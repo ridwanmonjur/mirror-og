@@ -39,17 +39,18 @@
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img {!! trustedBladeHandleImageFailureBanner() !!}
+                id="eventBanner"
                 @class([
-                'opacity-until-hover border-0 ',
+                'opacity-until-hover border-0 w-100 h-100',
             ])
-                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; max-height: 200px;"
-                src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;">
+                style="object-fit: cover; border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; "
+                src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}">
             <div @class([
                 'invisible-until-hover '  => $isRoleParticipant, 
                 'd-none '  => !$isRoleParticipant, 
                 "mt-2 ms-4 position-absolute"
             ]) style="top: 20px;"
-                style="width: 100%; background-color: red;">
+                >
 
                 @if (!isset($joinEvent->roster[0]))
                     <span>Empty roster</span>
@@ -89,12 +90,12 @@
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
-                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
+                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-end align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
-                        class="object-fit-cover me-2 random-color-circle rounded-circle2" >
+                        class="object-fit-cover me-2 rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center  w-75">
                         <small class="d-inline-block my-0 text-truncate w-75">{{ $joinEvent->eventDetails->user->name }}</small>
                         <small

@@ -32,12 +32,6 @@ img.fslightbox-source{
  }
  
 
-
-.rounded-circle2{
-    width: 30px !important;
-    height: 30px !important;
-}
-
 @keyframes bobbing {
     0% {
         transform: translateY(0);
@@ -374,7 +368,8 @@ img.fslightbox-source{
     margin-bottom: 3rem;
     overflow: auto;
     max-width: 90vw;
-    height: min-content;
+    width: 300px;
+    height: min-content;    
     background: transparent;
     border-width: 2px;
     border-style: solid;
@@ -383,6 +378,11 @@ img.fslightbox-source{
     align-content: center;
     overflow: hidden;
 }
+
+.event #eventBanner {
+    height: 200px !important;
+}
+
 
 .event-width {
     width: 400px;
@@ -628,7 +628,9 @@ img.fslightbox-source{
 }
 
 @media screen and (min-width: 992px) {
-   
+    .event #eventBanner {
+        height: 220px !important;
+    }
     .main1 { 
         min-height: 40vh;
     }

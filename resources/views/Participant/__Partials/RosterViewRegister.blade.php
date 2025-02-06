@@ -43,12 +43,14 @@
     </div>
 
     <div @class([
-        'event w-100 mx-auto event-width cursor-pointer visible-until-hover-parent  ',
+        'event  mx-auto event-width cursor-pointer visible-until-hover-parent  ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
-            <img {!! trustedBladeHandleImageFailureBanner() !!} @class([
-                'opacity-until-hover object-fit-cover border-0 ',
+            <img 
+                id="eventBanner"
+                {!! trustedBladeHandleImageFailureBanner() !!} @class([
+                'opacity-until-hover object-fit-cover border-0 w-100 h-100 ',
             ])
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
@@ -329,17 +331,14 @@
                         </span>
                     </a>
                 </div>
-                <div onclick="goToUrl(event, this)"
+               <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center mx-0 mt-1 px-0">
-                    <img {!! trustedBladeHandleImageFailureBanner() !!} 
-                       
+                    class="col-6 col-xl-4 d-flex justify-content-end align-items-center px-0 mx-0 mt-1">
+                    <img 
+                        {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
-
-                        width="45" height="45" 
-                        class="me-2 object-fit-cover rounded-circle2 random-color-circle"
-                    >
-                    <div class="text-start d-inline-flex flex-column justify-content-center ms-2 w-100">
+                        class="object-fit-cover me-2 rounded-circle rounded-circle2" >
+                    <div class="text-start d-inline-flex flex-column justify-content-center  w-75">
                         <small class="d-inline-block my-0 text-truncate w-75">{{ $joinEvent->eventDetails->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
@@ -349,10 +348,13 @@
                         </small>
                     </div>
                 </div>
-                <form onclick="event.stopPropagation(); " onsubmit="onFollowSubmit(event)"
+                <form onclick="event.stopPropagation(); " 
+                    onsubmit="onFollowSubmit(event)"
                     id="{{ 'followForm' . $joinEvent->id . $random_int }}"
-                    data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}" method="POST"
-                    class="col-6 d-none d-xl-flex col-xl-2 my-2 px-0 h-100 justify-content-end text-end" action="{{ route('participant.organizer.follow') }}">
+                    data-join-event-user ="{{ $joinEvent->eventDetails?->user_id }}"
+                    method="POST" 
+                    class="col-6 d-none d-xl-flex followFormProfile col-xl-2 my-2 justify-content-end text-end px-0"
+                    action="{{ route('participant.organizer.follow') }}">
                     @csrf
                     @guest
                         <input type="hidden" name="user_id" value="">
@@ -366,22 +368,21 @@
                     @guest
                         <button type="button"
                             onclick="event.preventDefault(); event.stopPropagation(); reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails?->user_id]) }}')"
-                            class="mx-auto  {{ 'followButton' . $joinEvent->eventDetails?->user_id }}"
-                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; border-radius: 10px; border: none;">
+                            class="mx-auto {{ 'followButton' . $joinEvent->eventDetails?->user_id }}"
+                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit"
-                                class="mx-auto {{ 'followButton' . $joinEvent->eventDetails?->user_id }}"
-                                style="background-color: {{ $joinEvent->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
-                                {{ $joinEvent->isFollowing ? 'Following' : 'Follow' }}
+                            <button type="submit" class="{{ 'followButton' . $joinEvent->eventDetails?->user_id }}" class="mx-auto "
+                                style="background-color: {{ $joinEvent?->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $joinEvent?->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                                {{ $joinEvent?->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
-                            <button type="button"
+                            <button type="button" 
                                 onclick="event.preventDefault(); event.stopPropagation(); toastWarningAboutRole(this, 'Participants can follow only!');"
-                                class="mx-auto  {{ 'followButton' . $joinEvent->eventDetails?->user_id }}"
+                                class="mx-auto {{ 'followButton' . $joinEvent->user_id }}"
                                 style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
                                 Follow
                             </button>

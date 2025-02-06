@@ -1,7 +1,7 @@
 <div class="field">
     <label for="username" class="placeholder-moves-up-container">
         <input value="{{ old('username') }}" autocomplete="off" type="text" name="username" id="username" required="true"
-            class="input-area" oninput="movePlaceholderUp(this)">
+            class="input-area" >
         <span class="placeholder-moves-up">Username</span>
         <div class="field-error-message {{ $errors->has('username') ? '' : 'd-none' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -18,7 +18,7 @@
 <div class="field">
     <label for="email" class="placeholder-moves-up-container">
         <input value="{{ old('email') }}" autocomplete="off" type="email" name="email" id="email"
-            required="true" class="input-area" oninput="movePlaceholderUp(this)">
+            required="true" class="input-area" >
         <span class="placeholder-moves-up">Email address</span>
         <div class="field-error-message {{ $errors->has('email') ? '' : 'd-none' }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -36,7 +36,7 @@
 <div class="field password">
     <label for="password" class="placeholder-moves-up-container">
         <input autocomplete="off" type="password" name="password" id="password" minlength="6" maxlength="24"
-            required="true" class="input-area" oninput="movePlaceholderUp(this)">
+            required="true" class="input-area" >
         <span class="placeholder-moves-up">Password</span>
         <button type="button" class="toggle-password" onclick="togglePassword('password')">
             <!-- Show Password Icon -->
@@ -69,7 +69,7 @@
 <div class="field password">
     <label for="confirmPassword" class="placeholder-moves-up-container">
         <input autocomplete="new-password" type="password" name="confirmPassword" id="confirmPassword" required="true"
-            class="input-area" oninput="movePlaceholderUp(this)">
+            class="input-area" >
         <span class="placeholder-moves-up">Confirm password</span>
         <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
             <!-- Show Password Icon -->

@@ -19,7 +19,7 @@
         <div class="field password">
             <label for="password" class="placeholder-moves-up-container">
                 <input autocomplete="new-password" type="password" name="password" id="password" minlength="6"
-                    maxlength="24" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+                    maxlength="24" required="true" class="input-area" >
                 <span class="placeholder-moves-up">Password</span>
                    <button type="button" class="toggle-password" onclick="togglePassword('password')">
             <!-- Show Password Icon -->
@@ -44,7 +44,7 @@
         <div class="field password">
             <label for="password" class="placeholder-moves-up-container">
                 <input autocomplete="new-password" type="password" name="confirmPassword" id="confirmPassword"
-                    minlength="6" maxlength="24" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+                    minlength="6" maxlength="24" required="true" class="input-area" >
                 <span class="placeholder-moves-up">Confirm password</span>
                    <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
             <!-- Show Password Icon -->

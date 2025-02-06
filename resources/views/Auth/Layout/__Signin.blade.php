@@ -1,6 +1,6 @@
 <div class="field">
     <label for="email" class="placeholder-moves-up-container">
-        <input  novalidate  autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" oninput="movePlaceholderUp(this)">
+        <input  novalidate  autocomplete="off" type="email" name="email" id="email" required="true" class="input-area" >
         <span class="placeholder-moves-up">Email</span>
         <div class="field-error-message d-none" id="email-error"></div>
     </label>
@@ -9,7 +9,7 @@
 <div class="field password">
     <label for="password" class="placeholder-moves-up-container mb-2">
         <input  novalidate  autocomplete="new-password" type="password" name="password" id="password" minlength="6" maxlength="24" required="true"
-            class="input-area" oninput="movePlaceholderUp(this)">
+            class="input-area" >
         <span class="placeholder-moves-up">Password</span>
          <button type="button" class="toggle-password" onclick="togglePassword('password')">
             <!-- Show Password Icon -->
