@@ -32,12 +32,6 @@ img.fslightbox-source{
  }
  
 
-
-.rounded-circle2{
-    width: 30px !important;
-    height: 30px !important;
-}
-
 @keyframes bobbing {
     0% {
         transform: translateY(0);

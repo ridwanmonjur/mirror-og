@@ -89,12 +89,12 @@
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
-                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
+                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
                     class="col-6 col-xl-4 d-flex justify-content-end align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
-                        class="object-fit-cover me-2 random-color-circle rounded-circle2" >
+                        class="object-fit-cover me-2 rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center  w-75">
                         <small class="d-inline-block my-0 text-truncate w-75">{{ $joinEvent->eventDetails->user->name }}</small>
                         <small
