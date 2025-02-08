@@ -15,7 +15,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <br><br>
     <div     
         @vue:mounted="init"
