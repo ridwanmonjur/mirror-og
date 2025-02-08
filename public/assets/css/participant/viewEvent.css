@@ -764,11 +764,7 @@ h2 {
         border-bottom: 1px solid var(--border-color);
         transform: translateY(1px);
    }
-    .tournament-bracket--rounded .tournament-bracket__item:nth-child(even)::after {
-   }
    
-   .tournament-bracket__joined-odd-list .tournament-bracket__item:nth-child(even)::after {
-    }
     .tournament-bracket__round:first-child .tournament-bracket__item {
         padding-left: 0;
    }
