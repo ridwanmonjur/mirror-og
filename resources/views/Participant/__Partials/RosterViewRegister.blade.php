@@ -6,7 +6,7 @@
     $rosterUserIds = [];
     $votes = ['totalCount' => 0, 'stayCount' => 0, 'leaveCount' => 0];
 @endphp
-<div class="position-relative opacity-parent-until-hover d-block " 
+<div class="col-12 col-lg-6 position-relative opacity-parent-until-hover d-block " 
     id="reg-member-id-{{$joinEvent->id}}"
     data-members-value="{{json_encode($joinEvent->members)}}"
     data-event-details="{{json_encode(
@@ -43,7 +43,7 @@
     </div>
 
     <div @class([
-        'event  mx-auto event-width cursor-pointer visible-until-hover-parent  ',
+        'event  mx-auto event-width cursor-pointer visible-until-hover-parent position-relative ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0; ">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
@@ -55,9 +55,8 @@
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
                 >
-            <div class="pt-3 mt-2 position-absolute custom-scrollbar " 
-                style="width: 100%; 
-                    {{-- background-color: red;  --}}
+            <div class="pt-3 mt-2 position-absolute custom-scrollbar w-100" 
+                style="
                     top: 0px; 
                     overflow-y: auto; 
                     overflow-x: hidden;

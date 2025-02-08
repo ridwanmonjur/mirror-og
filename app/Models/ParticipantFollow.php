@@ -95,13 +95,13 @@ class ParticipantFollow extends Model
         $followQuery = self::select($select)
             ->where('participant_follows.participant_followee', $userId)
             ->join('users', 'participant_follows.participant_follower', '=', 'users.id')
-            
             ->when(trim($search), function($q) use ($search) {
                 $q->where('users.name', 'LIKE', "%" . trim($search) . "%"); 
             })
-            ->leftJoin('participants', 'participants.user_id', '=', 'users.id')
-            
-            ;
+            ->leftJoin('participants', function($join) {
+                $join->on('participants.user_id', '=', 'users.id')
+                     ->where('users.role', '=', 'PARTICIPANT');
+            });
 
         self::addLoggedUserInfo($followQuery, $loggedUseId);
 
@@ -123,7 +123,8 @@ class ParticipantFollow extends Model
                 'organizer_follows.organizer_user_id', 
                 'organizer_follows.participant_user_id',
                 ...$select,
-            ])
+                DB::raw('NULL as nickname')  // Corrected NULL alias syntax
+                ])
             ->when(trim($search), function($q) use ($search) {
                 $q->where('users.name', 'LIKE', "%" . $search . "%");
             })
@@ -137,13 +138,19 @@ class ParticipantFollow extends Model
                 'participant_follows.participant_follower',
                 'participant_follows.participant_followee',
                 ...$select,
+                'participants.nickname as nickname',
             ])
             ->where('users.name', 'LIKE', "%{$search}%")
             ->join('participant_follows', function($join) use ($userId) {
                 $join->on('participant_follows.participant_followee', '=', 'users.id')
                     ->where('participant_follows.participant_follower', $userId);
 
+            })
+            ->leftJoin('participants', function($join) {
+                $join->on('participants.user_id', '=', 'users.id')
+                     ->where('users.role', '=', 'PARTICIPANT');
             });
+            ;
         
         return [$organizerFollowers, $participantFollowers];
     }

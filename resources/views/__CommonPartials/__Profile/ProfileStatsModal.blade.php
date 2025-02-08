@@ -5,7 +5,7 @@
     {{$propsIsUserSame}},
     '{{$propsRole}}',
     '{{$propsUserRole}}'
-   )" id="connectionModal" class="modal fade" tabindex="-1" aria-labelledby="connectionModalLabel"
+   )" id="connectionModal" class="modal w-100 fade" tabindex="-1" aria-labelledby="connectionModalLabel"
        aria-hidden="true" @vue:mounted="init"
     >
        <div class="modal-dialog modal-xl" style="top: 5vh; color: black;">
@@ -26,20 +26,20 @@
                        </button>
                        <template v-if="role === 'PARTICIPANT'">
                            <ul class="nav " id="connectionTabs" role="tablist">
-                               <li :class="{ 'btn nav-item user-select-none ms-0 px-4 py-2 ': true, ' text-primary ': currentTab == 'followers' }"
+                               <li :class="{ 'btn nav-item user-select-none ms-0 px-3 py-2 ': true, ' text-primary ': currentTab == 'followers' }"
                                    role="presentation" id="followers-tab" data-bs-toggle="tab"
                                    data-bs-target="#followers" type="button" role="tab"
                                    v-on:click="resetSearch('followers');"
                                 >
                                    Followers 
                                </li>
-                               <li :class="{ 'btn nav-item user-select-none px-4 py-2': true, ' text-primary ': currentTab == 'following' }"
+                               <li :class="{ 'btn nav-item user-select-none px-3 py-2': true, ' text-primary ': currentTab == 'following' }"
                                    role="presentation" id="following-tab" data-bs-toggle="tab"
                                    data-bs-target="#following" type="button" role="tab"
                                    v-on:click="resetSearch('following');">
                                    Following
                                </li>
-                               <li :class="{ 'btn nav-item user-select-none px-4 py-2 ': true, ' text-primary ': currentTab == 'friends' }"
+                               <li :class="{ 'btn nav-item user-select-none px-3 py-2 ': true, ' text-primary ': currentTab == 'friends' }"
                                    role="presentation" id="friends-tab" data-bs-toggle="tab" data-bs-target="#friends"
                                    type="button" role="tab" v-on:click="resetSearch('friends');">
                                    Friends
@@ -74,7 +74,7 @@
                                <div class="mt-3 px-0 justify-content-center grid-2-columns mx-auto user-select-none ">
                                    <template v-for="(user, index) in connections" :key="user.id">
 
-                                       <div class=" border border-secondary mx-3 mb-3 py-3 px-3"
+                                       <div class=" border border-secondary mx-1 mb-3 py-3 px-2"
                                            style="border-radius: 20px; padding-top: 10px; padding-bottom: 10px;">
                                            <div class="position-relative">
                                                <div class="d-flex align-items-center">
@@ -86,14 +86,14 @@
                                                    </a>
                                                    <div class="text-start">
                                                         <template v-if="user.role == 'PARTICIPANT' && user.nickname">
-                                                            <h6 style="width: 75%;" class="card-title mb-1  text-truncate" v-text="user.nickname">
-                                                            </h6>
-                                                            <p style="width: 75%;" class="card-text mb-0 mt-2" style="color: gray;"
+                                                            <u><h5 style="width: 25ch;" class="card-title mb-1  text-truncate" v-text="user.nickname">
+                                                            </h5></u>
+                                                            <p style="width: 25ch;" class="card-text mb-0 mt-2" style="color: gray;"
                                                                 v-text="user.name">
                                                             </p>
                                                         </template>
                                                         <template v-else>
-                                                            <h6 style="width: 75%;" class="card-title mb-3  text-truncate" v-text="user.name">
+                                                            <h6 style="width: 25ch;" class="card-title mb-3  text-truncate" v-text="user.name">
                                                             </h6>
                                                         </template>
                                                         <div class="mt-2"> 
@@ -116,7 +116,7 @@
                                                                             </svg>
                                                                         </button>
                                                                         <div class="dropdown-menu py-0" aria-labelledby="dropdownMenuLink">
-                                                                            <button class="dropdown-item cursor-pointer  px-4 py-2" 
+                                                                            <button class="dropdown-item cursor-pointer  px-3 py-2" 
                                                                                 data-action="unfriend"
                                                                                 type="button"
                                                                                 v-on:click="friendRequest(event)"

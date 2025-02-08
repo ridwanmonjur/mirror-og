@@ -76,11 +76,16 @@ class OrganizerFollow extends Model
             'users.userBanner',
             'users.created_at',
             'users.role',
+            'participants.nickname as nickname',
         ];
 
         $ogQuery = self::select($select)
             ->where('organizer_follows.organizer_user_id', $userId)
             ->join('users', 'organizer_follows.participant_user_id', '=', 'users.id')
+            ->leftJoin('participants', function($join) {
+                $join->on('participants.user_id', '=', 'users.id')
+                     ->where('users.role', '=', 'PARTICIPANT');
+            })
             ->when(trim($search), function ($q) use ($search) {
                 $q->where('users.name', 'LIKE', "%" . trim($search) . "%");
             });
