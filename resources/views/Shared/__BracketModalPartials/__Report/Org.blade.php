@@ -1,5 +1,5 @@
 <div>
-    @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
+    @include('Shared.__BracketModalPartials.__Report.ExistingChoices')
     <template v-if="!report.realWinners[reportUI.matchNumber] && !dispute[reportUI.matchNumber]">
         <div>
             <div>
@@ -22,7 +22,7 @@
                     </div>   
                 </template>
             </div>
-            @include('__CommonPartials.__BracketModals.__Report.PickWinners')         
+            @include('Shared.__BracketModalPartials.__Report.PickWinners')         
         </div>
     </template>
     <template v-if="dispute[reportUI.matchNumber]">
@@ -45,7 +45,7 @@
                     </div>
                     <template v-if="report.realWinners[reportUI.matchNumber]">
                         <div>
-                            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
+                            @include('Shared.__BracketModalPartials.__Report.RealWinners')
                         </div>
                     </template>
                 </div>
@@ -62,14 +62,14 @@
                             > Show dispute </button>
                         </div>
                     </div>
-                    @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
+                    @include('Shared.__BracketModalPartials.__Report.PendingWinners')
                 </div>
             </template>
         </div>
     </template>
     <template v-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
         <div>
-            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
+            @include('Shared.__BracketModalPartials.__Report.RealWinners')
             <div class="d-flex justify-content-center">
                 <button class="btn btn-sm border rounded-pill text-primary border-primary " v-on:click="onChangeTeamToWin"> Change Declaration </button>
             </div>
