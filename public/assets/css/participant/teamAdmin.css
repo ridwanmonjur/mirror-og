@@ -80,6 +80,7 @@ img.fslightbox-source{
     background-size: cover;
     margin: 0;
     padding: 0px 0 20vh;
+    min-height: 75vh;
 }
 
 .menu-toggle {
