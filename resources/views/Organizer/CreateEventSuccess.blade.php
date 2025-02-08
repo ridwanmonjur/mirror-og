@@ -1,7 +1,7 @@
     @include('Organizer.__Partials.CreateEventHeadTag')
     <body>
     @include('googletagmanager::body')
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
 
         <main>
             <div>

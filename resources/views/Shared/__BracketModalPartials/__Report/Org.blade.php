@@ -1,13 +1,13 @@
 <div>
-    @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
-    <template x-if="!report.realWinners[reportUI.matchNumber] && !dispute[reportUI.matchNumber]">
+    @include('Shared.__BracketModalPartials.__Report.ExistingChoices')
+    <template v-if="!report.realWinners[reportUI.matchNumber] && !dispute[reportUI.matchNumber]">
         <div>
             <div>
-                <template x-if="report.teams[0].winners[reportUI.matchNumber] &&
+                <template v-if="report.teams[0].winners[reportUI.matchNumber] &&
                     report.teams[1].winners[reportUI.matchNumber]"
                 >
                     <div>
-                        <template x-if="(report.teams[0].winners[reportUI.matchNumber] !=
+                        <template v-if="(report.teams[0].winners[reportUI.matchNumber] !=
                                 report.teams[1].winners[reportUI.matchNumber])
                                 && !dispute[reportUI.matchNumber]?.resolution_winner
                             "
@@ -22,18 +22,18 @@
                     </div>   
                 </template>
             </div>
-            @include('__CommonPartials.__BracketModals.__Report.PickWinners')         
+            @include('Shared.__BracketModalPartials.__Report.PickWinners')         
         </div>
     </template>
-    <template x-if="dispute[reportUI.matchNumber]">
+    <template v-if="dispute[reportUI.matchNumber]">
         <div>
-            <template x-if="dispute[reportUI.matchNumber]?.resolution_winner">
+            <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
                 <div>
                    
                     
                      <p class="text-success mt-2">
                         The dispute has been resolved in favor of 
-                        <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name"> </span>
+                        <span v-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name"> </span>
                     </p>
                     <div class="mt-2">
                        <div class="d-flex justify-content-center">
@@ -43,14 +43,14 @@
                             > Show dispute </button>
                         </div>
                     </div>
-                    <template x-if="report.realWinners[reportUI.matchNumber]">
+                    <template v-if="report.realWinners[reportUI.matchNumber]">
                         <div>
-                            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
+                            @include('Shared.__BracketModalPartials.__Report.RealWinners')
                         </div>
                     </template>
                 </div>
             </template>
-            <template x-if="!dispute[reportUI.matchNumber]?.resolution_winner">
+            <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner">
                 <div>
                     <p class="text-red mt-2">
                         The results of this match are disputed. 
@@ -62,16 +62,16 @@
                             > Show dispute </button>
                         </div>
                     </div>
-                    @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
+                    @include('Shared.__BracketModalPartials.__Report.PendingWinners')
                 </div>
             </template>
         </div>
     </template>
-    <template x-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
+    <template v-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
         <div>
-            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
+            @include('Shared.__BracketModalPartials.__Report.RealWinners')
             <div class="d-flex justify-content-center">
-                <button class="btn btn-sm border rounded-pill text-primary border-primary " x-on:click="onChangeTeamToWin"> Change Declaration </button>
+                <button class="btn btn-sm border rounded-pill text-primary border-primary " v-on:click="onChangeTeamToWin"> Change Declaration </button>
             </div>
         </div>
     </template>

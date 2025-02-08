@@ -13,7 +13,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     
     <a class="d-none" id="manageRegistrationUrl"
         href="{{ route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id]) }}"> </a>

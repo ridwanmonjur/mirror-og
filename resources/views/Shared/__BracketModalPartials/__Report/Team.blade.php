@@ -1,21 +1,21 @@
 <div>
 
-    @include('__CommonPartials.__BracketModals.__Report.ExistingChoices')
-    <template x-if="!report.realWinners[reportUI.matchNumber]">
+    @include('Shared.__BracketModalPartials.__Report.ExistingChoices')
+    <template v-if="!report.realWinners[reportUI.matchNumber]">
         <div>
             <template
-                x-if="report.teams[0].winners[reportUI.matchNumber] && 
+                v-if="report.teams[0].winners[reportUI.matchNumber] && 
                 report.teams[1].winners[reportUI.matchNumber]"
             >
                 <div>
                     <template
-                        x-if="report.teams[0].winners[reportUI.matchNumber] != report.teams[1].winners[reportUI.matchNumber]
+                        v-if="report.teams[0].winners[reportUI.matchNumber] != report.teams[1].winners[reportUI.matchNumber]
                         && !dispute[reportUI.matchNumber]    
                     ">
                         <div class="mt-3">
                             <div class="d-flex justify-content-center">
                                 <button class="btn border rounded-pill text-light bg-primary me-3"
-                                    x-on:click="onChangeTeamToWin">
+                                    v-on:click="onChangeTeamToWin">
                                     Change Declaration
                                 </button>
                                 <button class="btn border rounded-pill text-light me-3 bg-red" 
@@ -29,7 +29,7 @@
                             </p>
                         </div>
                     </template>
-                    <template x-if="dispute[reportUI.matchNumber] && !dispute[reportUI.matchNumber]?.resolution_winner">
+                    <template v-if="dispute[reportUI.matchNumber] && !dispute[reportUI.matchNumber]?.resolution_winner">
                         <div>
                             <p class="text-red mt-2">
                                 The results of this match are disputed.
@@ -45,7 +45,7 @@
                                 <div class="d-flex justify-content-center">
                                     <button
                                         class="btn btn-sm border rounded-pill text-light bg-primary"
-                                        x-on:click="onChangeTeamToWin"
+                                        v-on:click="onChangeTeamToWin"
                                     > 
                                     Change Declaration 
                                     </button>
@@ -56,38 +56,38 @@
                 </div>
             </template>
             <template
-                x-if="!report.teams[reportUI.teamNumber].winners[reportUI.matchNumber]"
+                v-if="!report.teams[reportUI.teamNumber].winners[reportUI.matchNumber]"
             >
                 <div class="mt-2">
-                    @include('__CommonPartials.__BracketModals.__Report.PickWinners')
+                    @include('Shared.__BracketModalPartials.__Report.PickWinners')
                 </div>
             </template>
             <template
-                x-if="report.teams[reportUI.teamNumber].winners[reportUI.matchNumber] &&
+                v-if="report.teams[reportUI.teamNumber].winners[reportUI.matchNumber] &&
                     !report.teams[reportUI.otherTeamNumber].winners[reportUI.matchNumber] 
                 "
             >
                 <div class="mt-2">
-                     @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
+                     @include('Shared.__BracketModalPartials.__Report.PendingWinners')
                 </div>
             </template>
         </div>
     </template>
-     <template x-if="dispute[reportUI.matchNumber]?.resolution_winner">
+     <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
         <div>
-            <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == dispute[reportUI.matchNumber]?.dispute_teamNumber">
+            <template v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == dispute[reportUI.matchNumber]?.dispute_teamNumber">
                 <div class="mt-2">
                 <p class="text-success mt-2">
-                    <span x-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                    <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
                     </span> has conceded the dispute. Winner is to be decided by the organizer.
                 </p>
             </div>
             </template>
-            <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by != dispute[reportUI.matchNumber]?.dispute_teamNumber">
+            <template v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by != dispute[reportUI.matchNumber]?.dispute_teamNumber">
                 <div class="mt-2">
                     <p class="text-success mt-2">
                         The dispute has been resolved in favor of
-                        <span x-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name">
+                        <span v-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name">
                         </span>
                     </p>
                 </div>
@@ -100,14 +100,14 @@
                     > Show dispute </button>
                 </div>
             </div>
-            <template x-if="!report.realWinners[reportUI.matchNumber]">
-                @include('__CommonPartials.__BracketModals.__Report.PendingWinners')
+            <template v-if="!report.realWinners[reportUI.matchNumber]">
+                @include('Shared.__BracketModalPartials.__Report.PendingWinners')
             </template>
     </template>
-    <template x-if="report.realWinners[reportUI.matchNumber]">
+    <template v-if="report.realWinners[reportUI.matchNumber]">
         <div>
             
-            @include('__CommonPartials.__BracketModals.__Report.RealWinners')
+            @include('Shared.__BracketModalPartials.__Report.RealWinners')
         </div>
     </template>
 </div>

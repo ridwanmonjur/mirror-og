@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main>
     <div id="app" class="app-container row">
@@ -143,7 +143,7 @@
                     })">
                     </div>
                     <div :class="message.className">
-                        <img v-if="message.sender?.userBanner" :src="`/storage/${message.sender.userBanner}`"
+                        <img v-if="message.sender?.userBanner" v-bind:src="`/storage/${message.sender.userBanner}`"
                             v-on:error="$el.src = '/assets/images/404.png'" height="40" width="40"
                             class="object-fit-cover rounded-circle me-2">
 
@@ -363,7 +363,7 @@
                                 </div>
 
                                 <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start">
-                                    <img :src="'/storage/' + user?.userBanner"
+                                    <img v-bind:src="'/storage/' + user?.userBanner"
                                         class="rounded-circle object-fit-cover border border-primary me-2"
                                         width="35" height="35" onerror="this.src='/assets/images/404.png';">
 

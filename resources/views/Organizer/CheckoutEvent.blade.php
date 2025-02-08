@@ -2,7 +2,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
    
     <main class="main-background-2">
         <div id="hidden-variables" class="d-none"
@@ -18,7 +18,6 @@
         @include('Organizer.__CheckoutPartials.CheckoutPaymentOptions', ['event' => $event])
     </main>
 
-    @include('Organizer.__CheckoutPartials.CheckoutScripts', ['fee' => $fee, 'event' => $event])
     <script src="https://js.stripe.com/v3/"></script>
     <script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
     <script src="{{ asset('/assets/js/organizer/CheckoutScripts.js') }}"></script>

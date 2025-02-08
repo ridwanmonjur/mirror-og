@@ -15,7 +15,7 @@
 <body
     @style(["min-height: 100vh;" => $isRedirect])
 >
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main 
         @style(["height: 95vh" => $isRedirect])

@@ -39,17 +39,17 @@
                             class="row justify-content-start bg-light border border-3 border-dark border rounded px-2 pt-2 pb-4">
                             <h5 class="text-start my-3"> Match Information </h5>
                             <div class="ps-5 ps-5 text-start">
-                                <p class="my-0"> Match: <span x-text="report.position"></span></p>
-                                <p class="mt-0 mb-2">Game: <span x-text="reportUI.matchNumber+1"> </span></p>
+                                <p class="my-0"> Match: <span v-text="report.position"></span></p>
+                                <p class="mt-0 mb-2">Game: <span v-text="reportUI.matchNumber+1"> </span></p>
                                 <div class="row px-0 w-75 mx-auto">
                                     <div class="col-12  text-center col-lg-4">
                                         <div>
-                                            <img :src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/.png'" alt="Team Banner"
+                                            <img v-bind:src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
-                                        <p class="mt-1 mb-2 py-0" x-text="report.teams[0]?.name"></p>
+                                        <p class="mt-1 mb-2 py-0" v-text="report.teams[0]?.name"></p>
                                         <br>
                                     </div>
                                     <div class="col-12 col-lg-4">
@@ -60,12 +60,12 @@
                                     </div>
                                     <div class="col-12 col-lg-4  text-center">
                                         <div>
-                                            <img :src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/.png'" alt="Team Banner"
+                                            <img v-bind:src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
-                                        <p class="mt-1 mb-2 py-0" x-text="report.teams[1]?.name"></p>
+                                        <p class="mt-1 mb-2 py-0" v-text="report.teams[1]?.name"></p>
 
                                     </div>
                                 </div>
@@ -73,17 +73,17 @@
                         </div>
                     </div>
                 </div>
-                <template x-if="!dispute[reportUI.matchNumber]">
+                <template v-if="!dispute[reportUI.matchNumber]">
                     <div>
                         {{-- CREATE FORM --}}
-                        <form method="POST" x-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
+                        <form method="POST" v-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="create">
                             <input type="hidden" name="event_id" value="{{$event->id}}">
-                            <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.id">
-                            <input type="hidden" name="dispute_teamNumber" x-bind:value="reportUI.teamNumber">
-                            <input type="hidden" name="report_id" x-bind:value="report.id">
+                            <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.matchNumber]?.id">
+                            <input type="hidden" name="dispute_teamNumber" v-bind:value="reportUI.teamNumber">
+                            <input type="hidden" name="report_id" v-bind:value="report.id">
                             <input type="hidden" name="dispute_userId" value="{{$user?->id}}">
-                            <input type="hidden" name="match_number" x-bind:value="reportUI.matchNumber">
+                            <input type="hidden" name="match_number" v-bind:value="reportUI.matchNumber">
                             <div class="row">
                                 <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                     <div
@@ -141,19 +141,19 @@
                                             class="text-red">*</span>
                                         </h5>
                                         <div class="ps-5 pe-5 text-start">
-                                            <div class="upload-container ps-5 pe-5" x-data="type1" x-ref="createDisputeInputs"
-                                                  @initiate-upload.window="uploadToServer('/api/media')"
+                                            <div class="upload-container ps-5 pe-5" v-data="type1" v-ref="createDisputeInputs"
+                                                  {{-- @initiate-upload.window="uploadToServer('/api/media')" --}}
                                             >
                                                 <div class="d-flex justify-content-start">
-                                                    <div class="upload-area me-2 d-flex justify-content-between" x-ref="uploadArea"></div>
-                                                    <div class="plus-button" @click="$refs.fileInput.click()">+</div>
+                                                    <div class="upload-area me-2 d-flex justify-content-between" v-ref="uploadArea"></div>
+                                                    <div class="plus-button" v-bind:click="$refs.fileInput.click()">+</div>
                                                 </div>
                                                 <input type="file" 
-                                                    x-ref="fileInput" 
+                                                    v-ref="fileInput" 
                                                     class="file-input" 
                                                     multiple
                                                     accept="image/*" 
-                                                    @change="handleFiles($event)"
+                                                    v-bind:change="handleFiles($event)"
                                                 >
                                             </div>
                                         </div>
@@ -176,7 +176,7 @@
                     </div>
                 </template>
 
-                <template x-if="dispute[reportUI.matchNumber]">
+                <template v-if="dispute[reportUI.matchNumber]">
                     <div>
                         <div class="row">
                             <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
@@ -185,42 +185,42 @@
                                     <h5 class="text-start my-3"> Dispute Information </h5>
                                     <div class="ps-5 ps-5 text-start">
                                         <p class="my-0"> Disputing Team </p>
-                                        <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.banner"
+                                        <img v-bind:src="'/storage/' + report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.banner"
                                             alt="Team Banner" width="50" height="50"
                                             onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                             class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
                                         <p class="text-primary">
                                             <span
-                                                x-text="report.teams[dispute[reportUI.matchNumber].dispute_teamNumber].name">
+                                                v-text="report.teams[dispute[reportUI.matchNumber].dispute_teamNumber].name">
                                             </span>
                                             <span
-                                                x-show="reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber">(Your
+                                                v-show="reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber">(Your
                                                 Team)</span>
                                         </p>
 
-                                        <p class="my-0" x-html="dispute[reportUI.matchNumber].dispute_reason">
+                                        <p class="my-0" v-html="dispute[reportUI.matchNumber].dispute_reason">
                                         </p>
                                         <p class="text-primary" style="white-space: pre-wrap;"
-                                            x-html="dispute[reportUI.matchNumber].dispute_description">
+                                            v-html="dispute[reportUI.matchNumber].dispute_description">
                                         </p>
                                         
                                         <div class="mb-2">
-                                            <template x-if="dispute[reportUI.matchNumber]?.dispute_image_videos[0]">
+                                            <template v-if="dispute[reportUI.matchNumber]?.dispute_image_videos[0]">
                                                 <div>
                                                     <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
 
-                                                    <template x-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
+                                                    <template v-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
                                                         <div>
-                                                            <template x-if="imgVideo.startsWith('media/img')">
-                                                                <img :src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
-                                                                    @click="showImageModal(imgVideo)"
+                                                            <template v-if="imgVideo.startsWith('media/img')">
+                                                                <img v-bind:src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
+                                                                    v-click="showImageModal(imgVideo)"
                                                                     height="100px" width="100px" 
                                                                 />
                                                             </template>
                                                             
-                                                            <template x-if="!imgVideo.startsWith('media/img')">
+                                                            <template v-else>
                                                                 <video controls class="prview-item">
-                                                                    <source :src="'/storage/' + imgVideo" type="video/mp4">
+                                                                    <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
                                                                     Your browser does not support the video tag.
                                                                 </video>
                                                             </template>
@@ -235,7 +235,7 @@
                         </div>
 
                         {{-- reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber --}}
-                        <template x-if="dispute[reportUI.matchNumber].response_teamId">
+                        <template v-if="dispute[reportUI.matchNumber].response_teamId">
                             <div class="row">
                                 <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                     <div
@@ -243,43 +243,43 @@
                                         <div class="ps-5 ps-5 text-start">
                                             <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
                                             <p class="my-0"> Responding Team </p>
-                                            <img :src="'/storage/' + report.teams[dispute[reportUI.matchNumber].response_teamNumber]?.banner"
+                                            <img v-bind:src="'/storage/' + report.teams[dispute[reportUI.matchNumber].response_teamNumber]?.banner"
                                                 alt="Team Banner" width="50" height="50"
                                                 onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                 class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover"
                                             >
                                             <p class="text-primary">
                                                 <span
-                                                    x-text="report.teams[dispute[reportUI.matchNumber].response_teamNumber].name">
+                                                    v-text="report.teams[dispute[reportUI.matchNumber].response_teamNumber].name">
                                                 </span>
                                                 <span
-                                                    x-show="reportUI.teamNumber == dispute[reportUI.matchNumber].response_teamNumber">(Your
+                                                    v-show="reportUI.teamNumber == dispute[reportUI.matchNumber].response_teamNumber">(Your
                                                     Team)
                                                 </span>
                                             </p>
 
-                                            <p class="my-0" x-html="dispute[reportUI.matchNumber].response_explanation">
+                                            <p class="my-0" v-html="dispute[reportUI.matchNumber].response_explanation">
                                             </p>
                                             <p class="text-primary" style="white-space: pre-wrap;"
-                                                x-html="dispute[reportUI.matchNumber].dispute_description">
+                                                v-html="dispute[reportUI.matchNumber].dispute_description">
                                             </p>
                                             <div class="mb-2">
-                                                <template x-if="dispute[reportUI.matchNumber]?.response_image_videos[0]">
+                                                <template v-if="dispute[reportUI.matchNumber]?.response_image_videos[0]">
                                                     <div>
                                                         <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
 
-                                                        <template x-for="imgVideo in dispute[reportUI.matchNumber].response_image_videos" :key="imgVideo">
+                                                        <template v-for="imgVideo in dispute[reportUI.matchNumber].response_image_videos" :key="imgVideo">
                                                             <div>
-                                                                <template x-if="imgVideo.startsWith('media/img')">
-                                                                    <img :src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
-                                                                        @click="showImageModal(imgVideo)"
+                                                                <template v-if="imgVideo.startsWith('media/img')">
+                                                                    <img v-bind:src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
+                                                                        v-click="showImageModal(imgVideo)"
                                                                         height="100px" width="100px" 
                                                                     />
                                                                 </template>
                                                                 
-                                                                <template x-if="!imgVideo.startsWith('media/img')">
+                                                                <template v-else>
                                                                     <video controls class="prview-item">
-                                                                        <source :src="'/storage/' + imgVideo" type="video/mp4">
+                                                                        <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
                                                                         Your browser does not support the video tag.
                                                                     </video>
                                                                 </template>
@@ -294,10 +294,10 @@
                                 </div>
                             </div>
                         </template>
-                        <template x-if="!dispute[reportUI.matchNumber].response_teamId && userLevelEnums['IS_ORGANIZER'] != report.userLevel">
+                        <template v-if="!dispute[reportUI.matchNumber].response_teamId && userLevelEnums['IS_ORGANIZER'] != report.userLevel">
                             <div class="row">
                                 <template
-                                    x-if="reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber">
+                                    v-if="reportUI.teamNumber == dispute[reportUI.matchNumber].dispute_teamNumber">
                                     <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                         <div
                                             class="row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
@@ -313,19 +313,19 @@
                                     </div>
                                 </template>
                                 <template
-                                    x-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber && !dispute[reportUI.matchNumber].resolution_winner">
+                                    v-if="reportUI.teamNumber != dispute[reportUI.matchNumber].dispute_teamNumber && !dispute[reportUI.matchNumber].resolution_winner">
                                     <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                         <div class="response_decision row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
                                             <div class="mt-3 d-flex align-items-center py-3 pb-4 justify-content-around flex-column">
-                                                <button style="width: 250px;" class="btn btn-danger text-light bg-red px-2 mb-2 py-2 rounded-pill border border-dark" x-on:click="toggleResponseForm('response_decision', 'response_form');">
+                                                <button style="width: 250px;" class="btn btn-danger text-light bg-red px-2 mb-2 py-2 rounded-pill border border-dark" v-on:click="toggleResponseForm('response_decision', 'response_form');">
                                                     Submit Counter Evidence
                                                 </button>
-                                                <form method="POST" x-on:submit="resolveDisputeForm(event)" id="resolveForm">
-                                                    <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                <form method="POST" v-on:submit="resolveDisputeForm(event)" id="resolveForm">
+                                                    <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber].match_number">
                                                     <input type="hidden" name="action" value="resolve">
-                                                    <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                    <input type="hidden" name="resolution_winner" x-bind:value="reportUI.otherTeamNumber">
-                                                    <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['RESPONDER']">
+                                                    <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber].id">
+                                                    <input type="hidden" name="resolution_winner" v-bind:value="reportUI.otherTeamNumber">
+                                                    <input type="hidden" name="resolution_resolved_by" v-bind:value="disputeLevelEnums['RESPONDER']">
                                                     <button type="submit" style="width: 250px;" class="btn d-inline-block btn-light border px-2 mb-2 py-2 border-dark rounded-pill text-dark"
                                                         data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal" 
                                                     >
@@ -340,12 +340,12 @@
 
                                         <div
                                             class="response_form d-none row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
-                                            <form method="POST" x-on:submit="respondDisputeForm(event)" id="respondForm">
+                                            <form method="POST" v-on:submit="respondDisputeForm(event)" id="respondForm">
                                                 <input type="hidden" name="action" value="respond">
-                                                <input type="hidden" name="dispute_teamId" x-bind:value="report.teams[reportUI.matchNumber]?.id">
-                                                <input type="hidden" name="response_teamNumber" x-bind:value="reportUI.teamNumber">
-                                                <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
-                                                <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
+                                                <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.matchNumber]?.id">
+                                                <input type="hidden" name="response_teamNumber" v-bind:value="reportUI.teamNumber">
+                                                <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber].id">
                                                 <input type="hidden" name="response_userId" value="{{$user?->id}}">
 
                                                 <h5 class="text-start my-3"> Dispute Description (optional) </h5>
@@ -359,23 +359,23 @@
                                                 </div>
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
                                                 <div class="ps-5 pe-5 text-start">
-                                                <div class="upload-container ps-5 pe-5" x-data="type2" x-ref="respondDisputeInputs"
+                                                <div class="upload-container ps-5 pe-5" v-data="type2" v-ref="respondDisputeInputs"
                                                     @initiate-upload.window="uploadToServer('/api/media')"
                                                 >
                                                     <div class="d-flex justify-content-start">
-                                                        <div class="upload-area me-2 d-flex justify-content-between" x-ref="uploadArea"></div>
-                                                        <div class="plus-button" @click="$refs.fileInput.click()">+</div>
+                                                        <div class="upload-area me-2 d-flex justify-content-between" v-ref="uploadArea"></div>
+                                                        <div class="plus-button" v-click="$refs.fileInput.click()">+</div>
                                                     </div>
                                                     <input type="file" 
-                                                        x-ref="fileInput" 
+                                                        v-ref="fileInput" 
                                                         class="file-input" 
                                                         multiple
                                                         accept="image/*" 
-                                                        @change="handleFiles($event)">
+                                                        v-on:change="handleFiles($event)">
                                                     </div>
                                                 </div>
                                                 <div class="my-3 px-3 d-flex justify-content-between">
-                                                    <button class="btn btn-light rounded-pill border border-dark" data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal"  x-on:click="toggleResponseForm('response_form', 'response_decision');">
+                                                    <button class="btn btn-light rounded-pill border border-dark" data-bs-toggle="modal" data-bs-target="#reportModal" data-bs-dismiss="modal"  v-on:click="toggleResponseForm('response_form', 'response_decision');">
                                                         Cancel
                                                     </button>
                                                     <button class="btn btn-secondary rounded-pill text-light" type="submit">
@@ -388,9 +388,9 @@
                                 </template>
                             </div>
                         </template>
-                        <template x-if="!dispute[reportUI.matchNumber].resolution_winner">
+                        <template v-if="!dispute[reportUI.matchNumber].resolution_winner">
                             <div>
-                                <template x-if="userLevelEnums['IS_ORGANIZER'] != report.userLevel">
+                                <template v-if="userLevelEnums['IS_ORGANIZER'] != report.userLevel">
                                     <div class="row">
                                         <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                             <div
@@ -417,7 +417,7 @@
                                         </div>
                                     </div>
                                 </template>
-                                <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
+                                <template v-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
                                     <div class="row">
                                         <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                             <div
@@ -430,28 +430,28 @@
                                                     </div>
                                                 </div>
                                                 <div class="ps-5 ps-5 text-start">
-                                                    <form method="POST" x-on:submit="resolveDisputeForm(event)" >
+                                                    <form method="POST" v-on:submit="resolveDisputeForm(event)" >
                                                         <input type="hidden" name="action" value="resolve">
-                                                        <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                        <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                        <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber].id">
+                                                        <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber].match_number">
 
                                                         <input type="hidden" name="resolution_winner" id="resolution_winner_input">
                                                         <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">
                                                         <p class="text-primary text-center"> The dispute will be resolved in favor of (Choose): </p>
                                                         <div class="d-flex justify-content-center flex-column mt-2">
-                                                            <button type="button" x-on:click="decideResolution(event, 0)" :disabled="getDisabled()"
+                                                            <button type="button" v-on:click="decideResolution(event, 0)" v-bind:disabled="getDisabled()"
                                                                 class="selectedButton selectedDisputeResolveButton ps-0 btn mb-2 mt-2 rounded-pill mx-auto py-0 border border-dark text-start">
-                                                                <img :src="'/storage/' + report.teams[0]?.banner" alt="Team Banner" width="35" height="35"
+                                                                <img v-bind:src="'/storage/' + report.teams[0]?.banner" alt="Team Banner" width="35" height="35"
                                                                     onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                                     class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-                                                                <small class="ms-2 py-0" x-text="report.teams[0]?.name"></small>
+                                                                <small class="ms-2 py-0" v-text="report.teams[0]?.name"></small>
                                                             </button>
-                                                            <button type="button" x-on:click="decideResolution(event, 1)" :disabled="getDisabled()"
+                                                            <button type="button" v-on:click="decideResolution(event, 1)" v-bind:disabled="getDisabled()"
                                                                 class="selectedButton selectedDisputeResolveButton ps-0 btn  rounded-pill mx-auto py-0 mt-2 border border-dark text-start">
-                                                                <img :src="'/storage/' + report.teams[1]?.banner" alt="Team Banner" width="35" height="35"
+                                                                <img v-bind:src="'/storage/' + report.teams[1]?.banner" alt="Team Banner" width="35" height="35"
                                                                     onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                                     class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-                                                                <small class="ms-2 py-0" x-text="report.teams[1]?.name"></small>
+                                                                <small class="ms-2 py-0" v-text="report.teams[1]?.name"></small>
                                                             </button>
                                                             <button type="submit"  class="selectTeamSubmitButton btn border mx-auto border border-primary text-primary py-2 btn-sm rounded-pill mt-4 px-4"> Submit </button>
                                                         </div>
@@ -464,7 +464,7 @@
                                 </template>
                             </div>
                         </template>
-                        <template x-if="dispute[reportUI.matchNumber].resolution_winner">
+                        <template v-if="dispute[reportUI.matchNumber].resolution_winner">
                             <div class="row">
                                 <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                     <div
@@ -475,31 +475,31 @@
                                         <div class="ps-5 ps-5 text-start">
                                             <div class="mt-2">
                                                 <div>
-                                                    <img :src="'/storage/' + report.teams[report.realWinners[reportUI.matchNumber]]?.banner" alt="Team Banner"
+                                                    <img v-bind:src="'/storage/' + report.teams[report.realWinners[reportUI.matchNumber]]?.banner" alt="Team Banner"
                                                         width="60" height="60" onerror="this.src='{{ asset('assets/images/404.png') }}';"
                                                         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                                                 </div>
                                                 <div class="mt-2 mb-2 d-block">
                                                     <p>
-                                                        <span x-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
+                                                        <span v-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
                                                         has been resolved as the winner.
                                                     </p>
-                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']">
+                                                    <template v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']">
                                                         <div class="mt-2">
                                                             <p class="text-success mt-2">
-                                                                <span x-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                                                                <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
                                                                 </span> has conceded the dispute. Winner is to be decided by the organizer.
                                                             </p>
                                                         </div>
                                                     </template>
-                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
+                                                    <template v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
                                                         <div class="mt-2">
                                                             <p class="text-success mt-2">
                                                                 The responder has conceded the dispute. The disputee is declared as the winner.
                                                             </p>
                                                         </div>
                                                     </template>
-                                                    <template x-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['ORGANIZER']">
+                                                    <template v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['ORGANIZER']">
                                                         <div class="mt-2">
                                                             <p class="text-success mt-2">
                                                             Winner has been decided by the organizer.
@@ -507,14 +507,14 @@
                                                         </div>
                                                     </template>
 
-                                                    <template x-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
+                                                    <template v-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">
                                                         <div class="d-inline">
-                                                            <form method="POST" class="d-inline" x-on:submit="resolveDisputeForm(event)">
+                                                            <form method="POST" class="d-inline" v-on:submit="resolveDisputeForm(event)">
                                                                 <input type="hidden" name="action" value="resolve">
-                                                                <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                                                <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
-                                                                <input type="hidden" name="already_winner" x-bind:value="dispute[reportUI.matchNumber].resolution_winner">
-                                                                <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['ORGANIZER']">
+                                                                <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber].id">
+                                                                <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber].match_number">
+                                                                <input type="hidden" name="already_winner" v-bind:value="dispute[reportUI.matchNumber].resolution_winner">
+                                                                <input type="hidden" name="resolution_resolved_by" v-bind:value="disputeLevelEnums['ORGANIZER']">
                                                                 <button type="submit" class="btn py-0 d-inline rounded-pill bg-red text-light">
                                                                     Change Declaration
                                                                 </button>
@@ -536,14 +536,14 @@
                             </button>
                         </div>
                         <br>
-                            <template x-if="!dispute[reportUI.matchNumber]?.resolution_winner">
+                            <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner">
                                 <div class="text-center">
-                                    <form method="POST" x-on:submit="resolveDisputeForm(event)">
+                                    <form method="POST" v-on:submit="resolveDisputeForm(event)">
                                         <input type="hidden" name="action" value="resolve">
-                                        <input type="hidden" name="id" x-bind:value="dispute[reportUI.matchNumber].id">
-                                        <input type="hidden" name="match_number" x-bind:value="dispute[reportUI.matchNumber].match_number">
-                                        <input type="hidden" name="already_winner" x-bind:value="reportUI.otherTeamNumber">
-                                        <input type="hidden" name="resolution_resolved_by" x-bind:value="disputeLevelEnums['DISPUTEE']">
+                                        <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber].id">
+                                        <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber].match_number">
+                                        <input type="hidden" name="already_winner" v-bind:value="reportUI.otherTeamNumber">
+                                        <input type="hidden" name="resolution_resolved_by" v-bind:value="disputeLevelEnums['DISPUTEE']">
                                         <button type="submit"
                                             class="btn  btn-large btn-danger bg-red border-danger rounded-pill px-5 py-3">
                                             Cancel Dispute

@@ -37,8 +37,8 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('Organizer.__ProfilePartials.BackgroundModal')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('Organizer.__Partials.BackgroundModal')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main 
         id="app"
         v-scope="OrganizerData()"
@@ -179,7 +179,7 @@
                                     </span>
                                 </span>
                             </span>
-                            @include('__CommonPartials.ProfileStatsModal', [
+                            @include('__CommonPartials.__Profile.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
                                 'propsUserId' => $loggedUserId ?? '0',
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 
@@ -603,7 +603,7 @@
         <br> <br>
         {{-- </form> --}}
     </main>
-    @include('__CommonPartials.Cropper')
+    @include('__CommonPartials.__Profile.Cropper')
 
 </body>
 <script src="{{ asset('/assets/js/organizer/PlayerProfile.js') }}"></script>
