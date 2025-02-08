@@ -315,7 +315,7 @@
 
                                                                 <button v-cloak type="button"
                                                                     v-if="user.logged_follow_status"
-                                                                    class="btn btn-success btn-sm px-3 text-dark rounded-pill mb-1"
+                                                                    class="btn btn-success btn-sm px-3 text-dark rounded-pill "
                                                                     data-action="unfollow" 
                                                                     v-bind:data-role="user.role"
                                                                     v-on:click="followRequest(event)"
@@ -331,9 +331,9 @@
                                                             <div v-cloak v-if="user.logged_block_status" class="d-inline m-0 p-0">
                                                                  <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                                     <button  type="button"
-                                                                        class="btn border-danger btn-sm px-3 text-red me-2 rounded-pill mb-1"
+                                                                        class="btn border-danger btn-sm px-3 text-red me-2 rounded-pill "
                                                                     >
-                                                                        <svg class="me-1 mt-1"
+                                                                        <svg class="me-1 "
                                                                             xmlns="http://www.w3.org/2000/svg" width="13"
                                                                             height="13" viewBox="0 0 24 24" fill="none"
                                                                             stroke="currentColor" stroke-width="2"
@@ -371,7 +371,7 @@
                                                        <li>
 
                                                            <a class="dropdown-item ms-0 py-1" v-bind:href="'/profile/message/?userId=' + user.id">
-                                                               <svg class="me-1 mt-1"
+                                                               <svg class="me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"
@@ -391,7 +391,7 @@
                                                                 v-bind:data-inputs="user.id"
 
                                                            >
-                                                               <svg class="me-1 mt-1"
+                                                               <svg class="me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"
@@ -412,7 +412,7 @@
                                                        >
                                                            <a class="dropdown-item ms-0 text-red report-item py-1 "
                                                                href="#">
-                                                               <svg class="text-red me-1 mt-1"
+                                                               <svg class="text-red me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"
