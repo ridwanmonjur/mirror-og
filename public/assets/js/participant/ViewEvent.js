@@ -143,7 +143,7 @@ document.getElementById('followForm')?.addEventListener('submit', async function
 //     window.Swal.close();
 // }, { once: true });
 
-let previousValues = JSON.parse(document.getElementById('previousValues')?.value);
+let previousValues = JSON.parse(document.getElementById('previousValues')?.value ?? '[]');
 const eventId = document.getElementById('eventId')?.value;
 
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');

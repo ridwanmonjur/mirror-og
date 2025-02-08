@@ -1,10 +1,9 @@
 <html>
 
 <head>
-    <meta name="page-component" content="settings">
     @include('googletagmanager::head')
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/settings.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 @php
@@ -18,7 +17,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main id="app">
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">

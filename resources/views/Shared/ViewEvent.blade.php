@@ -30,7 +30,7 @@
 <body style="background: none; ">
     @include('googletagmanager::body')
 
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
@@ -347,7 +347,8 @@
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
-                <div id="Bracket" class="tabcontent" style="width: 90%;">
+                <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
+                     class="tabcontent" style="width: 90%;">
                     @include('Participant.__Partials.BracketReport')
                 </div>
 

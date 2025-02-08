@@ -20,7 +20,7 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('Participant.__Partials.TeamHead')
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">

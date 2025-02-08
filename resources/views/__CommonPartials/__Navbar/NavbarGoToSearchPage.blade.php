@@ -68,7 +68,7 @@
         </div>
         @endguest
         @auth
-            @include('__CommonPartials.NavbarAuth')
+            @include('__CommonPartials.__Navbar.NavbarAuth')
         @endauth
     </div>
 </nav>
@@ -126,7 +126,7 @@
             @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
                 <a href="{{ url('/participant/team/create/' ) }}" class="py-1">Create a Team</a>
                 <a href="{{ url('/participant/team/list/' ) }}" class="py-1">Team List</a>
-                <a href="{{ url('/participant/request/' ) }}" class="py-1">Team Requests</a>
+                <a href="{{ route('user.notif.view' ) }}" class="py-1">Team Requests</a>
             @endif
             @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
                 <a class="py-1" href="{{ route('event.create') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event</a>

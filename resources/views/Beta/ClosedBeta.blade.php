@@ -3,7 +3,7 @@
 @section('title', 'Driftwood - Community Esports')
 @section('body-class', '')
 @push('styles')
-    <meta name="page-component" value="beta">
+    <meta name="page-component" content="beta">
     <link 
         rel="preload" 
         href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
@@ -16,10 +16,10 @@
 @section('content')
     <header>
           @auth
-            @include('__CommonPartials.NavbarGoToSearchPage')
+            @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
         @endauth
         @guest
-            @include('__CommonPartials.NavbarBeta')
+            @include('__CommonPartials.__Navbar.NavbarBeta')
         @endguest
     </header>
 

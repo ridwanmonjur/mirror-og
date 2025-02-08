@@ -620,8 +620,6 @@ document.addEventListener('DOMContentLoaded', () => {
         DateDividerComponent,
         ReportBlockComponent
     }).mount('#app');
-
-  
 });
 
 

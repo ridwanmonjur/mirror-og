@@ -7,7 +7,7 @@
 
 @section('content')
     <header>
-        @include('__CommonPartials.NavbarBeta')
+        @include('__CommonPartials.__Navbar.NavbarBeta')
     </header>
     <main style="padding: 5vh 10vw ;">
         <br><br>

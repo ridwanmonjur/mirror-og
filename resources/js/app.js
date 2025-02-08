@@ -4,6 +4,8 @@ import * as Popper from '@popperjs/core'
 window.Popper = Popper
 import * as bootstrap from 'bootstrap'
 window.bootstrap = bootstrap;
+import { createApp } from 'petite-vue';
+import { PageNotificationComponent } from './custom/notifications';
 
 const Toast = Swal.mixin({
     toast: true,
@@ -100,12 +102,6 @@ window.loadMessage = () => {
 window.Toast = Toast;
 window.Swal = Swal;
 
-// document.querySelectorAll('.modal').forEach(modal => {
-//     modal.addEventListener('hidden.bs.modal', function() {
-//         document.body.style.paddingRight = '0';
-//     });
-// });
-
 import './libraries/lightgallery';
 import './libraries/lightpicker';
 import './libraries/motion';
@@ -125,8 +121,11 @@ if (pageName ) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Check for page-specific component in meta tag
     
+    createApp({
+        PageNotificationComponent,
+    }).mount('#notif-dropdown');
+
     const colors = [
         '#234B5C',  // Rich navy blue
         '#8B4513',  // Saddle brown

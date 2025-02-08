@@ -15,7 +15,7 @@
 <body>
     @include('googletagmanager::body')
     <main>
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
 
         <div class="text-center" id="step-0" >
             <div class="d-flex align-items-center justify-content-center " >

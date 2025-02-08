@@ -5,7 +5,7 @@
 
         <div>
             <small class="d-block mt-2 ms-2 py-0">
-                Results for Game <span x-text="reportUI.matchNumber+1"></span> pending
+                Results for Game <span v-text="reportUI.matchNumber+1"></span> pending
             </small>
         </div>
     </div>
