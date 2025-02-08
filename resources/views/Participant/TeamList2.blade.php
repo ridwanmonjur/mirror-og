@@ -35,7 +35,6 @@
         </div>
         <form id="newTeamsForm">
             <div>
-                <input type="hidden" id="request_view_route" value="{{ route('participant.request.view') }}">
                 <input type="hidden" id="countServer" value="{{ $count }}">
                 <input type="hidden" id="teamListServer" value="{{ json_encode($teamList) }}">
                 <input type="hidden" id="membersCountServer" value="{{ json_encode($membersCount) }}">

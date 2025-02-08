@@ -72,12 +72,14 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::group(['middleware' => 'check-permission:participant|admin|organizer'], function () {
+    Route::group(['middleware' => 'check-permission:participant|organizer'], function () {
+        // Notifications page
+        Route::get('/notifications', [UserController::class, 'viewNotifications'])->name('user.notif.view');
         Route::post('/media', [ImageVideoController::class, 'upload']);
         // Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
-        Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');
         Route::get('settings', [UserController::class, 'settings'])->name('user.settings.view');
+        Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
 
     });
 });
@@ -100,16 +102,9 @@ Route::group(['prefix' => 'participant'], function () {
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'check-permission:participant|admin'], function () {
-            // Home page
             Route::get('/home', [ParticipantEventController::class, 'home'])->name('participant.home.view');
-
-            // Request page
-            Route::get('/request', [ParticipantController::class, 'viewRequest'])->name('participant.request.view');
-
        
-            // Friends
             Route::post('/friends', [SocialController::class, 'updateFriend'])->name('participant.friends.update');
-            
             Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
 
             // Team management

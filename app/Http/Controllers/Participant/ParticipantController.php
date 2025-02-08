@@ -43,64 +43,7 @@ class ParticipantController extends Controller
         }
     }
 
-    public function viewRequest(Request $request)
-    {
-        $user = $request->attributes->get('user');
-        $user_id = $user->id;
-
-        // pending requests
-        $invitedTeamAndMemberList = Team::join('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->where('team_members.user_id', $user_id)
-            ->where(function ($query) {
-                $query->where([
-                    ['team_members.status', 'pending'],
-                    ['team_members.actor', 'team'],
-                ])->orWhere([
-                    ['team_members.status', 'rejected'],
-                    ['team_members.actor', 'user'],
-                ]);
-            })
-            ->select('teams.*', 'team_members.*')
-            ->get();
-
-        $teamIdList = $invitedTeamAndMemberList->pluck('team_id')->toArray();
-        $membersCount = DB::table('teams')
-            ->leftJoin('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->whereIn('teams.id', $teamIdList)
-            ->where(function ($query) {
-                $query->where([
-                    ['team_members.status', 'pending'],
-                    ['team_members.actor', 'team'],
-                ])->orWhere([
-                    ['team_members.status', 'rejected'],
-                    ['team_members.actor', 'user'],
-                ]);
-            })
-            ->groupBy('teams.id')
-            ->selectRaw('teams.id as team_id, COALESCE(COUNT(team_members.id), 0) as member_count')
-            ->pluck('member_count', 'team_id')
-            ->toArray();
-
-        // sentTeam
-        $pendingTeamAndMemberList = Team::join('team_members', 'teams.id', '=', 'team_members.team_id')
-            ->where('team_members.user_id', $user_id)
-            ->where([
-                ['team_members.status', 'pending'],
-                ['team_members.actor', 'user'],
-            ])
-            ->select('teams.*', 'team_members.*')
-            ->get();
-
-        // invitations
-        $teamMembersList = TeamMember::where('user_id', $user_id)->pluck('team_id')->unique();
-        $invitedEventsList = EventInvitation::whereIn('team_id', $teamMembersList)
-            ->with('event', 'event.tier', 'event.game', 'event.user')
-            ->get();
-
-        // dd($invitedTeamAndMemberList, $membersCount, $pendingTeamAndMemberList, $pendingTeamAndMemberList, $invitedEventsList);
-        return view('Participant.ParticipantRequest', compact('membersCount', 'invitedTeamAndMemberList', 'pendingTeamAndMemberList', 'invitedEventsList'));
-    }
-
+   
     public function viewOwnProfile(Request $request)
     {
         try {

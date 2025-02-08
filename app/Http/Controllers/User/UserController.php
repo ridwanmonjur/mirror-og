@@ -28,7 +28,13 @@ class UserController extends Controller
         $this->settingsService = $settingsService;
     }
 
-    
+    public function viewNotifications(Request $request)
+    {
+        $user = $request->attributes->get('user');
+
+        return view('Shared.Notifications');
+    }
+
 
     public function replaceBackground(BannerUpdateRequest $request)
     {

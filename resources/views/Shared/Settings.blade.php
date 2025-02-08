@@ -1,10 +1,9 @@
 <html>
 
 <head>
-    <meta name="page-component" content="settings">
     @include('googletagmanager::head')
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/settings.js'])
     @include('__CommonPartials.HeadIcon')
 </head>
 @php

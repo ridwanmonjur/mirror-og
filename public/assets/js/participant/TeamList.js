@@ -1,7 +1,3 @@
-function goToScreen() {
-    let url = document.getElementById('request_view_route')?.value;
-    window.location.href = url;
-}
 
 // Elements
 let newTeamsForm = document.getElementById('newTeamsForm');

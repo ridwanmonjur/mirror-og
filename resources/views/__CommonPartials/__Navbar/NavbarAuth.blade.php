@@ -1,14 +1,110 @@
-@if ($user->role == 'PARTICIPANT' )
-        <a href="{{ url('/participant/request/') }}" role="button" class="btn p-0 me-3" 
-            aria-haspopup="true" aria-expanded="true"
+<div  @vue:mounted="init"
+    id="notif-dropdown" 
+    v-scope="PageNotificationComponent()"
+    class="dropdown me-3" data-reference="parent" data-bs-auto-close="outside" >
+    <a href="#" role="button" class="btn d-flex justify-content-start align-items-center m-0 p-0" id="dropNotification" data-bs-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="true"
+    >
+        
+        <img width="42px" height="38px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
+            class="me-2"    style="object-position: center;"
         >
-            <img width="42px" height="38px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
-                 style="object-position: center;"
+        <span>
+                <svg width="6" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 16">
+                    <circle v-if="true" cx="2" cy="2" r="2" v-bind:fill="notificationColors.social"></circle>
+                    <circle v-if="true" cx="2" cy="8" r="2" v-bind:fill="notificationColors.teams"></circle>
+                    <circle v-if="true" cx="2" cy="14" r="2" v-bind:fill="notificationColors.event"></circle>
+                </svg>
+            </span>
+    </a>
+    <div class="dropdown-menu border shadow-lg mx-2 py-2 py-0" style="position: absolute; left: -500px; border-radius: 10px; top: 70px; font-size: 14px; width: 600px;"
+        aria-labelledby="dropNotification"
+            onclick="event.stopPropagation()"
+    >
+        <div class="d-flex mx-4 mt-2 justify-content-between py-1">
+            <h5 class="py-0 my-0">Notifications</h5>
+            <a href="{{ route('user.notif.view') }}" role="button" class="px-2 py-1 btn btn-small bg-secondary text-white fs-7 me-3" 
+                aria-haspopup="true" aria-expanded="true"
             >
-        </a>
-@endif
-<div class="dropdown" data-reference="parent" data-bs-auto-close="outside" data-bs-offset="-80,-80">
-    <a href="#" role="button" class="btn m-0 p-0" id="dropdownMenuLinkSignedIn" data-bs-toggle="dropdown"
+                See all
+            </a>
+            
+        </div>
+        <div     
+        >
+            <div class="tabs w-100 d-block row py-1 mx-2 px-0 " >
+                <button id="SocialBtn" class="tab-button d-inline col-12 col-lg-3 py-1  outer-tab"
+                    v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
+                    style="width: auto;"
+                    v-on:click="changeNotificationTab('social')"    
+                >Social
+                <span v-if="true" class="me-2">
+                    <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                        <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['social']"></circle>
+                    </svg>
+                </span>
+                </button>
+                <button id="TeamsBtn" class="tab-button py-1 col-12 col-lg-3  d-inline  outer-tab"
+                    onclick="showTab(event, 'Teams', 'outer-tab')"
+                    v-on:click="changeNotificationTab('teams')"
+                    v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
+                    style="width: auto;"
+                >
+                    Teams
+                    <span v-if="true" class="me-2">
+                        <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                            <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['teams']"></circle>
+                        </svg>
+                    </span>
+                </button>
+                <button id="EventBtn" class="tab-button py-1  col-12 col-lg-3 d-inline  outer-tab"
+                    v-on:click="changeNotificationTab('event')"   
+                    v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
+                    style="width: auto;"
+                >Event
+                <span v-if="true" class="me-2">
+                    <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                        <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['event']"></circle>
+                    </svg>
+                </span>
+                </button>
+            </div>
+            <div class="mx-2">
+                <div class="notification-list">
+                    <template v-for="notification in notificationList" :key="notification.id">
+                        <div 
+                            class="notification-item cursor-pointer d-flex align-items-center p-3 border-0 "
+                            v-on:click="markNotificationRead(notification.id, notification.link)"
+                        >
+                           
+                            <div class="notification-icon " style="white-space: nowrap;">
+                                <span v-if="!notification.isRead" class="me-2">
+                                    <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                                        <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
+                                    </svg>
+                                </span>
+                                <template v-if="notification.iconType" >
+                                    <span class="me-2" v-html="getIconSvg(notification.iconType)"></span>
+                                </template>
+                                <template v-else-if="notification.imageSrc">
+                                    <img v-bind:src="notification.imageSrc" class="rounded-circle object-fit-cover me-2" width="30"
+                                        height="30" alt="Profile">
+                                </template>
+                            </div>
+                            <div class="notification-content ">
+                                <div  v-html="notification.html"></div>
+                                <small class="text-muted" v-text="formatTime(notification.createdAt)"></small>
+                            </div>
+                        </div>
+                    </template> 
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="dropdown" data-reference="parent" data-bs-auto-close="outside" >
+    <a href="#" role="button" class="btn m-0 p-0" id="dropUser" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         @if($user->userBanner)
             <img
@@ -21,12 +117,12 @@
             </span>
         @endif
     </a>
-    {{-- <a href="#" role="button" class="btn" id="dropdownMenuLinkSignedIn" data-bs-toggle="dropdown"
+    {{-- <a href="#" role="button" class="btn" id="dropUser" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
     </a> --}}
     <div class="dropdown-menu border shadow-lg  py-0" style="position: absolute; left: -200px; border-radius: 10px; top: 70px; font-size: 14px; width: 250px;"
-        aria-labelledby="dropdownMenuLinkSignedIn">
+        aria-labelledby="dropUser">
         <div class="border-secondary border-1 border-bottom text-center mb-0 px-2">
             <a class="py-0" href="{{ route(strtolower($user->role) . '.profile.view') }}">
                 <div class="py-navbar d-flex justify-content-start align-items-center py-2 ps-2">
