@@ -662,7 +662,13 @@ h5 {
     width: min(90vw, 1000px);
     margin: auto;
 }
-
+.event-carousel-styles {
+    display: grid; 
+    justify-content: center;
+    gap: 40px 5%;
+    align-items: center;
+    grid-template-columns: 1fr;
+}
 .tab-button {
     background-color: transparent;
     color: #000;
