@@ -85,11 +85,17 @@
                                                            onerror="this.src='/assets/images/404.png';">
                                                    </a>
                                                    <div class="text-start">
-                                                       <h6 class="card-title mb-1  text-truncate" v-text="user.name">
-                                                       </h6>
-                                                       <p class="card-text mb-0 mt-2" style="color: gray;"
-                                                           v-text="user.email">
-                                                        </p>
+                                                        <template v-if="user.role = 'PARTICIPANT' && user.nickname">
+                                                            <h6 style="width: 30ch;" class="card-title mb-1  text-truncate" v-text="user.nickname">
+                                                            </h6>
+                                                            <p style="width: 30ch;" class="card-text mb-0 mt-2" style="color: gray;"
+                                                                v-text="user.name">
+                                                            </p>
+                                                        </template>
+                                                        <template v-else>
+                                                            <h6 style="width: 30ch;" class="card-title mb-1  text-truncate" v-text="user.name">
+                                                            </h6>
+                                                        </template>
                                                         <div class="mt-2"> 
                                                             <div v-cloak class="p-0 ms-0 my-0 me-2 d-inline-block" v-if="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">
                                                                 <template v-if="user.logged_friendship_status == 'accepted'">

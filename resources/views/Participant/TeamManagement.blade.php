@@ -119,7 +119,7 @@
                 </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster{{ bladePluralPrefix($joinCount) }} member(s).</p>
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster member{{ bladePluralPrefix($joinCount) }}.</p>
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
@@ -137,7 +137,7 @@
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }} member(s).</p>
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }} member{{ bladePluralPrefix($joinCount) }}.</p>
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
