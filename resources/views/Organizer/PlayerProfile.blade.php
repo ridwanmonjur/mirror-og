@@ -37,7 +37,7 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('Organizer.__ProfilePartials.BackgroundModal')
+    @include('Organizer.__Partials.BackgroundModal')
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main 
         id="app"
