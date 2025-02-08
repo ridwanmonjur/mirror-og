@@ -179,57 +179,6 @@ img.fslightbox-source{
     /* Make button visible on hover */
 }
 
-.tabs {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: min(90vw, 1000px);
-    margin: auto;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-.tab-size {
-    width: min(90vw, 1000px);
-    margin: auto;
-}
-
-.tab-button {
-    background-color: transparent;
-    color: #000;
-    padding: 15px 25px;
-    /* Increased padding */
-    border: none;
-    flex-grow: 1;
-    max-width: 300px;
-    min-width: 150px;
-    border-bottom: 2px solid transparent;
-    margin: 0 10px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: border 0.5s linear;
-}
-
-.tab-button:hover, .tab-button-active, .tab-button:active {
-    border-bottom: 2px solid #000;
-}
-
-.tab-button:after {
-    animation: none !important;
-    transition: none !important;
-}
-
-.event-carousel-styles {
-    display: grid; 
-    justify-content: center;
-    gap: 40px 5%;
-    align-items: center;
-    grid-template-columns: 1fr;
-}
-
-
 .carousel-button {
     text-align: center;
     background-color: #1e3744;

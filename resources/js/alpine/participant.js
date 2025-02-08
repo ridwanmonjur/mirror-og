@@ -1,9 +1,7 @@
-import Alpine from "alpinejs";
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
-import Swal from "sweetalert2";
 
 let userData = JSON.parse(document.getElementById('initialUserData')?.value);
 let participantData = JSON.parse(document.getElementById('initialParticipantData')?.value);

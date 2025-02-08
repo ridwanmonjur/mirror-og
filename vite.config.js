@@ -13,7 +13,9 @@ export default defineConfig({
                 'resources/js/alpine/chat.js',
                 'resources/js/alpine/teamhead.js',
                 'resources/js/alpine/organizer.js',
-                'resources/js/alpine/participant.js'
+                'resources/js/alpine/participant.js',
+                'resources/js/alpine/notifications.js'
+
             ],
             refresh: true,
         }),
