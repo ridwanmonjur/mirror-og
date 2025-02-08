@@ -19,7 +19,7 @@
 
 <body>
     @include('googletagmanager::body')
-        @include('__CommonPartials.NavbarGoToSearchPage')
+        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
  
     <main x-data="alpineDataComponent">
         <input type="hidden" id="eventId" value="{{$event->id}}">

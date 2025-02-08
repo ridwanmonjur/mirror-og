@@ -14,7 +14,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         <section class="hero">

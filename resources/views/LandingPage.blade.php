@@ -14,7 +14,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage', ['search' => true ])
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage', ['search' => true ])
 
     <main 
     >

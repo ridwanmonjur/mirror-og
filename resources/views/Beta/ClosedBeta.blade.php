@@ -16,10 +16,10 @@
 @section('content')
     <header>
           @auth
-            @include('__CommonPartials.NavbarGoToSearchPage')
+            @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
         @endauth
         @guest
-            @include('__CommonPartials.NavbarBeta')
+            @include('__CommonPartials.__Navbar.NavbarBeta')
         @endguest
     </header>
 

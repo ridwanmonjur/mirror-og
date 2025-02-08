@@ -44,7 +44,7 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <div
         data-user-profile-id="{{ $userProfile->id }}"
         data-user-profile-birthday="{{ $userProfile->participant->birthday }}"

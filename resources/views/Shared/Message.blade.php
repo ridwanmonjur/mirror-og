@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main>
     <div id="app" class="app-container row">

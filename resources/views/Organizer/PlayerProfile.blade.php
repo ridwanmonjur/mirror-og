@@ -38,7 +38,7 @@
 <body>
     @include('googletagmanager::body')
     @include('Organizer.__ProfilePartials.BackgroundModal')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main 
         id="app"
         v-scope="OrganizerData()"

@@ -76,7 +76,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
 
     <main class="px-2 d-none">
         <input type="hidden" id="currentUrlInput" value="{{ route('event.awards.index', ['id' => $event->id]) }}">

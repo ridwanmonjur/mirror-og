@@ -22,7 +22,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.NavbarGoToSearchPage')
+    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main class="main-background-2 pt-3">
         <br>
         @include('Participant.__CheckoutPartials.CheckoutPaymentOptions')
