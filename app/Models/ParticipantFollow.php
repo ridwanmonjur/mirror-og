@@ -87,11 +87,13 @@ class ParticipantFollow extends Model
             'users.userBanner',
             'users.created_at',
             'users.role',
+            'participants.nickname',
             'participant_follows.participant_follower',
             'participant_follows.participant_followee',
         ];
 
         $followQuery = self::select($select)
+            ->leftJoin('participants', 'participants.user_id', '=', 'users.id')
             ->where('participant_follows.participant_followee', $userId)
             ->join('users', 'participant_follows.participant_follower', '=', 'users.id')
             ->when(trim($search), function($q) use ($search) {
