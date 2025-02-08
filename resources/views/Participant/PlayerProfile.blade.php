@@ -362,7 +362,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @include('__CommonPartials.ProfileStatsModal', [
+                            @include('__CommonPartials.__Profile.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
                                 'propsUserId' => $loggedUserId ?? '0',
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 
@@ -610,6 +610,6 @@
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
     </main>
 </body>
-@include('__CommonPartials.Cropper')
+@include('__CommonPartials.__Profile.Cropper')
 
 </html>
