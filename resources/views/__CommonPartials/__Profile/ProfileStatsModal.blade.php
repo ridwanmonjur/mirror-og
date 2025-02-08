@@ -74,10 +74,10 @@
                                <div class="mt-3 px-0 justify-content-center grid-2-columns mx-auto user-select-none ">
                                    <template v-for="(user, index) in connections" :key="user.id">
 
-                                       <div class=" border border-secondary mx-3 mb-3 pt-3 pb-2 px-3"
+                                       <div class=" border border-secondary mx-3 mb-3 py-3 px-3"
                                            style="border-radius: 20px; padding-top: 10px; padding-bottom: 10px;">
                                            <div class="position-relative">
-                                               <div class="d-flex align-items-start">
+                                               <div class="d-flex align-items-center">
                                                    <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                        <img v-bind:src="'/storage/' + user?.userBanner"
                                                            class="rounded-circle object-fit-cover border border-secondary me-2"
@@ -85,15 +85,15 @@
                                                            onerror="this.src='/assets/images/404.png';">
                                                    </a>
                                                    <div class="text-start">
-                                                        <template v-if="user.role = 'PARTICIPANT' && user.nickname">
-                                                            <h6 style="width: 30ch;" class="card-title mb-1  text-truncate" v-text="user.nickname">
+                                                        <template v-if="user.role == 'PARTICIPANT' && user.nickname">
+                                                            <h6 style="width: 75%;" class="card-title mb-1  text-truncate" v-text="user.nickname">
                                                             </h6>
-                                                            <p style="width: 30ch;" class="card-text mb-0 mt-2" style="color: gray;"
+                                                            <p style="width: 75%;" class="card-text mb-0 mt-2" style="color: gray;"
                                                                 v-text="user.name">
                                                             </p>
                                                         </template>
                                                         <template v-else>
-                                                            <h6 style="width: 30ch;" class="card-title mb-1  text-truncate" v-text="user.name">
+                                                            <h6 style="width: 75%;" class="card-title mb-3  text-truncate" v-text="user.name">
                                                             </h6>
                                                         </template>
                                                         <div class="mt-2"> 
