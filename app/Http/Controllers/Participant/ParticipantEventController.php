@@ -416,7 +416,7 @@ class ParticipantEventController extends Controller
                     $joinEvent->save();
                 }
             } else {
-                return back()->with('errorMessage', 'Error operation not permitted.')
+                return back()->with('errorMessage', 'This cancel operation is not permitted at this stage.')
                     ->with('scroll', $request->join_event_id) ;
             }
 

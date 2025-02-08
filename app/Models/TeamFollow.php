@@ -37,10 +37,16 @@ class TeamFollow extends Model
             'users.userBanner',
             'users.created_at',
             'users.role',
+            'participants.nickname as nickname',
         ];
 
         $teamQuery = self::select($select)->where('team_follows.team_id', $teamId)
             ->join('users', 'team_follows.user_id', '=', 'users.id')
+            ->leftJoin('participants', function($join) {
+                $join->on('participants.user_id', '=', 'users.id')
+                     ->where('users.role', '=', 'PARTICIPANT');
+            })
+
             ->when(trim($search), function ($q) use ($search) {
                 $q->where('users.name', 'LIKE', "%" . trim($search) . "%");
             });

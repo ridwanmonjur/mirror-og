@@ -89,7 +89,7 @@
             @else
             {{-- IS REDURECT CHANGE--}}
            
-            <div class="event-carousel-styles  px-5">
+            <div class="row mx-5 px-5">
                 @foreach ($joinEvents as $joinEvent)
                        
                     @include('Participant.__Partials.RosterViewRegister')

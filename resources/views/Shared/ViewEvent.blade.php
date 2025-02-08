@@ -5,11 +5,10 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="page-component" content="bracket">
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
     @include('__CommonPartials.HeadIcon')
-    @vite([ 'resources/sass/app.scss', 'resources/js/app.js'])
+    @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
 </head>
 
 @php

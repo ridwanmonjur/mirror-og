@@ -402,7 +402,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                 </div>
                             </div>
                             <div class="text-center">
-                                <h3 class="team-name" id="team-name">${team?.teamName}</h3>
+                                <h6 style="width: 15ch;" class="team-name text-truncate " id="team-name">${team?.teamName}</h6>
                                 <span> Region: ${team?.country_name ? team?.country_name: '-'} </span>  <br>
                                 <br>
                                 <span> Members:
