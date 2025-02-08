@@ -27,6 +27,7 @@
         @vite(['resources/sass/betaapp.scss', 'resources/js/betaapp.js'])    
     @endguest
     @auth
+        @vite(['resources/sass/betaapp.scss'])    
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     @endauth
     <title>@yield('title', 'Driftwood')</title>
