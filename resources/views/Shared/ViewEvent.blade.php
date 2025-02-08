@@ -341,17 +341,17 @@
                         onclick="openTab(event, 'Result', 'current-positions'); ">Result</button>
                 </div>
                 <br>
-                <div id="Overview" class="tabcontent" style="display: block; width: 90%;">
+                <div id="Overview" class="tabcontent" style="display: block; ;">
                     <h5><u>About this event</u></h5>
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
                 <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
-                     class="tabcontent" style="width: 90%;">
+                     class="tabcontent" style=";">
                     @include('Participant.__Partials.BracketReport')
                 </div>
 
-                <div id="Teams" class="tabcontent" style="width: 90%;">
+                <div id="Teams" class="tabcontent" style=";">
                     <h5 class="my-0"><u>Teams</u></h5>
                     <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
@@ -468,7 +468,7 @@
                         }
                     }
                 @endphp
-                <div id="Result" class="tabcontent" style="width: 90%;">
+                <div id="Result" class="tabcontent" style=";">
                     <h5 class="mb-3"><u>Result</u></h5>
                     <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
                         <div class="card border-0 py-0 my-0 mx-auto" style="background: none;">

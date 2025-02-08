@@ -337,6 +337,7 @@ input[type="submit"]:active {
     display: none;
     padding: 15px 10px;
     border-top: none;
+    width: 100%;
 }
 
 .image-at-top {
@@ -347,6 +348,12 @@ input[type="submit"]:active {
 }
 
 @media screen and (min-width: 992px) {
+    .tabcontent {
+        display: none;
+        padding: 15px 10px;
+        border-top: none;
+        width: 90%;
+    }
 
     img.fslightbox-source{
         aspect-ratio: 12/3 !important;
