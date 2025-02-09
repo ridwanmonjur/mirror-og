@@ -339,8 +339,8 @@ async function fetchMembers(event = null) {
                     <div class="col-1 col-lg-1 d-flex align-items-center gap-3">
                        
                         <a 
-                        class="text-decoration-none text-body-secondary cursor-pointer">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        class="text-decoration-none border btn btn-sm gear-icon-btn border-secondary rounded-circle text-body-secondary cursor-pointer">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" />

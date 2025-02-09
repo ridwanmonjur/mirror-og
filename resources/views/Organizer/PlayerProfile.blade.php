@@ -320,7 +320,6 @@
                 <p class="tab-size">
                     This profile has no active events
                 </p>
-                <br><br><br>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
@@ -346,7 +345,6 @@
                     @endforeach
                 </div>
             @endif
-            <br><br>
 
         </div>
         <div class="grid-2-columns tab-size">

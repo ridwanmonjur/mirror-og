@@ -17,15 +17,18 @@
 }
 
 .back-next button {
-    position: absolute;
+    position: static;
 }
 
 .back-next button:nth-child(1) {
     left: 5vw;
+    margin-right: 10px;
 }
 
 .back-next button:nth-child(2) {
     right: 5vw;
+    margin-left: 10px;
+
 }
 
 /* Add this CSS to your existing stylesheet */
@@ -431,8 +434,8 @@ input[type="time"] {
 
 .back-next button {
     width: 200px;
-    position: absolute;
-    padding: 10px 45px;
+    position: static;
+    padding: 10px 20px;
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -1282,10 +1285,7 @@ input[type="submit"]:active {
     margin: auto;
 }
 
-.box-width {
-    margin: auto !important;
-    max-width: 80vw !important;
-}
+
 
 .flexbox {
     display: flex;

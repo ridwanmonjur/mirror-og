@@ -101,6 +101,7 @@ body {
     overflow-y: scroll !important;
     overflow-x: hidden !important; /* Move overflow here instead */
     padding-right: 0 !important; /* Prevent Bootstrap modal padding */
+    padding-left: 0 !important;
 }
 
 /* Handle both SweetAlert2 and Bootstrap modal */

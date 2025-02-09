@@ -142,6 +142,11 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
             const buttonRole = button.dataset.role ;
             const inputId = button.dataset.inputs ;
 
+            if (loggedUserRole == "ORGANIZER") {
+                window.toastError("An organizer cannot follow anyone!");
+                return;
+            }
+
             if (inputId == loggedUserId) {
                 window.toastError("Cannot follow yourself");
                 return;
