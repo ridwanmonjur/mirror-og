@@ -347,11 +347,11 @@
                 </div>
 
                 <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
-                     class="tabcontent" style=";">
+                     class="tabcontent" >
                     @include('Participant.__Partials.BracketReport')
                 </div>
 
-                <div id="Teams" class="tabcontent" style=";">
+                <div id="Teams" class="tabcontent" >
                     <h5 class="my-0"><u>Teams</u></h5>
                     <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
@@ -387,12 +387,12 @@
                                                     </div>
                                                     <div class="col-2 ">
                                                         <a href="{{ route('public.team.view', ['id' => $team->id]) }}" 
-                                                            class="btn btn-link position-relative " 
+                                                            class="btn btn-link position-relative border border-secondary rounded-circle btn-sm gear-icon-btn " 
                                                             style="z-index: 3;"
                                                         >
-                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
-                                                                <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
+                                                                <path d="M9 6L15 12L9 18" stroke="gray" stroke-width="2"
                                                                     stroke-linecap="round" stroke-linejoin="round" />
                                                             </svg>
                                                         </a>
@@ -468,7 +468,7 @@
                         }
                     }
                 @endphp
-                <div id="Result" class="tabcontent" style=";">
+                <div id="Result" class="tabcontent" >
                     <h5 class="mb-3"><u>Result</u></h5>
                     <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
                         <div class="card border-0 py-0 my-0 mx-auto" style="background: none;">

@@ -17,11 +17,11 @@
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
-        <section class="hero">
+        <section class="hero d-none d-lg-block">
             <img src="{{ asset('/assets/images/events/homepage new header.png') }}" alt="">
         </section>
 
-        <div class="text__middle ">
+        <div class="text__middle d-none d-lg-block">
             <p class="head">We've got events happening...</p>
         </div>
 

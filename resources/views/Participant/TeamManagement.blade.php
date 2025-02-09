@@ -151,7 +151,6 @@
     </main>
                 
 
-    {{-- <script src="{{ asset('/assets/js/participant/TeamManagement.js') }}"></script> --}}
     <script src="{{ asset('/assets/js/participant/TeamManagementMemberView.js') }}"></script>
   
 </body>

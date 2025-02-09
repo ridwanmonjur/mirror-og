@@ -5,7 +5,7 @@
     {{$propsIsUserSame}},
     '{{$propsRole}}',
     '{{$propsUserRole}}'
-   )" id="connectionModal" class="modal w-100 fade" tabindex="-1" aria-labelledby="connectionModalLabel"
+   )" id="connectionModal" style="width: 90%;" class="modal  fade" tabindex="-1" aria-labelledby="connectionModalLabel"
        aria-hidden="true" @vue:mounted="init"
     >
        <div class="modal-dialog modal-xl" style="top: 5vh; color: black;">
@@ -16,8 +16,8 @@
                        <h5 class="ms-3 my-3"
                            v-text="currentTab.charAt(0).toUpperCase() + currentTab.slice(1).toLowerCase()"></h5>
                    </div>
-                   <div class="d-flex user-select-none justify-content-between flex-wrap mt-2 mb-3">
-                       <button class="btn btn-link py-0" data-bs-dismiss="modal" aria-label="Close">
+                   <div class="row user-select-none px-0 mx-0 mt-2 mb-3">
+                       <button class="text-start col-lg-3 col-12 mx-0 btn btn-link py-0" data-bs-dismiss="modal" aria-label="Close">
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                class="bi bi-chevron-left" viewBox="0 0 16 16">
                                <path fill-rule="evenodd"
@@ -25,7 +25,7 @@
                            </svg>
                        </button>
                        <template v-if="role === 'PARTICIPANT'">
-                           <ul class="nav " id="connectionTabs" role="tablist">
+                           <ul class="col-12 col-lg-5 px-0 mx-0" id="connectionTabs" role="tablist">
                                <li :class="{ 'btn nav-item user-select-none ms-0 px-3 py-2 ': true, ' text-primary ': currentTab == 'followers' }"
                                    role="presentation" id="followers-tab" data-bs-toggle="tab"
                                    data-bs-target="#followers" type="button" role="tab"
@@ -46,7 +46,7 @@
                                </li>
                            </ul>
                        </template>
-                       <div>
+                       <div class="col-12 col-lg-4">
                            <div class="input-group position-relative border border-primary">
                                <span class="input-group-text border border-end-0 bg-white">
                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -56,7 +56,7 @@
                                    </svg>
                                </span>
                                <input id="search-connections" @input.debounce="loadSearch" type="search"
-                                   class=" form-control ps-2 border-start-0 ps-0 pe-4" placeholder="Search..."
+                                   class=" form-control ps-2 border-start-0 ps-0 " placeholder="Search..."
                                    aria-label="Search">
                            </div>
                        </div>
@@ -315,7 +315,7 @@
 
                                                                 <button v-cloak type="button"
                                                                     v-if="user.logged_follow_status"
-                                                                    class="btn btn-success btn-sm px-3 text-dark rounded-pill mb-1"
+                                                                    class="btn btn-success btn-sm px-3 text-dark rounded-pill "
                                                                     data-action="unfollow" 
                                                                     v-bind:data-role="user.role"
                                                                     v-on:click="followRequest(event)"
@@ -331,9 +331,9 @@
                                                             <div v-cloak v-if="user.logged_block_status" class="d-inline m-0 p-0">
                                                                  <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                                     <button  type="button"
-                                                                        class="btn border-danger btn-sm px-3 text-red me-2 rounded-pill mb-1"
+                                                                        class="btn border-danger btn-sm px-3 text-red me-2 rounded-pill "
                                                                     >
-                                                                        <svg class="me-1 mt-1"
+                                                                        <svg class="me-1 "
                                                                             xmlns="http://www.w3.org/2000/svg" width="13"
                                                                             height="13" viewBox="0 0 24 24" fill="none"
                                                                             stroke="currentColor" stroke-width="2"
@@ -371,7 +371,7 @@
                                                        <li>
 
                                                            <a class="dropdown-item ms-0 py-1" v-bind:href="'/profile/message/?userId=' + user.id">
-                                                               <svg class="me-1 mt-1"
+                                                               <svg class="me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"
@@ -391,7 +391,7 @@
                                                                 v-bind:data-inputs="user.id"
 
                                                            >
-                                                               <svg class="me-1 mt-1"
+                                                               <svg class="me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"
@@ -412,7 +412,7 @@
                                                        >
                                                            <a class="dropdown-item ms-0 text-red report-item py-1 "
                                                                href="#">
-                                                               <svg class="text-red me-1 mt-1"
+                                                               <svg class="text-red me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"
                                                                    stroke="currentColor" stroke-width="2"

@@ -371,7 +371,6 @@ function saveEvent(willGoToNextPage = true) {
 
 function goToNextScreen(nextId, nextTimeline) {
 
-    document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
 
     const allIDs = [
         'step-0',
@@ -429,4 +428,7 @@ function goToNextScreen(nextId, nextTimeline) {
             box.classList.add('rounded-box-thickness');
         }
     }
+
+    document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
+
 }
