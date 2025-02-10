@@ -20,7 +20,7 @@
                     </li>
                 </ul>
             @else
-                <ul class="achievement-list">
+                <ul class="achievement-list z-99">
                     <li>
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-trophy" viewBox="0 0 16 16">

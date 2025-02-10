@@ -63,9 +63,9 @@ img.fslightbox-source{
 }
 
 .main1 {
-    min-height: fit-content;
+    height: fit-content;
     display: block !important;
-    padding: 0px 10px;
+    padding: 0px 0px 10px;
     align-items: center;
     justify-content: center;
     background-color: #dfe1e2;

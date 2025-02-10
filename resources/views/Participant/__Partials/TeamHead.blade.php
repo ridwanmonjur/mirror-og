@@ -87,7 +87,7 @@
         <div class="team-section position-relative"
             {{-- x-data="alpineDataComponent" --}}
         >
-            <div  v-cloak class="position-relative position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
+            <div  v-cloak class="position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
                 <form method="POST" action="{{ route('participant.team.follow', ['id'=> $selectTeam->id]) }}">
                     @csrf
                     <button

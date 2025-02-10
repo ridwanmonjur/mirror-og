@@ -39,7 +39,7 @@
 
         <div class="tab-content pb-4 outer-tab" id="Overview">
             <div class="d-none d-lg-block"><br><br></div>
-            <div class="d-flex justify-content-center"><b>Recent Events</b></div>
+            <div class="tab-size d-none d-lg-flex "><b>Recent Events</b></div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
@@ -81,11 +81,11 @@
                         >
                             <div class="col-12 col-xl-4"> 
                                 <h3 class="py-0 my-0"> {{ $totalEventsCount }} </h3>
-                                <p class="mx-2 py-2 my-0"> Events Joined By Team </p>
+                                <p class="mx-2 py-2 my-0"> Event{{ bladePluralPrefix($totalEventsCount) }} Joined By Team </p>
                             </div>
                             <div class="col-12 col-xl-4"> 
                                 <h3 class="py-0 my-0"> {{$wins}} </h3>
-                                <p class="mx-2 py-2 my-0"> Tournament Wins By Team </p>
+                                <p class="mx-2 py-2 my-0"> Tournament Win{{ bladePluralPrefix($wins) }} By Team </p>
                             </div>
                             <div class="col-12 col-xl-4"> 
                                 <h3 class="py-0 my-0"> {{$streak}} </h3>

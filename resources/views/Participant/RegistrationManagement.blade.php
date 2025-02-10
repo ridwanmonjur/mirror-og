@@ -13,12 +13,10 @@
     @include('__CommonPartials.HeadIcon')
 </head>
 <body
-    @style(["min-height: 100vh;" => $isRedirect])
 >
         @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main 
-        @style(["height: 95vh" => $isRedirect])
         class="main2"
     >
 
@@ -56,22 +54,8 @@
         </div>
     </div>
 
-    @if ($isRedirect)
-        <form method="POST" action="{{ route('participant.memberManage.action') }}">
-            @csrf
-            <input type="hidden" value="{{$eventId}}" name="eventId">
-            <input type="hidden" value="{{$selectTeam->id}}" name="teamId">
-            <input id="manageMemberButton" type="submit" class="d-none" value="Done">
-            </div>
-        </form>
-        <a class="d-none" id="manageRegistrationUrl" href="{{route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $eventId ] ) }}"> </a>
-        <a class="d-none" id="eventUrl" href="{{route('participant.event.view', ['id' => $eventId ] ) }}"> </a>
-        @include('Participant.__Partials.TeamHead', ['isCompactView' => true ]) 
-        <br><br>
-
-    @else
+   
         @include('Participant.__Partials.TeamHead') 
-    @endif
         <div id="Overview">
             <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
                 @if (session('successMessage'))
@@ -80,9 +64,6 @@
                     <div class="text-red text-center">{{session('errorMessage')}}</div>
                 @endif
             </div>
-            @if (!$isRedirect)
-                <div class="tab-size mt-3"><b>Outstanding Registrations</b></div><br> <br>
-            @endif
             
             @if (!isset($joinEvents[0]))
                 <p class="tab-size text-start mx-auto ">No events available</p>
@@ -99,7 +80,6 @@
             {{-- IS REDURECT CHANGE--}}
             @endif
         </div>
-        @if (!$isRedirect)
             <div id="Invitation">
                 <br><br>
                 <div class="tab-size"><b>Event Invitations</b></div>
@@ -117,11 +97,7 @@
                     @endif
                 <br> <br>
             </div>
-        @endif
-        @if ($isRedirect)
-        @else 
             <br><br><br><br><br><br>
-        @endif
         
         <script src="{{ asset('assets/js/participant/RegistrationManagement.js') }}"></script>
 

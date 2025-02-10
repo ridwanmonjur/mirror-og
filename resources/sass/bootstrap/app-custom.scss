@@ -557,10 +557,16 @@ button:after {
     display: none;
     opacity: 0;
   }
+
+  .position-lg-absolute {
+    position: relative;
+}
   
 
 @media screen and (min-width: 1000px) {
-
+    .position-lg-absolute {
+        position: absolute;
+    }
     .navbar { 
         padding-top: 4px;
         padding-bottom: 4px;

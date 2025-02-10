@@ -177,8 +177,10 @@ function PageNotificationComponent () {
         
         async markNotificationRead(id, link) {
             await notificationStore.markNotificationRead(id);
-            window.open(link, '_blank');
-        },
+            window.open(
+                link,
+                '_blank',
+              );        },
         async changeNotificationTab(tabName) {
             try {
                 tabStore.changeNotificationTab(tabName);
