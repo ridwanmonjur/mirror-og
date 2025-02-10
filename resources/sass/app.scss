@@ -129,10 +129,7 @@ table.responsive td img {
 }
 
 @media screen and (max-width: 1000px) {
-  .position-lg-absolute {
-    position: static;
-  }
-
+  
   table.responsive {
     border: 0;
   }
@@ -238,23 +235,6 @@ button:hover {
   scale: 1.05;
 }
 
-button:after {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border-radius: 200px;
-  background-image: radial-gradient(circle, #000 10%, transparent 10.01%);
-  background-repeat: no-repeat;
-  background-position: 50%;
-  transform: scale(10, 10);
-  opacity: 0;
-  transition: transform .5s, opacity 1s
-}
-
 u {
   font-weight: 600 !important;
   text-decoration: none !important;
@@ -276,9 +256,6 @@ tr .colored-cell {
 
 }
 
-.position-lg-absolute {
-  position: absolute;
-}
 
 
 .rounded-circle2{

@@ -90,7 +90,6 @@ input[type="submit"],
     justify-content: space-between;
     text-decoration: underline;
     width: 100%;
-    max-width: ;
 }
 
 .flexbox-centered-space {
@@ -125,6 +124,7 @@ input[type="submit"]:active {
     border-radius: 30px 30px;
     border-width: 3px;
     border-style: solid;
+    height: min-content;
     /* #8CCD39 */
     margin: auto;
     width: min(320px, 80vw);
@@ -224,6 +224,10 @@ input[type="submit"]:active {
         padding: 5% 10% 10% 10%;
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .rounded-box {
+        height: 550px;
+    }
 }
 
 
@@ -273,7 +277,7 @@ input[type="submit"]:active {
 
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1400px) {
   
 
     main {

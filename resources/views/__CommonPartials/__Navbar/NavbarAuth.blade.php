@@ -8,6 +8,8 @@
         
         <img width="42px" height="38px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
             class="me-2"    style="object-position: center;"
+            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
+
         >
         <span>
                 <svg width="6" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 16">
@@ -88,7 +90,9 @@
                                 </template>
                                 <template v-else-if="notification.imageSrc">
                                     <img v-bind:src="notification.imageSrc" class="rounded-circle object-fit-cover me-2" width="30"
-                                        height="30" alt="Profile">
+                                        height="30" alt="Profile"
+                                        onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
+                                    >
                                 </template>
                             </div>
                             <div class="notification-content ">
@@ -109,6 +113,7 @@
         @if($user->userBanner)
             <img
                 class="object-fit-cover rounded-circle me-2 border border-primary" 
+                onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                 src="{{ bladeImageNull($user->userBanner)}}" width="38" height="38">
         @else 
             <span style="display: inline-block; height: 38px; width: 38px;"
@@ -117,10 +122,7 @@
             </span>
         @endif
     </a>
-    {{-- <a href="#" role="button" class="btn" id="dropUser" data-bs-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="true">
-        <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-    </a> --}}
+   
     <div class="dropdown-menu border shadow-lg  py-0" style="position: absolute; left: -200px; border-radius: 10px; top: 70px; font-size: 14px; width: 250px;"
         aria-labelledby="dropUser">
         <div class="border-secondary border-1 border-bottom text-center mb-0 px-2">
@@ -128,6 +130,7 @@
                 <div class="py-navbar d-flex justify-content-start align-items-center py-2 ps-2">
                     @if ($user->userBanner)
                         <img class="object-fit-cover rounded-circle me-2 border border-primary"
+                            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                             src="{{bladeImageNull($user->userBanner)}}" width="45" height="45">
                     @else
                         <span style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"

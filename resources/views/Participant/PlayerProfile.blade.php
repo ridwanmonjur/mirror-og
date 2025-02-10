@@ -386,10 +386,11 @@
         </div>
         
         <div class="tab-content pb-4  outer-tab" id="Overview">
-            <br><br>
-            <div class="d-flex justify-content-center"><b>Recent Events</b></div>
-            <br> <br>
-            <div class="position-relative d-flex justify-content-center">
+            <div class="d-none d-lg-block"><br><br></div>
+            
+            <div class="d-flex d-none d-lg-flex  justify-content-center"><b>Recent Events</b></div>
+            <div class="d-none d-lg-block"><br><br></div>
+            <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
@@ -547,11 +548,7 @@
                     @endforeach
                 </div>
             @else
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center py-5">
-                        <p class="mb-0">No current teams</p>
-                    </div>
-                </div>
+                <div class="tab-size">No current teams</div>
             @endif
             </div>
             <br> 

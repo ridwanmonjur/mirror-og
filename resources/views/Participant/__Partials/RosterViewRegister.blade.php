@@ -56,12 +56,8 @@
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
                 >
             <div class="pt-3 mt-2 position-absolute custom-scrollbar w-100" 
-                style="
-                    top: 0px; 
-                    overflow-y: auto; 
-                    overflow-x: hidden;
-                    height: 250px;
-                ">
+                id="eventView"
+                >
 
                
                     <div class="row d-flex justify-content-center" >

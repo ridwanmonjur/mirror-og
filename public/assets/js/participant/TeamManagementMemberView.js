@@ -308,7 +308,10 @@ async function fetchMembers(event = null) {
     
     for (member of filteredSortedMembers) {
         bodyHtml+=`
-        <div class="card border-2 mb-2 bg-white hover-shadow-sm position-relative">
+        <div class="card border-2 mb-2 bg-white hover-shadow-sm position-relative"
+        onmouseover="this.style.transform='translateY(-2px)'" 
+        onmouseout="this.style.transform='translateY(0)'"
+        >
             <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}');" >
                 <div class="row align-items-center">
                     <div class="col-11 col-lg-11 d-flex align-items-center gap-3">

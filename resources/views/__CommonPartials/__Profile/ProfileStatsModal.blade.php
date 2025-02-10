@@ -5,7 +5,7 @@
     {{$propsIsUserSame}},
     '{{$propsRole}}',
     '{{$propsUserRole}}'
-   )" id="connectionModal" style="width: 90%;" class="modal  fade" tabindex="-1" aria-labelledby="connectionModalLabel"
+   )" id="connectionModal"  class="modal  fade" tabindex="-1" aria-labelledby="connectionModalLabel"
        aria-hidden="true" @vue:mounted="init"
     >
        <div class="modal-dialog modal-xl" style="top: 5vh; color: black;">

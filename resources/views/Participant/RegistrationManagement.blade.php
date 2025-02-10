@@ -104,7 +104,7 @@
                 <br><br>
                 <div class="tab-size"><b>Event Invitations</b></div>
                 <br> <br>
-                <div class="position-relative d-flex justify-content-center">
+                <div class="position-relative d-none d-lg-flex justify-content-center">
                     @if (!isset($invitedEvents[0]))
                         <p class="tab-size text-start mx-auto">No events available</p>
                     @else
