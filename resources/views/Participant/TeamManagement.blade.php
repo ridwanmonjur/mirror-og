@@ -38,10 +38,10 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab" id="Overview">
-            <br><br>
+            <div class="d-none d-lg-block"><br><br></div>
             <div class="d-flex justify-content-center"><b>Recent Events</b></div>
-            <br> <br>
-            <div class="position-relative d-flex justify-content-center">
+            <div class="d-none d-lg-block"><br><br></div>
+            <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
@@ -53,7 +53,7 @@
                     </button>
                     <button @class(["carousel-button position-absolute ",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="right: 10px;"
+                    ]) style="right: 20px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>

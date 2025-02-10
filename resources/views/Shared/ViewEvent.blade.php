@@ -476,7 +476,10 @@
                                 <div class="d-flex flex-column gap-3">
                                     @foreach ($joinEventAndTeamList as $joinEventAndTeam)
                                         <div class="card border-2 bg-white hover-shadow-sm position-relative">
-                                            <div class="card-body">
+                                            <div class="card-body"
+                                                onmouseover="this.style.transform='translateY(-2px)'" 
+                                            onmouseout="this.style.transform='translateY(0)'"
+                                            >
                                                 <div class="row align-items-center">
                                                     <div class="col-12 col-lg-10 my-1 d-flex align-items-center gap-3">
                                                         <div class="position-relative">
@@ -505,7 +508,9 @@
                                                                 {{ bladeOrdinalPrefix($joinEventAndTeam->position) }}
                                                             </div>
                                                         @else
-                                                            <span class="text-body-secondary small">TBD</span>
+                                                             <div class="d-flex align-items-center text-body-secondary small">
+                                                                <span class="me-1">{!! getMedalSvg($joinEventAndTeam->position) !!}</span>
+                                                            </div>
                                                         @endif
  
                                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"

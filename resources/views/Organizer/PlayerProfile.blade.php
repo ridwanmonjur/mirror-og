@@ -279,10 +279,10 @@
                     <p class="mx-2"> Total Prize Pool Across All Time </p>
                 </div>
             </div>
-            <br><br>
-            <div class="tab-size"><b>Recent Events</b></div>
-            <br> <br>
-            <div class="position-relative d-flex justify-content-center carousel-works">
+           <div class="d-none d-lg-block"><br><br></div>
+            <div class="tab-size d-none d-lg-flex "><b>Recent Events</b></div>
+            <div class="d-none d-lg-block"><br><br></div>
+            <div class="position-relative d-none d-lg-flex justify-content-center carousel-works">
                 @if (!isset($joinEvents[0]))
                     <p>No events available!</p>
                 @else
@@ -294,7 +294,7 @@
                     </button>
                     <button @class(["carousel-button position-absolute",
                        "carousel-button-disabled"  => empty($joinEvents[2])
-                    ]) style="right: 10px;"
+                    ]) style="right: 20px;"
                         onclick="carouselWork(2)">
                         &gt;
                     </button>

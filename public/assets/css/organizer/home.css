@@ -255,15 +255,23 @@ footer {
     bottom: 160px;
 }
 
+.clickable-box {
+    width: 330px;
+}
+
 .nav__items {
     padding: 20px;
 }
 
-@media ( max-width: 1200px) {
+@media ( max-width: 992px) {
     .featured-events .event_head,
     .event_1 .event_head,
     .event_2 .event_head {
         display: none;
+    }
+
+    .clickable-box {
+        width: 300px !important;
     }
 
     main {

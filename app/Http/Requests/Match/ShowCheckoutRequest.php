@@ -89,7 +89,7 @@ class ShowCheckoutRequest extends FormRequest
         if ($this->amount < $paymentOptionLower) {
             $validator->errors()->add(
                 'amount',
-                "If you don't pay full amount, you have to pay higher than RM $paymentOptionLower."
+                "You have tried to pay RM $this->amount. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower."
             );
 
             return;
@@ -105,7 +105,7 @@ class ShowCheckoutRequest extends FormRequest
             $minimum = ($total - $participantPaymentSum) - $paymentOptionLower ;
             $validator->errors()->add(
                 'amount',
-                "If you don't pay full amount, you have to pay higher than RM $paymentOptionLower and lower than RM $minimum."
+                "You have tried to pay RM $this->amount. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower and lower than RM $minimum."
             );
 
             return;

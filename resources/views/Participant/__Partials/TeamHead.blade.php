@@ -87,7 +87,7 @@
         <div class="team-section position-relative"
             {{-- x-data="alpineDataComponent" --}}
         >
-            <div  v-cloak class="position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
+            <div  v-cloak class="position-relative position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
                 <form method="POST" action="{{ route('participant.team.follow', ['id'=> $selectTeam->id]) }}">
                     @csrf
                     <button
@@ -291,16 +291,16 @@
                 @endauth
                 @if ($role == "PARTICIPANT")
                     @if (is_null($status))
-                        <form  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                        <form  v-if="!isEditMode"  class="d-block d-lg-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                             @csrf()
                             <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="submit">
                                 <span> Join Team </span>
                             </button>
                         </form>
                     @elseif ($status == "pending_me")
-                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
                             <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="button">
-                                <span> Requested, wait please... </span>
+                                <span> Requested </span>
                             </button>
                             <button class="gear-icon-btn mt-0 ms-1"
                                 onclick="withdrawInviteMember({{ $teamMember->id }})">
@@ -316,7 +316,7 @@
                         {{-- <span   v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
 
                     @elseif ($status == "pending_team" )
-                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
                             <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn btn-success bg-white btn-sm btn-link me-1" type="button">
                                 <span class="text-success"> Yes, join team </span>
                             </button>
@@ -326,7 +326,7 @@
                         </div>
                         {{-- <span   v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
                     @elseif ($status == "rejected_me" )
-                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
                             <button
                                 class="me-2 btn btn-sm text-red bg-white py-1 px-2"
                                 style="border: 1px solid red; pointer-events: none;"
@@ -342,7 +342,7 @@
                             </button>
                         </div>
                     @elseif ($status == "rejected_team" )
-                        <div  v-if="!isEditMode"  class="d-inline-block pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
                             <button
                                 disabled
                                 style="pointer-events: none; border: none;"
