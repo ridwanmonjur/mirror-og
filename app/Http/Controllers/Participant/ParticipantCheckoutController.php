@@ -46,26 +46,23 @@ class ParticipantCheckoutController extends Controller
             ]);
             
             $discountStatusEnums = config("constants.DISCOUNT_STATUS");
-            $discountStatus = is_null($discount_wallet) || $discount_wallet?->amount < 0 ? $discountStatusEnums['ABSENT']:  $discountStatusEnums['COMPLETE'];
+            $discountStatus = (is_null($discount_wallet) || $discount_wallet?->amount < 0) ? $discountStatusEnums['ABSENT']:  $discountStatusEnums['COMPLETE'];
             $payment_amount_min = $pendingAfterDiscount = 0.0;
-
             if ($discountStatus != $discountStatusEnums['ABSENT']) {
                 $payment_amount_min = $request->amount;
-                if ($discount_wallet < $request->amount) {
+                if ($discount_wallet->amount < $request->amount) {
                     $payment_amount_min = min(
-                        $discount_wallet->amount
+                        $discount_wallet->amount,
                         ($request->total - $request->participantPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
                     );
 
                     $discountStatus = $discountStatusEnums['PARTIAL'];
                     $pendingAfterDiscount = $request->total - ($request->participantPaymentSum + $payment_amount_min); 
-
                     if ($pendingAfterDiscount < config("constants.STRIPE.MINIMUM_RM") ) {
                         $discountStatus = $discountStatusEnums['INVALID'];
                     }
                 }
             }
-
 
             return view('Participant.CheckoutEvent', [
                 'teamId' => $request->teamId,
