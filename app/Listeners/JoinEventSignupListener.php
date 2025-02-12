@@ -32,8 +32,8 @@ class JoinEventSignupListener implements ShouldQueue
     public function handle(JoinEventSignuped $event): void
     {
         ActivityLogs::insert($event->allEventLogs);
-        Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
-        Notification::send($event->organizerList, new EventJoinNotification($event->organizerNotification));
+        // Notification::send($event->memberList, new EventJoinNotification($event->memberNotification));
+        // Notification::send($event->organizerList, new EventJoinNotification($event->organizerNotification));
     }
 
     public function failed(): void

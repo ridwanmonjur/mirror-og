@@ -1,7 +1,9 @@
-<div  @vue:mounted="init"
+<div 
     id="notif-dropdown" 
     v-scope="PageNotificationComponent()"
-    class="dropdown me-3" data-reference="parent" data-bs-auto-close="outside" >
+    class="dropdown me-3" data-reference="parent" data-bs-auto-close="outside" 
+    v-on:click="loadFirstPage()"
+    >
     <a href="#" role="button" class="btn d-flex justify-content-start align-items-center m-0 p-0" id="dropNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true"
     >
@@ -11,14 +13,14 @@
             onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
 
         >
-        <span>
-                <svg width="6" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 16">
-                    <circle v-if="true" cx="2" cy="2" r="2" v-bind:fill="notificationColors.social"></circle>
-                    <circle v-if="true" cx="2" cy="8" r="2" v-bind:fill="notificationColors.teams"></circle>
-                    <circle v-if="true" cx="2" cy="14" r="2" v-bind:fill="notificationColors.event"></circle>
-                </svg>
-            </span>
+        <span v-cloak>
+            <svg width="6" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 16"  >
+                <circle  v-for="(circle, index) in visibleCircles" :key="index + circle.color" cx="2" v-bind:cy="circle.position"  r="2" v-bind:fill="circle.color"></circle>
+            </svg>
+        </span>
+        
     </a>
+
     <div class="dropdown-menu border shadow-lg mx-2 py-2 py-0" style="position: absolute; left: -500px; border-radius: 10px; top: 70px; font-size: 14px; width: 600px;"
         aria-labelledby="dropNotification"
             onclick="event.stopPropagation()"
@@ -40,7 +42,7 @@
                     style="width: auto;"
                     v-on:click="changeNotificationTab('social')"    
                 >Social
-                <span v-if="true" class="me-2">
+                <span v-if="counter.socialCount > 0" class="me-2">
                     <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                         <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['social']"></circle>
                     </svg>
@@ -53,7 +55,7 @@
                     style="width: auto;"
                 >
                     Teams
-                    <span v-if="true" class="me-2">
+                    <span v-if="counter.teamsCount > 0" class="me-2">
                         <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                             <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['teams']"></circle>
                         </svg>
@@ -64,7 +66,7 @@
                     v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
                     style="width: auto;"
                 >Event
-                <span v-if="true" class="me-2">
+                <span v-if="counter.eventCount > 0" class="me-2">
                     <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                         <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['event']"></circle>
                     </svg>
@@ -80,18 +82,18 @@
                         >
                            
                             <div class="notification-icon " style="white-space: nowrap;">
-                                <span v-if="!notification.isRead" class="me-2">
+                                <span v-if="!notification.is_read" class="me-2">
                                     <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                                         <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
                                     </svg>
                                 </span>
                                 <span v-else class="d-inline-block me-2" style="width: 5px; height: 5px;">
                                 </span>
-                                <template v-if="notification.iconType" >
-                                    <span class="me-3" v-html="getIconSvg(notification.iconType)"></span>
+                                <template v-if="notification.icon_type" >
+                                    <span class="me-3" v-html="getIconSvg(notification.icon_type)"></span>
                                 </template>
-                                <template v-else-if="notification.imageSrc">
-                                    <img v-bind:src="notification.imageSrc" class="rounded-circle object-fit-cover me-3" width="30"
+                                <template v-else-if="notification.img_src">
+                                    <img v-bind:src="notification.img_src" class="rounded-circle object-fit-cover me-3" width="30"
                                         height="30" alt="Profile"
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                                     >
@@ -103,6 +105,13 @@
                             </div>
                         </div>
                     </template> 
+                </div>
+                <div>
+                    <template v-if="hasMore">
+                        <div aria-label="Page navigation" class="mt-0 mb-3">
+                            <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage()">Next page</button>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>

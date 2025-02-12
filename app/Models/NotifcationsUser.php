@@ -38,7 +38,9 @@ class NotifcationsUser extends Model
             $counter = NotificationCounter::firstOrCreate(
                 ['user_id' => $notification->user_id]
             );
-            $counter->incrementCounter($notification->type);
+            // comment the line below and uncomment the next one
+            if (!$notification->is_read) $counter->incrementCounter($notification->type);
+            // $counter->incrementCounter($notification->type);
         });
 
         static::deleted(function ($notification) {
@@ -54,19 +56,14 @@ class NotifcationsUser extends Model
     public function markAsRead()
     {
         return DB::transaction(function () {
-            $updated = self::where('id', $this->id)
+            self::where('id', $this->id)
                 ->where('is_read', false)
                 ->lockForUpdate()
                 ->update(['is_read' => true]);
-
-            if ($updated) {
-                NotificationCounter::where('user_id', $this->user_id)
-                    ->lockForUpdate()
-                    ->decrement($this->type . '_count');
-            }
-            
-            return $updated;
+            NotificationCounter::where('user_id', $this->user_id)
+                ->lockForUpdate()
+                ->decrement($this->type . '_count');
         }, 3);
     }
-    
+     
 }

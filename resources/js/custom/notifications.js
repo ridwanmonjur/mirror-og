@@ -11,95 +11,168 @@ const importantUrlsDiv = document.getElementById('importantUrls');
 let {
     socialCount,
     teamsCount,
-    eventCount
+    eventCount, 
 } = importantUrlsDiv.dataset;
 
+console.log({
+    socialCount,
+    teamsCount,
+    eventCount, 
+});
+
+function  createVisibleCircles(counter) {
+    const circles = [];
+    if (counter.socialCount > 0) {
+        circles.push({ color: notificationColors.social, position: makePosition(0, counter.countsGreaterThanZero) })
+    };
+
+    if (counter.teamsCount > 0) {
+        circles.push({ color: notificationColors.teams, position: makePosition(1, counter.countsGreaterThanZero) })
+    };
+
+    if (counter.eventCount > 0) {
+        circles.push({ color: notificationColors.event, position: makePosition(2, counter.countsGreaterThanZero) })
+    };
+
+    return circles;
+}
+
+function makePosition(index, totalCircles) {
+    if (totalCircles === 1) return 10;
+    if (totalCircles === 2) return [2, 6, 14][index];
+    return [2, 8, 14][index];
+}
+
+function createCounterAndCircles() {
+    let counter = {
+        socialCount,
+        teamsCount,
+        eventCount,
+        countsGreaterThanZero: (socialCount > 0) +  (teamsCount > 0) + (eventCount > 0)
+    }
+    return {
+        counter,
+        items: {
+            social: [],
+            teams: [],
+            event: []
+        },
+        page: {
+            social: 0,
+            teams: 0,
+            event: 0
+        },
+        hasMore: {
+            social: false,
+            teams: false,
+            event: false
+        },
+        visibleCircles: createVisibleCircles(counter),
+    }
+}
+
 let allNotificationStore = reactive({
-    items: {
-        social: [
-            {
-                id: 1,
-                imageSrc: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQCL9eyWoLXmTfSGwTvH2ZVFMCQIyy7SqD-nyaFbrukZRE0IAKAf3kvZQyVM0d0QItdemcDT9Kkm9yXC-zxMYoxsQ',
-                html: '<a data-href="https://www.youtube.com/shorts/92ADmrIskFs" class="text-primary gear-icon-btn">Zuck</a> sent you a friend request.',
-                createdAt: '2024-02-08T09:42:00',
-                link: 'https://www.youtube.com/shorts/92ADmrIskFs',
-                isRead: false
-            },
-            {
-                id: 2,
-                imageSrc: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                html: 'The Royal Prince of Saudi is now following you.',
-                createdAt: '2024-02-08T09:58:00',
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                isRead: true
-            },
-        ],
-        teams: [
-            {
-                id: 5,
-                iconType: 'confirm',
-                html: 'Awesome Team has confirmed registration for <a data-href="https://www.youtube.com/watch?v=4XepH7Q-8rA" class="text-primary gear-icon-btn">The Super Duper Dota League</a>.',
-                createdAt: '2024-02-08T10:00:00',
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                isRead: true
-            },
-            {
-                id: 6,
-                iconType: 'vote',
-                html: 'Awesome Team has voted to STAY in <a data-href="https://www.youtube.com/watch?v=4XepH7Q-8rA" class="text-primary gear-icon-btn">The Super Duper Dota League</a>.',
-                createdAt: '2024-02-08T09:00:00',
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                isRead: true
-            },
-            {
-                id: 7,
-                iconType: 'quit',
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                html: 'A vote to quit <a data-href="https://www.youtube.com/watch?v=4XepH7Q-8rA" class="text-primary gear-icon-btn">The Super Duper Dota League</a> has been called for Awesome Team.',
-                createdAt: '2024-02-07T22:00:00',
-                isRead: false
-            },
-            {
-                id: 111,
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                imageSrc: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-                html: 'The Royal Prince of Saudi has followed your team.',
-                createdAt: '2024-02-08T09:58:00',
-                isRead: true
-            },
-        ],
-        event: [
-            {
-                id: 8,
-                iconType: 'calendar',
-                html: '<a data-href="https://www.youtube.com/watch?v=4XepH7Q-8rA" class="text-primary gear-icon-btn">The Super Duper Dota League</a> has been rescheduled.',
-                createdAt: '2024-02-08T09:00:00',
-                isRead: false,
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-            },
-            {
-                id: 9,
-                iconType: 'live',
-                html: '<a data-href="https://www.youtube.com/watch?v=4XepH7Q-8rA" class="text-primary gear-icon-btn">The Great CNY Dota Bash</a> has gone live!',
-                createdAt: '2024-02-07T23:00:00',
-                isRead: true,
-                link: 'https://cdn.britannica.com/43/207843-050-792E9358/Mohammed-bin-Salman-policy-maker-Saudi-king-2015.jpg',
-            }
-        ]
-    },
+    ...createCounterAndCircles(),
+
     async markNotificationRead(id, currentTab) {
+        let url = `/api/notifications/${id}`;
+        const response = await fetch( url,  {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const data = await response.json();
+        if (!data.success) {
+            window.toastError("Notifications have failed!")
+            return;
+        }
+
         this.items = Object.keys(this.items).reduce((acc, key) => {
             // Only update the array for the currentTab, keep others as is
             acc[key] = key === currentTab 
                 ? this.items[key].map((value) => {
                     return value.id === id 
-                        ? { ...value, isRead: true }
+                        ? { ...value, is_read: true }
                         : value;
                   })
                 : this.items[key];
             return acc;
         }, {});
-    }
+
+        let newCounterTabName = currentTab + 'Count';
+        let newCount = this.counter[newCounterTabName] - 1;
+        let countsGreaterThanZero = this.counter['countsGreaterThanZero'];
+        
+        this.counter = {
+            ...this.counter,
+            [newCounterTabName]: newCount,
+            countsGreaterThanZero
+        }
+        
+        if (newCount <= 0) {
+            countsGreaterThanZero -= 1;
+            this.visibleCircles = [...createVisibleCircles({
+                ...this.counter
+            })];
+        } 
+    },
+
+    async loadFirstPage (tab) {
+        if (this.page[tab] <= 0) {
+            this.loadPage(tab, 1);
+        }
+    },
+
+    async loadOtherPagePage (tab) {
+        let page = this.page[tab] + 1;
+        this.loadPage(tab, page);
+    },
+    
+    async loadPage(tab, page) {
+        this.page = {
+            ...this.page,
+            [tab]: page
+        }
+
+        try {
+            let url = `/api/notifications?type=${tab}&page=${page}`;
+            const response = await fetch( url );
+            const data = await response.json();
+
+            if (!data.success) {
+                this.page = {
+                    ...this.page,
+                    [tab]: page-1
+                }
+                
+                return;
+            }
+
+            this.items = Object.keys(this.items).reduce((acc, key) => {
+                acc[key] = key === tab 
+                    ? [
+                        ...this.items[key],
+                        ...data.data[key]
+                    ]
+                    : this.items[key];
+                return acc;
+            }, {});
+
+            this.hasMore = {
+                ...this.hasMore,
+                [tab]: data.hasMore
+            }
+
+          
+        } catch (error) {
+            this.page = {
+                ...this.page,
+                [tab]: page-1
+            }
+            console.error('Failed to load page:', error);
+        }
+    },
 });
 
 const iconStore = {
@@ -129,34 +202,51 @@ const iconStore = {
 
 const tabStore = reactive({
     currentTab: 'social',
+  
     changeNotificationTab(tabName) {
         this.currentTab = tabName;
     },
 });
 
 
-const notificationStore = {
-    get notificationList() {
-        return allNotificationStore.items[tabStore.currentTab];
-    },
-    notificationPage: 0,
-
-    async fetchMoreNotifications () {
-
-    },
-    async markNotificationRead(id) {
-        allNotificationStore.markNotificationRead(id, tabStore.currentTab);
-    },
-};
-
 
    
 function PageNotificationComponent () {
     return {
         notificationColors,
-        get notificationList () {
-            return notificationStore.notificationList;
+
+        async loadFirstPage(){
+            await allNotificationStore.loadFirstPage(this.currentTab);
         },
+
+        changeNotificationTab(tabName) {
+            this.currentTab = tabName;
+        },
+        
+        get visibleCircles() {
+            return allNotificationStore.visibleCircles
+        },
+
+        get counter() {
+            return allNotificationStore.counter;
+        },
+
+        get hasMore() {
+            return allNotificationStore.hasMore[tabStore.currentTab]
+        },
+
+        get notificationList () {
+            return allNotificationStore.items[tabStore.currentTab];
+        },
+
+        async loadNextPage() {
+            await allNotificationStore.loadOtherPagePage(tabStore.currentTab);
+        },
+
+        init() {
+            this.loadFirstPage();
+        },
+       
 
         get currentTab () {
             return tabStore.currentTab;
@@ -167,37 +257,34 @@ function PageNotificationComponent () {
         },
         
         async markNotificationRead(event, id, link) {
-            await notificationStore.markNotificationRead(id);
+            await allNotificationStore.markNotificationRead(id, tabStore.currentTab);
             let target = event.target;
             if (target.tagName === 'A') {
                 window.open(
                     target.dataset.href,
                     'noopener,noreferrer',
                 ); 
-                window.focus();
                 return; 
             }
+
             window.open(
                 link,
                 'noopener,noreferrer',
             );        
-            window.focus();
-
         },
+
         async changeNotificationTab(tabName) {
             try {
                 tabStore.changeNotificationTab(tabName);
+                this.loadFirstPage();
             } catch (error) {
-                toastError('Failed to update email');
+                console.error(error);
+                toastError('Failed to load notifications');
             }
         },
-        init() {
-            console.log({notificationList: this.notificationList});
-            console.log({notificationList: this.notificationList});
-            console.log({notificationList: this.notificationList});
-        },
-        getIconSvg(iconType) {
-            return iconStore[iconType] || '';
+       
+        getIconSvg(icon_type) {
+            return iconStore[icon_type] || '';
         },
         formatTime(date) {
             return  DateTime

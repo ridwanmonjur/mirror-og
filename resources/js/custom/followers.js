@@ -92,17 +92,12 @@ function ReportFormData ()  {
         },
 
         init() {
-           
             window.addEventListener('report-selected', async (event) => {
                 let element = document.getElementById('reportUserModal')
                 let modal = new window.bootstrap.Modal(element);
                 modal.show();
                 this.user = event.detail;
                 await this.fetchReports();
-                console.log({user: this.user});
-                console.log({user: this.user});
-                console.log({user: this.user});
-                console.log({user: this.user});
             });
         },
     }

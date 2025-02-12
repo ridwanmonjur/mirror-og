@@ -8,14 +8,14 @@ use App\Http\Requests\User\BannerUpdateRequest;
 use App\Http\Requests\User\UpdateSettingsRequest;
 use App\Models\StripePayment;
 use App\Models\TeamProfile;
-use App\Models\User;
 use App\Models\UserProfile;
+use App\Models\NotifcationsUser;
+use Database\Seeders\NotificationSeeder;
 use App\Services\SettingsService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -31,8 +31,45 @@ class UserController extends Controller
     public function viewNotifications(Request $request)
     {
         $user = $request->attributes->get('user');
+        $perPage = $request->input('per_page', 1); 
+        $pageNumber =  $request->input('page', 1); 
+        $type = $request->input('type', 'all'); 
+        $page = NotifcationsUser::where('user_id', $user->id)
+            ->when($type, function ($query, $type) {
+                return $query->where('type', $type);
+            })
+            ->orderBy('is_read', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate($perPage, ['*'], 'notification_page', $pageNumber);
+        return response()->json([
+            'data' => [$type => $page->items()],
+            'hasMore' => $page->hasMorePages(),
+            'success' => true
+        ]);
 
-        return view('Shared.Notifications');
+    }
+
+    public function markAsRead(Request $request, $id)
+    {
+        $user = $request->attributes->get('user');
+        
+        $notification = NotifcationsUser::where('user_id', $user->id)
+            ->findOrFail($id);
+        $notification->markAsRead();
+
+        return response()->json([
+            'message' => 'Notification marked as read',
+            'success' => true
+        ]);
+    }
+
+    public function seed() {
+        $seeder = new NotificationSeeder();
+        $seeder->run();
+        
+        return [
+            'success' => true
+        ];
     }
 
 
