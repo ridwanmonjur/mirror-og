@@ -27,6 +27,7 @@ Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.la
 Route::view('/closedbeta', 'Beta.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Beta.About')->name('public.about.view');
 Route::view('/contact', 'Beta.Contact')->name('public.contact.view');
+Route::get('/notifSeed', [UserController::class, 'seed']);
 
 // Forget, reset password
 Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
@@ -74,7 +75,7 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|organizer'], function () {
         // Notifications page
-        Route::get('/notifications', [UserController::class, 'viewNotifications'])->name('user.notif.view');
+        Route::view('/notifications', 'Shared.Notifications')->name('user.notif.view');
         Route::post('/media', [ImageVideoController::class, 'upload']);
         // Route::view('user/{id}/stats', 'Shared.PlayerProfileStats', ['userId' => request('id')])->name('user.stats');
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');

@@ -365,7 +365,7 @@ function AccountComponent() {
                 newData = await newData.json();
 
                 if (!newData.success) {
-                    toastError('Failed to update email');
+                    toastError('Failed to update password');
                     return;
                 }
         

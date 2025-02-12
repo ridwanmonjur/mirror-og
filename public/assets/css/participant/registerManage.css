@@ -126,7 +126,7 @@
 }
 
 .bg-translucent {
-    background: rgb(210, 204, 204, 0.7);
+    background: rgb(210, 204, 204) !important;
 }
 
 .progress--empty {

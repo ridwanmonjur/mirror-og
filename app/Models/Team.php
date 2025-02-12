@@ -544,8 +544,8 @@ class Team extends Model
                 ],
             ],
         ];
-        Notification::send($memberList, new EventConfirmNotification($memberNotification));
-        Notification::send($organizerList, new EventConfirmNotification($organizerNotification));
+        // Notification::send($memberList, new EventConfirmNotification($memberNotification));
+        // Notification::send($organizerList, new EventConfirmNotification($organizerNotification));
     }
 
     public function cancelTeamRegistration(EventDetail $event, array $discountsByUserAndType, bool $isTeamCancelee = true)
@@ -701,8 +701,8 @@ class Team extends Model
             ],
         ];
 
-        Notification::send($memberList, new EventCancelNotification($memberNotification));
-        Notification::send($organizerList, new EventCancelNotification($organizerNotification));
+        // Notification::send($memberList, new EventCancelNotification($memberNotification));
+        // Notification::send($organizerList, new EventCancelNotification($organizerNotification));
         
     }
 

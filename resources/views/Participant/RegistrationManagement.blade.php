@@ -55,49 +55,48 @@
     </div>
 
    
-        @include('Participant.__Partials.TeamHead') 
-        <div id="Overview">
-            <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
-                @if (session('successMessage'))
-                    <div class="text-success text-center">{{session('successMessage')}}</div>
-                @elseif (session('errorMessage'))
-                    <div class="text-red text-center">{{session('errorMessage')}}</div>
-                @endif
-            </div>
-            
-            @if (!isset($joinEvents[0]))
-                <p class="tab-size text-start mx-auto ">No events available</p>
-            @else
-            {{-- IS REDURECT CHANGE--}}
-           
+    @include('Participant.__Partials.TeamHead') 
+    <div id="Overview">
+        <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
+            @if (session('successMessage'))
+                <div class="text-success text-center">{{session('successMessage')}}</div>
+            @elseif (session('errorMessage'))
+                <div class="text-red text-center">{{session('errorMessage')}}</div>
+            @endif
+        </div>
+        <br><br>
+        <div class="tab-size"><b>Upcoming Registrations</b></div>
+        <br> <br>
+        @if (!isset($joinEvents[0]))
+            <p class="tab-size text-start mx-auto ">No events available</p>
+        @else
             <div class="row mx-5 px-5">
                 @foreach ($joinEvents as $joinEvent)
-                       
+                        
                     @include('Participant.__Partials.RosterViewRegister')
                     @include('Participant.__Partials.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
-            {{-- IS REDURECT CHANGE--}}
-            @endif
+        @endif
+    </div>
+        <div id="Invitation">
+            <br><br>
+            <div class="tab-size"><b>Event Invitations</b></div>
+            <br> <br>
+            <div class="position-relative d-none d-lg-flex justify-content-center">
+                @if (!isset($invitedEvents[0]))
+                    <p class="tab-size text-start mx-auto">No events available</p>
+                @else
+                    <div class="event-carousel-styles px-5">
+                        @foreach ($invitedEvents as $key => $joinEvent)
+                            @include('Participant.__Partials.RosterViewRegister')
+                            @include('Participant.__Partials.PieChart', ['isInvited' => true])
+                        @endforeach
+                    </div>
+                @endif
+            <br> <br>
         </div>
-            <div id="Invitation">
-                <br><br>
-                <div class="tab-size"><b>Event Invitations</b></div>
-                <br> <br>
-                <div class="position-relative d-none d-lg-flex justify-content-center">
-                    @if (!isset($invitedEvents[0]))
-                        <p class="tab-size text-start mx-auto">No events available</p>
-                    @else
-                        <div class="event-carousel-styles px-5">
-                            @foreach ($invitedEvents as $key => $joinEvent)
-                                @include('Participant.__Partials.RosterViewRegister')
-                                @include('Participant.__Partials.PieChart', ['isInvited' => true])
-                            @endforeach
-                        </div>
-                    @endif
-                <br> <br>
-            </div>
-            <br><br><br><br><br><br>
+        <br><br><br><br><br><br>
         
         <script src="{{ asset('assets/js/participant/RegistrationManagement.js') }}"></script>
 

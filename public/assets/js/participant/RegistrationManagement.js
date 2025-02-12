@@ -153,8 +153,9 @@ function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap) {
 }
 
 function rosterHtmlGenerater (roster, rosterMap) {
+
     return roster.map(player => {
-        if (rosterMap[roster.user.id]) return '';
+        if (!rosterMap[player.user.id]) return '';
         return (
         `<div class="d-flex align-items-center gap-2 mb-2">
             <img
@@ -310,6 +311,9 @@ function submitConfirmCancelForm(event) {
     const {eventDetails: eventDetailsJSON, membersValue: membersValueJSON, followCounts} = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     let membersValue = JSON.parse(membersValueJSON);
+    console.log({membersValue});
+    console.log({membersValue});
+    console.log({membersValue});
     const rosterMapContainer = document.getElementById('roster-id-list-' + joinEventId);
     let { rosterMap: rosterMapJSON } = rosterMapContainer.dataset;
     let rosterMap = JSON.parse(rosterMapJSON);

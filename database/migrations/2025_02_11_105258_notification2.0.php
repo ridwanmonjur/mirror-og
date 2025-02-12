@@ -30,7 +30,8 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
                 $table->string('type');  // e.g. 'social'
-                $table->string('icon_type');  // e.g. 'friend'
+                $table->string('icon_type')->nullable();  // e.g. 'friend'
+                $table->string('img_src')->nullable();  // e.g. 'friend'
                 $table->text('html');  // Store the HTML content
                 $table->string('link')->nullable();
                 $table->boolean('is_read')->default(false);

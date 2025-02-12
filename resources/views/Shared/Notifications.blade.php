@@ -32,7 +32,7 @@
                 v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
                 v-on:click="changeNotificationTab('social')"   
             >Social
-            <span v-if="true" class="me-2">
+            <span v-if="counter.socialCount > 0" class="me-2">
                 <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                     <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['social']"></circle>
                 </svg>
@@ -44,7 +44,7 @@
                 v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
             >
                 Teams
-                <span v-if="true" class="me-2">
+                <span v-if="counter.teamsCount > 0" class="me-2">
                     <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                         <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['teams']"></circle>
                     </svg>
@@ -56,7 +56,7 @@
                 v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
             >
                 Event
-                <span v-if="true" class="me-2">
+                <span v-if="counter.eventCount > 0" class="me-2">
                     <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                         <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors['event']"></circle>
                     </svg>
@@ -70,18 +70,18 @@
                         v-on:click="markNotificationRead(event, notification2.id, notification2.link)"
                     >
                         <div class="notification-icon me-3">
-                            <span v-if="!notification2.isRead" class="me-2">
+                            <span v-if="!notification2.is_read" class="me-2">
                                 <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                                     <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
                                 </svg>
                             </span>
                             <span v-else class="d-inline-block me-2" style="width: 5px; height: 5px;">
                             </span>
-                            <template v-if="notification2.iconType" >
-                                <span style="margin-right: 6px;" v-html="getIconSvg(notification2.iconType)"></span>
+                            <template v-if="notification2.icon_type" >
+                                <span style="margin-right: 6px;" v-html="getIconSvg(notification2.icon_type)"></span>
                             </template>
-                            <template v-else-if="notification2.imageSrc">
-                                <img v-bind:src="notification2.imageSrc" class="rounded-circle object-fit-cover" width="30"
+                            <template v-else-if="notification2.img_src">
+                                <img v-bind:src="notification2.img_src" class="rounded-circle object-fit-cover" width="30"
                                     height="30" alt="Profile">
                             </template>
                         </div>
@@ -91,6 +91,13 @@
                         </div>
                     </div>
                 </template> 
+            </div>
+            <div>
+                <template v-if="hasMore">
+                    <div aria-label="Page navigation" class="mt-1">
+                        <button class="btn btn-primary btn-sm text-white " v-on:click="loadNextPage()">Next page</button>
+                    </div>
+                </template>
             </div>
         </div>
     </div>

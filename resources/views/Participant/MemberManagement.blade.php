@@ -15,7 +15,6 @@
     $isRedirect = isset($redirect) && $redirect;
 @endphp
 <body
-    @style(["min-height: 100vh;" => $isRedirect])
 >
     @include('googletagmanager::body')
 
