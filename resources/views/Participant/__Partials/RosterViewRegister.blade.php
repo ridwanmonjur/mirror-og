@@ -6,7 +6,7 @@
     $rosterUserIds = [];
     $votes = ['totalCount' => 0, 'stayCount' => 0, 'leaveCount' => 0];
 @endphp
-<div class="col-12 col-lg-6 position-relative opacity-parent-until-hover d-block " 
+<div class="col-12 col-lg-6 position-relative opacity-parent-until-hover d-block mb-3" 
     id="reg-member-id-{{$joinEvent->id}}"
     data-members-value="{{json_encode($joinEvent->members)}}"
     data-event-details="{{json_encode(
@@ -29,7 +29,7 @@
                     </li>
                 </ul>
             @else
-                <ul class="achievement-list">
+                <ul class="achievement-list z-99">
                     <li>
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-trophy" viewBox="0 0 16 16">

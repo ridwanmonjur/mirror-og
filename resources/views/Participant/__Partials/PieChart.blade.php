@@ -23,7 +23,7 @@
 @endphp
 
 
-<div class="col-12 col-lg-6 d-flex user-select-none flex-column justify-content-between position-relative  popover-parent rounded">
+<div class="col-12 col-lg-6 d-flex user-select-none flex-column justify-content-between mb-5 position-relative  popover-parent rounded">
     <div class="mx-auto text-center cursor-pointer popover-button">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>

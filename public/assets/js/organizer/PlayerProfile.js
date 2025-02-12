@@ -14,8 +14,6 @@ let initialUserProfile = JSON.parse(document.getElementById('initialUserProfile'
 let initialOrganizer = JSON.parse(document.getElementById('initialOrganizer').value);
 let initialAddress = JSON.parse(document.getElementById('initialAddress').value);
 
-
-
 function reddirectToLoginWithIntened(route) {
     const loginRoute = document.getElementById('routeContainer').dataset.loginRoute;
 

@@ -83,6 +83,16 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Team::class, 'creator_id');
     }
 
+    public function notificationCount(): HasOne
+    {
+        return $this->hasOne(NotificationCounter::class, 'user_id');
+    }
+
+    public function notificationList(): HasMany
+    {
+        return $this->hasMany(NotifcationsUser::class, 'user_id');
+    }
+
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class, 'user_id');

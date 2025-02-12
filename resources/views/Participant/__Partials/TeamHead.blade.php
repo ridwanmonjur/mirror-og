@@ -87,7 +87,7 @@
         <div class="team-section position-relative"
             {{-- x-data="alpineDataComponent" --}}
         >
-            <div  v-cloak class="position-relative position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
+            <div  v-cloak class="position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
                 <form method="POST" action="{{ route('participant.team.follow', ['id'=> $selectTeam->id]) }}">
                     @csrf
                     <button
@@ -453,7 +453,7 @@
    'propsRole' => "TEAM", 
    'propsUserRole' => $role
 ])
-@include('Participant.__Partials.BackgroundModal')
+@include('Participant.__Partials.TeamBackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
 @include('__CommonPartials.__Profile.Cropper')

@@ -76,7 +76,7 @@
                     <template v-for="notification in notificationList" :key="notification.id">
                         <div 
                             class="notification-item cursor-pointer d-flex align-items-center p-3 border-0 "
-                            v-on:click="markNotificationRead(notification.id, notification.link)"
+                            v-on:click="markNotificationRead(event, notification.id, notification.link)"
                         >
                            
                             <div class="notification-icon " style="white-space: nowrap;">
@@ -85,11 +85,13 @@
                                         <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
                                     </svg>
                                 </span>
+                                <span v-else class="d-inline-block me-2" style="width: 5px; height: 5px;">
+                                </span>
                                 <template v-if="notification.iconType" >
-                                    <span class="me-2" v-html="getIconSvg(notification.iconType)"></span>
+                                    <span class="me-3" v-html="getIconSvg(notification.iconType)"></span>
                                 </template>
                                 <template v-else-if="notification.imageSrc">
-                                    <img v-bind:src="notification.imageSrc" class="rounded-circle object-fit-cover me-2" width="30"
+                                    <img v-bind:src="notification.imageSrc" class="rounded-circle object-fit-cover me-3" width="30"
                                         height="30" alt="Profile"
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                                     >

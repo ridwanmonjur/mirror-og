@@ -6,6 +6,11 @@
     @endphp
 @endauth
 @php
+    $notificationsCountArray = [
+        'social_count' => 0,
+        'teams_count' => 0,
+        'event_count' => 0
+    ];
     if (isset($user)) {
         $role = $user->role;
         if ($role == 'PARTICIPANT') {
@@ -16,12 +21,25 @@
         else {
             $routeLogo = route('public.landing.view');
         }
+
+        $notificationsCount = $user->load('notificationCount')->notificationCount;    
+        if ($notificationsCount) {
+            $notificationsCountArray = $notificationsCount->toArray();
+        }
     } else {
         $routeLogo = route('public.landing.view');
     }
 @endphp
-<input type="hidden" id="searchEndpointInput" value="{{ route('public.search.view') }}">
-<input type="hidden" id="landingEndpointInput" value="{{ route('public.landing.view') }}">
+<div 
+    class="d-none"
+    id="importantUrls"
+    data-search-endpoint="{{ route('public.search.view') }}"
+    data-landing-endpoint="{{ route('public.landing.view') }}"
+    data-social-count="{{ $notificationsCountArray['social_count'] }}"
+    data-teams-count="{{ $notificationsCountArray['teams_count'] }}"
+    data-event-count="{{ $notificationsCountArray['event_count'] }}"
+>
+</div>
 <nav class="navbar justify-content-between align-items-center user-select-none px-3 ">
     <a href="{{ $routeLogo }}">
         <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
