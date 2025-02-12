@@ -642,7 +642,12 @@ document.querySelectorAll('[data-dynamic-select]').forEach(select => {
 */
 let searchEndpointInputValue = null; 
 let ENDPOINT = null;
-const searchEndpointInput = document.getElementById('searchEndpointInput');
+const importantUrlsDiv = document.getElementById('importantUrls');
+let {
+    searchEndpointInput,
+    landingEndpointInput
+} = importantUrlsDiv.dataset;
+
 if (searchEndpointInput) {
     searchEndpointInputValue = searchEndpointInput.value;
     document.getElementById('search-bar')?.addEventListener(
@@ -660,7 +665,6 @@ if (searchEndpointInput) {
     );
 
 } else {
-    const landingEndpointInput = document.getElementById('landingEndpointInput')?.value;
 
     ENDPOINT = landingEndpointInput;
     var page = 1;

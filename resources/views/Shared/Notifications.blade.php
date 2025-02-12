@@ -67,13 +67,15 @@
             <div class="notification-list">
                 <template v-for="notification2 in notificationList" :key="notification2.id">
                     <div class="notification-item d-flex align-items-center cursor-pointer p-3 border-0"
-                        v-on:click="markNotificationRead(notification2.id, notification2.link)"
+                        v-on:click="markNotificationRead(event, notification2.id, notification2.link)"
                     >
                         <div class="notification-icon me-3">
                             <span v-if="!notification2.isRead" class="me-2">
                                 <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                                     <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
                                 </svg>
+                            </span>
+                            <span v-else class="d-inline-block me-2" style="width: 5px; height: 5px;">
                             </span>
                             <template v-if="notification2.iconType" >
                                 <span style="margin-right: 6px;" v-html="getIconSvg(notification2.iconType)"></span>

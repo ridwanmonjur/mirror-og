@@ -453,7 +453,7 @@
    'propsRole' => "TEAM", 
    'propsUserRole' => $role
 ])
-@include('Participant.__Partials.BackgroundModal')
+@include('Participant.__Partials.TeamBackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
 @include('__CommonPartials.__Profile.Cropper')
