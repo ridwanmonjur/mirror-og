@@ -1,129 +1,139 @@
-# Driftwood
+# Driftwood Installation Guide
 
-Depends on the team description 
+## Prerequisites
+- PHP 8.2
+- Composer
+- Node.js & npm
+- Apache2
+- SQLite3
 
-# Admin Login for Test
-```bash
-
+## Admin Credentials
+```
 Email: admin@example.com
-
-password: 12345678
-
+Password: 12345678
 ```
 
-### Local Installation
+## Installation Steps
 
-
+1. First, install PHP 8.2 and required extensions:
 ```bash
-# Composer dependencies
+sudo apt install php8.2-sqlite3
+service apache2 restart
+```
+
+2. Install project dependencies:
+```bash
+# Install Composer dependencies
 composer update
 
-# Create a copy of your .env file
-cp .env.prod .env
-
-# Generate an app encryption key
-php artisan key:generate
-
-# Install npm using wget 
-
-npm i 
+# Install npm dependencies
+npm i
 npm i -g vite
 npm run build
+```
 
-USE php 8.2
+3. Set up environment:
+```bash
+# Create environment file
+cp .env.prod .env
 
-sudo apt install php8.2-sqlite3
-service apache2 restart 
+# Generate application key
+php artisan key:generate
 
-rm -rf public/storage
-php artisan storage:link
+# Generate JWT secret
 php artisan jwt:secret
-php artisan migrate
-Raw sql data in database/migrations/data.sql
-Copy ALL FILES AND FOLDERS from public/assets/images/storage to public/storage (new symlink folder)
-
-
-No need of postman, use dd() to debg json request
-
-# Clear All Caches (Combined)
-
-php artisan optimize:clear
-
-
 ```
-### Admin Filament Installation
+
+4. Set up storage:
 ```bash
-# Create Admin Credentials
+# Remove existing storage symlink if exists
+rm -rf public/storage
+
+# Create new storage symlink
+php artisan storage:link
+
+# Copy storage assets
+cp -r public/assets/images/storage/* public/storage/
+```
+
+5. Database setup:
+```bash
+# Run migrations
+php artisan migrate
+
+# Import SQL data (if needed)
+# The data is located in database/migrations/data.sql
+```
+
+6. Set up Filament admin:
+```bash
+# Create admin user
 php artisan make:filament-user
-GO TO DATABASE
-AND GIVE USER ROLE=ADMIN (compulsory!!!)
-#update Images
 
+# IMPORTANT: After creating the user, manually update the database:
+# Set role='admin' for the created user in the users table
 ```
 
-### Migrate
-
-
+7. Clear application cache:
 ```bash
+php artisan optimize:clear
+```
 
+## Development Commands
 
-# making migration
-php artisan make:migration create_oganizer_table
-php artisan make:migration create_participant_table
-php artisan make:migration add_eventGroupStructure_to_events
-php artisan make:migration add_tokens_to_users
+### Creating New Components
+```bash
+# Create migrations
+php artisan make:migration [migration_name]
 
-# edit tables in those files, then run:
-php artisan migrate
-php artisan make:model Organizer
-php artisan make:model Participant
+# Create models
+php artisan make:model [ModelName]
 
-# Changes Development only reset database
+# Create seeders
+php artisan make:seeder [SeederName]
+```
+
+### Database Management
+```bash
+# Reset database (development only)
 php artisan migrate:reset
 
-# Seed
-php artisan make:seeder EventSeeder
-php artisan make:seeder UserSeeder
-# Run this one
+# Run specific seeder
 php artisan db:seed --class=EventSeeder
 
+# Rollback specific migration
+php artisan migrate:rollback --path=/database/migrations/[migration_file].php
 ```
 
+### Additional Setup
+
+1. SweetAlert Integration:
 ```bash
-
-# docs
-
-# Include 'sweetalert::alert' in master layout
-@include('sweetalert::alert')
-# and run the below command to publish the package assets.
+# Publish SweetAlert assets
 php artisan sweetalert:publish
 
-bash```
-php artisan make:migration add_fkkeys_to_organizers
-php artisan make:migration add_fkkeys_to_participants
+# Add to layout
+# Include '@include('sweetalert::alert')' in your master layout
+```
 
-# http://localhost:8000/organizerSignin
-# http://localhost:8000/organizerSignup
-
-php artisan make:middleware CheckPermission
-bash```
-
-
-bash```
-Mail
+2. Mail Configuration:
+```bash
+# Publish mail configuration
 php artisan vendor:publish --tag=laravel-mail
+```
 
-bash```
+3. Horizon Setup:
+```bash
+php artisan horizon:install
+```
 
-Rollback specific migration
-bash```
-php artisan migrate:rollback --path=/database/migrations/2024_02_13_150411_create_captains_table.php
-php artisan migrate
-bash```
+4. Log Viewer:
+```bash
+php artisan vendor:publish --tag=log-viewer-assets --force
+```
 
- php artisan horizon:install
- 
- php artisan vendor:publish --tag=log-viewer-assets --force
-
-
+## Debugging
+- Use `dd()` for debugging JSON requests instead of Postman
+- Check storage permissions if file-related operations fail
+- Verify database role settings for admin users
 
