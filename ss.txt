@@ -1,0 +1,22 @@
+all notifications and respective redirects
+
+SOCIAL
+new follower - user's profile
+new following - user's profile
+user sent you a friend request - user's profile
+user accepted your request - user's profile (e.g. you and serenity are now friends. > Click to go to serenity's profile)
+you accepted user's request - user's profile (e.g. you and serenity are now friends. > Click to go to serenity's profile)
+new message from user - messaging page with the chat with that user as the active chat (you have new messages from serenity and 3 others. > Click to go to messaging page with the latest message as the active conversation)
+
+TEAM
+confirmed registration - registration management
+vote started - registration management
+vote concluded - registration management
+team signed up for event - registration management
+user requested to join team (apply) - member management
+user has joined team (open to join/join request accepted) - member management (serenity has joined Awesome Team. > Click to go to member management)
+team placement in event - roster history (auto-scroll to the relevant event card? skip if tedious to do)
+
+EVENT
+event rescheduled - event details (overview tab)
+event countdown - event details (overview tab)
