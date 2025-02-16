@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\UpdateTeamRequest;
+use App\Jobs\HandleFollowsFriends;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
@@ -104,9 +105,7 @@ class ParticipantTeamController extends Controller
         try {
 
             $user = $request->attributes->get('user');
-            $selectTeam = Team::where('id', $id)
-                ->select(['id'])
-                ->first();
+            $selectTeam = Team::getTeamAndMembersByTeamId($id);
 
             $profile = TeamProfile::where('team_id', $id)
                 ->select(['id', 'team_id', 'follower_count'])
@@ -123,20 +122,16 @@ class ParticipantTeamController extends Controller
                 ->select(['id', 'team_id'])
                 ->count();
 
-
+           
             $result = DB::table('team_follows')
                 ->where('user_id', $user->id)
                 ->where('team_id', $selectTeam->id)
                 ->delete();
             
             if ($result > 0) {
-                $statusMessage =  'Unfollowed the team!';
                 $profile->follower_count = $exisitngFollowCount - 1;
-            
-            } else {
-                $statusMessage =  'Followed the team!';
             }
-            
+
             if ($result === 0) {
                 DB::table('team_follows')->insert([
                     'user_id' => $user->id,
@@ -145,6 +140,11 @@ class ParticipantTeamController extends Controller
 
                 $profile->follower_count = $exisitngFollowCount + 1;
 
+                dispatch(new HandleFollowsFriends('FollowTeam', [
+                    'team' => $selectTeam,
+                    'user' => $user,
+                    'isFollow' => true,
+                ]));
             }
           
             $profile->save();
@@ -398,7 +398,7 @@ class ParticipantTeamController extends Controller
                     throw ValidationException::withMessages(['teamName' => 'Team name already exists. Please choose a different name.']);
                 }
 
-                $team = $this->validateAndSaveTeam($request, $team, $user_id);
+                $team = Team::validateAndSaveTeam($request, $team, $user_id);
                 TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
                 $teamMembers = $team->members;
 
@@ -430,14 +430,13 @@ class ParticipantTeamController extends Controller
                 }
             }
 
-            $this->validateAndSaveTeam($request, $team, $user_id);
+            $team = Team::validateAndSaveTeam($request, $team, $user_id);
 
             return redirect()->route('participant.team.view', ['id' => $user_id]);
         } catch (Exception $e) {
             return back()->with('errorMessage', $e->getMessage());
         }
     }
-
   
     protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)
     {
@@ -456,30 +455,5 @@ class ParticipantTeamController extends Controller
             'captain',
             'userList'
         ));
-    }
-
-    private function validateAndSaveTeam($request, $team, $user_id) 
-    {     
-            $customMessages = [
-                'teamName.required' => 'Please give your team a name',
-                'teamName.max' => 'Team name cannot exceed 25 characters',
-                'teamName.string' => 'Team name must be text',
-                // 'teamDescription.required' => 'Please add a description for your team',
-                // 'teamDescription.max' => 'Team description must be less than 150 characters'
-            ];
-
-            $request->validate([
-                'teamName' => 'required|string|max:25',
-                // 'teamDescription' => 'required|max:150',
-            ], $customMessages);
-            
-            $team->teamName = $request->input('teamName');
-            // $team->teamDescription = $request->input('teamDescription');
-            $team->creator_id = $user_id;
-            $team->save();
-            
-            return $team;
-
-       
     }
 }

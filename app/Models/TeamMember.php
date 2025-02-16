@@ -16,8 +16,8 @@ class TeamMember extends Model
     protected $fillable = ['user_id', 'team_id', 'status', 'actor'];
 
     protected $dispatchesEvents = [
-        'updating' => TeamMemberUpdated::class,
-        'creating' => TeamMemberCreated::class,
+        'updated' => TeamMemberUpdated::class,
+        'created' => TeamMemberCreated::class,
     ];
 
     protected $table = 'team_members';
