@@ -31,15 +31,15 @@ class UserController extends Controller
     public function viewNotifications(Request $request)
     {
         $user = $request->attributes->get('user');
-        $perPage = $request->input('per_page', 1); 
+        $perPage = $request->input('per_page', 5); 
         $pageNumber =  $request->input('page', 1); 
         $type = $request->input('type', 'all'); 
         $page = NotifcationsUser::where('user_id', $user->id)
             ->when($type, function ($query, $type) {
                 return $query->where('type', $type);
             })
-            ->orderBy('is_read', 'desc')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->orderBy('is_read', 'asc')
             ->simplePaginate($perPage, ['*'], 'notification_page', $pageNumber);
         return response()->json([
             'data' => [$type => $page->items()],
@@ -55,7 +55,7 @@ class UserController extends Controller
         
         $notification = NotifcationsUser::where('user_id', $user->id)
             ->findOrFail($id);
-        $notification->markAsRead();
+        if (!$notification->is_read) $notification->markAsRead();
 
         return response()->json([
             'message' => 'Notification marked as read',
