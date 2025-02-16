@@ -5,21 +5,15 @@ namespace App\Http\Controllers\Participant;
 use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LikeRequest;
-use App\Jobs\HandleFollows;
-use App\Models\Achievements;
-use App\Models\AwardResults;
+use App\Jobs\HandleEventJoinConfirm;
 use App\Models\EventDetail;
-use App\Models\EventInvitation;
-use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
-use App\Models\PaymentTransaction;
 use App\Models\RosterMember;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
-use App\Models\User;
 use App\Services\PaymentService;
 use ErrorException;
 use Exception;
@@ -29,11 +23,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\UnauthorizedException;
 use App\Services\EventMatchService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Match\ParticipantViewEventRequest;
+use App\Models\Participant;
 
 class ParticipantEventController extends Controller
 {
@@ -206,7 +200,7 @@ class ParticipantEventController extends Controller
         DB::beginTransaction();
         try {
             $user = $request->attributes->get('user');
-            $userId = $request->attributes->get('user')->id;
+            $userId = $user->id;
             $teamId = $request->input('selectedTeamId');
             if ($teamId === null || trim($teamId) === '') {
                 throw new ErrorException('No team has been chosen');
@@ -220,22 +214,14 @@ class ParticipantEventController extends Controller
             $selectTeam = Team::getTeamAndMembersByTeamId($teamId);
             
             $event = EventDetail::with(['user' => function ($query) {
-                $query->select('id', 'name', 'email');
-            },
-            ])
+                    $query->select('id', 'name', 'email');
+                }])
                 ->select('id', 'user_id', 'eventName')
                 ->find($id);
 
             if ($selectTeam && $isAlreadyMember) {
-                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
-                    = $selectTeam->processTeamRegistration($user, $event);
-                Event::dispatch(new JoinEventSignuped(
-                    compact(
-                        'memberList', 'organizerList', 'memberNotification',
-                        'organizerNotification', 'allEventLogs'
-                    )
-                ));
-
+                Event::dispatch(new JoinEventSignuped(compact('user', 'event', 'selectTeam')));
+                $selectTeam->processTeamRegistration( $user->id, $event->id);
                 DB::commit();
 
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
@@ -291,7 +277,7 @@ class ParticipantEventController extends Controller
         DB::beginTransaction();
         try {
             $user = $request->attributes->get('user');
-            $user_id = $request->attributes->get('user')->id;
+            $user_id = $user->id;
             [
                 'teamList' => $selectTeam,
                 'count' => $count,
@@ -305,39 +291,23 @@ class ParticipantEventController extends Controller
             $event = EventDetail::select('id', 'user_id', 'eventName')->with(
                 ['user' => function ($q) {
                     $q->select('id', 'name', 'email');
-                },
-                ]
+                }]
             )->find($id);
 
             if ($count < 5) {
-                $request->validate([
-                    'teamName' => 'required|string|max:25',
-                    'teamDescription' => 'required',
-                ]);
-
-                $teamName = $request->input('teamName');
-                $selectTeam = new Team(['teamName' => $teamName]);
-                $selectTeam->teamDescription = $request->input('teamDescription');
-                $selectTeam->creator_id = $user_id;
-                $selectTeam->save();
+                $selectTeam = new Team();
+                $selectTeam = Team::validateAndSaveTeam($request, $selectTeam, $user_id);
                 TeamMember::bulkCreateTeanMembers($selectTeam->id, [$user_id], 'accepted');
                 TeamCaptain::insert([
                     'team_member_id' => $selectTeam->members[0]->id,
                     'teams_id' => $selectTeam->id,
                 ]);
                 $teamMembers = $selectTeam->members->load(['user' => function ($q) {
-                    $q->select(['name', 'id', 'email']);
-                },
+                        $q->select(['name', 'id', 'email', 'userBanner']);
+                    },
                 ]);
-                [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs]
-                    = $selectTeam->processTeamRegistration($user, $event);
-                
-                    event(new JoinEventSignuped(
-                    compact(
-                        'memberList', 'organizerList', 'memberNotification',
-                        'organizerNotification', 'allEventLogs'
-                    )
-                ));
+                Event::dispatch(new JoinEventSignuped(compact($user, $event, $selectTeam)));
+                $selectTeam->processTeamRegistration( $user->id, $event->id);
                 DB::commit();
 
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
@@ -347,14 +317,8 @@ class ParticipantEventController extends Controller
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
         } catch (Exception $e) {
             DB::rollBack();
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
-                $errorMessage = 'Please choose a unique name!';
-            } else {
-                $errorMessage = $e->getMessage();
-            }
-
+            $errorMessage = $e->getMessage();
             session()->flash('errorMessage', $errorMessage);
-
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
         }
     }
@@ -386,7 +350,11 @@ class ParticipantEventController extends Controller
             if ($isPermitted) {
                 if ($isToBeConfirmed) {
                     $joinEvent->join_status = $request->join_status;
-                    $team->confirmTeamRegistration($event);
+                    dispatch(new HandleEventJoinConfirm('Confirm', [
+                        'selectTeam' => $team,
+                        'user' => $user,
+                        'event' => $event,
+                    ]));
                     $joinEvent->save();
                 } else {
                     $voteToQuit = true;
@@ -395,24 +363,45 @@ class ParticipantEventController extends Controller
                     $joinEvent->vote_starter_id = $user->id;
                     $joinEvent->vote_ongoing = $user->id;
                     [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
-                    $joinEvent->save();
-                    // dd($joinEvent, $leaveRatio, $stayRatio);
-                    if ($leaveRatio > 0.5) {
-                        $team->load(['members' => function ($query) {
-                            $query->where('status', 'accepted')->with('user');
-                        }]);
-                        $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
-                        $team->cancelTeamRegistration($event, $discountsByUserAndType );
-                        $joinEvent->vote_ongoing = false;
-                        $joinEvent->join_status = "canceled";
-                    }
 
-                    if ($stayRatio > 0.5) {
-                        $joinEvent->vote_ongoing = false;
-                        $joinEvent->join_status = $joinEvent->payment_status == "completed" ? 
-                            "confirmed" : "pending";
-                    }
+                    if ($leaveRatio > 0.5 || $stayRatio > 0.5) {
+                        if ($leaveRatio > 0.5) {
+                            $team->load(['members' => function ($query) {
+                                $query->where('status', 'accepted')->with('user');
+                            }]);
+                            $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
+                            $joinEvent->vote_ongoing = false;
+                            $joinEvent->join_status = "canceled";
+                            dispatch(new HandleEventJoinConfirm('VoteEnd', [
+                                'selectTeam' => $team,
+                                'user' => $user,
+                                'event' => $event,
+                                'discount' => $discountsByUserAndType,
+                                'willQuit' => true
+                            ]));
+                        }
 
+                        if ($stayRatio > 0.5) {
+                            $joinEvent->vote_ongoing = false;
+                            $joinEvent->join_status = $joinEvent->payment_status == "completed" ? 
+                                "confirmed" : "pending";
+                            
+                            dispatch(new HandleEventJoinConfirm('VoteEnd', [
+                                'selectTeam' => $team,
+                                'user' => $user,
+                                'event' => $event,
+                                'willQuit' => false
+                            ]));
+                        }
+
+                    } else {
+                        dispatch(new HandleEventJoinConfirm('VoteStart', [
+                            'selectTeam' => $team,
+                            'user' => $user,
+                            'event' => $event,
+                        ]));
+                    }
+                    
                     $joinEvent->save();
                 }
             } else {

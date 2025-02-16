@@ -14,8 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Storage;
+
 
 class Team extends Model
 {
@@ -114,14 +113,13 @@ class Team extends Model
 
     public static function getTeamAndMembersByTeamId(int| string $teamId): ?self
     {
-        return self::with(['members.user' => function ($query) {
-            $query->select(['name', 'id', 'email']);
-        },
-        ])
-            ->whereHas('members', function ($query) {
-                $query->where('status', 'accepted');
-            })
-            ->find($teamId);
+        return self::with(['members' => function ($query) {
+            $query->where('status', 'accepted')
+                ->with(['user' => function ($query) {
+                    $query->select(['id', 'name', 'email', 'userBanner']);
+                }]);
+        }])
+        ->findOrFail($teamId);
     }
 
     public static function getUserTeamListAndPluckIds(int| string $user_id): array
@@ -171,8 +169,6 @@ class Team extends Model
             'teamIdList' => $teamIdList,
         ];
     }
-
-    
 
     public static function getUserPastTeamList($user_id)
     {
@@ -317,393 +313,40 @@ class Team extends Model
         return config('app.url') . '/' . $path;
     }
 
-    public function processTeamRegistration($user, $event): array
-    {
-        $userId = $user->id;
-        $teamBannerUrl = 
-            $this->teamBanner ? 
-            Storage::path($this->teamBanner) : 
-            public_path('assets/images/404.png');
-
-        $teamMembers = $this->members;
-        $participant = Participant::where('user_id', $userId)->firstOrFail();
-        $allEventLogs = [];
-        $memberNotification = [
-            'team' => ['id' => $this->id],
-            'subject' => 'Team '.$this->teamName.' joining Event: '.$event->eventName,
-            'links' => [
-                [
-                    'name' => 'View Team',
-                    'url' => route('public.team.view', ['id' => $this->id]),
-                ],
-                [
-                    'name' => 'View Event',
-                    'url' => route('public.event.view', ['id' => $event->id]),
-                ],
-            ],
+    public static function validateAndSaveTeam($request, $team, $user_id) 
+    {     
+        $customMessages = [
+            'teamName.unique' => 'Please give a unique name for your team.',
+            'teamName.required' => 'Please give your team a name',
+            'teamName.max' => 'Team name cannot exceed 25 characters',
+            'teamName.string' => 'Team name must be text',
         ];
 
-            $memberList = [];
-            $memberNotification['banner'] = $teamBannerUrl;
-            $memberNotification['textFirstPart'] = <<<HTML
-                <a href="/view/team/{$this->id}">
-                    <img src="{$teamBannerUrl}"
-                        width="45" height="45"
-                        onerror="this.src='/assets/images/404.png';"
-                        class="object-fit-cover rounded-circle me-2"
-                        alt="Team banner for {$this->teamName}">
-                </a>
-            HTML;
-            $memberNotification['text'] = <<<HTML
-                <span class="notification-gray">
-                    You have joined 
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event,
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>
-                    with your team, 
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-blue">{$this->teamName}</span>
-                    </a>. Please complete and confirm your registration for this event.
-                </span>
-            HTML;
+        $request->validate([
+            'teamName' => 'required|string|unique:teams|max:25',
+        ], $customMessages);
+        
+        $team->teamName = $request->input('teamName');
+        $team->creator_id = $user_id;
+        $team->save();
+        
+        return $team;
+    }
 
-
-            foreach ($teamMembers as $member) {
-                $memberList[] = $member->user;
-                $address = $member->user->id == $userId ? 'You': $member->user->name;
-                $allEventLogs[] = [
-                    'action' => 'join',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                    'subject_id' => $member->user->id,
-                    'subject_type' => User::class,
-                    'log' => <<<HTML
-                        <a href="/view/team/{$this->id}">
-                            <img src="/storage/{$this->teamBanner}"
-                                width="30" height="30" 
-                                onerror="this.src='/assets/images/404.png';"
-                                class="object-fit-cover rounded-circle me-2"
-                                alt="Team banner for {$this->teamName}">
-                        </a>
-                        <span class="notification-gray">
-                            {$address} have joined 
-                            <a href="/view/organizer/{$event->user->id}">
-                                <span class="notification-blue">{$event->user->name}</span>
-                            </a>'s event,
-                            <a href="/event/{$event->id}">
-                                <span class="notification-blue">{$event->eventName}</span>
-                            </a>. 
-                        </span>
-                    HTML,
-                ];
-            }
-            
-
-        $organizerList = [$event->user];
-
-        $organizerNotification = [
-            'subject' => 'Team '.$this->teamName.' joining Event: '.$event->eventName,
-            'team' => ['id' => $this->id],
-            'banner' => $teamBannerUrl,
-            'textFirstPart' => <<<HTML
-                <a href="/view/team/{$this->id}">
-                    <img src="{$teamBannerUrl}"
-                        width="45" height="45"
-                        onerror="this.src='/assets/images/404.png';"
-                        class="object-fit-cover rounded-circle me-2"
-                        alt="Team banner for {$this->teamName}">
-                </a>
-            HTML,
-            'text' => <<<HTML
-                <span class="notification-gray">
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-black">{$this->teamName}</span> 
-                    </a>
-                    has signed up for
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event,
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>. After signing up, they must complete and confirm registration for this event.
-                </span>
-            HTML,
-            'links' => [
-                [
-                    'name' => 'Visit Event',
-                    'url' => route('public.event.view', ['id' => $event->id]),
-                ],
-            ],
-        ];
+    public function processTeamRegistration($userId, $eventId): void {
+        $participant = Participant::where('user_id', $userId)
+            ->select(['id', 'user_id'])
+            ->firstOrFail();
 
         $joinEvent = JoinEvent::saveJoinEvent([
             'team_id' => $this->id,
             'joiner_id' => $userId,
             'joiner_participant_id' => $participant->id,
-            'event_details_id' => $event->id,
+            'event_details_id' => $eventId,
         ]);
 
-        RosterMember::userJoinEventRoster($joinEvent->id, $teamMembers, $this->id, $userId);
+        RosterMember::userJoinEventRoster($joinEvent->id, $this->members, $this->id, $userId);
 
-        return [$memberList, $organizerList, $memberNotification, $organizerNotification, $allEventLogs];
-    }
-
-    public function confirmTeamRegistration($event): void
-    {
-        $teamBannerUrl = 
-            $this->teamBanner ? 
-            Storage::path($this->teamBanner) : 
-            public_path('assets/images/404.png');
-
-        $teamMembers = $this->members;
-        $memberNotificationDefault = [
-            'team' => ['id' => $this],
-            'subject' => 'Team '.$this->teamName.' confirming registration for Event: '.$event->eventName,
-            'links' => [
-                [
-                    'name' => 'View Team',
-                    'url' => route('public.team.view', ['id' => $this->id]),
-                ],
-                [
-                    'name' => 'View Event',
-                    'url' => route('public.event.view', ['id' => $event->id]),
-                ],
-            ],
-        ];
-
-       
-        $memberList = $memberNotification = [];
-        foreach ($teamMembers as $member) {
-            $memberList[] = $member->user;
-            $memberNotification['banner'] = $teamBannerUrl;
-            $memberNotification['team'] = $memberNotificationDefault['team'];
-            $memberNotification['subject'] = $memberNotificationDefault['subject'];
-            $memberNotification['links'] = $memberNotificationDefault['links'];
-            $memberNotification['textFirstPart'] = <<<HTML
-                <a href="/view/team/{$this->id}">
-                    <img src="{$teamBannerUrl}"
-                        width="45" height="45"
-                        onerror="this.src='/assets/images/404.png';"
-                        class="object-fit-cover rounded-circle me-2"
-                        alt="Team banner for {$this->teamName}">
-                </a>
-            HTML;
-
-            $memberNotification['text'] = <<<HTML
-                <span class="notification-gray">
-                    Your team 
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-black">{$this->teamName}</span> 
-                    </a> has confirmed registration for  
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event,
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>. Your registration is completed and all ready to go.
-                </span>
-            HTML;
-        }
-
-        $organizerList = [$event->user];
-
-        $organizerNotification = [
-            'subject' => 'Team '.$this->teamName.' confirmed registration for Event: '.$event->eventName,
-            'team' => ['id' => $this->id],
-            'banner' => $teamBannerUrl,
-            'textFirstPart' => <<<HTML
-                <a href="/view/team/{$this->id}">
-                    <img src="{$teamBannerUrl}"
-                        width="45" height="45"
-                        onerror="this.src='/assets/images/404.png';"
-                        class="object-fit-cover rounded-circle me-2"
-                        alt="Team banner for {$this->teamName}">
-                </a>
-            HTML,
-            'text' => <<<HTML
-                <span class="notification-gray">
-                    <a href="/view/team/{$this->id}">
-                        <span class="notification-black">{$this->teamName}</span> 
-                    </a>
-                    has confirmed registration for
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event,
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>. They have confirmed their registrations for this event.
-                </span>
-            HTML,
-            'links' => [
-                [
-                    'name' => 'Visit Event',
-                    'url' => route('public.event.view', ['id' => $event->id]),
-                ],
-            ],
-        ];
-        // Notification::send($memberList, new EventConfirmNotification($memberNotification));
-        // Notification::send($organizerList, new EventConfirmNotification($organizerNotification));
-    }
-
-    public function cancelTeamRegistration(EventDetail $event, array $discountsByUserAndType, bool $isTeamCancelee = true)
-    {
-        if ($isTeamCancelee) {
-            $data['subject'] = 'Team '.$this->teamName.' canceled registration for Event: '.$event->eventName;
-            $data['refundString'] = 'half';
-            $data['cacnelOrgHtml'] = <<<HTML
-                <span>
-                    Team   
-                        <a href="/view/team/{$this->id}">
-                            <span class="notification-black">{$this->teamName}</span> 
-                        </a> has canceled registration for
-                        your event, 
-                        <a href="/event/{$event->id}">
-                            <span class="notification-blue">{$event->eventName}</span>
-                        </a>. They will be refunded a part of their fees according to tournament rules.
-                </span>
-                HTML;
-            $data['cacnelMemeberHtml'] = <<<HTML
-                <span>
-                    Team   
-                        <a href="/view/team/{$this->id}">
-                            <span class="notification-black">{$this->teamName}</span> 
-                        </a> has canceled registration for
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-blue">{$event->user->name}</span>
-                    </a>'s event,
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>. You will be refunded a part of your fees according to tournament rules.
-                </span>
-            HTML;
-        } else {
-            $data['subject'] = 'Organizer has '. 'canceled the Event: '.$event->eventName;
-            $data['refundString'] = 'all';
-            $data['cacnelOrgHtml'] = <<<HTML
-                <span>
-                    <span class="notification-black">You have canceled your event, </span>    
-                    <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>. You will be refunded a part of your fees according to tournament rules.
-                </span>
-                HTML;
-            $data['cacnelMemeberHtml'] = <<<HTML
-                <span>
-                    Organizer   
-                    <a href="/view/organizer/{$event->user->id}">
-                        <span class="notification-black">{$event->user->name}</span> 
-                    </a> has canceled the event: <a href="/event/{$event->id}">
-                        <span class="notification-blue">{$event->eventName}</span>
-                    </a>. You will be refunded a part of your fees according to tournament rules.
-                </span>
-            HTML;
-        }
-
-        $teamBannerUrl = 
-            $this->teamBanner ? 
-            Storage::path($this->teamBanner) : 
-            public_path('assets/images/404.png');
-
-        $teamMembers = $this->members;
-        $memberNotificationDefault = [
-            'team' => ['id' => $this->id],
-            'subject' => $data['subject'],
-            'links' => [
-                [
-                    'name' => 'View Team',
-                    'url' => route('public.team.view', ['id' => $this->id]),
-                ],
-                [
-                    'name' => 'View Event',
-                    'url' => route('public.event.view', ['id' => $event->id]),
-                ],
-            ],
-        ];
-
-       
-        $memberList = $memberNotification = [];
-        foreach ($teamMembers as $member) {
-            $user = $member->user;
-            $memberList[] = $user;
-            $discount = isset($discountsByUserAndType[$member->user_id]) ? $discountsByUserAndType[$member->user_id] : null;
-            $discountText = '';
-
-            $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;
-            $issetCouponedAmount = isset($discount['couponed_amount']) && $discount['couponed_amount'] > 0;    
-            if ( $issetReleasedAmount || $issetCouponedAmount ) {
-                $discountText = "You have been returned {$data['refundString']} of your contribution: ";
-                
-                if ($issetReleasedAmount) {
-                    $discountText .= "RM {$discount['released_amount']} in bank refunds" ;
-                }
-                
-                if ($issetReleasedAmount && $issetCouponedAmount) {
-                    $discountText .= " &";
-                }
-            
-                if ($issetCouponedAmount) {
-                    $discountText .= " RM {$discount['couponed_amount']} in coupons.";
-                }
-            }
-            
-
-            $memberNotification['banner'] = $teamBannerUrl;
-            $memberNotification['team'] = $memberNotificationDefault['team'];
-            $memberNotification['subject'] = $memberNotificationDefault['subject'];
-            $memberNotification['links'] = $memberNotificationDefault['links'];
-            $memberNotification['textFirstPart'] = <<<HTML
-                <a href="/view/team/{$this->id}">
-                    <img src="{$teamBannerUrl}"
-                        width="45" height="45"
-                        onerror="this.src='/assets/images/404.png';"
-                        class="object-fit-cover rounded-circle me-2"
-                        alt="Team banner for {$this->teamName}">
-                </a>
-            HTML;
-
-            $memberNotification['text'] = <<<HTML
-                <span class="notification-gray">
-                    {$data['cacnelMemeberHtml']}
-                    <br> {$discountText}
-                </span> 
-            HTML;
-        }
-
-        $organizerList = [$event->user];
-
-        $organizerNotification = [
-            'subject' => $data['subject'],
-            'team' => ['id' => $this->id],
-            'banner' => $teamBannerUrl,
-            'textFirstPart' => <<<HTML
-                <a href="/view/team/{$this->id}">
-                    <img src="{$teamBannerUrl}"
-                        width="45" height="45"
-                        onerror="this.src='/assets/images/404.png';"
-                        class="object-fit-cover rounded-circle me-2"
-                        alt="Team banner for {$this->teamName}">
-                </a>
-            HTML,
-            'text' =>  <<<HTML
-                <span class="notification-gray">
-                    {$data['cacnelOrgHtml']}
-                    <br>The system has refunded {$data['refundString']} the registration fees in refunds and coupons.
-                </span>
-            HTML,
-            'links' => [
-                [
-                    'name' => 'Visit Event',
-                    'url' => route('public.event.view', ['id' => $event->id]),
-                ],
-            ],
-        ];
-
-        // Notification::send($memberList, new EventCancelNotification($memberNotification));
-        // Notification::send($organizerList, new EventCancelNotification($organizerNotification));
-        
     }
 
 

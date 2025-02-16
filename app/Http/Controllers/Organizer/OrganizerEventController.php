@@ -6,6 +6,7 @@ use App\Exceptions\EventChangeException;
 use App\Exceptions\TimeGreaterException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Match\OrganizerViewEventRequest;
+use App\Jobs\HandleEventJoinConfirm;
 use App\Models\EventCategory;
 use App\Models\EventDetail;
 use App\Models\EventTier;
@@ -304,9 +305,11 @@ class OrganizerEventController extends Controller
         return response()->json(['success' => true, 'message' => 'Notification settings updated successfully']);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
+            $user = $request->attributes->get('user');
+
             $event = EventDetail::where('id', $id)
                 ->with('user')
                 ->firstOrFail(); 
@@ -317,9 +320,15 @@ class OrganizerEventController extends Controller
                     $q->with('user')->where('status', 'accepted'); 
                 }])
                 ->get();
-            $teamList->each(function (Team $team) use ($event, $id) {
+
+            $teamList->each(function (Team $team) use ($event, $user, $id) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$id], 0);
-                $team->cancelTeamRegistration($event, $discountsByUserAndType, false);
+                dispatch(new HandleEventJoinConfirm('OrgCancel', [
+                    'selectTeam' => $team,
+                    'user' => $user,
+                    'event' => $event,
+                    'discount' => $discountsByUserAndType
+                ]));
             });
 
             return response()->json([

@@ -2,6 +2,9 @@
 
 namespace App\Events;
 
+use App\Models\EventDetail;
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -11,26 +14,21 @@ class JoinEventSignuped
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $memberNotification;
+    public User $user;
 
-    public $organizerNotification;
+    public Team $selectTeam;
 
-    public $memberList;
+    public EventDetail $event;
 
-    public $organizerList;
-
-    public $allEventLogs;
 
     /**
      * Create a new event instance.
      */
     public function __construct($parameters)
     {
-        $this->memberList ??= $parameters['memberList'];
-        $this->organizerList ??= $parameters['organizerList'];
-        $this->memberNotification ??= $parameters['memberNotification'];
-        $this->organizerNotification ??= $parameters['organizerNotification'];
-        $this->allEventLogs ??= $parameters['allEventLogs'];
+        $this->user ??= $parameters['user'];
+        $this->selectTeam ??= $parameters['selectTeam'];
+        $this->event ??= $parameters['event'];
     }
 
     /**
