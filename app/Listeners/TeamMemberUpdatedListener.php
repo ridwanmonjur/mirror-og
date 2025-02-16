@@ -37,7 +37,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
         $user = $event->teamMember->user;
         $status = $event->teamMember->status;
         $routeCreator = route('participant.team.manage', $selectTeam->id);
-        $routeMember = route('public.participant.view', $user->id);]
+        $routeMember = route('public.participant.view', $user->id);
         $userLog = null;
 
         switch ($status) {
