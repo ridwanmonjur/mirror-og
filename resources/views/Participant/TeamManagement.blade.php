@@ -95,7 +95,7 @@
                     </div>
                 </div>
 
-                <div class="achievements col-12 col-lg-6">
+                <div class="achievements col-12 col-lg-6" id="Positions">
                     <div class="ms-2 text-center"><b>Positions</b></div><br>
                     @include('__CommonPartials.PositionBadge')
                 </div>

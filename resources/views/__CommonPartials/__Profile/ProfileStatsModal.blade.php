@@ -88,13 +88,13 @@
                                                         <template v-if="user.role == 'PARTICIPANT' && user.nickname">
                                                             <u><h5 style="width: 25ch;" class="card-title mb-1  text-truncate" v-text="user.nickname">
                                                             </h5></u>
-                                                            <p style="width: 25ch;" class="card-text mb-0 mt-2" style="color: gray;"
+                                                            <p style="width: 25ch;" class="card-text mb-0 " style="color: gray;"
                                                                 v-text="user.name">
                                                             </p>
                                                         </template>
                                                         <template v-else>
-                                                            <h6 style="width: 25ch;" class="card-title mb-3  text-truncate" v-text="user.name">
-                                                            </h6>
+                                                            <h5 style="width: 25ch;" class="card-title  mb-3 mt-2 text-truncate" v-text="user.name">
+                                                            </h5>
                                                         </template>
                                                         <div class="mt-2"> 
                                                             <div v-cloak class="p-0 ms-0 my-0 me-2 d-inline-block" v-if="loggedUserRole != 'ORGANIZER' && user.role != 'ORGANIZER'">

@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Jobs\HandleFollows;
+use App\Jobs\HandleFollowsFriends;
 use App\Models\ActivityLogs;
 use App\Models\Friend;
 use App\Models\OrganizerFollow;
@@ -27,7 +27,7 @@ class SocialService {
             $existingFollow->delete();
             $message = 'Successfully Unfollowed the organizer';
             $isFollowing = false;
-            dispatch(new HandleFollows('Unfollow', [
+            dispatch(new HandleFollowsFriends('UnfollowOrg', [
                 'subject_type' => User::class,
                 'object_type' => User::class,
                 'subject_id' => $participant->id,
@@ -42,14 +42,16 @@ class SocialService {
             ]);
             $message = 'Successfully followed the organizer';
             $isFollowing = true;
-            dispatch(new HandleFollows('Follow', [
+            dispatch(new HandleFollowsFriends('FollowOrg', [
                 'subject_type' => User::class,
                 'object_type' => User::class,
                 'subject_id' => $participant->id,
                 'object_id' => $organizer->id,
                 'action' => 'Follow',
+                'organizer' => $organizer,
+                'participant' => $participant,
                 'log' => $isFollowing ? sprintf(
-                    '<span class="notification-gray"> You started following another organizer, <span class="notification-black">%s.</span></span>',
+                    $this->generateFollowLogHtml($organizer, 'organizer', 'organizer'),
                     $organizer->name
                 ) : null
             ]));
@@ -75,12 +77,21 @@ class SocialService {
                     throw new Exception('You are befriending yourself!');
                 }
 
+                $addUser = User::where('id', $validatedData['addUserId'])
+                    ->select(['id', 'userBanner', 'name'])
+                    ->firstOrFail();
+
                 Friend::create([
                     'user1_id' => $user->id,
-                    'user2_id' => intval($validatedData['addUserId']),
+                    'user2_id' => $addUser->id,
                     'status' => 'pending',
                     'actor_id' => $user->id,
                 ]);
+
+                dispatch(new HandleFollowsFriends('NewFriend', [
+                    'user' => $user,
+                    'otherUser' => $addUser,                    
+                ]));
 
                 $result = ['type' => 'successMessage', 'message' => 'Successfully created a friendship'];
             }
@@ -107,6 +118,7 @@ class SocialService {
                         'object_id' => $friend->id,
                         'action' => 'friend',
                     ])->delete();
+
                 } elseif ($status === 'accepted') {
                     ActivityLogs::createActivityLogs([
                         'subject_type' => User::class,
@@ -115,10 +127,16 @@ class SocialService {
                         'object_id' => $friend->id,
                         'action' => 'friend',
                         'log' => [
-                            $this->generateLogHtml($updateUser, $updateUser),
-                            $this->generateLogHtml($user, $user)
+                            $this->generateFriendLogHtml($updateUser, $updateUser),
+                            $this->generateFriendLogHtml($user, $user)
                         ],
                     ]);
+
+                    dispatch(new HandleFollowsFriends('UpdateFriend', [
+                        'subject' => $user,
+                        'object' => $updateUser,
+                        'status' => $status
+                    ]));
                 }
 
                 $messages = [
@@ -141,7 +159,27 @@ class SocialService {
         }
     }
 
-    private function generateLogHtml($imageUser, $linkUser): string
+    private function generateFollowLogHtml($imageUser, $role, $roleName): string
+    {
+        return <<<HTML
+            <a href="/view/{$role}/{$imageUser->id}" alt="Follow Image link">
+                <img class="object-fit-cover rounded-circle me-2" 
+                    width="30" height="30"  
+                    src="/storage/{$imageUser->userBanner}" 
+                    alt="Profile picture of {$imageUser->name}"
+                    onerror="this.src='/assets/images/404.png';"
+                >
+            </a>
+            <span class="notification-gray">
+                You have started following another {$roleName},
+                <a href="/view/{$role}/{$imageUser->id}" alt="Follow link">  
+                    <span class="notification-blue">{$imageUser->name}</span>  
+                </a>.
+            </span>
+        HTML;
+    }
+
+    private function generateFriendLogHtml($imageUser, $linkUser): string
     {
         return <<<HTML
             <a href="/view/participant/{$imageUser->id}" alt="Friend Image link">
@@ -194,8 +232,8 @@ class SocialService {
         DB::beginTransaction();
         try {
             $updateUser = User::where('id', $participantId)
-                    ->select(['id', 'userBanner', 'name'])
-                    ->firstOrFail();
+                ->select(['id', 'userBanner', 'name'])
+                ->firstOrFail();
 
             $follow = ParticipantFollow::create([
                 'participant_follower' => $userId,
@@ -208,23 +246,14 @@ class SocialService {
                 'object_type' => ParticipantFollow::class,
                 'object_id' => $follow->id,
                 'action' => $PARTICIPANT_FOLLOW_ACTION,
-                'log' =>  <<<HTML
-                <a href="/view/participant/{$updateUser->id}" alt="Follow Image link"> 
-                    <img class="object-fit-cover rounded-circle me-2" 
-                        width='30' height='30'  
-                        alt="Profile picture of {$user->name}"
-                        src="/storage/{$updateUser->userBanner}" 
-                        onerror="this.src='/assets/images/404.png';"
-                    >
-                </a>
-                <span class="notification-gray me-2">
-                    You started  following another player,
-                    <a href="/view/participant/$updateUser->id" alt="Follow link"> 
-                        <span class="notification-blue">{$updateUser->name}</span>  
-                    </a>.
-                </span>
-                HTML,
+                'log' =>  $this->generateFollowLogHtml($updateUser, 'participant', 'player'),
             ]); 
+
+            dispatch(new HandleFollowsFriends('FollowParticipant', [
+                'followee' => $updateUser,
+                'user' => $user,
+            ]));
+
             DB::commit();
 
             return [

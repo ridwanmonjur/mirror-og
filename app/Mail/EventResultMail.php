@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 
-class EventConfirmMail extends Mailable implements ShouldQueue
+class EventResultMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $tries = 3; 
@@ -36,11 +36,11 @@ class EventConfirmMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
-            ->subject("Event Confirm Mail")
-            ->view('Email.event-confirmed')
+            ->subject("Event Results Mail")
+            ->view('Email.event-awarded')
             ->with([
                 'team' => $this->body['team'],
-                'actionName' => 'Login and view registration!',
+                'actionName' => 'Login and view position!',
                 'actionUrl' => $this->body['link'],
                 'text' => $this->body['text'],  
             ]);

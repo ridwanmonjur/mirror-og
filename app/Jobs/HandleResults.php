@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Mail\EventResultMail;
 use App\Models\ActivityLogs;
+use App\Models\NotifcationsUser;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,6 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ChangePositionStrategy
 {
@@ -40,14 +43,10 @@ class ChangePositionStrategy
             [
                 'teamId' => $teamId,
                 'image' => $image,
+                'team' => $team
             ] = $parameters;
 
-            $emojiMap = [1 => '🥇 (1st position)', 2 => '🥈 (2nd position)'];
             $positionString = intval($this->ordinalPrefix($parameters['position']));
-            if (isset($emojiMap[$parameters['position']])) {
-                $positionString = $emojiMap[$parameters['position']];
-            }
-
             $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
@@ -88,15 +87,24 @@ class ChangePositionStrategy
                 ActivityLogs::createActivityLogs($parameters);
             }
 
-            $parameters['data'] = [
-                'subject' => 'Position updated',
-                'data' => $notificationLog,
-                'links' => [[
-                    'url' => route('public.event.view', ['id' => $parameters['eventId']]),
-                    'name' => 'View event',
-                ],
-                ],
-            ];
+            foreach ($team->members as $member) {
+    
+                $memberNotification[] = [
+                    'user_id' => $member->user->id,
+                    'type' => 'trophy',
+                    'link' =>  route('public.team.view', ['id' => $team->id]),
+                    'icon_type' => 'results',
+                    'html' => $notificationLog,
+                ];
+    
+                Mail::to($member->user->email)->send(new EventResultMail([
+                    'team' => $team,
+                    'text' => $notificationLog,
+                    'link' => route('participant.team.view', ['id' => $team->id]) . '#Positions'                
+                ]));
+            }
+    
+            NotifcationsUser::insert($memberNotification);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -236,6 +244,8 @@ class AddAchievementStrategy
                 ],
                 ],
             ];
+
+
 
         } catch (Exception $e) {
             Log::error($e->getMessage());

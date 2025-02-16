@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Team Confirming Event' }}
+    {{ 'Team Starting Vote' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Team Confirming Event' }}
+    {{ 'Team Starting Vote' }}
 @endsection
 @section('content')
     <tr>
@@ -36,10 +36,9 @@
                 </tr>
                 <tr>
                     <td style="text-align: center; padding: 10px 0; color: #999999;">
-                        <p>If you're having trouble with the button above, please check you have signed in first. Next, copy and paste the URL below into your web
+                        <p>If you're having trouble with the button above, please check you have signed in first. Next, copy and paste the URL below into your
                             browser: <a href="{{ $actionUrl }}"
-                                style="color: {{$secondaryColor}};">{{ $actionUrl }}</a>
-                        </p>
+                                style="color: {{$secondaryColor}};">{{ $actionUrl }}</a></p>
                     </td>
                 </tr>
             </table>

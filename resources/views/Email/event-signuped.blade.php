@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Team Confirming Event' }}
+    {{ 'Team Signing for Event' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Team Confirming Event' }}
+    {{ 'Team Signing for Event' }}
 @endsection
 @section('content')
     <tr>
@@ -29,7 +29,7 @@
                                 {{$actionName}}
                             </a>
                         </p>
-                        <p>If you did not do this action, please ignore this email or contact support if you have
+                        <p>If you're having trouble with the button above, please check you have signed in first. Next, copy and paste the URL below into your web
                             questions.</p>
                         <p>Thanks,<br>Driftwood</p>
                     </td>

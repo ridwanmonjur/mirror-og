@@ -92,7 +92,7 @@
                                         <img class="rounded-circle object-fit-cover random-color-circle me-2" width="25"
                                             height="25" 
                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
-
+                                            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                                             {{-- {!! trustedBladeHandleImageFailureBanner() !!} --}}
                                         >
                                          @if ($joinEvent->roster_captain_id == $roster->id)

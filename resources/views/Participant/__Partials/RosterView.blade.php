@@ -64,8 +64,7 @@
                             >
                                  <img class="rounded-circle object-fit-cover random-color-circle ms-1 me-2 mb-1" width="25" height="25" 
                                     src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
-
-                                    {!!trustedBladeHandleImageFailureBanner()!!}>
+                                    onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;">
                                 <small>{{ $roster->user->name }}</small>
                             </li>
                         @endforeach

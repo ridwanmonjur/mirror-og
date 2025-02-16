@@ -20,7 +20,6 @@ return new class extends Migration
                 $table->integer('event_count')->default(0);
                 $table->timestamps();
 
-                // Add unique constraint to prevent duplicate counters per user
                 $table->unique('user_id');
             });
         }

@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\TeamMember;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -15,7 +16,7 @@ class TeamMemberCreated implements ShouldQueue
 
     public $teamMember;
 
-    public function __construct($teamMember)
+    public function __construct(TeamMember $teamMember)
     {
         $this->teamMember = $teamMember;
     }

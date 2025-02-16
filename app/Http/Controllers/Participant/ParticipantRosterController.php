@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\ApproveMemberRequest;
 use App\Http\Requests\Team\DisapproveMemberRequest;
 use App\Http\Requests\Team\VoteToStayRequest;
+use App\Jobs\HandleEventJoinConfirm;
 use App\Models\JoinEvent;
 use App\Models\RosterCaptain;
 use App\Models\RosterMember;
@@ -77,17 +78,33 @@ class ParticipantRosterController extends Controller
                 ->with(['roster', 'eventDetails', 'eventDetails.user'])
                 ->first();
 
-                $team = Team::where('id', $joinEvent->team_id)
+            $team = Team::where('id', $joinEvent->team_id)
                 ->with(['members' => function ($query) {
                     $query->where('status', 'accepted')->with('user');
                 }])
                 ->first();
             $joinEvent->vote_starter_id = $user->id;
-            [$leaveRatio, ] = $joinEvent->decideRosterLeaveVote();
+            [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
             $joinEvent->save();
             if ($leaveRatio > 0.5) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$joinEvent->eventDetails->id], 0.5);
-                $team->cancelTeamRegistration($joinEvent->eventDetails, $discountsByUserAndType );
+                dispatch(new HandleEventJoinConfirm('VoteEnd', [
+                    'selectTeam' => $team,
+                    'user' => $user,
+                    'event' => $joinEvent->eventDetails,
+                    'discount' => $discountsByUserAndType,
+                    'willQuit' => true
+                ]));
+            } 
+            
+            if ($stayRatio > 0.5) {
+                dispatch(new HandleEventJoinConfirm('VoteEnd', [
+                    'selectTeam' => $team,
+                    'user' => $user,
+                    'event' => $joinEvent->eventDetails,
+                    'discount' => null,
+                    'willQuit' => false
+                ]));
             }
     
             $message = !$request->vote_to_quit ? 'Voted to stay in the event' : 'Voted to leave the event';

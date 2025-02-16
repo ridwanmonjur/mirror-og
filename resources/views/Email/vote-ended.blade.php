@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Team Joining Event' }}
+    {{ 'Team Ending Vote' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Team Joining Event' }}
+    {{ 'Team Ending Vote' }}
 @endsection
 @section('content')
     <tr>
@@ -21,12 +21,6 @@
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hello and greetings.</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
-                            <a href="/view/team/{{$team['id']}}" style="color: white !important;">
-                                <img src="{{$message->embed($bannerPath)}}"
-                                    width="45" height="45"
-                                    style="object-fit:cover; border-radius: 50%; margin-right: 10px;"
-                                    alt="Team banner">
-                            </a>
                             <span>{!! $text !!}</span>
                         </p> 
                         <p style="text-align: center;">
@@ -42,7 +36,7 @@
                 </tr>
                 <tr>
                     <td style="text-align: center; padding: 10px 0; color: #999999;">
-                        <p>If you're having trouble with the button above, copy and paste the URL below into your web
+                        <p>If you're having trouble with the button above, please check you have signed in first. Next, copy and paste the URL below into your
                             browser: <a href="{{ $actionUrl }}"
                                 style="color: {{$secondaryColor}};">{{ $actionUrl }}</a></p>
                     </td>
