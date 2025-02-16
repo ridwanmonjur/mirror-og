@@ -7,28 +7,23 @@ use App\Http\Requests\User\FriendRequest;
 use App\Http\Requests\User\FriendUpdateRequest;
 use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\OrganizerFollowRequest;
-use App\Jobs\HandleFollows;
+use App\Jobs\HandleFollowsFriends;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Friend;
-use App\Models\JoinEvent;
-use App\Models\Like;
+
 use App\Models\OrganizerFollow;
 use App\Models\TeamFollow;
-use App\Models\Participant;
 use App\Models\ParticipantFollow;
 use App\Models\Report;
-use App\Models\Team;
-use App\Models\TeamMember;
+
 use App\Models\User;
 use App\Services\SocialService;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Io238\ISOCountries\Models\Country;
+
 
 
 class SocialController extends Controller
