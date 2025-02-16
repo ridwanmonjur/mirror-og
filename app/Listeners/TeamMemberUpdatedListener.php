@@ -220,6 +220,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
 
         $memberNotification = [];
         foreach ($selectTeam->members as $member) {
+            if ($member->user->id == $user->id) continue;
             $route = $member->user->id == $selectTeam->creator_id ? $routeCreator: $routeMember;
 
             $memberNotification[] = [
