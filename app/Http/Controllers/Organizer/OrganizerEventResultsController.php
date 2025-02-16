@@ -85,6 +85,7 @@ class OrganizerEventResultsController extends Controller
             'action' => 'Position',
             'eventId' => $joinEvent->event_details_id,
             'teamId' => $team->id,
+            'team' => $team,
             'teamName' => $request->teamName,
             'image' => $request->teamBanner,
             'position' => intval($request->position),
