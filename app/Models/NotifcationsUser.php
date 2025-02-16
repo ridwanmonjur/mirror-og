@@ -16,7 +16,8 @@ class NotifcationsUser extends Model
         'icon_type',
         'html',
         'link',
-        'is_read'
+        'is_read',
+        'img_src'
     ];
 
     protected $casts = [
