@@ -75,6 +75,11 @@
             </div>
             <div class="mx-2">
                 <div class="notification-list">
+                    <template v-if="!notificationList?.[0]"> 
+                        <div class="p-3 text-start">
+                            No notifications.
+                        </div> 
+                    </template>
                     <template v-for="notification in notificationList" :key="notification.id">
                         <div 
                             class="notification-item cursor-pointer d-flex align-items-center p-3 border-0 "
@@ -95,7 +100,7 @@
                                 <template v-else-if="notification.img_src">
                                     <img v-bind:src="notification.img_src" class="rounded-circle object-fit-cover me-3" width="30"
                                         height="30" alt="Profile"
-                                        onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
+                                        onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                                     >
                                 </template>
                             </div>

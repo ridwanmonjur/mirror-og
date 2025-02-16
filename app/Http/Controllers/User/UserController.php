@@ -6,6 +6,7 @@ use App\Exceptions\SettingsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
 use App\Http\Requests\User\UpdateSettingsRequest;
+use App\Models\NotificationCounter;
 use App\Models\StripePayment;
 use App\Models\TeamProfile;
 use App\Models\UserProfile;
@@ -66,6 +67,15 @@ class UserController extends Controller
     public function seed() {
         $seeder = new NotificationSeeder();
         $seeder->run();
+        
+        return [
+            'success' => true
+        ];
+    }
+
+    public function delete() {
+        NotificationCounter::truncate();
+        NotifcationsUser::truncate();
         
         return [
             'success' => true
