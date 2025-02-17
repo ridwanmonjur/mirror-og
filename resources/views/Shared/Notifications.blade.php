@@ -92,6 +92,11 @@
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                                     >
                                 </template>
+                                <template v-else>
+                                    <img src="{{ asset('assets/images/404q.png') }}" class="rounded-circle object-fit-cover me-3" width="30"
+                                        height="30" alt="Profile"
+                                    >
+                                </template>
                         </div>
                         <div class="notification-content flex-grow-1">
                             <div v-html="notification2.html"></div>
