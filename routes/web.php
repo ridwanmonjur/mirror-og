@@ -27,8 +27,6 @@ Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.la
 Route::view('/closedbeta', 'Beta.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Beta.About')->name('public.about.view');
 Route::view('/contact', 'Beta.Contact')->name('public.contact.view');
-Route::get('/notifSeed', [UserController::class, 'seed']);
-Route::get('/notifDelete', [UserController::class, 'delete']);
 
 // Forget, reset password
 Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
