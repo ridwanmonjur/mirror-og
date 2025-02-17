@@ -22,10 +22,10 @@
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <br><br>
     <div     
-        @vue:mounted="init"
         id="notif-container" 
         v-scope="PageNotificationComponent()"
         style="width: min(1000px, 95%); "
+
     >
         <h4 class="ms-4">
             All Notifications
