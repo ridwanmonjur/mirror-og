@@ -188,9 +188,23 @@ class FollowTeamStrategy
                     'html' => $html,
                 ];
             }
+
+            NotifcationsUser::create([
+                'user_id' => $user->id,
+                'type' => 'teams',
+                'html' => <<<HTML
+                    <span class="notification-gray me-2">
+                        You followed a team, 
+                        <a href="/view/team/{$selectTeam->id}">
+                            <span class="notification-blue">{$selectTeam->teamName}</span></a>. 
+                    </span>
+                HTML,
+                'link' => route('public.team.view', $selectTeam->id),
+                'icon_type' => 'follow'
+            ]);
         }
 
-        NotifcationsUser::insert($memberNotification);
+        NotifcationsUser::insertWithCount($memberNotification);
     }
 }
 

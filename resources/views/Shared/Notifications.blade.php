@@ -32,7 +32,6 @@
         </h4>
         <div class="tabs d-block row ms-4 px-0 " >
             <button id="SocialBtn" class="tab-button d-inline  col-12 col-lg-3 py-2   outer-tab"
-                onclick="showTab(event, 'Social', 'outer-tab')"
                 v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
                 v-on:click="changeNotificationTab('social')"   
             >Social
@@ -43,7 +42,6 @@
             </span>
             </button>
             <button id="TeamsBtn" class="tab-button py-2 col-12 col-lg-3  d-inline  outer-tab"
-                onclick="showTab(event, 'Teams', 'outer-tab')"
                 v-on:click="changeNotificationTab('teams')"  
                 v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
             >
@@ -55,7 +53,6 @@
                 </span>
             </button>
             <button id="EventBtn" class="tab-button py-2  col-12 col-lg-3 d-inline  outer-tab"
-                onclick="showTab(event, 'Event', 'outer-tab')"
                 v-on:click="changeNotificationTab('event')" 
                 v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
             >
@@ -90,7 +87,7 @@
                                     <span class="me-1" v-html="getIconSvg(notification2.icon_type)"></span>
                                 </template>
                                 <template v-else-if="notification2.img_src">
-                                    <img v-bind:src="notification2.img_src" class="rounded-circle object-fit-cover me-1" width="30"
+                                    <img v-bind:src="'/storage/'+ notification2.img_src" class="rounded-circle object-fit-cover me-1" width="30"
                                         height="30" alt="Profile"
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                                     >

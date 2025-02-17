@@ -104,7 +104,7 @@ class ChangePositionStrategy
                 ]));
             }
     
-            NotifcationsUser::insert($memberNotification);
+            NotifcationsUser::insertWithCount($memberNotification);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());

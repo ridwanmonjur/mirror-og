@@ -49,7 +49,6 @@
                 </span>
                 </button>
                 <button id="TeamsBtn" class="tab-button py-1 col-12 col-lg-3  d-inline  outer-tab"
-                    onclick="showTab(event, 'Teams', 'outer-tab')"
                     v-on:click="changeNotificationTab('teams')"
                     v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
                     style="width: auto;"
@@ -98,7 +97,7 @@
                                     <span class="me-3" v-html="getIconSvg(notification.icon_type)"></span>
                                 </template>
                                 <template v-else-if="notification.img_src">
-                                    <img v-bind:src="notification.img_src" class="rounded-circle object-fit-cover me-3" width="30"
+                                    <img v-bind:src="'/storage/' + notification.img_src" class="rounded-circle object-fit-cover me-3" width="30"
                                         height="30" alt="Profile"
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                                     >

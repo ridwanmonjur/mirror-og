@@ -240,7 +240,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
             'img_src' => $selectTeam->teamBanner
         ];
 
-        NotifcationsUser::insert([...$memberNotification, $userNotification]);
+        NotifcationsUser::insertWithCount([...$memberNotification, $userNotification]);
     }
 
     

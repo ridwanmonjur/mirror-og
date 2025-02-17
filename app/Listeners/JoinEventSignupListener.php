@@ -64,7 +64,7 @@ class JoinEventSignupListener implements ShouldQueue
             ]));
         }
             
-        NotifcationsUser::insert($memberNotification);
+        NotifcationsUser::insertWithCount($memberNotification);
     }
 
     public function failed($error): void

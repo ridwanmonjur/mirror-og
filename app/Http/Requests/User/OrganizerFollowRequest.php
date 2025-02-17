@@ -16,7 +16,7 @@ class OrganizerFollowRequest extends FormRequest
     {
         $this->organizer = User::where('id', $this->organizer_id)
             ->where('role', 'ORGANIZER')
-            ->select(['id', 'role', 'name'])
+            ->select(['id', 'role', 'name', 'userBanner'])
             ->firstOrFail();
             
         $user = $this->attributes->get('user');
