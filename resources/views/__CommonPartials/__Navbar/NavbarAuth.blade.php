@@ -3,6 +3,7 @@
     v-scope="PageNotificationComponent()"
     class="dropdown me-3" data-reference="parent" data-bs-auto-close="outside" 
     v-on:click="loadFirstPage()"
+    @vue:mounted="init"
     >
     <a href="#" role="button" class="btn d-flex justify-content-start align-items-center m-0 p-0" id="dropNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true"
