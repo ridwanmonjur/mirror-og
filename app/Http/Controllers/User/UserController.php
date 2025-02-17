@@ -6,13 +6,11 @@ use App\Exceptions\SettingsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
 use App\Http\Requests\User\UpdateSettingsRequest;
-use App\Models\NotificationCounter;
 use App\Models\StripePayment;
 use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
 use App\Models\User;
-use Database\Seeders\NotificationSeeder;
 use App\Services\SettingsService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -41,7 +39,6 @@ class UserController extends Controller
                 return $query->where('type', $type);
             })
             ->orderBy('created_at', 'asc')
-            ->orderBy('is_read', 'asc')
             ->simplePaginate($perPage, ['*'], 'notification_page', $pageNumber);
         return response()->json([
             'data' => [$type => $page->items()],
@@ -65,29 +62,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function seed() {
-        $seeder = new NotificationSeeder();
-        $seeder->run();
-        
-        return [
-            'success' => true
-        ];
-    }
-
-    public function delete() {
-        NotificationCounter::truncate();
-        NotifcationsUser::truncate();
-        $users = User::all();
-
-        foreach ($users as $user) { 
-            NotificationCounter::create([
-                'user_id' => $user->id,
-            ]);
-        }
-        return [
-            'success' => true
-        ];
-    }
 
 
     public function replaceBackground(BannerUpdateRequest $request)

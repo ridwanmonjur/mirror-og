@@ -116,7 +116,7 @@ let allNotificationStore = reactive({
     async loadFirstPage (tab) {
         if (this.page[tab] <= 0) {
             this.loadPage(tab, 1);
-        }
+        } 
     },
 
     async loadOtherPagePage (tab) {
@@ -213,11 +213,13 @@ const tabStore = reactive({
 
    
 function PageNotificationComponent () {
+    const notifications = allNotificationStore;
+    const tabs = tabStore;
     return {
         notificationColors,
 
-        async loadFirstPage(){
-            await allNotificationStore.loadFirstPage(this.currentTab);
+        async loadFirstPage(tabName){
+            await notifications.loadFirstPage(tabName);
         },
 
         changeNotificationTab(tabName) {
@@ -225,59 +227,41 @@ function PageNotificationComponent () {
         },
         
         get visibleCircles() {
-            return allNotificationStore.visibleCircles
+            return notifications.visibleCircles
         },
 
         get counter() {
-            return allNotificationStore.counter;
+            return notifications.counter;
         },
 
         get hasMore() {
-            return allNotificationStore.hasMore[tabStore.currentTab]
+            return notifications.hasMore[tabStore.currentTab]
         },
 
         get notificationList () {
-            return allNotificationStore.items[tabStore.currentTab];
+            return notifications.items[tabStore.currentTab];
         },
 
         async loadNextPage() {
-            await allNotificationStore.loadOtherPagePage(tabStore.currentTab);
+            await notifications.loadOtherPagePage(tabStore.currentTab);
         },
 
         init() {
             this.loadFirstPage();
         },
        
-
         get currentTab () {
-            return tabStore.currentTab;
-        },
-
-        async fetchMoreNotifications () {
-
+            return tabs.currentTab;
         },
         
-        async markNotificationRead(event, id, link) {
-            await allNotificationStore.markNotificationRead(id, tabStore.currentTab);
-            let target = event.target;
-            if (target.tagName === 'A') {
-                window.open(
-                    target.dataset.href,
-                    'noopener,noreferrer',
-                ); 
-                return; 
-            }
-
-            window.open(
-                link,
-                'noopener,noreferrer',
-            );        
+        async markNotificationRead(id) {
+            await notifications.markNotificationRead(id, tabStore.currentTab);
         },
 
         async changeNotificationTab(tabName) {
             try {
-                tabStore.changeNotificationTab(tabName);
-                this.loadFirstPage();
+                tabs.changeNotificationTab(tabName);
+                this.loadFirstPage(tabName);
             } catch (error) {
                 console.error(error);
                 toastError('Failed to load notifications');

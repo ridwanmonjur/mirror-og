@@ -60,7 +60,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     </span>
                 HTML;
 
-                if ($event->teamMember->actor === 'team') {
+                if ($event->teamMember->actor == 'team') {
                     $userNotification =  <<<HTML
                         <span class="notification-gray me-2">
                         <a href="/view/team/{$selectTeam->id}" alt="Team View">
@@ -118,7 +118,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 HTML;
 
 
-                if ($event->teamMember->actor === 'team') {
+                if ($event->teamMember->actor == 'team') {
                     
                     $userNotification = <<<HTML
                         <span class="notification-gray">
@@ -161,7 +161,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 break;
             case 'rejected':
                 $action = 'rejected';
-                if ($event->teamMember->actor === 'team') {
+                if ($event->teamMember->actor == 'team') {
                     $userNotification = <<<HTML
                         <span class="notification-gray">
                             <a href="/view/team/{$selectTeam->id}" alt="Team View">
@@ -172,14 +172,14 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
-                            The user, 
+                            <a href="/view/team/{$selectTeam->id}" alt="Team View">
+                                <span class="notification-blue">{$selectTeam->teamName}</span></a>
+                            has rejected the user, 
                             <a href="/view/participant/{$user->id}" 
                                 alt="User link"
                             > 
                             <span class="notification-black">{$user->name}</span></a>
-                            has been rejected to join your team, 
-                            <a href="/view/team/{$selectTeam->id}" alt="Team View">
-                                <span class="notification-blue">{$selectTeam->teamName}</span></a>.
+                            to join.
                         </span>
                         HTML;
                 } else {

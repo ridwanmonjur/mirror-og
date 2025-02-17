@@ -65,7 +65,7 @@
             </button>
         </div>
         <div class="ms-4">
-            <div class="notification-list">
+            <div class="notification-list2">
                 <template v-if="!notificationList?.[0]"> 
                     <div class="p-3 text-start">
                         No notifications.
@@ -73,30 +73,30 @@
                 </template>
                 <template v-for="notification2 in notificationList" :key="notification2.id">
                     <div class="notification-item d-flex align-items-center cursor-pointer p-3 border-0"
-                        v-on:click="markNotificationRead(event, notification2.id, notification2.link)"
+                        v-on:click="markNotificationRead(notification2.id)"
                     >
                         <div class="notification-icon me-1">
                              <span v-if="!notification2.is_read" class="me-2">
-                                    <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
-                                        <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
-                                    </svg>
-                                </span>
-                                <span v-else class="d-inline-block me-2" style="width: 5px; height: 5px;">
-                                </span>
-                                <template v-if="notification2.icon_type" >
-                                    <span class="me-1" v-html="getIconSvg(notification2.icon_type)"></span>
-                                </template>
-                                <template v-else-if="notification2.img_src">
-                                    <img v-bind:src="'/storage/'+ notification2.img_src" class="rounded-circle object-fit-cover me-1" width="30"
-                                        height="30" alt="Profile"
-                                        onerror="this.src='{{ asset('assets/images/404q.png') }}';"
-                                    >
-                                </template>
-                                <template v-else>
-                                    <img src="{{ asset('assets/images/404q.png') }}" class="rounded-circle object-fit-cover me-3" width="30"
-                                        height="30" alt="Profile"
-                                    >
-                                </template>
+                                <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                                    <circle cx="2" cy="2" r="2" v-bind:fill="notificationColors[currentTab]"></circle>
+                                </svg>
+                            </span>
+                            <span v-else class="d-inline-block me-2" style="width: 5px; height: 5px;">
+                            </span>
+                            <template v-if="notification2.icon_type" >
+                                <span class="me-1" v-html="getIconSvg(notification2.icon_type)"></span>
+                            </template>
+                            <template v-else-if="notification2.img_src">
+                                <img v-bind:src="'/storage/'+ notification2.img_src" class="rounded-circle object-fit-cover me-1" width="30"
+                                    height="30" alt="Profile"
+                                    onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                                >
+                            </template>
+                            <template v-else>
+                                <img src="{{ asset('assets/images/404q.png') }}" class="rounded-circle object-fit-cover me-3" width="30"
+                                    height="30" alt="Profile"
+                                >
+                            </template>
                         </div>
                         <div class="notification-content flex-grow-1">
                             <div v-html="notification2.html"></div>
