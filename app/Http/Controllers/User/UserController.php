@@ -11,6 +11,7 @@ use App\Models\StripePayment;
 use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
+use App\Models\User;
 use Database\Seeders\NotificationSeeder;
 use App\Services\SettingsService;
 use Exception;
@@ -76,7 +77,13 @@ class UserController extends Controller
     public function delete() {
         NotificationCounter::truncate();
         NotifcationsUser::truncate();
-        
+        $users = User::all();
+
+        foreach ($users as $user) { 
+            NotificationCounter::create([
+                'user_id' => $user->id,
+            ]);
+        }
         return [
             'success' => true
         ];

@@ -104,7 +104,7 @@ class ConfirmStrategy
             'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
         ]));
         ActivityLogs::insert($allEventLogs);
-        NotifcationsUser::insert([$organizerNotification, ...$memberNotification]);
+        NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
     }
 }
 
@@ -161,7 +161,7 @@ class VoteStartStrategy
             ]));
         }
 
-        NotifcationsUser::insert($memberNotification);
+        NotifcationsUser::insertWithCount($memberNotification);
     }
 }
 
@@ -285,7 +285,7 @@ class VoteEndStrategy
                 'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
             ]));
 
-            NotifcationsUser::insert([$organizerNotification, ...$memberNotification]);
+            NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
         } else {
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
@@ -330,7 +330,7 @@ class VoteEndStrategy
                 ]));
             }
 
-            NotifcationsUser::insert($memberNotification);
+            NotifcationsUser::insertWithCount($memberNotification);
         }
     }
 }
@@ -412,7 +412,7 @@ class JoinPlaceStrategy {
         ];
 
         ActivityLogs::insert($allEventLogs);
-        NotifcationsUser::insert([$organizerNotification, ...$memberNotification]);
+        NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
     }
 }
 

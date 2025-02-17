@@ -39,9 +39,7 @@ class NotifcationsUser extends Model
             $counter = NotificationCounter::firstOrCreate(
                 ['user_id' => $notification->user_id]
             );
-            // comment the line below and uncomment the next one
-            if (!$notification->is_read) $counter->incrementCounter($notification->type);
-            // $counter->incrementCounter($notification->type);
+            $counter->incrementCounter($notification->type);
         });
 
         static::deleted(function ($notification) {
@@ -49,6 +47,37 @@ class NotifcationsUser extends Model
                 $counter = NotificationCounter::where('user_id', $notification->user_id)->first();
                 if ($counter) {
                     $counter->decrementCounter($notification->type);
+                }
+            }
+        });
+    }
+
+    public static function insertWithCount(array $notifications)
+    {
+        DB::transaction(function () use ($notifications) {
+            self::insert($notifications);
+            
+            $counterUpdates = collect($notifications)
+                ->groupBy('user_id')
+                ->map(function ($userNotifications) {
+                    return $userNotifications
+                        ->mapToGroups(function ($notification) {
+                            return [$notification['type'] => 1];
+                        })
+                        ->map(function ($counts) {
+                            return $counts->sum();
+                        });
+                });
+            
+            foreach ($counterUpdates as $userId => $types) {
+                NotificationCounter::firstOrCreate(['user_id' => $userId]);
+                
+                foreach ($types as $type => $count) {
+                    if (is_string($type) && is_numeric($count)) {  
+                        DB::table('notification_counters')
+                            ->where('user_id', $userId)
+                            ->increment("{$type}_count", (int)$count);
+                    }
                 }
             }
         });

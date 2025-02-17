@@ -14,11 +14,6 @@ let {
     eventCount, 
 } = importantUrlsDiv.dataset;
 
-console.log({
-    socialCount,
-    teamsCount,
-    eventCount, 
-});
 
 function  createVisibleCircles(counter) {
     const circles = [];
@@ -39,7 +34,7 @@ function  createVisibleCircles(counter) {
 
 function makePosition(index, totalCircles) {
     if (totalCircles === 1) return 10;
-    if (totalCircles === 2) return [2, 6, 14][index];
+    if (totalCircles === 2) return [2, 8, 14][index];
     return [2, 8, 14][index];
 }
 

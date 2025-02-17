@@ -87,7 +87,7 @@
                                     <span class="me-1" v-html="getIconSvg(notification2.icon_type)"></span>
                                 </template>
                                 <template v-else-if="notification2.img_src">
-                                    <img v-bind:src="notification2.img_src" class="rounded-circle object-fit-cover me-1" width="30"
+                                    <img v-bind:src="'/storage/'+ notification2.img_src" class="rounded-circle object-fit-cover me-1" width="30"
                                         height="30" alt="Profile"
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                                     >
