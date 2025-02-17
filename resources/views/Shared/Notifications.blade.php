@@ -25,6 +25,7 @@
         id="notif-container" 
         v-scope="PageNotificationComponent()"
         style="width: min(1000px, 95%); "
+    @vue:mounted="init"
 
     >
         <h4 class="ms-4">
