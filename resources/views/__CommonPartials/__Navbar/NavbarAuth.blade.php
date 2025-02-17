@@ -49,7 +49,6 @@
                 </span>
                 </button>
                 <button id="TeamsBtn" class="tab-button py-1 col-12 col-lg-3  d-inline  outer-tab"
-                    onclick="showTab(event, 'Teams', 'outer-tab')"
                     v-on:click="changeNotificationTab('teams')"
                     v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
                     style="width: auto;"

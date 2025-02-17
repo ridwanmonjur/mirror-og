@@ -32,7 +32,6 @@
         </h4>
         <div class="tabs d-block row ms-4 px-0 " >
             <button id="SocialBtn" class="tab-button d-inline  col-12 col-lg-3 py-2   outer-tab"
-                onclick="showTab(event, 'Social', 'outer-tab')"
                 v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
                 v-on:click="changeNotificationTab('social')"   
             >Social
@@ -43,7 +42,6 @@
             </span>
             </button>
             <button id="TeamsBtn" class="tab-button py-2 col-12 col-lg-3  d-inline  outer-tab"
-                onclick="showTab(event, 'Teams', 'outer-tab')"
                 v-on:click="changeNotificationTab('teams')"  
                 v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
             >
@@ -55,7 +53,6 @@
                 </span>
             </button>
             <button id="EventBtn" class="tab-button py-2  col-12 col-lg-3 d-inline  outer-tab"
-                onclick="showTab(event, 'Event', 'outer-tab')"
                 v-on:click="changeNotificationTab('event')" 
                 v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
             >
