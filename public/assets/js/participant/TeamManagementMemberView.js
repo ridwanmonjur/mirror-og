@@ -281,8 +281,7 @@ async function fetchMembers(event = null) {
 
         let statusListFilter = formData.getAll('status');
         if (nameFilter != "" && !(
-            String(sortedMember?.user?.name).includes(nameFilter) ||
-            String(sortedMember?.user?.email).includes(nameFilter)
+            String(sortedMember?.user?.name).includes(nameFilter) 
         )) {
             isToBeAdded = isToBeAdded && false;
         } 

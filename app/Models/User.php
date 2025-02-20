@@ -184,8 +184,7 @@ class User extends Authenticatable implements FilamentUser
             ->where(function ($query) use ($search, $status, $teamId) {
                 if (! empty($search)) {
                     $query->where(function ($q) use ($search) {
-                        $q->orWhere('name', 'LIKE', "%{$search}%")
-                            ->orWhere('email', 'LIKE', "%{$search}%");
+                        $q->orWhere('name', 'LIKE', "%{$search}%");
                     });
                 }
 
