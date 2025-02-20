@@ -27,7 +27,7 @@
     >
         <div class="d-flex mx-4 mt-2 justify-content-between py-1">
             <h5 class="py-0 my-0">Notifications</h5>
-            <a href="{{ route('user.notif.view') }}" role="button" class="px-2 py-1 btn btn-small bg-secondary text-white fs-7 me-3" 
+            <a href="{{ route('user.notif.view') }}" role="button" class="px-2 py-1 btn btn-small bg-secondary text-white fs-7 " 
                 aria-haspopup="true" aria-expanded="true"
             >
                 See all
@@ -117,8 +117,8 @@
                 </div>
                 <div>
                     <template v-if="hasMore">
-                        <div aria-label="Page navigation" class="mt-0 mb-3">
-                            <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage()">Next page</button>
+                        <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
+                            <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage()">Next notification</button>
                         </div>
                     </template>
                 </div>
