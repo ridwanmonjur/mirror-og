@@ -109,7 +109,7 @@
             <div>
                 <template v-if="hasMore">
                     <div aria-label="Page navigation" class="mt-1" style="padding-left: 9px;">
-                        <button class="btn btn-primary btn-sm text-white " v-on:click="loadNextPage()">Next notification</button>
+                        <button class="btn btn-primary btn-sm text-white " v-on:click="loadNextPage()">Next notifications</button>
                     </div>
                 </template>
             </div>
