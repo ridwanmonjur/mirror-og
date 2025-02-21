@@ -254,8 +254,15 @@ function PageNotificationComponent () {
             return tabs.currentTab;
         },
         
-        async markNotificationRead(id) {
-            await notifications.markNotificationRead(id, tabStore.currentTab);
+        async markNotificationRead(event, id, link, isRead) {
+            if (!isRead) await notifications.markNotificationRead(id, tabStore.currentTab);
+            let target = event.target;
+            if (target.tagName === "button") {
+                let { href } = target.dataset;
+                if (href) link = href;
+            }
+           
+            window.open(link, '_blank');
         },
 
         async changeNotificationTab(tabName) {

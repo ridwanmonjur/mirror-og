@@ -82,7 +82,7 @@
                     <template v-for="notification in notificationList" :key="notification.id">
                         <div 
                             class="notification-item cursor-pointer d-flex align-items-center p-3 border-0 "
-                            v-on:click="markNotificationRead(notification.id)"
+                            v-on:click="markNotificationRead(event, notification.id, notification.link, notification.is_read)"
                         >
                            
                             <div class="notification-icon " style="white-space: nowrap;">

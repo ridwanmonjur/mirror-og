@@ -52,27 +52,27 @@ class ChangePositionStrategy
                 <span>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <a href="/event/$teamId" alt="Team Link">
-                        <span class="notification-blue">{$parameters['teamName']}</span>
-                    </a>. 
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                        {$parameters['teamName']}
+                    </button>. 
                 </span>
             HTML;
 
             $activityLog = <<<HTML
                 <span>
-                    <a href="/event/$teamId" alt="Team View">
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
-                    </a>
+                    </button>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <a href="/event/$teamId" alt="Team Link">
-                        <span class="notification-blue">{$parameters['teamName']}</span>
-                    </a>. 
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                        {$parameters['teamName']}
+                    </button>. 
                 </span>
             HTML;
 
@@ -127,37 +127,37 @@ class AddAwardStrategy
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
                 <span>
-                <a href="/event/$teamId" alt="Team View">
+                <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                     <img src="/storage/$image" 
                         width="30" height="30"
                         onerror="this.src='/assets/images/404.png';"
                         class="object-fit-cover rounded-circle me-2"
                         alt="Event View"
                     >
-                </a>
+                </button>
                 <span class="notification-gray"> You achieved 
                 {$parameters['award']} position in the team,
-                <a href="/event/$teamId" alt="Team Link">
-                    <span class="notification-blue">{$parameters['teamName']}</span>
-                </a>. 
+                <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                    {$parameters['teamName']}
+                </button>. 
             </span>
             HTML;
 
             $activityLog = <<<HTML
                 <span>
-                    <a href="/event/$teamId" alt="Team View">
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
-                    </a>
+                    </button>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a href="/event/$teamId" alt="Team Link">
-                        <span class="notification-blue">{$parameters['teamName']}</span>
-                    </a>. 
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                        {$parameters['teamName']}
+                    </button>. 
                 </span>
             HTML;
 
@@ -192,19 +192,19 @@ class AddAchievementStrategy
             
             $notificationLog = <<<HTML
                 <span>
-                    <a href="/event/$teamId" alt="Team View">
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
-                    </a>
+                    </button>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a href="/event/$teamId" alt="Team Link">
-                        <span class="notification-blue">{$parameters['teamName']}</span>
-                    </a>. 
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                        {$parameters['teamName']}
+                    </button>. 
                 </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
@@ -213,19 +213,19 @@ class AddAchievementStrategy
 
             $activityLog = <<<HTML
                 <span>
-                    <a href="/event/$teamId" alt="Team View">
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image"
                             width="30" height="30" 
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Event View"
                         >
-                    </a>
+                    </button>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a href="/event/$teamId" alt="Team Link">
-                        <span class="notification-blue">{$parameters['teamName']}</span>
-                    </a>. 
+                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                        {$parameters['teamName']}
+                    </button>. 
                 </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
                     <span class="notification-black">{$parameters['teamName']}</span>.
