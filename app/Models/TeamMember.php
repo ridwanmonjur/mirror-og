@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,10 @@ class TeamMember extends Model
         'updated' => TeamMemberUpdated::class,
         'created' => TeamMemberCreated::class,
     ];
+
+    public function updatedAtDiffForHumans() {
+        return $this->updated_at ? Carbon::parse($this->updated_at)->diffForHumans(): '';
+    }
 
     protected $table = 'team_members';
 
