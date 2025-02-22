@@ -266,12 +266,7 @@ a.custom-link:hover {
     margin-top: 20px;
 }
 
-.member-table th,
-.member-table td {
-    padding: 8px;
-    text-align: left;
-    vertical-align: middle !important;
-}
+
 
 .nf {
     background-color: transparent;

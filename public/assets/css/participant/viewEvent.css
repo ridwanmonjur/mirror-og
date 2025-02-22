@@ -462,11 +462,7 @@ input[type="submit"]:active {
     transform: scale(1.1);
 }
 
-.member-table th,
-.member-table td {
-    padding: 8px;
-    text-align: left;
-}
+
 
 
 *, *::before, *::after {

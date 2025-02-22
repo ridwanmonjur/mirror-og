@@ -662,7 +662,7 @@ async function fetchMembers(event = null) {
         links = data?.data?.links;
         for (user of users) {
             bodyHtml+=`
-                <tr class="st">
+                <tr class="st py-2">
                     <td class="colorless-col px-0 mx-0   cursor-pointer  ">
                         <svg 
                             onclick="redirectToProfilePage(${user.id});"
@@ -680,7 +680,7 @@ async function fetchMembers(event = null) {
                                 onerror="this.onerror=null;this.src='/assets/images/404.png';"
                                 width="45" height="45" 
                                 src="/storage/${user.userBanner}"
-                                class="mx-2 random-color-circle object-fit-cover rounded-circle"
+                                class="mx-2 my-1 border border-2 border-secondary object-fit-cover rounded-circle"
                             >
                             <span>${user.name}</span>
                         </div>
@@ -695,7 +695,7 @@ async function fetchMembers(event = null) {
                             'Not in team'
                         }
                     </td>
-                    <td class="colorless-col" style="min-width: 1.875rem;">
+                    <td class="colorless-col px-2" style="min-width: 1.875rem;">
                         <div class="gear-icon-btn ${user.is_in_team ? 'd-none' : ''}" onclick="inviteMember('${user.id}', '${teamId}')">
                             <img src="/assets/images/add.png" height="24px" width="24px">
                         </div>
