@@ -355,6 +355,20 @@ class ParticipantTeamController extends Controller
     {
         try {
             $existingCaptain = TeamCaptain::where('teams_id', $id)->first();
+            
+            $user_id = $request->attributes->get('user')->id;
+
+            $teamMember = TeamMember::where('user_id', $user_id)
+                ->where('id', $existingCaptain->team_member_id)
+                ->first();
+
+            if (!$teamMember || $teamMember?->user_id != $user_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only captain can remove himself as captain!'
+                ], 400);
+            }
+            
             if ($existingCaptain) {
                 $existingCaptain->delete();
             }
@@ -375,6 +389,19 @@ class ParticipantTeamController extends Controller
         $existingCaptain = TeamCaptain::where('teams_id', $id)
             ->where('team_member_id', $memberId)
             ->first();
+        
+        $user_id = $request->attributes->get('user')->id;
+
+        $teamMember = TeamMember::where('user_id', $user_id)
+            ->where('id', $memberId)
+            ->first();
+
+        if (!$teamMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only captain can remove himself as captain!'
+            ], 400);
+        }
 
         if ($existingCaptain) {
             $existingCaptain->delete();

@@ -82,40 +82,35 @@
     transform:  rotate(-45deg);
 }
 
+.captain-crown:hover {
+    animation: flicker 1s ease-in-out infinite;
+    animation-timing-function: ease-in-out;
+}
+
 @keyframes flicker {
     0% { 
         transform: scale(1.55);
-        border: 2px solid #43A4D7;
         opacity: 1;
     }
     25% {
         transform: scale(1.05);
-        border: 2px solid #3590c0;
         opacity: 0.8;
     }
     50% {
         transform: scale(1.55);
-        border: 2px solid #43A4D7;
         opacity: 1;
     }
     75% {
         transform: scale(1.45);
-        border: 2px solid #3590c0;
         opacity: 0.8;
     }
     100% {
         transform: scale(1.55);
-        border: 2px solid #43A4D7;
         opacity: 1;
     }
 }
 
-.captain-crown:hover {
-    transform: scale(1.55);
-    border: 2px solid #43A4D7;
-    animation: flicker 1s ease-in-out infinite;
-    animation-timing-function: ease-in-out;
-}
+
 
 .border-red {
     border: 2px solid red;
