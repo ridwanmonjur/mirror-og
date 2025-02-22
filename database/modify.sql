@@ -12,7 +12,8 @@ RENAME TO all_payment_transactions;
 ALTER TABLE all_payment_transactions
 ADD CONSTRAINT fk_payment_transactions
 FOREIGN KEY (payment_id) REFERENCES payment_transactions(id)
-ON DELETE CASCADE;
+ON DELETE CASCADE
+WHERE payment_id IS NOT NULL;
 
 ALTER TABLE table_name
 DROP COLUMN payment_request_id;

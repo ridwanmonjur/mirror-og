@@ -41,7 +41,7 @@
                     <div v-else class="avatar me-3"
                         v-text="room?.otherRoomMember?.name ? room.otherRoomMember.name?.charAt(0)?.toUpperCase(): room?.otherRoomMember?.email[0]?.toUpperCase()">
                     </div>
-                    <div class="chat-info">
+                    <div class="chat-info w-75">
                         <div v-if="room?.otherRoomMember && room?.otherRoomMember?.name">
                             <h3 class="d-inline user-select-none" v-text="room?.otherRoomMember?.name"></h3>
                             <small v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }"
@@ -74,7 +74,7 @@
         </div>
         <div v-cloak id="chat-component" v-scope="ChatListComponent()"
             class="chat-container position-relative col-12 d-flex  col-lg-8 m-0 p-0" style="overflow: hidden;">
-            <div class="chat-header w-100">
+            <div class="chat-header 75">
                 <h2 class="chat-user-name py-0 my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
                         <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!}
@@ -143,7 +143,7 @@
                     </div>
                     <div :class="message.className">
                         <img v-if="message.sender?.userBanner" v-bind:src="`/storage/${message.sender.userBanner}`"
-                            v-on:error="$el.src = '/assets/images/404.png'" height="40" width="40"
+                            v-on:error="$el.src = '/assets/images/404q.png'" height="40" width="40"
                             class="object-fit-cover rounded-circle me-2">
 
                         <div v-else class="avatar me-2"
@@ -176,12 +176,12 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content  px-4 py-2">
                     <div class="px-4 pt-4   border-0">
-                        <h5 class="modal-title" id="staticBackdropLabel">Start a new chat</h5>
+                        <h5 class="modal-title py-0 my-0" id="staticBackdropLabel">Start a new chat</h5>
                     </div>
-                    <div class="modal-body py-4 pv-3">
+                    <div class="modal-body pt-2 px-3 pb-2 container-fluid">
                         <div class="row">
-                            <div class="col-12 col-lg-9">
-                                <div class="input-group">
+                            <div class="col-11 ">
+                                <div class="input-group mx-3 my-1">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -192,47 +192,47 @@
                                         </span>
                                     </div>
                                     <input @input.debounce.500m="fetchProspectiveChatters($event)" type="text"
-                                        class="form-control cursor-pointer" placeholder="Search...">
+                                        class="form-control cursor-pointer px-3" placeholder="Search...">
                                 </div>
                             </div>
                         </div>
-                        <br>
-                        <div class="tab-size">
-                            <table class="table table-borderless table-sm table-striped responsive ">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="chat in users?? []" :key="chat.name + chat.id" class="border-none"
-                                        style="vertical-align: center !important;">
-                                        <th scope="row"></th>
-                                        <td>
-                                            <img class="object-fit-cover border border-primary rounded-circle"
-                                                height="40" width="40" {!! trustedBladeHandleImageFailure() !!}
-                                                v-bind:src="'/storage/' + chat?.userBanner">
-                                            <span class="ms-3" v-text="chat?.name"> </span>
-                                        </td>
-                                        <td class="pt-3 pb-2" v-text="chat?.role.toLowerCase()"></td>
-                                        <td class="text-center pt-3 pb-2 cursor-pointer" data-bs-dismiss="modal"
-                                            v-on:click="changeUser(chat)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                                fill="currentColor" class="bi bi-chat-text text-primary"
-                                                viewBox="0 0 16 16">
-                                                <path
-                                                    d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
-                                                <path
-                                                    d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8m0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5" />
-                                            </svg>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <ul class="pagination cursor-pointer py-3">
+                       <div class="container-fluid mt-2 px-3">
+                                <div class="w-100 g-3 mt-3">
+                                    <div v-for="chat in users ?? []" :key="chat.name + chat.id" >
+                                        <div class="card mb-2 rounded-lg shadow-sm" 
+                                            onmouseover="this.style.transform='translateY(-2px)'" 
+                                            onmouseout="this.style.transform='translateY(0)'"
+                                            style="transition: transform 0.2s ease"
+                                            v-on:click="changeUser(chat)"
+                                            data-bs-dismiss="modal"
+                                            role="button">
+                                            <div class="card-body py-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-2 col-xl-1">
+                                                        <img class="rounded-circle border border-secondary"
+                                                        onerror="this.src='/assets/images/404q.png';"
+                                                            height="40" width="40"
+                                                            {!! trustedBladeHandleImageFailure() !!}
+                                                            v-bind:src="'/storage/' + chat?.userBanner">
+                                                    </div>
+                                                    <div class="col-9 col-xl-10 col-xl-">
+                                                        <span class="text-truncate d-inline-block align-middle me-2 w-75" style="width: 30ch;" v-text="chat?.name"></span>
+                                                        <small class="text-muted d-inline-block align-middle" v-text="chat?.role.toLowerCase()"></small>
+                                                    </div>
+                                                    <div class="col-1 text-end gear-icon-btn">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-chevron-right text-secondary"
+                                                            viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="pagination cursor-pointer pt-2">
                                 <li v-for="link in pagination ?? []" :key="link.label"
                                     v-on:click="if (link.url) { fetchProspectiveChatters(event); }"
                                     v-bind:data-url="link.url"
@@ -247,18 +247,18 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" data-bs-dismiss="modal"
-                            class="rounded-pill btn btn-primary text-light">Close</button>
-                    </div>
+                          <button type="button" data-bs-dismiss="modal"
+                            class="rounded-pill btn d-inline-block mb-2 mx-auto px-4 btn-primary text-light ">Close</button>
                 </div>
+                    </div>
+                   
+                      
             </div>
         </div>
 
         <div v-scope="ReportBlockComponent()" id="reportUserModal" @vue:mounted="mounted"  class="modal" >
             <div id="reportUserModal" tabindex="-1">
-                <div class="modal-dialog modal-lg mb-0">
+                <div class="modal-dialog  mb-0">
                     <div class="modal-content  pt-3 pb-0 px-3">
                         <div class="modal-body px-3 mx-3 pt-0 mt-0">
                             <div v-on:click="toggleWillShowReports" class="mt-2 text-red ms-0 cursor-pointer"
@@ -274,7 +274,7 @@
                                 <h5 class="mt-4 mb-0 d-block pt-0 pb-3 text-primary text-start">
                                     <img v-bind:src="'/storage/' + user?.userBanner"
                                         class="rounded-circle object-fit-cover border border-primary me-2"
-                                        width="35" height="35" onerror="this.src='/assets/images/404.png';">
+                                        width="35" height="35" onerror="this.src='/assets/images/404q.png';">
                                     <span>Past Reports against </span>
                                     <span v-text="user?.userName"> </span>
                                 </h5>
@@ -321,7 +321,7 @@
                                                             <img src="{{ asset('storage/' . ($user?->userBanner ?? '')) }}"
                                                                 class="rounded-circle object-fit-cover border border-secondary me-1"
                                                                 width="25" height="25"
-                                                                onerror="this.src='{{ asset('assets/images/404.png') }}'">
+                                                                onerror="this.src='{{ asset('assets/images/404q.png') }}'">
                                                             <span>{{ $user?->name }} </span>
                                                         </p>
                                                     </div>
@@ -364,7 +364,7 @@
                                 <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start">
                                     <img v-bind:src="'/storage/' + user?.userBanner"
                                         class="rounded-circle object-fit-cover border border-primary me-2"
-                                        width="35" height="35" onerror="this.src='/assets/images/404.png';">
+                                        width="35" height="35" onerror="this.src='/assets/images/404q.png';">
 
                                     <span v-text="user?.userName"> </span>
                                 </h5>

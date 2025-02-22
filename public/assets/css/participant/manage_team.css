@@ -79,7 +79,7 @@
 }
 
 .captain-crown {
-    transform: translateY(-5px) rotate(-45deg);
+    transform:  rotate(-45deg);
 }
 
 @keyframes flicker {

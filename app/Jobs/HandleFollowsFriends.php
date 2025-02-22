@@ -22,9 +22,9 @@ class FollowOrgStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <a href="/view/participant/{$participant->id}" alt="Follow link">
-                        <span class="notification-blue">{$participant->name}</span>
-                    </a> is now following you.
+                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$participant->id}" alt="Follow link">
+                        {$participant->name}
+                    </button> is now following you.
                 </span>
             HTML,
             'link' => route('public.participant.view', $participant->id),
@@ -37,9 +37,9 @@ class FollowOrgStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     You started following an organizer,
-                    <a href="/view/participant/{$organizer->id}" alt="Follow link">
-                        <span class="notification-blue">{$organizer->name}</span>.
-                    </a>
+                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$organizer->id}" alt="Follow link">
+                        {$organizer->name}.
+                    </button>
                 </span>
             HTML,
             'link' => route('public.organizer.view', $organizer->id),
@@ -62,9 +62,9 @@ class FollowParticipantStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <a href="/view/participant/{$user->id}" alt="Follow link">
-                        <span class="notification-blue">{$user->name}</span>
-                    </a> is now following you.
+                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Follow link">
+                        {$user->name}
+                    </button> is now following you.
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
@@ -77,9 +77,9 @@ class FollowParticipantStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     You started following another player,
-                    <a href="/view/participant/{$followee->id}" alt="Follow link">
-                        <span class="notification-blue">{$followee->name}</span>.
-                    </a>
+                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$followee->id}" alt="Follow link">
+                        {$followee->name}.
+                    </button>
                 </span>
             HTML,
             'link' => route('public.organizer.view', $followee->id),
@@ -108,9 +108,9 @@ class NewFriendStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <a href="/view/participant/{$user->id}" alt="Friend Request link">
-                        <span class="notification-blue">{$user->name}</span>
-                    </a>has send you a friend request.
+                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Request link">
+                        {$user->name}
+                    </button>has send you a friend request.
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
@@ -132,11 +132,11 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <a href="/view/participant/{$user->id}" alt="Friend Accept link">
-                            <span class="notification-blue">{$user->name}</span>
-                        </a>and you are now friends. > Click to go to <a href="/view/participant/{$user->id}" alt="Friend Accept link">
-                            <span class="notification-blue">{$user->name}</span>
-                        </a>'s profile.
+                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                            {$user->name}
+                        </button>and you are now friends. > Click to go to <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                            {$user->name}
+                        </button>'s profile.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
@@ -148,11 +148,11 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <a href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
-                            <span class="notification-blue">{$otherUser->name}</span>
-                        </a>and you are now friends. > Click to go to <a href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
-                            <span class="notification-blue">{$otherUser->name}</span>
-                        </a>'s profile.
+                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                            {$otherUser->name}
+                        </button>and you are now friends. > Click to go to <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                            {$otherUser->name}
+                        </button>'s profile.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
@@ -172,11 +172,11 @@ class FollowTeamStrategy
             foreach ($selectTeam->members as $member) {
                 $html = <<<HTML
                     <span class="notification-gray">
-                        <a href="/view/participant/{$user->id}" alt="Team Follower link">
-                            <span class="notification-blue">{$user->name}</span></a>
+                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Team Follower link">
+                            {$user->name}</button>
                         followed your team, 
-                        <a href="/view/team/{$selectTeam->id}">
-                            <span class="notification-blue">{$selectTeam->teamName}</span></a>. 
+                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                            {$selectTeam->teamName}</button>. 
                     </span>
                 HTML;
 
@@ -195,8 +195,8 @@ class FollowTeamStrategy
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
                         You followed a team, 
-                        <a href="/view/team/{$selectTeam->id}">
-                            <span class="notification-blue">{$selectTeam->teamName}</span></a>. 
+                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                            {$selectTeam->teamName}</button>. 
                     </span>
                 HTML,
                 'link' => route('public.team.view', $selectTeam->id),

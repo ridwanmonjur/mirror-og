@@ -74,7 +74,7 @@
                 </template>
                 <template v-for="notification2 in notificationList" :key="notification2.id">
                     <div class="notification-item d-flex align-items-center cursor-pointer p-3 border-0"
-                        v-on:click="markNotificationRead(notification2.id)"
+                        v-on:click="markNotificationRead(event, notification2.id, notification2.link, notification2.is_read)"
                     >
                         <div class="notification-icon me-1">
                              <span v-if="!notification2.is_read" class="me-2">
@@ -108,8 +108,8 @@
             </div>
             <div>
                 <template v-if="hasMore">
-                    <div aria-label="Page navigation" class="mt-1">
-                        <button class="btn btn-primary btn-sm text-white " v-on:click="loadNextPage()">Next page</button>
+                    <div aria-label="Page navigation" class="mt-1" style="padding-left: 9px;">
+                        <button class="btn btn-primary btn-sm text-white " v-on:click="loadNextPage()">Next notifications</button>
                     </div>
                 </template>
             </div>

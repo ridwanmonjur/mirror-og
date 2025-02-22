@@ -44,7 +44,7 @@ class EventInvitation extends Model
                 $search = trim($request->input('search'));
                 if (! empty($search)) {
                     $query->where(function ($q) use ($search) {
-                        $q->orWhere('name', 'LIKE', "%{$search}%")->orWhere('email', 'LIKE', "%{$search}%");
+                        $q->orWhere('name', 'LIKE', "%{$search}%");
                     });
                 }
             });

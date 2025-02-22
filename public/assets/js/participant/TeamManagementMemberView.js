@@ -281,8 +281,7 @@ async function fetchMembers(event = null) {
 
         let statusListFilter = formData.getAll('status');
         if (nameFilter != "" && !(
-            String(sortedMember?.user?.name).includes(nameFilter) ||
-            String(sortedMember?.user?.email).includes(nameFilter)
+            String(sortedMember?.user?.name).includes(nameFilter) 
         )) {
             isToBeAdded = isToBeAdded && false;
         } 
@@ -309,8 +308,8 @@ async function fetchMembers(event = null) {
     for (member of filteredSortedMembers) {
         bodyHtml+=`
         <div class="card border-2 mb-2 bg-white hover-shadow-sm position-relative"
-        onmouseover="this.style.transform='translateY(-2px)'" 
-        onmouseout="this.style.transform='translateY(0)'"
+            onmouseover="this.style.transform='translateY(-2px)'" 
+            onmouseout="this.style.transform='translateY(0)'"
         >
             <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}');" >
                 <div class="row align-items-center">
@@ -342,8 +341,8 @@ async function fetchMembers(event = null) {
                     <div class="col-1 col-lg-1 d-flex align-items-center gap-3">
                        
                         <a 
-                        class="text-decoration-none border btn btn-sm gear-icon-btn border-secondary rounded-circle text-body-secondary cursor-pointer">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        class="text-decoration-none  btn btn-sm gear-icon-btn text-body-secondary cursor-pointer">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" />
