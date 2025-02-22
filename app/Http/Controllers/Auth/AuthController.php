@@ -75,7 +75,7 @@ class AuthController extends Controller
     {
         $validatedData = [];
         $validationRules = [
-            'username' => 'bail|required|min:3|unique:users',
+            'username' => 'bail|required|min:3|unique:users,email',
             'email' => 'bail|required|email',
             'password' => 'bail|required|min:6|max:24',
             'confirmPassword' => 'bail|required|min:6|max:24|same:password',

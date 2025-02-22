@@ -235,12 +235,18 @@ form input[type="button"]:hover {
     border-radius: 30px;
     margin-bottom: 15px;
     border: 1px solid rgb(167, 166, 166);
+    box-shadow: 0 0 2px 2px transparent;
+}
+
+.btn:hover {
+    scale: 1.0 ;
 }
 
 .btn-login:hover {
     /* add very small box-shadow */
     box-shadow: 0 0 2px 2px #43A4D7;
-    border: none !important;
+    border: 1px solid transparent;
+    scale: 1.0 ; 
     outline: none !important;
 }
 

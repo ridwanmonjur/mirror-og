@@ -12,7 +12,7 @@ let {
     socialCount,
     teamsCount,
     eventCount, 
-} = importantUrlsDiv.dataset;
+} = importantUrlsDiv?.dataset ?? {};
 
 
 function  createVisibleCircles(counter) {

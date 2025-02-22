@@ -646,7 +646,7 @@ const importantUrlsDiv = document.getElementById('importantUrls');
 let {
     searchEndpointInput,
     landingEndpointInput
-} = importantUrlsDiv.dataset;
+} = importantUrlsDiv?.dataset ?? {};
 
 if (searchEndpointInput) {
     searchEndpointInputValue = searchEndpointInput.value;
