@@ -214,20 +214,6 @@ table.responsive td img {
   animation: 1s dropdownAnimate;
 }
 
-.modal-body {
-  animation: 1s modalAnimate;
-}
-
-
-@keyframes modalAnimate {
-  0% {
-    scale: 1.05;
-  }
-
-  100% {
-    scale: 1.0;
-  }
-}
 
 
 @keyframes dropdownAnimate {
