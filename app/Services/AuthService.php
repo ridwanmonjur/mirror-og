@@ -1,12 +1,15 @@
 <?php
 namespace App\Services;
 
+use App\Models\NotificationCounter;
 use Illuminate\Support\Str;
 use App\Models\Organizer;
 use App\Models\Participant;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class AuthService {
@@ -24,6 +27,8 @@ class AuthService {
         $token = generateToken();
         $user->email_verified_token = $token;
         $user->save();
+
+        NotificationCounter::create(['user_id' => $user->id]);
 
         return $user;
     }
@@ -45,8 +50,6 @@ class AuthService {
                 'roleFirstCapital' => 'Participant',
             ];
         }
-
-
 
         throw new \InvalidArgumentException('Invalid registration path');
     }
@@ -94,10 +97,7 @@ class AuthService {
             if ($finduser->role != $role) {
                 return ['finduser' => null, 'error' =>  sprintf("Only %ss can sign in with this route.", strtolower($role))];
             }
-            // if (!$user->user['email_verified']) {
-            //     return ['finduser' => null, 'error' => 'Your Gmail is not verified'];
-            // }
-
+          
             Auth::login($finduser);
 
             return ['finduser' => $finduser, 'error' => null];
@@ -119,38 +119,48 @@ class AuthService {
             return ['finduser' => $finduser, 'error' => null];
         }
 
-        $newUser = User::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => bcrypt(Str::random(13)),
-            'role' => strtoupper($role),
-            'created_at' => now(),
-        ]);
-
-        if ($newUser->role === 'ORGANIZER') {
-            $organizer = new Organizer([
-                'user_id' => $newUser->id,
+        DB::beginTransaction();
+        
+        try{
+            $newUser = User::create([
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => Str::random(13),
+                'role' => strtoupper($role),
+                'created_at' => now(),
             ]);
 
-            $organizer->save();
-        } elseif ($newUser->role === 'PARTICIPANT') {
-            $participant = new Participant([
-                'user_id' => $newUser->id,
-            ]);
+            NotificationCounter::create(['user_id' => $newUser->id]);
 
-            $participant->save();
+            if ($newUser->role === 'ORGANIZER') {
+                $organizer = new Organizer([
+                    'user_id' => $newUser->id,
+                ]);
+
+                $organizer->save();
+            } elseif ($newUser->role === 'PARTICIPANT') {
+                $participant = new Participant([
+                    'user_id' => $newUser->id,
+                ]);
+
+                $participant->save();
+            }
+
+            $newUser->email_verified_at = now();
+
+            if ($type === 'google') {
+                $newUser->google_id = $user->id;
+            } elseif ($type === 'steam') {
+                $newUser->steam_id = $user->id;
+            }
+
+            $newUser->save();
+            Auth::login($newUser);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
         }
-
-        $newUser->email_verified_at = now();
-
-        if ($type === 'google') {
-            $newUser->google_id = $user->id;
-        } elseif ($type === 'steam') {
-            $newUser->steam_id = $user->id;
-        }
-
-        $newUser->save();
-        Auth::login($newUser);
 
         return ['finduser' => $newUser, 'error' => null];
     }
