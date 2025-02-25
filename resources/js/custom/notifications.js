@@ -196,9 +196,20 @@ const iconStore = {
     message: `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fd7e14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
     
     // Event related icons
-    calendar: `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#e83e8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`,
+    started: `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#e83e8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`,
     
-    live: `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="3" y="5" width="14" height="14" rx="2" ry="2"></rect></svg>`
+    live: `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="3" y="5" width="14" height="14" rx="2" ry="2"></rect></svg>`,
+
+    ended: `<svg width="30" height="30"  viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Clock face -->
+    <circle cx="12" cy="12" r="10"></circle>
+    
+    <!-- Clock hands -->
+    <line x1="12" y1="12" x2="12" y2="6"></line>
+    <line x1="12" y1="12" x2="16" y2="12"></line>
+    
+  
+  </svg>`
 };
 
 const tabStore = reactive({
