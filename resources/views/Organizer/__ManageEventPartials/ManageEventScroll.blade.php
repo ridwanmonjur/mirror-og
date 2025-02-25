@@ -65,7 +65,7 @@
                                 @endif
                             @endforeach
                         @else
-                            <span>Missing</span>
+                            <span>N.A</span>
                         @endif
                     </button>
                 </div>
@@ -134,7 +134,7 @@
                                 <a class="m-0 btn mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
                                     <span> <u> Invite </u> </span>
                                 </a>
-                        @endif    
+                            @endif    
                         <div class="popover-content2 d-none" style="z-index: 999 !important;">
                             <div class="popover-box py-2 px-1" style="z-index: 999 !important;">
                                 <a class="px-2 py-1 text-light me-3 btn btn-primary d-inline"  href="{{ route('event.matches.index', ['id' => $event->id, 'eventType'=> $event->type->eventType]) }}">
@@ -161,7 +161,7 @@
             </div>
             <div class="group-hover flex-wrap d-flex justify-content-center cursor-pointer mb-2">
                    
-                    @if (in_array($status, ['ONGOING', 'DRAFT', 'SCHEDULED']))
+                    @if (in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED']))
                         <a class="m-0 mb-1 mx-4 p-0" href="{{ route('event.show', $event->id) }}">
                             <svg onclick="goToLivePreview()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>

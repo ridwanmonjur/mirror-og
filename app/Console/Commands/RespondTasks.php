@@ -79,17 +79,17 @@ class RespondTasks extends Command
 
             $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
                 ->where('join_status', 'confirmed')
-                ->with('members', 'eventDetails', 'eventDetails.user')
+                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
                 ->get();
 
             $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
                 ->where('join_status', 'confirmed')
-                ->with('members', 'eventDetails', 'eventDetails.user')
+                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
                 ->get();
                
             $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
                 ->where('join_status', 'confirmed')
-                ->with('members', 'eventDetails', 'eventDetails.user')
+                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
                 ->get();
       
 
