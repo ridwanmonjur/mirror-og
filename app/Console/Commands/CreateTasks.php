@@ -35,7 +35,7 @@ class CreateTasks extends Command
     {
         $today = Carbon::now();
         $commandName = 'tasks:create';
-        $id = $this->logEntry($today, $commandName);
+        $id = $this->logEntry('Generate Tasks', $commandName, '0 0 * *', $today, $commandName);
         try{
             $twoMonthsAgo = Carbon::now()->subMonths(2);
 
@@ -43,26 +43,40 @@ class CreateTasks extends Command
             Task::where('created_at', '<', $twoMonthsAgo)->delete();
             DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twoMonthsAgo)->delete();
             
-            $twoWeeksAgo = $today->subWeeks(2);
             $todayDate = $today->toDateString();
             $todayTime = $today->toTimeString();
 
-            $launchEvents = EventDetail::whereDate('sub_action_public_date', $todayDate)
-                ->whereTime('sub_action_public_time', '<=', $todayDate)
-                ->select(['id', 'sub_action_public_date', 'sub_action_public_time'])
+            // $launchEvents = EventDetail::whereDate('sub_action_public_date', $todayDate)
+            //     ->whereTime('sub_action_public_time', '<=', $todayDate)
+            //     ->select(['id', 'sub_action_public_date', 'sub_action_public_time'])
+            //     ->get();
+
+            // $startEvents = EventDetail::whereDate('startDate', $todayDate)
+            //     ->select(['id', 'startDate'])
+            //     ->get();
+
+            // $endEvents = EventDetail::whereDate('endDate', $todayDate)
+            //     ->select(['id', 'endDate'])
+            //     ->get();
+
+            $launchEvents = EventDetail::select(['id', 'sub_action_public_date', 'sub_action_public_time'])
                 ->get();
 
-            $endEvents = EventDetail::whereDate('endDate', $todayDate)
-                ->select(['id', 'endDate'])
+            $startEvents = EventDetail::select(['id', 'startDate'])
                 ->get();
 
-            $this->createTask($launchEvents, 'launch', $todayTime, $todayDate);
+            $endEvents = EventDetail::select(['id', 'endDate'])
+                ->get();
+
+
+            $this->createTask($launchEvents, 'live', $todayTime, $todayDate);
             $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
-                
+            $this->createTask($startEvents, 'started', $todayTime, $todayDate);
+
             $now = Carbon::now();
             $this->logExit($id, $now);
         } catch (Exception $e) {
-            $this->logError($id, $e->getMessage());
+            $this->logError($id, $e);
         }
 
     }
