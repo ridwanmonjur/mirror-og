@@ -22,7 +22,7 @@ class FollowOrgStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$participant->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$participant->id}" alt="Follow link">
                         {$participant->name}
                     </button> is now following you.
                 </span>
@@ -37,7 +37,7 @@ class FollowOrgStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     You started following an organizer,
-                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$organizer->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$organizer->id}" alt="Follow link">
                         {$organizer->name}.
                     </button>
                 </span>
@@ -62,7 +62,7 @@ class FollowParticipantStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Follow link">
                         {$user->name}
                     </button> is now following you.
                 </span>
@@ -77,7 +77,7 @@ class FollowParticipantStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     You started following another player,
-                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$followee->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$followee->id}" alt="Follow link">
                         {$followee->name}.
                     </button>
                 </span>
@@ -108,7 +108,7 @@ class NewFriendStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Request link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Request link">
                         {$user->name}
                     </button>has send you a friend request.
                 </span>
@@ -132,9 +132,9 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
-                        </button>and you are now friends. > Click to go to <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
                         </button>'s profile.
                     </span>
@@ -148,9 +148,9 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
-                        </button>and you are now friends. > Click to go to <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
                         </button>'s profile.
                     </span>
@@ -172,10 +172,10 @@ class FollowTeamStrategy
             foreach ($selectTeam->members as $member) {
                 $html = <<<HTML
                     <span class="notification-gray">
-                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Team Follower link">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Team Follower link">
                             {$user->name}</button>
                         followed your team, 
-                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
                     </span>
                 HTML;
@@ -195,7 +195,7 @@ class FollowTeamStrategy
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
                         You followed a team, 
-                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
                     </span>
                 HTML,

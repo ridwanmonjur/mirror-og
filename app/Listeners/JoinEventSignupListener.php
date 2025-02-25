@@ -36,14 +36,14 @@ class JoinEventSignupListener implements ShouldQueue
             $html = <<<HTML
                 <span class="notification-gray">
                     You have signed up for  
-                    <button class="px-0 border-0 notification-blue" data-href="/view/organizer/{$event2->event->user->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event2->event->user->id}">
                         {$event2->event->user->name}
                     </button>'s event,
-                    <button class="px-0 border-0 notification-blue" data-href="/event/{$event2->event->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event2->event->id}">
                         {$event2->event->eventName}
                     </button>
                     with your team, 
-                    <button class="px-0 border-0 notification-blue" data-href="/view/team/{$event2->selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$event2->selectTeam->id}">
                         {$event2->selectTeam->teamName}</button>. 
                     Please complete and confirm your registration for this event.
                 </span>

@@ -162,7 +162,7 @@ class SocialService {
     private function generateFollowLogHtml($imageUser, $role, $roleName): string
     {
         return <<<HTML
-            <button class="px-0 border-0 notification-blue" data-href="/view/{$role}/{$imageUser->id}" alt="Follow Image link">
+            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/{$role}/{$imageUser->id}" alt="Follow Image link">
                 <img class="object-fit-cover rounded-circle me-2" 
                     width="30" height="30"  
                     src="/storage/{$imageUser->userBanner}" 
@@ -172,7 +172,7 @@ class SocialService {
             </button>
             <span class="notification-gray">
                 You have started following another {$roleName},
-                <button class="px-0 border-0 notification-blue" data-href="/view/{$role}/{$imageUser->id}" alt="Follow link">  
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/{$role}/{$imageUser->id}" alt="Follow link">  
                     {$imageUser->name}  
                 </button>.
             </span>
@@ -182,7 +182,7 @@ class SocialService {
     private function generateFriendLogHtml($imageUser, $linkUser): string
     {
         return <<<HTML
-            <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$imageUser->id}" alt="Friend Image link">
+            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$imageUser->id}" alt="Friend Image link">
                 <img class="object-fit-cover rounded-circle me-2" 
                     width="30" height="30"  
                     src="/storage/{$imageUser->userBanner}" 
@@ -191,7 +191,7 @@ class SocialService {
             </button>
             <span class="notification-gray">
                 You and 
-                <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$linkUser->id}" alt="Friend link">  
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$linkUser->id}" alt="Friend link">  
                     {$linkUser->name}  
                 </button>
                 are friends.
