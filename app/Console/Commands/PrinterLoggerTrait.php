@@ -4,13 +4,19 @@ namespace App\Console\Commands;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 trait PrinterLoggerTrait
 {
-    private function logEntry(Carbon $today, string $commandName): int
+    private function logEntry(
+        string $commandName, 
+        string $commandType,
+        string $cronExpression = "0 0 * * *",
+        Carbon $today, 
+    ): int
     {
-        return DB::transaction(function () use ($commandName, $today) {
+        return DB::transaction(function () use ($commandName, $commandType, $cronExpression, $today) {
             $record = DB::table('monitored_scheduled_tasks')
                 ->where('name', $commandName)
                 ->where('type', 'Daily cron check')
@@ -28,9 +34,9 @@ trait PrinterLoggerTrait
             } else {
                 return DB::table('monitored_scheduled_tasks')->insertGetId([
                     'name' => $commandName,
-                    'type' => 'Daily cron check',
+                    'type' => $commandName,
                     'created_at' => $today,
-                    'cron_expression' => '0 0 * * *',
+                    'cron_expression' => $cronExpression,
                     'last_started_at' => $today,
                     'updated_at' => $today,
                 ]);
@@ -48,13 +54,13 @@ trait PrinterLoggerTrait
             ]);
     }
 
-    private function logError(int $id, string $errorMsg): void
+    private function logError(int $id, Exception $e): void
     {
-        Log::error($errorMsg);
+        Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         DB::table('monitored_scheduled_task_log_items')->insert([
             'monitored_scheduled_task_id' => $id, 
             'type' => "Error", 
-            'logs' => $errorMsg, 
+            'logs' => $e->getMessage(), 
             'created_at' => now(),
             'updated_at' => now(),
         ]);

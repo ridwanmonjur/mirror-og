@@ -43,6 +43,7 @@ class JoinEvent extends Model
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
+    
     public function members(): HasMany
     {
         return $this->hasMany(TeamMember::class, 'team_id', 'team_id');

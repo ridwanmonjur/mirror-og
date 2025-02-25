@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('event_id');
-            $table->enum('task_name', ['live', 'ended', 'registration_over']);
+            $table->string('task_name');
             $table->boolean('isExecuted')->default(false);
             $table->dateTime('action_time');
             $table->timestamps();

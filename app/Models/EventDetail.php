@@ -131,10 +131,12 @@ class EventDetail extends Model
             $this->sub_action_public_date,
             $this->sub_action_public_time
         );
+
         $carbonEndDateTime = $this->createCarbonDateTimeFromDB(
             $this->endDate,
             $this->endTime
         );
+        
         $carbonStartDateTime = $this->createCarbonDateTimeFromDB(
             $this->startDate,
             $this->startTime
