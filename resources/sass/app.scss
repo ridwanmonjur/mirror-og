@@ -77,14 +77,6 @@
 @import  'cropperjs/dist/cropper.css';
 @import '@easylogic/colorpicker/dist/colorpicker.css';
 @import 'intl-tel-input/build/css/intlTelInput.css';
-img.fslightbox-source{
-  min-height: 50vh !important;
-  max-height: 80vh !important;
-  object-fit: cover;
-  width: auto !important;
-  max-width: 80vw !important;
-}
-
 
 
 .special-font-signinin {
@@ -210,21 +202,7 @@ table.responsive td img {
   text-align: justify !important;
 }
 
-.dropdown-menu {
-  animation: 1s dropdownAnimate;
-}
 
-
-
-@keyframes dropdownAnimate {
-  0% {
-    scale: 1.03;
-  }
-
-  100% {
-    scale: 1.0;
-  }
-}
 
 button {
   position: relative;

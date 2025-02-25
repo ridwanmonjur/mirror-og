@@ -521,10 +521,6 @@ a.custom-link:hover {
      margin-right: 20px !important;
 }
 
-img.fslightbox-source{
-   aspect-ratio: 1/1;
-   max-height: 80%;
-}
 
 @media screen and (min-width: 992px) {
     .tab-button:active {
