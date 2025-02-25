@@ -8,8 +8,8 @@
         aria-haspopup="true" aria-expanded="true"
     >
         
-        <img width="42px" height="38px" src="{{ asset('/assets/images/navbar-bell.png') }}" alt=""
-            class="me-2"    style="object-position: center;"
+        <img width="45px" height="38px" src="{{ asset('/assets/images/notif.webp') }}" alt=""
+            class="me-1"    
             onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
 
         >
@@ -76,7 +76,7 @@
                 <div class="notification-list">
                     <template v-if="!notificationList?.[0]"> 
                         <div class="p-3 text-start">
-                            No notifications.
+                            Empty <span v-text="currentTab"> </span> notifications.
                         </div> 
                     </template>
                     <template v-for="notification in notificationList" :key="notification.id">
