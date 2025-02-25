@@ -37,11 +37,10 @@ class CreateTasks extends Command
         $commandName = 'tasks:create';
         $id = $this->logEntry('Generate Tasks', $commandName, '0 0 * *', $today, $commandName);
         try{
-            $twoMonthsAgo = Carbon::now()->subMonths(2);
-
-            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $twoMonthsAgo)->delete();
-            Task::where('created_at', '<', $twoMonthsAgo)->delete();
-            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twoMonthsAgo)->delete();
+            $twelveMonthsAgo = Carbon::now()->subMonths(12);
+            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twelveMonthsAgo)->delete();
+            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $twelveMonthsAgo)->delete();
+            Task::where('created_at', '<', $twelveMonthsAgo)->delete();
             
             $todayDate = $today->toDateString();
             $todayTime = $today->toTimeString();
