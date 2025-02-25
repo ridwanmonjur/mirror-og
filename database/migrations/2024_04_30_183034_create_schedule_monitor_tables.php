@@ -13,7 +13,7 @@ class CreateScheduleMonitorTables extends Migration
         Schema::create('monitored_scheduled_tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('type')->nullable();
             $table->string('cron_expression');
             $table->dateTime('last_started_at')->nullable();
