@@ -2,11 +2,9 @@
 
 namespace App\Providers;
 
-use App\Console\Commands\RespondTasks;
 use App\Events\JoinEventSignuped;
 use App\Events\TeamMemberCreated;
 use App\Events\TeamMemberUpdated;
-use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Listeners\JoinEventSignupListener;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
