@@ -45,7 +45,10 @@ class VanillaLightbox {
                  id="vanillaLightbox" 
                  tabindex="-1" 
                  aria-hidden="true"
-                 style="overflow: hidden; maxHeight: 80%";
+                 style="
+                    overflow: hidden; 
+                    max-height: 100vh;
+                ";
 
             >
                 <div class="modal-dialog modal-dialog-centered modal-xl" aria-hidden="true"
@@ -59,8 +62,12 @@ class VanillaLightbox {
                         </div>
                         <div class="modal-body text-center p-0" aria-hidden="true">
                             <img src="${src}" 
-                                 class="fs-lightbox-source" 
-                                 style="max-height: 70vh; max-width: 80%; object-fit: contain;"
+                                 class="fslightbox-source" 
+                                 style=" 
+                                    max-width: 100%;
+                                    object-fit: contain;
+                                    max-height: 80vh;
+                                 "
                                  aria-hidden="true"
                                  onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                                  >

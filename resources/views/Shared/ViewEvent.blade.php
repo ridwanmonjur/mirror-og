@@ -71,7 +71,7 @@
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
                             <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
-                                @class([' rounded-banner height-image ms-0 ', ' rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                                @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                                 alt="" 
                             >
                         </a>
