@@ -178,7 +178,7 @@ class RespondTasks extends Command
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
             <span class="notification-gray">
-                <button class="px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
                 {$join->eventDetails->eventName}</button> has now ended. 
                 </span>
             HTML;
@@ -207,7 +207,7 @@ class RespondTasks extends Command
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
             <span class="notification-gray">
-                <button class="px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
                 {$join->eventDetails->eventName}</button> is now live. 
                 </span>
             HTML;
@@ -239,7 +239,7 @@ class RespondTasks extends Command
 
             $memberHtml = <<<HTML
             <span class="notification-gray">
-                <button class="px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
                 {$join->eventDetails->eventName}</button> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
                 on {$timeDate->format('M d, Y')}. 
                 </span>

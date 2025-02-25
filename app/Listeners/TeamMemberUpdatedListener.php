@@ -45,7 +45,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 $action = 'accepted';
 
                 $userLog = <<<HTML
-                    <button class="px-0 border-0 notification-blue" data-href="/view/team/{selectTeam->id}" alt="Team View">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{selectTeam->id}" alt="Team View">
                         <img src="/storage/{selectTeam->teamBanner}" 
                             width="30" height="30"    
                             onerror="this.src='/assets/images/404q.png';"
@@ -55,7 +55,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     </button>
                     <span class="notification-gray me-2">
                         You joined the team, 
-                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                             {$selectTeam->teamName}</button>.
                     </span>
                 HTML;
@@ -63,7 +63,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 if ($event->teamMember->actor == 'team') {
                     $userNotification =  <<<HTML
                         <span class="notification-gray me-2">
-                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                             {$selectTeam->teamName}</button>
                             has accepted your join request.
                         </span>
@@ -71,20 +71,20 @@ class TeamMemberUpdatedListener implements ShouldQueue
 
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$user->name}</button>
                             has accepted the join request of your team,
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>
                         </span>
                     HTML;
                 } else {
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$user->name}</button>
                             has joined your team 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>
                         </span>
                     HTML;
@@ -92,7 +92,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     $userNotification =  <<<HTML
                             <span class="notification-gray">
                             You have joined the team, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>
                         </span>
                     HTML;
@@ -102,7 +102,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 $action = 'left';
 
                 $userLog = <<<HTML
-                    <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                         <img src="/storage/{$selectTeam->teamBanner}" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -112,7 +112,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     </button>
                     <span class="notification-gray">
                         You left the team, 
-                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                             {$selectTeam->teamName}</button>.
                     </span>
                 HTML;
@@ -123,7 +123,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     $userNotification = <<<HTML
                         <span class="notification-gray">
                             You have been removed from the team, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>.
                         </span>
                         HTML;
@@ -131,10 +131,10 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     $teamNotification = <<<HTML
                     <span class="notification-gray">
                         The user, 
-                        <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="User link"> 
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="User link"> 
                             {$user->name} </button> 
                         has been removed from your team, 
-                        <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                             {$selectTeam->teamName}</button>.
                     </span>
                     HTML;
@@ -142,18 +142,18 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
                             You have left the team, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>.
                         </span>
                     HTML;
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
                             The user, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
                                 alt="User link"
                             > {$user->name} </button>
                             has left your team, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>.
                         </span>
                     HTML;
@@ -164,7 +164,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 if ($event->teamMember->actor == 'team') {
                     $userNotification = <<<HTML
                         <span class="notification-gray">
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>
                             has rejected your request to join this team!
                         </span>
@@ -172,10 +172,10 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>
                             has rejected the user, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
                                 alt="User link"
                             > 
                             <span class="notification-black">{$user->name}</span></button>
@@ -186,12 +186,12 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
                             The user, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
                                 alt="User link"
                             > 
                             <span class="notification-black">{$user->name}</span></button>
                             has rejected the invitation to your team, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>.
                         </span>
                         HTML;
@@ -199,7 +199,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     $userNotification = <<<HTML
                         <span class="notification-gray">
                             You have rejected the invitation join the team, 
-                            <button class="px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>.
                         </span>
                         HTML;

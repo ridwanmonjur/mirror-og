@@ -52,7 +52,7 @@ class ChangePositionStrategy
                 <span>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
                         {$parameters['teamName']}
                     </button>. 
                 </span>
@@ -60,7 +60,7 @@ class ChangePositionStrategy
 
             $activityLog = <<<HTML
                 <span>
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -70,7 +70,7 @@ class ChangePositionStrategy
                     </button>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
                         {$parameters['teamName']}
                     </button>. 
                 </span>
@@ -127,7 +127,7 @@ class AddAwardStrategy
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
                 <span>
-                <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                     <img src="/storage/$image" 
                         width="30" height="30"
                         onerror="this.src='/assets/images/404.png';"
@@ -137,7 +137,7 @@ class AddAwardStrategy
                 </button>
                 <span class="notification-gray"> You achieved 
                 {$parameters['award']} position in the team,
-                <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
                     {$parameters['teamName']}
                 </button>. 
             </span>
@@ -145,7 +145,7 @@ class AddAwardStrategy
 
             $activityLog = <<<HTML
                 <span>
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -155,7 +155,7 @@ class AddAwardStrategy
                     </button>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
                         {$parameters['teamName']}
                     </button>. 
                 </span>
@@ -192,7 +192,7 @@ class AddAchievementStrategy
             
             $notificationLog = <<<HTML
                 <span>
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -202,7 +202,7 @@ class AddAchievementStrategy
                     </button>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
                         {$parameters['teamName']}
                     </button>. 
                 </span>
@@ -213,7 +213,7 @@ class AddAchievementStrategy
 
             $activityLog = <<<HTML
                 <span>
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
                         <img src="/storage/$image"
                             width="30" height="30" 
                             onerror="this.src='/assets/images/404.png';"
@@ -223,7 +223,7 @@ class AddAchievementStrategy
                     </button>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <button class="px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
                         {$parameters['teamName']}
                     </button>. 
                 </span>
