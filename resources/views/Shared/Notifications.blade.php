@@ -25,7 +25,7 @@
         id="notif-container" 
         v-scope="PageNotificationComponent()"
         style="width: min(1000px, 95%); "
-    @vue:mounted="init"
+        @vue:mounted="init"
 
     >
         <h4 class="ms-4">
@@ -69,7 +69,7 @@
             <div class="notification-list2">
                 <template v-if="!notificationList?.[0]"> 
                     <div class="p-3 text-start">
-                        No notifications.
+                        Empty <span v-text="currentTab"> </span> notifications.
                     </div> 
                 </template>
                 <template v-for="notification2 in notificationList" :key="notification2.id">
