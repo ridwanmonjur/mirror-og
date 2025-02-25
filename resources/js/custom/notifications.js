@@ -262,7 +262,7 @@ function PageNotificationComponent () {
                 if (href) link = href;
             }
            
-            window.open(link, '_blank');
+            window.open(link);
         },
 
         async changeNotificationTab(tabName) {
