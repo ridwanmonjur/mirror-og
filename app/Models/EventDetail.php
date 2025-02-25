@@ -222,6 +222,14 @@ class EventDetail extends Model
             ->utc();
     }
 
+    public function createCarbonDateTime(string| null $date, string| null $time): ?Carbon
+    {
+        if ($date === null || $time === null) {
+            return null;
+        }
+        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time));
+    }
+
     function startDatesReadableForLanding(bool $willShowCountDown): array
     {
         $now = new DateTime('now', new DateTimeZone('UTC'));
@@ -487,7 +495,7 @@ class EventDetail extends Model
         }
     }
 
-    public static function storeLogic(EventDetail $eventDetail, Request $request): EventDetail
+    public static function storeLogic(EventDetail $eventDetail, Request $request): mixed
     {
         try {
             if ($request->hasFile('eventBanner')) {
@@ -498,11 +506,12 @@ class EventDetail extends Model
                 $eventDetail->eventBanner = self::storeEventBanner($request->file('eventBanner'));
             }
         } catch (Exception $e) {
+            throw new TimeGreaterException($e->getMessage());
         }
 
         $isEditMode = $eventDetail->id !== null;
         $isDraftMode = $request->launch_visible === 'DRAFT';
-
+        $isTimeSame = false;
         $isPreviewMode = $isEditMode ? false : $request->livePreview === 'true';
         $carbonStartDateTime = null;
         $carbonEndDateTime = null;
@@ -517,7 +526,12 @@ class EventDetail extends Model
         $endTime = $eventDetail->fixTimeToRemoveSeconds($request->endTime);
 
         if ($startDate && $startTime) {
-            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->startDate.' '.$startTime)->utc();
+            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime)->utc();
+            if ($isEditMode) {
+                $eventDetailDateTime = $eventDetail->createCarbonDateTime($eventDetail->startDate, $eventDetail->startTime);
+                $isTimeSame = $carbonStartDateTime->eq($eventDetailDateTime);
+            }
+
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
             $eventDetail->startTime = $carbonStartDateTime->format('H:i');
         } elseif ($isPreviewMode && ! $isEditMode) {
@@ -531,10 +545,14 @@ class EventDetail extends Model
         }
 
         if ($endDate && $endTime) {
-            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->endDate.' '.$endTime)->utc();
+            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $endDate.' '.$endTime)->utc();
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
                 $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
                 $eventDetail->endTime = $carbonEndDateTime->format('H:i');
+                if ($isEditMode) {
+                    $eventDetailDateTime = $eventDetail->createCarbonDateTime( $eventDetail->endDate, $eventDetail->endTime);
+                    $isTimeSame = $isTimeSame || $carbonEndDateTime->eq($eventDetailDateTime);
+                }
             } elseif ($isPreviewMode && ! $isEditMode) {
                 $eventDetail->endDate = null;
                 $eventDetail->endTime = null;
@@ -589,7 +607,7 @@ class EventDetail extends Model
         $eventDetail->status = $eventDetail->statusResolved();
         $eventDetail->willNotify = true;
 
-        return $eventDetail;
+        return [$eventDetail, $isTimeSame];
     }
 
     public static function findEventWithRelationsAndThrowError(

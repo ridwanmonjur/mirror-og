@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
+use App\Jobs\HandleEventUpdate;
 
 class OrganizerEventController extends Controller
 {
@@ -65,7 +66,7 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $userId)->first();
         $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
         $eventList = $eventListQuery
-            ->with(['tier', 'type', 'game'])
+            ->with(['tier', 'type', 'game', 'user'])
             ->where('user_id', $user->id)
             ->withCount(['joinEvents' => function ($q) {
                 $q->where('join_status', 'confirmed');
@@ -204,7 +205,7 @@ class OrganizerEventController extends Controller
     {
         try {
             $eventDetail = new EventDetail();
-            $eventDetail = EventDetail::storeLogic($eventDetail, $request);
+            [$eventDetail] = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
             $eventDetail->makeSignupTables();
@@ -277,9 +278,11 @@ class OrganizerEventController extends Controller
             );
 
             if ($eventId) {
-                $eventDetail = EventDetail::storeLogic($eventDetail, $request);
+                [$eventDetail, $isTimeChanged] = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
+                if ($isTimeChanged) dispatch(new HandleEventUpdate($eventDetail));
+
                 $eventDetail->makeSignupTables();
 
                 if ($request->livePreview === 'true') {
@@ -294,7 +297,7 @@ class OrganizerEventController extends Controller
         } catch (TimeGreaterException|EventChangeException $e) {
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $e->getTraceAsString() . ' ' .$e->getMessage());
         }
     }
 
