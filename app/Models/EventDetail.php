@@ -154,7 +154,7 @@ class EventDetail extends Model
                     [
                         'event_id' => $this->id,
                         'task_name' => 'live',
-                        'action_time' => date_create_from_format('Y-m-d', $this->sub_action_public_date)->format('Y-m-d H:i:s'),
+                        'action_time' => date_create_from_format('Y-m-d', $this->sub_action_public_date),
                         'created_at' => $now,
                     ]
                 ];
