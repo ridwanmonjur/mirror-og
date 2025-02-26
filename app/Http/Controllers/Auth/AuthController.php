@@ -109,7 +109,7 @@ class AuthController extends Controller
                 $participant->save();
             }
 
-            // Mail::to($user->email)->queue(new VerifyUserMail($user, $user->email_verified_token));
+            Mail::to($user->email)->queue(new VerifyUserMail($user, $user->email_verified_token));
 
             DB::commit();
 
