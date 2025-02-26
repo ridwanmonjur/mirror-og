@@ -77,6 +77,7 @@ class SocialService {
                     throw new Exception('You are befriending yourself!');
                 }
 
+                $friend = Friend::checkFriendship($validatedData['addUserId'], $user->id);
 
                 $addUser = User::where('id', $validatedData['addUserId'])
                     ->select(['id', 'userBanner', 'name'])
