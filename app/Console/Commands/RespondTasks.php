@@ -177,13 +177,13 @@ class RespondTasks extends Command
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="//event/{$join->eventDetails->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</button> has now ended. 
                     </span>
                 HTML;
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="px-0 border-0 notification-blue" href="//event/{$join->eventDetails->id}">
+                    <a class="px-0 border-0 notification-blue" href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</a> has now ended. 
                     </span>
                 HTML;
@@ -212,13 +212,13 @@ class RespondTasks extends Command
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="//event/{$join->eventDetails->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</button> is now live. 
                     </span>
                 HTML;
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="//event/{$join->eventDetails->id}">
+                    <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</a> is now live. 
                     </span>
                 HTML;
@@ -250,7 +250,7 @@ class RespondTasks extends Command
 
             $memberHtml = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="//event/{$join->eventDetails->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</button> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
                     on {$timeDate->format('M d, Y')}. 
                     </span>
@@ -258,7 +258,7 @@ class RespondTasks extends Command
             
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="//event/{$join->eventDetails->id}">
+                    <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</a> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
                     on {$timeDate->format('M d, Y')}. 
                     </span>
