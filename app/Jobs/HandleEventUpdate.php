@@ -46,8 +46,7 @@ class HandleEventUpdate implements ShouldQueue
 
                 DB::beginTransaction();
                 try {
-                    $partialEmail = "The event, {$this->eventDetail->eventName}</button>  starts in {$startTimeDate->diffForHumans()} at {$startTimeDate->format('g:i A')}. 
-                    It ends in {$endTimeDate->diffForHumans()} at {$endTimeDate->format('g:i A')}.";
+                    $partialEmail = "The event, {$this->eventDetail->eventName}</button>  has been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.";
 
                     $memberHtml = <<<HTML
                         <span class="notification-gray">
@@ -101,7 +100,7 @@ class HandleEventUpdate implements ShouldQueue
                             'html' => $notificationMap['member']['html'],
                         ];
 
-                        Mail::to($member->user->email)->send($participantEmail);
+                        // Mail::to($member->user->email)->send($participantEmail);
                     }
 
                     $organizerNotification = [
@@ -112,7 +111,7 @@ class HandleEventUpdate implements ShouldQueue
                         'html' => $notificationMap['organizer']['html'],
                     ];
                     
-                    Mail::to($this->eventDetail->user->email)->send($organizerEmail);
+                    // Mail::to($this->eventDetail->user->email)->send($organizerEmail);
 
                     NotifcationsUser::insertWithCount([
                         ...$memberNotification,

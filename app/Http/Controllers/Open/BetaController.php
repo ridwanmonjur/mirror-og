@@ -109,7 +109,7 @@ class BetaController extends Controller
 
     private function sendVerificationEmail($email, $token): void
     {
-        Mail::to($email)->queue(new VerifyInterestedUserMail($email, $token));
+        // Mail::to($email)->queue(new VerifyInterestedUserMail($email, $token));
     }
 
     public function verifyInterestedUser($token)
@@ -174,9 +174,7 @@ class BetaController extends Controller
                 $user->password = Hash::make($password);
                 $user->save();
 
-                Mail::to($user)->queue(new SendBetaWelcomeMail(
-                    $user, $password
-                ));
+                // Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
             }
             
             $existingUsersEmail = $existingUsers->pluck('email')->toArray();
@@ -211,7 +209,7 @@ class BetaController extends Controller
                 ]);
 
                 $participant->save();
-                Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
+                // Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
             }
 
 
