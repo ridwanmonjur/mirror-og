@@ -153,7 +153,6 @@ class RespondTasks extends Command
                     ];
                 }
             } catch (Exception $e) {
-                $errorMsg = "Payment Intent: {$item['payment_id']} error: " . $e->getMessage();
                 $this->logError($taskId, $e);
             }
         }
@@ -177,18 +176,24 @@ class RespondTasks extends Command
     public function getEndedNotifications($joinList) {
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
-            <span class="notification-gray">
-                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
-                {$join->eventDetails->eventName}</button> has now ended. 
-                </span>
-            HTML;
+                <span class="notification-gray">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</button> has now ended. 
+                    </span>
+                HTML;
+            $memberEmail = <<<HTML
+                <span class="notification-gray">
+                    <a class="px-0 border-0 notification-blue" href="/view/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</a> has now ended. 
+                    </span>
+                HTML;
             return [
                 'member' => [
                     'type' => 'event',
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'ended',
                     'html' => $memberHtml,
-                    'mail' => $memberHtml,
+                    'mail' => $memberEmail,
                     'mailClass' => 'EventEndMail'
                 ], 
                 'organizer' => [
@@ -196,7 +201,7 @@ class RespondTasks extends Command
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'ended',
                     'html' => $memberHtml,
-                    'mail' => $memberHtml,
+                    'mail' => $memberEmail,
                     'mailClass' => 'EventEndMail'
                 ]
             ];
@@ -206,18 +211,24 @@ class RespondTasks extends Command
     public function getLiveNotifications($joinList) {
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
-            <span class="notification-gray">
-                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
-                {$join->eventDetails->eventName}</button> is now live. 
-                </span>
-            HTML;
+                <span class="notification-gray">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</button> is now live. 
+                    </span>
+                HTML;
+            $memberEmail = <<<HTML
+                <span class="notification-gray">
+                    <a class="btn-transparent px-0 border-0 notification-blue" href="/view/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</a> is now live. 
+                    </span>
+                HTML;
             return [
                 'member' => [
                     'type' => 'event',
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'live',
                     'html' => $memberHtml,
-                    'mail' => $memberHtml,
+                    'mail' => $memberEmail,
                     'mailClass' => 'EventEndMail'
                 ], 
                 'organizer' => [
@@ -225,7 +236,7 @@ class RespondTasks extends Command
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'live',
                     'html' => $memberHtml,
-                    'mail' => $memberHtml,
+                    'mail' => $memberEmail,
                     'mailClass' => 'EventEndMail'
                 ]
             ];
@@ -238,12 +249,20 @@ class RespondTasks extends Command
             $timeDate = Carbon::parse($join->eventDetails->startDate . ' ' . $join->eventDetails->startTime);
 
             $memberHtml = <<<HTML
-            <span class="notification-gray">
-                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
-                {$join->eventDetails->eventName}</button> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
-                on {$timeDate->format('M d, Y')}. 
-                </span>
-            HTML;
+                <span class="notification-gray">
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</button> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
+                    on {$timeDate->format('M d, Y')}. 
+                    </span>
+                HTML;
+            
+            $memberEmail = <<<HTML
+                <span class="notification-gray">
+                    <a class="btn-transparent px-0 border-0 notification-blue" href="/view/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</a> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
+                    on {$timeDate->format('M d, Y')}. 
+                    </span>
+                HTML;
             
             return [
                 'member' => [
@@ -251,7 +270,7 @@ class RespondTasks extends Command
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'started',
                     'html' => $memberHtml,
-                    'mail' => $memberHtml,
+                    'mail' => $memberEmail,
                     'mailClass' => 'EventStartMail'
                 ], 
                 'organizer' => [
@@ -259,7 +278,7 @@ class RespondTasks extends Command
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'started',
                     'html' => $memberHtml,
-                    'mail' => $memberHtml,
+                    'mail' => $memberEmail,
                     'mailClass' => 'EventStartMail'
                 ]
             ];
