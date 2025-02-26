@@ -121,12 +121,6 @@
                             <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage()">More</button>
                         </div>
                     </template>
-                    <template v-else>
-                        <div aria-label="Page navigation" class="mt-1" style="padding-left: 9px;">
-                            <span>Loaded all</span>
-                            <br><br>
-                        </div>
-                    </template>
                 </div>
             </div>
         </div>
