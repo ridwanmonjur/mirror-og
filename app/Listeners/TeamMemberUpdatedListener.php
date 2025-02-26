@@ -45,18 +45,17 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 $action = 'accepted';
 
                 $userLog = <<<HTML
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{selectTeam->id}" alt="Team View">
+                    <a class="px-0 border-0 notification-blue" href="/view/team/{selectTeam->id}" alt="Team View">
                         <img src="/storage/{selectTeam->teamBanner}" 
                             width="30" height="30"    
                             onerror="this.src='/assets/images/404q.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Team View"
-                        >
-                    </button>
+                        ></a>
                     <span class="notification-gray me-2">
                         You joined the team, 
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
-                            {$selectTeam->teamName}</button>.
+                        <a class="px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}" alt="Team View">
+                            {$selectTeam->teamName}</a>.
                     </span>
                 HTML;
 

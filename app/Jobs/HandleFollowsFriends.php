@@ -54,7 +54,6 @@ class FollowParticipantStrategy
 {
     public function handle($parameters)
     {
-        ActivityLogs::create($parameters);
         ['followee' => $followee, 'user' => $user] = $parameters;
 
         NotifcationsUser::create([
@@ -123,7 +122,6 @@ class UpdateFriendStrategy
 {
     public function handle($parameters)
     {
-        ActivityLogs::where($parameters)->delete();
         ['user' => $user, 'otherUser' => $otherUser, 'status' => $status] = $parameters;
 
         if ($status == "accepted") {
