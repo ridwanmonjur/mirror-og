@@ -46,21 +46,22 @@ class HandleEventUpdate implements ShouldQueue
 
                 DB::beginTransaction();
                 try {
-                    $memberHtml = <<<HTML
-                    <span class="notification-gray">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$this->eventDetail->id}">
-                        The event, {$this->eventDetail->eventName}</button>  starts in {$startTimeDate->diffForHumans()} at {$startTimeDate->format('g:i A')}. 
-                        It ends in {$endTimeDate->diffForHumans()} at {$endTimeDate->format('g:i A')}.
-                        </span>
-                    HTML;
+                    $partialEmail = "The event, {$this->eventDetail->eventName}</button>  starts in {$startTimeDate->diffForHumans()} at {$startTimeDate->format('g:i A')}. 
+                    It ends in {$endTimeDate->diffForHumans()} at {$endTimeDate->format('g:i A')}.";
 
                     $memberHtml = <<<HTML
-                    <span class="notification-gray">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$this->eventDetail->id}">
-                        The event, {$this->eventDetail->eventName}</button>  starts in {$startTimeDate->diffForHumans()} at {$startTimeDate->format('g:i A')}. 
-                        It ends in {$endTimeDate->diffForHumans()} at {$endTimeDate->format('g:i A')}.
+                        <span class="notification-gray">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/event/{$this->eventDetail->id}">
+                            {$partialEmail}</button>
+                            </span>
+                        HTML;
+
+                    $memberEmail = <<<HTML
+                        <span class="notification-gray">
+                            <a class="px-0 border-0 notification-blue" href="/view/event/{$this->eventDetail->id}">
+                            {$partialEmail}</a>
                         </span>
-                    HTML;
+                        HTML;
 
                     $notificationMap = [
                         'member' => [
@@ -68,14 +69,14 @@ class HandleEventUpdate implements ShouldQueue
                             'link' =>  route('public.event.view', ['id' => $this->eventDetail->id]),
                             'icon_type' => 'ended',
                             'html' => $memberHtml,
-                            'mail' => $memberHtml,
+                            'mail' => $memberEmail,
                         ], 
                         'organizer' => [
                             'type' => 'event',
                             'link' =>  route('public.event.view', ['id' => $this->eventDetail->id]),
                             'icon_type' => 'ended',
                             'html' => $memberHtml,
-                            'mail' => $memberHtml,
+                            'mail' => $memberEmail,
                         ]
                     ];
 
