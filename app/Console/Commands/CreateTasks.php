@@ -45,28 +45,18 @@ class CreateTasks extends Command
             $todayDate = $today->toDateString();
             $todayTime = $today->toTimeString();
 
-            // $launchEvents = EventDetail::whereDate('sub_action_public_date', $todayDate)
-            //     ->whereTime('sub_action_public_time', '<=', $todayDate)
-            //     ->select(['id', 'sub_action_public_date', 'sub_action_public_time'])
-            //     ->get();
-
-            // $startEvents = EventDetail::whereDate('startDate', $todayDate)
-            //     ->select(['id', 'startDate'])
-            //     ->get();
-
-            // $endEvents = EventDetail::whereDate('endDate', $todayDate)
-            //     ->select(['id', 'endDate'])
-            //     ->get();
-
-            $launchEvents = EventDetail::select(['id', 'sub_action_public_date', 'sub_action_public_time'])
+            $launchEvents = EventDetail
+                ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
+                
                 ->get();
 
-            $startEvents = EventDetail::select(['id', 'startDate'])
+            $startEvents = EventDetail::whereDate('startDate', $todayDate)
+                ->select(['id', 'startDate'])
                 ->get();
 
-            $endEvents = EventDetail::select(['id', 'endDate'])
+            $endEvents = EventDetail::whereDate('endDate', $todayDate)
+                ->select(['id', 'endDate'])
                 ->get();
-
 
             $this->createTask($launchEvents, 'live', $todayTime, $todayDate);
             $this->createTask($endEvents, 'ended', $todayTime, $todayDate);
@@ -82,6 +72,8 @@ class CreateTasks extends Command
 
     private function createTask($eventList, $taskName, $actionTime, $actionDate)
     {
+        $now = now();
+
         $eventIds = $eventList->pluck('id')->toArray();
         $dateTime = date_create_from_format('Y-m-d H:i:s', $actionDate.' '.$actionTime);
         $tasksData = [];
@@ -90,6 +82,7 @@ class CreateTasks extends Command
                 'event_id' => $eventId,
                 'task_name' => $taskName,
                 'action_time' => $dateTime->format('Y-m-d H:i:s'),
+                'created_at' => $now,
             ];
         }
 

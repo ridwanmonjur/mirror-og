@@ -125,6 +125,45 @@ class EventDetail extends Model
         return $isComplete;
     }
 
+    public function createUpdateTask()
+    {
+        $now = now();
+
+        $status = $this->statusResolved();
+        Task::where('event_id', $this->id)
+            ->whereNot('task_name', 'dispute')
+            ->delete();
+        if ($status !== 'PENDING' || $status!= 'DRAFT' || $status !== 'PREVIEW') {
+            $tasksData[] = [
+                [
+                    'event_id' => $this->id,
+                    'task_name' => 'started',
+                    'action_time' => $this->startDate->format('Y-m-d'),
+                    'created_at' => $now,
+                ],
+                [
+                    'event_id' => $this->id,
+                    'task_name' => 'ended',
+                    'action_time' => $this->endDate->format('Y-m-d'),
+                    'created_at' => $now,
+                ],
+            ];
+
+            if ($this->sub_action_public_date) {
+                $tasksData[] = [
+                    [
+                        'event_id' => $this->id,
+                        'task_name' => 'live',
+                        'action_time' => date_create_from_format('Y-m-d', $this->sub_action_public_date)->format('Y-m-d H:i:s'),
+                        'created_at' => $now,
+                    ]
+                ];
+            }
+
+            Task::insert($tasksData);
+        }
+    }
+
     public function statusResolved(): string
     {
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(

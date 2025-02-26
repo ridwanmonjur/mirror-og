@@ -28,8 +28,7 @@ class TaskResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('task_name')
                     ->required(),
-                Forms\Components\Toggle::make('isExecuted')
-                    ->required(),
+            
                 Forms\Components\DateTimePicker::make('action_time')
                     ->required(),
             ]);
@@ -43,8 +42,7 @@ class TaskResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('task_name'),
-                Tables\Columns\IconColumn::make('isExecuted')
-                    ->boolean(),
+              
                 Tables\Columns\TextColumn::make('action_time')
                     ->dateTime()
                     ->sortable(),

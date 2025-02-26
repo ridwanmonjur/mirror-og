@@ -50,28 +50,20 @@ class RespondTasks extends Command
         $taskId = $this->logEntry('Respond Tasks', $commandName, '*/30 * * * *', $now, $commandName);        try {
             $today = Carbon::today();
             $tasks = Task
-            // ::whereDate('action_time', $today)
-            // ->where('action_time', '>=', $now)
-            // ->where('action_time', '<=', $now->addMinutes(30))
-                ::all();
-            // $tasks = Task
-            //     ::whereDate('action_time', $today)
-            //     ->where('action_time', '>=', $now)
-            //     ->where('action_time', '<=', $now->addMinutes(30))
-            //     ->get();
+                ::whereDate('action_time', $today)
+                ->where('action_time', '>=', $now)
+                ->where('action_time', '<=', $now->addMinutes(30))
+                ->get();
             $endedTaskIds= $liveTaskIds = $startedTaskIds = [];
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
                     case 'ended':
-                        $endedTasks[] = $task;
                         $endedTaskIds[] = $task->event_id;
                         break;
                     case 'live':
-                        $liveTasks[] = $task;
                         $liveTaskIds[] = $task->event_id;
                         break;
                     case 'started':
-                        $startedTasks[] = $task;
                         $startedTaskIds[] = $task->event_id;
                         break;
                 }
@@ -91,8 +83,8 @@ class RespondTasks extends Command
                 ->where('join_status', 'confirmed')
                 ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
                 ->get();
-      
 
+      
             $this->handleEventTypes(
                 $this->getEndedNotifications($endedEvents), 
                 $endedEvents, 

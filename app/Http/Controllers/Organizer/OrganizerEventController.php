@@ -204,12 +204,14 @@ class OrganizerEventController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $eventDetail = new EventDetail();
             [$eventDetail] = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
             $eventDetail->makeSignupTables();
-
+            $eventDetail->createUpdateTask();
+            DB::commit();
             if ($request->livePreview === 'true') {
                 return redirect('organizer/event/'.$eventDetail->id.'?live=true');
             }
@@ -220,8 +222,10 @@ class OrganizerEventController extends Controller
             
             return redirect('organizer/event/'.$eventDetail->id.'/success');
         } catch (TimeGreaterException|EventChangeException $e) {
+            DB::rollBack();
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
+            DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
@@ -231,19 +235,13 @@ class OrganizerEventController extends Controller
         try {
             $user = $request->get('user');
             $userId = $user->id;
-            $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId,
-                $id,
-            );
+            $event = EventDetail::findEventWithRelationsAndThrowError($userId,$id);
             $status = $event->statusResolved();
 
             if ($status === 'ENDED') {
                 return $this->showErrorOrganizer("Event has already ended id: {$id}");
             }
 
-            if (! in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED', 'PENDING'])) {
-                return $this->showErrorOrganizer("Event has already gone live for id: {$id}");
-            }
 
             $eventCategory = EventCategory::all();
             $eventTierList = EventTier::all();
@@ -272,19 +270,17 @@ class OrganizerEventController extends Controller
             $eventId = $id;
             $user = $request->get('user');
             $userId = $user->id;
-            $eventDetail = EventDetail::findEventWithRelationsAndThrowError(
-                $userId,
-                $id,
-            );
+            $eventDetail = EventDetail::findEventWithRelationsAndThrowError($userId,$id);
+            DB::beginTransaction();
 
             if ($eventId) {
                 [$eventDetail, $isTimeChanged] = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
                 if ($isTimeChanged) dispatch(new HandleEventUpdate($eventDetail));
-
+                $eventDetail->createUpdateTask();
                 $eventDetail->makeSignupTables();
-
+                DB::commit();
                 if ($request->livePreview === 'true') {
                     return redirect('organizer/event/'.$eventId.'/live');
                 }
@@ -295,8 +291,10 @@ class OrganizerEventController extends Controller
             }
             return $this->showErrorOrganizer("Event not found for id: {$id}");
         } catch (TimeGreaterException|EventChangeException $e) {
+            DB::rollBack();
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
+            DB::rollBack();
             return back()->with('error', $e->getTraceAsString() . ' ' .$e->getMessage());
         }
     }
