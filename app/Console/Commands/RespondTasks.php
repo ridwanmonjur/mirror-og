@@ -303,7 +303,7 @@ class RespondTasks extends Command
                             'html' => $notificationMap['member']['html'],
                         ];
 
-                    Mail::to($member->user->email)->send($mailInvocation);
+                    // Mail::to($member->user->email)->send($mailInvocation);
                     }
                 }
 
@@ -326,7 +326,7 @@ class RespondTasks extends Command
                         'html' => $notificationMap['organizer']['html'],
                     ];
 
-                    Mail::to($join->eventDetails->user->email)->send($mailInvocation);
+                    // Mail::to($join->eventDetails->user->email)->send($mailInvocation);
                 }
 
                 NotifcationsUser::insertWithCount([

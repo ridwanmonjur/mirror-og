@@ -80,10 +80,7 @@ class AuthResetAndVerifyController extends Controller
 
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
-        Mail::to($email)->queue(new ResetPasswordMail(
-            public_path('assets/images/driftwood logo.png'), 
-            $token
-        ));
+        Mail::to($email)->queue(new ResetPasswordMail(public_path('assets/images/driftwood logo.png'), $token));
 
 
         return back()->with('success', 'Password reset link sent. Please check your email.');

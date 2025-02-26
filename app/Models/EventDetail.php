@@ -134,17 +134,17 @@ class EventDetail extends Model
             ->whereNot('task_name', 'dispute')
             ->delete();
         if ($status !== 'PENDING' || $status!= 'DRAFT' || $status !== 'PREVIEW') {
-            $tasksData[] = [
+            $tasksData = [
                 [
-                    'event_id' => $this->id,
+                    'event_id' => $this->getKey(),
                     'task_name' => 'started',
-                    'action_time' => $this->startDate->format('Y-m-d'),
+                    'action_time' => $this->startDate,
                     'created_at' => $now,
                 ],
                 [
-                    'event_id' => $this->id,
+                    'event_id' => $this->getKey(),
                     'task_name' => 'ended',
-                    'action_time' => $this->endDate->format('Y-m-d'),
+                    'action_time' => $this->endDate,
                     'created_at' => $now,
                 ],
             ];
@@ -152,7 +152,7 @@ class EventDetail extends Model
             if ($this->sub_action_public_date) {
                 $tasksData[] = [
                     [
-                        'event_id' => $this->id,
+                        'event_id' => $this->getKey(),
                         'task_name' => 'live',
                         'action_time' => date_create_from_format('Y-m-d', $this->sub_action_public_date),
                         'created_at' => $now,
@@ -266,7 +266,7 @@ class EventDetail extends Model
         if ($date === null || $time === null) {
             return null;
         }
-        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time));
+        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))->utc();
     }
 
     function startDatesReadableForLanding(bool $willShowCountDown): array
@@ -550,11 +550,9 @@ class EventDetail extends Model
 
         $isEditMode = $eventDetail->id !== null;
         $isDraftMode = $request->launch_visible === 'DRAFT';
-        $isTimeSame = false;
+        $isTimeSame = true;
         $isPreviewMode = $isEditMode ? false : $request->livePreview === 'true';
-        $carbonStartDateTime = null;
-        $carbonEndDateTime = null;
-        $carbonPublishedDateTime = null;
+        $carbonStartDateTime = $carbonEndDateTime = $carbonPublishedDateTime = null;
         $eventDetail->event_type_id = $request->eventTypeId;
         $eventDetail->event_tier_id = $request->eventTierId;
         $eventDetail->event_category_id = $request->gameTitleId;
@@ -567,8 +565,8 @@ class EventDetail extends Model
         if ($startDate && $startTime) {
             $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime)->utc();
             if ($isEditMode) {
-                $eventDetailDateTime = $eventDetail->createCarbonDateTime($eventDetail->startDate, $eventDetail->startTime);
-                $isTimeSame = $carbonStartDateTime->eq($eventDetailDateTime);
+                $eventDetailStartDateTime = $eventDetail->createCarbonDateTime($eventDetail->startDate, $eventDetail->startTime);
+                $isTimeSame = $carbonStartDateTime->eq($eventDetailStartDateTime);
             }
 
             $eventDetail->startDate = $carbonStartDateTime->format('Y-m-d');
@@ -585,13 +583,13 @@ class EventDetail extends Model
 
         if ($endDate && $endTime) {
             $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $endDate.' '.$endTime)->utc();
+            if ($isEditMode) {
+                $eventEndDateTime = $eventDetail->createCarbonDateTime( $eventDetail->endDate, $eventDetail->endTime);
+                $isTimeSame = $isTimeSame && $carbonEndDateTime->eq($eventEndDateTime);
+            }
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
                 $eventDetail->endDate = $carbonEndDateTime->format('Y-m-d');
                 $eventDetail->endTime = $carbonEndDateTime->format('H:i');
-                if ($isEditMode) {
-                    $eventDetailDateTime = $eventDetail->createCarbonDateTime( $eventDetail->endDate, $eventDetail->endTime);
-                    $isTimeSame = $isTimeSame || $carbonEndDateTime->eq($eventDetailDateTime);
-                }
             } elseif ($isPreviewMode && ! $isEditMode) {
                 $eventDetail->endDate = null;
                 $eventDetail->endTime = null;

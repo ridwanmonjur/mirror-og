@@ -274,10 +274,10 @@ class OrganizerEventController extends Controller
             DB::beginTransaction();
 
             if ($eventId) {
-                [$eventDetail, $isTimeChanged] = EventDetail::storeLogic($eventDetail, $request);
+                [$eventDetail, $isTimeSame] = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
-                if ($isTimeChanged) dispatch(new HandleEventUpdate($eventDetail));
+                if (!$isTimeSame) dispatch(new HandleEventUpdate($eventDetail));
                 $eventDetail->createUpdateTask();
                 $eventDetail->makeSignupTables();
                 DB::commit();

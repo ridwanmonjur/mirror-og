@@ -95,11 +95,11 @@ class ChangePositionStrategy
                     'html' => $notificationLog,
                 ];
     
-                Mail::to($member->user->email)->send(new EventResultMail([
-                    'team' => $team,
-                    'text' => $notificationLog,
-                    'link' => route('participant.team.view', ['id' => $team->id]) . '#Positions'                
-                ]));
+                // Mail::to($member->user->email)->send(new EventResultMail([
+                //     'team' => $team,
+                //     'text' => $notificationLog,
+                //     'link' => route('participant.team.view', ['id' => $team->id]) . '#Positions'                
+                // ]));
             }
     
             NotifcationsUser::insertWithCount($memberNotification);

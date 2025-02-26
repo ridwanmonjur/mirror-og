@@ -174,9 +174,7 @@ class BetaController extends Controller
                 $user->password = Hash::make($password);
                 $user->save();
 
-                Mail::to($user)->queue(new SendBetaWelcomeMail(
-                    $user, $password
-                ));
+                Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
             }
             
             $existingUsersEmail = $existingUsers->pluck('email')->toArray();
