@@ -10,6 +10,7 @@ use App\Models\StripePayment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 
@@ -79,6 +80,7 @@ class OrganizerCheckoutController extends Controller
     public function showCheckoutTransition(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
@@ -106,27 +108,29 @@ class OrganizerCheckoutController extends Controller
                     );
 
                     $event->payment_transaction_id = $transaction->id;
-                    // this line must be below setting the payment transaction
                     if ($event->status !== 'DRAFT') {
                         $event->status = 'NOT PENDING';
                         $event->status = $event->isCompleteEvent() ? $event->statusResolved() : 'PENDING';
                     }
 
                     $event->save();
-
+                    $event->createUpdateTask();
+                    DB::commit();
                     return view('Organizer.CheckoutEventSuccess', [
                         'event' => $event,
                         'isUser' => true,
                     ]);
                 }
             }
-
+            DB::rollback();
             return redirect()
                 ->route('organizer.checkout.view', ['id' => $id])
                 ->with('errorCheckout', 'Your payment has failed unfortunately!');
         } catch (ModelNotFoundException|UnauthorizedException $e) {
+            DB::rollback();
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
+            DB::rollback();
             return redirect()
                 ->route('organizer.checkout.view', ['id' => $id])
                 ->with('errorCheckout', $e->getMessage());

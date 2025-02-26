@@ -4,12 +4,12 @@
 <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
 @include('Shared.__BracketModalPartials.Report')
 {{-- @include('Shared.__BracketModalPartials.Dispute') --}}
-<div id="bracket-list"  style="overflow-x: visible; overflow-y: visible;">
+<div id="bracket-list "  style="overflow-x: hidden; overflow-y: visible; ">
     @if (isset($bracketList['upperBracket']))
 
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
-        <div class="row mb-2">
-            <div class="tournament-bracket tournament-bracket--rounded col-12 col-xxl-6">
+        <div class="mb-2">
+            <div class="tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">
                         @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)

@@ -374,11 +374,6 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
             try {
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));
      
-               
-                console.log({data})
-                console.log({data})
-                console.log({data})
-                console.log({data})
                 if (!('is_blocked' in data)) {
                     return;
                 }
@@ -444,7 +439,6 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
 
                 const response = await fetch( url );
                 const data = await response.json();
-                console.log(data);
                 if (tab in data.connections)  {
                     if (this.page && this.page == 1) {
                         let newTab = this.page;

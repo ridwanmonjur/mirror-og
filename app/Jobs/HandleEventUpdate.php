@@ -51,14 +51,14 @@ class HandleEventUpdate implements ShouldQueue
 
                     $memberHtml = <<<HTML
                         <span class="notification-gray">
-                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="//event/{$this->eventDetail->id}">
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$this->eventDetail->id}">
                             {$partialEmail}</button>
                             </span>
                         HTML;
 
                     $memberEmail = <<<HTML
                         <span class="notification-gray">
-                            <a class="px-0 border-0 notification-blue" href="//event/{$this->eventDetail->id}">
+                            <a class="px-0 border-0 notification-blue" href="/event/{$this->eventDetail->id}">
                             {$partialEmail}</a>
                         </span>
                         HTML;
