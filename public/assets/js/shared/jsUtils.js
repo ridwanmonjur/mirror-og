@@ -162,6 +162,7 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+
     if (typeof bodyHeight3 === 'undefined' || bodyHeight3 === null) {
         bodyHeight3 = document.body.offsetHeight;
     }
@@ -171,9 +172,21 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     evt.currentTarget.className += " active";
     
     if (specialElementHeightId) {
+        console.log({specialElementHeightId});
         let bracketList = document.getElementById(specialElementHeightId);
+        console.log({bracketList});
+        console.log({bracketList});
+        console.log({bracketList});
+        console.log({bracketList});
+        console.log({bracketList});
+        console.log({bracketList});
         if (!bracketList) return;
-        let bracketListHeight = bracketList.getBoundingClientRect().height;
+        let bracketListHeight = bracketList.clientHeight;
+        console.log({bracketListHeight});
+        console.log({bracketListHeight});
+        console.log({bracketListHeight});
+        console.log({bracketListHeight});
+        console.log({bracketListHeight});
         let main = document.querySelector('main');
         if (main) {
             main.style.transition = "height 0.5s ease-in-out";

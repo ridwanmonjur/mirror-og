@@ -146,16 +146,13 @@ function addTippyToClass(classAndPositionList) {
 window.addTippyToClass = addTippyToClass;
 
 function addDotsToContainer(key, value) {
-  console.log({value});
-  console.log({value});
-  console.log({value});
+
   let parent = document.querySelector(`.${key}.popover-middle-content`);
   let table = document.querySelector(`.${key}.tournament-bracket__table`);
   let dottedScoreContainer = parent?.querySelectorAll('.dotted-score-container');
   let dottedScoreBox = parent?.querySelectorAll('.dotted-score-box');
   let statusBox = parent?.querySelectorAll('.status-box');
   let dottedScoreTable = table?.querySelectorAll('.dotted-score-box');
-  console.log({dottedScoreTable});
   dottedScoreContainer?.forEach((element, index) => {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
       if (value.realWinners[dottedElementIndex]) {
@@ -248,21 +245,11 @@ function getAllMatchStatusesData() {
 getAllMatchStatusesData();
 
 
-let bodyHeight22 = document.body.offsetHeight;
-let bracketList = document.getElementById('bracket-list');
-let bracketListHeight = bracketList?.getBoundingClientRect()?.height;
-let main2 = document.querySelector('main');
-if (main2) {
-  main2.style.transition = "height 0.5s ease-in-out";
-  main2.style.height = bodyHeight22 + bracketListHeight + 'px';
-}
+
 
 
 function BracketData() {
-  console.log("uuuu");
-  console.log("uuuu");
-  console.log("uuuu");
-  console.log("uuuu");
+
   const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums' ?? '[]').value);
   const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
   let initialData = {
@@ -645,11 +632,7 @@ function BracketData() {
       });
     },
     async init() {
-      console.log("zzzzzzzzzzzz");
-      console.log("zzzzzzzzzzzz");
-      console.log("zzzzzzzzzzzz");
-      console.log("zzzzzzzzzzzz");
-      console.log("zzzzzzzzzzzz");
+
       if (hiddenUserId) {
       
         const { user, claims } = await initializeFirebaseAuth();
@@ -1201,10 +1184,7 @@ const validateDisputeCreation = async (data) => {
 };
 
 window.onload = () => {
-  console.log('rrrrrrr');
-  console.log('rrrrrrr');
-  console.log('rrrrrrr');
-  console.log('rrrrrrr');
+
   createApp({
     BracketData,
     UploadData,

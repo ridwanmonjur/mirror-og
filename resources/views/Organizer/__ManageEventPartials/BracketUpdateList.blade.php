@@ -6,7 +6,7 @@
  
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
         <div class="row mb-2">
-            <div class="tournament-bracket tournament-bracket--rounded col-12 col-xxl-6">
+            <div class="tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">
                         @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
