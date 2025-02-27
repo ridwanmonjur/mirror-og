@@ -141,19 +141,18 @@
                                             class="text-red">*</span>
                                         </h5>
                                         <div class="ps-5 pe-5 text-start">
-                                            <div class="upload-container ps-5 pe-5" v-data="type1" v-ref="createDisputeInputs"
-                                                  {{-- @initiate-upload.window="uploadToServer('/api/media')" --}}
+                                            <div class="upload-container ps-5 pe-5" v-scope="UploadData('createDisputeInputs')" id="createDisputeInputs"
+                                                @vue:mounted="init"
                                             >
                                                 <div class="d-flex justify-content-start">
-                                                    <div class="upload-area me-2 d-flex justify-content-between" v-ref="uploadArea"></div>
-                                                    <div class="plus-button" v-bind:click="$refs.fileInput.click()">+</div>
+                                                    <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
+                                                    <div class="plus-button" v-bind:click="clickInput()">+</div>
                                                 </div>
                                                 <input type="file" 
-                                                    v-ref="fileInput" 
                                                     class="file-input" 
                                                     multiple
                                                     accept="image/*" 
-                                                    v-bind:change="handleFiles($event)"
+                                                    v-bind:change="handleFiles(event)"
                                                 >
                                             </div>
                                         </div>
@@ -213,7 +212,7 @@
                                                         <div>
                                                             <template v-if="imgVideo.startsWith('media/img')">
                                                                 <img v-bind:src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
-                                                                    v-click="showImageModal(imgVideo)"
+                                                                    v-on:click="showImageModal(imgVideo)"
                                                                     height="100px" width="100px" 
                                                                 />
                                                             </template>
@@ -272,7 +271,7 @@
                                                             <div>
                                                                 <template v-if="imgVideo.startsWith('media/img')">
                                                                     <img v-bind:src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
-                                                                        v-click="showImageModal(imgVideo)"
+                                                                        v-on:click="showImageModal(imgVideo)"
                                                                         height="100px" width="100px" 
                                                                     />
                                                                 </template>
@@ -359,19 +358,18 @@
                                                 </div>
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
                                                 <div class="ps-5 pe-5 text-start">
-                                                <div class="upload-container ps-5 pe-5" v-data="type2" v-ref="respondDisputeInputs"
-                                                    @initiate-upload.window="uploadToServer('/api/media')"
+                                                <div class="upload-container ps-5 pe-5" v-scope="UploadData('respondDisputeInputs')" id="respondDisputeInputs"
+                                                    @vue:mounted="init"
                                                 >
                                                     <div class="d-flex justify-content-start">
-                                                        <div class="upload-area me-2 d-flex justify-content-between" v-ref="uploadArea"></div>
-                                                        <div class="plus-button" v-click="$refs.fileInput.click()">+</div>
+                                                        <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
+                                                        <div class="plus-button" v-on:click="clickInput()">+</div>
                                                     </div>
                                                     <input type="file" 
-                                                        v-ref="fileInput" 
                                                         class="file-input" 
                                                         multiple
                                                         accept="image/*" 
-                                                        v-on:change="handleFiles($event)">
+                                                        v-on:change="handleFiles(event)">
                                                     </div>
                                                 </div>
                                                 <div class="my-3 px-3 d-flex justify-content-between">
