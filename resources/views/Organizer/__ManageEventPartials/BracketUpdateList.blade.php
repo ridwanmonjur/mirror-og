@@ -5,7 +5,7 @@
     @if (isset($bracketList['upperBracket']))
  
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
-        <div class="row mb-2">
+        <div class="row mb-2 custom-scrollbar">
             <div class="tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">
@@ -51,7 +51,7 @@
 
         </div>
         <h5 class="mb-2 text-start"><u>Lower bracket</u></h5>
-        <div class="tournament-bracket tournament-bracket--rounded">
+        <div class="tournament-bracket tournament-bracket--rounded custom-scrollbar">
             @php
                 $rounds = [
                     'eliminator1' => 'tournament-bracket__joined-odd-list',

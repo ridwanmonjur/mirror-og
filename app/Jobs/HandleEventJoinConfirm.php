@@ -161,7 +161,7 @@ class VoteStartStrategy
     }
 }
 
-class OrgCancel{
+class OrgCancelStrategy{
     public function handle($parameters) {
 
     }

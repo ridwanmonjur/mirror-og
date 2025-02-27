@@ -242,7 +242,7 @@ nav svg:active {
     padding-left: 90px;
     width: 400px;
     max-width: 80vw;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
     transition-delay: 100ms;
     transition-timing-function: ease-in;
     /* caret-color: #43A4D7;
@@ -464,6 +464,7 @@ a:hover {
 
 .custom-scrollbar {
     overflow-y: auto;
+    overflow-x: auto;
     scrollbar-width: thin;
     /* For Firefox */
     scrollbar-color: #ece4e4 #f0f0f0;
