@@ -100,7 +100,7 @@ class HandleEventUpdate implements ShouldQueue
                             'html' => $notificationMap['member']['html'],
                         ];
 
-                        // Mail::to($member->user->email)->send($participantEmail);
+                        Mail::to($member->user->email)->send($participantEmail);
                     }
 
                     $organizerNotification = [
@@ -111,7 +111,7 @@ class HandleEventUpdate implements ShouldQueue
                         'html' => $notificationMap['organizer']['html'],
                     ];
                     
-                    // Mail::to($this->eventDetail->user->email)->send($organizerEmail);
+                    Mail::to($this->eventDetail->user->email)->send($organizerEmail);
 
                     NotifcationsUser::insertWithCount([
                         ...$memberNotification,

@@ -57,11 +57,11 @@ class JoinEventSignupListener implements ShouldQueue
                 'html' => $html,
             ];
 
-            // Mail::to($member->user->email)->send(new EventSignupMail([
-            //     'team' => $event2->selectTeam,
-            //     'text' => $html,
-            //     'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
-            // ]));
+            Mail::to($member->user->email)->send(new EventSignupMail([
+                'team' => $event2->selectTeam,
+                'text' => $html,
+                'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
+            ]));
         }
             
         NotifcationsUser::insertWithCount($memberNotification);
