@@ -4,7 +4,8 @@
 <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
 @include('Shared.__BracketModalPartials.Report')
 {{-- @include('Shared.__BracketModalPartials.Dispute') --}}
-<div id="bracket-list "  style="overflow-x: hidden; overflow-y: visible; ">
+<div id="bracket-list custom-scrollbar"  class="tab-bracketlist"
+>
     @if (isset($bracketList['upperBracket']))
 
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
@@ -53,7 +54,7 @@
 
         </div>
         <h5 class="mb-2 text-start"><u>Lower bracket</u></h5>
-        <div class="tournament-bracket tournament-bracket--rounded">
+        <div class="tournament-bracket tournament-bracket--rounded custom-scrollbar" >
             @php
                 $rounds = [
                     'eliminator1' => 'tournament-bracket__joined-odd-list',

@@ -330,7 +330,7 @@
     <div class="grid-container">
             <div></div>
             <div>
-                <div class="tab ms-0 position-relative" style="width: max(60vw, 95%); left: min(2%, 10px); top:20px;">
+                <div class="tab ms-0 position-relative tab-viewEvent" >
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
                         onclick="openTab(event, 'Overview'); ">Overview</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
@@ -347,7 +347,7 @@
                 </div>
 
                 <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
-                     class="tabcontent position-absolute" >
+                     class="tabcontent " >
                     @include('Participant.__Partials.BracketReport')
                 </div>
 
