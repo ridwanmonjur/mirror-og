@@ -60,7 +60,7 @@ class SettingsService
             'email_verified_token' => $token
         ]);
 
-        // Mail::to($user->email)->queue(new VerifyUserMailChange($user, $token));
+        Mail::to($user->email)->queue(new VerifyUserMailChange($user, $token));
 
         return [
             'message' => 'Please verify your new email address'
