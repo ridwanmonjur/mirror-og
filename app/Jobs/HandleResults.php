@@ -46,7 +46,7 @@ class ChangePositionStrategy
                 'team' => $team
             ] = $parameters;
 
-            $positionString = intval($this->ordinalPrefix($parameters['position']));
+            $positionString = $this->ordinalPrefix($parameters['position']);
             $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
