@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Team Canceling Event' }}
+    {{ 'Team Posiion in Event' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Team Canceling Event' }}
+    {{ 'Team Posiion in Event' }}
 @endsection
 @section('content')
     <tr>
@@ -19,7 +19,7 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>The event has been canceled!</p>
+                        <p>The event's position has been awarded.</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <a href="/view/team/{{$team['id']}}" style="color: white !important;">
                                 <img src="{{$message->embed($bannerPath)}}"

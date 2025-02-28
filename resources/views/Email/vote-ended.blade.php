@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Team Ending Vote' }}
+    {{ 'Vote Results' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Team Ending Vote' }}
+    {{ 'Vote Results' }}
 @endsection
 @section('content')
     <tr>
@@ -19,7 +19,7 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Hello and greetings.</p>
+                        <p>Vote to quite event has ended. Results are in!</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <span>{!! $text !!}</span>
                         </p> 
