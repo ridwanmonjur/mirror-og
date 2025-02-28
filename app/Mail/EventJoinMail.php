@@ -40,7 +40,6 @@ class EventJoinMail extends Mailable implements ShouldQueue
             ->view('Email.event-joined')
             ->with([
                 'team' => $this->body['team'],
-                'bannerPath' => $this->body['banner'],
                 'actionName' => $this->body['links'][0]['name'],
                 'actionUrl' => $this->body['links'][0]['url'],
                 'text' => $this->body['text'],  
