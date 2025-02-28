@@ -16,32 +16,14 @@ trait PrinterLoggerTrait
         Carbon $today, 
     ): int
     {
-        return DB::transaction(function () use ($commandName, $commandType, $cronExpression, $today) {
-            $record = DB::table('monitored_scheduled_tasks')
-                ->where('name', $commandName)
-                ->where('type', 'Daily cron check')
-                ->whereDate('created_at', $today->toDateString())
-                ->first();
-        
-            if ($record) {
-                DB::table('monitored_scheduled_tasks')
-                    ->where('id', $record->id)
-                    ->update([
-                        'last_started_at' => $today,
-                        'updated_at' => $today,
-                    ]);
-                return $record->id;
-            } else {
-                return DB::table('monitored_scheduled_tasks')->insertGetId([
-                    'name' => $commandName,
-                    'type' => $commandName,
-                    'created_at' => $today,
-                    'cron_expression' => $cronExpression,
-                    'last_started_at' => $today,
-                    'updated_at' => $today,
-                ]);
-            }
-        });
+        return DB::table('monitored_scheduled_tasks')->insertGetId([
+            'name' => $commandName,
+            'type' => $commandType,
+            'created_at' => $today,
+            'cron_expression' => $cronExpression,
+            'last_started_at' => $today,
+            'updated_at' => $today,
+        ]);
     }
 
     private function logExit(int $id, Carbon $now): void

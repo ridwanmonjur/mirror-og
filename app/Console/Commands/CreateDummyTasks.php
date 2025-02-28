@@ -41,6 +41,8 @@ class CreateDummyTasks extends Command
 
             $launchEvents = EventDetail
                 ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
+                ->whereNotNull('sub_action_public_date')
+                ->select(['id', 'sub_action_public_date'])
                 ->get();
 
             $startEvents = EventDetail
