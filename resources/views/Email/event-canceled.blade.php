@@ -21,12 +21,7 @@
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>The event has been canceled!</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
-                            <a href="/view/team/{{$team['id']}}" style="color: white !important;">
-                                <img src="{{$message->embed($bannerPath)}}"
-                                    width="45" height="45"
-                                    style="object-fit:cover; border-radius: 50%; margin-right: 10px;"
-                                    alt="Team banner">
-                            </a>
+                            
                             <span>{!! $text !!}</span>
                         </p> 
                         <p style="text-align: center;">

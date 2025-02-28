@@ -31,7 +31,7 @@ class JoinEventSignupListener implements ShouldQueue
      */
     public function handle(JoinEventSignuped $event2): void
     {
-        $memberNotification = []; $memberEmail = [];
+        $memberNotification = []; 
         foreach ($event2->selectTeam->members as $member) {
             $html = <<<HTML
                 <span class="notification-gray">
@@ -57,11 +57,13 @@ class JoinEventSignupListener implements ShouldQueue
                 'html' => $html,
             ];
 
-            Mail::to($member->user->email)->send(new EventSignupMail([
-                'team' => $event2->selectTeam,
-                'text' => $html,
-                'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
-            ]));
+            if ($member->user->email) {
+                Mail::to($member->user->email)->send(new EventSignupMail([
+                    'team' => $event2->selectTeam,
+                    'text' => $html,
+                    'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
+                ]));
+            }
         }
             
         NotifcationsUser::insertWithCount($memberNotification);

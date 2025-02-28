@@ -46,11 +46,13 @@ class ConfirmStrategy
                 'html' => $html,
             ];
 
-            Mail::to($member->user->email)->send(new EventConfirmMail([
-                'team' => $selectTeam,
-                'text' => $html,
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-            ]));
+            if ($member->user->email) {
+                Mail::to($member->user->email)->send(new EventConfirmMail([
+                    'team' => $selectTeam,
+                    'text' => $html,
+                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                ]));
+            } 
 
             $addressPart2 = $member->user->id == $user->id ? 'You': $member->user->name;
             $allEventLogs[] = [
@@ -93,12 +95,14 @@ class ConfirmStrategy
                 </span>
             HTML,
         ];
-
-        Mail::to($event->user->email)->send(new EventConfirmMail([
-            'team' => $selectTeam,
-            'text' => $html,
-            'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-        ]));
+        if ($event->user->email) {
+            Mail::to($event->user->email)->send(new EventConfirmMail([
+                'team' => $selectTeam,
+                'text' => $html,
+                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+            ]));
+        }
+        
         ActivityLogs::insert($allEventLogs);
         NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
     }
@@ -150,11 +154,13 @@ class VoteStartStrategy
                 'html' => $htmlNotif,
             ];
 
-            Mail::to($member->user->email)->send(new EventConfirmMail([
-                'team' => $selectTeam,
-                'text' => $htmlMail,
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-            ]));
+            if ($member->user->email) {
+                Mail::to($member->user->email)->send(new EventConfirmMail([
+                    'team' => $selectTeam,
+                    'text' => $htmlMail,
+                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                ]));
+            }
         }
 
         NotifcationsUser::insertWithCount($memberNotification);
@@ -238,11 +244,13 @@ class VoteEndStrategy
                     'html' => $htmlNotif,
                 ];
 
-                Mail::to($member->user->email)->send(new VoteEndMail([
-                    'team' => $selectTeam,
-                    'text' => $htmlMail,
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-                ]));
+                if ($member->user->email) {
+                    Mail::to($member->user->email)->send(new VoteEndMail([
+                        'team' => $selectTeam,
+                        'text' => $htmlMail,
+                        'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    ]));
+                }
             }
 
             $htmlMail = <<<HTML
@@ -275,11 +283,13 @@ class VoteEndStrategy
                 'html' => $htmlNotif
             ];
             
-            Mail::to($event->user->email)->send(new VoteEndMail([
-                'team' => $selectTeam,
-                'text' => $htmlMail,
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-            ]));
+            if ($event->user->email) {
+                Mail::to($event->user->email)->send(new VoteEndMail([
+                    'team' => $selectTeam,
+                    'text' => $htmlMail,
+                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                ]));
+            }
 
             NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
         } else {
@@ -319,11 +329,13 @@ class VoteEndStrategy
                     'html' => $htmlNotif,
                 ];
 
-                Mail::to($member->user->email)->send(new VoteEndMail([
-                    'team' => $selectTeam,
-                    'text' => $htmlMail,
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-                ]));
+                if ($member->user->email) {
+                    Mail::to($member->user->email)->send(new VoteEndMail([
+                        'team' => $selectTeam,
+                        'text' => $htmlMail,
+                        'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    ]));
+                }
             }
 
             NotifcationsUser::insertWithCount($memberNotification);
