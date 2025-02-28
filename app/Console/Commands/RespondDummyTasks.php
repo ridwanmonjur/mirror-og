@@ -45,7 +45,7 @@ class RespondDummyTasks extends Command
 
     public function getTodayTasksByName()
     {
-        $now = Carbon::dummy();
+        $now = Carbon::now();
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);        
         try {
             $tasks = Task::all();
