@@ -10,7 +10,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class CreateTasks extends Command 
+class CreateDummyTasks extends Command 
 {
     use PrinterLoggerTrait;
     /**
@@ -24,9 +24,9 @@ class CreateTasks extends Command
      *
      * @var string
      */
-    protected $signature = 'tasks:create';
+    protected $signature = 'tasks:dummyCreate';
 
-    protected $description = 'Create tasks in the database';
+    protected $description = 'Create dummy tasks in the database';
 
     /**
      * Execute the console command.
@@ -34,27 +34,22 @@ class CreateTasks extends Command
     public function handle()
     {
         $today = Carbon::now();
-        $commandName = 'tasks:create';
-        $id = $this->logEntry('Generate Tasks', $commandName, '0 0 * *', $today, $commandName);
+        $id = $this->logEntry($this->description, $this->signature, '0 0 * *', $today);
         try{
-            $twelveMonthsAgo = Carbon::now()->subMonths(12);
-            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twelveMonthsAgo)->delete();
-            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $twelveMonthsAgo)->delete();
-            Task::where('created_at', '<', $twelveMonthsAgo)->delete();
-            
             $todayDate = $today->toDateString();
             $todayTime = $today->toTimeString();
 
             $launchEvents = EventDetail
                 ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
-                
                 ->get();
 
-            $startEvents = EventDetail::whereDate('startDate', $todayDate)
+            $startEvents = EventDetail
+                ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
                 ->select(['id', 'startDate'])
                 ->get();
 
-            $endEvents = EventDetail::whereDate('endDate', $todayDate)
+            $endEvents = EventDetail                
+                ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
                 ->select(['id', 'endDate'])
                 ->get();
 
