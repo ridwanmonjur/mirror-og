@@ -407,8 +407,8 @@
                                 @endforeach
                             </div>
                         @else
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body text-center py-5">
+                            <div >
+                                <div class="text-center py-5">
                                     <p class="mb-0">No teams</p>
                                 </div>
                             </div>
@@ -526,8 +526,8 @@
                                     @endforeach
                                 </div>
                             @else
-                                <div class="card border bg-white">
-                                    <div class="card-body text-start py-4">
+                                <div >
+                                    <div class="text-start py-4">
                                         <svg class="ms-4" width="20" height="20" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"

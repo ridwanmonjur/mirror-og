@@ -303,7 +303,7 @@
 
                                 </div>
                                 <div v-if="!reports?.[0]">
-                                    <div class="card mt-3 p-5 mb-5">
+                                    <div class="mt-3 p-5 mb-5">
                                         No reports available.
                                     </div>
                                 </div>
