@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\StripeClient;
 
-class RespondTasks extends Command
+class RespondDummyTasks extends Command
 {
     use PrinterLoggerTrait;
 
@@ -31,9 +31,9 @@ class RespondTasks extends Command
      *
      * @var string
      */
-    protected $signature = 'tasks:respond';
+    protected $signature = 'tasks:dummyRespond';
 
-    protected $description = 'Respond tasks in the database';
+    protected $description = 'Dummy task respond in the database';
 
 
     /**
@@ -45,15 +45,10 @@ class RespondTasks extends Command
 
     public function getTodayTasksByName()
     {
-        $now = Carbon::now();
+        $now = Carbon::dummy();
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);        
         try {
-            $today = Carbon::today();
-            $tasks = Task
-                ::whereDate('action_time', $today)
-                ->where('action_time', '>=', $now)
-                ->where('action_time', '<=', $now->addMinutes(30))
-                ->get();
+            $tasks = Task::all();
             $endedTaskIds= $liveTaskIds = $startedTaskIds = [];
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
