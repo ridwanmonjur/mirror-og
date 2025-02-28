@@ -1,4 +1,4 @@
-<div id="bracket-list" class="position-absolute" style="overflow-x: visible; overflow-y: visible;">
+<div id="bracket-list"  style="overflow-x: auto; overflow-y: visible;">
     @include('Shared.__BracketModalPartials.Report')
     @include('Shared.__BracketModalPartials.Update')
     @include('Shared.__BracketModalPartials.Dispute')
