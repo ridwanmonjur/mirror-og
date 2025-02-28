@@ -19,7 +19,7 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Hello and greetings.</p>
+                        <p>Hello and greetings. The team has confirmed its place.</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <span>{!! $text !!}</span>
                         </p> 

@@ -552,6 +552,11 @@ function BracketData() {
       document.querySelector(`.${classToHide}`).classList.toggle("d-none");
     },
     showImageModal(imgPath) {
+      console.log("zzzzzzzz", imgPath);
+      console.log("zzzzzzzz", imgPath);
+
+      console.log("zzzzzzzz", imgPath);
+
       const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
       document.getElementById('modalImage').src = '/storage/' + imgPath;
       if (modal) modal.show();
@@ -883,7 +888,13 @@ function BracketData() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            this.$dispatch('initiate-upload');
+            const event = new CustomEvent('initiate-upload', {
+              bubbles: true,  
+              cancelable: true,  
+              detail: {}  
+            });
+            
+            this.dispatchEvent(event);            
             const uploadResult = await new Promise((resolve) => {
               window.uploadResolve = resolve;
             });
@@ -1008,27 +1019,31 @@ function BracketData() {
 
 }
 
-function UploadData (uploaderId) {
+function UploadData (domId) {
   return {
     inputFiles: [],
-    init() {
-      this.id = uploaderId;
-      this.inputFiles = [];
-    },
-
-
     handleFiles(event) {
-      const newFiles = Array.from(event.target.files);
-      newFiles.forEach(file => {
+      console.log({files:this.inputFiles});
+      console.log({files:this.inputFiles});
+
+      console.log({files:this.inputFiles});
+      if (!event.target?.files) return;
+
+      const newFiles = Array.from(event.target?.files);
+      newFiles?.forEach(file => {
         if (!(file.type.startsWith('image/') || file.type.startsWith('video/'))) {
           window.toastError("Only images and videis are supported");
           return;
         }
       });
-
+      
+      console.log({files:this.inputFiles, newFiles});
+      console.log({files:this.inputFiles, newFiles});
+      console.log({files:this.inputFiles, newFiles});
       this.inputFiles = [...this.inputFiles, ...newFiles];
+      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
 
-      this.$refs.uploadArea.innerHTML = "";
+      uploadArea.innerHTML = "";
 
       this.inputFiles.forEach((file, index) => {
         if (file.type.startsWith('image/')) {
@@ -1038,6 +1053,15 @@ function UploadData (uploaderId) {
         }
       });
       event.target.value = '';
+    },
+    init () {
+      window.addEventListener('initiate-upload', function() {
+        this.uploadToServer('/api/media');
+      });
+    },
+    clickInput() {
+      const fileInput = document.querySelector(`#${domId} .file-input`);
+      fileInput?.click()
     },
     async uploadToServer(url) {
       try {
@@ -1066,7 +1090,7 @@ function UploadData (uploaderId) {
         console.error('Upload error:', error);
         this.$dispatch('upload-error', {
           error: error.message,
-          uploaderId: this.id
+          uploaderId: domId
         });
       }
     },
@@ -1100,7 +1124,7 @@ function UploadData (uploaderId) {
       preview.appendChild(deleteBtn);
       preview.appendChild(fileName);
 
-      const uploadArea = this.$refs.uploadArea;
+      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
       const plusButton = uploadArea.querySelector('.plus-button');
       uploadArea.insertBefore(preview, plusButton);
     },
@@ -1134,17 +1158,20 @@ function UploadData (uploaderId) {
       preview.appendChild(deleteBtn);
       preview.appendChild(fileName);
 
-      const uploadArea = this.$refs.uploadArea;
+      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
       const plusButton = uploadArea.querySelector('.plus-button');
       uploadArea.insertBefore(preview, plusButton);
     },
 
     getImages() {
-      return Array.from(this.$refs.uploadArea.querySelectorAll('.preview-item img'))
+      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
+
+      return Array.from(uploadArea.querySelectorAll('.preview-item img'))
         .map(img => img.src);
     }
   };
 }
+
 
 // const uploaderTypes = ['type1', 'type2'];
 
