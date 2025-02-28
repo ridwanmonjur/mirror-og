@@ -52,15 +52,14 @@ class ChangePositionStrategy
                 <span>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
-                        {$parameters['teamName']}
-                    </button>. 
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/$teamId" alt="Team Link">
+                        {$parameters['teamName']}</button>. 
                 </span>
             HTML;
 
             $activityLog = <<<HTML
                 <span>
-                    <a class="px-0 border-0 notification-blue" href="/event/$teamId" alt="Team View">
+                    <a class="px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -69,7 +68,7 @@ class ChangePositionStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <a class="px-0 border-0 notification-blue" href="/event/$teamId" alt="Team Link">
+                    <a class="px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</a>. 
                 </span>
             HTML;
@@ -85,8 +84,13 @@ class ChangePositionStrategy
                 ActivityLogs::createActivityLogs($parameters);
             }
 
+            $memberMailable = new EventResultMail([
+                'team' => $team,
+                'text' => $notificationLog,
+                'link' => route('participant.team.view', ['id' => $team->id]) . '#Positions'                
+            ]);
+
             foreach ($team->members as $member) {
-    
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'trophy',
@@ -95,11 +99,7 @@ class ChangePositionStrategy
                     'html' => $notificationLog,
                 ];
     
-                Mail::to($member->user->email)->send(new EventResultMail([
-                    'team' => $team,
-                    'text' => $notificationLog,
-                    'link' => route('participant.team.view', ['id' => $team->id]) . '#Positions'                
-                ]));
+                if ($member->user->email) Mail::to($member->user->email)->send($memberMailable);
             }
     
             NotifcationsUser::insertWithCount($memberNotification);
@@ -125,7 +125,7 @@ class AddAwardStrategy
                     <span class="notification-black">{$parameters['teamName']}</span>.
                 </span>
                 <span>
-                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team View">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/$teamId" alt="Team View">
                     <img src="/storage/$image" 
                         width="30" height="30"
                         onerror="this.src='/assets/images/404.png';"
@@ -135,7 +135,7 @@ class AddAwardStrategy
                 </button>
                 <span class="notification-gray"> You achieved 
                 {$parameters['award']} position in the team,
-                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/$teamId" alt="Team Link">
+                <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/$teamId" alt="Team Link">
                     {$parameters['teamName']}
                 </button>. 
             </span>
@@ -143,7 +143,7 @@ class AddAwardStrategy
 
             $activityLog = <<<HTML
                 <span>
-                    <a class=" px-0 border-0 notification-blue" href="/event/$teamId" alt="Team View">
+                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -152,7 +152,7 @@ class AddAwardStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a class=" px-0 border-0 notification-blue" href="/event/$teamId" alt="Team Link">
+                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</a>. 
                 </span>
             HTML;
@@ -188,7 +188,7 @@ class AddAchievementStrategy
             
             $notificationLog = <<<HTML
                 <span>
-                    <a class=" px-0 border-0 notification-blue" href="/event/$teamId" alt="Team View">
+                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team View">
                         <img src="/storage/$image" 
                             width="30" height="30"
                             onerror="this.src='/assets/images/404.png';"
@@ -197,7 +197,7 @@ class AddAchievementStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a class=" px-0 border-0 notification-blue" href="/event/$teamId" alt="Team Link">
+                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</a>. 
                 </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
@@ -207,7 +207,7 @@ class AddAchievementStrategy
 
             $activityLog = <<<HTML
                 <span>
-                    <a class=" px-0 border-0 notification-blue" href="/event/$teamId" alt="Team View">
+                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team View">
                         <img src="/storage/$image"
                             width="30" height="30" 
                             onerror="this.src='/assets/images/404.png';"
@@ -216,7 +216,7 @@ class AddAchievementStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a class=" px-0 border-0 notification-blue" href="/event/$teamId" alt="Team Link">
+                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</a>. 
                 </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
