@@ -110,14 +110,15 @@ class ParticipantEventController extends Controller
                     $query->where('user_id', $logged_user_id)->where('status', 'accepted');
                 });
             });
-        })->with(
-            $request->eventId ? [] : [
-                'members' => function ($query) {
-                    $query->where('status', 'accepted')->with(['user']);
-                },
-                'invitationList',
-            ]
-        )->first();
+        })
+            ->with(
+                [
+                    'members' => function ($query) {
+                        $query->where('status', 'accepted')->with(['user']);
+                    },
+                    'invitationList',
+                ]
+            )->first();
         $groupedPaymentsByEventAndTeamMember = [];
         $member = TeamMember::where('user_id', $logged_user_id)->select('id')->first();
         if ($selectTeam) {
@@ -144,6 +145,9 @@ class ParticipantEventController extends Controller
             $maxRosterSize = config("constants.ROSTER_SIZE");  
             $signupStatusEnum = config("constants.SIGNUP_STATUS");
             $paymentLowerMin = config("constants.STRIPE.MINIMUM_RM");
+            if ($request->has('scroll')) {
+                session()->flash('scroll', $request->scroll);
+            }
 
             return view(
                 'Participant.RegistrationManagement',
@@ -160,10 +164,12 @@ class ParticipantEventController extends Controller
                     'eventId',
                     'maxRosterSize',
                     'paymentLowerMin',
-                    'signupStatusEnum'
+                    'signupStatusEnum',
                 )
             );
         }
+
+       
         return redirect()->back()->with('error', "Team not found/ You're not authorized.");
     }
 

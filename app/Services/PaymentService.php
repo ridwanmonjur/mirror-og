@@ -91,7 +91,7 @@ class PaymentService
                         $summedDiscounts[$userId][$discountKey] +  $refundedAmount;
                 }
             } catch (Exception $e) {
-                Log::error("PaymentCaptureService Error - ID: {$item->id}, Message: Payment Intent: {$item->payment_id} error: " . $e->getMessage());
+                Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
 
@@ -108,7 +108,7 @@ class PaymentService
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error("PaymentCaptureService Error - Bulk update failed: " . $e->getMessage());
+                Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
 
@@ -135,7 +135,7 @@ class PaymentService
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error("PaymentCaptureService Error - Bulk update failed: " . $e->getMessage());
+                Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
 

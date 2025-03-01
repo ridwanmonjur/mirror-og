@@ -410,6 +410,45 @@ function BracketData() {
         }
       });
     },
+    
+    async onRemoveTeamToWin() {
+      window.Swal.fire({
+        title: 'Remove the winner',
+        html: `
+                Are you sure you want to remove the winner?
+            `,
+        showCancelButton: true,
+        confirmButtonText: 'Remove Declaration',
+        cancelButtonText: 'Back',
+        padding: '2em',
+        confirmButtonColor: '#43A4D7',
+        reverseButtons: true,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          let matchNumber = this.reportUI.matchNumber;
+
+          let update = {
+            organizerWinners: [...this.report.organizerWinners],
+            matchStatus: [...this.report.matchStatus],
+            realWinners: [...this.report.realWinners],
+            teams: [...this.report.teams],
+            position: this.report.position,
+            completeMatchStatus: matchNumber == 2 ? "ENDED": "ONGOING"
+          };
+    
+          update.matchStatus[matchNumber] = "ENDED";
+          if (matchNumber != 2) {
+            update.matchStatus[matchNumber+1] = "ONGOING";
+          }
+
+          update.organizerWinners[matchNumber] = null;
+          update.realWinners[matchNumber] = null;
+          update.score = this.calcScores(update);
+
+          await this.saveReport(update);
+        }
+      });
+    },
     async resolveDisputeForm(event) {
       event.preventDefault();
       const form = event.currentTarget;

@@ -13,7 +13,7 @@
 
         $eventTierLowerImg = bladeEventTierImage($tier);
         $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
+        $bladeEventGameImage = bladeImageNullq($event->game ? $event->game?->gameIcon : null);
         
         $eventId = $event->id;
         $toolTip = '<b>Event ID: </b>' . $eventId . '<br>';

@@ -106,7 +106,17 @@ function bladeImageNull($eventBanner)
     return $eventBannerImg;
 }
 
+function bladeImageNullq($eventBanner)
+{
+    $imgFailure = asset('assets/images/404q.png');
+    if ($eventBanner) {
+        $eventBannerImg = asset('storage/'.$eventBanner);
+    } else {
+        $eventBannerImg = $imgFailure;
+    }
 
+    return $eventBannerImg;
+}
 
 function trustedBladeHandleImageFailure()
 {

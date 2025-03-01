@@ -3,7 +3,6 @@
 <body>
     @include('googletagmanager::body')
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
-
     <main>
         <div>
             <div class="pt-5">
@@ -12,6 +11,4 @@
         </div>
         <br><br>
     </main>
-
-    
 </body>

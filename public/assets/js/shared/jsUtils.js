@@ -467,7 +467,7 @@ class DynamicSelect {
                 optionContent = this.data[i].html;
             } else {
                 optionContent = `
-                    ${this.data[i].img ? `<img  onerror="this.src='/assets/images/404.png';"
+                    ${this.data[i].img ? `<img  onerror="this.src='/assets/images/404q.png';"
                         src="${this.data[i].img}" alt="${this.data[i].text}" class=" border border-primary border-2   object-fit-cover ${this.data[i].imgWidth && this.data[i].imgHeight ? '' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
                     ${this.data[i].text ? '<span class="dynamic-select-option-text">' + this.data[i].text + '</span>' : ''}
                 `;
@@ -603,7 +603,7 @@ class DynamicSelect {
                 optionContent = this.data[i].html;
             } else {
                 optionContent = `
-                    ${this.data[i].img ? `<img onerror="this.src='/assets/images/404.png';"
+                    ${this.data[i].img ? `<img onerror="this.src='/assets/images/404q.png';"
                         src="${this.data[i].img}" alt="${this.data[i].text}" class=" border border-primary border-2   object-fit-cover ${this.data[i].imgWidth && this.data[i].imgHeight ? 'object-fit-cover' : ''}" style="${this.data[i].imgWidth ? 'width:' + this.data[i].imgWidth + ';' : ''}${this.data[i].imgHeight ? 'height:' + this.data[i].imgHeight + ';' : ''}">` : ''}
                     ${this.data[i].text ? '<span class="dynamic-select-option-text">' + this.data[i].text + '</span>' : ''}
                 `;
@@ -628,7 +628,7 @@ class DynamicSelect {
             this.element.querySelector('input').value = dataValue;
 
             const headerContent = selectedData.html || `
-                ${selectedData.img ? `<img onerror="this.src='/assets/images/404.png';"
+                ${selectedData.img ? `<img onerror="this.src='/assets/images/404q.png';"
                     src="${selectedData.img}" alt="${selectedData.text}" class=" border border-primary border-2   object-fit-cover ${selectedData.imgWidth && selectedData.imgHeight ? 'object-fit-cover' : ''}" style="${selectedData.imgWidth ? 'width:' + selectedData.imgWidth + ';' : ''}${selectedData.imgHeight ? 'height:' + selectedData.imgHeight + ';' : ''}">` : ''}
                 ${selectedData.text ? '<span class="dynamic-select-option-text">' + selectedData.text + '</span>' : ''}
             `;

@@ -72,6 +72,7 @@
             @include('Shared.__BracketModalPartials.__Report.RealWinners')
             <div class="d-flex justify-content-center">
                 <button class="btn btn-sm border rounded-pill text-primary border-primary " v-on:click="onChangeTeamToWin"> Change Declaration </button>
+                <button class="btn btn-sm border border-danger rounded-pill text-danger ms-2 " v-on:click="onRemoveTeamToWin"> Remove </button>
             </div>
         </div>
     </template>

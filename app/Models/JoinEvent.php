@@ -192,7 +192,7 @@ class JoinEvent extends Model
                 $q->where('status', 'accepted')
                     ->with('payments', 'user');
             },
-            'roster', 'roster.user', 'voteStarter'
+            'roster', 'roster.user', 'voteStarter', 'captain'
         ];
 
         if (! is_null($eventId)) {
