@@ -244,7 +244,7 @@ class VoteEndStrategy
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button> 
-                        has voted to QUIT in the
+                        has voted to <span class="notification-danger">QUIT</span> in the
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                             {$event->eventName}</button>.
                     </span>
@@ -283,7 +283,7 @@ class VoteEndStrategy
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
-                    has voted to QUIT in the
+                    has voted to <span class="notification-danger">QUIT</span> in the
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                 </span>
@@ -311,7 +311,7 @@ class VoteEndStrategy
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
-                    has voted to QUIT in the
+                    has voted to <span class="notification-danger">QUIT</span> in the
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                     They will be refunded half of their fees.
@@ -331,7 +331,7 @@ class VoteEndStrategy
                         with your team, 
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
-                        Your team has voted to stay. Please complete the remaining registration to book your place, if your team hasn't done so.
+                        Your team has voted to <span class="notification-blue">STAY</span>. Please complete the remaining registration to book your place, if your team hasn't done so.
                     </span>
                 HTML;
                 

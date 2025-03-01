@@ -51,7 +51,8 @@ class ChangePositionStrategy
             $notificationLog = <<<HTML
                 <span>
                     <span class="notification-gray"> You achieved 
-                    {$positionString} position in the team,
+                    <span class="notification-other"><span class="notification-{$parameters['position']}">
+                        {$positionString}</span></span> position in the team,
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</button>. 
                 </span>

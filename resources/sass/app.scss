@@ -163,12 +163,32 @@ table.responsive td img {
 
 // Variables
 /*! purgecss start ignore */
-.notification-black {
-  color: black;
+.notification-entity {
+  color: #2e4b59;
 }
 
 .notification-gray {
-  color: black;
+  color: #95adbd;
+}
+
+.notification-danger {
+  color: #bf6868;
+}
+
+.notification-1 {
+  color: #e8cf66; 
+}
+
+.notification-2 {
+  color: #bdbcbc; 
+}
+
+.notification-3 {
+  color: #a6877c; 
+}
+
+.notification-other {
+  color: #7dc3e0; 
 }
 
 .notification-blue {

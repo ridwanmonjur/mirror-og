@@ -177,7 +177,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                             <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
                                 alt="User link"
                             > 
-                            <span class="notification-black">{$user->name}</span></button>
+                            {$user->name}</button>
                             to join.
                         </span>
                         HTML;
@@ -188,7 +188,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                             <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" 
                                 alt="User link"
                             > 
-                            <span class="notification-black">{$user->name}</span></button>
+                            {$user->name}</button>
                             has rejected the invitation to your team, 
                             <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
                                 {$selectTeam->teamName}</button>.
