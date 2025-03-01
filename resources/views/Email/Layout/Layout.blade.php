@@ -24,6 +24,16 @@
             text-decoration: none !important;
         }
 
+
+        .btn-transparent {
+            border: 0px solid black !important;
+            background: none !important;
+        }
+
+        .notification-blue {
+            color: #43A4D7 !important;
+        }
+
         @media (max-width: 1000px) {
             html, body {
                 font-size: 17.3px;
