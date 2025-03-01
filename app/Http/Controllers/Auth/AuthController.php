@@ -123,7 +123,6 @@ class AuthController extends Controller
                 );
         } catch (QueryException $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
 
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                 return redirect()
@@ -136,6 +135,7 @@ class AuthController extends Controller
                 ->with('error', 'An error occurred while processing your request.');
         }   catch (\Throwable $th) {
             DB::rollBack();
+            Log::error($th->getMessage() . PHP_EOL . $th->getTraceAsString());
 
             return redirect()
                 ->route($redirectErrorRoute)
@@ -180,7 +180,6 @@ class AuthController extends Controller
 
             throw new ErrorException('The email or password you entered is incorrect!');
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
             return response()->json(['success' => false, 'message' => 'An error occurred while processing your request.'], 422);
         } catch (ValidationException $e) {
             $errors = $e->validator->errors();

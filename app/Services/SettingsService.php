@@ -41,10 +41,9 @@ class SettingsService
             ];
 
         } catch (SettingsException $e) {
-            Log::error('Settings update failed: ' . $e->getMessage());
             throw $e;
         } catch (Exception $e) {
-            Log::error('Unexpected error in settings update: ' . $e->getMessage());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             throw new SettingsException('Failed to update settings', 0, $e);
         }
     }
