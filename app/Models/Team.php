@@ -59,10 +59,7 @@ class Team extends Model
         return $this->hasOne(TeamProfile::class, 'team_id');
     }
 
-    public function activities(): MorphMany
-    {
-        return $this->morphMany(ActivityLogs::class, 'subject');
-    }
+   
 
     public function findTeamFollowerByUserId(int $userId)
     {

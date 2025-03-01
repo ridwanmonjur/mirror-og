@@ -116,8 +116,8 @@ trait RespondTrait
                 HTML;
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$join->eventDetails->id}">
-                    {$join->eventDetails->eventName}</a> is now live. 
+                    <a class="btn-transparent px-0 border-0 " href="/event/{$join->eventDetails->id}">
+                    <span class="notification-blue">{$join->eventDetails->eventName}</span></a> is now live. 
                     </span>
                 HTML;
             $notifications[$join->id ] = [
@@ -158,8 +158,8 @@ trait RespondTrait
             
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$join->eventDetails->id}">
-                    {$join->eventDetails->eventName}</a> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
+                    <a class="btn-transparent px-0 border-0" href="/event/{$join->eventDetails->id}">
+                    <span class="notification-blue">{$join->eventDetails->eventName}</span></a> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
                     on {$timeDate->format('M d, Y')}. 
                     </span>
                 HTML;

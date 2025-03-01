@@ -22,10 +22,17 @@ class ConfirmStrategy
         $teamMembers = $selectTeam->members;
         $memberNotification = [];
         foreach ($teamMembers as $member) {
-            $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
+            $addressPartHTML = $user->id == $member->user->id 
+                ? "You have" 
+                : <<<HTML
+            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/user/{$user->id}">
+                {$user->name}
+            </button> has
+            HTML;
+
             $html = <<<HTML
                 <span class="notification-gray">
-                    {$addressPart} confirmed registration for  
+                    {$addressPartHTML} confirmed registration for  
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
                         {$event->user->name}
                     </button>'s event,
@@ -54,7 +61,14 @@ class ConfirmStrategy
                 ]));
             } 
 
-            $addressPart2 = $member->user->id == $user->id ? 'You': $member->user->name;
+            $addressPart2Log = $member->user->id == $user->id 
+                ? 'You' 
+                : <<<HTML
+            <a href="/view/user/{$member->user->id}" class="notification-blue">
+                <span>{$member->user->name}</span>
+            </a>
+            HTML;
+
             $allEventLogs[] = [
                 'action' => 'confirm',
                 'created_at' => now(),
@@ -62,19 +76,19 @@ class ConfirmStrategy
                 'subject_id' => $member->user->id,
                 'subject_type' => User::class,
                 'log' => <<<HTML
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}">
+                    <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}">
                         <img src="/storage/{$selectTeam->teamBanner}"
                             width="30" height="30" 
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Team banner for {$selectTeam->teamName}"></a>
                     <span class="notification-gray">
-                        {$addressPart2} confirmed registration for 
-                        <a class="btn-transparent px-0 border-0 notification-blue" href="/view/organizer/{$event->user->id}">
-                            {$event->user->name}</a>'s event,
-                        <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$event->id}">
-                            {$event->eventName}</a> with <a class="btn-transparent px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}">
-                            {$selectTeam->teamName}</a>. 
+                        {$addressPart2Log} confirmed registration for 
+                        <a class="btn-transparent px-0 border-0 " href="/view/organizer/{$event->user->id}">
+                            <span class="notification-blue">{$event->user->name}</span></a>'s event,
+                        <a class="btn-transparent px-0 border-0" href="/event/{$event->id}">
+                        <span class="notification-blue">{$event->eventName}</span></a> with <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}">
+                            <span class="notification-blue">{$selectTeam->teamName}</span></a>. 
                     </span>
                 HTML,
             ];
@@ -87,11 +101,11 @@ class ConfirmStrategy
             'icon_type' => 'confirm',
             'html' => <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}">
-                        <span class="notification-black">{$selectTeam->teamName}</span> </a>
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        {$selectTeam->teamName}</button>
                     has confirmed registration for your event,
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$event->id}">
-                        {$event->eventName}</a>.
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                        {$event->eventName}</button>.
                 </span>
             HTML,
         ];
@@ -230,7 +244,7 @@ class VoteEndStrategy
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button> 
-                        has voted to QUIT in the
+                        has voted to <span class="notification-danger">QUIT</span> in the
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                             {$event->eventName}</button>.
                     </span>
@@ -256,7 +270,7 @@ class VoteEndStrategy
             $htmlMail = <<<HTML
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
-                        <span class="notification-black">{$selectTeam->teamName}</span> 
+                        <span class="notification-blue">{$selectTeam->teamName}</span> 
                     </button>
                     has voted to cancel registration for your event,
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
@@ -269,7 +283,7 @@ class VoteEndStrategy
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
-                    has voted to QUIT in the
+                    has voted to <span class="notification-danger">QUIT</span> in the
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                 </span>
@@ -297,7 +311,7 @@ class VoteEndStrategy
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
-                    has voted to QUIT in the
+                    has voted to <span class="notification-danger">QUIT</span> in the
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                     They will be refunded half of their fees.
@@ -317,7 +331,7 @@ class VoteEndStrategy
                         with your team, 
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
-                        Your team has voted to stay. Please complete the remaining registration to book your place, if your team hasn't done so.
+                        Your team has voted to <span class="notification-blue">STAY</span>. Please complete the remaining registration to book your place, if your team hasn't done so.
                     </span>
                 HTML;
                 
@@ -371,7 +385,14 @@ class JoinPlaceStrategy {
                 HTML,
             ];
 
-            $address = $member->user->id == $user->id ? 'You': $member->user->name;
+            $addressLog = $member->user->id == $user->id 
+                    ? 'You' 
+                    : <<<HTML
+                <a href="/view/user/{$member->user->id}" >
+                    <span class="notification-blue">{$member->user->name}</span>
+                </a>
+                HTML;            
+            
             $allEventLogs[] = [
                 'action' => 'signup',
                 'created_at' => now(),
@@ -379,20 +400,20 @@ class JoinPlaceStrategy {
                 'subject_id' => $member->user->id,
                 'subject_type' => User::class,
                 'log' => <<<HTML
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}">
+                    <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}">
                         <img src="/storage/{$selectTeam->teamBanner}"
                             width="30" height="30" 
                             onerror="this.src='/assets/images/404.png';"
                             class="object-fit-cover rounded-circle me-2"
                             alt="Team banner for {$selectTeam->teamName}"></a>
                     <span class="notification-gray">
-                        {$address} signed up 
-                        <a class="btn-transparent px-0 border-0 notification-blue" href="/view/organizer/{$event->user->id}">
-                            {$event->user->name}</a>'s event,
-                        <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$event->id}">
-                            {$event->eventName}</a> with your team, 
-                        <a class="btn-transparent px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}">
-                            {$selectTeam->teamName}</a>. 
+                        {$addressLog} signed up 
+                        <a class="btn-transparent px-0 border-0" href="/view/organizer/{$event->user->id}">
+                            <span class="notification-blue">{$event->user->name}</span></a>'s event,
+                        <a class="btn-transparent px-0 border-0" href="/event/{$event->id}">
+                            <span class="notification-blue">{$event->eventName}</span></a> with your team, 
+                        <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}">
+                            <span class="notification-blue">{$selectTeam->teamName}</span></a>. 
                     </span>
                 HTML,
             ];
@@ -405,11 +426,11 @@ class JoinPlaceStrategy {
             'icon_type' => 'signup',
             'html' => <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}">
-                        <span class="notification-black">{$selectTeam->teamName}</span> </a>
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <span class="notification-blue">{$selectTeam->teamName}</span></button>
                     has signed up for your event,
-                    <a class="btn-transparent px-0 border-0 notification-blue" href="/event/{$event->id}">
-                        {$event->eventName}</a>
+                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                        {$event->eventName}</button>
                     . After signing up, they must complete and confirm registration for this event.
                 </span>
             HTML,

@@ -51,7 +51,8 @@ class ChangePositionStrategy
             $notificationLog = <<<HTML
                 <span>
                     <span class="notification-gray"> You achieved 
-                    {$positionString} position in the team,
+                    <span class="notification-other"><span class="notification-{$parameters['position']}">
+                        {$positionString}</span></span> position in the team,
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</button>. 
                 </span>
@@ -68,8 +69,8 @@ class ChangePositionStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
-                    <a class="px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
-                        {$parameters['teamName']}</a>. 
+                    <a class="px-0 border-0" href="/view/team/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span></a>. 
                 </span>
             HTML;
 
@@ -122,7 +123,7 @@ class AddAwardStrategy
 
             $notificationLog = <<<HTML
                 <span class="notification-gray"> You achieved {$parameters['award']} in the team, 
-                    <span class="notification-black">{$parameters['teamName']}</span>.
+                    <span class="notification-blue">{$parameters['teamName']}</span>.
                 </span>
                 <span>
                 <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/$teamId" alt="Team View">
@@ -152,8 +153,8 @@ class AddAwardStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
-                        {$parameters['teamName']}</a>. 
+                    <a class=" px-0 border-0" href="/view/team/$teamId" alt="Team Link">
+                        <span class="notification-blue">{$parameters['teamName']}</span></a>. 
                 </span>
             HTML;
 
@@ -201,7 +202,7 @@ class AddAchievementStrategy
                         {$parameters['teamName']}</a>. 
                 </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
-                    <span class="notification-black">{$parameters['teamName']}</span>.
+                    <span class="notification-blue">{$parameters['teamName']}</span>.
                 </span>
             HTML;
 
@@ -216,11 +217,12 @@ class AddAchievementStrategy
                         ></a>
                     <span class="notification-gray"> You achieved 
                     {$parameters['award']} position in the team,
-                    <a class=" px-0 border-0 notification-blue" href="/view/team/$teamId" alt="Team Link">
-                        {$parameters['teamName']}</a>. 
+                    <a class=" px-0 border-0" href="/view/team/$teamId" alt="Team Link">
+                    <span class="notification-blue">{$parameters['teamName']}</span></a>. 
                 </span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
-                    <span class="notification-black">{$parameters['teamName']}</span>.
+                <a class=" px-0 border-0" href="/view/team/$teamId" alt="Team Link">
+                    <span class="notification-blue">{$parameters['teamName']}</span></a>.
                 </span>
             HTML;
 

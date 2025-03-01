@@ -14,6 +14,7 @@ class FollowOrgStrategy
 {
     public function handle($parameters)
     {
+        // search FollowOrg
         ActivityLogs::create($parameters);
         ['organizer' => $organizer, 'participant' => $participant] = $parameters;
 
