@@ -93,9 +93,9 @@ class ChangePositionStrategy
             foreach ($team->members as $member) {
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
-                    'type' => 'trophy',
+                    'type' => 'teams',
                     'link' =>  route('public.team.view', ['id' => $team->id]),
-                    'icon_type' => 'results',
+                    'icon_type' => 'trophy',
                     'html' => $notificationLog,
                 ];
     
@@ -105,7 +105,7 @@ class ChangePositionStrategy
             NotifcationsUser::insertWithCount($memberNotification);
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 }
@@ -171,7 +171,7 @@ class AddAwardStrategy
             ];
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 }
@@ -240,7 +240,7 @@ class AddAchievementStrategy
 
 
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 }
@@ -252,7 +252,7 @@ class DeleteAwardStrategy
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 }
@@ -264,7 +264,7 @@ class DeleteAchievementStrategy
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
         } catch (Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
     }
 }
