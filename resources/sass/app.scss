@@ -167,8 +167,12 @@ table.responsive td img {
   color: #2e4b59;
 }
 
-.notification-gray {
+.notification-list .notification-gray {
   color: #95adbd;
+}
+
+.activity-logs .notification-gray {
+  color: black;
 }
 
 .notification-danger {
