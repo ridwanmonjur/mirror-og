@@ -22,7 +22,7 @@
         
         <section class="hero user-select-none">
             <img 
-                onerror="this.onerror=null;this.src='/assets/images/404.png';"
+                onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                 src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
             >
         </section>

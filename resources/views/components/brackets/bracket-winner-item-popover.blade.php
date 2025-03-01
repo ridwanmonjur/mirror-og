@@ -27,7 +27,7 @@
         </div>
         <div class="col-12 col-lg-4">
             <div>
-                <img src="{{ bladeImageNull($teamBanner1) }}" alt="Team Banner" width="100"
+                <img src="{{ bladeImageNullq($teamBanner1) }}" alt="Team Banner" width="100"
                     height="100" onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                     data-position="{{$position1.'middle'}}"
                     class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
@@ -49,7 +49,7 @@
         </div>
         <div class="col-12 col-lg-4">
             <div >
-                <img src="{{ bladeImageNull($teamBanner2) }}" alt="Team Banner" width="100"
+                <img src="{{ bladeImageNullq($teamBanner2) }}" alt="Team Banner" width="100"
                     height="100" onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                     data-position="{{$position2. 'middle'}}" class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
                 >

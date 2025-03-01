@@ -26,7 +26,44 @@
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
         <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
+         <div class="ms-5">
+            <u>
+                <h3>
+                    Manage your event bracket
+                </h3>
+            </u>
+        </div> <br>
         <div class="px-4 py-4">
+            <div  class="d-flex justify-content-center">
+                <div style="width:min(600px, 80vw);" class="border bg-white d-inline-block border-primary shadow-xl px-5 mx-auto text-start  py-3">
+                    <div class="d-flex justify-content-start align-items-center">
+                        <img {!! trustedBladeHandleImageFailureBanner() !!}
+                            src="{{ '/storage' . '/'.  $event->eventBanner }}"
+                            class="object-fit-cover float-left border border-primary rounded-circle me-1" width="30" height="30"
+                        >
+                        <div>
+                            <p class="py-0 my-0 ms-2 mb-2"> {{ $event->eventName }} </p>
+                            <small class="py-0 my-0 ms-2">
+                                Description: {{ $event->eventDescription }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="d-flex mt-3 mb-2 align-items-center justify-content-start">
+                        <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                            src="{{ '/storage' . '/'. $event?->user?->userBanner }}" width="30"
+                            height="30" class="me-1 border border-warning rounded-circle object-fit-cover "
+                        >
+                        <div class="ms-2">
+                            <small class="d-block py-0 my-0">
+                                {{ $event?->user?->name ?? 'Name Pending' }}
+                            </small>
+                                <small class="d-block py-0 my-0">
+                                Joined: {{ $event?->user?->createdAtDiffForHumans() ?? 'Recently' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @include('Organizer.__ManageEventPartials.BracketUpdateList')
         </div>
         
