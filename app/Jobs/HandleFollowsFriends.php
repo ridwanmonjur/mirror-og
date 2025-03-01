@@ -108,8 +108,7 @@ class NewFriendStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Request link">
-                        {$user->name}
-                    </button>has send you a friend request.
+                        {$user->name}</button> has send you a friend request.
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
