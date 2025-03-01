@@ -46,19 +46,23 @@ class HandleEventUpdate implements ShouldQueue
 
                 DB::beginTransaction();
                 try {
-                    $partialEmail = "The event, {$this->eventDetail->eventName}</button>  has been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.";
-
+                    $partialHtml = <<<HTML
+                        The event, <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
+                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.
+                        HTML;
+                    $partialEmail = <<<HTML
+                        The event, <a class="px-0 border-0 notification-blue" href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</a> has 
+                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}"
+                        HTML;
                     $memberHtml = <<<HTML
                         <span class="notification-gray">
-                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$this->eventDetail->id}">
-                            {$partialEmail}</button>
-                            </span>
+                            {$partialHtml}
+                        </span>
                         HTML;
 
                     $memberEmail = <<<HTML
                         <span class="notification-gray">
-                            <a class="px-0 border-0 notification-blue" href="/event/{$this->eventDetail->id}">
-                            {$partialEmail}</a>
+                            {$partialEmail}
                         </span>
                         HTML;
 

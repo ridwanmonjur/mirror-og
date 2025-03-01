@@ -54,8 +54,8 @@ class TeamMemberUpdatedListener implements ShouldQueue
                         ></a>
                     <span class="notification-gray me-2">
                         You joined the team, 
-                        <a class="px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}" alt="Team View">
-                            {$selectTeam->teamName}</a>.
+                        <a class="px-0 border-0" href="/view/team/{$selectTeam->id}" alt="Team View">
+                            <span class="notification-blue">{$selectTeam->teamName}</span></a>.
                     </span>
                 HTML;
 
@@ -111,8 +111,8 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     </button>
                     <span class="notification-gray">
                         You left the team, 
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team View">
-                            {$selectTeam->teamName}</button>.
+                        <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}" alt="Team View">
+                        <span class="notification-blue">{$selectTeam->teamName}</span></a>.
                     </span>
                 HTML;
 
