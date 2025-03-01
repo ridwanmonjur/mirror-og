@@ -619,21 +619,24 @@ addOnLoad(()=> {
     if (swal) {
         actionResponse[swal]?.(savedId);
     } else {
-        console.log({savedId});
-        console.log({savedId});
-        console.log({savedId});
+        
         successMessage = getData('successMessage') || null;
         errorMessage = getData('errorMessage') || null;
         if (successMessage) {
             confirmSuccess(successMessage, savedId);
+            return;
         } else if (errorMessage) {
+            scrollSwal(savedId);
             Swal.fire({
                 icon: 'error',
                 text: errorMessage,
                 timer: 1500,
                 showConfirmButton: false
             });
+        } else {
+            scrollSwal(savedId);
         }
+
 
     }
 
