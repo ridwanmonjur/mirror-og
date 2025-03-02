@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ConfirmStrategy
@@ -25,22 +26,21 @@ class ConfirmStrategy
             $addressPartHTML = $user->id == $member->user->id 
                 ? "You have" 
                 : <<<HTML
-            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/user/{$user->id}">
-                {$user->name}
-            </button> has
+            <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/user/{$user->id}">
+                {$user->name}</button> has
             HTML;
 
             $html = <<<HTML
                 <span class="notification-gray">
                     {$addressPartHTML} confirmed registration for  
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/organizer/{$event->user->id}">
                         {$event->user->name}
                     </button>'s event,
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                         {$event->eventName}
                     </button>
                     with the team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button>. 
                 </span>
             HTML;
@@ -51,6 +51,7 @@ class ConfirmStrategy
                 'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
                 'icon_type' => 'confirm',
                 'html' => $html,
+                'created_at' => DB::raw('NOW()')
             ];
 
             if ($member->user->email) {
@@ -64,7 +65,7 @@ class ConfirmStrategy
             $addressPart2Log = $member->user->id == $user->id 
                 ? 'You' 
                 : <<<HTML
-            <a href="/view/user/{$member->user->id}" class="notification-blue">
+            <a href="/view/user/{$member->user->id}" class="notification-entity">
                 <span>{$member->user->name}</span>
             </a>
             HTML;
@@ -99,6 +100,7 @@ class ConfirmStrategy
             'type' => 'teams',
             'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
             'icon_type' => 'confirm',
+            'created_at' => DB::raw('NOW()'),
             'html' => <<<HTML
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
@@ -166,6 +168,7 @@ class VoteStartStrategy
                 'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
                 'icon_type' => 'vote',
                 'html' => $htmlNotif,
+                'created_at' => DB::raw('NOW()')
             ];
 
             if ($member->user->email) {
@@ -256,6 +259,7 @@ class VoteEndStrategy
                     'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
                     'icon_type' => 'quit',
                     'html' => $htmlNotif,
+                    'created_at' => DB::raw('NOW()')
                 ];
 
                 if ($member->user->email) {
@@ -294,7 +298,8 @@ class VoteEndStrategy
                 'type' => 'teams',
                 'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
                 'icon_type' => 'quit',
-                'html' => $htmlNotif
+                'html' => $htmlNotif,
+                'created_at' => DB::raw('NOW()')
             ];
             
             if ($event->user->email) {
@@ -341,6 +346,7 @@ class VoteEndStrategy
                     'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
                     'icon_type' => 'stay',
                     'html' => $htmlNotif,
+                    'created_at' => DB::raw('NOW()')
                 ];
 
                 if ($member->user->email) {
@@ -369,6 +375,7 @@ class JoinPlaceStrategy {
                 'type' => 'teams',
                 'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
                 'icon_type' => 'signup',
+                'created_at' => DB::raw('NOW()'),
                 'html' => <<<HTML
                     <span class="notification-gray">
                         You have been placed in
@@ -424,6 +431,7 @@ class JoinPlaceStrategy {
             'type' => 'teams',
             'link' =>  route('public.team.view', ['id' => $selectTeam->id]),
             'icon_type' => 'signup',
+            'created_at' => DB::raw('NOW()'),
             'html' => <<<HTML
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">

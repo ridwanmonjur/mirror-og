@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -98,6 +99,7 @@ class ChangePositionStrategy
                     'link' =>  route('public.team.view', ['id' => $team->id]),
                     'icon_type' => 'trophy',
                     'html' => $notificationLog,
+                    'created_at' => DB::raw('NOW()')
                 ];
     
                 if ($member->user->email) Mail::to($member->user->email)->send($memberMailable);
@@ -167,7 +169,7 @@ class AddAwardStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                ],
+                    ],
                 ],
             ];
 
@@ -235,7 +237,7 @@ class AddAchievementStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                ],
+                    ],
                 ],
             ];
 

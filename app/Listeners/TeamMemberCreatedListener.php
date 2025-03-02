@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TeamMemberCreatedListener implements ShouldQueue
@@ -79,7 +80,8 @@ class TeamMemberCreatedListener implements ShouldQueue
                 'type' => 'teams',
                 'html' => $teamNotification,
                 'link' => $route,
-                'img_src' => $user->userBanner
+                'img_src' => $user->userBanner,
+                'created_at' => DB::raw('NOW()')
             ];
         }
 
@@ -88,7 +90,8 @@ class TeamMemberCreatedListener implements ShouldQueue
             'type' => 'teams',
             'html' => $userNotification,
             'link' => route('public.team.view', $selectTeam->id),
-            'img_src' => $selectTeam->teamBanner
+            'img_src' => $selectTeam->teamBanner,
+            'created_at' => DB::raw('NOW()')
         ];
 
         NotifcationsUser::insertWithCount([...$memberNotification, $userNotification]);

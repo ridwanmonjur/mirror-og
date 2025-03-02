@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -69,6 +70,7 @@ class JoinEventSignupListener implements ShouldQueue
                 'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
                 'icon_type' => 'signup',
                 'html' => $notifHtml,
+                'created_at' => DB::raw('NOW()')
             ];
 
             if ($member->user->email) {

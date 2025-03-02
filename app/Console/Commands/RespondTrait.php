@@ -89,7 +89,8 @@ trait RespondTrait
                         'icon_type' => 'ended',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
                         'type' => 'event',
@@ -97,7 +98,8 @@ trait RespondTrait
                         'icon_type' => 'ended',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ]
             ];
         }
@@ -127,7 +129,8 @@ trait RespondTrait
                         'icon_type' => 'live',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
                         'type' => 'event',
@@ -135,7 +138,8 @@ trait RespondTrait
                         'icon_type' => 'live',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ]
             ];
         }
@@ -171,7 +175,8 @@ trait RespondTrait
                         'icon_type' => 'started',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventStartMail'
+                        'mailClass' => 'EventStartMail',
+                        'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
                         'type' => 'event',
@@ -179,7 +184,8 @@ trait RespondTrait
                         'icon_type' => 'started',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventStartMail'
+                        'mailClass' => 'EventStartMail',
+                        'created_at' => DB::raw('NOW()')
                     ]
             ];
         }
@@ -214,6 +220,7 @@ trait RespondTrait
                             'link' =>  $notificationMap[$join->id]['member']['link'],
                             'icon_type' => $notificationMap[$join->id]['member']['icon_type'],
                             'html' => $notificationMap[$join->id]['member']['html'],
+                            'created_at' => DB::raw('NOW()')
                         ];
 
                         if ($member->user->mail) Mail::to($member->user->email)->send($memberMailInvocation);
@@ -225,6 +232,7 @@ trait RespondTrait
                         'link' =>  $notificationMap[$join->id]['organizer']['link'],
                         'icon_type' => $notificationMap[$join->id]['organizer']['icon_type'],
                         'html' => $notificationMap[$join->id]['organizer']['html'],
+                        'created_at' => DB::raw('NOW()')
                     ];
 
                     $orgMailClass = 'App\\Mail\\'. $notificationMap[$join->id]['organizer']['mailClass'];

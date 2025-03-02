@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class FollowOrgStrategy
 {
@@ -29,7 +30,8 @@ class FollowOrgStrategy
                 </span>
             HTML,
             'link' => route('public.participant.view', $participant->id),
-            'img_src' => $participant->userBanner
+            'img_src' => $participant->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
        
         NotifcationsUser::create([
@@ -44,7 +46,8 @@ class FollowOrgStrategy
                 </span>
             HTML,
             'link' => route('public.organizer.view', $organizer->id),
-            'img_src' => $organizer->userBanner
+            'img_src' => $organizer->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
     }
 }
@@ -68,7 +71,8 @@ class FollowParticipantStrategy
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
-            'img_src' => $user->userBanner
+            'img_src' => $user->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
        
         NotifcationsUser::create([
@@ -113,7 +117,8 @@ class NewFriendStrategy
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
-            'img_src' => $user->userBanner
+            'img_src' => $user->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
     }
 }
@@ -138,7 +143,8 @@ class UpdateFriendStrategy
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
-                'img_src' => $user->userBanner
+                'img_src' => $user->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
 
             NotifcationsUser::create([
@@ -154,7 +160,8 @@ class UpdateFriendStrategy
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
-                'img_src' => $otherUser->userBanner
+                'img_src' => $otherUser->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
         }
 
@@ -172,7 +179,8 @@ class UpdateFriendStrategy
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
-                'img_src' => $user->userBanner
+                'img_src' => $user->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
 
             NotifcationsUser::create([
@@ -188,7 +196,8 @@ class UpdateFriendStrategy
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
-                'img_src' => $otherUser->userBanner
+                'img_src' => $otherUser->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
         }
     }
@@ -218,6 +227,7 @@ class FollowTeamStrategy
                     'link' =>  route('public.team.view', ['id' => $selectTeam->id]),
                     'icon_type' => 'follow',
                     'html' => $html,
+                    'created_at' => DB::raw('NOW()')
                 ];
             }
 
@@ -232,7 +242,8 @@ class FollowTeamStrategy
                     </span>
                 HTML,
                 'link' => route('public.team.view', $selectTeam->id),
-                'icon_type' => 'follow'
+                'icon_type' => 'follow',
+                'created_at' => DB::raw('NOW()')
             ]);
         }
 

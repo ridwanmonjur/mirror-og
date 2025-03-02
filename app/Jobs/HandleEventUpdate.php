@@ -73,6 +73,7 @@ class HandleEventUpdate implements ShouldQueue
                             'icon_type' => 'ended',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
+                            'created_at' => DB::raw('NOW()')
                         ], 
                         'organizer' => [
                             'type' => 'event',
@@ -80,6 +81,7 @@ class HandleEventUpdate implements ShouldQueue
                             'icon_type' => 'ended',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
+                            'created_at' => DB::raw('NOW()')
                         ]
                     ];
 
@@ -102,6 +104,7 @@ class HandleEventUpdate implements ShouldQueue
                             'link' =>  $notificationMap['member']['link'],
                             'icon_type' => $notificationMap['member']['icon_type'],
                             'html' => $notificationMap['member']['html'],
+                            'created_at' => DB::raw('NOW()')
                         ];
 
                         if ($member->user->email) Mail::to($member->user->email)->send($participantEmail);
@@ -113,6 +116,7 @@ class HandleEventUpdate implements ShouldQueue
                         'link' =>  $notificationMap['organizer']['link'],
                         'icon_type' => $notificationMap['organizer']['icon_type'],
                         'html' => $notificationMap['organizer']['html'],
+                        'created_at' => DB::raw('NOW()')
                     ];
                     
                     if ($this->eventDetail->user->email) Mail::to($this->eventDetail->user->email)->send($organizerEmail);

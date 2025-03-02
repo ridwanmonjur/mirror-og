@@ -14,6 +14,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class TeamMemberUpdatedListener implements ShouldQueue
@@ -227,7 +228,8 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 'type' => 'teams',
                 'html' => $teamNotification,
                 'link' => $route,
-                'img_src' => $user->userBanner
+                'img_src' => $user->userBanner,
+                'created_at' => DB::raw('NOW()')
             ];
         }
 
@@ -236,7 +238,8 @@ class TeamMemberUpdatedListener implements ShouldQueue
             'type' => 'teams',
             'html' => $userNotification,
             'link' => route('public.team.view', $selectTeam->id),
-            'img_src' => $selectTeam->teamBanner
+            'img_src' => $selectTeam->teamBanner,
+            'created_at' => DB::raw('NOW()')
         ];
 
         NotifcationsUser::insertWithCount([...$memberNotification, $userNotification]);
