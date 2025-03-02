@@ -34,6 +34,18 @@
             color: #43A4D7 !important;
         }
 
+        .Color-Turtle {
+            color: #8CCD39;
+        }
+
+        .Color-Starfish {
+            color: #CE3C39;
+        }
+
+        .Color-Dolphin{
+            color: #43A4D7;
+        }
+
         @media (max-width: 1000px) {
             html, body {
                 font-size: 17.3px;

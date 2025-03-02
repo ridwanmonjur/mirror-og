@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class FollowOrgStrategy
 {
@@ -23,13 +24,14 @@ class FollowOrgStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$participant->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$participant->id}" alt="Follow link">
                         {$participant->name}
                     </button> is now following you.
                 </span>
             HTML,
             'link' => route('public.participant.view', $participant->id),
-            'img_src' => $participant->userBanner
+            'img_src' => $participant->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
        
         NotifcationsUser::create([
@@ -38,13 +40,14 @@ class FollowOrgStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     You started following an organizer,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$organizer->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$organizer->id}" alt="Follow link">
                         {$organizer->name}.
                     </button>
                 </span>
             HTML,
             'link' => route('public.organizer.view', $organizer->id),
-            'img_src' => $organizer->userBanner
+            'img_src' => $organizer->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
     }
 }
@@ -62,13 +65,14 @@ class FollowParticipantStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Follow link">
                         {$user->name}
                     </button> is now following you.
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
-            'img_src' => $user->userBanner
+            'img_src' => $user->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
        
         NotifcationsUser::create([
@@ -77,7 +81,7 @@ class FollowParticipantStrategy
             'html' => <<<HTML
                 <span class="notification-gray me-2">
                     You started following another player,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$followee->id}" alt="Follow link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$followee->id}" alt="Follow link">
                         {$followee->name}.
                     </button>
                 </span>
@@ -108,12 +112,13 @@ class NewFriendStrategy
             'type' => 'social',
             'html' => <<<HTML
                 <span class="notification-gray me-2">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Request link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Request link">
                         {$user->name}</button> has send you a friend request.
                 </span>
             HTML,
             'link' => route('public.participant.view', $user->id),
-            'img_src' => $user->userBanner
+            'img_src' => $user->userBanner,
+            'created_at' => DB::raw('NOW()')
         ]);
     }
 }
@@ -130,15 +135,16 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
-                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
                         </button>'s profile.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
-                'img_src' => $user->userBanner
+                'img_src' => $user->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
 
             NotifcationsUser::create([
@@ -146,15 +152,16 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
-                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
                         </button>'s profile.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
-                'img_src' => $otherUser->userBanner
+                'img_src' => $otherUser->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
         }
 
@@ -164,15 +171,16 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
-                        </button>and you are no longer friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
+                        </button>and you are no longer friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
                         </button>'s profile.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
-                'img_src' => $user->userBanner
+                'img_src' => $user->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
 
             NotifcationsUser::create([
@@ -180,15 +188,16 @@ class UpdateFriendStrategy
                 'type' => 'social',
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
-                        </button>and you are no longer friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
+                        </button>and you are no longer friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
                         </button>'s profile.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
-                'img_src' => $otherUser->userBanner
+                'img_src' => $otherUser->userBanner,
+                'created_at' => DB::raw('NOW()')
             ]);
         }
     }
@@ -204,10 +213,10 @@ class FollowTeamStrategy
             foreach ($selectTeam->members as $member) {
                 $html = <<<HTML
                     <span class="notification-gray">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Team Follower link">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Team Follower link">
                             {$user->name}</button>
                         followed your team, 
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
                     </span>
                 HTML;
@@ -218,6 +227,7 @@ class FollowTeamStrategy
                     'link' =>  route('public.team.view', ['id' => $selectTeam->id]),
                     'icon_type' => 'follow',
                     'html' => $html,
+                    'created_at' => DB::raw('NOW()')
                 ];
             }
 
@@ -227,12 +237,13 @@ class FollowTeamStrategy
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
                         You followed a team, 
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
                     </span>
                 HTML,
                 'link' => route('public.team.view', $selectTeam->id),
-                'icon_type' => 'follow'
+                'icon_type' => 'follow',
+                'created_at' => DB::raw('NOW()')
             ]);
         }
 

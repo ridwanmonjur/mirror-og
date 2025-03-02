@@ -6,14 +6,12 @@ use App\Models\NotifcationsUser;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
 use Illuminate\Support\Facades\Mail;
-use Stripe\StripeClient;
 
-trait RespondTrait
+trait RespondTaksTrait
 {
     public function handleEndedPayments(array $endedTaskIds, $taskId) {
         $paymentData = DB::table('event_details')
@@ -72,7 +70,7 @@ trait RespondTrait
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$join->eventDetails->id}">
+                    <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</button> has now ended. 
                     </span>
                 HTML;
@@ -89,7 +87,8 @@ trait RespondTrait
                         'icon_type' => 'ended',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
                         'type' => 'event',
@@ -97,7 +96,8 @@ trait RespondTrait
                         'icon_type' => 'ended',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ]
             ];
         }
@@ -110,7 +110,7 @@ trait RespondTrait
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$join->eventDetails->id}">
+                    <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</button> is now live. 
                     </span>
                 HTML;
@@ -127,7 +127,8 @@ trait RespondTrait
                         'icon_type' => 'live',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
                         'type' => 'event',
@@ -135,7 +136,8 @@ trait RespondTrait
                         'icon_type' => 'live',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail'
+                        'mailClass' => 'EventEndMail',
+                        'created_at' => DB::raw('NOW()')
                     ]
             ];
         }
@@ -150,7 +152,7 @@ trait RespondTrait
 
             $memberHtml = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$join->eventDetails->id}">
+                    <button class="btn-transparent px-0 border-0 Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
                     {$join->eventDetails->eventName}</button> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
                     on {$timeDate->format('M d, Y')}. 
                     </span>
@@ -171,7 +173,8 @@ trait RespondTrait
                         'icon_type' => 'started',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventStartMail'
+                        'mailClass' => 'EventStartMail',
+                        'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
                         'type' => 'event',
@@ -179,7 +182,8 @@ trait RespondTrait
                         'icon_type' => 'started',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventStartMail'
+                        'mailClass' => 'EventStartMail',
+                        'created_at' => DB::raw('NOW()')
                     ]
             ];
         }
@@ -214,6 +218,7 @@ trait RespondTrait
                             'link' =>  $notificationMap[$join->id]['member']['link'],
                             'icon_type' => $notificationMap[$join->id]['member']['icon_type'],
                             'html' => $notificationMap[$join->id]['member']['html'],
+                            'created_at' => DB::raw('NOW()')
                         ];
 
                         if ($member->user->mail) Mail::to($member->user->email)->send($memberMailInvocation);
@@ -225,6 +230,7 @@ trait RespondTrait
                         'link' =>  $notificationMap[$join->id]['organizer']['link'],
                         'icon_type' => $notificationMap[$join->id]['organizer']['icon_type'],
                         'html' => $notificationMap[$join->id]['organizer']['html'],
+                        'created_at' => DB::raw('NOW()')
                     ];
 
                     $orgMailClass = 'App\\Mail\\'. $notificationMap[$join->id]['organizer']['mailClass'];

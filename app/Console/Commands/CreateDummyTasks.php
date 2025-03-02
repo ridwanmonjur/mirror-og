@@ -43,16 +43,19 @@ class CreateDummyTasks extends Command
                 ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
                 ->whereNotNull('sub_action_public_date')
                 ->select(['id', 'sub_action_public_date'])
+                ->limit(5)
                 ->get();
 
             $startEvents = EventDetail
                 ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
                 ->select(['id', 'startDate'])
+                ->limit(5)
                 ->get();
 
             $endEvents = EventDetail                
                 ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
                 ->select(['id', 'endDate'])
+                ->limit(5)
                 ->get();
 
             $this->createTask($launchEvents, 'live', $todayTime, $todayDate);

@@ -38,7 +38,7 @@ class HandleEventUpdate implements ShouldQueue
                 ->first();
             
 
-            $this->eventDetail->load('user');
+            $this->eventDetail->load(['user']);
 
             if ($joinEvent) {
                 $startTimeDate = $this->eventDetail->createCarbonDateTime($this->eventDetail->startDate, $this->eventDetail->startTime);
@@ -46,8 +46,9 @@ class HandleEventUpdate implements ShouldQueue
 
                 DB::beginTransaction();
                 try {
+
                     $partialHtml = <<<HTML
-                        The event, <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
+                        The event, <button class="btn-transparent px-0 border-0 Color-{$this->eventDetail->tier->eventTier}" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
                         been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.
                         HTML;
                     $partialEmail = <<<HTML
@@ -73,6 +74,7 @@ class HandleEventUpdate implements ShouldQueue
                             'icon_type' => 'ended',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
+                            'created_at' => DB::raw('NOW()')
                         ], 
                         'organizer' => [
                             'type' => 'event',
@@ -80,6 +82,7 @@ class HandleEventUpdate implements ShouldQueue
                             'icon_type' => 'ended',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
+                            'created_at' => DB::raw('NOW()')
                         ]
                     ];
 
@@ -102,6 +105,7 @@ class HandleEventUpdate implements ShouldQueue
                             'link' =>  $notificationMap['member']['link'],
                             'icon_type' => $notificationMap['member']['icon_type'],
                             'html' => $notificationMap['member']['html'],
+                            'created_at' => DB::raw('NOW()')
                         ];
 
                         if ($member->user->email) Mail::to($member->user->email)->send($participantEmail);
@@ -113,6 +117,7 @@ class HandleEventUpdate implements ShouldQueue
                         'link' =>  $notificationMap['organizer']['link'],
                         'icon_type' => $notificationMap['organizer']['icon_type'],
                         'html' => $notificationMap['organizer']['html'],
+                        'created_at' => DB::raw('NOW()')
                     ];
                     
                     if ($this->eventDetail->user->email) Mail::to($this->eventDetail->user->email)->send($organizerEmail);

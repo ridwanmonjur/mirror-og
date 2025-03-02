@@ -221,7 +221,7 @@ const tabStore = reactive({
 });
 
 
-
+let nowReference = DateTime.now();
    
 function PageNotificationComponent () {
     const notifications = allNotificationStore;
@@ -291,10 +291,20 @@ function PageNotificationComponent () {
             return iconStore[icon_type] || '';
         },
         formatTime(date) {
-            return  DateTime
-                .fromISO(date)
-                .toRelative();
-        }
+            const dt1 = DateTime.fromISO(date);
+            const diff = dt1.diff(nowReference, ['months', 'days', 'hours', 'minutes', 'seconds']);
+            const units = ['months', 'days', 'hours', 'minutes', 'seconds'];
+            
+            for (const unit of units) {
+              const value = Math.abs(diff[unit]);
+              if (value > 0) {
+                const formattedValue = Number.isInteger(value) ? value : value.toFixed(1);
+                return `${formattedValue} ${value === 1 ? unit.slice(0, -1) : unit}`;
+              }
+            }
+            
+            return 'just now'; 
+          }
     }
 }
 

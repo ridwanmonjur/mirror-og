@@ -330,7 +330,7 @@ class Team extends Model
         return $team;
     }
 
-    public function processTeamRegistration($userId, $eventId): void {
+    public function processTeamRegistration($userId, $eventId): int {
         $participant = Participant::where('user_id', $userId)
             ->select(['id', 'user_id'])
             ->firstOrFail();
@@ -343,7 +343,7 @@ class Team extends Model
         ]);
 
         RosterMember::userJoinEventRoster($joinEvent->id, $this->members, $this->id, $userId);
-
+        return $joinEvent->id;
     }
 
 

@@ -12,35 +12,35 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ConfirmStrategy
 {
     public function handle($parameters)
     {
-        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event] = $parameters;
+        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event, 'join_id' => $join_id] = $parameters;
         $teamMembers = $selectTeam->members;
         $memberNotification = [];
         foreach ($teamMembers as $member) {
             $addressPartHTML = $user->id == $member->user->id 
                 ? "You have" 
                 : <<<HTML
-            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/user/{$user->id}">
-                {$user->name}
-            </button> has
+            <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/user/{$user->id}">
+                {$user->name}</button> has
             HTML;
 
             $html = <<<HTML
                 <span class="notification-gray">
                     {$addressPartHTML} confirmed registration for  
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/organizer/{$event->user->id}">
                         {$event->user->name}
                     </button>'s event,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}
                     </button>
                     with the team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button>. 
                 </span>
             HTML;
@@ -48,16 +48,23 @@ class ConfirmStrategy
             $memberNotification[] = [
                 'user_id' => $member->user->id,
                 'type' => 'teams',
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                'link' =>  route('participant.register.manage', [
+                    'id' => $selectTeam->id,
+                    'scroll' => $join_id
+                ]),
                 'icon_type' => 'confirm',
                 'html' => $html,
+                'created_at' => DB::raw('NOW()')
             ];
 
             if ($member->user->email) {
                 Mail::to($member->user->email)->send(new EventConfirmMail([
                     'team' => $selectTeam,
                     'text' => $html,
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    'link' =>  route('participant.register.manage', [
+                        'id' => $selectTeam->id,
+                        'scroll' => $join_id
+                    ]),
                 ]));
             } 
 
@@ -97,14 +104,18 @@ class ConfirmStrategy
         $organizerNotification = [
             'user_id' => $event->user->id,
             'type' => 'teams',
-            'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+            'link' =>  route('participant.register.manage', [
+                'id' => $selectTeam->id,
+                'scroll' => $join_id
+            ]),
             'icon_type' => 'confirm',
+            'created_at' => DB::raw('NOW()'),
             'html' => <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button>
                     has confirmed registration for your event,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                 </span>
             HTML,
@@ -113,7 +124,10 @@ class ConfirmStrategy
             Mail::to($event->user->email)->send(new EventConfirmMail([
                 'team' => $selectTeam,
                 'text' => $html,
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                'link' =>  route('participant.register.manage', [
+                    'id' => $selectTeam->id,
+                    'scroll' => $join_id
+                ]),
             ]));
         }
         
@@ -126,26 +140,26 @@ class VoteStartStrategy
 {
     public function handle($parameters)
     {
-        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event] = $parameters;
+        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event,  'join_id' => $join_id] = $parameters;
         $teamMembers = $selectTeam->members;
         $memberNotification = [];
         foreach ($teamMembers as $member) {
             $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    A vote to quit
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                    A vote to <span class="notification-danger" >QUIT></span>
+                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}
                     </button>
                     has been started for your team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}
                     </button>. 
                 </span>
             HTML;
             $htmlMail = <<<HTML
                 <span class="notification-gray">
-                    {$addressPart} have started a vote to quit  
+                    {$addressPart} have started a vote to <span class="notification-danger" >QUIT></span>  
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
                         {$event->user->name}
                     </button>'s event,
@@ -163,16 +177,23 @@ class VoteStartStrategy
             $memberNotification[] = [
                 'user_id' => $member->user->id,
                 'type' => 'teams',
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                'link' =>  route('participant.register.manage', [
+                    'id' => $selectTeam->id,
+                    'scroll' => $join_id
+                ]),
                 'icon_type' => 'vote',
                 'html' => $htmlNotif,
+                'created_at' => DB::raw('NOW()')
             ];
 
             if ($member->user->email) {
                 Mail::to($member->user->email)->send(new EventConfirmMail([
                     'team' => $selectTeam,
                     'text' => $htmlMail,
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    'link' =>  route('participant.register.manage', [
+                        'id' => $selectTeam->id,
+                        'scroll' => $join_id
+                    ]),
                 ]));
             }
         }
@@ -192,11 +213,13 @@ class VoteEndStrategy
 {
     public function handle($parameters)
     {
-        ['selectTeam' => $selectTeam, 
+        [
+            'selectTeam' => $selectTeam, 
             'user' => $user, 
             'event' => $event, 
             'willQuit' => $willQuit,
-            'discount' => $discountsByUserAndType
+            'discount' => $discountsByUserAndType,
+            'join_id' => $join_id
         ] = $parameters;
         $teamMembers = $selectTeam->members;
         $memberNotification = [];
@@ -242,10 +265,10 @@ class VoteEndStrategy
 
                 $htmlNotif = <<<HTML
                     <span class="notification-gray">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button> 
                         has voted to <span class="notification-danger">QUIT</span> in the
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                        <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                             {$event->eventName}</button>.
                     </span>
                 HTML;
@@ -253,16 +276,23 @@ class VoteEndStrategy
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'teams',
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    'link' =>  route('participant.register.manage', [
+                        'id' => $selectTeam->id,
+                        'scroll' => $join_id
+                    ]),
                     'icon_type' => 'quit',
                     'html' => $htmlNotif,
+                    'created_at' => DB::raw('NOW()')
                 ];
 
                 if ($member->user->email) {
                     Mail::to($member->user->email)->send(new VoteEndMail([
                         'team' => $selectTeam,
                         'text' => $htmlMail,
-                        'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                        'link' =>  route('participant.register.manage', [
+                            'id' => $selectTeam->id,
+                            'scroll' => $join_id
+                        ]),
                     ]));
                 }
             }
@@ -281,10 +311,10 @@ class VoteEndStrategy
 
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
                     has voted to <span class="notification-danger">QUIT</span> in the
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                 </span>
             HTML;
@@ -292,16 +322,23 @@ class VoteEndStrategy
             $organizerNotification = [
                 'user_id' => $event->user->id,
                 'type' => 'teams',
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                'link' =>  route('participant.register.manage', [
+                    'id' => $selectTeam->id,
+                    'scroll' => $join_id
+                ]),
                 'icon_type' => 'quit',
-                'html' => $htmlNotif
+                'html' => $htmlNotif,
+                'created_at' => DB::raw('NOW()')
             ];
             
             if ($event->user->email) {
                 Mail::to($event->user->email)->send(new VoteEndMail([
                     'team' => $selectTeam,
                     'text' => $htmlMail,
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    'link' =>  route('participant.register.manage', [
+                        'id' => $selectTeam->id,
+                        'scroll' => $join_id
+                    ]),
                 ]));
             }
 
@@ -309,10 +346,10 @@ class VoteEndStrategy
         } else {
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
                     has voted to <span class="notification-danger">QUIT</span> in the
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}</button>.
                     They will be refunded half of their fees.
                 </span>
@@ -338,16 +375,23 @@ class VoteEndStrategy
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'teams',
-                    'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                    'link' =>  route('participant.register.manage', [
+                        'id' => $selectTeam->id,
+                        'scroll' => $join_id
+                    ]),
                     'icon_type' => 'stay',
                     'html' => $htmlNotif,
+                    'created_at' => DB::raw('NOW()')
                 ];
 
                 if ($member->user->email) {
                     Mail::to($member->user->email)->send(new VoteEndMail([
                         'team' => $selectTeam,
                         'text' => $htmlMail,
-                        'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
+                        'link' =>  route('participant.register.manage', [
+                            'id' => $selectTeam->id,
+                            'scroll' => $join_id
+                        ]),
                     ]));
                 }
             }
@@ -357,89 +401,6 @@ class VoteEndStrategy
     }
 }
 
-class JoinPlaceStrategy {
-    public function handle ($parameters) {
-        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event] = $parameters;
-        $teamMembers = $selectTeam->members;
-        $allEventLogs = [];
-        $memberNotification = [];
-        foreach ($teamMembers as $member) {
-            $memberNotification[] = [
-                'user_id' => $member->user->id,
-                'type' => 'teams',
-                'link' =>  route('participant.register.manage', ['id' => $selectTeam->id]),
-                'icon_type' => 'signup',
-                'html' => <<<HTML
-                    <span class="notification-gray">
-                        You have been placed in
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
-                            {$event->user->name}
-                        </button>'s event,
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
-                            {$event->eventName}
-                        </button>
-                        with <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
-                            {$selectTeam->teamName}</button>. 
-                            Please complete and confirm your registration for this event.
-                    </span>
-                HTML,
-            ];
-
-            $addressLog = $member->user->id == $user->id 
-                    ? 'You' 
-                    : <<<HTML
-                <a href="/view/user/{$member->user->id}" >
-                    <span class="notification-blue">{$member->user->name}</span>
-                </a>
-                HTML;            
-            
-            $allEventLogs[] = [
-                'action' => 'signup',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'subject_id' => $member->user->id,
-                'subject_type' => User::class,
-                'log' => <<<HTML
-                    <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}">
-                        <img src="/storage/{$selectTeam->teamBanner}"
-                            width="30" height="30" 
-                            onerror="this.src='/assets/images/404.png';"
-                            class="object-fit-cover rounded-circle me-2"
-                            alt="Team banner for {$selectTeam->teamName}"></a>
-                    <span class="notification-gray">
-                        {$addressLog} signed up 
-                        <a class="btn-transparent px-0 border-0" href="/view/organizer/{$event->user->id}">
-                            <span class="notification-blue">{$event->user->name}</span></a>'s event,
-                        <a class="btn-transparent px-0 border-0" href="/event/{$event->id}">
-                            <span class="notification-blue">{$event->eventName}</span></a> with your team, 
-                        <a class="btn-transparent px-0 border-0" href="/view/team/{$selectTeam->id}">
-                            <span class="notification-blue">{$selectTeam->teamName}</span></a>. 
-                    </span>
-                HTML,
-            ];
-        }
-            
-        $organizerNotification = [
-            'user_id' => $event->user->id,
-            'type' => 'teams',
-            'link' =>  route('public.team.view', ['id' => $selectTeam->id]),
-            'icon_type' => 'signup',
-            'html' => <<<HTML
-                <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
-                        <span class="notification-blue">{$selectTeam->teamName}</span></button>
-                    has signed up for your event,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
-                        {$event->eventName}</button>
-                    . After signing up, they must complete and confirm registration for this event.
-                </span>
-            HTML,
-        ];
-
-        ActivityLogs::insert($allEventLogs);
-        NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
-    }
-}
 
 class HandleEventJoinConfirm implements ShouldQueue
 {

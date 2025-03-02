@@ -123,8 +123,6 @@ class UserController extends Controller
             'limit' => $limit_history + 1,
         ];
 
-     
-
         if ($user->stripe_customer_id) {
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
             $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
