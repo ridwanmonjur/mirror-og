@@ -296,15 +296,19 @@ function PageNotificationComponent () {
             const units = ['months', 'days', 'hours', 'minutes', 'seconds'];
             
             for (const unit of units) {
-              const value = Math.abs(diff[unit]);
-              if (value > 0) {
-                const formattedValue = Number.isInteger(value) ? value : value.toFixed(1);
-                return `${formattedValue} ${value === 1 ? unit.slice(0, -1) : unit}`;
-              }
+                const value = Math.abs(diff[unit]);
+                if (value > 0) {
+                    if (unit === 'seconds') {
+                        const formattedValue = Math.round(value);
+                        return `${formattedValue} ${formattedValue === 1 ? 'second' : 'seconds'}`;
+                    }
+                    const formattedValue = Number.isInteger(value) ? value : value.toFixed(1);
+                    return `${formattedValue} ${value === 1 ? unit.slice(0, -1) : unit}`;
+                }
             }
             
-            return 'just now'; 
-          }
+            return 'just now';
+        }
     }
 }
 
