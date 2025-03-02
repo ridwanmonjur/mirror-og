@@ -36,34 +36,34 @@ class TeamMemberCreatedListener implements ShouldQueue
             $userNotification = <<<HTML
                 <span class="notification-gray">
                     The team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
                         {$selectTeam->teamName}</button>
                     has invited you to join them.
                 </span>
             HTML;
             $teamNotification = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Team Join Request link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Team Join Request link">
                         {$user->name}</button>
                     has requested to join your team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
                         {$selectTeam->teamName}</button>.
                 </span>
             HTML;
         } else {
             $userNotification = <<<HTML
                 <span class="notification-gray">
-                    You have requested to join the team, <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
+                    You have requested to join the team, <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
                         {$selectTeam->teamName}</button>.
                 </span>
             HTML;
             $teamNotification = <<<HTML
                 <span class="notification-gray">
                     The user 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/participant/{$user->id}" alt="Team Join Request link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Team Join Request link">
                         {$user->name}</button>
                     has requested to join your team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}" alt="Team Join Request link">
                         {$selectTeam->teamName}</button>.
                 </span>
             HTML;

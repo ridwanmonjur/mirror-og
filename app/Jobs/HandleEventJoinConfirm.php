@@ -65,7 +65,7 @@ class ConfirmStrategy
             $addressPart2Log = $member->user->id == $user->id 
                 ? 'You' 
                 : <<<HTML
-            <a href="/view/user/{$member->user->id}" class="notification-entity">
+            <a href="/view/user/{$member->user->id}" class="notification-blue">
                 <span>{$member->user->name}</span>
             </a>
             HTML;
@@ -103,7 +103,7 @@ class ConfirmStrategy
             'created_at' => DB::raw('NOW()'),
             'html' => <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button>
                     has confirmed registration for your event,
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
@@ -135,19 +135,19 @@ class VoteStartStrategy
             $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    A vote to quit
+                    A vote to <span class="notification-danger" >QUIT></span>
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                         {$event->eventName}
                     </button>
                     has been started for your team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}
                     </button>. 
                 </span>
             HTML;
             $htmlMail = <<<HTML
                 <span class="notification-gray">
-                    {$addressPart} have started a vote to quit  
+                    {$addressPart} have started a vote to <span class="notification-danger" >QUIT></span>  
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
                         {$event->user->name}
                     </button>'s event,
@@ -245,7 +245,7 @@ class VoteEndStrategy
 
                 $htmlNotif = <<<HTML
                     <span class="notification-gray">
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button> 
                         has voted to <span class="notification-danger">QUIT</span> in the
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
@@ -285,7 +285,7 @@ class VoteEndStrategy
 
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
                     has voted to <span class="notification-danger">QUIT</span> in the
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
@@ -314,7 +314,7 @@ class VoteEndStrategy
         } else {
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                         {$selectTeam->teamName}</button> 
                     has voted to <span class="notification-danger">QUIT</span> in the
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
@@ -379,13 +379,13 @@ class JoinPlaceStrategy {
                 'html' => <<<HTML
                     <span class="notification-gray">
                         You have been placed in
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/organizer/{$event->user->id}">
                             {$event->user->name}
                         </button>'s event,
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
                             {$event->eventName}
                         </button>
-                        with <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                        with <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
                             {$selectTeam->teamName}</button>. 
                             Please complete and confirm your registration for this event.
                     </span>

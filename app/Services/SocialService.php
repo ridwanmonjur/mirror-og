@@ -179,7 +179,7 @@ class SocialService {
                 ></a>
             <span class="notification-gray">
                 You have started following another {$roleName},
-                <a class="px-0 border-0" href="/view/{$role}/{$imageUser->id}" alt="Follow link">  
+                <a class="px-0 border-0 " href="/view/{$role}/{$imageUser->id}" alt="Follow link">  
                     <span class="notification-blue">{$imageUser->name}</span></a>.
             </span>
         HTML;

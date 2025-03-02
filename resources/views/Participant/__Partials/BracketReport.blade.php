@@ -4,7 +4,7 @@
 <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
 @include('Shared.__BracketModalPartials.Report')
 @include('Shared.__BracketModalPartials.Dispute')
-<div id="bracket-list custom-scrollbar"  class="tab-bracketlist"
+<div id="bracket-list"  class=" custom-scrollbar tab-bracketlist"
 >
     @if (isset($bracketList['upperBracket']))
 
