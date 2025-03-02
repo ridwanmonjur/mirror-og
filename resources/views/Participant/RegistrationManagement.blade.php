@@ -30,9 +30,7 @@
         data-payment-lower="{{$paymentLowerMin}}"
         data-vote-url="{{ route('participant.roster.vote') }}"
         data-register-url="{{ 
-            $isRedirect 
-            ? route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $joinEvents[0]->eventDetails?->id])
-            : route('participant.register.manage', ['id' => $selectTeam->id])
+            route('participant.register.manage', ['id' => $selectTeam->id])
         }}"
         data-success-message="{{ session('successMessage') }}"
         data-error-message="{{ session('errorMessage') }}"

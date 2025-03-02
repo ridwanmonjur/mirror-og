@@ -75,7 +75,10 @@ class ParticipantRosterController extends Controller
             $rosterMember->save();
 
             $joinEvent = JoinEvent::where('id', $rosterMember->join_events_id)
-                ->with(['roster', 'eventDetails', 'eventDetails.user'])
+                ->with(['roster', 
+                    'eventDetails.user:id,name,userBanner',
+                    'eventDetails.tier:id,eventTier'
+                ])
                 ->first();
 
             $team = Team::where('id', $joinEvent->team_id)
@@ -93,7 +96,8 @@ class ParticipantRosterController extends Controller
                     'user' => $user,
                     'event' => $joinEvent->eventDetails,
                     'discount' => $discountsByUserAndType,
-                    'willQuit' => true
+                    'willQuit' => true,
+                    'join_id' => $joinEvent->id
                 ]));
             } 
             
@@ -103,7 +107,8 @@ class ParticipantRosterController extends Controller
                     'user' => $user,
                     'event' => $joinEvent->eventDetails,
                     'discount' => null,
-                    'willQuit' => false
+                    'willQuit' => false,
+                    'join_id' => $joinEvent->id
                 ]));
             }
     

@@ -38,7 +38,7 @@ class HandleEventUpdate implements ShouldQueue
                 ->first();
             
 
-            $this->eventDetail->load('user');
+            $this->eventDetail->load(['user']);
 
             if ($joinEvent) {
                 $startTimeDate = $this->eventDetail->createCarbonDateTime($this->eventDetail->startDate, $this->eventDetail->startTime);
@@ -46,8 +46,9 @@ class HandleEventUpdate implements ShouldQueue
 
                 DB::beginTransaction();
                 try {
+
                     $partialHtml = <<<HTML
-                        The event, <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
+                        The event, <button class="btn-transparent px-0 border-0 Color-{$this->eventDetail->tier->eventTier}" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
                         been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.
                         HTML;
                     $partialEmail = <<<HTML

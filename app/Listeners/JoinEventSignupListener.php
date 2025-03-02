@@ -37,7 +37,7 @@ class JoinEventSignupListener implements ShouldQueue
                     <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/organizer/{$event2->event->user->id}">
                         {$event2->event->user->name}
                     </button>'s event,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event2->event->id}">
+                    <button class="btn-transparent px-0 border-0 Color-{$event2->event->tier->eventTier}" data-href="/event/{$event2->event->id}">
                         {$event2->event->eventName}
                     </button>
                     with your team, 
@@ -67,7 +67,11 @@ class JoinEventSignupListener implements ShouldQueue
             $memberNotification[] = [
                 'user_id' => $member->user->id,
                 'type' => 'teams',
-                'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
+                'link' =>  route('participant.register.manage', [
+                        'id' => $event2->selectTeam->id,
+                        'scroll' => $event2->join_id
+                    ]
+                ),
                 'icon_type' => 'signup',
                 'html' => $notifHtml,
                 'created_at' => DB::raw('NOW()')
@@ -77,7 +81,10 @@ class JoinEventSignupListener implements ShouldQueue
                 Mail::to($member->user->email)->send(new EventSignupMail([
                     'team' => $event2->selectTeam,
                     'text' => $logHtml,
-                    'link' =>  route('participant.register.manage', ['id' => $event2->selectTeam->id]),
+                    'link' =>  route('participant.register.manage', [
+                        'id' => $event2->selectTeam->id,
+                        'scroll' => $event2->join_id
+                    ]),
                 ]));
             }
         }

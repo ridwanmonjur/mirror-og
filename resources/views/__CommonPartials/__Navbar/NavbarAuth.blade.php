@@ -110,7 +110,7 @@
                             </div>
                             <div class="notification-content ">
                                 <div class="d-inline-block" v-html="notification.html"></div>
-                                <small class="text-muted" v-text="formatTime(notification.created_at)"></small>
+                                <span class="text-muted" v-text="formatTime(notification.created_at)"></span>
                             </div>
                         </div>
                     </template> 

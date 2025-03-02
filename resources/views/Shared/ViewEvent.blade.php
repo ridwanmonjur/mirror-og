@@ -352,7 +352,7 @@
                 </div>
 
                 <div id="Teams" class="tabcontent" >
-                    <h5 class="my-0"><u>Teams</u></h5>
+                    <h5 class="mb-3"><u>Teams</u></h5>
                     <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
                              <div class="row row-cols-1 row-cols-xl-2  g-4  pt-0 mt-1">
@@ -408,8 +408,13 @@
                             </div>
                         @else
                             <div >
-                                <div class="text-center py-5">
-                                    <p class="mb-0">No teams</p>
+                                <div class="text-start pt-2">
+                                    <svg class="ms-4" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <p class="d-inline text-body-secondary mb-0">No teams joined yet.</p>
                                 </div>
                             </div>
                         @endif
@@ -470,8 +475,8 @@
                 @endphp
                 <div id="Result" class="tabcontent" >
                     <h5 class="mb-3"><u>Result</u></h5>
-                    <div class="tab-content pb-4 tab-size outer-tab mx-auto" id="current-positions">
-                        <div class="card border-0 py-0 my-0 mx-auto" style="background: none;">
+                    <div class=" pb-4 outer-tab mx-0" id="current-positions">
+                        <div class="card border-0 py-0 my-0 mx-0" style="background: none;">
                             @if (isset($joinEventAndTeamList[0]))
                                 <div class="d-flex flex-column gap-3">
                                     @foreach ($joinEventAndTeamList as $joinEventAndTeam)
@@ -527,7 +532,7 @@
                                 </div>
                             @else
                                 <div >
-                                    <div class="text-start py-4">
+                                    <div class="text-start pt-2">
                                         <svg class="ms-4" width="20" height="20" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"

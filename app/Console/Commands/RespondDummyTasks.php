@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 
 class RespondDummyTasks extends Command
 {
-    use PrinterLoggerTrait, RespondTrait;
+    use PrinterLoggerTrait, RespondTaksTrait;
 
     /**
      * The name and signature of the console command.

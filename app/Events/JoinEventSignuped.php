@@ -16,6 +16,8 @@ class JoinEventSignuped
 
     public User $user;
 
+    public $join_id;
+
     public Team $selectTeam;
 
     public EventDetail $event;
@@ -29,6 +31,7 @@ class JoinEventSignuped
         $this->user ??= $parameters['user'];
         $this->selectTeam ??= $parameters['selectTeam'];
         $this->event ??= $parameters['event'];
+        $this->join_id ??= $parameters['join_id'];
     }
 
     /**

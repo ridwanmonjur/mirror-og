@@ -2,23 +2,16 @@
 
 namespace App\Console\Commands;
 
-use App\Models\NotifcationsUser;
-use App\Models\PaymentTransaction;
-use App\Models\StripePayment;
 use App\Models\Task;
 use App\Console\Commands\PrinterLoggerTrait;
 use App\Models\JoinEvent;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Stripe\StripeClient;
 
 class RespondTasks extends Command
 {
-    use PrinterLoggerTrait, RespondTrait;
+    use PrinterLoggerTrait, RespondTaksTrait;
 
     /**
      * The name and signature of the console command.
@@ -70,19 +63,35 @@ class RespondTasks extends Command
                 }
             }
 
+            $with = [
+                'members:id,team_id,user_id', 
+                'members.user:id,name', 
+                'eventDetails.user:id,name',
+                'eventDetails.tier:id,eventTier'
+            ];
+
             $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
                 ->where('join_status', 'confirmed')
-                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
+                ->with([
+                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id', 
+                    ...$with,
+                ])
                 ->get();
 
             $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
                 ->where('join_status', 'confirmed')
-                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
+                ->with([
+                    'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id', 
+                    ...$with,
+                ])                
                 ->get();
                
             $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
                 ->where('join_status', 'confirmed')
-                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
+                ->with([
+                    'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id', 
+                    ...$with,
+                ])                
                 ->get();
 
       

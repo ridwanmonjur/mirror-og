@@ -222,12 +222,18 @@ class ParticipantEventController extends Controller
             $event = EventDetail::with(['user' => function ($query) {
                     $query->select('id', 'name', 'email');
                 }])
-                ->select('id', 'user_id', 'eventName')
+                ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
+                ->with([
+                    'tier:id,eventTier',
+                    'user:id,name,userBanner'
+                ])
+
                 ->find($id);
+            
 
             if ($selectTeam && $isAlreadyMember) {
-                Event::dispatch(new JoinEventSignuped(compact('user', 'event', 'selectTeam')));
-                $selectTeam->processTeamRegistration( $user->id, $event->id);
+                $join_id = $selectTeam->processTeamRegistration( $user->id, $event->id);
+                Event::dispatch(new JoinEventSignuped(compact('user', 'join_id', 'event', 'selectTeam')));
                 DB::commit();
 
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
@@ -294,11 +300,11 @@ class ParticipantEventController extends Controller
                 throw new Exception('One of your teams has joined this event already!');
             }
 
-            $event = EventDetail::select('id', 'user_id', 'eventName')->with(
-                ['user' => function ($q) {
-                    $q->select('id', 'name', 'email');
-                }]
-            )->find($id);
+            $event = EventDetail::select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
+                ->with([
+                    'tier:id,eventTier',
+                    'user:id,name,userBanner'
+                ])->find($id);
 
             if ($count < 5) {
                 $selectTeam = new Team();
@@ -312,8 +318,8 @@ class ParticipantEventController extends Controller
                         $q->select(['name', 'id', 'email', 'userBanner']);
                     },
                 ]);
-                Event::dispatch(new JoinEventSignuped(compact($user, $event, $selectTeam)));
-                $selectTeam->processTeamRegistration( $user->id, $event->id);
+                $join_id = $selectTeam->processTeamRegistration( $user->id, $event->id );
+                Event::dispatch(new JoinEventSignuped(compact('user', 'join_id', 'event', 'selectTeam')));
                 DB::commit();
 
                 return view('Participant.EventNotify', compact('id', 'selectTeam'));
@@ -349,7 +355,10 @@ class ParticipantEventController extends Controller
                 ->firstOrFail();
             $team = Team::where( 'id', $joinEvent->team_id)
                 ->firstOrFail();
-            $event = EventDetail::findOrFail($joinEvent->event_details_id);
+            $event = EventDetail::where('id', $joinEvent->event_details_id)
+                ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
+                ->with('tier:id,eventTier')
+                ->firstOrFail();
             $isPermitted = $joinEvent->payment_status === 'completed' &&
                 ($request->join_status === 'confirmed' || $request->join_status === 'canceled');
 
@@ -360,6 +369,7 @@ class ParticipantEventController extends Controller
                         'selectTeam' => $team,
                         'user' => $user,
                         'event' => $event,
+                        'join_id' => $joinEvent->id
                     ]));
                     $joinEvent->save();
                 } else {
@@ -383,7 +393,8 @@ class ParticipantEventController extends Controller
                                 'user' => $user,
                                 'event' => $event,
                                 'discount' => $discountsByUserAndType,
-                                'willQuit' => true
+                                'willQuit' => true,
+                                'join_id' => $joinEvent->id
                             ]));
                         }
 
@@ -396,7 +407,8 @@ class ParticipantEventController extends Controller
                                 'selectTeam' => $team,
                                 'user' => $user,
                                 'event' => $event,
-                                'willQuit' => false
+                                'willQuit' => false,
+                                'join_id' => $joinEvent->id
                             ]));
                         }
 
@@ -405,6 +417,7 @@ class ParticipantEventController extends Controller
                             'selectTeam' => $team,
                             'user' => $user,
                             'event' => $event,
+                            'join_id' => $joinEvent->id
                         ]));
                     }
                     

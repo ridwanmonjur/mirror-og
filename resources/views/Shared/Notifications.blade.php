@@ -101,7 +101,7 @@
                         </div>
                         <div class="notification-content flex-grow-1">
                             <div class="d-inline-block" v-html="notification2.html"></div>
-                            <small class="text-muted" v-text="formatTime(notification2.created_at)"></small>
+                            <span class="text-muted" v-text="formatTime(notification2.created_at)"></span>
                         </div>
                     </div>
                 </template> 
