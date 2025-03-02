@@ -82,10 +82,12 @@ class JoinEvent extends Model
             ->get();
     }
 
-    public static function getJoinEventsForTeamListWithEventsRosterResults(array $teamIdList= []): Collection
+    public static function getJoinEventsByRoster($userId): Collection
     {
 
-        return self::whereIn('team_id', $teamIdList)
+        $joinIdList = RosterMember::where('user_id', $userId)
+            ->select(['user_id', 'join_events_id'])->get()->pluck('join_events_id');
+        return self::whereIn('id', $joinIdList)
             ->where('join_status', '<>', 'canceled')
             ->with(['eventDetails',  'user', 'roster' => function ($q) {
                 $q->with('user');

@@ -107,8 +107,8 @@ class ParticipantController extends Controller
                 'teamIdList' => $teamIdList,
             ] = Team::getUserTeamList($userProfile->id);
             $pastTeam = Team::getUserPastTeamList($userProfile->id);
-
-            $joinEvents = JoinEvent::getJoinEventsForTeamListWithEventsRosterResults($teamIdList);
+            
+            $joinEvents = JoinEvent::getJoinEventsByRoster($userProfile->id);
             $totalEventsCount = $joinEvents->count();
             ['wins' => $wins, 'streak' => $streak] =
                 JoinEvent::getPlayerJoinEventsWinCountForTeamList($teamIdList,  $userProfile->id);
