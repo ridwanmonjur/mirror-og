@@ -56,6 +56,7 @@
                         src="{{ $bladeEventGameImage }}" 
                         class="logo2 mt-2 object-fit-cover gameIcon" 
                         alt=""
+             
                     >
                 </div>
                 <button class="btn rounded-pill mt-2" style="@php echo $stylesEventRatio; @endphp">

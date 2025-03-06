@@ -137,7 +137,7 @@
                 <div> eWallet </div>
                 <div class="accordion-arrows"> @include('Organizer.__CheckoutPartials.AccordionArrows') </div>
             </div>
-            <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
+            {{-- <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
                 <div class="grid-4-columns">
                     @foreach (bladeGetPaymentLogos('eWallet') as $logo)
                         <div class="position-relative" style="width: min-content;">
@@ -154,7 +154,7 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="me-5 pb-2 mb-2 d-none">
             <div onclick="toggleArrows(event);"
@@ -165,7 +165,7 @@
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
                 <div class="grid-5-columns">
-                    @foreach (bladeGetPaymentLogos('bank') as $logo)
+                    {{-- @foreach (bladeGetPaymentLogos('bank') as $logo)
                         <div class="position-relative" style="width: min-content;">
                             <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
                                 width="{{ $logo['width'] }}" height="{{ $logo['height'] }}"
@@ -178,7 +178,7 @@
                                 onclick="onChoosePayment(event, 'bank', '{{ $logo['name'] }}');">
                             <div class="rounded-circle position-absolute px-1 check-tick d-none">✔</div>
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
             </div>
         </div>
@@ -191,7 +191,7 @@
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
                 <div class="grid-4-columns">
-                    @foreach (bladeGetPaymentLogos('otherEWallet') as $logo)
+                    {{-- @foreach (bladeGetPaymentLogos('otherEWallet') as $logo)
                         <div class="position-relative" style="width: min-content;">
                             <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
                                 width="{{ $logo['width'] }}" height="{{ $logo['height'] }}"
@@ -204,7 +204,7 @@
                                 onclick="onChoosePayment(event, 'otherEWallet', '{{ $logo['name'] }}');">
                             <div class="rounded-circle position-absolute  px-1 check-tick d-none">✔</div>
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
             </div>
         </div>

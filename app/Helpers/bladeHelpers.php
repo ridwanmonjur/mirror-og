@@ -4,19 +4,19 @@ use Carbon\Carbon;
 
 
 
-function bladeGetPaymentLogos($logoType)
-{
-    $logoName = [
-        'bank' => 'bankLogos',
-        'eWallet' => 'eWalletLogos',
-        'otherEWallet' => 'otherEWalletLogos',
-        'card' => 'cardLogos',
-    ];
+// function bladeGetPaymentLogos($logoType)
+// {
+//     $logoName = [
+//         'bank' => 'bankLogos',
+//         'eWallet' => 'eWalletLogos',
+//         'otherEWallet' => 'otherEWalletLogos',
+//         'card' => 'cardLogos',
+//     ];
 
-    $logo = $logoName[$logoType];
+//     $logo = $logoName[$logoType];
 
-    return config("constants.{$logo}");
-}
+//     return config("constants.{$logo}");
+// }
 
 function fixTimeToRemoveSeconds($time)
 {
@@ -48,7 +48,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
     } elseif ($ratio > 0.5) {
         $stylesEventRatio .= 'background-color: #FA831F; color: white;';
     } elseif ($ratio <= 0.5) {
-        $stylesEventRatio .= 'background-color: #FFE325; color: black;';
+        $stylesEventRatio .= 'background-color: #FFE325; color: #2e4b59;';
     }
 
     return $stylesEventRatio;
@@ -86,7 +86,7 @@ function bladeEventTierImage($eventTier)
 {
     if ($eventTier) {
         $eventTierLower = strtolower($eventTier);
-        $eventTierLowerImg = asset('/assets/images/'.$eventTierLower.'.png');
+        $eventTierLowerImg = asset('/storage'. '/images/event_details'. '/'. $eventTierLower.'.png');
     } else {
         $eventTierLowerImg = asset('assets/images/createEvent/question.png');
     }
