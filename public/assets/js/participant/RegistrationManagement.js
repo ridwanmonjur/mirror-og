@@ -656,7 +656,7 @@ addOnLoad(()=> {
         playButton.id = 'playButton';
         playButton.classList.add('btn', 'btn-primary', 'text-light', 'px-2', 'py-2', 'btn-sm', 'position-fixed', 'top-50', 'end-0', 'translate-middle-y', 'me-0', 'shadow-sm');        
         playButton.innerHTML = 'Roster Tour';
-        playButton.style.zIndex = '1043';
+        playButton.style.zIndex = '9';
         document.body.appendChild(playButton);
       
         function highlightMember(index) {

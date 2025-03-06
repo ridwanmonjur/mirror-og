@@ -6,7 +6,7 @@
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Matches</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/participant/viewEvent.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/viewEvent.css') }}">
     @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
     @include('__CommonPartials.HeadIcon')
 

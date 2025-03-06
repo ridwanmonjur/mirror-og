@@ -20,7 +20,7 @@
         @if(session('token'))
             <input type="hidden" id="session_token" value="{{ session('token') }}">
         @endif
-        <section class="hero">
+        <section class="hero d-none d-lg-block">
             <img 
                 src="{{ asset('/assets/images/homepage new header.png') }}"
                 alt=""
