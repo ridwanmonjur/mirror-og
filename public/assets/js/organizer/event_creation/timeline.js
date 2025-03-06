@@ -432,3 +432,28 @@ function goToNextScreen(nextId, nextTimeline) {
     document.getElementsByClassName("navbar")[0].scrollIntoView({ behavior: 'smooth' });
 
 }
+
+const gameCategories = document.querySelectorAll('.game-events');
+    
+gameCategories.forEach(category => {
+    category.addEventListener('click', function() {
+        gameCategories.forEach(element => {
+            element.classList.remove('color-border-success');
+        });
+        
+        this.classList.add('color-border-success');
+        
+        const categoryId = this.dataset.categoryId;
+        const gameTitle = this.dataset.gameTitle;
+        const gameIconSrc = this.dataset.gameIcon;
+        
+        setFormValues({ 
+            'gameTitle': gameTitle,
+            'gameTitleId': categoryId 
+        });
+        
+        localStorage.setItem('gameTitleImg', gameIconSrc);
+        
+        goToNextScreen('step-2', 'timeline-1');
+    });
+});
