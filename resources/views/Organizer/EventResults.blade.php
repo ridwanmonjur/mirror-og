@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     @include('__CommonPartials.HeadIcon')
-    <link rel="stylesheet" href="{{ asset('/assets/css/organizer/eventResults.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 </head>
