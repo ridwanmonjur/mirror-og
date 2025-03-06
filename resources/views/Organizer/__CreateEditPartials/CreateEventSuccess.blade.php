@@ -62,7 +62,7 @@
         @if ($event->sub_action_private == 'private')
             <a href="{{ route('event.invitation.index', $event->id) }}">
                 <button class="oceans-gaming-default-button"
-                    style="padding: 10px 50px; background-color: transparent; color: black; border: 1px solid black;">
+                    style="padding: 10px 50px; background-color: transparent; color: #2e4b59; border: 1px solid black;">
                     <img src="{{ asset('/assets/images/events/user.png') }}" height="20" width="20"> &nbsp;
                     View Invite list
                 </button>
@@ -76,7 +76,7 @@
              <label> Notify me as players join my event. <span>
         </div>
         <button onclick="goToManageScreen();" class="oceans-gaming-default-button"
-            style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
+            style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
             Go to Event Page
         </button>
         <br><br>

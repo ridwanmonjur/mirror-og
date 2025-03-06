@@ -8,7 +8,7 @@
    )" id="connectionModal"  class="modal custom-scrollbar fade" tabindex="-1" aria-labelledby="connectionModalLabel"
        aria-hidden="true" @vue:mounted="init"
     >
-       <div class="modal-dialog modal-xl" style="top: 5vh; color: black;">
+       <div class="modal-dialog modal-xl" style="top: 5vh; color: #2e4b59;">
            <div class="modal-content ">
 
                <div class="modal-body mb-3">

@@ -39,7 +39,7 @@
         @endif
     </div>
     <button class="mt-5 js-shareUrl oceans-gaming-default-button"
-        style="padding: 10px 50px; background-color: transparent; color: black; border: 1px solid black;">
+        style="padding: 10px 50px; background-color: transparent; color: #2e4b59; border: 1px solid black;">
         <img src="{{ asset('/assets/images/events/copy-icon.png') }}" class="js-shareUrl" height="20" width="20">
         &nbsp;
         Copy event url
@@ -48,7 +48,7 @@
     <!-- <a style="" href="{{ route('event.show', $event->id) }}"> <u> Click to more details for event type: {{ $event->sub_action_private }} id: {{ $event->id }} </u></a> -->
     
     <button onclick="goToManageScreen();" class="oceans-gaming-default-button"
-        style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
+        style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
         Go to event page
     </button>
     <br><br>

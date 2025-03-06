@@ -106,7 +106,7 @@ input[type="submit"],
 }
 
 a {
-    color: black !important;
+   color: #2e4b59 !important;
 }
 
 
@@ -147,14 +147,14 @@ input[type="submit"]:active {
 }
 
 .rounded-box a {
-    color: black;
+    color: #2e4b59;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
 
 .rounded-box a:hover {
-    color: black;
+    color: #2e4b59;
     text-decoration: none;
 }
 
@@ -301,7 +301,7 @@ input[type="submit"]:active {
 }
 
 .dropdown-content a {
-    color: black;
+    color: #2e4b59;
     text-decoration: none;
 }
 

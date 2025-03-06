@@ -45,7 +45,7 @@ extract($dateArray);
                     <p class="hide-if-participant">No teams invited yet</p>
                     @endforelse
                 </div>
-                <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 5px 20px; background-color: white; color: black; border: 1px solid black; margin: auto;">
+                <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 5px 20px; background-color: white; color: #2e4b59; border: 1px solid black; margin: auto;">
                     Go to event page
                 </button>
                 <br>

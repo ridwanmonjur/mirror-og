@@ -71,7 +71,7 @@ input[type="submit"] {
 
 .oceans-gaming-white-button{
     background: transparent !important;
-    color: black !important;
+   color: #2e4b59 !important;
     border: 1px solid black;
     width: 100px !important;
 }
@@ -98,7 +98,7 @@ input[type="submit"] {
 .oceans-gaming-transparent-button {
     background: transparent;
     border: 1px solid black;
-    color: black;
+    color: #2e4b59;
 }
 
 input.largerCheckbox {
@@ -112,7 +112,7 @@ input.largerCheckbox {
 }
 
 .mark {
-    color: black;
+    color: #2e4b59;
 }
 
 .dropbtn {

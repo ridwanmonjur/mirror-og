@@ -16,12 +16,12 @@
                 <p id="notification">{{ $error }}</p>
             </div>
             <br><br><br><br>
-            <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
+            <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
                 Go to event page
             </button>
             @if (isset($id) && isset($edit) && $edit )
                 <br><br>
-                <button onclick="goToEditScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: black; border: 1px solid black;">
+                <button onclick="goToEditScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
                     Edit event
                 </button>
             @endif

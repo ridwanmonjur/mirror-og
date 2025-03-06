@@ -37,8 +37,7 @@
                     <img src="{{ $bladeEventGameImage }}" 
                         onerror="this.onerror=null;this.src='{{ asset('assets/images/404q.png') }}';"
                         alt="menu" width="40" height="40"
-
-                        class="object-fit-cover"
+                        class="object-fit-cover rounded-2"
                     >
                     <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
                         class="{{ 'activate-tooltip px-3 py-2 rounded-pill '. 'EventStatus-' .  $status }}"

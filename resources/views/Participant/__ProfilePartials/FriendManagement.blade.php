@@ -8,7 +8,7 @@
                         <button
                             onclick="formRequestSubmitById('Are you sure you want to delete this request?' ,'deleteFriendRequest')"
                             class="me-2 btn bg-success border-none rounded-pill px-2 py-2"
-                            style="font-size: 1rem; font-weight: lighter; color: black;">
+                            style="font-size: 1rem; font-weight: lighter; color: #2e4b59;">
                             <svg class="mt-1 cursor-pointer mb-1" xmlns="http://www.w3.org/2000/svg" width="18"
                                 height="18" fill="black" class="bi bi-trash3" viewBox="0 0 16 16">
                                 <path
