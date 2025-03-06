@@ -22,7 +22,6 @@
         <h3>
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
-        <br>
         <p>Then, select what kind of event you want to run.</p>
         <div class="box-width">
             <div class="grid-2-columns box-width" >
@@ -71,7 +70,7 @@
          <h3>
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
-        <p class="my-3">Finally, choose a tier for your event.</p>
+        <p >Finally, choose a tier for your event.</p>
         <div class="row  box-width">
             @foreach ($eventTierList as $tierCategory)
                 <section
@@ -136,7 +135,7 @@
         <h3>
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
-        <p class="m-3">Here are the categories you've chosen for your event.</p>
+        <p>Here are the categories you've chosen for your event.</p>
     </div>
     <section class="container-border-2 grid-2 justify-content-center py-0">
         <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!} width=225 height="100%"
@@ -201,8 +200,8 @@
             First, when is your event happening?
         </p>
         <br><br>
-        <div class="event-details-form row mx-auto">
-            <div class="form-group col-12 col-lg-6 mx-auto">
+        <div class="event-details-form row my-0 mx-auto box-width" >
+            <div class="form-group col-12 col-lg-6 mx-0">
                 <label for="mt-3 startDate">Date of Event</label>
                 <div class="my-3">Tell your players when to mark their calendars</div>
                  <div class="mx-auto d-flex justify-content-center  ">
@@ -341,9 +340,9 @@
 
 <div class="text-center d-none create" id="step-8">
     <div class="welcome text-center">
-            <h3>
-                STEP 2: Fill in your <span class="text-primary">event details</span>
-            </h3>
+        <h3>
+            STEP 2: Fill in your <span class="text-primary">event details</span>
+        </h3>
         <p>
             Keywords wil help players find your event!
         </p>
@@ -353,7 +352,7 @@
             <label for="eventTags">Event Tags</label>
             <p class="my-3">Add some relevant keywords to help players find your event more easily</p>
             <div class="box">
-                <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required class="w-100 rounded-pil">
+                <input type="text" id="eventTags" name="eventTags" placeholder="Add tags" required class="w-100 border-dark rounded-pil">
             </div>
         </div>
     </div>
@@ -367,49 +366,47 @@
 
 <div class="text-center create d-none" id="step-9">
     <div class="welcome text-center"
-        style="padding-top: 10px !important; padding-bottom: 0px !important;">
-            <h3>
-                STEP 2: Fill in your <span class="text-primary">event details</span>
-            </h3>
+    >
+        <h3>
+            STEP 2: Fill in your <span class="text-primary">event details</span>
+        </h3>
         <p>
             Finally, some visual aid!
         </p>
-        <br>
-        <div class="event-details-form box-width">
-            <div class="form-group ">
-                <label for="eventBanner">Event Banner</label>
-                <p class="mt-3" style="font-size: 16px;">A distinctive banner will help your event stand out. </p>
-                <p class="description"><i>Minimum resolution: 1400x600 (16:9)</i></p>
-                <div class="banner-upload mx-auto">
-                    <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
-                        name="eventBanner" accept="image/*" required
-                    >
-                    <div class="banner-preview pt-4 position-relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-image z-index-11">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                            <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        <div style="color: black;" class=" z-index-11">Supported files: JPEG, JPG and PNG</div><br>
-                        <label class=" upload-button btn btn-primary text-light d-inline rounded-pill py-2 px-3 z-index-11 " for="eventBanner">Upload Image</label><br>
-                        @if ($event)
-                            <img @class([
-                                'd-none' => is_null($event->eventBanner),
-                                'banner-preview-img z-index-4',
-                            ]) src="{{ bladeImageNull($event->eventBanner) }}"
-                                {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" 
-                            >
-                        @else
-                            <img class="d-none banner-preview-img z-index-4" id="previewImage" alt="Preview" 
-                                height="auto"
-                            >
-                        @endif
-                    </div>
-                  
+    </div>
+    <div class="event-details-form box-width">
+        <div class="form-group ">
+            <label for="eventBanner">Event Banner</label>
+            <p class="mt-3" style="font-size: 16px;">A distinctive banner will help your event stand out. </p>
+            <p class="description"><i>Minimum resolution: 1400x600 (16:9)</i></p>
+            <div class="banner-upload mx-auto">
+                <input onchange="handleFile('eventBanner', 'previewImage');" type="file" id="eventBanner"
+                    name="eventBanner" accept="image/*" required
+                >
+                <div class="banner-preview pt-4 position-relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-image z-index-11">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <div style="color: black;" class=" z-index-11">Supported files: JPEG, JPG and PNG</div><br>
+                    <label class=" upload-button btn btn-primary text-light d-inline rounded-pill py-2 px-3 z-index-11 " for="eventBanner">Upload Image</label><br>
+                    @if ($event)
+                        <img @class([
+                            'd-none' => is_null($event->eventBanner),
+                            'banner-preview-img z-index-4',
+                        ]) src="{{ bladeImageNull($event->eventBanner) }}"
+                            {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" 
+                        >
+                    @else
+                        <img class="d-none banner-preview-img z-index-4" id="previewImage" alt="Preview" 
+                            height="auto"
+                        >
+                    @endif
                 </div>
-              
+                
             </div>
         </div>
         <div class=" d-flex justify-content-between box-width back-next">
@@ -422,12 +419,12 @@
 </div>
 
 <div class="text-center d-none" id="step-launch-1">
-    <div class="welcome mb-2" >
-            <h3>
-                STEP 3: Set your event's <span class="text-primary">visibility</span>
-            </h3>
+    <div class="welcome text-center" >
+        <h3>
+            STEP 3: Set your event's <span class="text-primary">visibility</span>
+        </h3>
     </div>
-    <div class="payment-summary mt-3 ">
+    <div class="payment-summary ">
         @if ($isEventNotNull)
             @if ($status == 'DRAFT')
                 <div>
@@ -588,12 +585,12 @@
 
 
 <div class="text-center d-none" id="step-launch-2">
-    <div class="welcome mb-1">
+    <div class="welcome ">
             <h3>
                 STEP 3: Set your event's <span class="text-primary">visibility</span>
             </h3>
     </div>
-    <div class="payment-summary mt-5" style="text-align: center">
+    <div class="payment-summary " style="height: auto;">
         <br>
         <h5>Launch Event Now?</h5>
         <p>You are about to launch your your event to the world.</p>
@@ -601,23 +598,25 @@
             as it is.</p>
         <p>Are your sure you want to launch your event now?</p>
         <br>
-        <div class=" d-flex justify-content-between box-width back-next">
+       
+    </div>
+     <div class=" d-flex justify-content-between box-width back-next">
             <button onclick="goToNextScreen('step-launch-1', 'timeline-launch'); " type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button"> Cancel </button>
             <button onclick="goToPaymentPage()" type="button" class="oceans-gaming-default-button"> Yes, I'm sure
             </button>
         </div>
-    </div>
-    <br>
 </div>
 
 
 <div class="text-center d-none" id="step-payment">
-    <div class="welcome mb-1" >
+    <div class="welcome" >
             <h3>
                 STEP 4: Complete the <span class="text-primary">payment </span>
             </h3>
-        <div class="payment-summary mt-4">
+            </div>
+            <div>
+        <div class="payment-summary">
             <h5>Payment Summary </h5>
             <div>Event Categories</div>
             <div class="ms-3">Type: <span id="paymentType"> </span></div>
@@ -630,16 +629,14 @@
                 <span>Event Creation Fee Rate</span>
                 <span id="paymentRate"></span>
             </div>
-            <div class="flexbox">
+            <div class="flexbox mb-2">
                 <span>Event Creation Fee total</span>
                 <span id="paymentFee"></span>
             </div>
-            <br>
-            <div class="flexbox">
+            <div class="flexbox mb-2">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal"></h5>
             </div>
-            <br>
             <div class="text-center">
                 @if ($event && $event->payment_transaction_id != null)
                     <button class="choose-payment-method"
@@ -657,7 +654,6 @@
                 </button>
             </div>
         </div>
-        <br>
         <div class=" d-flex justify-content-between box-width back-next">
             <button onclick="goToNextScreen('step-launch-1', 'timeline-launch');" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
