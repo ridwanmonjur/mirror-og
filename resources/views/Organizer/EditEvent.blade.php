@@ -20,7 +20,7 @@
                         @else
                             @include('Organizer.__CreateEditPartials.EditEventTimelineWelcome')
                         @endif
-                        @include('Organizer.__CreateEditPartials.EditEventStepOne')
+                        @include('Organizer.__CreateEditPartials.CreateEventStepOne', ['event' => $event])
                         @include('Organizer.__CreateEditPartials.CreateEventForm', ['event' => $event])
                         @if (session()->has('success'))
                             @include('Organizer.__CreateEditPartials.CreateEventSuccess')
