@@ -20,14 +20,14 @@
     >
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         
-        <section class="hero user-select-none">
+        <section class="hero user-select-none d-none d-lg-block">
             <img 
                 onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                 src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
             >
         </section>
 
-        <div class="text__middle"
+        <div class="text__middle pt-3"
         >
             <p class="head">
             @if (empty(app('request')->input('search')))  
