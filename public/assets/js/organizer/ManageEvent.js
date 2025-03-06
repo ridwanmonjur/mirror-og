@@ -158,7 +158,9 @@ function addTippy() {
         const contentElement = parent.querySelector(".popover-content2");
         const parentElement = parent.querySelector(".popover-button");
         if (contentElement) {
-            window.addPopover(parentElement, contentElement, 'click');
+            window.addPopover(parentElement, contentElement, 'click' , {
+                hideOnClick: true
+            });
         }
     });
 }
