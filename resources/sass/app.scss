@@ -156,6 +156,27 @@ table.responsive td img {
   }
 }
 
+.navbar {
+  width: 100vw;
+}
+
+.navbar .dropdown-item:active {
+  background: white !important;
+ color: #2e4b59 !important;
+}
+
+.navbar .dropdown-item:hover {
+  background: white;
+  color: gray;
+  font-weight: bold;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
 
 @import 'sweetalert2/src/sweetalert2.scss';
 
@@ -172,7 +193,7 @@ table.responsive td img {
 }
 
 .activity-logs .notification-gray {
-  color: black;
+  color: #2e4b59;
 }
 
 .notification-danger {
