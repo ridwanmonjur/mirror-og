@@ -8,7 +8,7 @@
    )" id="connectionModal"  class="modal custom-scrollbar fade" tabindex="-1" aria-labelledby="connectionModalLabel"
        aria-hidden="true" @vue:mounted="init"
     >
-       <div class="modal-dialog modal-xl" style="top: 5vh; color: #2e4b59;">
+       <div class="modal-dialog modal-xl" style=" color: #2e4b59;">
            <div class="modal-content ">
 
                <div class="modal-body mb-3">
@@ -77,6 +77,7 @@
                                        <div class=" border border-secondary mx-1 mb-3 py-3 px-2"
                                            style="border-radius: 20px; padding-top: 10px; padding-bottom: 10px;">
                                            <div class="position-relative">
+
                                                <div class="d-flex align-items-center">
                                                    <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                        <img v-bind:src="'/storage/' + user?.userBanner"
@@ -438,7 +439,7 @@
                        <!-- Pagination -->
                        <template v-if="next_page">
                            <div aria-label="Page navigation" class="mt-3 d-flex justify-content-center">
-                               <button class="btn  btn-link " v-on:click="loadNextPage">Next page</button>
+                               <button class="btn  btn-link " v-on:click="loadNextPage(event)">More</button>
                            </div>
                        </template>
                    </div>

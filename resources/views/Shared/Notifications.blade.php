@@ -115,7 +115,7 @@
                 </template>
                 <template v-else>
                     <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
-                        <button disabled class="btn btn-primary btn-sm text-white ms-4">No more</button>
+                        <button class="btn btn-link  btn-sm color-notif ms-4">No more notifications</button>
                     </div>
                 </template>
             </div>

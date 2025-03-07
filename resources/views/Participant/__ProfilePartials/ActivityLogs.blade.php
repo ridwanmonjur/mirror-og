@@ -29,7 +29,7 @@
 
     <template v-if="hasMore">
         <div class="text-center mt-2">
-            <button v-on:click="loadMore" 
+            <button v-on:click="loadMore(event)" 
                     class="btn btn-link btn-sm text-primary">
                 Load More
             </button>

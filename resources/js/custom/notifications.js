@@ -255,17 +255,16 @@ function PageNotificationComponent () {
 
         async loadNextPage(event) {
             let button = event.currentTarget;
+            if (button.disabled) return;
             button.setAttribute("disabled", true);
             try {
                 await notifications.loadOtherPagePage(tabStore.currentTab);
             } catch (error) {
                 window.toastError("Failed to get data")
             } finally {
-                if (!this.hasMore) {
-                    button.innerHTML = "Fetched all data.";
-                } 
-                
-                button.removeAttribute("disabled");
+                setTimeout(() => {
+                    button.removeAttribute("disabled");
+                }, 2000);     
             }
         },
 

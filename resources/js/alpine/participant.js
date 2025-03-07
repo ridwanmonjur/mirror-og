@@ -158,10 +158,10 @@ function ActivityLogs(userId, duration) {
         duration,
 
         async init() {
-            await this.loadMore();
+            await this.loadData();
         },
 
-        async loadMore() {
+        async loadData () {
             try {
                 const response = await fetch(
                     `/api/activity-logs?userId=${userId}&duration=${this.duration}&page=${this.page}`
@@ -174,6 +174,22 @@ function ActivityLogs(userId, duration) {
             } catch (error) {
                 console.error('Error loading activity logs:', error);
             }
+        },
+
+        async loadMore(event) {
+            let button = event.currentTarget;
+            if (button.disabled) return;
+            button.setAttribute("disabled", true);
+            try {
+                await this.loadData();
+            } catch (error) {
+                console.error('Error loading activity logs:', error);
+            } finally {
+                setTimeout(() => {
+                    button.removeAttribute("disabled");
+                }, 2000);            
+            }
+            
         },
 
         formatDate(date) {

@@ -113,9 +113,20 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
         role,
         loggedUserRole,
         
-        async loadNextPage(){
-            if (this.next_page) {
-                await this.loadPage(this.page + 1);
+        async loadNextPage(event){
+            let button = event.currentTarget;
+            if (button.disabled) return;
+            button.setAttribute("disabled", true);
+            try {
+                if (this.next_page) {
+                    await this.loadPage(this.page + 1);
+                }
+            } catch (error) {
+                window.toastError("Failed to get data")
+            } finally {
+                setTimeout(() => {
+                    button.removeAttribute("disabled");
+                }, 2000);            
             }
         },
 
@@ -353,7 +364,6 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
                 }
                     
             } catch (error) {
-                // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
                 window.toastError(error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.');
             }
@@ -387,7 +397,6 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
                      
             } catch (error) {
 
-                // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
                 window.toastError(error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.');
             }
@@ -440,10 +449,8 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
                 const response = await fetch( url );
                 const data = await response.json();
                 if (tab in data.connections)  {
-                    if (this.page && this.page == 1) {
-                        let newTab = this.page;
-                        newTab++;
-                        this.page = newTab;
+                    if (page != 1) {
+                        this.page = page;
 
                         this.connections = [
                             ...this.connections,
