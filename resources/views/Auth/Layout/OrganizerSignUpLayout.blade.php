@@ -25,7 +25,7 @@
     
     <input type="submit" class="mt-2" value="Register">
 
-    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a href="#">Privacy Policy</a>.</div>
+    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#" role="button">Terms of Use</a>. Read our <a href="#" role="button">Privacy Policy</a>.</div>
 
     <div class="section-bottoms">
         <p class="py-0 my-0">Already have an account? <a href="{{ route('organizer.signin.view') }}">Sign in</a></p>

@@ -385,7 +385,7 @@
                                                            </a>
                                                        </li>
                                                         <li>
-                                                           <a class="dropdown-item ms-0 py-1 " href="#"
+                                                           <a class="dropdown-item ms-0 py-1 " href="javascript:void(0)"
                                                                 v-bind:data-route="'/api/user/' + user.id + '/block'"
                                                                 v-on:click="blockRequest(event)"
                                                                 v-bind:data-status="user.logged_block_status"
@@ -412,7 +412,7 @@
                                                             data-bs-dismiss="modal" aria-haspopup="true"
                                                        >
                                                            <a class="dropdown-item ms-0 text-red report-item py-1 "
-                                                               href="#">
+                                                               href="javascript:void(0)">
                                                                <svg class="text-red me-1 "
                                                                    xmlns="http://www.w3.org/2000/svg" width="13"
                                                                    height="13" viewBox="0 0 24 24" fill="none"

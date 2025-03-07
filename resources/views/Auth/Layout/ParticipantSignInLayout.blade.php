@@ -54,8 +54,8 @@
     </div>
     <input type="submit" value="Sign in">
 
-    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#">Terms of Use</a>. Read our <a
-            href="#">Privacy Policy</a>.</div>
+    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#" role="button">Terms of Use</a>. Read our <a
+            href="#" role="button">Privacy Policy</a>.</div>
     <div class="section-or">
         <div class="straight-line"></div>
         <p>or</p>

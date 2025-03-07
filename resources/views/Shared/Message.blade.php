@@ -104,7 +104,7 @@
                             v-on:click="blockRequest(event)"
                             v-bind:data-status="currentRoomObj?.otherRoomMember?.i_blocked_them"
                             v-bind:data-inputs="currentRoomObj?.otherRoomMember?.id"><a class="dropdown-item py-2"
-                                href="#">
+                                href="#" role="button">
                                 <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">
@@ -118,7 +118,7 @@
                             v-bind:data-user-id="currentRoomObj?.otherRoomMember?.id"
                             v-bind:data-user-name="currentRoomObj?.otherRoomMember?.name"
                             v-bind:data-user-banner="currentRoomObj?.otherRoomMember?.userBanner"><a
-                                class="dropdown-item text-red py-2" href="#">
+                                class="dropdown-item text-red py-2" href="#" role="button">
                                 <svg class=" me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                     viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">

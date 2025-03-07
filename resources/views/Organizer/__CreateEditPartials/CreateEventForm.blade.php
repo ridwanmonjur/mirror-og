@@ -39,7 +39,9 @@
                                 ' container-border-dotted ' => $gameCategory->eventType == "League",
                                 'color-border-success' =>
                                     $event && $gameCategory->id == $event->event_type_id,
-                            ])>
+                            ])
+                                role="button"
+                            >
                                 <h2 class="{{ 'inputEventTypeTitle box-title' }}">
                                     <u>{{ $gameCategory->eventType }}</u>
                                 </h2>
@@ -80,6 +82,7 @@
                     onclick="handleTierSelection(this)"
                 >
                     <a href="#" 
+                        role="button"
                         @class([
                         'event pt-2 selectable-box box-tier ps-5 pe-5 mx-auto',
                         'rounded-box-' . strtolower($tierCategory->eventTier),
