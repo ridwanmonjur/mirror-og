@@ -37,7 +37,7 @@ class EventEndMail extends Mailable implements ShouldQueue
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
             ->subject("Event Ended Mail")
-            ->view('Email.event-endeded')
+            ->view('Email.event-ended')
             ->with([
                 'actionName' => 'View this event!',
                 'actionUrl' => $this->body['link'],
