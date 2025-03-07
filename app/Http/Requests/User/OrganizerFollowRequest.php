@@ -11,17 +11,29 @@ class OrganizerFollowRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public ?User $organizer = null;
-
     public function authorize(): bool
     {
-        $this->organizer = User::where('id', $this->organizer_id)
-            ->where('role', 'ORGANIZER')
-            ->select(['id', 'role', 'name', 'userBanner'])
-            ->firstOrFail();
+        return true;
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->organizer = User::where('id', $this->organizer_id)
+                ->where('role', 'ORGANIZER')
+                ->select(['id', 'role', 'name', 'userBanner'])
+                ->first();
             
-        $user = $this->attributes->get('user');
-        return $user->role === 'PARTICIPANT' 
-            && $this->organizer_id != $user->id;
+            if (!$this->organizer) {
+                $validator->errors()->add('event',  'Organizer not found');
+            }
+                
+            $user = $this->attributes->get('user');
+            if (!( $user->role === 'PARTICIPANT' 
+                && $this->organizer_id != $user->id)) {
+                $validator->errors()->add('event',  'Wrong role!');
+            }
+        });
     }
 
     /**

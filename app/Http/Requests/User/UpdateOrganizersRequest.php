@@ -4,6 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Validation\Validator;
 
 class UpdateOrganizersRequest extends FormRequest
 {
@@ -85,9 +86,9 @@ class UpdateOrganizersRequest extends FormRequest
     }
 
     private function isEmptyOrNotSet($array, $key): bool
-{
-    return !isset($array[$key]) || empty($array[$key]);
-}
+    {
+        return !isset($array[$key]) || empty($array[$key]);
+    }
 
     protected function prepareForValidation()
     {
@@ -150,5 +151,15 @@ class UpdateOrganizersRequest extends FormRequest
 
         }
 
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $error = $validator->errors()->first();
+    
+        throw new ValidationException($validator, response()->json( [
+            'message' => $error,
+            'success'=> false
+        ], 422));
     }
 }

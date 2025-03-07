@@ -7,6 +7,7 @@ use App\Models\TeamMember;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApproveMemberRequest extends FormRequest
@@ -15,46 +16,36 @@ class ApproveMemberRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public string|int $member_id ;
-
     public function authorize(): bool
     {
-        $userId = $this->user_id;
-        if (JoinEvent::hasJoinedByOtherTeamsForSameEvent($this->event_id, $userId)) {
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => 'This user has already joined this event with the roster of another team!',
-                ], Response::HTTP_NOT_FOUND)
-            );
-        };
-
-        $teamMember = TeamMember::where([
-            'user_id' => $userId,
-            'team_id' => $this->team_id
-        ])->first();
-
-        if (!$teamMember) {
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => 'Team member not found',
-                ], Response::HTTP_NOT_FOUND)
-            );
-        }
-
-        if ($teamMember->status!="accepted") {
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => 'Member is not accepted',
-                ], Response::HTTP_FORBIDDEN)
-            );
-        }
-
-        $this->member_id = $teamMember->id;
-
         return true;
-       
+    }
+
+    public function withValidator($validator) 
+    {
+        $validator->after(function ($validator) {
+
+            $userId = $this->user_id;
+            if (JoinEvent::hasJoinedByOtherTeamsForSameEvent($this->event_id, $userId)) {
+                $validator->errors()->add('event',  'This user has already joined this event with the roster of another team!');
+            };
+
+            $teamMember = TeamMember::where([
+                'user_id' => $userId,
+                'team_id' => $this->team_id
+            ])->first();
+
+            if (!$teamMember) {
+                $validator->errors()->add('event',  'Team member not found');
+            }
+
+            if ($teamMember->status != "accepted") {
+                $validator->errors()->add('event',  'Member is not accepted');
+            }
+
+            $this->member_id = $teamMember->id;
+
+        });
     }
 
     /**
@@ -101,12 +92,12 @@ class ApproveMemberRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422)
-        );
+        
+        $error = $validator->errors()->first();
+    
+        throw new \Illuminate\Validation\ValidationException($validator, response()->json( [
+            'message' => $error,
+            'success'=> false
+        ], 422));
     }
 }

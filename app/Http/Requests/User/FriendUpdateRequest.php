@@ -63,19 +63,12 @@ class FriendUpdateRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        if ($this->expectsJson()) {
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => 'Invalid request format',
-                    'errors' => $validator->errors(),
-                ], 422)
-            );
-        }
-
-        $firstError = $validator->errors()->first();
-        session()->flash('errorMessage', $firstError);
         
-        parent::failedValidation($validator);
+        $error = $validator->errors()->first();
+    
+        throw new ValidationException($validator, response()->json( [
+            'message' => $error,
+            'success'=> false
+        ], 422));
     }
 }

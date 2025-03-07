@@ -110,7 +110,7 @@ document.querySelectorAll('.followFormProfile')?.forEach((elementOuter) => {
         })
     } catch (error) {
         followButton.style.setProperty('pointer-events', 'auto');
-        toastError('Error occured.');
+        window.toastError('Error occured.');
     }
 })});
 

@@ -412,7 +412,7 @@ async function onFollowSubmit(event) {
             followButton.style.setProperty('pointer-events', 'auto');
         });
 
-        console.error('Error:', error);
+       window.toastError("Following failed!")
     }
 }
 

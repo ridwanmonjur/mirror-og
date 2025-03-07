@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Team;
 
 use App\Models\RosterMember;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 class VoteToStayRequest extends FormRequest
@@ -13,31 +15,29 @@ class VoteToStayRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
-    {
-        $rosterMember = RosterMember::find($this->roster_id);
 
-        if (!$rosterMember) {
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => 'Roster member not found',
-                ], Response::HTTP_NOT_FOUND)
-            );
-        }
+     public function authorize(): bool
+     {
+         return true;
+     }
+ 
+     public function withValidator($validator)
+     {
+         $validator->after(function ($validator) {
+  
+            $rosterMember = RosterMember::find($this->roster_id);
 
-        $this->rosterMember = $rosterMember;
+            if (!$rosterMember) {
+                $validator->errors()->add('event',  'Roster member not found');
+            }
 
-        if ($rosterMember->user_id !== $this->attributes->get('user')?->id) {
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => 'Unauthorized to vote for this roster member',
-                ], Response::HTTP_FORBIDDEN)
-            );
-        }
+            $this->rosterMember = $rosterMember;
 
-        return true;
+            if ($rosterMember->user_id !== $this->attributes->get('user')?->id) {
+                $validator->errors()->add('event',  'Unauthorized to vote for this roster member');
+            }
+
+         });
     }
 
     /**
@@ -57,5 +57,16 @@ class VoteToStayRequest extends FormRequest
             ]
     
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        
+        $error = $validator->errors()->first();
+    
+        throw new ValidationException($validator, response()->json( [
+            'message' => $error,
+            'success'=> false
+        ], 422));
     }
 }

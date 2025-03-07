@@ -16,6 +16,7 @@ function goToEditScreen() {
     window.location.href = url;
 }
 
+
 async function submitLikesForm() {
     event.preventDefault();
     let likesCount = document.getElementById('likesCount');
@@ -74,7 +75,7 @@ async function submitLikesForm() {
         likesCount.dataset.count = count;
     } catch (error) {
         likesButton.style.setProperty('pointer-events', 'auto');
-        toastError('Error occured.', error);
+        window.toastError('Error occured.');
     }
 }
 
@@ -86,7 +87,6 @@ document.getElementById('followForm')?.addEventListener('submit', async function
     let form = this;
     let formData = new FormData(form);
     followButton.style.setProperty('pointer-events', 'none');
-
     try {
         let jsonObject = {}
         for (let [key, value] of formData.entries()) {
@@ -131,17 +131,11 @@ document.getElementById('followForm')?.addEventListener('submit', async function
         followCount.dataset.count = count;
     } catch (error) {
         followButton.style.setProperty('pointer-events', 'auto');
-        toastError('Error occured.', error);
+        window.toastError('Error occured.');
     }
 });
 
-// addOnLoad(()=> {
-//     window.showLoading();
-// });
 
-// document.addEventListener('alpine:init', () => {
-//     window.Swal.close();
-// }, { once: true });
 
 let previousValues = JSON.parse(document.getElementById('previousValues')?.value ?? '[]');
 const eventId = document.getElementById('eventId')?.value;
@@ -185,7 +179,7 @@ function updateModalShow(event) {
         parentWithDataset.dataset.bracket === null
     ) {
         window.closeLoading();
-        toastError("Dataset match results not updated");
+        window.toastError("Dataset match results not updated");
         return;
     }
 

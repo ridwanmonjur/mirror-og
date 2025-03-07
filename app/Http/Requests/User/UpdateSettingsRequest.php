@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class UpdateSettingsRequest extends FormRequest
 {
@@ -75,11 +76,12 @@ class UpdateSettingsRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 422)
-        );
+        
+        $error = $validator->errors()->first();
+    
+        throw new ValidationException($validator, response()->json( [
+            'message' => $error,
+            'success'=> false
+        ], 422));
     }
 }
