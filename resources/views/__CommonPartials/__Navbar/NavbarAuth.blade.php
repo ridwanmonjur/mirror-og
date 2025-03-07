@@ -39,7 +39,7 @@
             <div class="tabs w-100 d-block row py-1 mx-2 px-0 "  >
                 <button id="SocialBtn" class="tab-button d-inline col-12 col-lg-3 py-1  outer-tab"
                     v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
-                    style="width: auto; color: #808080; "
+                    style="width: auto; "
                     v-on:click="changeNotificationTab('social')"    
                 >Social
                 <span v-if="counter.socialCount > 0" class="me-2">
@@ -51,7 +51,7 @@
                 <button id="TeamsBtn" class="tab-button py-1 col-12 col-lg-3  d-inline  outer-tab"
                     v-on:click="changeNotificationTab('teams')"
                     v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
-                    style="width: auto; color: #808080; "
+                    style="width: auto; "
                 >
                     Teams
                     <span v-if="counter.teamsCount > 0" class="me-2">
@@ -63,7 +63,7 @@
                 <button id="EventBtn" class="tab-button py-1  col-12 col-lg-3 d-inline  outer-tab"
                     v-on:click="changeNotificationTab('event')"   
                     v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
-                    style="width: auto; color: #808080; "
+                    style="width: auto; "
                 >Event
                 <span v-if="counter.eventCount > 0" class="me-2">
                     <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
@@ -73,7 +73,7 @@
                 </button>
             </div>
             <div class="mx-2">
-                <div class="notification-list" style="color: #808080; "
+                <div class="notification-list color-notif" 
 >
                     <template v-if="!notificationList?.[0]"> 
                         <div class="p-3 text-start">
@@ -117,9 +117,15 @@
                     </template> 
                 </div>
                 <div>
+                  
                     <template v-if="hasMore">
                         <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
-                            <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage()">More</button>
+                            <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage(event)">More</button>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
+                            <button disabled class="btn btn-primary btn-sm text-white ms-4">No more</button>
                         </div>
                     </template>
                 </div>
@@ -159,10 +165,8 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
                     @endif
-                        <p class="d-inline-block py-0 my-0 ms-1 text-start text-truncate"
-                            style="width: 22ch;"
+                        <p class="py-0 my-0 text-start "
                         > {{ $user->name }}</p> 
-                        {{-- <small> N__Edit put the profile link </small> --}}
                 </div>
             </a>
         </div>

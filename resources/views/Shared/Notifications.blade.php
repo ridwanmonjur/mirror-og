@@ -26,13 +26,14 @@
         v-scope="PageNotificationComponent()"
         style="width: min(1000px, 95%); "
         @vue:mounted="init"
+        class="color-notif"
 
     >
         <h4 class="ms-4">
             All Notifications
         </h4>
         <div class="tabs d-block row ms-4 px-0 " >
-            <button id="SocialBtn" class="tab-button d-inline  col-12 col-lg-3 py-2   outer-tab"
+            <button id="SocialBtn" class="tab-button d-inline  col-12 col-lg-3 py-2 color-notif  outer-tab"
                 v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
                 v-on:click="changeNotificationTab('social')"   
             >Social
@@ -42,7 +43,7 @@
                 </svg>
             </span>
             </button>
-            <button id="TeamsBtn" class="tab-button py-2 col-12 col-lg-3  d-inline  outer-tab"
+            <button id="TeamsBtn" class="tab-button py-2 col-12 col-lg-3  d-inline  color-notif outer-tab"
                 v-on:click="changeNotificationTab('teams')"  
                 v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
             >
@@ -53,7 +54,7 @@
                     </svg>
                 </span>
             </button>
-            <button id="EventBtn" class="tab-button py-2  col-12 col-lg-3 d-inline  outer-tab"
+            <button id="EventBtn" class="tab-button py-2  col-12 col-lg-3 d-inline color-notif outer-tab"
                 v-on:click="changeNotificationTab('event')" 
                 v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
             >
@@ -108,8 +109,13 @@
             </div>
             <div>
                 <template v-if="hasMore">
-                    <div aria-label="Page navigation" class="mt-1" style="padding-left: 9px;">
-                        <button class="btn btn-primary btn-sm text-white " v-on:click="loadNextPage()">More</button>
+                    <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
+                        <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage(event)">More</button>
+                    </div>
+                </template>
+                <template v-else>
+                    <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
+                        <button disabled class="btn btn-primary btn-sm text-white ms-4">No more</button>
                     </div>
                 </template>
             </div>
