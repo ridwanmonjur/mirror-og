@@ -516,7 +516,7 @@ input:read-only {
     font-weight: 500 !important;
 }
 input, select {
-    color: rgb(61, 55, 55) !important;
+    color: #2E4B59 !important;
 }
 
 
@@ -533,7 +533,7 @@ input, select {
     left: 110%;
     padding: 1px 3px;
     font-size: 12px;
-    color: gray;
+    color: #2E4B59;
     z-index: 100;
     position: relative;
 }
@@ -662,7 +662,7 @@ h2 {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 2em;
     margin-bottom: 2em;
-    color: gray;
+    color: #2E4B59;
     transition: padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 }
 @media (max-width: 600px) {
@@ -1022,7 +1022,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 }
 .tournament-bracket__code {
     padding: 0 0.5em;
-    color: #212121;
+    color: #2E4B59;
     font-weight: 600;
     text-transform: uppercase;
     border: 0;
