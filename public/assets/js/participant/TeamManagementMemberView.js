@@ -313,7 +313,7 @@ async function fetchMembers(event = null) {
         >
             <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}');" >
                 <div class="row align-items-center">
-                    <div class="col-11 col-lg-11 d-flex align-items-center gap-3">
+                    <div class="col-12 col-lg-11 d-flex align-items-center gap-3">
                         <div class="position-relative">
                             
                             <img src="/storage/${member?.user?.userBanner}" 
@@ -325,7 +325,7 @@ async function fetchMembers(event = null) {
                             <h6 class="mb-1 text-truncate py-1">
                                 <span class="ms-2 d-inline-block ${!captainJson || member.id != captainJson?.team_member_id && 'd-none'}">
                                     <img 
-                                        class="z-99 rounded-pill me-2 captain-crown"
+                                        class="z-99 rounded-pill me-1 captain-crown"
                                         height="20" 
                                         width="20" 
                                         src="/assets/images/participants/crown-straight.png"
@@ -338,7 +338,7 @@ async function fetchMembers(event = null) {
                             </div>
                     </div>
         
-                    <div class="col-1 col-lg-1 d-flex align-items-center gap-3">
+                    <div class="col-12 col-lg-1 d-flex align-items-center my-2 gap-3">
                        
                         <a 
                         class="text-decoration-none  btn btn-sm gear-icon-btn text-body-secondary cursor-pointer">

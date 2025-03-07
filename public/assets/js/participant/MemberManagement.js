@@ -695,7 +695,7 @@ async function fetchMembers(event = null) {
                             'Not in team'
                         }
                     </td>
-                    <td class="colorless-col px-2" style="min-width: 1.875rem;">
+                    <td class="colorless-col ps-0 pe-2 py-2 text-start text-lg-center" style="min-width: 1.875rem;">
                         <div class="gear-icon-btn ${user.is_in_team ? 'd-none' : ''}" onclick="inviteMember('${user.id}', '${teamId}')">
                             <img src="/assets/images/add.png" height="24px" width="24px">
                         </div>

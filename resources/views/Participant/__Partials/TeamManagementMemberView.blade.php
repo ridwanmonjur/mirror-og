@@ -51,12 +51,12 @@
                 </span>
             </div>
             <div class="mb-2">
-                <div class="d-flex justify-content-end">
-                    <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" class="rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
+                <div class="d-flex  justify-content-start flex-wrap ">
+                    <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" class="mb-1 rounded-pill px-4 form-control me-3 cursor-pointer" type="text" placeholder="Search for player name/ email">
                     <button type="button" class="btn btn-primary text-light px-2 border-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-search"
+                            stroke-linejoin="round" class="feather mb-1 feather-search"
                         >
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>

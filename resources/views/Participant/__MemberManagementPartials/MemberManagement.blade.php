@@ -53,7 +53,7 @@
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
                                 ])
-                                <div class="col-12 col-lg-2 col-xl-2 my-3 text-start card-text text-lg-end">
+                                <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end card-text text-lg-end">
                                     <span>
                                         @if ($user->id == $selectTeam->creator_id)
                                             <button id="remove-{{ $member->id }}" class="gear-icon-btn me-2"
@@ -72,7 +72,7 @@
                                             </button>
                                         @else
                                             <button style="opacity: 0;">
-                                                <span class="d-inline-block" style="width: 30px; height: 30px;"> </span>
+                                                <span class="d-inline-block" style="width: 30px; height: 10px;"> </span>
                                             </button>
                                         @endif
                                     </span>
@@ -97,7 +97,7 @@
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
                                 ])
-                                <div class="col-12 col-lg-2 col-xl-2 my-3 text-end">
+                                <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end">
                                     
                                     @if ($user->id == $selectTeam->creator_id && $member->actor == 'team')
                                         <button id="add-{{ $member->id }}" class="gear-icon-btn ms-2"
@@ -106,7 +106,7 @@
                                         </button>
                                     @endif
                                     <button style="opacity: 0;">
-                                        <span class="d-inline-block" style="width: 30px; height: 30px;"> </span>
+                                        <span class="d-inline-block" style="width: 30px; height: 10px;"> </span>
                                     </button>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
                                 ])
-                                <div class="col-12 col-lg-2 col-xl-2 my-3 text-end">
+                                <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end">
                                      
                                     @if ($user->id == $selectTeam->creator_id && $member->actor == 'user')
                                         <button id="add-{{ '$member->id' }}" class="gear-icon-btn"
@@ -165,7 +165,7 @@
                                     @endif
 
                                     <button style="opacity: 0;">
-                                        <span class="d-inline-block" style="width: 30px; height: 30px;"> </span>
+                                        <span class="d-inline-block" style="width: 30px; height: 10px;"> </span>
                                     </button>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
                                 ])
-                                <div class="col-12 col-lg-2 col-xl-2 my-3 text-end">
+                                <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end">
                                     <span>
                                         @if ($user->id == $selectTeam->creator_id && $member->actor != 'user')
                                             <button id="add-{{ $member->id }}" class="gear-icon-btn ms-2"
@@ -198,7 +198,7 @@
                                         @endif
                                     </span>
                                     <button style="opacity: 0;">
-                                        <span class="d-inline-block" style="width: 30px; height: 30px;"> </span>
+                                        <span class="d-inline-block" style="width: 30px; height: 10px;"> </span>
                                     </button>
                                 </div>
                             </div>
@@ -254,11 +254,11 @@
                 </span>
             </div>
             <div class="mb-2">
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-start flex-wrap">
                     <input name="search" style="width: min(90vw, 350px); font-size: 1rem;" id="searchInput"
-                        class="rounded-pill px-4 form-control" type="text"
+                        class="rounded-pill px-4 form-control mb-1" type="text"
                         placeholder="Search for player name/ email...">
-                    <button type="button" class="btn btn-primary text-light px-2 ms-2 border-0">
+                    <button type="button" class="btn btn-primary text-light px-2 ms-2  mb-1 border-0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="feather feather-search cursor-pointer">
