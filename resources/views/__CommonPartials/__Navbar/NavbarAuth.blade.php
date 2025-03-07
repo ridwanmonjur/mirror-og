@@ -159,7 +159,7 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
                     @endif
-                        <p class="d-inline-block py-0 my-0 text-start text-truncate"
+                        <p class="d-inline-block py-0 my-0 ms-1 text-start text-truncate"
                             style="width: 22ch;"
                         > {{ $user->name }}</p> 
                         {{-- <small> N__Edit put the profile link </small> --}}

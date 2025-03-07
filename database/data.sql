@@ -38,7 +38,7 @@ INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at
 
 
 INSERT INTO `event_categories` (`id`, `gameTitle`, `gameIcon`, `eventDefinitions`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Dota 2', 'images/event_details/dota2.png', "Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.", NULL, '2023-11-05 14:39:09', '2023-12-19 04:46:06'),
+(1, 'Dota 2', 'images/event_details/dota 2.png', "Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.", NULL, '2023-11-05 14:39:09', '2023-12-19 04:46:06'),
 (2, 'Dota ', 'images/event_details/dota.png', 'dota doing good', NULL, '2023-11-05 21:06:58', '2023-11-05 21:06:58');
 
 
