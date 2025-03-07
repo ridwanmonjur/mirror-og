@@ -20,3 +20,7 @@ team placement in event - roster history (auto-scroll to the relevant event card
 EVENT
 event rescheduled - event details (overview tab)
 event countdown - event details (overview tab)
+
+1. https://driftwood.gg/view/participant/5
+0th position
+2. roster view bug

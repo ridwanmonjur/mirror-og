@@ -319,7 +319,7 @@
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-2" width="35px" height="40px"
+                            class="object-fit-cover me-2 rounded-2" width="30px" height="30px"
                              style="object-position:center;"    
                         >
                         <span class="text-truncate  d-inline-block w-75 pe-2 text-start"> {{ $joinEvent->eventDetails->eventName }}

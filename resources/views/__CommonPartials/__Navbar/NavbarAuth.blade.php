@@ -144,7 +144,7 @@
                 src="{{ bladeImageNull($user->userBanner)}}" width="38" height="38">
         @else 
             <span style="display: inline-block; height: 38px; width: 38px;"
-                class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
+                class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle me-2">
                 {{ strtoupper(substr($user->name, 0, 1)) }}
             </span>
         @endif
@@ -161,7 +161,7 @@
                             src="{{bladeImageNull($user->userBanner)}}" width="45" height="45">
                     @else
                         <span style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
-                            class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle">
+                            class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle me-2">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
                     @endif

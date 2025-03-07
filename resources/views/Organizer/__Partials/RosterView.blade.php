@@ -52,7 +52,7 @@
                         <img 
                             {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-1 " width="35px" height="40px"
+                            class="object-fit-cover me-1 rounded-2 " width="30px" height="30px"
                             style="object-position: center;"    
                         >
                         <span class="text-truncate d-inline-block w-75 text-start pe-2"> {{ $joinEvent->eventName }} </span>

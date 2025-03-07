@@ -272,7 +272,7 @@
                                     <div>
                                         <img {!! trustedBladeHandleImageFailureBanner() !!}
                                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                                            class="object-fit-cover me-1" width="30" height="30"
+                                            class="object-fit-cover rounded-2 me-1" width="30" height="30"
                                         >
                                         <p class=" d-inline my-0 ms-2"> {{ $joinEvent->eventDetails->eventName }} </p>
                                     </div>
