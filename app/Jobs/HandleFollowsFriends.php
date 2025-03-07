@@ -136,10 +136,7 @@ class UpdateFriendStrategy
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
-                            {$user->name}
-                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
-                            {$user->name}
-                        </button>'s profile.
+                            {$user->name}</button> and you are now friends.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
@@ -154,9 +151,7 @@ class UpdateFriendStrategy
                     <span class="notification-gray me-2">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
                             {$otherUser->name}
-                        </button>and you are now friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
-                            {$otherUser->name}
-                        </button>'s profile.
+                        </button> and you are now friends.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
@@ -173,9 +168,7 @@ class UpdateFriendStrategy
                     <span class="notification-gray me-2">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
                             {$user->name}
-                        </button>and you are no longer friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
-                            {$user->name}
-                        </button>'s profile.
+                        </button> and you are no longer friends.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $user->id),
@@ -189,10 +182,7 @@ class UpdateFriendStrategy
                 'html' => <<<HTML
                     <span class="notification-gray me-2">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
-                            {$otherUser->name}
-                        </button>and you are no longer friends. > Click to go to <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
-                            {$otherUser->name}
-                        </button>'s profile.
+                            {$otherUser->name} </button> and you are no longer friends.
                     </span>
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),

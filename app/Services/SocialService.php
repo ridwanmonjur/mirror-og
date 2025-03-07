@@ -196,7 +196,7 @@ class SocialService {
                     onerror="this.src='/assets/images/404.png';"></a>
             <span class="notification-gray">
                 You and 
-                <a class="px-0 border-0 " data-href="/view/participant/{$linkUser->id}" alt="Friend link">  
+                <a class="px-0 border-0 " href="/view/participant/{$linkUser->id}" alt="Friend link">  
                     <span class="notification-blue">{$linkUser->name}</span></a>
                 are friends.
             </span>
