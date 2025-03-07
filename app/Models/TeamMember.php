@@ -63,7 +63,7 @@ class TeamMember extends Model
         $rejectedMembers = collect();
         $leftMembers = collect();
         $acceptedMembersCount = $pendingMembersCount = $rejectedMembersCount = $leftMembersCount = 0;
-        $members = self::where('team_id', $id)->with('user')->get();
+        $members = self::where('team_id', $id)->with('user.participant')->get();
         foreach ($members as $member) {
             $status = $member->status;
             if ($status === 'accepted') {
