@@ -5,11 +5,11 @@ import { createApp } from "petite-vue";
 import Swal from "sweetalert2";
 
 const myOffcanvas = document.getElementById('profileDrawer');
-// myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
-//     resetBg(teamData?.profile ?? null);
-// })
+myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
+    resetBg(teamData?.profile ?? null);
+})
 
-// initOffCanvasListeners();
+initOffCanvasListeners();
 
 let imageUpload = document.getElementById("image-upload");
 

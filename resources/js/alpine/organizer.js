@@ -53,11 +53,11 @@ if (initialUserProfile?.mobile_no)
 
 const myOffcanvas = document.getElementById('profileDrawer');
 
-// myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
-//     resetBg(initialUserProfile?.profile ?? null);
-// })
+myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
+    resetBg(initialUserProfile?.profile ?? null);
+})
 
-// initOffCanvasListeners();
+initOffCanvasListeners();
 
 
 

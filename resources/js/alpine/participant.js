@@ -8,9 +8,9 @@ let participantData = JSON.parse(document.getElementById('initialParticipantData
 const imageUpload = document.getElementById("image-upload");
 
 const myOffcanvas = document.getElementById('profileDrawer');
-// myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
-//     resetBg(userData?.profile ?? null);
-// })
+myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
+    resetBg(userData?.profile ?? null);
+})
 
 initOffCanvasListeners();
 
