@@ -6,6 +6,7 @@ use App\Models\EventDetail;
 use App\Models\EventInvitation;
 use App\Models\JoinEvent;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\UnauthorizedException;
@@ -21,21 +22,29 @@ class OrganizerViewEventRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        return true;
+    }
+
+    public function withValidator($validator) {
         $eventId = $this->route('event');
         $user = $this->user();
         $this->user = $user;
         $userId = $user?->id;
-
-        $this->event = EventDetail::findEventWithRelationsAndThrowError(
-            $userId,
-            $eventId,
-            null,
-            [],
-            ['joinEvents' => function ($q) {
-                $q->where('join_status', 'confirmed');
-            }]
-        );
-        $this->existingJoint = null;
+        try {
+            $this->event = EventDetail::findEventWithRelationsAndThrowError(
+                $userId,
+                $eventId,
+                null,
+                [],
+                ['joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                }]
+            );
+            $this->existingJoint = null;
+        } catch (Exception $e) {
+            $validator->errors()->add('event', "Event not found by ID: {$eventId}");
+            return;
+        }
 
         return true;
     }
@@ -58,13 +67,12 @@ class OrganizerViewEventRequest extends FormRequest
         return $this->user;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
-    public function rules(): array
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        return [
-            // Add any additional validation rules for query parameters if needed
-        ];
+        $error = $validator->errors()->first();
+    
+        throw new \Illuminate\Validation\ValidationException($validator, response()->view('Participant.EventNotFound', [
+            'error' => $error
+        ]));
     }
 }
