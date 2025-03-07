@@ -94,9 +94,11 @@ function ReportFormData ()  {
         init() {
             window.addEventListener('report-selected', async (event) => {
                 let element = document.getElementById('reportUserModal')
-                let modal = new window.bootstrap.Modal(element);
+                let modal = window.bootstrap.Modal.getOrCreateInstance(element);
                 modal.show();
-                this.user = event.detail;
+                let connectionModalEl = document.getElementById('connectionModal')
+                let connectionModal = window.bootstrap.Modal.getOrCreateInstance(connectionModalEl);
+                connectionModal.hide();
                 await this.fetchReports();
             });
         },

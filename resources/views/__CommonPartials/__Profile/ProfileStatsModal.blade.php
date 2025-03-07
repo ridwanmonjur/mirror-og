@@ -77,7 +77,6 @@
                                        <div class=" border border-secondary mx-1 mb-3 py-3 px-2"
                                            style="border-radius: 20px; padding-top: 10px; padding-bottom: 10px;">
                                            <div class="position-relative">
-
                                                <div class="d-flex align-items-center">
                                                    <a v-bind:href="`/view/${user?.role?.toLowerCase()}/${user.id}`">
                                                        <img v-bind:src="'/storage/' + user?.userBanner"
@@ -409,7 +408,7 @@
                                                             v-bind:data-user-id="user.id" 
                                                             v-bind:data-user-name="user.name" 
                                                             v-bind:data-user-banner="user?.userBanner"  
-                                                            data-bs-dismiss="modal" aria-haspopup="true"
+                                                            aria-haspopup="true"
                                                        >
                                                            <a class="dropdown-item ms-0 text-red report-item py-1 "
                                                                href="javascript:void(0)">
