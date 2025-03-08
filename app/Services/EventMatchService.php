@@ -44,7 +44,9 @@ class EventMatchService {
         $teamList = collect();
         $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
             $teamMap[$joinEvent->team->id] = $joinEvent->team;
-            $teamList->push($joinEvent->team);
+            if ($joinEvent->join_status === 'confirmed') {
+                $teamList->push($joinEvent->team);
+            }
         });
 
         $matchTeamIds = collect();
