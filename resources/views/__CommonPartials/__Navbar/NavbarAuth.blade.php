@@ -21,12 +21,12 @@
         
     </a>
 
-    <div class="dropdown-menu border shadow-lg mx-2 py-2 py-0" style="position: absolute; left: -555px; border-radius: 10px; top: 120%; font-size: 14px; width: 600px;"
+    <div class="dropdown-menu border dropdown-menu-end shadow-lg mx-2 py-2 py-0" style="border-radius: 10px; top: 120%; font-size: 14px; width: 600px;"
         aria-labelledby="dropNotification"
             onclick="event.stopPropagation()"
     >
         <div class="d-flex mx-4 mt-2 justify-content-between py-1">
-            <h5 class="py-0 my-0">Notifications</h5>
+            <h5 class="py-0 my-0 color-notif">Notifications</h5>
             <a href="{{ route('user.notif.view') }}" role="button" class="px-2 py-1 btn btn-small bg-secondary text-white fs-7 " 
                 aria-haspopup="true" aria-expanded="true"
             >
@@ -124,8 +124,8 @@
                         </div>
                     </template>
                     <template v-else>
-                        <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
-                        <button class="btn btn-link color-notif btn-sm ms-4">No more notifications</button>
+                        <div aria-label="Page navigation" class="mt-0 text-center mt-2 mb-3" >
+                        <small class="small color-notif ">No more notifications</small>
                         </div>
                     </template>
                 </div>
@@ -150,7 +150,7 @@
         @endif
     </a>
    
-    <div class="dropdown-menu border shadow-lg px-2 py-0 " style=" position: absolute; left: -210px; border-radius: 10px; top: 120%; font-size: 14px; width: 250px;"
+    <div class="dropdown-menu border shadow-lg px-2 py-0 dropdown-menu-end" style=" border-radius: 10px; top: 120%; font-size: 14px; width: 250px;"
         aria-labelledby="dropUser">
         <div class="border-secondary border-1 border-bottom text-center mb-0 px-2">
             <a class="py-0" href="{{ route(strtolower($user->role) . '.profile.view') }}">
