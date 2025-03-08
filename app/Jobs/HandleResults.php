@@ -46,8 +46,11 @@ class ChangePositionStrategy
                 'image' => $image,
                 'team' => $team
             ] = $parameters;
+            Log::info($parameters['position']);
 
             $positionString = $this->ordinalPrefix($parameters['position']);
+            Log::info($positionString);
+            
             $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
@@ -76,14 +79,22 @@ class ChangePositionStrategy
             HTML;
 
             if (isset($foundLogs[0])) {
-                foreach ($foundLogs as $foundLog) {
-                    $foundLog->update([
-                        'log' => $activityLog,
-                    ]);
+                if ($parameters['position'] > 0 ) { 
+                    foreach ($foundLogs as $foundLog) {
+                        $foundLog->update([
+                            'log' => $activityLog,
+                        ]);
+                    }
+                } else {
+                    foreach ($foundLogs as $foundLog) {
+                        $foundLog->delete();
+                    } 
                 }
             } else {
-                $parameters['log'] = $activityLog;
-                ActivityLogs::createActivityLogs($parameters);
+                if ($parameters['position'] > 0 ) { 
+                    $parameters['log'] = $activityLog;
+                    ActivityLogs::createActivityLogs($parameters);
+                }
             }
 
             $memberMailable = new EventResultMail([

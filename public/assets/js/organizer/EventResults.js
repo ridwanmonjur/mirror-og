@@ -86,6 +86,11 @@ function editCreatePosition(event) {
     let formData = new FormData(event.target);
     let joinEventId = formData.get('id');
     let joinEventPosition = formData.get('position');
+    if (!joinEventPosition) {
+        window.toastError("Missing position!");        
+        return;
+    }
+    
     const url = getUrl('event-results-store-route');
     
     fetchData(url,
