@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\EventResultMail;
 use App\Models\ActivityLogs;
+use App\Models\EventDetail;
 use App\Models\NotifcationsUser;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -44,9 +45,12 @@ class ChangePositionStrategy
             [
                 'teamId' => $teamId,
                 'image' => $image,
-                'team' => $team
+                'team' => $team,
+                'eventId' => $eventId
             ] = $parameters;
             Log::info($parameters['position']);
+
+            $event = EventDetail::where(['id' => $eventId])->select(['id', 'eventName'])->firstOrFail();
 
             $positionString = $this->ordinalPrefix($parameters['position']);
             Log::info($positionString);
@@ -58,7 +62,8 @@ class ChangePositionStrategy
                     <span class="notification-other"><span class="notification-{$parameters['position']}">
                         {$positionString}</span></span> position in the team,
                     <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/$teamId" alt="Team Link">
-                        {$parameters['teamName']}</button>. 
+                        {$parameters['teamName']}</button> in the event, <button class="btn-transparent px-0 border-0 notification-entity" data-href="/event/$event->id" alt="Event Link">
+                        {$event->eventName}</button>. 
                 </span>
             HTML;
 
@@ -74,7 +79,9 @@ class ChangePositionStrategy
                     <span class="notification-gray"> You achieved 
                     {$positionString} position in the team,
                     <a class="px-0 border-0" href="/view/team/$teamId" alt="Team Link">
-                        <span class="notification-blue">{$parameters['teamName']}</span></a>. 
+                        <span class="notification-blue">{$parameters['teamName']}</span></a> in the event, 
+                        <a class="px-0 border-0" href="/event/$event->id" alt="Event Link">
+                        <span class="notification-blue">{$event->eventName}</span></a>. 
                 </span>
             HTML;
 

@@ -46,7 +46,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 $action = 'accepted';
 
                 $userLog = <<<HTML
-                    <a class="px-0 border-0 notification-blue" href="/view/team/{selectTeam->id}" alt="Team View">
+                    <a class="px-0 border-0 notification-blue" href="/view/team/{$selectTeam->id}" alt="Team View">
                         <img src="/storage/{selectTeam->teamBanner}" 
                             width="30" height="30"    
                             onerror="this.src='/assets/images/404q.png';"

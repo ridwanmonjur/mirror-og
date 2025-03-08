@@ -125,7 +125,7 @@
                     </template>
                     <template v-else>
                         <div aria-label="Page navigation" class="mt-0 text-center mt-2 mb-3" >
-                        <small class="small color-notif ">No more notifications</small>
+                        <small class="small color-notif  ">No more notifications</small>
                         </div>
                     </template>
                 </div>

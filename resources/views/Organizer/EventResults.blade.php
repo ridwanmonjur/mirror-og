@@ -179,7 +179,6 @@
                                                                     <span class="ms-3 mb-1" style="font-size: 1.5rem;"> {{ $joinEventAndTeam->country_flag }} </span>
                                                                 </h6>
                                                                 <div class="text-body-secondary py-1 text-truncate">
-                                                                    <span class="me-3">Event Joining Status: {{ $joinEventAndTeam->join_status }}</span>
                                                                     <span>Created: {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}</span>
                                                                 </div>
                                                             </div>
@@ -190,7 +189,7 @@
                                                             <!-- Position -->
                                                             @if ($joinEventAndTeam->position)
                                                                 <div class="d-flex align-items-center text-body-secondary small">
-                                                                    <span class="me-2">{!! getMedalSvg($event->position) !!} </span>
+                                                                    <span class="me-2">{!! getMedalSvg($joinEventAndTeam->position) !!} </span>
                                                                     <span class="me-2">{{ bladeOrdinalPrefix($joinEventAndTeam->position) }}</span>
                                                                 </div>
                                                             @else
