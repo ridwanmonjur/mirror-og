@@ -45,7 +45,7 @@
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-6 col-xl-6 d-flex justify-content-start d my-1 px-0">
+                <div class="col-6 col-xl-5 d-flex justify-content-start d my-1 px-0">
                     <a class="d-flex w-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
 
@@ -55,18 +55,18 @@
                             class="object-fit-cover me-1 rounded-2 " width="30px" height="30px"
                             style="object-position: center;"    
                         >
-                        <span class="text-truncate d-inline-block w-75 text-start pe-2"> {{ $joinEvent->eventName }} </span>
+                        <span class="text-wrap d-inline-block  text-start pe-2"> {{ $joinEvent->eventName }} </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
+                    class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
                         class="me-2 object-fit-cover rounded-circle rounded-circle2" >
-                    <div class="text-start d-inline-flex flex-column justify-content-center w-75">
-                        <small class="d-inline-block my-0 text-truncate w-75">{{ $joinEvent->user->name }}</small>
+                    <div class="text-start d-inline-flex flex-column justify-content-center ">
+                        <small class="d-inline-block my-0 text-wrap ">{{ $joinEvent->user->name }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">
@@ -90,21 +90,21 @@
                     @guest
                         <button type="button"
                             onclick="reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->user_id]) }}')"
-                            class="mx-auto  {{ 'followButton' . $joinEvent->user_id }}"
-                            style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                            class="  roster-button  {{ 'followButton' . $joinEvent->user_id }}"
+                        >
                             Follow
                         </button>
                     @endguest
                     @auth
                         @if ($user->role == 'PARTICIPANT')
-                            <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}" class="mx-auto "
-                                style="background-color: {{ $userProfile?->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $userProfile?->isFollowing ? 'black' : 'white' }};  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                            <button type="submit" class="{{ 'followButton' . $joinEvent->user_id }}   roster-button  "
+                                style="background-color: {{ $userProfile?->isFollowing ? '#8CCD39' : '#43A4D7' }}; color: {{ $userProfile?->isFollowing ? 'black' : 'white' }};  ">
                                 {{ $userProfile?->isFollowing ? 'Following' : 'Follow' }}
                             </button>
                         @else
                             <button type="button" onclick="toastWarningAboutRole(this, 'Participants can follow only!');"
-                                class="mx-auto {{ 'followButton' . $joinEvent->user_id }}"
-                                style="background-color: #43A4D7; color: white;  padding: 5px 10px; font-size: 0.875rem; border-radius: 10px; border: none;">
+                                class="  {{ 'followButton' . $joinEvent->user_id }} roster-button  "
+                            >
                                 Follow
                             </button>
                         @endif
