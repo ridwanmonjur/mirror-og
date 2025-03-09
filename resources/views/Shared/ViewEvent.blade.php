@@ -355,6 +355,13 @@
                     <h5 class="mb-3"><u>Teams</u></h5>
                     <div class="pb-5" id="current-teams" >
                         @if (isset($teamList[0]))
+                            @php
+                                $statusJoinMap = [
+                                    'pending' => ['text' => 'SIGNUP', 'theme' => 'primary'],
+                                    'canceled' => ['text' => 'CANCELED', 'theme' => 'danger'],
+                                    'confirmed' => ['text' => 'COMPLETED', 'theme' => 'success']
+                                ];
+                            @endphp
                              <div class="row row-cols-1 row-cols-xl-2  g-4  pt-0 mt-1">
                                 @foreach($teamList as $team)
                                     <div class="col">
@@ -374,14 +381,13 @@
                                                             alt="{{ $team->teamName }}"
                                                         >
                                                         <div>
-                                                            <p class="card-title py-0 my-0 text-truncate-card d-inline-block  text-truncate my-0 py-0 mb-0" style="width: 30ch;"><u>{{ $team->teamName }}</u></p>
-                                                            <div class="text-muted">
+                                                            <p class="card-title py-0 my-0  d-inline-block  text-wrap my-0 py-0 mb-0" style="width: 30ch;"><u class="me-2" >{{ $team->teamName }}</u><span style="font-size: 1.5rem;">{{ $team->country_flag }}</span></p>
+                                                            <div class="text-muted text-wrap align-middle">
                                                                 <span class="me-2">{{$team->createdAtHumaReadable()}}</span>
-                                                                @if ($team->country_flag)
-                                                                    <span class="me-2" style="font-size: 1.5rem;">{{ $team->country_flag }}</span>
-                                                                @else 
-                                                                    <span style="font-size: 1.5rem;"></span>
-                                                                @endif
+                                                         
+                                                                <span class="me-2 badge bg-{{$statusJoinMap[$team->join_status]['theme']}}">{{ $statusJoinMap[$team->join_status]['text'] }}</span>
+
+                                                               
                                                             </div>
                                                         </div>
                                                     </div>

@@ -105,7 +105,7 @@ class Team extends Model
     }
 
     public function createdAtHumaReadable() {
-        return Carbon::parse($this->created_at)->format('j F, Y');
+        return Carbon::parse($this->created_at)->diffForHumans();
     }
 
     public static function getTeamAndMembersByTeamId(int| string $teamId): ?self
