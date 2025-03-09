@@ -6,12 +6,13 @@
     >
     <a href="#" role="button" class="btn d-flex justify-content-start align-items-center m-0 p-0" id="dropNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true"
+        onclick="event.stopPropagation();"
+        v-on:click="changeNotificationTab('social')"    
     >
         
-        <img width="45px" height="38px" src="{{ asset('/assets/images/notif.webp') }}" alt=""
+        <img width="38px" height="38px" src="{{ asset('/assets/images/notif.webp') }}" alt=""
             class="me-0"    
             onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
-
         >
         <span v-cloak>
             <svg width="6" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 16"  >
@@ -21,9 +22,9 @@
         
     </a>
 
-    <div class="dropdown-menu border dropdown-menu-end shadow-lg mx-2 py-2 py-0" style="border-radius: 10px; top: 120%; font-size: 14px; width: 600px;"
+    <div class="dropdown-menu border dropdown-menu-end shadow-lg mx-2 py-2 py-0" style="border-radius: 10px; right: -12px; top: 120%; font-size: 14px; width: 600px;"
         aria-labelledby="dropNotification"
-            onclick="event.stopPropagation()"
+        onclick="event.stopPropagation()"
     >
         <div class="d-flex mx-4 mt-2 justify-content-between py-1">
             <h5 class="py-0 my-0 color-notif">Notifications</h5>
@@ -80,7 +81,7 @@
                             Empty <span v-text="currentTab"> </span> notifications.
                         </div> 
                     </template>
-                    <template v-for="notification in notificationList" :key="notification.id">
+                    <template v-for="notification in notificationList" v-bind:key="notification.id">
                         <div 
                             class="notification-item cursor-pointer d-flex align-items-center p-3 border-0 "
                             v-on:click="markNotificationRead(event, notification.id, notification.link, notification.is_read)"
@@ -134,12 +135,12 @@
 
     </div>
 </div>
-<div class="dropdown" data-reference="parent" data-bs-auto-close="outside" >
+<div class="dropdown me-2" data-reference="parent" data-bs-auto-close="outside" >
     <a href="#" role="button" class="btn m-0 p-0" id="dropUser" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         @if($user->userBanner)
             <img
-                class="object-fit-cover rounded-circle me-2 border border-primary" 
+                class="object-fit-cover rounded-circle border border-primary" 
                 onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                 src="{{ bladeImageNull($user->userBanner)}}" width="38" height="38">
         @else 
