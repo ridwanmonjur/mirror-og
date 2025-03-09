@@ -83,7 +83,7 @@
                         <div>
                             <br>
                             <div class="d-flex justify-content-between flex-wrap align-items-start pb-3">
-                                <h5 class="text-truncated w-75">
+                                <h5 class="text-wrap w-75">
                                     {{ $event->eventName ?? 'No name yet' }}
                                 </h5>
                                 <div>
@@ -374,8 +374,7 @@
                                                         <img 
                                                             src="{{ '/storage' . '/'. $team->teamBanner }}"
                                                             {!! trustedBladeHandleImageFailure() !!}
-                                                            class="border border-secondary  rounded-circle me-3"
-                                                            style="object-fit: cover;"
+                                                            class="border object-fit-cover my-2 border-secondary  rounded-circle me-3"
                                                             width="50"
                                                             height="50"
                                                             alt="{{ $team->teamName }}"
@@ -500,10 +499,10 @@
                                                                 style="width: 48px; height: 48px;" 
                                                                 alt="Team banner">
                                                         </div>
-                                                        <div class="d-inline-flex text-truncate flex-column justify-content-center">
-                                                            <h6 class="mb-1 text-truncate-card text-truncate py-0">{{ $joinEventAndTeam->teamName }} <span class="ms-2" style="font-size: 1.5rem;">{{$joinEventAndTeam->country_flag}}</span></h6>
+                                                        <div class="d-inline-flex text-wrap flex-column justify-content-center">
+                                                            <h6 class="mb-1 text-wrap py-0">{{ $joinEventAndTeam->teamName }} <span class="ms-2" style="font-size: 1.5rem;">{{$joinEventAndTeam->country_flag}}</span></h6>
                                                             
-                                                            <div class="text-body-secondary text-muted text-truncate">
+                                                            <div class="text-body-secondary text-muted text-wrap">
                                                                 <span>
                                                                     {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}
                                                                 </span>
@@ -544,7 +543,7 @@
                                             <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
-                                        <p class="d-inline text-body-secondary text-center  mb-0">No teams joined yet.</p>
+                                        <p class="d-inline text-body-secondary text-center  mb-0">No results yet.</p>
                                     </div>
                                 </div>
                             @endif

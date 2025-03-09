@@ -446,9 +446,6 @@ input[type="submit"]:active {
 
 }
 
-.text-truncate-card {
-    max-width: 30ch;
-}
 
 .svg-fix {
     position: relative;
@@ -1185,9 +1182,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 }
 
 @media (max-width: 640px) {
-    .text-truncate-card {
-        max-width: 20ch;
-    }
+  
 
     .upload-area {
         padding: 10px;

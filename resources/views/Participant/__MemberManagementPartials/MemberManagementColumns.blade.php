@@ -8,7 +8,7 @@
 <div class="col-12 col-lg-9  py-2">
     <div >
         <div class="py-0 my-0">
-            <h6 style="width: 25ch;" class="text-truncate my-0 mb-0 pt-2 pb-0 d-inline-block"
+            <h6 style="width: 25ch;" class="text-wrap my-0 mb-0 pt-2 pb-0 d-inline-block"
             >
              @if ($captain && $member->id == $captain->team_member_id)
                 <img onclick="deleteCaptain({{ $member->id }}, {{ $selectTeam->id }})"

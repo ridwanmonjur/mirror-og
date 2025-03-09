@@ -175,10 +175,10 @@
                                                                     alt="Team banner">
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center my-2">
-                                                                <h6 class="mb-1 text-truncate py-0">{{ $joinEventAndTeam->teamName }}
+                                                                <h6 class="mb-1 text-wrap py-0">{{ $joinEventAndTeam->teamName }}
                                                                     <span class="ms-3 mb-1" style="font-size: 1.5rem;"> {{ $joinEventAndTeam->country_flag }} </span>
                                                                 </h6>
-                                                                <div class="text-body-secondary py-1 text-truncate">
+                                                                <div class="text-body-secondary py-1 text-wrap">
                                                                     <span>Created: {{ is_null($joinEventAndTeam->created_at) ? '' : Carbon::parse($joinEventAndTeam->created_at)->diffForHumans() }}</span>
                                                                 </div>
                                                             </div>
@@ -425,7 +425,7 @@
                                                                     value="{{ $award->id }}"
                                                                 ><br>
                                                                 
-                                                                <span class="mt-2 text-truncate  d-inline-block text-start" style="height: 40px;"> {{ $award->title }} </span>
+                                                                <span class="mt-2 text-wrap  d-inline-block text-start" style="height: 40px;"> {{ $award->title }} </span>
                                                                 <label class="form-check-label"
                                                                     for="awardId">
                                                                     <img src="{{ '/storage' . '/' . $award->image }}"
