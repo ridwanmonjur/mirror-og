@@ -60,7 +60,7 @@
                 </div>
                 <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
-                    class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
+                    class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 ms-1 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
