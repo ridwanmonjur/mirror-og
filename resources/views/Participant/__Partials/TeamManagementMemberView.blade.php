@@ -5,12 +5,19 @@
 
 <div id="CurrentMembers">
     <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
-        {{ $counTeamMembers }} present team member{{bladePluralPrefix($counTeamMembers)}}. &nbsp;&nbsp;
+        {{ $counTeamMembers }} present team member{{bladePluralPrefix($counTeamMembers)}}. 
         @if (isset($user) && $selectTeam->creator_id == $user->id)
-            <button class="oceans-gaming-default-button oceans-gaming-default-button-link" 
-                onclick="window.location.href='{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}'">
-                Manage Members
-            </button>
+            
+                <a 
+                    href="{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}"
+                    clss="ms-2  small py-1 mx-0"
+                > 
+                <button role="btn" class="btn text-primary text-primary  cursor-pointer  px-2">
+                    Manage Members
+                </button>
+            </span>
+
+                </a>
         @endif            
     </p>
     <form id="newMembersForm">
@@ -40,7 +47,7 @@
                         document.getElementById('filter-search-results').classList.remove('d-none');
                     ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                        fill="none" stroke="#2e4b59" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
                         <path d="M15 7h6v6" />
