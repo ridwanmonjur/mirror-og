@@ -86,14 +86,14 @@
                                                    </a>
                                                    <div class="text-start">
                                                         <template v-if="user.role == 'PARTICIPANT' && user.nickname">
-                                                            <u><h5 style="width: 25ch;" class="card-title mb-1  text-wrap" v-text="user.nickname">
+                                                            <u><h5  class="card-title mb-1  text-wrap" v-text="user.nickname">
                                                             </h5></u>
-                                                            <p style="width: 25ch;" class="card-text mb-0 " style="color: gray;"
+                                                            <p  class="card-text mb-0 " style="color: gray;"
                                                                 v-text="user.name">
                                                             </p>
                                                         </template>
                                                         <template v-else>
-                                                            <h5 style="width: 25ch;" class="card-title  mb-3 mt-2 text-wrap" v-text="user.name">
+                                                            <h5  class="card-title  mb-3 mt-2 text-wrap" v-text="user.name">
                                                             </h5>
                                                         </template>
                                                         <div class="mt-2"> 

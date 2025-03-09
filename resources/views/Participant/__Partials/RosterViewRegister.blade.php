@@ -314,7 +314,7 @@
         </a>
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
-                <div class="col-6 col-xl-6  my-1 px-0">
+                <div class="col-6 col-xl-5  my-1 px-0">
                     <a class="d-flex w-100 h-100 justify-content-start align-items-center"
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img {!! trustedBladeHandleImageFailureBanner() !!}
@@ -328,7 +328,7 @@
                 </div>
                <div onclick="goToUrl(event, this)"
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
-                    class="col-6 col-xl-4 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
+                    class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 

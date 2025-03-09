@@ -216,7 +216,7 @@
                                                             v-bind:src="'/storage/' + chat?.userBanner">
                                                     </div>
                                                     <div class="col-9 col-xl-10 col-xl-">
-                                                        <span class="text-wrap d-inline-block align-middle me-2 " style="width: 30ch;" v-text="chat?.name"></span>
+                                                        <span class="text-wrap d-inline-block align-middle me-2 "  v-text="chat?.name"></span>
                                                         <small class="text-muted d-inline-block align-middle" v-text="chat?.role.toLowerCase()"></small>
                                                     </div>
                                                     <div class="col-1 text-end gear-icon-btn">
