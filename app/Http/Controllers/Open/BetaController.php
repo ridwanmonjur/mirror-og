@@ -139,7 +139,7 @@ class BetaController extends Controller
 
     public function viewOnboardBeta (Request $request) {
         $users = DB::table('interested_user')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->simplePaginate(50); 
 
         return view('Organizer.SendBetaUser', compact('users'));

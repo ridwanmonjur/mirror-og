@@ -99,7 +99,7 @@ const chatStore = reactive({
      async getMessages(id) {
         let q = query(
             collection(db, `room/${id}/message`),
-            orderBy("createdAt", "asc")
+            orderBy("id", "desc")
         );
 
         let isInitialDataFetched = false;

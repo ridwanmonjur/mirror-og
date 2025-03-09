@@ -248,7 +248,6 @@ class OrganizerEventResultsController extends Controller
     }
 
     public function viewMatches(Request $request, $id) {
-        $user = $request->attributes->get('user');
         $eventType = $request->query('eventType');
         $event = EventDetail::with(['type'])->findOrFail($id);
 

@@ -81,7 +81,7 @@ class ActivityLogs extends Model
             }
     
             $activityLogs = $activityLogsQuery
-                ->orderBy('created_at', 'desc')
+                ->orderBy('id', 'desc')
                 ->simplePaginate($perPage, ['*'], 'page', $page);
                 
         return $activityLogs;

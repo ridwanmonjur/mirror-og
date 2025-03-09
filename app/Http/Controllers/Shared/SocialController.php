@@ -240,7 +240,7 @@ class SocialController extends Controller
     
         $reports = Report::where('reported_user_id', $user->id)
             ->with('reporter:id,name')  // Optionally include reporter details
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
     
         return response()->json([

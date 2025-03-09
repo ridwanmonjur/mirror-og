@@ -38,7 +38,7 @@ class UserController extends Controller
             ->when($type, function ($query, $type) {
                 return $query->where('type', $type);
             })
-            ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'desc')
             ->simplePaginate($perPage, ['*'], 'notification_page', $pageNumber);
         return response()->json([
             'data' => [$type => $page->items()],
