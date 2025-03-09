@@ -124,7 +124,7 @@
                                 </div>
                                 @php
                                     $colors = [
-                                        ['#000000', '#545454', '#737373'], // Black to Gray
+                                        ['#2e4b59', '#545454', '#737373'], // Black to Gray
                                         ['#800080', '#4682b4', '#add8e6'], // Purple to Light Blue
                                         ['#800080', '#ff00ff', '#dda0dd'], // Purple to Plum
                                         ['#4682b4', '#b0c4de', '#e0ffff'], // Steel Blue to Light Cyan

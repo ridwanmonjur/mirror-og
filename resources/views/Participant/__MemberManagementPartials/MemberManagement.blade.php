@@ -243,7 +243,7 @@
                         document.getElementById('filter-search-results').classList.remove('d-none');
                     ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                        fill="none" stroke="#2e4b59" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path d="M20.2 7.8l-7.7 7.7-4-4-5.7 5.7" />
                         <path d="M15 7h6v6" />

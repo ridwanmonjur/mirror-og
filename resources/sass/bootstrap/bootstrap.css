@@ -6612,7 +6612,7 @@ progress {
   --bs-table-active-color: #000;
   --bs-table-hover-bg: #e5e6e7;
   --bs-table-hover-color: #000;
-  color: #000;
+  color: #2e4b59;
   border-color: #dfe0e1;
 }
 
@@ -8170,7 +8170,7 @@ textarea.form-control-lg {
 }
 
 .btn-primary {
-  color: #000;
+  color: #2e4b59;
   background-color: #43A4D7;
   border-color: #43A4D7;
 }
@@ -8200,7 +8200,7 @@ textarea.form-control-lg {
 }
 
 .btn-secondary {
-  color: #000;
+  color: #2e4b59;
   background-color: #A6A6A6;
   border-color: #A6A6A6;
 }
@@ -8230,7 +8230,7 @@ textarea.form-control-lg {
 }
 
 .btn-success {
-  color: #000;
+  color: #2e4b59;
   background-color: #8CCD39;
   border-color: #8CCD39;
 }
@@ -8260,7 +8260,7 @@ textarea.form-control-lg {
 }
 
 .btn-info {
-  color: #000;
+  color: #2e4b59;
   background-color: #0dcaf0;
   border-color: #0dcaf0;
 }
@@ -8290,7 +8290,7 @@ textarea.form-control-lg {
 }
 
 .btn-warning {
-  color: #000;
+  color: #2e4b59;
   background-color: #ffc107;
   border-color: #ffc107;
 }
@@ -8320,7 +8320,7 @@ textarea.form-control-lg {
 }
 
 .btn-danger {
-  color: #000;
+  color: #2e4b59;
   background-color: #EB8D96;
   border-color: #EB8D96;
 }
@@ -8350,7 +8350,7 @@ textarea.form-control-lg {
 }
 
 .btn-light {
-  color: #000;
+  color: #2e4b59;
   background-color: #f8f9fa;
   border-color: #f8f9fa;
 }
@@ -11148,7 +11148,7 @@ textarea.form-control-lg {
   background-color: #000;
 }
 .carousel-dark .carousel-caption {
-  color: #000;
+  color: #2e4b59;
 }
 
 @keyframes spinner-border {
