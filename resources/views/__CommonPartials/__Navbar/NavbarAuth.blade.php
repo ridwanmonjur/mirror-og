@@ -38,7 +38,7 @@
         <div     
         >
             <div class="tabs w-100 d-block row py-1 mx-2 px-0 "  >
-                <button id="SocialBtn" class="tab-button d-inline col-12 col-lg-3 py-1 color-notif  outer-tab"
+                <button id="SocialBtn" class="tab-button  py-1 color-notif  outer-tab"
                     v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
                     style="width: auto; "
                     v-on:click="changeNotificationTab('social')"    
@@ -49,7 +49,7 @@
                     </svg>
                 </span>
                 </button>
-                <button id="TeamsBtn" class="tab-button py-1 col-12 col-lg-3  d-inline color-notif   outer-tab"
+                <button id="TeamsBtn" class="tab-button py-1  color-notif   outer-tab"
                     v-on:click="changeNotificationTab('teams')"
                     v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
                     style="width: auto; "
@@ -61,7 +61,7 @@
                         </svg>
                     </span>
                 </button>
-                <button id="EventBtn" class="tab-button py-1  col-12 col-lg-3 d-inline color-notif  outer-tab"
+                <button id="EventBtn" class="tab-button py-1  color-notif  outer-tab"
                     v-on:click="changeNotificationTab('event')"   
                     v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
                     style="width: auto; "

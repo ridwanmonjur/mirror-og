@@ -322,7 +322,7 @@ async function fetchMembers(event = null) {
                                 style="width: 48px; height: 48px;">
                         </div>
                         <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-1 text-truncate py-1">
+                            <h6 class="mb-1  py-1">
                                 <span class=" d-inline-block ${!captainJson || member.id != captainJson?.team_member_id && 'd-none'}">
                                     <img 
                                         class="z-99 rounded-pill me-1 captain-crown"

@@ -32,8 +32,8 @@
         <h4 class="ms-4">
             All Notifications
         </h4>
-        <div class="tabs d-block row ms-4 px-0 " >
-            <button id="SocialBtn" class="tab-button d-inline  col-12 col-lg-3 py-2 color-notif  outer-tab"
+        <div class="tabs d-block  ms-4 px-0 " >
+            <button id="SocialBtn" class="tab-button d-inline  py-2 color-notif  outer-tab"
                 v-bind:class="{ 'tab-button-active': currentTab == 'social' }" 
                 v-on:click="changeNotificationTab('social')"   
             >Social
@@ -43,7 +43,7 @@
                 </svg>
             </span>
             </button>
-            <button id="TeamsBtn" class="tab-button py-2 col-12 col-lg-3  d-inline  color-notif outer-tab"
+            <button id="TeamsBtn" class="tab-button py-2 d-inline  color-notif outer-tab"
                 v-on:click="changeNotificationTab('teams')"  
                 v-bind:class="{ 'tab-button-active': currentTab == 'teams' }" 
             >
@@ -54,7 +54,7 @@
                     </svg>
                 </span>
             </button>
-            <button id="EventBtn" class="tab-button py-2  col-12 col-lg-3 d-inline color-notif outer-tab"
+            <button id="EventBtn" class="tab-button py-2  d-inline color-notif outer-tab"
                 v-on:click="changeNotificationTab('event')" 
                 v-bind:class="{ 'tab-button-active': currentTab == 'event' }" 
             >

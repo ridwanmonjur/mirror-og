@@ -26,13 +26,13 @@
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
         <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id']) }}">
         <div class="tabs">
-            <button class="tab-button outer-tab py-2 tab-button-active px-3"
+            <button class="tab-button outer-tab py-2 tab-button-active "
                 onclick="showTab(event, 'Overview')">Overview</button>
-            <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
-            <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Active Rosters', 'outer-tab')">Active
+            <button class="tab-button outer-tab  py-2" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
+            <button class="tab-button outer-tab  py-2" onclick="showTab(event, 'Active Rosters', 'outer-tab')"><span class="d-none d-lg-inline">Active</span>
                 Rosters
             </button>
-            <button class="tab-button outer-tab px-3 py-2" onclick="showTab(event, 'Roster History', 'outer-tab')">Roster
+            <button class="tab-button outer-tab  py-2" onclick="showTab(event, 'Roster History', 'outer-tab')"><span class="d-none d-lg-inline">Roster </span>
                 History
             </button>
         </div>
@@ -69,8 +69,9 @@
                  
                 @endif
             </div>
+            <br class="d-none d-lg-block" > 
 
-            <div class="row px-4 mt-5">
+            <div class="row px-4">
                 <div class="showcase col-12 col-lg-6">
                     <div class="text-center"><b>Showcase</b></div>
                     <br>

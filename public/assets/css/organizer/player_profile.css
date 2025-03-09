@@ -136,28 +136,9 @@ a.custom-link:hover {
 }
 
 .tab-button {
-    background-color: transparent;
-    color: #000;
-    padding: 15px 25px;
-    flex-grow: 1;
     max-width: 25vw;
-    min-width: 150px;
-    /* Increased padding */
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin: 0 10px;
-    cursor: pointer;
-
 }
 
-.tab-button:hover, .tab-button-active, .tab-button:active {
-    border-bottom: 2px solid #000;
-}
-
-.tab-button:after {
-    animation: none !important;
-    transition: none !important;
-}
 
 .recent-events {
     display: flex;
@@ -513,20 +494,4 @@ a.custom-link:hover {
     display: none !important;
 }
 
-.tab-button-override {
-    padding-left: 0px;
-     padding-right: 0px; 
-     max-width: 200px !important;
-     width: 200px !important;
-     margin-right: 20px !important;
-}
-
-
-@media screen and (min-width: 992px) {
-    .tab-button:active {
-        box-shadow: 0px 0px 0px 0px black;    /* Thin border-like shadow */
-    }
-
-    
-}
 
