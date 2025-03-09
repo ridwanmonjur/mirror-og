@@ -75,8 +75,8 @@
                                     <div class="d-flex flex-column justify-content-center my-2">
                                         <a href="{{ route('public.event.view', $event->id) }}">
 
-                                            <h6 class="mb-1 text-truncate py-0">{{ $event->eventName }}</h6>
-                                            <div class="text-body-secondary py-1 text-truncate ">
+                                            <h6 class="mb-1 text-wrap py-0">{{ $event->eventName }}</h6>
+                                            <div class="text-body-secondary py-1 text-wrap ">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16"
                                                     fill="currentColor" class="bi me-1 bi-person-circle"
                                                     viewBox="0 0 16 16">
