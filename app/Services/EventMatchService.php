@@ -45,7 +45,7 @@ class EventMatchService {
         if ($willFixBracketsAsOrganizer) {
             $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
                 $teamMap[$joinEvent->team->id] = $joinEvent->team;
-                if ($joinEvent->join_status === 'confirmed') {
+                if ($joinEvent->join_status !== 'confirmed') {
                     $teamList->push($joinEvent->team);
                 }
             });
