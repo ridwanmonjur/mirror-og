@@ -346,11 +346,11 @@ submitBtnElement?.addEventListener('click', function(event) {
                     currentMatch = document.querySelector(`.${match.team1_position}.finals`);
                 }
                 
-                if (match.stage_name == "upperBracket" && match.inner_stage_name == "eliminator1") {
+                if (match.stage_name == "U" && match.inner_stage_name == "e1") {
                     isUpperBracketFirstRound = true;
                 }
 
-                if (match.stage_name == "finals" ) {
+                if (match.stage_name == "fin" ) {
                     isFinalBracket = true;
                 }
 
@@ -554,7 +554,7 @@ submitBtnElement?.addEventListener('click', function(event) {
         });
 });
 
-const uploadContainers = document.querySelectorAll('.upload-container');
+// const uploadContainers = document.querySelectorAll('.upload-container');
 
 
 function redirectToTeamPage(teamId) {

@@ -242,8 +242,8 @@ class BracketDataService
         return [
         32 => [
             'tournament' => [
-                'finals' => [
-                    'finals' => [[
+                'fin' => [
+                    'fin' => [[
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
                         'winner_next_position' => 'FINAL',
@@ -258,8 +258,8 @@ class BracketDataService
                         ...$defaultValues
                     ]]
                 ],
-                'upperBracket' => [
-                    'eliminator1' => [
+                'U' => [
+                    'e1' => [
                         [
                             'team1_position' => 'W1',
                             'team2_position' => 'W2',
@@ -373,7 +373,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 16
                     ],
-                    'eliminator2' => [
+                    'e2' => [
                         [
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
@@ -431,7 +431,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 8
                     ],
-                    'eliminator3' => [
+                    'e3' => [
                         [
                             'team1_position' => 'U17',
                             'team2_position' => 'U18',
@@ -461,7 +461,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 4
                     ],
-                    'eliminator4' => [
+                    'e4' => [
                         [
                             'team1_position' => 'U25',
                             'team2_position' => 'U26',
@@ -477,7 +477,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 2
                     ],
-                    'prefinals' => [
+                    'pre' => [
                         [
                             'team1_position' => 'U29',
                             'team2_position' => 'U30',
@@ -487,8 +487,8 @@ class BracketDataService
                         ], // 1
                     ],
                 ],
-                'lowerBracket' => [
-                    'eliminator1' => [
+                'L' => [
+                    'e1' => [
                         [
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
@@ -546,7 +546,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 8
                     ],
-                    'eliminator2' => [
+                    'e2' => [
                         [
                             'team1_position' => 'L17',
                             'team2_position' => 'L18',
@@ -604,7 +604,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 8
                     ],
-                    'eliminator3' => [
+                    'e3' => [
                         [
                             'team1_position' => 'L33',
                             'team2_position' => 'L34',
@@ -637,7 +637,7 @@ class BracketDataService
 
                         ], // 4
                     ],
-                    'eliminator4' => [
+                    'e4' => [
                         [
                             'team1_position' => 'L41',
                             'team2_position' => 'L42',
@@ -671,7 +671,7 @@ class BracketDataService
 
                         ], // 4
                     ],
-                    'eliminator5' => [
+                    'e5' => [
                         [
                             'team1_position' => 'L49',
                             'team2_position' => 'L50',
@@ -689,7 +689,7 @@ class BracketDataService
 
                         ], // 2
                     ],
-                    'eliminator6' => [
+                    'e6' => [
                         [
                             'team1_position' => 'L53',
                             'team2_position' => 'L54',
@@ -707,7 +707,7 @@ class BracketDataService
 
                         ], // 2
                     ],
-                    'prefinals1' => [
+                    'pre1' => [
                         [
                             'team1_position' => 'L57',
                             'team2_position' => 'L58',
@@ -717,7 +717,7 @@ class BracketDataService
 
                         ], // 1
                     ],
-                    'prefinals2' => [
+                    'pre2' => [
                         [
                             'team1_position' => 'L59',
                             'team2_position' => 'L60',
@@ -732,8 +732,8 @@ class BracketDataService
         ],
         16 => [
             'tournament' => [
-                'finals' => [
-                    'finals' => [[                       
+                'fin' => [
+                    'fin' => [[                       
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
                         'winner_next_position' => 'FINAL',
@@ -749,8 +749,8 @@ class BracketDataService
                         ...$defaultValues
                     ]]
                 ],
-                'upperBracket' => [
-                    'eliminator1' => [
+                'U' => [
+                    'e1' => [
                         [
                             'team1_position' => 'W1',
                             'team2_position' => 'W2',
@@ -816,7 +816,7 @@ class BracketDataService
 
                         ], // 8
                     ],
-                    'eliminator2' => [
+                    'e2' => [
                         [
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
@@ -849,7 +849,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 4
                     ],
-                    'eliminator3' => [
+                    'e3' => [
                         [
                             'team1_position' => 'U9',
                             'team2_position' => 'U10',
@@ -865,7 +865,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 2
                     ],
-                    'prefinals' => [
+                    'pre' => [
                         [
                             'team1_position' => 'U13',
                             'team2_position' => 'U14',
@@ -875,8 +875,8 @@ class BracketDataService
                         ], // 1
                     ],
                 ],
-                'lowerBracket' => [
-                    'eliminator1' => [
+                'L' => [
+                    'e1' => [
                         [
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
@@ -906,7 +906,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 4
                     ],
-                    'eliminator2' => [
+                    'e2' => [
                         [
                             'team1_position' => 'L9',
                             'team2_position' => 'L10',
@@ -936,7 +936,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 4
                     ],
-                    'eliminator3' => [
+                    'e3' => [
                         [
                             'team1_position' => 'L17',
                             'team2_position' => 'L18',
@@ -952,7 +952,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 2
                     ],
-                    'eliminator4' => [
+                    'e4' => [
                         [
                             'team1_position' => 'L21',
                             'team2_position' => 'L22',
@@ -968,7 +968,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 2
                     ],
-                    'prefinals1' => [
+                    'pre1' => [
                         [
                             'team1_position' => 'L25',
                             'team2_position' => 'L26',
@@ -977,7 +977,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 1
                     ],
-                    'prefinals2' => [
+                    'pre2' => [
                         [
                             'team1_position' => 'L27',
                             'team2_position' => 'L28',
@@ -991,8 +991,8 @@ class BracketDataService
         ],
         8 => [
             'tournament' => [
-                'finals' => [
-                    'finals' => [[
+                'fin' => [
+                    'fin' => [[
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
                         'winner_next_position' => 'FINAL',
@@ -1007,8 +1007,8 @@ class BracketDataService
                         ...$defaultValues
                     ]]
                 ],
-                'upperBracket' => [
-                    'eliminator1' => [
+                'U' => [
+                    'e1' => [
                         [
                             'team1_position' => 'W1',
                             'team2_position' => 'W2',
@@ -1038,7 +1038,7 @@ class BracketDataService
                             ...$defaultValues
                         ], // 4
                     ],
-                    'eliminator2' => [
+                    'e2' => [
                         [
                             'team1_position' => 'U1',
                             'team2_position' => 'U2',
@@ -1054,7 +1054,7 @@ class BracketDataService
                             'loser_next_position' => 'L8',
                         ], // 2
                     ],
-                    'prefinals' => [
+                    'pre' => [
                         [
                             'team1_position' => 'U5',
                             'team2_position' => 'U6',
@@ -1064,8 +1064,8 @@ class BracketDataService
                         ], // 1
                     ],
                 ],
-                'lowerBracket' => [
-                    'eliminator1' => [
+                'L' => [
+                    'e1' => [
                         [
                             'team1_position' => 'L1',
                             'team2_position' => 'L2',
@@ -1081,7 +1081,7 @@ class BracketDataService
                             'loser_next_position' => null,
                         ], // 2
                     ],
-                    'eliminator2' => [
+                    'e2' => [
                         [
                             'team1_position' => 'L5',
                             'team2_position' => 'L6',
@@ -1097,7 +1097,7 @@ class BracketDataService
                             'loser_next_position' => null,
                         ], // 2
                     ],
-                    'prefinals1' => [
+                    'pre1' => [
                         [
                             'team1_position' => 'L9',
                             'team2_position' => 'L10',
@@ -1106,7 +1106,7 @@ class BracketDataService
                             ...$defaultValues,
                         ], // 1
                     ],
-                    'prefinals2' => [
+                    'pre2' => [
                         [
                             'team1_position' => 'L11',
                             'team2_position' => 'L12',

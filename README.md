@@ -79,6 +79,23 @@ php artisan make:filament-user
 php artisan optimize:clear
 ```
 
+## Bracket System Abbreviations
+
+The application uses specific abbreviations in the `BracketDataService` class and bracket components:
+
+| Abbreviation | Meaning      | Description                              |
+|--------------|--------------|------------------------------------------|
+| U            | Upper Bracket| Primary bracket path for winners         |
+| L            | Lower Bracket| Secondary bracket path for those who lost once |
+| pre          | Pre-finals   | Matches that occur before the final round|
+| fin          | Finals       | Final championship matches               |
+
+For example, in the code you might see:
+- `U1` - Upper bracket round 1
+- `L2` - Lower bracket round 2
+- `preFin` - Pre-finals match
+- `Fin` - Finals match
+
 ## Development Commands
 
 ### Creating New Components
@@ -136,4 +153,4 @@ php artisan vendor:publish --tag=log-viewer-assets --force
 - Use `dd()` for debugging JSON requests instead of Postman
 - Check storage permissions if file-related operations fail
 - Verify database role settings for admin users
-
+- When working with brackets, ensure proper abbreviation usage in the BracketDataService

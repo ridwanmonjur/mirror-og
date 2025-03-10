@@ -2,17 +2,17 @@
     @include('Shared.__BracketModalPartials.Report')
     @include('Shared.__BracketModalPartials.Update')
     @include('Shared.__BracketModalPartials.Dispute')
-    @if (isset($bracketList['upperBracket']))
+    @if (isset($bracketList['U']))
  
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
         <div class="row mb-2 custom-scrollbar">
             <div class="tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">
-                        @foreach ($bracketList['upperBracket']['eliminator1'] as $order => $bracket)
-                            <x-brackets.bracket-first-item :bracket="$bracket" :stageName="'upperBracket'" :innerStageName="'eliminator1'"
+                        @foreach ($bracketList['U']['e1'] as $order => $bracket)
+                            <x-brackets.bracket-first-item :bracket="$bracket" :stageName="'U'" :innerStageName="'e1'"
                                 :order="$order" 
-                                :wire:key="'upperBracket'. 'eliminator1'. $loop->index" 
+                                :wire:key="'U'. 'e1'. $loop->index" 
                             />
                         @endforeach
                     </div>
@@ -20,21 +20,21 @@
 
                 @php
                     $upperBracketRounds = [
-                        'eliminator2' => 'semifinals',
-                        'eliminator3' => 'semifinals',
-                        'eliminator4' => 'semifinals',
-                        'prefinals' => 'gold',
+                        'e2' => 'semifinals',
+                        'e3' => 'semifinals',
+                        'e4' => 'semifinals',
+                        'pre' => 'gold',
                     ];
                 @endphp
 
                 @foreach ($upperBracketRounds as $stage => $roundClass)
-                    @if (isset($bracketList['upperBracket'][$stage]))
+                    @if (isset($bracketList['U'][$stage]))
                         <div class="tournament-bracket__round mb-2 tournament-bracket__round--{{ $stage }}">
                             <div class="tournament-bracket__list">
-                                @foreach ($bracketList['upperBracket'][$stage] as $order => $bracket)
-                                    <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'upperBracket'" :innerStageName="$stage"
+                                @foreach ($bracketList['U'][$stage] as $order => $bracket)
+                                    <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'U'" :innerStageName="$stage"
                                         :order="$order" 
-                                        :wire:key="'upperBracket'. $stage. $loop->index" 
+                                        :wire:key="'U'. $stage. $loop->index" 
                                     />
                                 @endforeach
                             </div>
@@ -45,8 +45,8 @@
                 <div class="tournament-bracket__round tournament-bracket__round--gold mt-2">
                 </div>
             </div>
-            <x-brackets.bracket-winner-item :bracket="$bracketList['finals']['finals'][0]" :stageName="'finals'" :innerStageName="'finals'" :order="0"
-                :winner="$bracketList['finals']['winner'][0]"
+            <x-brackets.bracket-winner-item :bracket="$bracketList['fin']['fin'][0]" :stageName="'fin'" :innerStageName="'fin'" :order="0"
+                :winner="$bracketList['fin']['winner'][0]"
             />
 
         </div>
@@ -54,23 +54,23 @@
         <div class="tournament-bracket tournament-bracket--rounded custom-scrollbar">
             @php
                 $rounds = [
-                    'eliminator1' => 'tournament-bracket__joined-odd-list',
-                    'eliminator2' => 'tournament-bracket__joined-even-list',
-                    'eliminator3' => 'tournament-bracket__joined-odd-list',
-                    'eliminator4' => 'tournament-bracket__joined-even-list',
-                    'eliminator5' => 'tournament-bracket__joined-odd-list',
-                    'eliminator6' => 'tournament-bracket__joined-even-list',
+                    'e1' => 'tournament-bracket__joined-odd-list',
+                    'e2' => 'tournament-bracket__joined-even-list',
+                    'e3' => 'tournament-bracket__joined-odd-list',
+                    'e4' => 'tournament-bracket__joined-even-list',
+                    'e5' => 'tournament-bracket__joined-odd-list',
+                    'e6' => 'tournament-bracket__joined-even-list',
                 ];
             @endphp
 
             @foreach ($rounds as $stage => $listClass)
-                @if (isset($bracketList['lowerBracket'][$stage]))
+                @if (isset($bracketList['L'][$stage]))
                     <div class="tournament-bracket__round tournament-bracket__round--{{ $stage }}">
                         <div class="tournament-bracket__list {{ $listClass }}">
-                            @foreach ($bracketList['lowerBracket'][$stage] as $order => $bracket)
-                                <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'lowerBracket'" :innerStageName="$stage"
+                            @foreach ($bracketList['L'][$stage] as $order => $bracket)
+                                <x-brackets.bracket-middle-item :bracket="$bracket" :stageName="'L'" :innerStageName="$stage"
                                     :order="$order" 
-                                    :wire:key="'lowerBracket'. $stage. $loop->index" 
+                                    :wire:key="'L'. $stage. $loop->index" 
                                 />
                             @endforeach
                         </div>
@@ -81,9 +81,9 @@
 
             <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                 <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                    @foreach ($bracketList['lowerBracket']['prefinals1'] as $order => $bracket)
-                        <x-brackets.bracket-middle-item :bracket="$bracket" :order="$order" :stageName="'lowerBracket'"
-                            :innerStageName="'prefinals1'"  />
+                    @foreach ($bracketList['L']['pre1'] as $order => $bracket)
+                        <x-brackets.bracket-middle-item :bracket="$bracket" :order="$order" :stageName="'L'"
+                            :innerStageName="'pre1'"  />
                     @endforeach
                 </div>
             </div>
@@ -91,9 +91,9 @@
 
             <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                 <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                    @foreach ($bracketList['lowerBracket']['prefinals2'] as $order => $bracket)
-                        <x-brackets.bracket-middle-item :bracket="$bracket" :order="$order" :stageName="'lowerBracket'"
-                            :innerStageName="'prefinals2'"  />
+                    @foreach ($bracketList['L']['pre2'] as $order => $bracket)
+                        <x-brackets.bracket-middle-item :bracket="$bracket" :order="$order" :stageName="'L'"
+                            :innerStageName="'pre2'"  />
                     @endforeach
                 </div>
             </div>
