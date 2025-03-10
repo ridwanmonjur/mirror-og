@@ -51,9 +51,11 @@ class EventMatchService {
             });
         } else {
             $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
-                $joinEvent->team->join_status = $joinEvent->join_status;
                 $teamMap[$joinEvent->team->id] = $joinEvent->team;
-                $teamList->push($joinEvent->team);
+                if ($joinEvent->join_status === 'canceled') {
+                    $joinEvent->team->join_status = $joinEvent->join_status;
+                    $teamList->push($joinEvent->team);
+                }
             });
         }
        
