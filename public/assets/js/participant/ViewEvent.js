@@ -446,7 +446,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                         img.height = '25';
                         img.dataset.position = position;
                         img.onerror = function() {
-                            this.src='/assets/images/404.png';
+                            this.src='/assets/images/404q.png';
                         };
 
                         img.className = 'popover-button position-absolute w-100 h-100 d-none-when-hover object-fit-cover me-2';
@@ -480,7 +480,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                             roster.forEach(rosterItem => {
                                 rosterHtml += `
                                     <li class="d-inline">
-                                        <img width="25" height="25" onerror="this.src='/assets/images/404.png';"
+                                        <img width="25" height="25" onerror="this.src='/assets/images/404q.png';"
                                             src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
                                             class="mb-2 rounded-circle object-fit-cover me-3">
                                         ${rosterItem.user.name}
