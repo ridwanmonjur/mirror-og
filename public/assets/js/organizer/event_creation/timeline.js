@@ -424,7 +424,7 @@ function goToNextScreen(nextId, nextTimeline) {
         
         if (eventTierTitle) {
             box.classList.remove("rounded-box-thickness", "rounded-box-turtle", "rounded-box-dolphin", "rounded-box-starfish");
-            box.classList.add( 'rounded-box-' + eventTierTitle.toLowerCase());
+            box.classList.add( 'rounded-box-' + eventTierTitle.toLowerCase().trim());
             box.classList.add('rounded-box-thickness');
         }
     }
