@@ -197,7 +197,7 @@ function updateModalShow(event) {
         input.value = dataset[inputName];
     });
 
-    ['team1_position', 'team2_position', 'winner_next_position', 'loser_next_position'].forEach((element)=> {
+    ['team1_position', 'team2_position'].forEach((element)=> {
         let id2 = `${element}_label`;
         let domElement = document.getElementById(id2)
         if (domElement) 
@@ -358,7 +358,6 @@ submitBtnElement?.addEventListener('click', function(event) {
             
 
                 currentDataset.id = match.id;
-                currentDataset.winner_id = match.winner_id;
                 currentDataset.team1_id = match.team1_id;
                 currentDataset.team2_id = match.team2_id;
                 currentDataset.result= match.result;
@@ -374,13 +373,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                     currentDataset.team2_teamBanner = team2.teamBanner;
                 }
 
-                if (currentDataset.winner_id == team1_id) {
-                    currentDataset.winner = team1;
-                }
-
-                if (currentDataset.winner_id == team2_id) {
-                    currentDataset.winner = team2;
-                }
+             
 
                 if (currentMatch.dataset) {
                     currentMatch.dataset.bracket = JSON.stringify(currentDataset);

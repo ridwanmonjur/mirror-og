@@ -27,7 +27,6 @@ class MatchUpsertRequest extends FormRequest
         return [
             'id' => 'nullable',
             'event_details_id' => 'required',
-            'match_type' => 'required|string',
             'stage_name' => 'nullable|string',
             'inner_stage_name' => 'nullable|string',
             'order' => 'nullable|integer',
@@ -35,8 +34,6 @@ class MatchUpsertRequest extends FormRequest
             'team2_id' => 'nullable',
             'team1_position' => 'required|string',
             'team2_position' => 'nullable|string',
-            'winner_next_position' => 'nullable|string',
-            'loser_next_position' => 'nullable|string',
         ];
     }
 

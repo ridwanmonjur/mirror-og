@@ -84,11 +84,11 @@ class EventMatchService {
                 $USER_ENUMS
             )[$tournamentTypeFinal];
             // dd($bracketList);
-            $bracketList = $event->matches->reduce(function ($bracketList, $match) use (
-                    $existingJoint, 
-                    $willFixBracketsAsOrganizer,
-                    $USER_ENUMS,
-                ) {
+            $bracketList = $event?->matches?->reduce(function ($bracketList, $match) use (
+                $existingJoint, 
+                $willFixBracketsAsOrganizer,
+                $USER_ENUMS,
+            ) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
                 $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : null;
                 
@@ -96,17 +96,15 @@ class EventMatchService {
                     if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }
                     elseif ($match->team2_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM2']; }
                 }
-
+            
                 if (!$user_level) { $user_level = $USER_ENUMS['IS_PUBLIC']; }
-
                 $match->user_level = $user_level;
-                return data_set($bracketList, $path, [
+                
+                $existingData = data_get($bracketList, $path, []);
+                
+                $updatedProperties = [
                     'id' => $match->id,
                     'event_details_id' => $match->event_details_id,
-                    'match_type' => $match->match_type,
-                    'stage_name' => $match->stage_name,
-                    'inner_stage_name' => $match->inner_stage_name,
-                    'order' => $match->order,
                     'team1_id' => $match->team1_id,
                     'team2_id' => $match->team2_id,
                     'team1_teamBanner' => $match->team1?->teamBanner,
@@ -117,18 +115,13 @@ class EventMatchService {
                     'team2_roster' => $match->team2?->roster,
                     'team1_position' => $match->team1_position,
                     'team2_position' => $match->team2_position,
-                    'winner_id' => $match->winner_id,
-                    'status' => $match->status,
-                    'result' => $match->result,
-                    'winner_next_position' => $match->winner_next_position,
-                    'loser_next_position' => $match->loser_next_position,
                     'team1_name' => $match->team1->name ?? null,
                     'team2_name' => $match->team2->name ?? null,
-                    'winner_name' => $match->winner->name ?? null,
-                    'user_level'  => $match->user_level,
-                ]);
-
-            
+                ];
+                
+                $mergedData = array_merge($existingData, $updatedProperties);
+                
+                return data_set($bracketList, $path, $mergedData);
             }, $bracketList);
          
         } else {

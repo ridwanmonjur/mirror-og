@@ -37,14 +37,6 @@ class MatchesResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('team2_position')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('winner_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('winner_next_position')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('loser_next_position')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('match_type')
-                    ->required(),
                 Forms\Components\TextInput::make('stage_name')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('inner_stage_name')
@@ -72,14 +64,6 @@ class MatchesResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('team2_position')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('winner_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('winner_next_position')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('loser_next_position')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('match_type'),
                 Tables\Columns\TextColumn::make('stage_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('inner_stage_name')

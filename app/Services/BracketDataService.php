@@ -9,7 +9,6 @@ class BracketDataService
         ): array {
         return [
             'id' => null,
-            'match_type' => 'tournament',
             'team1_id' => null,
             'team1_teamName' => 'No team',
             'team1_teamBanner' => null,
@@ -18,7 +17,6 @@ class BracketDataService
             'team2_teamName' => 'No team',
             'team2_teamBanner' => null,
             'team2_roster' => null,
-            'winner_id' => '',
             'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER']: null
         ];
     }

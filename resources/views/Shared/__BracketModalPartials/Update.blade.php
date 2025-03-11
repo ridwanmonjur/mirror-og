@@ -8,14 +8,11 @@
                     @csrf
                     <input type="hidden" id="id" name="id" >
                     <input type="hidden" id="event_details_id" name="event_details_id"   value="{{$event->id}}">
-                    <input type="hidden" id="match_type" name="match_type"  required>
                     <input type="hidden" id="stage_name" name="stage_name" >
                     <input type="hidden" id="inner_stage_name" name="inner_stage_name" >
                     <input type="hidden" id="order" name="order" >
                     <input type="hidden" id="team1_position" name="team1_position" >
                     <input type="hidden" id="team2_position" name="team2_position" >
-                    <input type="hidden"  id="winner_next_position" name="winner_next_position">
-                    <input type="hidden"  id="loser_next_position" name="loser_next_position">
                     
                     <div class="row mb-3">
                         <!-- Team 1 Selection -->
