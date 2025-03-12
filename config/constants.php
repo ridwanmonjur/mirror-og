@@ -29,8 +29,8 @@ return [
         ],
         'ONGOING' => [
             'buttonBackgroundColor' => '#FFFBFB',
-            'buttonTextColor' => 'black',
-            'borderColor' => 'black',
+            'buttonTextColor' => '#2e4b59',
+            'borderColor' => '#2e4b59',
         ],
         'DRAFT' => [
             'buttonBackgroundColor' => '#8CCD39',

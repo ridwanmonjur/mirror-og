@@ -76,7 +76,7 @@ document.querySelectorAll('.followFormProfile')?.forEach((elementOuter) => {
             if (data.isFollowing) {
                 followButton.innerText = 'Following';
                 followButton.style.backgroundColor = '#8CCD39';
-                followButton.style.color = 'black';
+                followButton.style.color = '#2e4b59';
             } else {
                 followButton.innerText = 'Follow';
                 followButton.style.backgroundColor = '#43A4D7';

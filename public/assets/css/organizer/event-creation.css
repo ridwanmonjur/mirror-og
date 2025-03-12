@@ -320,7 +320,7 @@ input[type="time"] {
     width: 100%;
     padding: 10px;
     border-radius: 20px;
-    border: 1px solid #000000;
+    border: 1px solid #2e4b59;
     background-color: transparent;
     /* Make the background transparent */
     transition: border-color 0.3s;

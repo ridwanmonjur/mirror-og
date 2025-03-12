@@ -112,7 +112,7 @@ document.getElementById('followForm')?.addEventListener('submit', async function
             count++;
             followButton.innerText = 'Following';
             followButton.style.backgroundColor = '#8CCD39';
-            followButton.style.color = 'black';
+            followButton.style.color = '#2e4b59';
         } else {
             count--;
             followButton.innerText = 'Follow';

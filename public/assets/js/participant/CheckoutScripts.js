@@ -331,7 +331,7 @@ class PaymentProcessor {
             colorDanger: '#df1b41',
             fontFamily: 'Ideal Sans, system-ui, sans-serif',
             borderRadius: '0px',
-            colorPrimary: 'black',
+            colorPrimary: '#2e4b59',
             colorBackground: '#ffffff',
             borderRadius: '20px' 
         },

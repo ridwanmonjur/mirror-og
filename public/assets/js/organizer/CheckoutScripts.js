@@ -286,7 +286,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             colorText: '#30313d',
             colorDanger: '#df1b41',
             borderRadius: '0px',
-            colorPrimary: 'black',
+            colorPrimary: '#2e4b59',
             colorBackground: 'transparent',
             borderRadius: '20px',
         },

@@ -215,7 +215,7 @@ form input[type="button"]:hover {
     top: -8px;
     width: 200px;
     height: 1px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #2e4b59;
 }
 
 .straight-line-or {
