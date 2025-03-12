@@ -104,7 +104,7 @@
                             v-on:click="blockRequest(event)"
                             v-bind:data-status="currentRoomObj?.i_blocked"
                             v-bind:data-inputs="currentRoomObj?.otherRoomMember?.id"><a class="dropdown-item py-2"
-                                href="#" role="button">
+                                href="javascript:void(0)" role="button">
                                 <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">
