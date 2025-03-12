@@ -445,10 +445,6 @@ a:hover {
     background: none !important;
 }
 
-.dropdown-item:active {
-    color: white !important;
-}
-
 
 .team-dropdown {
     position: relative;
@@ -681,7 +677,7 @@ button:after {
         top: 0;
         left: 0;
         border-radius: 200px;
-        background-image: radial-gradient(circle, #000 10%, transparent 10.01%);
+        background-image: radial-gradient(circle, #2e4b59 10%, transparent 10.01%);
         background-repeat: no-repeat;
         background-position: 50%;
         transform: scale(10, 10);
@@ -744,10 +740,11 @@ button:after {
     cursor: pointer;
     margin-top: 10px;
     transition: none;
+    color: #2e4b59 !important;
 }
 
 .tab-button-active {
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid #2e4b59;
 }
 
 .tab-button:active {
