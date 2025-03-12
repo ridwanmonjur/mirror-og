@@ -29,7 +29,6 @@ const viewUserProfileInput = document.querySelector("#viewUserProfile");
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
 let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
 let viewUserProfile = JSON.parse(viewUserProfileInput?.value ?? "[]");
-let fetchFirebaseUsersRoute = fetchFirebaseUsersInputRoute?.value;
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -203,24 +202,47 @@ const roomStore = reactive({
         let subscribeToRoomSnapshot = onSnapshot(roomQ, async (rommSnapshot) => {
             
             rommSnapshot.docChanges().forEach((change) => {
+                let data = change.doc.data();
+                data['id'] = change.doc.id;
+                if (data.user1 != currentUserId) {
+                    userIdList.push(data.user1);
+                    data.otherRoomMemberId = data.user1;
+                } else {
+                    userIdList.push(data.user2);
+                    data.otherRoomMemberId = data.user2;
+                }
+
+                console.log({blocked: data['blocked_by']});
+
+                
+                data['i_blocked'] = data['blocked_by'] == currentUserId ? true : false;
+
+                data['they_blocked'] = data['blocked_by'] == data.otherRoomMemberId ? true : false;
+
                 if (change.type === "added") {
-                    let data = change.doc.data();
-                    data['id'] = change.doc.id;
-                    if (data.user1 != currentUserId) {
-                        userIdList.push(data.user1);
-                        data.otherRoomMemberId = data.user1;
-                    } else {
-                        userIdList.push(data.user2);
-                        data.otherRoomMemberId = data.user2;
-                    }
-
-                    
                     rooms.push(data);
-
                     length++;
                 }
-               
+
+                if (change.type === "modified") {
+                    const index = this.oldRooms.findIndex(room => room.id == data.id);
+                    if (index !== -1) {
+                        rooms = [
+                            ...rooms.slice(0, index),
+                            data,
+                            ...rooms.slice(index + 1)
+                        ];
+                        
+                        if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
+                            this.currentRoomObj = data;
+                        }
+                    }
+    
+                    return;
+                }
             });
+
+            
 
             let route = fetchFirebaseUsersInputRoute.value;
 
@@ -364,7 +386,7 @@ function ChatListComponent() {
         
             try {
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));           
-
+                return;
                 if (!('is_blocked' in data)) {
                     return;
                 }
@@ -400,13 +422,13 @@ function ChatListComponent() {
                     window.toastError("New chat still being updated...")
                 }
 
-                if (this.currentRoomObj?.otherRoomMember?.i_blocked_them) {
+                if (this.currentRoomObj?.i_blocked) {
                     window.toastError('You have blocked this user and can\'t send message this room.');
                     chatInput.value = "";
                     return;
                 } 
                 
-                if (this.currentRoomObj?.otherRoomMember?.they_blocked_me) {
+                if (this.currentRoomObj?.they_blocked) {
                     window.toastError('This user has blocked you and you can\'t send message this room.');
                     chatInput.value = "";
                     return;

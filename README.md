@@ -6,6 +6,8 @@
 - Node.js & npm
 - Apache2
 - SQLite3
+- PHP extensions for GRPC and social auth
+- An un-restricted php environment 
 
 ## Admin Credentials
 ```
@@ -16,10 +18,6 @@ Password: 12345678
 ## Installation Steps
 
 1. First, install PHP 8.2 and required extensions:
-```bash
-sudo apt install php8.2-sqlite3
-service apache2 restart
-```
 
 2. Install project dependencies:
 ```bash
