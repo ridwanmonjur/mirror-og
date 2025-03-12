@@ -165,39 +165,7 @@ class SocialController extends Controller
             'is_starred' => $authenticatedUser->hasStarred($user)
         ]);
     }
-
-    public function toggleBlock(Request $request, $id): JsonResponse
-    {
-        $authenticatedUser = $request->attributes->get('user');
-        $user = User::where('id', $id)
-            ->select('id')
-            ->first();
-        
-        if ($authenticatedUser->id == $user->id) {
-
-            return response()->json([
-                'message' => "Can't block yourself",
-                'is_blocked' => "False"
-            ], 404);
-        }
-        
-        if ($authenticatedUser->hasBlocked($user)) {
-            $authenticatedUser->blocks()->detach($user);
-            $message = 'User unblocked successfully';
-            $isBlocked = false;
-        } else {
-            $authenticatedUser->blocks()->attach($user);
-
-            $authenticatedUser->stars()->detach($user);
-            $message = 'User blocked successfully';
-            $isBlocked = true;
-        }
-
-        return response()->json([
-            'message' => $message,
-            'is_blocked' => $isBlocked
-        ]);
-    }
+    
 
     public function report(Request $request, $id): JsonResponse
     {

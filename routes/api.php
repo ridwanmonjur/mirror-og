@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/star', [SocialController::class, 'toggleStar'])->name('users.star.action');
-        Route::post('/user/{id}/block', [SocialController::class, 'toggleBlock'])->name('users.block.action');
+        Route::post('/user/{id}/block', [FirebaseController::class, 'toggleBlock'])->name('users.block.action');
         Route::post('/user/{id}/report', [SocialController::class, 'report'])->name('users.report.action');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
         Route::post('/notifications/{id}', [UserController::class, 'markAsRead'])->name('notifications.actopn');

@@ -386,7 +386,6 @@ function ChatListComponent() {
         
             try {
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));           
-                return;
                 if (!('is_blocked' in data)) {
                     return;
                 }

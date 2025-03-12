@@ -64,14 +64,7 @@ class ChatController extends Controller
                 ->select($select)
                 ->addSelect([
                     'firebase_user_active_at.updated_at',
-                    DB::raw('CASE 
-                        WHEN blocks.user_id = ' . $loggedUserId . ' THEN true 
-                        ELSE false 
-                    END as i_blocked_them'),
-                    DB::raw('CASE 
-                        WHEN blocks.blocked_user_id = ' . $loggedUserId . ' THEN true 
-                        ELSE false 
-                    END as they_blocked_me')
+                   
                 ])
                 ->get();
         } elseif ($request->has('searchQ')) {

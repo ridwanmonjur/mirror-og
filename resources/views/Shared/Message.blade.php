@@ -45,7 +45,7 @@
                         <div v-if="room?.otherRoomMember && room?.otherRoomMember?.name">
                             <h3 class="d-inline user-select-none" v-text="room?.otherRoomMember?.name"></h3>
                             <small v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }"
-                                class="text-red" v-if="room?.otherRoomMember.i_blocked_them">
+                                class="text-red" v-if="room?.i_blocked">
                                 <svg class="me-1 ms-2" xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">
@@ -102,7 +102,7 @@
                     <ul class="dropdown-menu py-0  ">
                         <li v-bind:data-route="'/api/user/' + currentRoomObj?.otherRoomMember?.id + '/block'"
                             v-on:click="blockRequest(event)"
-                            v-bind:data-status="currentRoomObj?.otherRoomMember?.i_blocked_them"
+                            v-bind:data-status="currentRoomObj?.i_blocked"
                             v-bind:data-inputs="currentRoomObj?.otherRoomMember?.id"><a class="dropdown-item py-2"
                                 href="#" role="button">
                                 <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="13" height="13"
@@ -112,7 +112,7 @@
                                     </circle>
                                     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                 </svg>
-                                <span v-text="currentRoomObj?.otherRoomMember?.i_blocked_them? 'Unblock Chat': 'Block Chat'">  </span>
+                                <span v-text="currentRoomObj?.otherRoomMember?.i_blocked ? 'Unblock Chat': 'Block Chat'">  </span>
                             </a></li>
                         <li v-on:click="triggerReportSelection(event)"
                             v-bind:data-user-id="currentRoomObj?.otherRoomMember?.id"

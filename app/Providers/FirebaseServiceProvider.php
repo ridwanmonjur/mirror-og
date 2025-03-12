@@ -15,5 +15,15 @@ class FirebaseServiceProvider extends ServiceProvider
                 
             return $factory->createAuth();
         });
+
+        $this->app->singleton('firebase.firestore', function ($app) {
+            $factory = (new Factory)
+                ->withServiceAccount(config('credentials.file'));
+            
+            
+            return $factory->createFirestore();
+        });
     }
+
+    
 }
