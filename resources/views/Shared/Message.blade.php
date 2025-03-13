@@ -1,10 +1,10 @@
 <html>
 
 <head>
+    @include('__CommonPartials.HeadIcon')
     @include('googletagmanager::head')
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/chat.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/common/fullpage.css') }}">
-    @include('__CommonPartials.HeadIcon')
 </head>
 
 <body>
@@ -114,7 +114,7 @@
                                 </svg>
                                 <span v-text="currentRoomObj?.otherRoomMember?.i_blocked ? 'Unblock Chat': 'Block Chat'">  </span>
                             </a></li>
-                        <li v-on:click="triggerReportSelection(event)"
+                        <li v-on:click="triggerReportSelection(event);"
                             v-bind:data-user-id="currentRoomObj?.otherRoomMember?.id"
                             v-bind:data-user-name="currentRoomObj?.otherRoomMember?.name"
                             v-bind:data-user-banner="currentRoomObj?.otherRoomMember?.userBanner"><a
@@ -254,9 +254,9 @@
                    
                       
             </div>
-        </div>
+      
 
-        <div v-scope="ReportBlockComponent()" id="reportUserModal" @vue:mounted="mounted"  class="modal" >
+        <div v-scope="ReportBlockComponent()" id="reportUserModal" @vue:mounted="init()"  class="modal" style="font-size: 0.9rem;">
             <div id="reportUserModal" tabindex="-1">
                 <div class="modal-dialog  mb-0">
                     <div class="modal-content  pt-3 pb-0 px-3">
@@ -423,10 +423,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center  my-4">
-                                        <button type="button"
-                                            class="btn btn-secondary px-3 text-white rounded-pill me-4"
-                                            v-on:click="reset()" data-bs-target="#connectionModal"
-                                            data-bs-dismiss="modal" data-bs-toggle="modal">Cancel</button>
+                                        
                                         <button type="submit" class="btn btn-primary text-light px-3 rounded-pill"
                                             v-bind:disabled="loading">
                                             <span v-show="loading"
@@ -442,6 +439,7 @@
             </div>
         </div>
     </div>
+      </div>
     </main>
 </body>
 {{-- <script src="{{ asset('/assets/js/shared/chat.js') }}"></script> --}}
