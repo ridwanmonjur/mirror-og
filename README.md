@@ -5,7 +5,6 @@
 - Composer
 - Node.js & npm
 - Apache2
-- SQLite3
 - PHP extensions for GRPC and social auth
 - An un-restricted php environment 
 
