@@ -236,9 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ActivityLogs
     }).mount('#app');
 
-    // createApp({
-        
-    // }).mount('#connectionModal');
 });
 
 async function readFileAsBase64(file) {
@@ -259,15 +256,3 @@ async function readFileAsBase64(file) {
 }
 
 
-// Alpine.data('profileData', alpineProfileData(userId, loggedUserId, userId == loggedUserId, role, loggedUserRole));
-// Alpine.data('profileStatsData', alpineProfileStatsData( userId,  role));
-// window.onpageshow = function(event) {
-//     if (event.persisted) {
-//         window.location.reload();
-//     }
-// };
-
-// Alpine.data('reportData', reportFormData());
-
-
-// Alpine.start();

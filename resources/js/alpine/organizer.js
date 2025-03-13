@@ -3,9 +3,7 @@ import intlTelInput from 'intl-tel-input';
 import utilsScript from "intl-tel-input/utils";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
 import { createApp } from "petite-vue";
-import Swal from "sweetalert2";
 
-let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const storage = document.querySelector('.profile-storage');
 const styles = {

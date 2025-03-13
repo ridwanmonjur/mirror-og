@@ -93,8 +93,10 @@ function ReportFormData ()  {
 
         init() {
             window.addEventListener('report-selected', async (event) => {
+                this.user = event.detail;
                 let element = document.getElementById('reportUserModal')
                 let modal = window.bootstrap.Modal.getOrCreateInstance(element);
+               
                 modal.show();
                 let connectionModalEl = document.getElementById('connectionModal')
                 let connectionModal = window.bootstrap.Modal.getOrCreateInstance(connectionModalEl);
@@ -483,11 +485,25 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
         },
 
         triggerReportSelection(event) {
+            console.log({event});
+            
             if (!loggedUserId) {
                 window.toastError('Please login first!');
             }
+            
+            
+            
             let button = event.currentTarget;
             const {userId, userName, userBanner} = button.dataset;
+
+            if (userId == loggedUserId) {
+                window.toastError("Cannot report yourself");
+                return;
+            }
+
+            console.log({
+                userId, userName, userBanner
+            })
             window.dispatchEvent(new CustomEvent('report-selected', {
                 detail: { id: userId, userName, userBanner }
             }));

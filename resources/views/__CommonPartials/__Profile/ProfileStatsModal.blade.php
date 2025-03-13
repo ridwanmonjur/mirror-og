@@ -404,7 +404,7 @@
                                                                <span v-text=" user.logged_block_status ? 'Unblock Chat': 'Block Chat'">  </span>
                                                            </a>
                                                        </li> 
-                                                       <li v-on:click="triggerReportSelection(event)" 
+                                                       <li v-on:click="triggerReportSelection(event);" 
                                                             v-bind:data-user-id="user.id" 
                                                             v-bind:data-user-name="user.name" 
                                                             v-bind:data-user-banner="user?.userBanner"  
@@ -447,7 +447,7 @@
        </div>
    </div>
 @auth
-    <div v-scope="ReportFormData()" id="reportUserModal" @vue:mounted="init"  class="modal" >
+    <div v-scope="ReportFormData()" id="reportUserModal" @vue:mounted="init()"  class="modal" >
             <div  tabindex="-1">
                 <div class="modal-dialog modal-lg mb-0"  style="color: black !important; text-align: start !important;">
                     <div class="modal-content  pt-3 pb-0 px-3">

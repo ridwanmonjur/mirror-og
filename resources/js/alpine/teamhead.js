@@ -161,8 +161,7 @@ window.formatDateMySqlLuxon = (mysqlDate, mysqlTime) => {
 }
 
 
-// Alpine.data('profileData', alpineProfileData(teamData.id, loggedUserId, false, role, loggedUserRole));
-// Alpine.data('reportData', reportFormData());
+
 
 window.openModal = openModal;
 window.onpageshow = function(event) {
@@ -174,12 +173,8 @@ window.onpageshow = function(event) {
 document.addEventListener('DOMContentLoaded', () => {
     createApp({
         TeamHead,
-    }).mount('.teamhead');
-
-    createApp({
         ProfileData,
-        ReportFormData
-    }).mount('#connectionModal');
+        ReportFormData,
+    }).mount('.teamhead');
 });
 
-// Alpine.start();

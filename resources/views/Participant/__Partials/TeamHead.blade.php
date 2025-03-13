@@ -445,14 +445,15 @@
 
        
     </div>
+    @include('__CommonPartials.__Profile.ProfileStatsModal', [
+        'propsTeamOrUserId' => $selectTeam->id,
+        'propsUserId' => $userId ?? 0,
+        'propsIsUserSame' => 0, 
+        'propsRole' => "TEAM", 
+        'propsUserRole' => $role
+    ])
 </main>
-@include('__CommonPartials.__Profile.ProfileStatsModal', [
-   'propsTeamOrUserId' => $selectTeam->id,
-   'propsUserId' => $userId ?? 0,
-   'propsIsUserSame' => 0, 
-   'propsRole' => "TEAM", 
-   'propsUserRole' => $role
-])
+
 @include('Participant.__Partials.TeamBackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
