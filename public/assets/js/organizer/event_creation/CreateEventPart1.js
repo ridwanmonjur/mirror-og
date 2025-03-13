@@ -90,7 +90,7 @@ function fillStepPaymentValues() {
         'Starfish': 5000,
         'Turtle': 10000,
         'Dolphin': 15000,
-        'Test': 10
+        'Mermaid': 10
     };
     
     let formValues = getFormValues(['eventTier', 'eventType']);
