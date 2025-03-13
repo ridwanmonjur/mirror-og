@@ -362,7 +362,7 @@
                                     'confirmed' => ['text' => 'COMPLETED', 'theme' => 'success']
                                 ];
                             @endphp
-                             <div class="row row-cols-1 row-cols-xl-2  g-4  pt-0 mt-1">
+                             <div class="row row-cols-1 row-cols-xl-2  gy-2 gx-4 pt-0">
                                 @foreach($teamList as $team)
                                     <div class="col">
                                         <div class="card h-100 border-0" style="transition: transform 0.2s; cursor: pointer;" 

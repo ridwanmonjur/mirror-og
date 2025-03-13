@@ -11,7 +11,6 @@ img.fslightbox-source{
     aspect-ratio: 1/1 !important;
 }
 
-
 .d-none {
     display: none !important;
 }
@@ -318,6 +317,7 @@ input[type="submit"]:active {
     cursor: pointer;
     padding: 15px 16px;
     transition: 0.3s;
+    color: #2e4b59;
 }
 
 /* Change background color of buttons on hover */
@@ -985,10 +985,14 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         flex-direction: column-reverse;
    }
    .tab-viewEvent {
-        width: 60vw; 
+        width: 100%; 
         left: 10px;
-        top:20px;
+        top: 20px;
         margin: auto;
+    }
+
+    button:after {
+        position: static;
     }
 
     .tab-bracketlist {

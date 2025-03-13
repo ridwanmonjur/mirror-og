@@ -245,12 +245,12 @@ nav svg:active {
     transition-duration: 250ms;
     transition-delay: 100ms;
     transition-timing-function: ease-in;
-    /* caret-color: #43A4D7;
-color: #43A4D7; */
 }
 
 .search-bar input:focus {
     width: 600px;
+    outline: none !important;
+    border-color: #2e4b59 !important;
 }
 
 input#search-bar:focus + svg {

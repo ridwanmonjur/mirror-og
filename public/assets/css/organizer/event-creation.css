@@ -47,6 +47,11 @@
 }
 
 
+button:after {
+    position: static;
+}
+
+
 .grid-2-columns,
 .grid-3-columns {
     display: grid;
@@ -255,9 +260,10 @@
     width: 80vw !important;
 }
 
-
-
-
+.box-width2 {
+    margin: 30px auto 0 !important;
+    max-width: 70vw;
+}
 
 :root {
     --timeline-start-width-desktop: 100px;
@@ -478,7 +484,10 @@ input[type="time"] {
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     padding-bottom: 20px;
+    padding-left: 10%;
+    padding-right: 10%;
 }
+
 
 .event_extra {
     border-radius: 20px;
@@ -1163,6 +1172,12 @@ body{
 }
 
 @media screen and (min-width: 1000px)  {
+
+    button:after {
+        position: static !important;
+    }
+
+
     .swiper-container {
         display: block;
     }
@@ -1194,7 +1209,8 @@ body{
     }
 
     .box_2nd {
-        height: 350px;
+        height: max-content;
+        max-height: 350px;
     }
 
     .grid {
@@ -1284,19 +1300,17 @@ body{
     }
 
     .back-next button {
-        position: absolute;
+        position: static;
         top: 85vh;
         margin-top: 0;  
         margin-bottom: 0; 
     }
 
     .back-next button:nth-child(1) {
-        position: absolute;
         left: calc(25% - var(--back-next-button)); 
     }
 
     .back-next button:nth-child(2) {
-        position: absolute;
         left: calc(75% - var(--back-next-button)); 
     }
 
@@ -1313,8 +1327,8 @@ body{
         grid-template-columns: 1fr 1fr 1fr;
     }
 
-    .box-width {
-        max-width: 80vw;
+    .box-width2 {
+        max-width: 60vw;
     }
 
     .grid-2 {
