@@ -23,6 +23,7 @@ class StripeController extends Controller
     {
         try {
             DB::beginTransaction();
+            $customer = $paymentIntentStripe = null;
             $paymentIntentStatus = 'created';
             $customerStatus = 'created';
             $willCreateNewPaymentIntent = true;
@@ -40,8 +41,14 @@ class StripeController extends Controller
             if ($isEmptyStripeCustomerId) {
                 $customer = $this->stripeClient->createStripeCustomer($request->name, $request->email);
             } else {
-                $customerStatus = 'retrieved';
-                $customer = $this->stripeClient->retrieveStripeCustomer($user->stripe_customer_id);
+                try {
+                    $customerStatus = 'retrieved';
+                    $customer = $this->stripeClient->retrieveStripeCustomer($user->stripe_customer_id);
+                } catch (Exception $e) {
+                    $customerStatus = 'created';
+                    $customer = $this->stripeClient->createStripeCustomer($request->name, $request->email);
+                }
+               
             }
 
             $paymentIntentDB = PaymentIntent::where([
@@ -49,12 +56,17 @@ class StripeController extends Controller
                 'status' => 'requires_payment_method'
             ])->first();
 
-            $paymentIntentStripe = $paymentIntentDB?->payment_intent_id ?
-                $this->stripeClient->retrieveStripePaymentByPaymentId($paymentIntentDB?->payment_intent_id)
-                : null;
+            try {
+                $paymentIntentStripe = $paymentIntentDB?->payment_intent_id ?
+                    $this->stripeClient->retrieveStripePaymentByPaymentId($paymentIntentDB?->payment_intent_id)
+                    : null;
             
-            $willCreateNewPaymentIntent = ! ($paymentIntentDB && $paymentIntentStripe 
-                && $paymentIntentStripe?->status === 'requires_payment_method');
+                $willCreateNewPaymentIntent = ! ($paymentIntentDB && $paymentIntentStripe 
+                    && $paymentIntentStripe?->status === 'requires_payment_method');
+            } catch (Exception $e) {
+                $paymentIntentStripe = null;
+                $willCreateNewPaymentIntent = true;
+            }
 
             $paymentIntentStripeBody = [
                 'amount' => +$request->paymentAmount * 100,

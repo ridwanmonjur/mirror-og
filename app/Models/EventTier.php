@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class EventTier extends Model
 {
@@ -15,6 +16,13 @@ class EventTier extends Model
     protected $table = 'event_tier';
     public $timestamps = false;  // Add this line
 
+    public static function scopeByUserOrNullUser(Builder $query, $userId)
+    {
+        return $query->where(function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                ->orWhereNull('user_id');
+        });
+    }
 
     public function user(): BelongsTo
     {

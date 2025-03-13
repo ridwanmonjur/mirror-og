@@ -58,7 +58,8 @@ class OrganizerEventController extends Controller
     public function index(Request $request)
     {
         $eventCategoryList = EventCategory::all();
-        $eventTierList = EventTier::all();
+        $user = $request->attributes->get('user');
+        $eventTierList = EventTier::byUserOrNullUser($user->id)->get();
         $eventTypeList = EventType::all();
         $user = Auth::user();
         $userId = $user->id;
@@ -128,10 +129,11 @@ class OrganizerEventController extends Controller
         return response()->json(['html' => $view], 200);
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $user = $request->get('user');
         $eventCategory = EventCategory::all();
-        $eventTierList = EventTier::all();
+        $eventTierList = EventTier::byUserOrNullUser($user->id)->get();
         $eventTypeList = EventType::all();
 
         return view('Organizer.CreateEvent', [
@@ -244,7 +246,7 @@ class OrganizerEventController extends Controller
 
 
             $eventCategory = EventCategory::all();
-            $eventTierList = EventTier::all();
+            $eventTierList = EventTier::byUserOrNullUser($userId)->get();
             $eventTypeList = EventType::all();
 
             return view('Organizer.EditEvent', [

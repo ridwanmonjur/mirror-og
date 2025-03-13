@@ -88,8 +88,10 @@ class OrganizerCheckoutController extends Controller
             if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                if ($paymentIntent->status === 'requires_capture') {
+                    $paymentIntent->capture();
+                }
                 
-
                 if ($paymentIntent['amount'] > 0 &&
                     $paymentIntent['amount_received'] === $paymentIntent['amount'] &&
                     $paymentIntent['metadata']['eventId'] === $id
