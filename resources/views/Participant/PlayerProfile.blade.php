@@ -522,10 +522,10 @@
                                                 alt="{{ $team->teamName }}"
                                             >
                                             <div>
-                                                <h5 class="card-title mb-0">{{ $team->teamName }}</h5>
+                                                <h5 class="card-title mb-0 text-wrap">{{ $team->teamName }}  <span class="ps-2 fs-5">{{ $team->country_flag }}</span></h5>
                                                 <div class="text-muted">
                                                     <span class="me-3">{{ $team->members_count }}/5 members</span>
-                                                    <span class="me-2 fs-5">{{ $team->country_flag }}</span>
+                                                   
 
                                                 </div>
                                             </div>
