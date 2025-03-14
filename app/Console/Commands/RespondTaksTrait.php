@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\Mail;
 
 trait RespondTaksTrait
 {
-    public function handleEndedPayments(array $endedTaskIds, $taskId) {
+    public function capturePayments(array $startedTaskIds, $taskId) {
         $paymentData = DB::table('event_details')
             ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
             ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
             ->join('all_payment_transactions',  'all_payment_transactions.id', '=', 'participant_payments.payment_id')
-            ->whereIn('event_details.id', $endedTaskIds)
+            ->whereIn('event_details.id', $startedTaskIds)
             ->where('all_payment_transactions.payment_status', 'requires_capture')
             ->get();
 
@@ -33,16 +33,18 @@ trait RespondTaksTrait
         foreach ($resultList as $item) {
             try {
                 $stripe = new StripePayment();
-                $paymentIntent = $stripe->retrieveStripePaymentByPaymentId($item['payment_id']);
+                if (isset($item['payment_id'])) {
+                    $paymentIntent = $stripe->retrieveStripePaymentByPaymentId($item['payment_id']);
 
-                if ($paymentIntent->status === 'requires_capture') {
-                    $capturedPayment = $paymentIntent->capture();
+                    if ($paymentIntent->status == 'requires_capture') {
+                        $capturedPayment = $paymentIntent->capture();
 
-                    $updatedPayments[] = [
-                        'id' => $item['id'],
-                        'payment_id' => $item['payment_id'],
-                        'payment_status' => $capturedPayment['status']
-                    ];
+                        $updatedPayments[] = [
+                            'id' => $item['id'],
+                            'payment_id' => $item['payment_id'],
+                            'payment_status' => $capturedPayment['status']
+                        ];
+                    }
                 }
             } catch (Exception $e) {
                 $this->logError($taskId, $e);
@@ -167,24 +169,24 @@ trait RespondTaksTrait
                 HTML;
             
             $notifications[$join->id] = [
-                    'member' => [
-                        'type' => 'event',
-                        'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                        'icon_type' => 'started',
-                        'html' => $memberHtml,
-                        'mail' => $memberEmail,
-                        'mailClass' => 'EventStartMail',
-                        'created_at' => DB::raw('NOW()')
-                    ], 
-                    'organizer' => [
-                        'type' => 'event',
-                        'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                        'icon_type' => 'started',
-                        'html' => $memberHtml,
-                        'mail' => $memberEmail,
-                        'mailClass' => 'EventStartMail',
-                        'created_at' => DB::raw('NOW()')
-                    ]
+                'member' => [
+                    'type' => 'event',
+                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                    'icon_type' => 'started',
+                    'html' => $memberHtml,
+                    'mail' => $memberEmail,
+                    'mailClass' => 'EventStartMail',
+                    'created_at' => DB::raw('NOW()')
+                ], 
+                'organizer' => [
+                    'type' => 'event',
+                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                    'icon_type' => 'started',
+                    'html' => $memberHtml,
+                    'mail' => $memberEmail,
+                    'mailClass' => 'EventStartMail',
+                    'created_at' => DB::raw('NOW()')
+                ]
             ];
         }
 

@@ -88,7 +88,7 @@ class RespondDummyTasks extends Command
                 $taskId
             );
 
-            $this->handleEndedPayments($endedTaskIds, $taskId);
+            $this->capturePayments($startedTaskIds, $taskId);
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
