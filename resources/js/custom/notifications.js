@@ -276,7 +276,7 @@ function PageNotificationComponent () {
             return tabs.currentTab;
         },
         
-        async markNotificationRead(event, id, link, isRead) {
+        async markNotificationRead(id, link, isRead) {
             if (!isRead) await notifications.markNotificationRead(id, tabStore.currentTab);
             window.location.href = link;
         },
