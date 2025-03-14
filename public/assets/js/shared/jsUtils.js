@@ -312,24 +312,6 @@ function carouselWork(increment = 0) {
     console.log("ended")
 }
 
-// navbar.addEventListener('mouseenter', () => {
-//     navbar.classList.remove('navbar-scrolled');
-// });
-
-// window.addEventListener('scroll', throttle(function() {
-//     let currentScroll = window.scrollY;
-    
-//     if (!navbar.matches(':hover')) {
-//         if (currentScroll > lastScrollTop && currentScroll > 100) {
-//             navbar.classList.add('navbar-scrolled');
-//         } 
-//         else if (currentScroll < lastScrollTop) {
-//             navbar.classList.remove('navbar-scrolled');
-//         }
-//     }
-    
-//     lastScrollTop = currentScroll;
-// }, 300));
 
 function goToUrl(event, element) {
     event.stopPropagation();
@@ -645,14 +627,7 @@ class DynamicSelect {
 
 }
 
-/*
 
-let selectMap = {};
-document.querySelectorAll('[data-dynamic-select]').forEach(select => {
-    selectMap[select.name] = new DynamicSelect(select);
-});
-
-*/
 let ENDPOINT = null;
 const importantUrlsDiv = document.getElementById('importantUrls');
 let {
@@ -757,16 +732,13 @@ function searchPart(e) {
     document.querySelector('.scrolling-pagination').innerHTML = '';
     search = e.target.value;
     ENDPOINT = landingEndpoint;
-    console.log({ENDPOINT});
-    console.log({ENDPOINT});
-    console.log({ENDPOINT});
     if (!search || String(search).trim() == "") {
         search = null;
         ENDPOINT += "?page=" + page;
         infinteLoadMore(null, ENDPOINT);
     } else {
         ENDPOINT = landingEndpoint;
-        ENDPOINT += "?search=" + e.target.value + "&page=" + page;
+        ENDPOINT += "?search=" + search + "&page=" + page;
         window.location.href = ENDPOINT;
     }
 }

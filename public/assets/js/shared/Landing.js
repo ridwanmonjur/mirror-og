@@ -10,6 +10,10 @@ window.addEventListener(
 
         page++;
         ENDPOINT_URL = ENDPOINT_URL_OG;
+        search = document.getElementById('search-bar')?.value;
+        if (!search || String(search).trim() == "") {
+            search = document.getElementById('search-bar-mobile')?.value;
+        } 
 
         if (!search || String(search).trim() == "") {
             search = null;
