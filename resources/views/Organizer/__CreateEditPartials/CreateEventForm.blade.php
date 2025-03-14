@@ -159,7 +159,7 @@
             <h4 id="outputEventTierTitle" class="text-center mt-2 mb-2">Choose a tier</h4>
             <div class="event_row">
                 <div class="icon_container me-4 ms-3">
-                    <img width="25" height=25 id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}"
+                    <img width="20" height="20" id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}"
                         class="event_icon">
                 </div>
                 <div class="info_container">
@@ -169,7 +169,7 @@
             </div>
             <div class="event_row">
                 <div class="icon_container me-4 ms-3">
-                    <img width="25" height=25 src="{{ asset('/assets/images/createEvent/trophy.png') }}"
+                    <img width="20" height="20" src="{{ asset('/assets/images/createEvent/trophy.png') }}"
                         class="event_icon">
                 </div>
                 <div class="info_container">
@@ -179,7 +179,7 @@
             </div>
             <div class="event_row">
                 <div class="icon_container me-4 ms-3">
-                    <img width="25" height=25 src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
+                    <img width="20" height="20" src="{{ asset('assets/images/dollar.png') }}" class="event_icon">
                 </div>
                 <div class="info_container">
                     <p class="my-1" id="outputEventTierEntry">RM Z</p>
@@ -206,7 +206,7 @@
         </p>
         <br><br>
         <div class="event-details-form row my-0 mx-auto box-width" >
-            <div class="form-group col-12 col-lg-6 mx-0">
+            <div class="form-group col-12 col-xl-6 mx-0">
                 <label for="mt-3 startDate">Date of Event</label>
                 <div class="my-3">Tell your players when to mark their calendars</div>
                  <div class="mx-auto d-flex justify-content-center  ">
@@ -232,7 +232,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group col-12 col-lg-6 mx-auto">
+            <div class="form-group col-12 col-xl-6 mx-auto">
                 <label for="mt-3 startTime">Time of Event</label>
                 <div class="my-3">So that your players can set their alarms</div>
                 <div class="mx-auto d-flex justify-content-center  ">

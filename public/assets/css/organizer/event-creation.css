@@ -624,14 +624,12 @@ input[type="time"] {
 }
 
 .icon_container {
-    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.event_icon {
-    width: 30px;
-    height: 30px;
-    display: block;
-}
+
 
 .upload-button {
     z-index: 999 !important;
