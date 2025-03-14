@@ -666,6 +666,12 @@ if (searchEndpointInput) {
     document.getElementById('search-bar')?.addEventListener(
         "keydown",
         debounce((e) => {
+            if (e.keyCode === 91 || e.keyCode === 92) {
+                e.preventDefault(); 
+                return; 
+            }
+            
+
             goToSearchPage();
         }, 1000)
     );
@@ -673,6 +679,11 @@ if (searchEndpointInput) {
     document.getElementById('search-bar-mobile')?.addEventListener(
         "keydown",
         debounce((e) => {
+            if (e.keyCode === 91 || e.keyCode === 92) {
+                e.preventDefault(); 
+                return; 
+            }
+            
             goToSearchPage();
         }, 1000)
     );
@@ -686,6 +697,11 @@ if (searchEndpointInput) {
     document.getElementById('search-bar')?.addEventListener(
         "keydown",
         debounce((e) => {
+            if (e.keyCode === 91 || e.keyCode === 92) {
+                e.preventDefault(); 
+                return; 
+            }
+            
             searchPart(e);
         }, 1000)
     );
@@ -693,10 +709,22 @@ if (searchEndpointInput) {
     document.getElementById('search-bar-mobile')?.addEventListener(
         "keydown",
         debounce((e) => {
+            if (e.keyCode === 91 || e.keyCode === 92) {
+                e.preventDefault(); 
+                return; 
+            }
+            
             searchPart(e);
         }, 1000)
     );
 }
+
+document.getElementById('search-bar')?.addEventListener("blur", () => {
+    const element = document.querySelector('.scrolling-pagination');
+    if (element) {
+        element.innerHTML = '';
+    }
+});
 
 function goToSearchPage() {
     let ENDPOINT = searchEndpointInputValue;
