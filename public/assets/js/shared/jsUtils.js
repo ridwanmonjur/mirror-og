@@ -653,16 +653,20 @@ document.querySelectorAll('[data-dynamic-select]').forEach(select => {
 });
 
 */
-let searchEndpointInputValue = null; 
 let ENDPOINT = null;
 const importantUrlsDiv = document.getElementById('importantUrls');
 let {
-    searchEndpointInput,
-    landingEndpointInput
+    searchEndpoint,
+    landingEndpoint
 } = importantUrlsDiv?.dataset ?? {};
 
-if (searchEndpointInput) {
-    searchEndpointInputValue = searchEndpointInput.value;
+console.log({
+    searchEndpoint,
+    landingEndpoint
+})
+
+if (searchEndpoint) {
+    ENDPOINT = searchEndpoint;
     document.getElementById('search-bar')?.addEventListener(
         "keydown",
         debounce((e) => {
@@ -690,7 +694,7 @@ if (searchEndpointInput) {
 
 } else {
 
-    ENDPOINT = landingEndpointInput;
+    ENDPOINT = landingEndpoint;
     var page = 1;
     var search = null;
 
@@ -727,7 +731,7 @@ document.getElementById('search-bar')?.addEventListener("blur", () => {
 });
 
 function goToSearchPage() {
-    let ENDPOINT = searchEndpointInputValue;
+    ENDPOINT = searchEndpoint;
     let page = 1;
     let search = null;
     let searchBar = document.querySelector('input#search-bar');
@@ -752,13 +756,16 @@ function searchPart(e) {
     noMoreDataElement.classList.add('d-none');
     document.querySelector('.scrolling-pagination').innerHTML = '';
     search = e.target.value;
-    ENDPOINT = landingEndpointInput;
+    ENDPOINT = landingEndpoint;
+    console.log({ENDPOINT});
+    console.log({ENDPOINT});
+    console.log({ENDPOINT});
     if (!search || String(search).trim() == "") {
         search = null;
         ENDPOINT += "?page=" + page;
         infinteLoadMore(null, ENDPOINT);
     } else {
-        ENDPOINT = landingEndpointInput;
+        ENDPOINT = landingEndpoint;
         ENDPOINT += "?search=" + e.target.value + "&page=" + page;
         window.location.href = ENDPOINT;
     }
