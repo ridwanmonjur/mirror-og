@@ -121,11 +121,6 @@ class SocialService {
                         'action' => 'friend',
                     ])->delete();
 
-                    dispatch(new HandleFollowsFriends('UpdateFriend', [
-                        'user' => $user,
-                        'otherUser' => $updateUser,
-                        'status' => $status
-                    ]));
 
                 } elseif ($status === 'accepted') {
                     ActivityLogs::createActivityLogs([

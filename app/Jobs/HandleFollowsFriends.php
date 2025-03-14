@@ -160,36 +160,7 @@ class UpdateFriendStrategy
             ]);
         }
 
-        if ($status == "left") {
-            NotifcationsUser::create([
-                'user_id' => $otherUser->id,
-                'type' => 'social',
-                'html' => <<<HTML
-                    <span class="notification-gray me-2">
-                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}" alt="Friend Accept link">
-                            {$user->name}
-                        </button> and you are no longer friends.
-                    </span>
-                HTML,
-                'link' => route('public.participant.view', $user->id),
-                'img_src' => $user->userBanner,
-                'created_at' => DB::raw('NOW()')
-            ]);
-
-            NotifcationsUser::create([
-                'user_id' => $user->id,
-                'type' => 'social',
-                'html' => <<<HTML
-                    <span class="notification-gray me-2">
-                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$otherUser->id}" alt="Friend Accept link">
-                            {$otherUser->name} </button> and you are no longer friends.
-                    </span>
-                HTML,
-                'link' => route('public.participant.view', $otherUser->id),
-                'img_src' => $otherUser->userBanner,
-                'created_at' => DB::raw('NOW()')
-            ]);
-        }
+       
     }
 }
 
