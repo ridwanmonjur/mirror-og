@@ -478,11 +478,12 @@ input[type="time"] {
 .event {
     overflow: visible;
     width: fit-content;
+    min-width: 220px;
     background: transparent;
     border: 2px solid rgb(242, 93, 123);
     border-radius: 40px;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     position: relative;
+    font-size: 0.9rem;
     padding-bottom: 20px;
     padding-left: 10%;
     padding-right: 10%;
@@ -1319,7 +1320,11 @@ body{
     }
 }
 
-
+@media screen and (min-width: 1000px) and (min-height: 700px)  {
+    .back-next button {
+        position: absolute;
+    }
+}
 
 
 @media screen and (min-width: 1300px) {
@@ -1329,6 +1334,9 @@ body{
 
     .box-width2 {
         max-width: 60vw;
+        overflow-x: auto; 
+        overflow-y: hidden; 
+        white-space: nowrap; 
     }
 
     .grid-2 {

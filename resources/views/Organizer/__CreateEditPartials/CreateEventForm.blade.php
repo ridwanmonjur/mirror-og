@@ -73,56 +73,58 @@
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
         <p >Finally, choose a tier for your event.</p>
-        <div class="d-flex mx-auto justify-content-center flex-wrap box-width2">
-            @foreach ($eventTierList as $tierCategory)
-                <section
-                    data-event-tier="{{ $tierCategory->eventTier }}"
-                    data-event-tier-id="{{ $tierCategory->id }}"
-                    class="featured-events  py-0"
-                    onclick="handleTierSelection(this)"
-                >
-                    <a href="#" 
-                        role="button"
-                        @class([
-                        'event pt-2 selectable-box box-tier px-5 mx-auto',
-                        'rounded-box-' . strtolower($tierCategory->eventTier),
-                        'color-border-success-dotted' =>
-                            $event && $tierCategory->id == $event->event_tier_id,
-                    ])>
-                        <div class="text-center mx-0 pt-3 pb-2">
-                            <img id='starfish' height="40" width="40" src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
-                                class="inputEventTierImg object-fit-cover"
-                            > 
-                            <h5 class="ms-2 d-inline inputEventTierTitle"> {{ $tierCategory->eventTier }}</h5>
-                        </div>
-                        <div class="d-flex justify-content-start align-items-center mt-2 mb-3">
-                            <img style="width: 25px; height: 25px; margin-right: 20px;"
-                                src="{{ asset('/assets/images/createEvent/user.png') }}">
+        <div class="mx-auto  box-width2 py-0" style="overflow-x: auto;">
+            <div class="d-flex py-0 flex-wrap flex-lg-nowrap">
+                @foreach ($eventTierList as $tierCategory)
+                    <section
+                        data-event-tier="{{ $tierCategory->eventTier }}"
+                        data-event-tier-id="{{ $tierCategory->id }}"
+                        class="featured-events  py-0"
+                        onclick="handleTierSelection(this)"
+                    >
+                        <a href="#" 
+                            role="button"
+                            @class([
+                            'event pt-2 selectable-box box-tier px-5 mx-2',
+                            'rounded-box-' . strtolower($tierCategory->eventTier),
+                            'color-border-success-dotted' =>
+                                $event && $tierCategory->id == $event->event_tier_id,
+                        ])>
+                            <div class="text-center mx-0 pt-3 pb-2">
+                                <img id='starfish' height="40" width="40" src="{{ asset('storage/' . $tierCategory->tierIcon) }}"
+                                    class="inputEventTierImg object-fit-cover"
+                                > 
+                                <h5 class="ms-2 d-inline inputEventTierTitle"> {{ $tierCategory->eventTier }}</h5>
+                            </div>
+                            <div class="d-flex justify-content-start align-items-center mt-2 mb-3">
+                                <img class="me-3" width="20" height="20"
+                                    src="{{ asset('/assets/images/createEvent/user.png') }}">
 
-                            <div>
-                                <span class="d-block inputEventTierPerson text-start m-0">{{ $tierCategory->tierTeamSlot }}</span>
-                                <span class="m-0 d-block text-start">team slots</span>
+                                <div>
+                                    <span class="d-block inputEventTierPerson text-start m-0">{{ $tierCategory->tierTeamSlot }}</span>
+                                    <span class="m-0 d-block text-start">team slots</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-start align-items-center mb-3">
-                            <img style="width: 25px; height: 25px; margin-right: 20px;"
-                                src="{{ asset('/assets/images/createEvent/trophy.png') }}">
-                            <div>
-                                <span class="inputEventTierPrize text-start d-block m-0">RM {{ $tierCategory->tierPrizePool }}</span>
-                                <span class="m-0 d-block text-start">prize pool</span>
+                            <div class="d-flex justify-content-start align-items-center mb-3">
+                                <img class="me-3" width="20" height="20"
+                                    src="{{ asset('/assets/images/createEvent/trophy.png') }}">
+                                <div>
+                                    <span class="inputEventTierPrize text-start d-block m-0">RM {{ $tierCategory->tierPrizePool }}</span>
+                                    <span class="m-0 d-block text-start">prize pool</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex justify-content-start align-items-center mb-3">
-                            <img style="width: 25px; height: 25px; margin-right: 20px;"
-                                src="{{ asset('/assets/images/createEvent/dollar.png') }}">
-                            <div>
-                                <span class="inputEventTierEntry d-block text-start m-0">RM {{ $tierCategory->tierEntryFee }}</span>
-                                <span class="m-0 d-block text-start">team entry fee</span>
+                            <div class="d-flex justify-content-start align-items-center mb-3">
+                                <img class="me-3" width="20" height="20"
+                                    src="{{ asset('/assets/images/createEvent/dollar.png') }}">
+                                <div>
+                                    <span class="inputEventTierEntry d-block text-start m-0">RM {{ $tierCategory->tierEntryFee }}</span>
+                                    <span class="m-0 d-block text-start">team entry fee</span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </section>
-            @endforeach
+                        </a>
+                    </section>
+                @endforeach
+            </div>
         </div>
         <div class=" d-flex justify-content-between box-width back-next">
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
