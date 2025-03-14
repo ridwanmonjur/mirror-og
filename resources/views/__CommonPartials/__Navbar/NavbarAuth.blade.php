@@ -1,12 +1,11 @@
 <div 
     id="notif-dropdown" 
     v-scope="PageNotificationComponent()"
-    class="dropdown me-3" data-reference="parent" data-bs-auto-close="outside" 
+    class="dropdown me-3"  data-bs-auto-close="outside" 
     v-on:click="loadFirstPage('social')"
     >
     <a href="#" role="button" class="btn d-flex justify-content-start align-items-center m-0 p-0" id="dropNotification" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true"
-        onclick="event.stopPropagation();"
         v-on:click="changeNotificationTab('social')"    
     >
         
@@ -135,7 +134,7 @@
 
     </div>
 </div>
-<div class="dropdown me-2" data-reference="parent" data-bs-auto-close="outside" >
+<div class="dropdown me-2"  data-bs-auto-close="true" >
     <a href="#" role="button" class="btn m-0 p-0" id="dropUser" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
         @if($user->userBanner)
