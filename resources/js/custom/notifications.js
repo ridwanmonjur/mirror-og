@@ -278,14 +278,7 @@ function PageNotificationComponent () {
         
         async markNotificationRead(event, id, link, isRead) {
             if (!isRead) await notifications.markNotificationRead(id, tabStore.currentTab);
-            let target = event.target;
-            window.open(link);
-           
-
-            if (target.tagName == "BUTTON") {
-                let { href } = target.dataset;
-                window.location.href = href;
-            }
+            window.location.href = link;
         },
 
         async changeNotificationTab(tabName) {

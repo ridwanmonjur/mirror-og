@@ -237,10 +237,14 @@ table.responsive td img {
   transition: none !important;
 }
 
-.notification-list button:hover {
-  transition: none !important;
-  transform: none !important;
+.notification-list button:hover, .notification-list2 button:hover {
+  scale: none;
 }
+
+.notification-list button::after, .notification-list2 button::after {
+  position: static;
+}
+
 
 
 .notification-container-not-read {
