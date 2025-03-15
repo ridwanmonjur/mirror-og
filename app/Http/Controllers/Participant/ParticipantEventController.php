@@ -65,11 +65,11 @@ class ParticipantEventController extends Controller
         ];
 
         if ($request->ajax()) {
-            $view = view('__CommonPartials.LandingPageHomeScroll', $output)->render();
+            $view = view('__CommonPartials.LandingHomeScroll', $output)->render();
 
             return response()->json(['html' => $view]);
         }
-        return view('LandingPage', $output);
+        return view('Landing', $output);
     }
 
     public function viewEvent(ParticipantViewEventRequest $request, $id)

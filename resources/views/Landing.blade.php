@@ -41,7 +41,7 @@
         <section 
             class="featured-events scrolling-pagination"
         >
-            @include('__CommonPartials.LandingPageScroll')
+            @include('__CommonPartials.Landing')
         </section>
         @if (isset($events[0]))
             <div class="no-more-data d-none"></div>
