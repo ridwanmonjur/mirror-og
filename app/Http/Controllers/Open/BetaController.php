@@ -116,11 +116,11 @@ class BetaController extends Controller
     {
         $user = DB::table(table: 'interested_user')->where('email_verified_token', $token)->first();
         if (!$user) {
-            return view('VerifyInterestedUser')->with('error', 'Invalid verification token.');
+            return view('Beta.Verify')->with('error', 'Invalid verification token.');
         }
 
         if ($user->email_verified_at !== null) {
-            return view('VerifyInterestedUser')
+            return view('Beta.Verify')
                 ->with('success', 'verified_already')
                 ->with('email', $user->email);
         }
@@ -132,7 +132,7 @@ class BetaController extends Controller
                 'email_verified_at' => now(),
             ]);
 
-        return view('VerifyInterestedUser')
+        return view('Beta.Verify')
             ->with('success', 'verified_now')
             ->with('email', $user->email);
     }
@@ -159,7 +159,6 @@ class BetaController extends Controller
 
             $existingUsers = User::whereIn('email', $interestedUserEmail)
                 ->get();
-
             
             foreach ($existingUsers as $user) {
                 $password = generateToken(8);
@@ -199,6 +198,7 @@ class BetaController extends Controller
                     'name' => generateToken(2) . $username . generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
+                    'email_verified_at' => now()
                 ]);
 
                 $user->save();

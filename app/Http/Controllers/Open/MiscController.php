@@ -38,11 +38,11 @@ class MiscController extends Controller
         $output = compact('events');
 
         if ($request->ajax()) {
-            $view = view('__CommonPartials.LandingPageScroll', $output)->render();
+            $view = view('__CommonPartials.Landing', $output)->render();
 
             return response()->json(['html' => $view]);
         }
 
-        return view('LandingPage', $output);
+        return view('Landing', $output);
     }
 }
