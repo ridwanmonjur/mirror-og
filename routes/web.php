@@ -58,15 +58,6 @@ Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfile
 Route::get('/view/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')
     ->middleware('prevent-back-history');
 
-Route::group(['prefix' => 'admin'], function () {
-    Route::group(['middleware' => 'auth'], function () {
-        // Beta onboarding
-        Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
-        Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
-        Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('admin.profile.view')
-            ->middleware('prevent-back-history');
-    });
-});
 
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
@@ -82,6 +73,19 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
 
     });
+});
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::group(['middleware' => 'auth'], function () {
+        Route::redirect('/profile', '/admin', 301)
+            ->name('admin.profile.view')
+            ->middleware('prevent-back-history');
+            Route::group(['middleware' => 'check-permission:admin'], function () {
+                Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
+                Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
+            });
+        });
 });
 
 /* THIS IS THE PARTICIPANT VIEW */

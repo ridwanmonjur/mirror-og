@@ -199,9 +199,13 @@ class AuthController extends Controller
         }
     }
 
-    public function logoutAction()
+    public function logoutAction(Request $request)
     {
         Auth::logout();
+        
+        $request->session()->invalidate();
+        
+        $request->session()->regenerateToken();
 
         return redirect('/home');
     }

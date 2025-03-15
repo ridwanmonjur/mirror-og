@@ -33,7 +33,7 @@
         </div>
 
         <section class="featured-events  scrolling-pagination">
-            @include('__CommonPartials.LandingPageScroll')
+            @include('__CommonPartials.Landing')
         </section>
 
         <div class="no-more-data d-none"></div>

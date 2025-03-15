@@ -22,6 +22,7 @@ class Authenticate extends Middleware
 
             return 'admin/login';
         }
+
         if ($request->is('participant/*')) {
             // dd(URL::current());
             Session::put('intended', URL::current());
