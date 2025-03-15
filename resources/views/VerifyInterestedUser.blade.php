@@ -1,9 +1,7 @@
 @extends('layout.app')
 
 @section('title', 'Driftwood - About Us')
-@section('body-class', '')
-
-
+@section('body-class', 'about')
 
 @section('content')
     <header>
