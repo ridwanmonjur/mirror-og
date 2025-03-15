@@ -124,10 +124,17 @@ class UserController extends Controller
         ];
 
         if ($user->stripe_customer_id) {
-            $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
-            $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
-            $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-            $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data); 
+            try {
+                $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
+                $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
+                $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
+                $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data); 
+            } 
+            catch (Exception $e) {
+                $paymentMethods = new Collection();
+                $paymentHistory = new Collection();
+                $hasMorePayments = $hasMoreHistory = false;
+            }
         } else {
             $paymentMethods = new Collection();
             $paymentHistory = new Collection();
