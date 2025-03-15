@@ -174,19 +174,10 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     if (specialElementHeightId) {
         console.log({specialElementHeightId});
         let bracketList = document.getElementById(specialElementHeightId);
-        console.log({bracketList});
-        console.log({bracketList});
-        console.log({bracketList});
-        console.log({bracketList});
-        console.log({bracketList});
-        console.log({bracketList});
+      
         if (!bracketList) return;
         let bracketListHeight = bracketList.clientHeight;
-        console.log({bracketListHeight});
-        console.log({bracketListHeight});
-        console.log({bracketListHeight});
-        console.log({bracketListHeight});
-        console.log({bracketListHeight});
+       
         let main = document.querySelector('main');
         if (main) {
             main.style.transition = "height 0.5s ease-in-out";
@@ -640,7 +631,6 @@ console.log({
     landingEndpoint
 })
 
-if (searchEndpoint) {
     ENDPOINT = searchEndpoint;
     document.getElementById('search-bar')?.addEventListener(
         "keydown",
@@ -649,9 +639,8 @@ if (searchEndpoint) {
                 e.preventDefault(); 
                 return; 
             }
-            
 
-            goToSearchPage();
+            searchPart(e);
         }, 1000)
     );
     
@@ -663,67 +652,10 @@ if (searchEndpoint) {
                 return; 
             }
             
-            goToSearchPage();
-        }, 1000)
-    );
-
-} else {
-
-    ENDPOINT = landingEndpoint;
-    var page = 1;
-    var search = null;
-
-    document.getElementById('search-bar')?.addEventListener(
-        "keydown",
-        debounce((e) => {
-            if (e.keyCode === 91 || e.keyCode === 92) {
-                e.preventDefault(); 
-                return; 
-            }
-            
             searchPart(e);
         }, 1000)
     );
 
-    document.getElementById('search-bar-mobile')?.addEventListener(
-        "keydown",
-        debounce((e) => {
-            if (e.keyCode === 91 || e.keyCode === 92) {
-                e.preventDefault(); 
-                return; 
-            }
-            
-            searchPart(e);
-        }, 1000)
-    );
-}
-
-document.getElementById('search-bar')?.addEventListener("blur", () => {
-    const element = document.querySelector('.scrolling-pagination');
-    if (element) {
-        element.innerHTML = '';
-    }
-});
-
-function goToSearchPage() {
-    ENDPOINT = searchEndpoint;
-    let page = 1;
-    let search = null;
-    let searchBar = document.querySelector('input#search-bar');
-    if (searchBar.style.display != 'none') {
-        search = searchBar.value;
-    } else {
-        searchBar = document.querySelector('input#search-bar-mobile');
-        search = searchBar.value;
-    }
-    if (!search || String(search).trim() == "") {
-        search = null;
-        ENDPOINT += "?page=" + page;
-    } else {
-        ENDPOINT += "?search=" + search + "&page=" + page;
-    }
-    window.location = ENDPOINT;
-}
 
 function searchPart(e) {
     page = 1;
@@ -733,13 +665,11 @@ function searchPart(e) {
     search = e.target.value;
     ENDPOINT = landingEndpoint;
     if (!search || String(search).trim() == "") {
-        search = null;
         ENDPOINT += "?page=" + page;
-        infinteLoadMore(null, ENDPOINT);
     } else {
-        ENDPOINT = landingEndpoint;
         ENDPOINT += "?search=" + search + "&page=" + page;
-        window.location.href = ENDPOINT;
     }
+
+    window.location.href = ENDPOINT;
 }
 

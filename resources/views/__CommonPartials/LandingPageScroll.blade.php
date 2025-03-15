@@ -10,7 +10,7 @@
         extract($event->startDatesReadableForLanding($willShowStartsInCountDown));
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
-        style="background-color: rgba(255, 255, 255, 0.6);"
+        style="background-color: rgba(255, 255, 255, 0.7);"
         
     >
         <a class="d-block" href="/event/{{ $event['id'] }}">
@@ -44,7 +44,7 @@
                     <span>{{ $status }}</span>
                 </button>
             </div>
-            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover" style="min-height: 150px !important; ">
+            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover " style="min-height: 150px !important; ">
             <div class="frame1 d-flex justify-content-between flex-wrap px-3">
                 <div>
                     <img 
@@ -67,8 +67,8 @@
                 </button>
             </div>
             <div class="league_name mt-4 mb-2">
-                <p class="{{ 'text-wrap  ms-0 mb-0 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
-                <br>
+                <p 
+                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
                 <small class=" px-0 ms-0 pb-2 ">
                     <span class="px-0 text-start">
                         <span class="d-inline text-wrap ">{{ $event->user->name  }}</span>
@@ -149,3 +149,4 @@
         </a>
     </div>
 @endforeach
+

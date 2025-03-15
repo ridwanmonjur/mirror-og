@@ -43,7 +43,11 @@
         >
             @include('__CommonPartials.LandingPageScroll')
         </section>
-        <div class="no-more-data d-none"></div>
+        @if (isset($events[0]))
+            <div class="no-more-data d-none"></div>
+        @else
+        <div class="no-more-data text-center mx-auto"> We don't have any events to display </div>
+        @endif
         <br><br>
         
         

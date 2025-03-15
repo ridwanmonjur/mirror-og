@@ -68,7 +68,7 @@
                                 <div class="col-12 col-lg-9 d-flex align-items-center gap-3">
                                     <div class="position-relative">
                                         <img src="{{ '/storage' . '/' . $event->eventBanner }}" {!! trustedBladeHandleImageFailure() !!}
-                                            class="rounded-circle object-fit-cover border border-primary"
+                                            class="rounded-circle object-fit-cover border border-secondary"
                                             style="width: 48px; height: 48px;" alt="Event banner">
 
                                     </div>
