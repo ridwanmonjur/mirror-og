@@ -64,7 +64,7 @@ class RespondTasks extends Command
             }
 
             $with = [
-                'members:id,team_id,user_id', 
+                'roster:id,team_id,user_id', 
                 'members.user:id,name', 
                 'eventDetails.user:id,name',
                 'eventDetails.tier:id,eventTier'

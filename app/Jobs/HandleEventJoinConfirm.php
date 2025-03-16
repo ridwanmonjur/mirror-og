@@ -19,9 +19,12 @@ class ConfirmStrategy
 {
     public function handle($parameters)
     {
-        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event, 'join_id' => $join_id] = $parameters;
-        $teamMembers = $selectTeam->members;
-        $memberNotification = [];
+        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event, 
+            'join_id' => $join_id, 'joinEvent' => $joinEvent 
+        ] = $parameters;
+      
+        $teamMembers = $joinEvent->roster;
+        $memberNotification = []; $memberMail = [];
         foreach ($teamMembers as $member) {
             $addressPartHTML = $user->id == $member->user->id 
                 ? "You have" 
@@ -58,14 +61,7 @@ class ConfirmStrategy
             ];
 
             if ($member->user->email) {
-                Mail::to($member->user->email)->send(new EventConfirmMail([
-                    'team' => $selectTeam,
-                    'text' => $html,
-                    'link' =>  route('participant.register.manage', [
-                        'id' => $selectTeam->id,
-                        'scroll' => $join_id
-                    ]),
-                ]));
+                $memberMail[] = $member->user->email;
             } 
 
             $addressPart2Log = $member->user->id == $user->id 
@@ -100,6 +96,15 @@ class ConfirmStrategy
                 HTML,
             ];
         }
+
+        Mail::to($memberMail)->send(new EventConfirmMail([
+            'team' => $selectTeam,
+            'text' => $html,
+            'link' =>  route('participant.register.manage', [
+                'id' => $selectTeam->id,
+                'scroll' => $join_id
+            ]),
+        ]));
             
         $organizerNotification = [
             'user_id' => $event->user->id,
@@ -120,6 +125,7 @@ class ConfirmStrategy
                 </span>
             HTML,
         ];
+
         if ($event->user->email) {
             Mail::to($event->user->email)->send(new EventConfirmMail([
                 'team' => $selectTeam,
@@ -140,9 +146,16 @@ class VoteStartStrategy
 {
     public function handle($parameters)
     {
-        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event,  'join_id' => $join_id] = $parameters;
-        $teamMembers = $selectTeam->members;
-        $memberNotification = [];
+        [   
+            'selectTeam' => $selectTeam, 
+            'user' => $user, 
+            'event' => $event,  
+            'join_id' => $join_id,
+            'joinEvent' => $joinEvent,
+        ] = $parameters;
+
+        $teamMembers = $joinEvent->members;
+        $memberNotification = []; $memberMail = [];
         foreach ($teamMembers as $member) {
             $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
             $htmlNotif = <<<HTML
@@ -160,14 +173,14 @@ class VoteStartStrategy
             $htmlMail = <<<HTML
                 <span class="notification-gray">
                     {$addressPart} have started a vote to <span class="notification-danger" >QUIT></span>  
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue">
                         {$event->user->name}
                     </button>'s event,
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue">
                         {$event->eventName}
                     </button>
                     for your team, 
-                    <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                    <button class="btn-transparent px-0 border-0 notification-blue" >
                         {$selectTeam->teamName}
                     </button>. 
                 </span>
@@ -187,16 +200,18 @@ class VoteStartStrategy
             ];
 
             if ($member->user->email) {
-                Mail::to($member->user->email)->send(new EventConfirmMail([
-                    'team' => $selectTeam,
-                    'text' => $htmlMail,
-                    'link' =>  route('participant.register.manage', [
-                        'id' => $selectTeam->id,
-                        'scroll' => $join_id
-                    ]),
-                ]));
+                $memberMail[] = $member->user->email;
             }
         }
+
+        Mail::to($memberMail)->send(new EventConfirmMail([
+            'team' => $selectTeam,
+            'text' => $htmlMail,
+            'link' =>  route('participant.register.manage', [
+                'id' => $selectTeam->id,
+                'scroll' => $join_id
+            ]),
+        ]));
 
         NotifcationsUser::insertWithCount($memberNotification);
     }
@@ -215,13 +230,14 @@ class VoteEndStrategy
     {
         [
             'selectTeam' => $selectTeam, 
-            'user' => $user, 
             'event' => $event, 
             'willQuit' => $willQuit,
             'discount' => $discountsByUserAndType,
-            'join_id' => $join_id
+            'join_id' => $join_id,
+            'joinEvent' => $joinEvent,
         ] = $parameters;
-        $teamMembers = $selectTeam->members;
+        $teamMembers = $joinEvent->members;
+        $memberMail = [];
         $memberNotification = [];
 
         if ($willQuit) {
@@ -286,16 +302,18 @@ class VoteEndStrategy
                 ];
 
                 if ($member->user->email) {
-                    Mail::to($member->user->email)->send(new VoteEndMail([
-                        'team' => $selectTeam,
-                        'text' => $htmlMail,
-                        'link' =>  route('participant.register.manage', [
-                            'id' => $selectTeam->id,
-                            'scroll' => $join_id
-                        ]),
-                    ]));
+                    $memberMail[] = $member->user->email;
                 }
             }
+
+            Mail::to($memberMail)->send(new VoteEndMail([
+                'team' => $selectTeam,
+                'text' => $htmlMail,
+                'link' =>  route('participant.register.manage', [
+                    'id' => $selectTeam->id,
+                    'scroll' => $join_id
+                ]),
+            ]));
 
             $htmlMail = <<<HTML
                 <span class="notification-gray">
@@ -385,16 +403,18 @@ class VoteEndStrategy
                 ];
 
                 if ($member->user->email) {
-                    Mail::to($member->user->email)->send(new VoteEndMail([
-                        'team' => $selectTeam,
-                        'text' => $htmlMail,
-                        'link' =>  route('participant.register.manage', [
-                            'id' => $selectTeam->id,
-                            'scroll' => $join_id
-                        ]),
-                    ]));
+                    $memberMail[] = $member->user->email;
                 }
             }
+
+            Mail::to($memberMail)->send(new VoteEndMail([
+                'team' => $selectTeam,
+                'text' => $htmlMail,
+                'link' =>  route('participant.register.manage', [
+                    'id' => $selectTeam->id,
+                    'scroll' => $join_id
+                ]),
+            ]));
 
             NotifcationsUser::insertWithCount($memberNotification);
         }

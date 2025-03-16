@@ -75,17 +75,14 @@ class ParticipantRosterController extends Controller
             $rosterMember->save();
 
             $joinEvent = JoinEvent::where('id', $rosterMember->join_events_id)
-                ->with(['roster', 
+                ->with(['roster', 'roster.user',
                     'eventDetails.user:id,name,userBanner',
                     'eventDetails.tier:id,eventTier'
                 ])
                 ->first();
 
-            $team = Team::where('id', $joinEvent->team_id)
-                ->with(['members' => function ($query) {
-                    $query->where('status', 'accepted')->with('user');
-                }])
-                ->first();
+            $team = Team::where('id', $joinEvent->team_id)->first();
+            
             $joinEvent->vote_starter_id = $user->id;
             [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
             $joinEvent->save();

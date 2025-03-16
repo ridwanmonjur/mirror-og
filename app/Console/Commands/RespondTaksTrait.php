@@ -78,8 +78,8 @@ trait RespondTaksTrait
                 HTML;
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="px-0 border-0 notification-blue" href="/event/{$join->eventDetails->id}">
-                    {$join->eventDetails->eventName}</a> has now ended. 
+                    <span class="px-0 border-0 notification-blue" >
+                    {$join->eventDetails->eventName}</span> has now ended. 
                     </span>
                 HTML;
             $notifications[$join->id] = [
@@ -118,8 +118,8 @@ trait RespondTaksTrait
                 HTML;
             $memberEmail = <<<HTML
                 <span class="notification-gray">
-                    <a class="btn-transparent px-0 border-0 " href="/event/{$join->eventDetails->id}">
-                    <span class="notification-blue">{$join->eventDetails->eventName}</span></a> is now live. 
+                    <span class="btn-transparent px-0 border-0 " >
+                    <span class="notification-blue">{$join->eventDetails->eventName}</span></span> is now live. 
                     </span>
                 HTML;
             $notifications[$join->id ] = [
@@ -213,7 +213,16 @@ trait RespondTaksTrait
                         'link' =>  $notificationMap[$join->id]['member']['link'],
                     ]);
                     
-                    foreach ($join->members as $member) {
+                    $memberEmails = collect($join->roster)
+                        ->map(function($member) {
+                            return $member->user && $member->user->email 
+                                ? $member->user->email 
+                                : null;
+                        })
+                        ->filter()
+                        ->all();
+
+                    foreach ($join->roster as $member) {
                         $memberNotification[] = [
                             'user_id' => $member->user->id,
                             'type' => $notificationMap[$join->id]['member']['type'],
@@ -223,7 +232,12 @@ trait RespondTaksTrait
                             'created_at' => DB::raw('NOW()')
                         ];
 
-                        if ($member->user->mail) Mail::to($member->user->email)->send($memberMailInvocation);
+                        if ($member->user->email) $memberEmails[] = $member->user->email;
+
+                    }
+
+                    if (!empty($memberEmails)) {
+                        Mail::to($memberEmails)->send($memberMailInvocation);
                     }
 
                     $organizerNotification[] = [
@@ -246,7 +260,6 @@ trait RespondTaksTrait
                         'link' =>  $notificationMap[$join->id]['organizer']['link'],
                     ]);
                     
-
                     if ($join->eventDetails->user->email) 
                         Mail::to($join->eventDetails->user->email)->send($orgMailInvocation);
                 }

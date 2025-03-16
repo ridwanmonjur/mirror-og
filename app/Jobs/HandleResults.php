@@ -46,21 +46,23 @@ class ChangePositionStrategy
                 'teamId' => $teamId,
                 'image' => $image,
                 'team' => $team,
-                'eventId' => $eventId
+                'eventId' => $eventId,
+                'joinEvent' => $joinEvent
             ] = $parameters;
+
+            $joinEvent->load(['roster', 'roster.user']);
             Log::info($parameters['position']);
 
             $event = EventDetail::where(['id' => $eventId])->select(['id', 'eventName'])->firstOrFail();
 
             $positionString = $this->ordinalPrefix($parameters['position']);
-            Log::info($positionString);
             
             $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
                     <span class="notification-gray"> You achieved 
                     <span class="notification-other"><span class="notification-{$parameters['position']}">
-                        {$positionString}</span></span> position in the team,
+                        {$positionString}</span></span> position with your team,
                     <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/$teamId" alt="Team Link">
                         {$parameters['teamName']}</button> in the event, <button class="btn-transparent px-0 border-0 notification-entity" data-href="/event/$event->id" alt="Event Link">
                         {$event->eventName}</button>. 
@@ -77,7 +79,7 @@ class ChangePositionStrategy
                             alt="Event View"
                         ></a>
                     <span class="notification-gray"> You achieved 
-                    {$positionString} position in the team,
+                    {$positionString} position with your team,
                     <a class="px-0 border-0" href="/view/team/$teamId" alt="Team Link">
                         <span class="notification-blue">{$parameters['teamName']}</span></a> in the event, 
                         <a class="px-0 border-0" href="/event/$event->id" alt="Event Link">
@@ -107,22 +109,24 @@ class ChangePositionStrategy
             $memberMailable = new EventResultMail([
                 'team' => $team,
                 'text' => $notificationLog,
-                'link' => route('participant.team.view', ['id' => $team->id]) . '#Positions'                
+                'link' => route('public.team.view', ['id' => $team->id]) . '#Positions'                
             ]);
 
-            foreach ($team->members as $member) {
+            foreach ($joinEvent->roster as $member) {
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'teams',
-                    'link' =>  route('public.team.view', ['id' => $team->id]),
+                    'link' =>  route('public.team.view', ['id' => $team->id]) . '#Positions',
                     'icon_type' => 'trophy',
                     'html' => $notificationLog,
                     'created_at' => DB::raw('NOW()')
                 ];
     
-                if ($member->user->email) Mail::to($member->user->email)->send($memberMailable);
+                if ($member->user->email) {
+                    $memberMail[] = $member->user->email;
+                }
             }
-    
+            Mail::to($memberMail)->send($memberMailable);
             NotifcationsUser::insertWithCount($memberNotification);
 
         } catch (Exception $e) {

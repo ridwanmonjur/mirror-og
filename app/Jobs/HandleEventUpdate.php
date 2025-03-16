@@ -34,10 +34,10 @@ class HandleEventUpdate implements ShouldQueue
         try {
             $joinEvent = JoinEvent::where('event_details_id', $this->eventDetail->id)
                 ->where('join_status', 'confirmed')
-                ->with(['members', 'members.user'])
+                ->with(['roster', 'roster.user'])
                 ->first();
             
-
+            $memberMail = [];
             $this->eventDetail->load(['user']);
 
             if ($joinEvent) {
@@ -51,10 +51,12 @@ class HandleEventUpdate implements ShouldQueue
                         The event, <button class="btn-transparent px-0 border-0 Color-{$this->eventDetail->tier->eventTier}" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
                         been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.
                         HTML;
+
                     $partialEmail = <<<HTML
-                        The event, <a class="px-0 border-0 notification-blue" href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</a> has 
+                        The event, <span class="px-0 border-0 notification-blue">{$this->eventDetail->eventName}</span> has 
                         been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}"
                         HTML;
+
                     $memberHtml = <<<HTML
                         <span class="notification-gray">
                             {$partialHtml}
@@ -98,7 +100,7 @@ class HandleEventUpdate implements ShouldQueue
 
 
                     $memberNotification = $organizerNotification = [];
-                    foreach ($joinEvent->members as $member) {
+                    foreach ($joinEvent->roster as $member) {
                         $memberNotification[] = [
                             'user_id' => $member->user->id,
                             'type' => $notificationMap['member']['type'],
@@ -108,8 +110,12 @@ class HandleEventUpdate implements ShouldQueue
                             'created_at' => DB::raw('NOW()')
                         ];
 
-                        if ($member->user->email) Mail::to($member->user->email)->send($participantEmail);
+                        if ($member->user->email) {
+                            $memberMail[] = $member->user->email;
+                        } 
                     }
+
+                    Mail::to($memberMail)->send($participantEmail);
 
                     $organizerNotification = [
                         'user_id' => $joinEvent->eventDetails->user_id,
@@ -126,6 +132,7 @@ class HandleEventUpdate implements ShouldQueue
                         ...$memberNotification,
                         $organizerNotification
                     ]);
+
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();

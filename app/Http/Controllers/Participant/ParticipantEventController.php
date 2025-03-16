@@ -351,24 +351,30 @@ class ParticipantEventController extends Controller
             
             $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!'
                 : 'You have started a vote to cancel registratin.';
+            
             $joinEvent = JoinEvent::where('id', $request->join_event_id)
                 ->firstOrFail();
+            
             $team = Team::where( 'id', $joinEvent->team_id)
                 ->firstOrFail();
+
             $event = EventDetail::where('id', $joinEvent->event_details_id)
                 ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
                 ->with('tier:id,eventTier')
                 ->firstOrFail();
+
             $isPermitted = $joinEvent->payment_status === 'completed' &&
                 ($request->join_status === 'confirmed' || $request->join_status === 'canceled');
 
             if ($isPermitted) {
+                $joinEvent->load(['roster', 'roster.user']);
                 if ($isToBeConfirmed) {
                     $joinEvent->join_status = $request->join_status;
                     dispatch(new HandleEventJoinConfirm('Confirm', [
                         'selectTeam' => $team,
                         'user' => $user,
                         'event' => $event,
+                        'joinEvent' => $joinEvent,
                         'join_id' => $joinEvent->id
                     ]));
                     $joinEvent->save();
@@ -382,9 +388,6 @@ class ParticipantEventController extends Controller
 
                     if ($leaveRatio > 0.5 || $stayRatio > 0.5) {
                         if ($leaveRatio > 0.5) {
-                            $team->load(['members' => function ($query) {
-                                $query->where('status', 'accepted')->with('user');
-                            }]);
                             $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
                             $joinEvent->vote_ongoing = false;
                             $joinEvent->join_status = "canceled";
@@ -392,6 +395,7 @@ class ParticipantEventController extends Controller
                                 'selectTeam' => $team,
                                 'user' => $user,
                                 'event' => $event,
+                                'joinEvent' => $joinEvent,
                                 'discount' => $discountsByUserAndType,
                                 'willQuit' => true,
                                 'join_id' => $joinEvent->id
@@ -407,6 +411,7 @@ class ParticipantEventController extends Controller
                                 'selectTeam' => $team,
                                 'user' => $user,
                                 'event' => $event,
+                                'joinEvent' => $joinEvent,
                                 'willQuit' => false,
                                 'join_id' => $joinEvent->id
                             ]));
@@ -416,6 +421,7 @@ class ParticipantEventController extends Controller
                         dispatch(new HandleEventJoinConfirm('VoteStart', [
                             'selectTeam' => $team,
                             'user' => $user,
+                            'joinEvent' => $joinEvent,
                             'event' => $event,
                             'join_id' => $joinEvent->id
                         ]));
