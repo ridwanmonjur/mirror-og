@@ -152,7 +152,10 @@
         </div>
         <div class="event_extra rounded-box" id="event-tier-display">
             <div class="event_head_container">
+            
                 <img id="outputEventTierImg" src="{{ asset('assets/images/createEvent/question.png') }}"
+                    onerror="this.onerror=null;this.src='/assets/images/createEvent/question.png';"
+
                     class="event_head" width="40" height="40"
                 >
             </div>
@@ -160,7 +163,9 @@
             <div class="event_row">
                 <div class="icon_container me-4 ms-3">
                     <img width="20" height="20" id="outputEventTierImg" src="{{ asset('assets/images/user.png') }}"
-                        class="event_icon">
+                        class="event_icon"  onerror="this.onerror=null;this.src='/assets/images/404q.png';"
+
+                    >
                 </div>
                 <div class="info_container">
                     <p class="my-1" id="outputEventTierPerson">X</p>
