@@ -69,7 +69,7 @@
                     </button>
                 </div>
                 <br>
-                <p class="card-text-2-lines m-0">
+                <p class="text-wrap m-0">
                     <u>{{ $event->eventName ?? 'Choose a name' }}</u></p>
                 <p class="small-text m-0"><i>
                     {{ $event?->user?->name ?? 'Choose organization name' }}
