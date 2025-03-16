@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Reset Password Link' }}
+    {{ 'Hi.' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Reset Password Link' }}
+    {{ 'Link to Reset Password' }}
 @endsection
 @section('content')
     <tr>
@@ -19,7 +19,6 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Hi,</p>
                         <p>You recently requested to reset your password for your account. Click the button below to reset
                             it.</p>
                         <p style="text-align: center;">

@@ -3,15 +3,15 @@
     $secondaryColor = '#81bc1a';
 @endphp
 @extends('Email.Layout.Layout')
-@section('title')
-    {{ 'Event Has Rescheduled' }}
+
+@section('emailTitle')
+    {{ 'This event has been rescheduled.' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Event Has Rescheduled' }}
+@section('title')
+    {{ 'This event has been rescheduled.' }}
 @endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">
@@ -19,7 +19,6 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>An important update for your event!</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <span>{!! $text !!}</span>
                         </p> 

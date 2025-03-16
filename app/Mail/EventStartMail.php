@@ -36,7 +36,7 @@ class EventStartMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
-            ->subject("Event Started Mail")
+            ->subject("Your event has started.")
             ->view('Email.event-started')
             ->with([
                 'actionName' => 'View this event!',

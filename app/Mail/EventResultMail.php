@@ -36,7 +36,7 @@ class EventResultMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
-            ->subject("Event Position Mail")
+            ->subject("Announcing the results of your participation!")
             ->view('Email.event-awarded')
             ->with([
                 'actionName' => 'View your team position!',

@@ -3,15 +3,12 @@
     $secondaryColor = '#81bc1a';
 @endphp
 @extends('Email.Layout.Layout')
-@section('title')
-    {{ 'Vote Results' }}
+@section('emailTitle')
+    {{ 'The participation vote for the team is now over.' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Vote Results' }}
-@endsection
+@section('title')
+    {{ 'The participation vote for the team is now over.' }}
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">

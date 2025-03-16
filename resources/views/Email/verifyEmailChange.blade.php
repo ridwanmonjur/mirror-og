@@ -4,14 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Email Change' }}
+    {{ 'Hi, user!' }}
 @endsection
 
-@push('head')
-@endpush
 @section('emailTitle')
-    {{ 'Email Change' }}
+    {{ 'Request to Change Account Email' }}
 @endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">

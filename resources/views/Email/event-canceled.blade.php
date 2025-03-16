@@ -3,14 +3,12 @@
     $secondaryColor = 'red';
 @endphp
 @extends('Email.Layout.Layout')
-@section('title')
-    {{ 'Team Canceling Event' }}
+@section('emailTitle')
+    {{ 'The event has been canceled!' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Team Canceling Event' }}
+@section('title')
+    {{ 'The event has been canceled!' }}
 @endsection
 @section('content')
     <tr>
@@ -19,7 +17,6 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>The event has been canceled!</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             
                             <span>{!! $text !!}</span>

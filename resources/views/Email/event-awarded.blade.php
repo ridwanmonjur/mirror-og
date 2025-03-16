@@ -3,15 +3,16 @@
     $secondaryColor = 'red';
 @endphp
 @extends('Email.Layout.Layout')
-@section('title')
-    {{ 'Team Position in Event' }}
+
+
+@section('emailTitle')
+    {{ 'The team position has been updated!' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Team Position in Event' }}
+@section('title')
+    {{ 'The team position has been updated!' }}
 @endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">
@@ -19,7 +20,6 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>The team position has been updated!</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <span>{!! $text !!}</span>
                         </p> 

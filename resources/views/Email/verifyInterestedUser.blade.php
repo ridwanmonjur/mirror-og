@@ -3,8 +3,13 @@
     $secondaryColor = '#81bc1a';
 @endphp
 @extends('Email.Layout.Layout')
+
 @section('title')
-    {{ 'Confirm your Email for Driftwood\'s Closed Beta!' }}
+    {{ 'Please verify your interest in the closed beta.' }}
+@endsection
+
+@section('emailTitle')
+    {{ 'Please verify your interest in the closed beta.' }}
 @endsection
 
 @section('content')

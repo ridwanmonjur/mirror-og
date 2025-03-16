@@ -15,10 +15,11 @@
         html, body {
             font-size: 16px;
         }
-        h1, h2, h3, h4, h5, h6, p, table, span, table {
+        h1, h2, h3, h4, h5, h6, p, table, span, table, button {
             text-align: justify;
             font-size: 1rem;
         }
+
         a { 
             color: #43A4D7;
             text-decoration: none !important;
@@ -26,12 +27,18 @@
 
 
         .btn-transparent {
+            padding-left: 0px  !important;
+            padding-right: 0px !important;
             border: 0px solid black !important;
             background: none !important;
         }
 
         .notification-blue {
             color: #43A4D7 !important;
+        }
+
+        .notification-danger {
+            color: red !important;
         }
 
         .Color-Turtle {

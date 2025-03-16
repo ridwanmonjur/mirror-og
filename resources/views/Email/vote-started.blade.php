@@ -4,14 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Team Starting Vote To Quit' }}
+    {{ 'The participation vote for the team has started.' }}
 @endsection
 
-@push('head')
-@endpush
 @section('emailTitle')
-    {{ 'Team Starting Vote To Quit' }}
+    {{ 'The participation vote for the team has started.' }}
 @endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">

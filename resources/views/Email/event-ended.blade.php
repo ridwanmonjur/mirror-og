@@ -3,15 +3,15 @@
     $secondaryColor = '#81bc1a';
 @endphp
 @extends('Email.Layout.Layout')
-@section('title')
-    {{ 'Event Has Ended' }}
+
+@section('emailTitle')
+    {{ 'Your event is now over.' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Event Has Ended' }}
+@section('title')
+    {{ 'Your event is now over.' }}
 @endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">
@@ -19,7 +19,6 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Event has finished.</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <span>{!! $text !!}</span>
                         </p> 

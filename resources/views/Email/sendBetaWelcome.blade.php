@@ -7,6 +7,10 @@
     {{ 'Welcome to Driftwood\'s Closed Beta!' }}
 @endsection
 
+@section('emailTitle')
+    {{ 'Welcome to Driftwood\'s Closed Beta!' }}
+@endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">

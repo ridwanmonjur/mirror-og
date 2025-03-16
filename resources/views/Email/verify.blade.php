@@ -3,15 +3,15 @@
     $secondaryColor = '#81bc1a';
 @endphp
 @extends('Email.Layout.Layout')
-@section('title')
-    {{ 'Email Verification Mail' }}
+
+@section('emailTitle')
+    {{ 'Email Verification To Complete Account Creation' }}
 @endsection
 
-@push('head')
-@endpush
-@section('emailTitle')
-    {{ 'Email Verification Mail' }}
+@section('title')
+    {{ "We've sent you an email to complete your account creation." }}
 @endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">
@@ -21,7 +21,7 @@
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hi,</p>
                         <p>You recently created your account with us. Click the button below to verify
-                            it.</p>
+                            email.</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.verify.action', $token) }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">

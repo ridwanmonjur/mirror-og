@@ -36,7 +36,7 @@ class EventConfirmMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
-            ->subject("Event Confirm Mail")
+            ->subject("The team has confirmed its registration.")
             ->view('Email.event-confirmed')
             ->with([
                 'team' => $this->body['team'],

@@ -36,7 +36,7 @@ class EventJoinMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
-            ->subject($this->body['subject'] ?? 'A subject')
+            ->subject('The team has signed up for the event successfully.')
             ->view('Email.event-joined')
             ->with([
                 'team' => $this->body['team'],
