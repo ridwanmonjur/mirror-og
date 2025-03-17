@@ -4,7 +4,9 @@ namespace App\Listeners;
 
 use App\Events\JoinEventSignuped;
 use App\Mail\EventSignupMail;
+use App\Models\ActivityLogs;
 use App\Models\NotifcationsUser;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -30,7 +32,11 @@ class JoinEventSignupListener implements ShouldQueue
     public function handle(JoinEventSignuped $event2): void
     {
         $memberNotification = []; 
+        $memberMail = [];
+     
         foreach ($event2->selectTeam->members as $member) {
+            $subjectList[] = $member->user->id;
+
             $notifHtml = <<<HTML
                 <span class="notification-gray">
                     You have signed up for  
@@ -47,22 +53,7 @@ class JoinEventSignupListener implements ShouldQueue
                 </span>
             HTML;
 
-            $logHtml = <<<HTML
-                <span class="notification-gray">
-                    You have signed up for  
-                    <a href="/view/organizer/{$event2->event->user->id}" class="notification-entity">
-                        <span>{$event2->event->user->name}</span>
-                    </a>'s event,
-                    <a href="/event/{$event2->event->id}" class="notification-blue">
-                        <span>{$event2->event->eventName}</span>
-                    </a>
-                    with your team, 
-                    <a href="/view/team/{$event2->selectTeam->id}" class="notification-entity">
-                        <span>{$event2->selectTeam->teamName}</span>
-                    </a>. 
-                    Please complete and confirm your registration for this event.
-                </span>
-                HTML;
+         
 
             $memberNotification[] = [
                 'user_id' => $member->user->id,
@@ -78,17 +69,19 @@ class JoinEventSignupListener implements ShouldQueue
             ];
 
             if ($member->user->email) {
-                Mail::to($member->user->email)->send(new EventSignupMail([
-                    'team' => $event2->selectTeam,
-                    'text' => $logHtml,
-                    'link' =>  route('participant.register.manage', [
-                        'id' => $event2->selectTeam->id,
-                        'scroll' => $event2->join_id
-                    ]),
-                ]));
+                $memberMail[] = $member->user->email;
             }
         }
-            
+
+        Mail::to($memberMail)->send(new EventSignupMail([
+            'team' => $event2->selectTeam,
+            'text' => $notifHtml,
+            'link' =>  route('participant.register.manage', [
+                'id' => $event2->selectTeam->id,
+                'scroll' => $event2->join_id
+            ]),
+        ]));
+
         NotifcationsUser::insertWithCount($memberNotification);
     }
 

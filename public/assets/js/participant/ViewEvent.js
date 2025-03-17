@@ -210,16 +210,12 @@ function updateModalShow(event) {
 
     window.closeLoading();
     
-   
-
     try {
-        // First, check if element exists and has correct structure
         if (!modalElement || !modalElement.classList) {
             console.error('Invalid modal element:', modalElement);
             return;
         }
     
-        // Check if a modal instance already exists
         let existingModal = bootstrap.Modal.getInstance(modalElement);
         if (existingModal) {
             console.log('Using existing modal instance');
@@ -227,7 +223,6 @@ function updateModalShow(event) {
             return;
         }
     
-        // If no existing instance, create new one with explicit config
         let modal = new bootstrap.Modal(modalElement, {
             backdrop: true,
             keyboard: true,
