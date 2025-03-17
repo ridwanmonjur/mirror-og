@@ -730,7 +730,7 @@ input[type="time"] {
 }
 
 
-main {
+body {
     background-image: url("/assets/images/event-management-bg.png");
     min-height: 100vh;
     background-repeat: repeat-y;
@@ -1225,9 +1225,6 @@ body{
         max-width: 60vw !important; 
     }
 
-    main {
-        min-height: 95vh; 
-    }
 
     .time-line-box .status__left small {
         left: 13%;
