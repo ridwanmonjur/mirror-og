@@ -2,7 +2,7 @@
     <img onclick="redirectToProfilePage({{ $member->user_id }});" width="45" height="45"
         src="{{ bladeImageNull($member->user->userBanner) }}"
         {!! trustedBladeHandleImageFailure() !!}
-        class="me-2 random-color-circle cursor-pointer rounded-circle object-fit-cover">
+        class="me-3 random-color-circle cursor-pointer rounded-circle object-fit-cover">
 
     <div >
         <div class="py-0 my-0">
