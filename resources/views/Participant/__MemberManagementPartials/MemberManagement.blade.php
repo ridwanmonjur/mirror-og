@@ -48,7 +48,7 @@
                         onmouseover="this.style.transform='translateY(-2px)'" 
                         onmouseout="this.style.transform='translateY(0)'"
                     >
-                        <div class="accepted-member-table card-body px-3 py-1">
+                        <div class="accepted-member-table card-body px-3 py-2">
                             <div class="st row invisible-until-hover-parent" id="tr-{{ $member->id }}">
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
@@ -92,7 +92,7 @@
                         onmouseover="this.style.transform='translateY(-2px)'" 
                         onmouseout="this.style.transform='translateY(0)'"
                     >
-                        <div class="accepted-member-table card-body px-3 py-1">
+                        <div class="accepted-member-table card-body px-3 py-2">
                             <div class="st row card-text invisible-until-hover-parent" id="tr-{{ $member->id }}">
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
@@ -124,7 +124,7 @@
         and {{ $teamMembersProcessed['rejected']['count'] }} rejected
         member{{ bladePluralPrefix($teamMembersProcessed['rejected']['count']) }}
     </p>
-    <div class=" mt-3 pt-3 tab-size">
+    <div class="  pt-3 tab-size">
         @if ($teamMembersProcessed['pending']['count'] != 0)
             <h5 class="pb-3">Invited Members</h5>
             <div class="row w-100">
@@ -133,7 +133,7 @@
                         onmouseover="this.style.transform='translateY(-2px)'" 
                         onmouseout="this.style.transform='translateY(0)'"
                     >
-                        <div class="accepted-member-table card-body px-3 py-1">
+                        <div class="accepted-member-table card-body px-3 py-2">
                             <div class="row invisible-until-hover-parent" id="tr-{{ $member->id }}">
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,
@@ -183,7 +183,7 @@
                         onmouseover="this.style.transform='translateY(-2px)'" 
                         onmouseout="this.style.transform='translateY(0)'"
                     >
-                        <div class="accepted-member-table card-body px-3 py-1">
+                        <div class="accepted-member-table card-body px-3 py-2">
                             <div class="st row invisible-until-hover-parent" id="tr-{{ $member->id }}">
                                 @include('Participant.__MemberManagementPartials.MemberManagementColumns', [
                                     'member' => $member,

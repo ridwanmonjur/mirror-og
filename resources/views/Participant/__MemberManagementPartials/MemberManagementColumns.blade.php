@@ -1,11 +1,9 @@
-<div class="col-12 col-lg-1 ">
+<div class="col-12 col-lg-10 d-flex justify-content-start align-items-center">
     <img onclick="redirectToProfilePage({{ $member->user_id }});" width="45" height="45"
         src="{{ bladeImageNull($member->user->userBanner) }}"
         {!! trustedBladeHandleImageFailure() !!}
-        class="me-2 my-3 random-color-circle cursor-pointer rounded-circle object-fit-cover">
-</div>
+        class="me-2 random-color-circle cursor-pointer rounded-circle object-fit-cover">
 
-<div class="col-12 col-lg-9  py-2">
     <div >
         <div class="py-0 my-0">
             <h6  class="text-wrap my-0 mb-0 pt-2 pb-0 d-inline-block"
@@ -19,11 +17,12 @@
             <u onclick="redirectToProfilePage({{ $member->user_id }});"
                 class="cursor-pointer"
             >{{ $member->user->name }}</u></h6>
-        </div>
-        <div>
-            <span class="fs-4 me-0 ">
+             <span class="fs-5 ms-2 ">
                 {{ $member?->user?->participant?->region_flag  }}
             </span>
+        </div>
+        <div>
+           
             <span>{{$actorStatusMap[$member->status][$member->actor]}}</span>
             <span>{{ $member->updatedAtDiffForHumans() }}</span>
         </div>

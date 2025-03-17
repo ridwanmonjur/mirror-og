@@ -220,7 +220,7 @@
                                             @if ($joinEvent->isUserPartOfRoster && !isset($currentUser['vote_to_quit']))
                                                 <div class="d-flex justify-content-between">
                                                     <button 
-                                                        class="btn btn-success text-dark px-3 rounded-pill z-99"
+                                                        class="btn btn-sm btn-success text-dark px-2 rounded-pill z-99"
                                                         data-vote-to-quit="0"
                                                         data-join-event-id="{{$joinEvent->id}}"
                                                         data-roster-id="{{ $currentUser['rosterId'] }}"
@@ -228,7 +228,7 @@
                                                     > Stay
                                                     </button>
                                                     <button 
-                                                        class="btn bg-red text-white px-3 rounded-pill z-99"
+                                                        class="btn btn-sm bg-red text-white px-2 rounded-pill z-99"
                                                         data-vote-to-quit="1"
                                                         data-roster-id="{{ $currentUser['rosterId'] }}"
                                                         data-join-event-id="{{$joinEvent->id}}"
@@ -236,12 +236,14 @@
                                                     > Leave
                                                     </button>
                                                 </div>
+                                            @else
+                                                <div class="d-flex justify-content-between px-2">
+                                                    <small class="text-success">Stay</small>
+                                                    <small class="text-red">Leave</small>
+                                                </div>
                                             @endif
-                                             <div class="d-flex justify-content-between">
-                                                <small class="text-success">Stay</small>
-                                                <small class="text-red">Leave</small>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
+                                             
+                                            <div class="d-flex justify-content-between px-2">
                                                 <span>{{$votes['stayCount']}}</span>
                                                 </span>{{$votes['leaveCount']}}</span>
                                             </div>
