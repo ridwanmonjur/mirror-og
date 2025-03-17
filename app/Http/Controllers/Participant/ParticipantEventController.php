@@ -379,55 +379,17 @@ class ParticipantEventController extends Controller
                     ]));
                     $joinEvent->save();
                 } else {
-                    $voteToQuit = true;
-                    $rosterMember->vote_to_quit = $voteToQuit;
-                    $rosterMember->save();
                     $joinEvent->vote_starter_id = $user->id;
-                    $joinEvent->vote_ongoing = $user->id;
-                    [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
-
-                    if ($leaveRatio > 0.5 || $stayRatio > 0.5) {
-                        if ($leaveRatio > 0.5) {
-                            $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$event->id], 0.5);
-                            $joinEvent->vote_ongoing = false;
-                            $joinEvent->join_status = "canceled";
-                            dispatch(new HandleEventJoinConfirm('VoteEnd', [
-                                'selectTeam' => $team,
-                                'user' => $user,
-                                'event' => $event,
-                                'joinEvent' => $joinEvent,
-                                'discount' => $discountsByUserAndType,
-                                'willQuit' => true,
-                                'join_id' => $joinEvent->id
-                            ]));
-                        }
-
-                        if ($stayRatio > 0.5) {
-                            $joinEvent->vote_ongoing = false;
-                            $joinEvent->join_status = $joinEvent->payment_status == "completed" ? 
-                                "confirmed" : "pending";
-                            
-                            dispatch(new HandleEventJoinConfirm('VoteEnd', [
-                                'selectTeam' => $team,
-                                'user' => $user,
-                                'event' => $event,
-                                'joinEvent' => $joinEvent,
-                                'willQuit' => false,
-                                'join_id' => $joinEvent->id
-                            ]));
-                        }
-
-                    } else {
-                        dispatch(new HandleEventJoinConfirm('VoteStart', [
-                            'selectTeam' => $team,
-                            'user' => $user,
-                            'joinEvent' => $joinEvent,
-                            'event' => $event,
-                            'join_id' => $joinEvent->id
-                        ]));
-                    }
-                    
+                    $joinEvent->vote_ongoing = true;
                     $joinEvent->save();
+
+                    dispatch(new HandleEventJoinConfirm('VoteStart', [
+                        'selectTeam' => $team,
+                        'user' => $user,
+                        'joinEvent' => $joinEvent,
+                        'event' => $event,
+                        'join_id' => $joinEvent->id
+                    ]));
                 }
             } else {
                 return back()->with('errorMessage', 'This cancel operation is not permitted at this stage.')

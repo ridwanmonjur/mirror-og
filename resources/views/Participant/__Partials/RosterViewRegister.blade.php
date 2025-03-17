@@ -45,7 +45,7 @@
     <div @class([
         'event  mx-auto event-width cursor-pointer visible-until-hover-parent position-relative ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
-    ]) style="margin-bottom : 0; ">
+    ]) style="margin-bottom : 0; width: auto !important;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img 
                 id="eventBanner"
@@ -207,11 +207,16 @@
                                         </span>
                                     </div>
                                     @if ($joinEvent->vote_ongoing)
-                                        <div class="mt-3 border py-2 px-3 border-2 ms-3 ms-lg-0 border-primary bg-translucent">
-                                            <small class="d-inline-block mt-0 mb-1 py-0"> A vote to quit was called by <span style="color: brown;">{{$joinEvent?->voteStarter?->name}}.</span> </small>
-                                            @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit']) && $currentUser['vote_to_quit'])
-                                                <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>
+                                        <div class="border py-2 px-2 border-2 ms-3 ms-lg-0 border-primary bg-translucent">
+                                            <small class="d-inline-block mt-0 mb-1 py-0"><small class="text-red">{{$joinEvent?->voteStarter?->name}}</small> has called a vote.</small>
+                                            @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit'])) 
+                                                @if ($currentUser['vote_to_quit'])
+                                                    <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>
+                                                @else 
+                                                    <small class="d-inline-block text-success mb-1"> You voted to stay in this event.</small>
+                                                @endif
                                             @endif
+                                           
                                             @if ($joinEvent->isUserPartOfRoster && !isset($currentUser['vote_to_quit']))
                                                 <div class="d-flex justify-content-between">
                                                     <button 
@@ -232,6 +237,10 @@
                                                     </button>
                                                 </div>
                                             @endif
+                                             <div class="d-flex justify-content-between">
+                                                <small class="text-success">Stay</small>
+                                                <small class="text-red">Leave</small>
+                                            </div>
                                             <div class="d-flex justify-content-between">
                                                 <span>{{$votes['stayCount']}}</span>
                                                 </span>{{$votes['leaveCount']}}</span>
