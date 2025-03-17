@@ -49,12 +49,12 @@ class HandleEventUpdate implements ShouldQueue
 
                     $partialHtml = <<<HTML
                         The event, <button class="btn-transparent px-0 border-0 Color-{$this->eventDetail->tier->eventTier}" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
-                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}.
+                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} MYT and ends on {$endTimeDate->format('l, F j, Y')} MYT.
                         HTML;
 
                     $partialEmail = <<<HTML
                         The event, <span class="px-0 border-0 notification-blue">{$this->eventDetail->eventName}</span> has 
-                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} and ends on {$endTimeDate->format('l, F j, Y')}"
+                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} MYT and ends on {$endTimeDate->format('l, F j, Y')} MYT.
                         HTML;
 
                     $memberHtml = <<<HTML

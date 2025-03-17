@@ -155,16 +155,14 @@ trait RespondTaksTrait
             $memberHtml = <<<HTML
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
-                    {$join->eventDetails->eventName}</button> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
-                    on {$timeDate->format('M d, Y')}. 
+                    {$join->eventDetails->eventName}</button> has started and is now underway. 
                     </span>
                 HTML;
             
             $memberEmail = <<<HTML
                 <span class="notification-gray">
                     <a class="btn-transparent px-0 border-0" href="/event/{$join->eventDetails->id}">
-                    <span class="notification-blue">{$join->eventDetails->eventName}</span></a> starts in {$timeDate->diffForHumans()} at {$timeDate->format('g:i A')} 
-                    on {$timeDate->format('M d, Y')}. 
+                    <span class="notification-blue">{$join->eventDetails->eventName}</span></a> has started and is now underway. 
                     </span>
                 HTML;
             
