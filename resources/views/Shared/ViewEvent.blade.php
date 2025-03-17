@@ -332,7 +332,7 @@
             <div>
                 <div class="tab ms-0 position-relative tab-viewEvent" >
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
-                        onclick="openTab(event, 'Overview'); ">Overview</button>
+                        onclick="openTab(event, 'Overview', 'current-title'); ">Overview</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         onclick="openTab(event, 'Bracket', 'bracket-list'); ">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
@@ -342,7 +342,7 @@
                 </div>
                 <br>
                 <div id="Overview" class="tabcontent" style="display: block; ;">
-                    <h5><u>About this event</u></h5>
+                    <h5 id="current-title"><u>About this event</u></h5>
                     <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 

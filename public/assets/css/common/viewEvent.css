@@ -743,8 +743,8 @@ h2 {
         content: '';
         display: block;
         width: var(--line-width);
-        height: 45%;
-        border-right: 1px solid var(--border-color);
+        height: 50%;
+        border-right: 0.25px solid var(--border-color);
    }
    .tournament-bracket__joined-odd-list .tournament-bracket__item::after {
         border-right: 0px solid var(--border-color);
@@ -804,7 +804,7 @@ h2 {
         display: block;
         width: var(--line-width);
         height: 10%;
-        border-left: 1px solid var(--border-color);
+        border-left: 0px solid var(--border-color);
     }
 
     .tournament-bracket__round--eliminator3 .tournament-bracket__match::before {
@@ -831,7 +831,7 @@ h2 {
 
     .tournament-bracket__match::before {
         bottom: 50%;
-        border-left: 1px solid var(--border-color);
+        border-left: 0px solid var(--border-color);
         transform: translate(0,1px);
    }
    
