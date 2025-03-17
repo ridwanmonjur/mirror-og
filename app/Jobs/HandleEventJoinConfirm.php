@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\EventConfirmMail;
 use App\Mail\VoteEndMail;
+use App\Mail\VoteStartMail;
 use App\Models\ActivityLogs;
 use App\Models\NotifcationsUser;
 use App\Models\User;
@@ -160,7 +161,7 @@ class VoteStartStrategy
             $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    A vote to <span class="notification-danger" >QUIT></span>
+                    A vote to <span class="notification-danger" >QUIT</span>
                     <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}
                     </button>
@@ -172,7 +173,7 @@ class VoteStartStrategy
             HTML;
             $htmlMail = <<<HTML
                 <span class="notification-gray">
-                    {$addressPart} have started a vote to <span class="notification-danger" >QUIT></span>  
+                    {$addressPart} have started a vote to <span class="notification-danger" >QUIT</span>  
                     <button class="btn-transparent px-0 border-0 notification-blue">
                         {$event->user->name}
                     </button>'s event,
@@ -204,7 +205,7 @@ class VoteStartStrategy
             }
         }
 
-        Mail::to($memberMail)->send(new EventConfirmMail([
+        Mail::to($memberMail)->send(new VoteStartMail([
             'team' => $selectTeam,
             'text' => $htmlMail,
             'link' =>  route('participant.register.manage', [

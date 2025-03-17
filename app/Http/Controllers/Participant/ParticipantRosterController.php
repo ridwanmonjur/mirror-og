@@ -94,18 +94,20 @@ class ParticipantRosterController extends Controller
                     'event' => $joinEvent->eventDetails,
                     'discount' => $discountsByUserAndType,
                     'willQuit' => true,
-                    'join_id' => $joinEvent->id
+                    'join_id' => $joinEvent->id,
+                    'joinEvent' => $joinEvent
                 ]));
             } 
             
-            if ($stayRatio > 0.5) {
+            if ($stayRatio >= 0.5) {
                 dispatch(new HandleEventJoinConfirm('VoteEnd', [
                     'selectTeam' => $team,
                     'user' => $user,
                     'event' => $joinEvent->eventDetails,
                     'discount' => null,
                     'willQuit' => false,
-                    'join_id' => $joinEvent->id
+                    'join_id' => $joinEvent->id,
+                    'joinEvent' => $joinEvent
                 ]));
             }
     
