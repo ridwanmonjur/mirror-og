@@ -7,7 +7,7 @@
          </tr>
      </thead>
      <tbody class="tournament-bracket__content">
-         <tr class="tournament-bracket__team tournament-bracket__team--winner">
+         <tr class="tournament-bracket__team  px-4 py-3 bg-translucent  tournament-bracket__team--winner">
              <td class="tournament-bracket__country ">
                  <abbr class="tournament-bracket__code me-2"
                      title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}
@@ -16,14 +16,14 @@
                     <img src="{{ bladeImageNullq($bracket['team1_teamBanner']) }}" width="40" height= "40"
                          onerror="this.src='/assets/images/404q.png';" class="object-fit-cover border border-primary rounded-circle" alt="Team View">
                 @else
-                    <div class="rounded-circle border border-primary" style="width: 40px; height: 40px;"></div>
+                    <div class="rounded-circle border border-secondary" style="width: 40px; height: 40px;"></div>
                  @endif
              </td>
-             <td class="tournament-bracket__score mb-2">
+             <td class="tournament-bracket__score ">
                  <span class="tournament-bracket__number">0</span>
              </td>
          </tr>
-         <tr class="tournament-bracket__team">
+         <tr class="tournament-bracket__team  bg-translucent px-4 py-3 ">
              <td class="tournament-bracket__country ">
                  <abbr class="tournament-bracket__code"
                      title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
@@ -31,11 +31,11 @@
                      <img src="{{ bladeImageNullq($bracket['team2_teamBanner']) }}" width="40" height= "40"
                          onerror="this.src='/assets/images/404q.png';" class="object-fit-cover border border-primary rounded-circle me-2" alt="Team View">
                  @else
-                    <div class="rounded-circle border border-primary me-2" style="width: 40px; height: 40px;"></div>
+                    <div class="rounded-circle border border-secondary me-2" style="width: 40px; height: 40px;"></div>
                 @endif
 
              </td>
-             <td class="tournament-bracket__score mb-2">
+             <td class="tournament-bracket__score ">
                  <span class="tournament-bracket__number dotted-score-box">0</span>
              </td>
          </tr>
