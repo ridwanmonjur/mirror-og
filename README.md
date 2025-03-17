@@ -4,7 +4,9 @@
 - PHP 8.2
 - Composer
 - Node.js & npm
-- Apache2
+- Hostinger
+- Docker
+- Hostinger MYSQL and local MYSQL with UTC timezone.  
 - PHP extensions for GRPC and social auth
 - An un-restricted php environment 
 
