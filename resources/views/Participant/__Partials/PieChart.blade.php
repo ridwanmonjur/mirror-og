@@ -134,7 +134,7 @@
                             Confirm Registration
                         </button>
                     </form>
-                @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
+                @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !isset($joinEvent->vote_ongoing))
                     <form class="{{'cancelform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
                         @csrf
                         <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">

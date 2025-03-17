@@ -85,7 +85,6 @@ class ParticipantRosterController extends Controller
             
             $joinEvent->vote_starter_id = $user->id;
             [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
-            $joinEvent->save();
             if ($leaveRatio > 0.5) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$joinEvent->eventDetails->id], 0.5);
                 dispatch(new HandleEventJoinConfirm('VoteEnd', [

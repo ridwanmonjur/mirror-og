@@ -303,7 +303,8 @@ class JoinEvent extends Model
                     $stayVoteCount++;
                 }
             });
-        if ($totalVoteCount != 0) {
+        
+            if ($totalVoteCount != 0) {
             $stayRatio = $stayVoteCount / $totalVoteCount;
             $leaveRatio = $leaveVoteCount / $totalVoteCount;
         }
@@ -312,6 +313,12 @@ class JoinEvent extends Model
             $this->vote_ongoing = false;
             $this->join_status = "canceled";
         }
+
+        if ($stayRatio >= 0.5) {
+            $this->vote_ongoing = false;
+        }
+
+        $this->save();
 
         return [$leaveRatio, $stayRatio];
     }
