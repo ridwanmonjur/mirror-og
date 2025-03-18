@@ -161,8 +161,8 @@ class VoteStartStrategy
             $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
-                    A vote to <span class="notification-danger" >QUIT</span>
-                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
+                    A vote to <span class="notification-danger" >QUIT</span> the 
+                    event, <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
                         {$event->eventName}
                     </button>
                     has been started for your team, 
