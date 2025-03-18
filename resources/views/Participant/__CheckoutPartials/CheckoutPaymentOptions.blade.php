@@ -42,6 +42,7 @@
                                         class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
                                         payment
                                     </button>
+                                    
                                     <button type="button" data-bs-dismiss="modal" id="closeDiscountModal"
                                         class="mt-2 ms-4 py-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
                                 </div>
@@ -235,13 +236,11 @@
                 </h5>
             </div>
             <div class="d-flex justify-content-center w-75">
-                <button type="submit"
-                    class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2">
-                    <a href="{{ route('participant.register.manage', ['id' => $teamId]) }}" class="submit-texts d-block"> Cancel </a>
+          
+                    <a href="{{ route('participant.register.manage', ['id' => $teamId]) }}" class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2 submit-texts d-block"> Cancel </a>
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
-                </button>
             </div>
         </div>
     </div>

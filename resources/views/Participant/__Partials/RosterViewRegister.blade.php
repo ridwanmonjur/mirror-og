@@ -158,7 +158,7 @@
                                 @endif
                             </ul>
                         </div>
-                        <div class="col-12 col-lg-6 ps-2 pe-3">
+                        <div class="col-12 col-lg-6 ps-2 pe-3" onclick="event.stopPropagation();">
                             <div class="px-0">
                                 @if ($joinEvent->isUserPartOfRoster) 
                                     <div class="text-end">

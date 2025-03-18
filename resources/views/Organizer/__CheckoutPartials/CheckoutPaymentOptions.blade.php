@@ -207,12 +207,10 @@
             <div id="card-element" class="mb-2 w-100 "> </div>
                 <div class="d-flex justify-content-center w-100  my-3 d-none" id="submit-button-element" style="width: 100px;">
                     <button form="stripe-payment-form" class="oceans-gaming-default-button" type="submit"> Submit </button>
-                    <button type="button"
-                        class="ms-3 oceans-gaming-default-button oceans-gaming-transparent-button px-2 py-2 " style="width: 100px;">
-                        <a href="{{ route('event.show', $event->id) }}" class=" submit-texts d-block"> 
+                   
+                        <a style="width: 100px;" href="{{ route('event.show', $event->id) }}" class=" submit-texts d-block ms-3 oceans-gaming-default-button oceans-gaming-transparent-button px-2 py-2 "> 
                             Cancel 
                         </a>
-                    </button>
                 </div> 
             </div>
         </div>
