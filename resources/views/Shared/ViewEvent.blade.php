@@ -81,7 +81,7 @@
                 <div class="grid-container-two-columns-at-desktop">
                     <div class="card-text ">
                         <div>
-                            <br>
+                            <br class="d-none d-lg-block">
                             <div class="d-flex justify-content-between flex-wrap align-items-start pb-3">
                                 <h5 class="text-wrap w-75">
                                     {{ $event->eventName ?? 'No name yet' }}
@@ -209,12 +209,12 @@
                                 <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
                             </div>
 
-                            <br>
+                            <br class="d-none d-lg-block"> 
 
                         </div>
                     </div>
                     <div class="ps-3">
-                        <br>
+                        <br class="d-none d-lg-block">
                         @if (session('errorMessage'))
                             <div class="error-message mt-0">
                                 {{ session('errorMessage') }}

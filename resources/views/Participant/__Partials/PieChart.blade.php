@@ -174,7 +174,7 @@
                             </span>
                             <span class="me-1">Roster is filled</span>
                             <button 
-                                class="btn btn-sm px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
+                                class="btn  px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
                             >
                                 <u>Tutorial</u>
                             </button>
@@ -188,7 +188,7 @@
                             </span>
                             <span class="me-0">Roster is still empty!</span>
                             <button  
-                                class="btn btn-sm cursor-pointer px-1 text-red tutorial-button position-relative z-99" 
+                                class="btn cursor-pointer px-0 text-red tutorial-button position-relative z-99" 
                             >
                                 <u>Tutorial</u>
                             </button>
