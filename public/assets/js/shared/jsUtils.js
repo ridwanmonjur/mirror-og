@@ -635,11 +635,6 @@ console.log({
     document.getElementById('search-bar')?.addEventListener(
         "keydown",
         debounce((e) => {
-            if (e.keyCode === 91 || e.keyCode === 92) {
-                e.preventDefault(); 
-                return; 
-            }
-
             searchPart(e);
         }, 1000)
     );
@@ -647,27 +642,25 @@ console.log({
     document.getElementById('search-bar-mobile')?.addEventListener(
         "keydown",
         debounce((e) => {
-            if (e.keyCode === 91 || e.keyCode === 92) {
-                e.preventDefault(); 
-                return; 
-            }
-            
             searchPart(e);
         }, 1000)
     );
 
 
 function searchPart(e) {
+    if (e.keyCode === 91 || e.keyCode === 92) {
+        e.preventDefault(); 
+        return; 
+    }
+
     page = 1;
     let noMoreDataElement = document.querySelector('.no-more-data');
     noMoreDataElement.classList.add('d-none');
     document.querySelector('.scrolling-pagination').innerHTML = '';
     search = e.target.value;
     ENDPOINT = landingEndpoint;
-    if (!search || String(search).trim() == "") {
-        ENDPOINT += "?page=" + page;
-    } else {
-        ENDPOINT += "?search=" + search + "&page=" + page;
+    if (search && String(search).trim() != "") {
+        ENDPOINT += "?search=" + search;
     }
 
     window.location.href = ENDPOINT;
