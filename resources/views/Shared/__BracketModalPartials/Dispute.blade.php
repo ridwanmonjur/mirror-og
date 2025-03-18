@@ -102,9 +102,9 @@
                                                 ];
                                             @endphp
                                             @foreach ($reasons as $key => $label)
-                                                <div class="mb-3">
+                                                <div class="mb-3 form-check">
                                                     <input type="radio" name="reportReason" id="{{ $key }}"
-                                                        value="{{ $label }}" class="form-check-input">
+                                                        value="{{ $label }}" class="">
                                                     <label class="ms-1 form-check-label" for="{{ $key }}">
                                                         {{ $label }}
                                                     </label>
@@ -142,17 +142,17 @@
                                         </h5>
                                         <div class="ps-5 pe-5 text-start">
                                             <div class="upload-container ps-5 pe-5" v-scope="UploadData('createDisputeInputs')" id="createDisputeInputs"
-                                                @vue:mounted="init"
+                                                @vue:mounted="init()"
                                             >
                                                 <div class="d-flex justify-content-start">
                                                     <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
-                                                    <div class="plus-button" v-bind:click="clickInput()">+</div>
+                                                    <div class="plus-button" v-on:click="clickInput()">+</div>
                                                 </div>
                                                 <input type="file" 
                                                     class="file-input" 
                                                     multiple
                                                     accept="image/*" 
-                                                    v-bind:change="handleFiles(event)"
+                                                    v-on:change="handleFiles(event)"
                                                 >
                                             </div>
                                         </div>
@@ -207,24 +207,25 @@
                                             <template v-if="dispute[reportUI.matchNumber]?.dispute_image_videos[0]">
                                                 <div>
                                                     <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
-
-                                                    <template v-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
-                                                        <div>
-                                                            <template v-if="imgVideo.startsWith('media/img')">
-                                                                <img v-bind:src="'/storage/' + imgVideo" class="object-fit-cover border border-primary"                
-                                                                    v-on:click="showImageModal(imgVideo)"
-                                                                    height="100px" width="100px" 
-                                                                />
-                                                            </template>
-                                                            
-                                                            <template v-else>
-                                                                <video controls class="prview-item">
-                                                                    <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            </template>
-                                                        </div>
-                                                    </template>
+                                                    <div class="d-flex justify-content-start">
+                                                        <template v-for="imgVideo in dispute[reportUI.matchNumber].dispute_image_videos" :key="imgVideo">
+                                                            <div class="cursor-pointer">
+                                                                <template v-if="imgVideo.startsWith('media/img')">
+                                                                    <img v-bind:src="'/storage/' + imgVideo" class="object-fit-cover border border-secondary me-2"                
+                                                                        v-on:click="showImageModal(imgVideo)"
+                                                                        height="100px" width="100px" 
+                                                                    />
+                                                                </template>
+                                                                
+                                                                <template v-else>
+                                                                    <video controls class="prview-item me-2">
+                                                                        <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                </template>
+                                                            </div>
+                                                        </template>
+                                                    </div>
                                                 </div>
                                             </template>
                                         </div>
@@ -359,7 +360,7 @@
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
                                                 <div class="ps-5 pe-5 text-start">
                                                 <div class="upload-container ps-5 pe-5" v-scope="UploadData('respondDisputeInputs')" id="respondDisputeInputs"
-                                                    @vue:mounted="init"
+                                                    @vue:mounted="init()"
                                                 >
                                                     <div class="d-flex justify-content-start">
                                                         <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
@@ -407,7 +408,7 @@
                                                         resolve the dispute.
                                                         <br>
                                                         If the opponent team does not respond by the allocated time, the dispute
-                                                        will automatically resolve in your favor.
+                                                        will automatically resolve in the favor of the team that raised the dispute.
                                                     </p>
                                                     <br><br>
                                                 </div>

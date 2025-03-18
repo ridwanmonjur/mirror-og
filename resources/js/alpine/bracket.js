@@ -933,7 +933,7 @@ function BracketData() {
               detail: {}  
             });
             
-            this.dispatchEvent(event);            
+            window.dispatchEvent(event);            
             const uploadResult = await new Promise((resolve) => {
               window.uploadResolve = resolve;
             });
@@ -1021,7 +1021,13 @@ function BracketData() {
         padding: '2em',
       }).then(async (result) => {
         if (result.isConfirmed) {
-          this.$dispatch('initiate-upload');
+          const event = new CustomEvent('initiate-upload', {
+            bubbles: true,  
+            cancelable: true,  
+            detail: {}  
+          });
+
+          window.dispatchEvent(event);
             const uploadResult = await new Promise((resolve) => {
               window.uploadResolve = resolve;
             });
@@ -1093,9 +1099,11 @@ function UploadData (domId) {
       });
       event.target.value = '';
     },
-    init () {
-      window.addEventListener('initiate-upload', function() {
-        this.uploadToServer('/api/media');
+    async init () {
+      console.log("ZZZZZZZ");
+      const self = this;
+      window.addEventListener('initiate-upload', async function() {
+        await self.uploadToServer('/api/media');
       });
     },
     clickInput() {
