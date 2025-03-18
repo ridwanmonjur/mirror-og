@@ -69,7 +69,7 @@
         @if (!isset($joinEvents[0]))
             <p class="tab-size text-start mx-auto ">No events available</p>
         @else
-            <div class="row mx-5 px-5">
+            <div class="row reg-container">
                 @foreach ($joinEvents as $joinEvent)
                         
                     @include('Participant.__Partials.RosterViewRegister')
