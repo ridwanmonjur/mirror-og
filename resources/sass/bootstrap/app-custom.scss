@@ -581,6 +581,13 @@ button:after {
   
 
 @media screen and (min-width: 1000px) {
+    .tab-button {
+        flex-grow: 1;
+        padding: 15px 25px;
+        margin: 0 20px;
+        min-width: 150px;
+    }
+    
     .position-lg-absolute {
         position: absolute;
     }
@@ -696,12 +703,7 @@ button:after {
         font-size: 1.25rem;
     }
 
-    .tab-button {
-        flex-grow: 1;
-        padding: 15px 25px;
-        margin: 0 20px;
-        min-width: 150px;
-    }
+
 }
 
 .tabs {

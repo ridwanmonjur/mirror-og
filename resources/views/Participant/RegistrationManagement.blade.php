@@ -13,6 +13,7 @@
     @include('__CommonPartials.HeadIcon')
 </head>
 <body
+    class="bgTeamAdmin"
 >
         @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')

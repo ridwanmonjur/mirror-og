@@ -279,7 +279,7 @@
                     <p class="mx-2"> Total Prize Pool Across All Time </p>
                 </div>
             </div>
-           <div class="d-none d-lg-block"><br><br></div>
+           <div class="d-none d-lg-block"><br></div>
             <div class="tab-size d-none d-lg-flex "><b>Recent Events</b></div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center carousel-works">

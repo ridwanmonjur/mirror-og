@@ -67,15 +67,17 @@
     margin: 0;
 }
 
+.bgTeamAdmin {
+    background-repeat:repeat-y;
+    background-size: cover;
+    height: max-content;
+} 
+
 .main2 {
     display: block !important;
     align-items: center;
     justify-content: center;
-    background-repeat: round;
-    background-size: cover;
     margin: 0;
-    padding: 0px 0 20vh;
-    min-height: max-content;
 }
 
 .menu-toggle {
@@ -571,9 +573,7 @@
     .main1 { 
         min-height: 40vh;
     }
-    .main2 {
-        min-height: 70vh;
-    }
+
     
     main {
         padding: 0px 0px;

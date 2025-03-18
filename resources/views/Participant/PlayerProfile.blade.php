@@ -386,7 +386,7 @@
         </div>
         
         <div class="tab-content pb-4  outer-tab" id="Overview">
-            <div class="d-none d-lg-block"><br><br></div>
+            <div class="d-none d-lg-block"><br></div>
             
             <div class="d-flex d-none d-lg-flex  justify-content-center"><b>Recent Events</b></div>
             <div class="d-none d-lg-block"><br><br></div>
@@ -415,7 +415,7 @@
             </div>
 
             <div class="row px-4 mt-4">
-               <div class="row px-4 mt-5">
+               <div class="row px-4 ">
                 <div class="showcase col-12 col-lg-6">
                     <div class="text-center"><b>Showcase</b></div>
                     <br>

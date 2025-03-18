@@ -164,17 +164,19 @@
     outline: none !important;
 }
 
-.main2 {
+
+
+.bgTeamAdmin {
     background-image: url("/assets/images/event-creation-bg.png");
     background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    min-height: 75vh;
 }
 
 
+
 @media screen and (min-width: 992px) {
-    .main2 {
+    .bgTeamAdmin {
         background-size: 100vw 100vh;
     }
 }

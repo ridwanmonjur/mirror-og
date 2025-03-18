@@ -15,6 +15,7 @@
     $isRedirect = isset($redirect) && $redirect;
 @endphp
 <body
+    class="bgTeamAdmin"
 >
     @include('googletagmanager::body')
 

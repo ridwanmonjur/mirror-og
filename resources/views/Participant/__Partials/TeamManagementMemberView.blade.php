@@ -2,9 +2,8 @@
     $counTeamMembers = count($selectTeam->members);
 @endphp
 <br>
-
 <div id="CurrentMembers">
-    <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
+    <p class="text-center mx-auto ">Team {{ $selectTeam->teamName }} has
         {{ $counTeamMembers }} present team member{{bladePluralPrefix($counTeamMembers)}}. 
         @if (isset($user) && $selectTeam->creator_id == $user->id)
             

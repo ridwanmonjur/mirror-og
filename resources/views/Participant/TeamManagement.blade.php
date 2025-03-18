@@ -18,7 +18,7 @@
         }
     @endphp
 @endauth
-<body>
+<body class="bgTeamAdmin">
     @include('googletagmanager::body')
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     @include('Participant.__Partials.TeamHead')
@@ -38,8 +38,8 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab" id="Overview">
-            <div class="d-none d-lg-block"><br><br></div>
-            <div class="tab-size d-none d-lg-flex "><b>Recent Events</b></div>
+            <div class="d-none d-lg-block"><br></div>
+            <div class="tab-size d-none d-lg-block text-center mx-auto"><b>Recent Events</b></div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
@@ -69,13 +69,11 @@
                  
                 @endif
             </div>
-            <br class="d-none d-lg-block" > 
-
+            <br>
             <div class="row px-4">
                 <div class="showcase col-12 col-lg-6">
                     <div class="text-center"><b>Showcase</b></div>
                     <br>
-                      
                     <div class="card border-2 py-0 my-0 mx-auto py-4" style=" width: 90%;">
                         <div class="card-body row py-2 d-flex justify-content-center flex-wrap text-center mx-auto py-0 px-0 " 
                             style="padding-top: 30px;padding-bottom: 30px;width: 90%;"
@@ -113,7 +111,7 @@
         @endphp
 
         <div class="tab-content pb-4  outer-tab d-none" id="Active Rosters">
-            <br><br>
+            <br>
             @if (!isset($joinEventsActive[0]))
                 <p class="text-center">
                     Team {{ $selectTeam->teamName }} has no active rosters.
@@ -133,7 +131,7 @@
         </div>
 
         <div class="tab-content pb-4  outer-tab d-none" id="Roster History">
-            <br><br>
+            <br>
             @if (!isset($joinEventsHistory[0]))
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
             @else
