@@ -121,6 +121,9 @@ function TeamHead() {
         },
         reset() {
             Object.assign(this, teamData);
+            document.querySelectorAll('.uploaded-image').forEach((element) => {
+                element.style.backgroundImage = `url(/storage/${teamData.teamBanner})`;
+            })
         },
         init() {
             this.fetchCountries();

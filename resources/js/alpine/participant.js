@@ -52,10 +52,15 @@ function ParticipantData ()  {
         restoreAfterEditMode() {
             this.isEditMode = false;
             this.reset();
+            console.log({userData});
+            document.querySelectorAll('.uploaded-image').forEach((element) => {
+                element.style.backgroundImage = `url(/storage/${userData.userBanner})`;
+            })
         },
         reset() {
             this.user = {...userData};
             this.participant = {...participantData};
+          
         },
         async fetchCountries() {
             if (this.isCountriesFetched) return;

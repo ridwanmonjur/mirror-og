@@ -85,12 +85,6 @@ function visibleElements() {
 }
 
 window.onload = () => {
-    // document.querySelectorAll('.animation-container')?.forEach(element => {
-    //     window.motion.createStaggerChildren(element);
-    // });
-
-    // window.motion.slideInLeftRight();
-
     document.getElementById('changeBackgroundBanner').addEventListener('click', (event)=> {
         event.currentTarget.value = '';
     });

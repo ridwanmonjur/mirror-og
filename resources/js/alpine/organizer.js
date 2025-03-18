@@ -76,6 +76,10 @@ function OrganizerData() {
             this.userProfile = { ...initialUserProfile };
             this.organizer = { ...initialOrganizer };
             this.address = { ...initialAddress };
+            
+            document.querySelectorAll('.uploaded-image').forEach((element) => {
+                element.style.backgroundImage = `url(/storage/${initialUserProfile.userBanner})`;
+            })
         },
         async submitEditProfile(event) {
             

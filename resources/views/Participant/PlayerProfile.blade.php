@@ -73,7 +73,7 @@
             @endif
             <input type="hidden" id="activity_input" value="{{ json_encode($activityNames) }}">
             <input type="hidden" id="region_details_input" value="{{ json_encode($userProfile->participant?->getRegionDetails()) }}">
-            <input type="hidden" id="initialUserData" value="{{json_encode($userProfile?->only(["id", "name", "profile"]))}}">
+            <input type="hidden" id="initialUserData" value="{{json_encode($userProfile)}}">
             <input type="hidden" id="initialParticipantData" value="{{json_encode($userProfile->participant)}}">
                 <div class="d-flex justify-content-end align-items-center py-0 my-0 mb-2 mx-3 flex-wrap">
                     @if ($isUserSame)
