@@ -142,8 +142,24 @@ body {
 }
 
 
+.reg-container {
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
 @media screen and (min-width: 992px) {
   .popover-display2 {
       width: 450px !important;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .popover-display2 {
+      width: 450px !important;
+  }
+
+  .reg-container {
+    padding-left: 8%;
+    padding-right: 8%;
   }
 }
