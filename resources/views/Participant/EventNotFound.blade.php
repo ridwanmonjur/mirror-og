@@ -16,7 +16,7 @@
                 @endif
             </div>
             <br><br><br><br>
-            <a href="{{ route('participant.home.view') }}" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black; text-decoration: none; display: inline-block;">
+            <a href="{{ route('public.landing.view') }}" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black; text-decoration: none; display: inline-block;">
                 Go to home page
             </a>
 
