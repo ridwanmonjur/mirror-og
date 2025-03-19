@@ -122,8 +122,9 @@ input[type="submit"]:active {
     border-radius: 30px 30px;
     border-width: 3px;
     border-style: solid;
-    height: min-content;
+    height: max-content !important;
     /* #8CCD39 */
+    margin-bottom: 5%;
     margin: auto;
     width: min(320px, 80vw);
     /* box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); */
@@ -223,11 +224,15 @@ input[type="submit"]:active {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .rounded-box {
+        height: 490px !important;
+    }
+
     
 }
 
 
-@media screen and (min-width: 1100px) {
+@media screen and (min-width: 1000px) {
     .flexbox-filter {
         width: 50%;
     }
@@ -264,11 +269,14 @@ input[type="submit"]:active {
         display: none;
     }
 
+    .rounded-box {
+        height: 510px !important;
+    }
  
     .grid-container {
-        padding: 5% 2%;
+        padding: 5% 0%;
         grid-gap: 10px;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
 }
@@ -283,6 +291,10 @@ input[type="submit"]:active {
     .grid-container {
         padding: 0px;
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .rounded-box {
+        height: 510px !important;
     }
 }
 

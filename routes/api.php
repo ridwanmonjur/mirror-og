@@ -31,24 +31,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('/activity-logs', [ParticipantController::class, 'getActivityLogs'])->name('activity-logs.index');
+Route::get('/user/{id}/logs', [ParticipantController::class, 'getActivityLogs'])->name('activity-logs.index');
 Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index')->middleware('prevent-back-history');
 Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
 
 Route::prefix('media')->group(function () {
     Route::post('/', [ImageVideoController::class, 'upload']);
-    Route::get('stream/{media}', [ImageVideoController::class, 'stream'])->name('media.stream');
-    Route::delete('{media}', [ImageVideoController::class, 'destroy']);
+    Route::get('/stream/{media}', [ImageVideoController::class, 'stream'])->name('media.stream');
+    Route::delete('/{media}', [ImageVideoController::class, 'destroy']);
 });
 
 Route::put('/interest', [BetaController::class, 'interestedAction'])->name('public.interest.action');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-jwt-permission:organizer|admin|participant'], function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
         Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);
         Route::get('/user/{id}/reports', [SocialController::class, 'getReports'])->name('users.report.view');
         Route::get('/notifications', [UserController::class, 'viewNotifications'])->name('notifications.index');
@@ -64,8 +63,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/{id}/report', [SocialController::class, 'report'])->name('users.report.action');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
         Route::post('/notifications/{id}', [UserController::class, 'markAsRead'])->name('notifications.actopn');
-
-
     });
 });
 
@@ -105,4 +102,3 @@ Route::group(['prefix' => 'organizer'], function () {
 });
 
 
-// Route::any('/admin', 'AdminController@index')->middleware('check-permission:admin');

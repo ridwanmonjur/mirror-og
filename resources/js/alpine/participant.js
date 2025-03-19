@@ -169,7 +169,7 @@ function ActivityLogs(userId, duration) {
         async loadData () {
             try {
                 const response = await fetch(
-                    `/api/activity-logs?userId=${userId}&duration=${this.duration}&page=${this.page}`
+                    `/api/user/${userId}/logs?duration=${this.duration}&page=${this.page}`
                 );
                 const data = await response.json();
                 

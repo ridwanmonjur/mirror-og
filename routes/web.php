@@ -42,7 +42,7 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 
 // Countries and games
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
-Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
+// Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
@@ -81,11 +81,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::redirect('/profile', '/admin', 301)
             ->name('admin.profile.view')
             ->middleware('prevent-back-history');
-            Route::group(['middleware' => 'check-permission:admin'], function () {
-                Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
-                Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
-            });
+        Route::group(['middleware' => 'check-permission:admin'], function () {
+            Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
+            Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
         });
+    });
 });
 
 /* THIS IS THE PARTICIPANT VIEW */
@@ -146,9 +146,9 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
             Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action')
                 ->middleware('prevent-back-history');
-            Route::post('event/discountCheckout', action: [ParticipantCheckoutController::class, 'discountCheckout'])->name('participant.discountCheckout.action');
+            Route::post('/event/discountCheckout', action: [ParticipantCheckoutController::class, 'discountCheckout'])->name('participant.discountCheckout.action');
 
-            Route::post('event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
+            Route::post('/event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 
             // Profile
             Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view')
@@ -164,6 +164,7 @@ Route::group(['prefix' => 'organizer'], function () {
         ->name('organizer.signin.view')
         ->middleware('prevent-back-history')
         ->middleware('guest');
+        
     Route::view('/signup', 'Auth.OrganizerSignUp')->name('organizer.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('organizer.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('organizer.signup.action');
