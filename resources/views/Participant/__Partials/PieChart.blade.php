@@ -116,51 +116,56 @@
                     </button> <br>
 
                 @endif
-                @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
-                    <form  class="{{'confirmform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" method="POST">
-                        @csrf
-                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                        <input type="hidden" name="join_status" value="confirmed">
-                        <button 
-                            data-form="{{'confirmform' . $random_int}}" 
-                            type="button" 
-                            data-cancel="0"
-                            data-join-event-id="{{$joinEvent->id}}"
-                            data-join-status="{{$joinEvent->join_status}}"
-                            data-registration-status="{{$joinEvent->regStatus}}"
-                            onclick="submitConfirmCancelForm(event)" 
-                            class="mt-2 btn bg-success py-2 rounded-pill"
-                        >
-                            Confirm Registration
-                        </button>
-                    </form>
-                @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !isset($joinEvent->vote_ongoing))
-                    <form class="{{'cancelform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
-                        @csrf
-                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                        <input type="hidden" name="join_status" value="canceled">
-                        <button 
-                            data-join-event-id="{{$joinEvent->id}}"
-                            data-form="{{'cancelform' . $random_int}}" 
-                            data-cancel="1"
-                            type="button" 
-                            data-join-status="{{$joinEvent->join_status}}"
-                            data-registration-status="{{$joinEvent->regStatus}}"
-                            onclick="submitConfirmCancelForm(event)" 
-                            class="mt-2 btn py-2 bg-red text-light rounded-pill"
-                        >
-                            Cancel Registration
-                        </button> 
-                        <br>
-                        <p class="text-success mt-2">Your registration is confirmed!</p>
-                    </form>
-                @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
-                    <button
-                            style="cursor: not-allowed; pointer-events: none;"
-                            class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
-                            Registration Canceled
-                        </button>
-                    </form>
+                @if ($joinEvent->totalRosterCount == $maxRosterSize
+                    && $joinEvent->payment_status == "completed"
+                    && $joinEvent->roster_captain_id
+                )
+                    @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
+                        <form  class="{{'confirmform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                            <input type="hidden" name="join_status" value="confirmed">
+                            <button 
+                                data-form="{{'confirmform' . $random_int}}" 
+                                type="button" 
+                                data-cancel="0"
+                                data-join-event-id="{{$joinEvent->id}}"
+                                data-join-status="{{$joinEvent->join_status}}"
+                                data-registration-status="{{$joinEvent->regStatus}}"
+                                onclick="submitConfirmCancelForm(event)" 
+                                class="mt-2 btn bg-success py-2 rounded-pill"
+                            >
+                                Confirm Registration
+                            </button>
+                        </form>
+                    @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !isset($joinEvent->vote_ongoing))
+                        <form class="{{'cancelform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                            @csrf
+                            <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                            <input type="hidden" name="join_status" value="canceled">
+                            <button 
+                                data-join-event-id="{{$joinEvent->id}}"
+                                data-form="{{'cancelform' . $random_int}}" 
+                                data-cancel="1"
+                                type="button" 
+                                data-join-status="{{$joinEvent->join_status}}"
+                                data-registration-status="{{$joinEvent->regStatus}}"
+                                onclick="submitConfirmCancelForm(event)" 
+                                class="mt-2 btn py-2 bg-red text-light rounded-pill"
+                            >
+                                Cancel Registration
+                            </button> 
+                            <br>
+                            <p class="text-success mt-2">Your registration is confirmed!</p>
+                        </form>
+                    @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
+                        <button
+                                style="cursor: not-allowed; pointer-events: none;"
+                                class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
+                                Registration Canceled
+                            </button>
+                        </form>
+                    @endif
                 @endif
                 @if ($joinEvent->vote_ongoing)
                     <p class="text-red mt-2">A vote to quit is in progress!</p>

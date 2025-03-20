@@ -35,7 +35,6 @@ class JoinEventSignupListener implements ShouldQueue
         $memberMail = [];
      
         foreach ($event2->selectTeam->members as $member) {
-            $subjectList[] = $member->user->id;
 
             $notifHtml = <<<HTML
                 <span class="notification-gray">
@@ -52,8 +51,6 @@ class JoinEventSignupListener implements ShouldQueue
                     Please complete and confirm your registration for this event.
                 </span>
             HTML;
-
-         
 
             $memberNotification[] = [
                 'user_id' => $member->user->id,
