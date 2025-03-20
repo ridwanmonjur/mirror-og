@@ -116,7 +116,7 @@
                     </button> <br>
 
                 @endif
-                @if ($joinEvent->totalRosterCount == $maxRosterSize
+                @if ($joinEvent->totalRosterCount >= $maxRosterSize - 2
                     && $joinEvent->payment_status == "completed"
                     && $joinEvent->roster_captain_id
                 )

@@ -227,10 +227,8 @@ class ParticipantEventController extends Controller
                     'tier:id,eventTier',
                     'user:id,name,userBanner'
                 ])
-
                 ->find($id);
             
-
             if ($selectTeam && $isAlreadyMember) {
                 $join_id = $selectTeam->processTeamRegistration( $user->id, $event->id);
                 Event::dispatch(new JoinEventSignuped(compact('user', 'join_id', 'event', 'selectTeam')));
@@ -245,7 +243,16 @@ class ParticipantEventController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {
-                $errorMessage = "Please choose a team that hasn't joined this event!";
+                $teamId = $request->input('selectedTeamId');
+                $join = JoinEvent::where('event_details_id', $id)
+                    ->where('team_id', $teamId)
+                    ->firstOrFail();
+
+                $errorMessage = "You have already joined this event with your team before!";
+                return redirect()
+                    ->route('participant.register.manage', ['id' => $teamId])
+                    ->with('errorMessage', $errorMessage)
+                    ->with('scroll', $join->id) ;
             } else {
                 $errorMessage = $e->getMessage();
             }
