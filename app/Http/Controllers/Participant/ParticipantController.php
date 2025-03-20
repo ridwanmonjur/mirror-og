@@ -155,8 +155,7 @@ class ParticipantController extends Controller
         }
     }
 
-    public function getActivityLogs(Request $request) {
-        $userId = $request->input('userId');
+    public function getActivityLogs(Request $request, $userId) {
         $duration = $request->input('duration');
         $page = $request->input('page', 1);
         $perPage = 5;
