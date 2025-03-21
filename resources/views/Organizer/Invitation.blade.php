@@ -1,7 +1,19 @@
-@include('Organizer.includes.CreateEventHeadTag')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @include('googletagmanager::head')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Invitation</title>
+     @include('includes.HeadIcon')
+    <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+</head>
+
 @php
-$dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
-extract($dateArray);
+    $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
+    extract($dateArray);
 @endphp
 
 <body>
