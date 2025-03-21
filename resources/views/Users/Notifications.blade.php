@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/notifications.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     <style>
         main, body {
             overflow-y: auto;
@@ -19,7 +19,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <br><br>
     <div     
         id="notif-container" 

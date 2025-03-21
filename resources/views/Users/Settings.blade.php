@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/settings.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 @php
     use Carbon\Carbon;
@@ -18,7 +18,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main id="app">
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">

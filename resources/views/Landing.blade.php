@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     <title>Driftwood</title>
@@ -14,7 +14,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage', ['search' => true ])
+    @include('includes.__Navbar.NavbarGoToSearchPage', ['search' => true ])
 
     <main 
     >
@@ -41,7 +41,7 @@
         <section 
             class="featured-events scrolling-pagination"
         >
-            @include('__CommonPartials.Landing')
+            @include('includes.Landing')
         </section>
         @if (isset($events[0]))
             <div class="no-more-data d-none"></div>

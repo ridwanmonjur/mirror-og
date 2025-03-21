@@ -8,12 +8,12 @@
     <title>Event creation</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="event_view_route" value="{{ route('participant.event.view', $id) }}">
         <div class="text-center h-100" id="step-0">

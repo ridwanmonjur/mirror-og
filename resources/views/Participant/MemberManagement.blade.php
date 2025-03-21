@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 @php
     $isRedirect = isset($redirect) && $redirect;
@@ -21,7 +21,7 @@
 
     <input type="hidden" id="publicParticipantViewUrl" value="{{ route('public.participant.view', ['id' => ':id']) }}">
 
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main 
         class="main2"
     >

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Profile Page</title>
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/organizer.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
@@ -38,7 +38,7 @@
 <body>
     @include('googletagmanager::body')
     @include('Organizer.includes.BackgroundModal')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main 
         id="app"
         v-scope="OrganizerData()"
@@ -179,7 +179,7 @@
                                     </span>
                                 </span>
                             </span>
-                            @include('__CommonPartials.__Profile.ProfileStatsModal', [
+                            @include('includes.__Profile.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
                                 'propsUserId' => $loggedUserId ?? '0',
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 
@@ -601,7 +601,7 @@
         <br> <br>
         {{-- </form> --}}
     </main>
-    @include('__CommonPartials.__Profile.Cropper')
+    @include('includes.__Profile.Cropper')
 
 </body>
 <script src="{{ asset('/assets/js/organizer/PlayerProfile.js') }}"></script>

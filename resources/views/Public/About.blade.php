@@ -14,10 +14,10 @@
 @section('content')
     <header>
         @auth
-            @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+            @include('includes.__Navbar.NavbarGoToSearchPage')
         @endauth
         @guest
-            @include('__CommonPartials.__Navbar.NavbarBeta')
+            @include('includes.__Navbar.NavbarBeta')
         @endguest
     </header>
     <main style="padding: 5vh 10vw ;">

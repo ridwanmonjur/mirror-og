@@ -14,7 +14,7 @@
     >
         @csrf
         <div class="flash-message">
-            @include('__CommonPartials.Flash')
+            @include('includes.Flash')
         </div>
         
         @include('Auth.Layout.__Signup')

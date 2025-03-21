@@ -15,10 +15,10 @@
 @section('content')
     <header>
         @auth
-            @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+            @include('includes.__Navbar.NavbarGoToSearchPage')
         @endauth
         @guest
-            @include('__CommonPartials.__Navbar.NavbarBeta')
+            @include('includes.__Navbar.NavbarBeta')
         @endguest
     </header>
     <!-- Contact & About Us Boxes and Social Media Data-->

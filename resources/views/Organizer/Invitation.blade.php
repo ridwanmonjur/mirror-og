@@ -6,7 +6,7 @@ extract($dateArray);
 
 <body>
     @include('googletagmanager::body')
-        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+        @include('includes.__Navbar.NavbarGoToSearchPage')
     <main>
         <div>
             <div id="eventData"

@@ -11,12 +11,12 @@
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/manageEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <br>
     <main>
         <div class="d-flex justify-content-between mb-2">

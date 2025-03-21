@@ -8,12 +8,12 @@
     <title>Select Team to Register</title>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerTeam.css') }}">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <input type="hidden" id="eventUrl" value="{{ route('participant.event.view', $id) }}">
     <main class="d-flex justify-content-center flex-row">
         <div class="wrapper-height ">

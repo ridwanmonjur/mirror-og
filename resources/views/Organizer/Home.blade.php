@@ -7,14 +7,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Home Page</title>
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/home.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
        

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Event</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/viewEvent.css') }}">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
 </head>
 
@@ -29,7 +29,7 @@
 <body style="background: none; ">
     @include('googletagmanager::body')
 
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">

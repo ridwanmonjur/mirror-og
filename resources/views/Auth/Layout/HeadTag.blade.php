@@ -8,7 +8,7 @@
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/authLogin.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 
 

@@ -8,14 +8,14 @@
     <title>Team formation</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamCreate.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 
 </head>
 
 <body>
     @include('googletagmanager::body')
     <main>
-        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+        @include('includes.__Navbar.NavbarGoToSearchPage')
 
         <div class="text-center" id="step-0" >
             <div class="d-flex align-items-center justify-content-center " >

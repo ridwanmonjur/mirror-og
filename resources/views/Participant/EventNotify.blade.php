@@ -8,12 +8,12 @@
     <title></title>
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_event_reg.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     
     <a class="d-none" id="manageRegistrationUrl"
         href="{{ route('participant.register.manage', ['id' => $selectTeam->id, 'eventId' => $id]) }}"> </a>

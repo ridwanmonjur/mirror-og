@@ -8,7 +8,7 @@
     <title>Profile Page</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     @vite([
         'resources/sass/app.scss', 
         'resources/js/app.js', 
@@ -44,7 +44,7 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <div
         data-user-profile-id="{{ $userProfile->id }}"
         data-user-profile-birthday="{{ $userProfile->participant->birthday }}"
@@ -362,7 +362,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @include('__CommonPartials.__Profile.ProfileStatsModal', [
+                            @include('includes.__Profile.ProfileStatsModal', [
                                 'propsTeamOrUserId' => $userProfile->id,
                                 'propsUserId' => $loggedUserId ?? '0',
                                 'propsIsUserSame' => $isUserSame ? 1: 0, 
@@ -442,7 +442,7 @@
 
                 <div class="achievements col-12 col-lg-6">
                     <div class="ms-2 text-center"><b>Positions</b></div><br>
-                    @include('__CommonPartials.PositionBadge')
+                    @include('includes.PositionBadge')
                 </div>
             </div>
         </div>
@@ -603,6 +603,6 @@
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
     </main>
 </body>
-@include('__CommonPartials.__Profile.Cropper')
+@include('includes.__Profile.Cropper')
 
 </html>

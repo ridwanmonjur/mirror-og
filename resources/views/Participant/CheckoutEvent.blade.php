@@ -11,7 +11,7 @@
     <title>Event checkout</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     <style>
         #Field-nameInput, #Field-addressLine2Input {
             width: 50% !important;
@@ -22,7 +22,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main class="main-background-2 pt-3">
         <br>
         @include('Participant.__CheckoutPartials.CheckoutPaymentOptions')

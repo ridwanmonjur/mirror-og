@@ -2,7 +2,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
    
     <main class="main-background-2">
         <div id="hidden-variables" class="d-none"

@@ -24,7 +24,7 @@
 >
     @csrf
     <div class="flash-message">
-    @include('__CommonPartials.Flash')
+    @include('includes.Flash')
         @if(session('errorEmail'))
         Click
         <a style="font-weight: bold; text-decoration: underline;"

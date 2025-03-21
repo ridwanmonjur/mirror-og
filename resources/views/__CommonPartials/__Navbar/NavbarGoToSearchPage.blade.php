@@ -86,7 +86,7 @@
             </div>
         @endguest
         @auth
-            @include('__CommonPartials.__Navbar.NavbarAuth')
+            @include('includes.__Navbar.NavbarAuth')
         @endauth
     </div>
 </nav>

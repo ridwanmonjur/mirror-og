@@ -8,7 +8,7 @@
     <title>Tournament Matches</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/viewEvent.css') }}">
     @vite([ 'resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/bracket.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 
 </head>
 
@@ -18,7 +18,7 @@
 
 <body>
     @include('googletagmanager::body')
-        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+        @include('includes.__Navbar.NavbarGoToSearchPage')
  
     <main id="Bracket" @vue:mounted="init" v-scope="BracketData()" class="position-relative">
         <input type="hidden" id="eventId" value="{{$event->id}}">

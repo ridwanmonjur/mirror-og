@@ -38,7 +38,7 @@ class MiscController extends Controller
         $output = compact('events');
 
         if ($request->ajax()) {
-            $view = view('__CommonPartials.Landing', $output)->render();
+            $view = view('includes.Landing', $output)->render();
 
             return response()->json(['html' => $view]);
         }

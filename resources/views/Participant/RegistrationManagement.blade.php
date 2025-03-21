@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/registerManage.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 <body
     class="bgTeamAdmin"
 >
-        @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+        @include('includes.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main 
         class="main2"

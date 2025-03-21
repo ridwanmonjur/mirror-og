@@ -38,7 +38,7 @@
             </a>
             to resend verification email.
         @endif
-        @include('__CommonPartials.Flash')
+        @include('includes.Flash')
     </div>
 
     @include('Auth.Layout.__Signin')

@@ -8,7 +8,7 @@
     <title>Manage Event Results</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 </head>
@@ -75,7 +75,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
 
     <main class="px-2 d-none">
         <input type="hidden" id="currentUrlInput" value="{{ route('event.awards.index', ['id' => $event->id]) }}">

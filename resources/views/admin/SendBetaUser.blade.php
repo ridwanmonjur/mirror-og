@@ -17,14 +17,14 @@
     use Carbon\Carbon;
 @endphp
 <body>
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main>
         <br><br><br>
 
         <div class="container mx-auto">
             <form id="betaUsersForm" action="{{ route('admin.onboardBeta.action') }}" method="POST">
                 @csrf
-                @include('__CommonPartials.Flash')
+                @include('includes.Flash')
                 <div class="table-responsive ">
                     <table class="table table-sm">
                         <thead>

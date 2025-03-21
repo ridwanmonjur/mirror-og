@@ -8,13 +8,13 @@
     
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     <title>Driftwood</title>
 </head>
 
 <body>
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     <main>
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         @if(session('token'))
@@ -33,7 +33,7 @@
         </div>
 
         <section class="featured-events  scrolling-pagination">
-            @include('__CommonPartials.Landing')
+            @include('includes.Landing')
         </section>
 
         <div class="no-more-data d-none"></div>

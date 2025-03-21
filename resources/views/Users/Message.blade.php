@@ -1,14 +1,14 @@
 <html>
 
 <head>
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
     @include('googletagmanager::head')
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/chat.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/common/fullpage.css') }}">
 </head>
 
 <body>
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main>
     <div id="app" class="app-container row">

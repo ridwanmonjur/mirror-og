@@ -14,7 +14,7 @@
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
         <div class="flash-message">
-            @include('__CommonPartials.Flash')
+            @include('includes.Flash')
         </div>
         <div class="field password">
             <label for="password" class="placeholder-moves-up-container">

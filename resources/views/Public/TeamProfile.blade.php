@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    @include('__CommonPartials.HeadIcon')
+    @include('includes.HeadIcon')
 </head>
 @auth
     @php
@@ -20,7 +20,7 @@
 @endauth
 <body class="bgTeamAdmin">
     @include('googletagmanager::body')
-    @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
+    @include('includes.__Navbar.NavbarGoToSearchPage')
     @include('Participant.includes.TeamHead')
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
@@ -96,7 +96,7 @@
 
                 <div class="achievements col-12 col-lg-6" id="Positions">
                     <div class="ms-2 text-center"><b>Positions</b></div><br>
-                    @include('__CommonPartials.PositionBadge')
+                    @include('includes.PositionBadge')
                 </div>
             </div>
         </div>
