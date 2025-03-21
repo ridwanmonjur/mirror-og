@@ -17,8 +17,8 @@
         <main>
             <div>
                 <div>
-                    @include('Organizer.__CreateEditPartials.CreateEventSuccessTimelineBox')
-                    @include('Organizer.__CreateEditPartials.CreateEventSuccess', ['event' => $event])
+                    @include('includes.__CreateEditEventPartials.CreateEventSuccessTimelineBox')
+                    @include('includes.__CreateEditEventPartials.CreateEventSuccess', ['event' => $event])
                 </div>
             </div>
             <br><br>

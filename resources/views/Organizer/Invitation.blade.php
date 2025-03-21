@@ -28,7 +28,7 @@
                 data-route-invitation-store="{{ route('event.invitation.store', $event->id) }}">
             </div>
 
-            @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
+            @include('includes.__CreateEditEventPartials.CreateEventTimelineBox')
             <br>
             <div class="text-center" style="margin:auto; border-color: black; background: white; max-width: 60vw; min-height: 60vh;display:flex;flex-direction:column; justify-content:space-between;">
                 <div>

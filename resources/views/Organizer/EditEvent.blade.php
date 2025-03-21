@@ -21,19 +21,19 @@
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf
-                        @include('Organizer.__CreateEditPartials.EditEventHiddenForm', ['event' => $event])
-                        @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
+                        @include('includes.__CreateEditEventPartials.EditEventHiddenForm', ['event' => $event])
+                        @include('includes.__CreateEditEventPartials.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.__CreateEditPartials.EditEventTimelineWelcome', [
+                            @include('includes.__CreateEditEventPartials.EditEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.__CreateEditPartials.EditEventTimelineWelcome')
+                            @include('includes.__CreateEditEventPartials.EditEventTimelineWelcome')
                         @endif
-                        @include('Organizer.__CreateEditPartials.CreateEventStepOne', ['event' => $event])
-                        @include('Organizer.__CreateEditPartials.CreateEventForm', ['event' => $event])
+                        @include('includes.__CreateEditEventPartials.CreateEventStepOne', ['event' => $event])
+                        @include('includes.__CreateEditEventPartials.CreateEventForm', ['event' => $event])
                         @if (session()->has('success'))
-                            @include('Organizer.__CreateEditPartials.CreateEventSuccess')
+                            @include('includes.__CreateEditEventPartials.CreateEventSuccess')
                         @endif
                     </form>
                     <form onkeydown="return event.key != 'Enter';" id="cancelEvent" method="POST"

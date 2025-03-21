@@ -20,20 +20,20 @@
                     <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
-                        @include('Organizer.__CreateEditPartials.CreateEventHiddenForm')
-                        @include('Organizer.__CreateEditPartials.CreateEventTimelineBox')
+                        @include('includes.__CreateEditEventPartials.CreateEventHiddenForm')
+                        @include('includes.__CreateEditEventPartials.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('Organizer.__CreateEditPartials.CreateEventTimelineWelcome', [
+                            @include('includes.__CreateEditEventPartials.CreateEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('Organizer.__CreateEditPartials.CreateEventTimelineWelcome')
+                            @include('includes.__CreateEditEventPartials.CreateEventTimelineWelcome')
                         @endif
-                        @include('Organizer.__CreateEditPartials.CreateEventStepOne')
+                        @include('includes.__CreateEditEventPartials.CreateEventStepOne')
                         
-                        @include('Organizer.__CreateEditPartials.CreateEventForm')
+                        @include('includes.__CreateEditEventPartials.CreateEventForm')
                         @if (session()->has('success'))
-                            @include('Organizer.__CreateEditPartials.CreateEventSuccess')
+                            @include('includes.__CreateEditEventPartials.CreateEventSuccess')
                         @endif
                     </form>
                 </div>
