@@ -2,8 +2,8 @@
 <input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
 <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
 <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
-@include('Shared.__BracketModalPartials.Report')
-@include('Shared.__BracketModalPartials.Dispute')
+@include('CommonPartials.__BracketModalPartials.Report')
+@include('CommonPartials.__BracketModalPartials.Dispute')
 <div id="bracket-list"  class=" custom-scrollbar tab-bracketlist"
 >
     @if (isset($bracketList['U']))

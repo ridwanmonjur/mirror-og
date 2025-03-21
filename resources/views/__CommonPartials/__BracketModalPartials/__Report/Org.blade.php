@@ -1,5 +1,5 @@
 <div>
-    @include('Shared.__BracketModalPartials.__Report.ExistingChoices')
+    @include('CommonPartials.__BracketModalPartials.__Report.ExistingChoices')
     <template v-if="!report.realWinners[reportUI.matchNumber] && !dispute[reportUI.matchNumber]">
         <div>
             <div>
@@ -22,7 +22,7 @@
                     </div>   
                 </template>
             </div>
-            @include('Shared.__BracketModalPartials.__Report.PickWinners')         
+            @include('CommonPartials.__BracketModalPartials.__Report.PickWinners')         
         </div>
     </template>
     <template v-if="dispute[reportUI.matchNumber]">
@@ -45,7 +45,7 @@
                     </div>
                     <template v-if="report.realWinners[reportUI.matchNumber]">
                         <div>
-                            @include('Shared.__BracketModalPartials.__Report.RealWinners')
+                            @include('CommonPartials.__BracketModalPartials.__Report.RealWinners')
                         </div>
                     </template>
                 </div>
@@ -62,14 +62,14 @@
                             > Show dispute </button>
                         </div>
                     </div>
-                    @include('Shared.__BracketModalPartials.__Report.PendingWinners')
+                    @include('CommonPartials.__BracketModalPartials.__Report.PendingWinners')
                 </div>
             </template>
         </div>
     </template>
     <template v-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
         <div>
-            @include('Shared.__BracketModalPartials.__Report.RealWinners')
+            @include('CommonPartials.__BracketModalPartials.__Report.RealWinners')
             <div class="d-flex justify-content-center">
                 <button class="btn btn-sm border rounded-pill text-primary border-primary " v-on:click="onChangeTeamToWin"> Change Declaration </button>
                 <button class="btn btn-sm border border-danger rounded-pill text-danger ms-2 " v-on:click="onRemoveTeamToWin"> Remove </button>
