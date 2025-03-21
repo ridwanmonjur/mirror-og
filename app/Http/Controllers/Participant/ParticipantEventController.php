@@ -88,7 +88,7 @@ class ParticipantEventController extends Controller
                 $existingJoint,
             );
 
-            return view('Shared.ViewEvent', [
+            return view('User.ViewEvent', [
                     ...$viewData,
                     'livePreview' => 0,
                     ...$bracketData,
