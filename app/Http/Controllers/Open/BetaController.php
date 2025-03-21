@@ -142,7 +142,7 @@ class BetaController extends Controller
             ->orderBy('id', 'desc')
             ->simplePaginate(50); 
 
-        return view('Organizer.SendBetaUser', compact('users'));
+        return view('admin.SendBetaUser', compact('users'));
     }
 
     public function postOnboardBeta (Request $request) {
