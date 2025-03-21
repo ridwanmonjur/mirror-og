@@ -72,15 +72,15 @@
                                 <template v-if="userLevelEnums['IS_TEAM1'] === report.userLevel 
                                     || userLevelEnums['IS_TEAM2'] === report.userLevel"
                                 >
-                                    @include('CommonPartials.__BracketModalPartials.__Report.Team')
+                                    @include('includes.__BracketModalPartials.__Report.Team')
                                 </template>
                                 <template v-if="userLevelEnums['IS_PUBLIC'] === report.userLevel"
                                 >
-                                    @include('CommonPartials.__BracketModalPartials.__Report.Public')
+                                    @include('includes.__BracketModalPartials.__Report.Public')
                                 </template>
                                 <template v-if="userLevelEnums['IS_ORGANIZER'] === report.userLevel"
                                 >
-                                    @include('CommonPartials.__BracketModalPartials.__Report.Org')
+                                    @include('includes.__BracketModalPartials.__Report.Org')
                                 </template>
                                 <br>
                             </div> 
