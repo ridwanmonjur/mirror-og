@@ -47,12 +47,17 @@ php artisan jwt:secret
 ```bash
 # Remove existing storage symlink if exists
 rm -rf public/storage
+mkdir storage/app/
+mkdir storage/app/public
+mkdir storage/app/public/images
 
 # Create new storage symlink
 php artisan storage:link
+ln -s storage/app/public public/storage
 
 # Copy storage assets
-cp -r public/assets/images/storage/* public/storage/
+
+cp -r public/assets/images/storage/images/* storage/app/public/images
 ```
 
 5. Database setup:
