@@ -50,7 +50,7 @@
                     <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>
             </div>
-            @include('Organizer.__ManageEventPartials.ManageEventFilterSort', [
+            @include('includes.__ManageEventPartials.ManageEventFilterSort', [
                 'eventCategoryList' => $eventCategoryList, 
                 'eventTierList' => $eventTierList, 
                 'eventTypeList' => $eventTypeList 
@@ -97,7 +97,7 @@
             </div>
 
             <div class="scrolling-pagination grid-container">
-                @include('Organizer.__ManageEventPartials.ManageEventScroll')
+                @include('includes.__ManageEventPartials.ManageEventScroll')
             </div>
 
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>

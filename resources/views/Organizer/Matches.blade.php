@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            @include('Organizer.__ManageEventPartials.BracketUpdateList')
+            @include('includes.__ManageEventPartials.BracketUpdateList')
         </div>
         
         <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
