@@ -408,7 +408,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView')
+                            @include('Participant.includes.RosterView')
                         @endforeach
                     </div>
                 @endif
@@ -475,7 +475,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Participant.__Partials.RosterView')
+                        @include('Participant.includes.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -491,7 +491,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('Participant.__Partials.RosterView')
+                        @include('Participant.includes.RosterView')
                         <br><br>
                     @endforeach
                 </div>

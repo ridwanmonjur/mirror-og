@@ -37,7 +37,7 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('Organizer.__Partials.BackgroundModal')
+    @include('Organizer.includes.BackgroundModal')
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
     <main 
         id="app"
@@ -304,7 +304,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Organizer.__Partials.RosterView')
+                            @include('Organizer.includes.RosterView')
                         @endforeach
                     </div>
                  
@@ -324,7 +324,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('Organizer.__Partials.RosterView')
+                        @include('Organizer.includes.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -340,7 +340,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
-                        @include('Organizer.__Partials.RosterView')
+                        @include('Organizer.includes.RosterView')
                         <br><br>
                     @endforeach
                 </div>

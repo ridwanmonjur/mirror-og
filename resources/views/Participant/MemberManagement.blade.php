@@ -34,7 +34,7 @@
         <input type="hidden" id="participantMemberInviteUrl" value="{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}">
 
         
-        @include('Participant.__Partials.TeamHead') 
+        @include('Participant.includes.TeamHead') 
 
         @include('Participant.__MemberManagementPartials.MemberManagement')
        

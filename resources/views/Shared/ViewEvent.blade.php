@@ -348,7 +348,7 @@
 
                 <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
                      class="tabcontent " >
-                    @include('Participant.__Partials.BracketReport')
+                    @include('Participant.includes.BracketReport')
                 </div>
 
                 <div id="Teams" class="tabcontent" >

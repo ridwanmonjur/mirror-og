@@ -21,7 +21,7 @@
 <body class="bgTeamAdmin">
     @include('googletagmanager::body')
     @include('__CommonPartials.__Navbar.NavbarGoToSearchPage')
-    @include('Participant.__Partials.TeamHead')
+    @include('Participant.includes.TeamHead')
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
         <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id']) }}">
@@ -63,7 +63,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.__Partials.RosterView')
+                            @include('Participant.includes.RosterView')
                         @endforeach
                     </div>
                  
@@ -102,7 +102,7 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab d-none" id="Members">
-            @include('Participant.__Partials.TeamManagementMemberView')
+            @include('Participant.includes.TeamManagementMemberView')
         </div>
 
         @php
@@ -122,7 +122,7 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('Participant.__Partials.RosterView')
+                            @include('Participant.includes.RosterView')
                         </div>
                         <br><br>
                     @endforeach
@@ -140,7 +140,7 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('Participant.__Partials.RosterView')
+                            @include('Participant.includes.RosterView')
                         </div>
                         <br><br>
                     @endforeach

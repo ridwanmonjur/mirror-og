@@ -1,4 +1,4 @@
-@include('Organizer.__Partials.CreateEventHeadTag')
+@include('Organizer.includes.CreateEventHeadTag')
 @php
 $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
 extract($dateArray);

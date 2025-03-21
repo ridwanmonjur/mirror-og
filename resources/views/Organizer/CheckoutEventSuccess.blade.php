@@ -1,4 +1,4 @@
-@include('Organizer.__Partials.CreateEventHeadTag')
+@include('Organizer.includes.CreateEventHeadTag')
 
 <body>
     @include('googletagmanager::body')

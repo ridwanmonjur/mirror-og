@@ -1,4 +1,4 @@
-@include('Organizer.__Partials.ManageEventHeadTag')
+@include('Organizer.includes.ManageEventHeadTag')
 
 
 <body>

@@ -1,4 +1,4 @@
-@include('Organizer.__Partials.CheckoutEventHeadTag')
+@include('Organizer.includes.CheckoutEventHeadTag')
 
 <body>
     @include('googletagmanager::body')
