@@ -191,7 +191,7 @@ class OrganizerEventController extends Controller
                 $existingJoint,
             );
 
-            return view('User.ViewEvent', [
+            return view('Public.ViewEvent', [
                     ...$viewData,
                     'livePreview' => $request->query('live') === 'true' ? 1 : 0,
                     ...$bracketData,

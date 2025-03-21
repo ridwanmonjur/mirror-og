@@ -132,7 +132,7 @@ class ParticipantController extends Controller
             $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
             return view(
-                'Participant.PlayerProfile',
+                'Public.PlayerProfile',
                 compact(
                     'joinEvents', 
                     'userProfile',

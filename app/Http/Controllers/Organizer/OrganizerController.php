@@ -150,7 +150,7 @@ class OrganizerController extends Controller
                 = EventDetail::processEvents($joinEvents, $isFollowing);
 
             return view(
-                'Organizer.PlayerProfile',
+                'Public.OrgProfile',
                 compact(
                     'joinEvents',
                     'userProfile',
