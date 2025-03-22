@@ -63,7 +63,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('Participant.includes.RosterView')
+                            @include('includes.Team.RosterView')
                         @endforeach
                     </div>
                  
@@ -102,7 +102,7 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab d-none" id="Members">
-            @include('Participant.includes.TeamManagementMemberView')
+            @include('Participant.includes.TeamMemberView')
         </div>
 
         @php
@@ -122,7 +122,7 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('Participant.includes.RosterView')
+                            @include('includes.Team.RosterView')
                         </div>
                         <br><br>
                     @endforeach
@@ -140,7 +140,7 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('Participant.includes.RosterView')
+                            @include('includes.Team.RosterView')
                         </div>
                         <br><br>
                     @endforeach

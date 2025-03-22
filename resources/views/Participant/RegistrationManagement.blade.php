@@ -70,10 +70,9 @@
             <p class="tab-size text-start mx-auto ">No events available</p>
         @else
             <div class="row reg-container">
-                @foreach ($joinEvents as $joinEvent)
-                        
-                    @include('Participant.includes.RosterViewRegister')
-                    @include('Participant.includes.PieChart', ['isInvited' => false])
+                @foreach ($joinEvents as $joinEvent) 
+                    @include('includes.Team.RosterViewRegister')
+                    @include('includes.Team.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
         @endif
@@ -88,8 +87,8 @@
                 @else
                     <div class="event-carousel-styles px-5">
                         @foreach ($invitedEvents as $key => $joinEvent)
-                            @include('Participant.includes.RosterViewRegister')
-                            @include('Participant.includes.PieChart', ['isInvited' => true])
+                            @include('includes.Team.RosterViewRegister')
+                            @include('includes.Team.PieChart', ['isInvited' => true])
                         @endforeach
                     </div>
                 @endif
