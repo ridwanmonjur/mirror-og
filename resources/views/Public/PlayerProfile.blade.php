@@ -16,7 +16,6 @@
     ])
 </head>
 @php
-    use Carbon\Carbon;
     $isUserSame = false;
     $loggedUserId = $loggedUserRole = null;
 
