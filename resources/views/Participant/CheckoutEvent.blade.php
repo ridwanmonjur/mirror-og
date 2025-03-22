@@ -25,7 +25,7 @@
     @include('includes.__Navbar.NavbarGoToSearchPage')
     <main class="main-background-2 pt-3">
         <br>
-        @include('Participant.__CheckoutPartials.CheckoutPaymentOptions')
+        @include('includes.__Checkout.PlayerCheckout')
         <br><br>
     </main>
     

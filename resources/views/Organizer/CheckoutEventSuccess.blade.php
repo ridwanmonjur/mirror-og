@@ -17,7 +17,7 @@
     <main>
         <div>
             <div class="pt-5">
-                @include('Organizer.__CheckoutPartials.CheckoutEventSuccess', ['event' => $event])
+                @include('includes.__Checkout.CheckoutEventSuccess', ['event' => $event])
             </div>
         </div>
         <br><br>

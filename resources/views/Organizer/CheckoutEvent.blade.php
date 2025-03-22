@@ -26,7 +26,7 @@
             data-stripe-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
             data-stripe-return-url="{{ route('organizer.checkout.transition', ['id' => $event->id]) }}">
         </div>
-        @include('Organizer.__CheckoutPartials.CheckoutPaymentOptions', ['event' => $event])
+        @include('includes.__Checkout.OrgCheckout', ['event' => $event])
     </main>
 
     <script src="https://js.stripe.com/v3/"></script>
