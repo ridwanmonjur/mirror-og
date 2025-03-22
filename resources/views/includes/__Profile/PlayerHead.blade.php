@@ -265,6 +265,7 @@
                             {{ Carbon::parse($userProfile->participant->created_at)->isoFormat('Do MMMM YYYY') }}</span>
                     </span>
                 </div>
+                
                 <div class="mt-4 my-2 text-wrap">
                     <div @vue:mounted="init"
                         v-scope="ProfileCount(
