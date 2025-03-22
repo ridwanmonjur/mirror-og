@@ -34,7 +34,7 @@
         <input type="hidden" id="participantMemberInviteUrl" value="{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}">
 
         
-        @include('Participant.includes.TeamHead') 
+        @include('includes.__Team.TeamHead') 
 
         @php
             $isRedirect = isset($redirect) && $redirect;

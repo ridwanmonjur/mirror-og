@@ -54,7 +54,7 @@
     </div>
 
    
-    @include('Participant.includes.TeamHead') 
+    @include('includes.__Team.TeamHead') 
     <div id="Overview">
         <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
             @if (session('successMessage'))
