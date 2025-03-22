@@ -88,7 +88,7 @@
                             >
                                 <div class="accepted-member-table card-body px-3 py-2">
                                     <div class="st row invisible-until-hover-parent" id="tr-{{ $member->id }}">
-                                        @include('Participant.Team.TeamMemberIntro', [
+                                        @include('Participant.__Team.TeamMemberIntro', [
                                             'member' => $member,
                                         ])
                                         <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end card-text text-lg-end">
@@ -132,7 +132,7 @@
                             >
                                 <div class="accepted-member-table card-body px-3 py-2">
                                     <div class="st row card-text invisible-until-hover-parent" id="tr-{{ $member->id }}">
-                                        @include('Participant.Team.TeamMemberIntro', [
+                                        @include('Participant.__Team.TeamMemberIntro', [
                                             'member' => $member,
                                         ])
                                         <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end">
@@ -173,7 +173,7 @@
                             >
                                 <div class="accepted-member-table card-body px-3 py-2">
                                     <div class="row invisible-until-hover-parent" id="tr-{{ $member->id }}">
-                                        @include('Participant.Team.TeamMemberIntro', [
+                                        @include('Participant.__Team.TeamMemberIntro', [
                                             'member' => $member,
                                         ])
                                         <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end">
@@ -223,7 +223,7 @@
                             >
                                 <div class="accepted-member-table card-body px-3 py-2">
                                     <div class="st row invisible-until-hover-parent" id="tr-{{ $member->id }}">
-                                        @include('Participant.Team.TeamMemberIntro', [
+                                        @include('Participant.__Team.TeamMemberIntro', [
                                             'member' => $member,
                                         ])
                                         <div class="col-12 col-lg-2 col-xl-2 py-2 text-start text-lg-end">
