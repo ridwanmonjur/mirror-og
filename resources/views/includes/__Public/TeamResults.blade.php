@@ -58,9 +58,10 @@
         @if (isset($joinEventAndTeamList[0]))
             <div class="d-flex flex-column gap-3">
                 @foreach ($joinEventAndTeamList as $joinEventAndTeam)
-                    <div class="card border-2 bg-white hover-shadow-sm position-relative">
+                    <div class="card border-2 bg-white hover-shadow-sm position-relative"
                         onmouseover="this.style.transform='translateY(-2px)'"
                         onmouseout="this.style.transform='translateY(0)'"
+                        >
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-12 col-lg-10 my-1 d-flex align-items-center gap-3">
