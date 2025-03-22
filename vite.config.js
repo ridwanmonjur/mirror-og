@@ -14,8 +14,8 @@ export default defineConfig({
                 'resources/js/alpine/teamhead.js',
                 'resources/js/alpine/organizer.js',
                 'resources/js/alpine/participant.js',
-                'resources/js/alpine/notifications.js'
-
+                'resources/js/alpine/notifications.js',
+                'resources/js/custom/share.js'
             ],
             refresh: true,
         }),
