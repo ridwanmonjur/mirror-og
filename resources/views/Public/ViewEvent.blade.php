@@ -16,7 +16,6 @@
 </head>
 
 @php
-    use Carbon\Carbon;
     $status = $event->statusResolved();
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
     $tier = $event->tier ? $event->tier?->eventTier : null;
@@ -30,7 +29,7 @@
     $userId = isset($user) ? $user->id : null; 
 @endphp
 
-<body style="background: none; ">
+<body>
     @include('googletagmanager::body')
 
     @include('includes.__Navbar.NavbarGoToSearchPage')
@@ -42,7 +41,7 @@
         <br class="d-none-at-desktop">
         <div class="pt-2">
             <header>
-                    <h5 class="text-start ms-5">
+                    <h5 class="text-start heading">
                      <u>
                         View your events
                         </u>

@@ -33,16 +33,15 @@ img.fslightbox-source{
     margin-bottom: 5px;
 }
 
-main {
-    display: block !important;
-    padding: 0px 10px;
-    align-items: center;
-    justify-content: center;
+body {
     background-image: url("/assets/images/event-management-bg.png");
-
     background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
+}
+
+main {
+    padding: 0px 10px;
 }
 
 svg{
@@ -391,8 +390,7 @@ input[type="submit"]:active {
         margin-left: 0px;
     }
 
-    main {
-        padding: 20px 0px;
+    body {
         background-size: 100vw 100vh;
     }
 

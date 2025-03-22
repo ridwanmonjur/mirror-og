@@ -578,9 +578,18 @@ button:after {
 }
 
 
-  
+.heading {
+    margin-left: 10px;
+    margin-top: 5px;
+}
 
 @media screen and (min-width: 1000px) {
+
+    .heading {
+        margin-left: 5%;
+        margin-top: 10px;
+    }
+
     .tab-button {
         flex-grow: 1;
         padding: 15px 25px;
