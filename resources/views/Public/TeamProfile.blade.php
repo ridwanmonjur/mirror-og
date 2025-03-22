@@ -102,7 +102,7 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab d-none" id="Members">
-            @include('Participant.includes.TeamMemberView')
+            @include('includes.__Team.TeamMemberView')
         </div>
 
         @php
