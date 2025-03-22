@@ -59,9 +59,8 @@
         class="d-none laravel-data-storage"
     ></div>
     <main id="app" >
-        @include('Participant.__ProfilePartials.BackgroundModal')
-
-        @include('Participant.__ProfilePartials.Forms')
+        @include('includes.__Profile.BackgroundModal')
+        @include('includes.__Profile.FriendFollowForms')
         <div id="backgroundBanner" class="member-section px-2 pt-2"
             @vue:mounted="init"
             v-scope="ParticipantData()"
@@ -116,7 +115,7 @@
                     </svg>
                     @endif
                 @if (!$isOwnProfile && !$isUserSame)
-                    @include('Participant.__ProfilePartials.FriendManagement')
+                    @include('includes.__Profile.FriendFriendUI')
                 @endif
             </div>
             <div  class="d-flex justify-content-center align-items-center flex-wrap">
@@ -453,13 +452,13 @@
         <div class="tab-content pb-4 d-none outer-tab " id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
-            @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[0]])
+            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[0]])
     
             <div class="tab-size"><b>Recent</b></div>
-            @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[1]])
+            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[1]])
             
             <div class="tab-size"><b>Older</b></div>
-            @include('Participant.__ProfilePartials.ActivityLogs', ['duration' => $activityNames[2]])
+            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[2]])
             
         </div>
 
