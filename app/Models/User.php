@@ -35,6 +35,11 @@ class User extends Authenticatable implements FilamentUser
         return Carbon::parse($this->updated_at)->diffForHumans();
     }
 
+    public function createdIsoFormat() {
+        return Carbon::parse($this->created_at)->isoFormat('Do MMMM YYYY');
+    }
+    
+
     /**
      * The attributes that are mass assignable.
      *

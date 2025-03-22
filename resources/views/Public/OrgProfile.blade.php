@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
 </head>
 @php
-    use Carbon\Carbon;
     $isUserSame = false;
     [   
         'backgroundStyles' => $backgroundStyles, 
@@ -66,7 +65,7 @@
         <input type="hidden" id="initialAddress" value="{{json_encode($userProfile->address)}}">
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
         <div >
-            @include('includes.__Profile.OrgProfile')
+            @include('includes.__Profile.OrgHead')
         </div>
         <div class="tabs px-5"  v-show="!isEditMode">
             <button class="tab-button  outer-tab py-2 tab-button-active"
@@ -118,7 +117,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('includes.__Team.OrgRosterView')
+                            @include('includes.__Profile.OrgRosterView')
                         @endforeach
                     </div>
                  
@@ -138,7 +137,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('includes.__Team.OrgRosterView')
+                        @include('includes.__Profile.OrgRosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -154,7 +153,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
-                        @include('includes.__Team.OrgRosterView')
+                        @include('includes.__Profile.OrgRosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -273,7 +272,7 @@
                             xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                         </svg>
-                        <span>Joined {{Carbon::parse($userProfile->created_at)->isoFormat('Do MMMM YYYY')}}</span>
+                        <span>Joined {{$userProfile->createdIsoFormat()}}</span>
                     </span>
 
                 </div>
@@ -315,7 +314,7 @@
                             xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                         </svg>
-                        <span>Joined {{Carbon::parse($userProfile->created_at)->isoFormat('Do MMMM YYYY')}}</span>
+                        <span>Joined {{ $userProfile->createdIsoFormat() }}</span>
                     </span>
                 </div>
             </div>

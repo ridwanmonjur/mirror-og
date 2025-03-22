@@ -90,7 +90,7 @@
         <input type="hidden" id="event-achievements-destroy-route" value="{{ route('event.achievements.destroy', ['achievementId' => ':id']) }}">
         <input type="hidden" id="eventId" value="{{ $event->id }}">
         <br>
-        <div class="ms-5">
+        <div class="heading">
             <u>
                 <h3>
                     Manage your event results

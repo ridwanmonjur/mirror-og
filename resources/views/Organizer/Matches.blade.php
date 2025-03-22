@@ -26,7 +26,7 @@
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
         <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
-         <div class="ms-5">
+         <div class="heading">
             <u>
                 <h3>
                     Manage your event bracket
