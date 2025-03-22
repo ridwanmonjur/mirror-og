@@ -21,19 +21,19 @@
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf
-                        @include('includes.__CreateEditEventPartials.EditEventHiddenForm', ['event' => $event])
-                        @include('includes.__CreateEditEventPartials.CreateEventTimelineBox')
+                        @include('includes.__CreateEditEvent.EditEventHiddenForm', ['event' => $event])
+                        @include('includes.__CreateEditEvent.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('includes.__CreateEditEventPartials.EditEventTimelineWelcome', [
+                            @include('includes.__CreateEditEvent.EditEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('includes.__CreateEditEventPartials.EditEventTimelineWelcome')
+                            @include('includes.__CreateEditEvent.EditEventTimelineWelcome')
                         @endif
-                        @include('includes.__CreateEditEventPartials.CreateEventStepOne', ['event' => $event])
-                        @include('includes.__CreateEditEventPartials.CreateEventForm', ['event' => $event])
+                        @include('includes.__CreateEditEvent.CreateEventStepOne', ['event' => $event])
+                        @include('includes.__CreateEditEvent.CreateEventForm', ['event' => $event])
                         @if (session()->has('success'))
-                            @include('includes.__CreateEditEventPartials.CreateEventSuccess')
+                            @include('includes.__CreateEditEvent.CreateEventSuccess')
                         @endif
                     </form>
                     <form onkeydown="return event.key != 'Enter';" id="cancelEvent" method="POST"

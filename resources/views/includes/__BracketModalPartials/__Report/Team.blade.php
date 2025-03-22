@@ -1,6 +1,6 @@
 <div>
 
-    @include('includes.__BracketModalPartials.__Report.ExistingChoices')
+    @include('includes.__BracketModal.__Report.ExistingChoices')
     <template v-if="!report.realWinners[reportUI.matchNumber]">
         <div>
             <template
@@ -59,7 +59,7 @@
                 v-if="!report.teams[reportUI.teamNumber].winners[reportUI.matchNumber]"
             >
                 <div class="mt-2">
-                    @include('includes.__BracketModalPartials.__Report.PickWinners')
+                    @include('includes.__BracketModal.__Report.PickWinners')
                 </div>
             </template>
             <template
@@ -68,7 +68,7 @@
                 "
             >
                 <div class="mt-2">
-                     @include('includes.__BracketModalPartials.__Report.PendingWinners')
+                     @include('includes.__BracketModal.__Report.PendingWinners')
                 </div>
             </template>
         </div>
@@ -101,13 +101,13 @@
                 </div>
             </div>
             <template v-if="!report.realWinners[reportUI.matchNumber]">
-                @include('includes.__BracketModalPartials.__Report.PendingWinners')
+                @include('includes.__BracketModal.__Report.PendingWinners')
             </template>
     </template>
     <template v-if="report.realWinners[reportUI.matchNumber]">
         <div>
             
-            @include('includes.__BracketModalPartials.__Report.RealWinners')
+            @include('includes.__BracketModal.__Report.RealWinners')
         </div>
     </template>
 </div>
