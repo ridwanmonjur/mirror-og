@@ -73,7 +73,7 @@ class HandleEventUpdate implements ShouldQueue
                         'member' => [
                             'type' => 'event',
                             'link' =>  route('public.event.view', ['id' => $this->eventDetail->id]),
-                            'icon_type' => 'ended',
+                            'icon_type' => 'schedule',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
                             'created_at' => DB::raw('NOW()')
@@ -81,7 +81,7 @@ class HandleEventUpdate implements ShouldQueue
                         'organizer' => [
                             'type' => 'event',
                             'link' =>  route('public.event.view', ['id' => $this->eventDetail->id]),
-                            'icon_type' => 'ended',
+                            'icon_type' => 'schedule',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
                             'created_at' => DB::raw('NOW()')
