@@ -198,6 +198,8 @@ class ParticipantTeamController extends Controller
                 $country = null;
             }
 
+            $team->uploadTeamBanner($request);
+
             return response()->json([
                 'message' => 'Team updated successfully',
                 'success' => true,
