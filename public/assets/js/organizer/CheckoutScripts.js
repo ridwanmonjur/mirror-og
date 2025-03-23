@@ -263,19 +263,27 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                     }
                 }
             });
+
+            if (error) {
+                console.log('Payment confirmation error:', error);
+                window.toastError(error.message || 'Payment failed. Please try again.');
+                return;
+            }
+
         } catch (error) {
-            console.error("Error submitting card form:", error);
+            console.log('Exception caught:', error);
+    
+            const errorMessage = 
+                error.message || 
+                error.error?.message || 
+                'Failed to process your payment. Please try again later.';
+            
+            window.toastError(errorMessage);
         }
     }
     async function initializeStripeEWalletPayment() {
 
-        const expressCheckoutOptions = {
-            buttonType: {
-                applePay: 'buy',
-                googlePay: 'buy',
-                paypal: 'buynow'
-            }
-        }
+        
     }
 
     let stripe = Stripe(hiddenVars['stripeKey'])
@@ -287,7 +295,6 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             colorDanger: '#df1b41',
             borderRadius: '0px',
             colorPrimary: '#2e4b59',
-            colorBackground: 'transparent',
             borderRadius: '20px',
         },
         rules: {
@@ -299,12 +306,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         }
     };
     let paymentElementOptions = {
-        type: 'tab',
-        style: {
-            base: {
-              backgroundColor: 'transparent',
-            }
-        },
+        
     };
     let addressElementOptions = {
         mode: 'billing',
@@ -327,19 +329,15 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
     const paymentAccordion = document.getElementById('paymentAccordion');
 
-    paymentAccordion.addEventListener('shown.bs.collapse', function(e) {
-        // Get the clicked accordion button
+    paymentAccordion?.addEventListener('shown.bs.collapse', function(e) {
         const clickedButton = e.target;
         
-        // Check which accordion item was clicked by its ID
         if (clickedButton.id === 'paymentCollapse') {
-            // If payment section (2nd accordion), scroll to bottom
             window.scrollTo({
                 top: document.documentElement.scrollHeight,
                 behavior: 'smooth'
             });
         } else if (clickedButton.id === 'addressCollapse') {
-            // If address section (1st accordion), scroll to top
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'

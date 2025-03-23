@@ -297,19 +297,21 @@ class PaymentProcessor {
                 phone: addressValue.phone
             };
 
-            const {
-                error
-            } = await stripe.confirmPayment({
-                elements,
-                confirmParams: {
-                    return_url: paymentVars['checkoutTransitionUrl'],
-                    payment_method_data: {
-                        billing_details: billingDetails
-                    }
-                }
-            });
+            if (error) {
+                console.log('Payment confirmation error:', error);
+                window.toastError(error.message || 'Payment failed. Please try again.');
+                return;
+            }
+
         } catch (error) {
-            console.error("Error submitting card form:", error);
+            console.log('Exception caught:', error);
+    
+            const errorMessage = 
+                error.message || 
+                error.error?.message || 
+                'Failed to process your payment. Please try again later.';
+            
+            window.toastError(errorMessage);
         }
     }
     async function initializeStripeEWalletPayment() {
