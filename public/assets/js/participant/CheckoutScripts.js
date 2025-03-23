@@ -302,7 +302,7 @@ class PaymentProcessor {
             } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: hiddenVars['stripeReturnUrl'],
+                    return_url: paymentVars['checkoutTransitionUrl'],
                     payment_method_data: {
                         billing_details: billingDetails
                     }
