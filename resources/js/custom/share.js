@@ -18,8 +18,8 @@ function initSocialShareModals() {
         const modalHtml = `
             <div class="modal fade" id="socialShareModal" tabindex="-1" aria-labelledby="socialShareModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content px-3 py-3">
-                        <h5 class="" id="socialShareModalLabel">Share this event</h5>
+                    <div class="modal-content px-3 py-4">
+                        <h5 class="text-center mx-auto" id="socialShareModalLabel">Share this event</h5>
                         <div class="modal-body py-3">
                             <div class="d-flex justify-content-center gap-3">
                                 <button class="btn btn-outline-primary share-facebook d-flex text-center justify-content-center align-items-center">
@@ -52,15 +52,16 @@ function initSocialShareModals() {
     const copyToClipboard = (url) => {
         navigator.clipboard.writeText(url)
             .then(() => {
-                const notification = modalElement.querySelector('.copy-notification');
-                notification.style.display = 'block';
-                
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 2000);
+                window.Toast.fire({
+                    icon: 'success',
+                    text: "Successfully copied to clipboard!"
+                });
             })
             .catch(err => {
-                console.error('Failed to copy URL: ', err);
+                window.Toast.fire({
+                    icon: 'error',
+                    text: "Failed to copy to clipboard!"
+                });
             });
     };
     
@@ -76,9 +77,9 @@ function initSocialShareModals() {
             const twitterBtn = modalElement.querySelector('.share-twitter');
             const discordBtn = modalElement.querySelector('.share-discord');
             
-            facebookBtn.dataset.url = shareUrl;
-            twitterBtn.dataset.url = shareUrl;
-            discordBtn.dataset.url = shareUrl;
+            facebookBtn.dataset.url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+            twitterBtn.dataset.url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`;
+            discordBtn.dataset.url = `https://discord.com/channels/@me?text=${encodeURIComponent(shareUrl)}`;
             
             modal.show();
         });

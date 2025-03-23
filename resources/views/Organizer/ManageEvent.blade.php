@@ -8,7 +8,7 @@
     <title>Manage Events</title>
     @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/manageEvent.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js' ])    
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/custom/share.js' ])   
     <link href="https://cdn.jsdelivr.net/npm/litepicker@2.0/dist/css/litepicker.min.css" rel="stylesheet">
 </head>
 
