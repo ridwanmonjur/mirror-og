@@ -42,7 +42,7 @@
 </div>
 <nav class="navbar justify-content-between align-items-center user-select-none px-3 ">
     <a href="{{ $routeLogo }}">
-        <img width="150" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
+        <img width="192" height="30" src="{{ asset('/assets/images/driftwood logo.png') }}" alt="">
     </a>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
