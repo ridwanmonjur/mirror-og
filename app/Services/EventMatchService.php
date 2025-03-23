@@ -42,22 +42,13 @@ class EventMatchService {
 
         $teamMap = collect();
         $teamList = collect();
-        if ($willFixBracketsAsOrganizer) {
-            $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
-                $teamMap[$joinEvent->team->id] = $joinEvent->team;
-                if ($joinEvent->join_status === 'confirmed') {
-                    $teamList->push($joinEvent->team);
-                }
-            });
-        } else {
-            $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
-                $teamMap[$joinEvent->team->id] = $joinEvent->team;
-                if ($joinEvent->join_status !== 'canceled') {
-                    $joinEvent->team->join_status = $joinEvent->join_status;
-                    $teamList->push($joinEvent->team);
-                }
-            });
-        }
+        $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
+            $teamMap[$joinEvent->team->id] = $joinEvent->team;
+            if ($joinEvent->join_status === 'confirmed') {
+                $teamList->push($joinEvent->team);
+            }
+        });
+        
        
 
         $matchTeamIds = collect();

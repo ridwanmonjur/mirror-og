@@ -124,6 +124,7 @@ class ParticipantController extends Controller
                 $friend = null;
                 $isFollowingParticipant = null;
             }
+            
             $joinEventsHistory = $joinEventsActive = $values = [];
             ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
                 = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);

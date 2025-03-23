@@ -1,13 +1,6 @@
 <h5 class="mb-3"><u>Teams</u></h5>
 <div class="pb-5" id="current-teams">
     @if (isset($teamList[0]))
-        @php
-            $statusJoinMap = [
-                'pending' => ['text' => 'SIGNUP', 'theme' => 'primary'],
-                'canceled' => ['text' => 'CANCELED', 'theme' => 'danger'],
-                'confirmed' => ['text' => 'COMPLETED', 'theme' => 'success'],
-            ];
-        @endphp
         <div class="row row-cols-1 row-cols-xl-2  gy-2 gx-4 pt-0">
             @foreach ($teamList as $team)
                 <div class="col">
@@ -26,10 +19,6 @@
                                                 style="font-size: 1.5rem;">{{ $team->country_flag }}</span></p>
                                         <div class="text-muted text-wrap align-middle">
                                             <span class="me-2">{{ $team->createdAtHumaReadable() }}</span>
-
-                                            <span
-                                                class="me-2 badge bg-{{ $statusJoinMap[$team->join_status]['theme'] }}">{{ $statusJoinMap[$team->join_status]['text'] }}</span>
-
 
                                         </div>
                                     </div>
