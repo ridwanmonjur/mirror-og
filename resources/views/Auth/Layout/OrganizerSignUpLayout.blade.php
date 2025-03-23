@@ -31,9 +31,8 @@
         <p class="py-0 my-0">Already have an account? <a href="{{ route('organizer.signin.view') }}">Sign in</a></p>
     </div>
     <div>
-        <a  href="{{ route('participant.signup.view') }}">
-            <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to participant</button>
-        </a>
+         <a  href="{{ route('participant.signup.view') }}" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to participant
+    </a>
     </div>
 
 </form>

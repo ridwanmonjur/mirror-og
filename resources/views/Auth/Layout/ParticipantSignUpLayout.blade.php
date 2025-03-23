@@ -28,8 +28,7 @@
             <p class="my-0 py-0">Already have an account? <a href="{{ route('participant.signin.view') }}">Sign in</a></p>
         </div>
         <div>
-            <a  href="{{ route('organizer.signup.view') }}">
-                <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer</button>
+            <a  href="{{ route('organizer.signup.view') }}" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer
             </a>
         </div>
 

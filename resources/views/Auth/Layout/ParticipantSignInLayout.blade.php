@@ -73,8 +73,7 @@
     <p class="py-0 my-0">New to Driftwood? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
 </div>
 <div>
-    <a  href="{{ route('organizer.signin.view') }}">
-        <button type="button" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer</button>
+    <a  href="{{ route('organizer.signin.view') }}" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer
     </a>
 </div>
 
