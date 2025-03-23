@@ -35,7 +35,7 @@ class ChatController extends Controller
             ['updated_at' => now()]
         );
 
-        return view('User.Message', ['userProfile' => $userProfile,
+        return view('Users.Message', ['userProfile' => $userProfile,
             'user' => $user,
         ]);
     }

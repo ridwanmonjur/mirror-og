@@ -142,7 +142,7 @@ class UserController extends Controller
         }
     
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
-        return view('User.Settings', 
+        return view('Users.Settings', 
             compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction',
             'limit_methods', 'limit_history', 'hasMorePayments',  'hasMoreHistory', 
             

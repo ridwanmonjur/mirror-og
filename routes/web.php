@@ -65,7 +65,7 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|organizer'], function () {
         // Notifications page
-        Route::view('/notifications', 'User.Notifications')->name('user.notif.view');
+        Route::view('/notifications', 'Users.Notifications')->name('user.notif.view');
         Route::post('/media', [ImageVideoController::class, 'upload']);
         Route::get('profile/message', [ChatController::class, 'message'])->name('user.message.view');
         Route::get('settings', [UserController::class, 'settings'])->name('user.settings.view');
