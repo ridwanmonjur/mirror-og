@@ -86,12 +86,16 @@ function fillStepPaymentValues() {
         eventFee = 0,
         eventTotal = 0;
     
-    let eventRateToTierMap = {
-        'Starfish': 5000,
-        'Turtle': 10000,
-        'Dolphin': 15000,
-        'Mermaid': 5
-    };
+    let eventRateToTierList = JSON.parse(document.getElementById("allTiers").value);
+  
+    let eventRateToTierMap = eventRateToTierList.reduce((accumulator, value) => {
+        accumulator[value.eventTier] = value.tierPrizePool;
+        return accumulator;
+    }, {});
+
+    console.log({eventRateToTierMap});
+    console.log({eventRateToTierMap});
+
     
     let formValues = getFormValues(['eventTier', 'eventType']);
     
@@ -112,7 +116,7 @@ function fillStepPaymentValues() {
         }
 
         eventFee = eventSubTotal * (eventRate / 100);
-        eventTotal = eventSubTotal + eventFee;
+        eventTotal = Number(eventSubTotal) + Number(eventFee);
         
         if (eventTier == null || eventType == null || eventSubTotal == -1) {
             getElementByIdAndSetInnerHTML('paymentType', "Not available");

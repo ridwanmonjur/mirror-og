@@ -10,3 +10,4 @@
 <input type="hidden" name="eventTierId" id="eventTierId" value="{{ $event->event_tier_id }}">
 <input type="hidden" name="eventTypeId"  id="eventTypeId" value="{{ $event->event_type_id }}">
 <input type="hidden" name="goToCheckoutPage"  id="goToCheckoutPage">
+<input type="hidden" id="allTiers" name="allTiers" value="{{json_encode($eventTierList ?? [])}}">

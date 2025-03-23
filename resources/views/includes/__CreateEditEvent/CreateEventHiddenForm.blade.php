@@ -8,3 +8,4 @@
 <input type="hidden" name="isPaymentDone"  id="isPaymentDone">
 <input type="hidden" name="paymentMethod"  id="paymentMethod">
 <input type="hidden" name="goToCheckoutPage"  id="goToCheckoutPage">
+<input type="hidden" id="allTiers" name="allTiers" value="{{json_encode($eventTierList ?? [])}}">
