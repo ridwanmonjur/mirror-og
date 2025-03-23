@@ -296,7 +296,7 @@
 .event {
     margin-bottom: 3rem;
     overflow: auto;
-    width: 90%;
+    width: 90vw;
     height: min-content;    
     background: transparent;
     border-width: 2px;
