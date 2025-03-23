@@ -297,6 +297,18 @@ class PaymentProcessor {
                 phone: addressValue.phone
             };
 
+            const {
+                error
+            } = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: hiddenVars['stripeReturnUrl'],
+                    payment_method_data: {
+                        billing_details: billingDetails
+                    }
+                }
+            });
+
             if (error) {
                 console.log('Payment confirmation error:', error);
                 window.toastError(error.message || 'Payment failed. Please try again.');
