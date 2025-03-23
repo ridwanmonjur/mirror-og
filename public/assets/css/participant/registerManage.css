@@ -18,6 +18,8 @@
   place-content:center;
   font-size:25px;
   font-weight:bold;
+  margin-top: 0px;
+  padding-top: 0px;
 }
 .pie:before,
 .pie:after {

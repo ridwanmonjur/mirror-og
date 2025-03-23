@@ -45,7 +45,7 @@
     <div @class([
         'event  mx-auto event-width cursor-pointer visible-until-hover-parent position-relative ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
-    ]) style="margin-bottom : 0; width: auto !important;">
+    ]) >
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img 
                 id="eventBanner"

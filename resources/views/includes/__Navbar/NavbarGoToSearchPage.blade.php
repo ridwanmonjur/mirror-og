@@ -129,6 +129,7 @@
                     @if($user->userBanner) 
                         <img
                             class="object-fit-cover rounded-circle me-2 border border-primary" 
+                            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                             src="{{'/storage' . '/' . $user->userBanner}}" width="45" height="45">
                     @else 
                         <div

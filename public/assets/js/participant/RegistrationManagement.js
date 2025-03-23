@@ -131,7 +131,7 @@ function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap) {
                     <img
                         width="20"
                         height="20"
-                        onerror="this.onerror = null; this.src= '/assets/images/404.png';"
+                        onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                         class="rounded-circle random-color-circle"
                         src="${player?.user?.userBanner ? '/storage/' + player.user.userBanner : '/assets/images/404.png'}"
                     >
@@ -140,6 +140,7 @@ function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap) {
                         ${player.id == rosterCaptainId ? `
                             <img 
                             class="z-99 rounded-pill me-1 ms-2 gear-icon-btn"
+                            onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                             height="20" 
                             width="20" 
                             src="/assets/images/participants/crown-straight.png"
@@ -161,7 +162,7 @@ function rosterHtmlGenerater (roster, rosterMap) {
             <img
                 width="25"
                 height="25"
-                onerror="this.onerror = null; this.src= '/assets/images/404.png';"
+                onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                 class="  rounded-circle random-color-circle"
                 src="${player?.user?.userBanner ? '/storage/' + player.user.userBanner : '/assets/images/404.png'}"
             >
@@ -716,7 +717,7 @@ addOnLoad(()=> {
           
           isAutoPlaying = true;
           playButton.innerHTML = ' Stop Tour';
-          playButton.classList.replace('btn-primary', 'btn-danger');
+          playButton.classList.replace('btn-primary', 'bg-red');
           createBackdrop();
 
           highlightMember(currentIndex);
@@ -766,7 +767,7 @@ addOnLoad(()=> {
           
           isAutoPlaying = false;
           playButton.innerHTML = 'Roster Management Tour';
-          playButton.classList.replace('btn-danger', 'btn-primary');
+          playButton.classList.replace('bg-red', 'btn-primary');
           clearInterval(autoPlayInterval);
           clearHighlight();
           removeBackdrop();
@@ -1058,6 +1059,7 @@ async function capatainMemberAction(event) {
                     <img  
                         width='30'
                         height='30'
+                        onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                         src='${rosterUserBanner ? '/storage/' + rosterUserBanner: '/assets/images/404.png' }
                         class="rounded-circle border-${eventDetails.tier.eventTier} me-1 object-fit-cover"
                     >
@@ -1127,14 +1129,14 @@ function drawEventTable(eventDetails, followCounts) {
         <div class="mx-3 py-2 px-3 text-start w-75 mx-auto mt-3 mb-3 border-${eventDetails.tier.eventTier} " >
             <div>
                 <img 
-                    onerror="this.onerror=null; this.src='/assets/images/404.png';"
+                    onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                     src="${eventDetails?.game?.gameIcon ? '/storage/' + eventDetails.game.gameIcon : '/assets/images/404.png'}"
                     class="object-fit-cover rounded-circle me-1" width="30" height="30"
                 >
                 <p class=" d-inline my-0 ms-2"> ${eventDetails.eventName}</p>
             </div>
             <div class="d-flex pt-2 justify-content-start">
-                <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                <img onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                     src="${eventDetails?.user?.userBanner ? '/storage/' + eventDetails.user.userBanner : '/assets/images/404.png'}"
                     width="30"
                     height="30" class="me-1 object-fit-cover  rounded-circle random-color-circle"
@@ -1209,6 +1211,7 @@ function addRosterMembers(event) {
                         </td>
                         <td >
                             <img 
+                            onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                                 class="object-fit-cover rounded-circle"
                                 src="${
                                     member.user.userBanner ?

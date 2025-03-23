@@ -25,7 +25,7 @@
             <br><br><br><br>
         </div>
         <div class="text__middle ">
-            <p class="head py-0 text-center text-lg-start">We've got events happening...</p>
+            <p class="head py-0 text-center text-lg-start">What would you like to do?</p>
         </div>
        
 

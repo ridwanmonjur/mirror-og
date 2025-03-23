@@ -23,7 +23,7 @@
 @endphp
 
 
-<div class="col-12 col-lg-6 d-flex user-select-none flex-column justify-content-between mb-5 position-relative  popover-parent rounded">
+<div style="margin-top: -20px;" class="col-12 col-lg-6 d-flex user-select-none flex-column justify-content-between mb-5 position-relative  popover-parent rounded">
     <div class="mx-auto text-center cursor-pointer popover-button">
         <div class="pie animate no-round" style="{{ $styles }}">{{ $percent }}%</div>
         <p> Total Entry Fee: <u>RM {{ $total }} </u></p>
@@ -178,25 +178,21 @@
                                 </svg>
                             </span>
                             <span class="me-1">Roster is filled</span>
-                            <button 
-                                class="btn  px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
+                            <span 
+                                class="  px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
                             >
                                 <u>Tutorial</u>
-                            </button>
+                            </span>
                         </div>
                     @else
-                        <div class="mt-2 text-start text-red">
+                        <div class="mt-2 text-start text-red tutorial-button z-99 cursor-pointer">
                             <span class="me-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                 </svg>       
                             </span>
-                            <span class="me-0">Roster is still empty!</span>
-                            <button  
-                                class="btn cursor-pointer px-0 text-red tutorial-button position-relative z-99" 
-                            >
-                                <u>Tutorial</u>
-                            </button>
+                            <span class="me-0">Roster is still empty! Click to start tour.</span>
+                          
                         </div>
                     @endif
                 

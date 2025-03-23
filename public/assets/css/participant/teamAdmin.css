@@ -553,6 +553,11 @@
         margin: auto;
     }
 
+
+    .event {
+        width: 65vw;
+    }
+
 }
 
 @media screen and (min-width: 992px) {
