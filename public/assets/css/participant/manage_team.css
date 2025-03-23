@@ -180,3 +180,8 @@
         background-size: 100vw 100vh;
     }
 }
+
+.card-member {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

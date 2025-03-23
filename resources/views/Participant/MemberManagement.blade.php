@@ -82,7 +82,7 @@
                     <h5 class="pb-3">Present Members</h5>
                     <div class="row  w-100">
                         @foreach ($teamMembersProcessed['accepted']['members'] as $member)
-                            <div class="card col-10 member-table responsive mb-2 "
+                            <div class="card card-member col-10 member-table responsive mb-2 "
                                 onmouseover="this.style.transform='translateY(-2px)'" 
                                 onmouseout="this.style.transform='translateY(0)'"
                             >
@@ -126,7 +126,7 @@
                     <h5 class="pb-3 mt-3">Past Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['left']['members'] as $member)
-                            <div class="card col-10 member-table responsive mb-2"
+                            <div class="card card-member col-10 member-table responsive mb-2"
                                 onmouseover="this.style.transform='translateY(-2px)'" 
                                 onmouseout="this.style.transform='translateY(0)'"
                             >
@@ -167,7 +167,7 @@
                     <h5 class="pb-3">Invited Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['pending']['members'] as $member)
-                            <div class="card col-10 member-table responsive mb-2"
+                            <div class="card card-member col-10 member-table responsive mb-2"
                                 onmouseover="this.style.transform='translateY(-2px)'" 
                                 onmouseout="this.style.transform='translateY(0)'"
                             >
@@ -217,7 +217,7 @@
                     <h5 class="pb-3 mt-3">Rejected Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['rejected']['members'] as $member)
-                            <div class="card col-10 member-table responsive mb-2"
+                            <div class="card card-member col-10 member-table responsive mb-2"
                                 onmouseover="this.style.transform='translateY(-2px)'" 
                                 onmouseout="this.style.transform='translateY(0)'"
                             >
@@ -233,6 +233,8 @@
                                                         onclick="approveMember({{ $member->id }})">
                                                         ✔
                                                     </button>
+                                                @else
+                                                    <span>No action</span>
                                                 @endif
                                             </span>
                                             <button style="opacity: 0;">
