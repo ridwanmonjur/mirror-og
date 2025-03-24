@@ -73,9 +73,9 @@
                     style="width:min(90vw, 602px);border-collapse:collapse;border:0;border-spacing:0;text-align:left;">
                     <tr style="border-bottom: 0;">
                         <td align="start" style="padding: 20px 0 10px 0;">
-                            <img src="{{$message->embed(public_path('assets/images/driftwood logo.png'))}}" alt="" width="250"
+                            <img src="{{$message->embed(public_path('assets/images/dw_logo.webp'))}}" alt="" width="250"
                                     style="height:auto;display:block;" />
-                            {{-- <img src="{{ asset('assets/images/driftwood logo.png') }}" alt="" width="300"
+                            {{-- <img src="{{ asset('assets/images/dw_logo.webp') }}" alt="" width="300"
                                 style="height:auto;display:block;" /> --}}
                         </td>
 

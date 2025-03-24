@@ -2,7 +2,7 @@
 @section('signUpbody')
 
 <a href="{{route('public.landing.view')}}">
-    <img class=" mb-1 motion-logo" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <img class=" mb-1 motion-logo" src="{{ asset('/assets/images/dw_logo.webp') }}">
 </a>
 
 <h5 class=" mb-0">Create an <span class="text-primary">organizer account</span></h5>

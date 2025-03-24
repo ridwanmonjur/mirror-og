@@ -10,7 +10,7 @@
 >
 </div>
 <a href="{{route('public.landing.view')}}">
-    <img class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/driftwood logo.png') }}">
+    <img class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/dw_logo.webp') }}">
 </a>
 <h5 class="mx-0 my-0">Sign in to your <span class="text-primary">organizer account</span></h5>
 <form 
