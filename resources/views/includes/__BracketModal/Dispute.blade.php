@@ -4,8 +4,15 @@
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center p-0">
-                <img id="modalImage" class="img-fluid object-fit-cover" alt="Full size image" style="max-height: 70vh;">
+              <div class="modal-body text-center p-0">
+                <!-- Image container (hidden for videos) -->
+                <img id="imagePreview" class="img-fluid object-fit-cover" alt="Full size image" style="max-height: 70vh; display: none;">
+                
+                <!-- Video container (hidden for images) -->
+                <video id="videoPreview" controls class="img-fluid" style="max-height: 70vh; display: none;">
+                    <source id="videoSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
             <br>
         </div>
@@ -156,7 +163,7 @@
                                                     <input type="file" 
                                                         class="file-input" 
                                                         multiple
-                                                        accept="image/*" 
+                                                        accept="image/*,video/*" 
                                                         v-on:change="handleFiles(event)">
                                                     </div>
                                                 </div>

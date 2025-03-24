@@ -283,11 +283,9 @@ const fileStore = reactive({
         createFormData.append('media2[]', file);
       });
 
-      console.log({files})
-
       const csrfToken4 = document.querySelector('meta[name="csrf-token"]').content;
 
-      const uploadResponse = await fetch('/api/media', {
+      let uploadResponse = await fetch('/api/media', {
         method: 'POST',
         body: createFormData,
         headers: {
@@ -295,7 +293,13 @@ const fileStore = reactive({
         }
       });
 
-      return await uploadResponse.json();
+      uploadResponse = await uploadResponse.json();
+
+      if (uploadResponse.files) {
+        return uploadResponse;
+      } else {
+        window.toastError("Uploading to server failed");
+      }
     } catch (error) {
       window.toastError("Uploading to server failed");
     }
@@ -644,10 +648,25 @@ function BracketData() {
       document.querySelector(`.${classToShow}`).classList.toggle("d-none");
       document.querySelector(`.${classToHide}`).classList.toggle("d-none");
     },
-    showImageModal(imgPath) {
-
+    showImageModal(imgPath, mediaType) {
       const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
-      document.getElementById('modalImage').src = '/storage/' + imgPath;
+            
+      const imagePreview = document.getElementById('imagePreview');
+      const videoPreview = document.getElementById('videoPreview');
+      const videoSource = document.getElementById('videoSource');
+      
+      imagePreview.style.display = 'none';
+      videoPreview.style.display = 'none';
+      
+      if (mediaType === 'image') {
+          imagePreview.src = '/storage/' + imgPath;
+          imagePreview.style.display = 'block';
+      } else {
+          videoSource.src = '/storage/' + imgPath;
+          videoPreview.load(); 
+          videoPreview.style.display = 'block';
+      }
+      
       if (modal) modal.show();
     },
     selectTeamToWin(event, index) {
@@ -1106,10 +1125,11 @@ function UploadData (type) {
       const newFiles = Array.from(event.target?.files);
       newFiles?.forEach(file => {
         if (!(file.type.startsWith('image/') || file.type.startsWith('video/'))) {
-          window.toastError("Only images and videis are supported");
+          window.toastError("Only images and videos are supported");
           return;
         }
       });
+
       
       fileStore.addFiles(newFiles, type);
       

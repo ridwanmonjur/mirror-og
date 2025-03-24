@@ -32,14 +32,18 @@
                                         <template v-if="imgVideo.startsWith('media/img')">
                                             <img v-bind:src="'/storage/' + imgVideo"
                                                 class="object-fit-cover border border-secondary me-2"
-                                                v-on:click="showImageModal(imgVideo)" height="100px" width="100px" />
+                                                v-on:click="showImageModal(imgVideo, 'image')" height="100px" width="100px" />
                                         </template>
 
                                         <template v-else>
-                                            <video controls class="prview-item me-2">
-                                                <source v-bind:src="'/storage/' + imgVideo" type="video/mp4">
-                                                Your browser does not support the video tag.
-                                            </video>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                class="me-3"
+                                                v-on:click="showImageModal(imgVideo, 'video')"
+                                                width="60"
+                                                height="60"
+                                            >
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" fill="#666666"/>
+                                            </svg>
                                         </template>
                                     </div>
                                 </template>

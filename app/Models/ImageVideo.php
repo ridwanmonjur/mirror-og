@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -21,26 +22,24 @@ class ImageVideo extends Model
     public static function handleMediaUploads(Request $request, string $formName): array
     {
         $fileArray = [];
-        if ($request->hasFile($formName)) {
-            $files = $request->file($formName);
+        $files = $request->file($formName);
 
-            $files = is_array($files) ? $files : [$files];
+        $files = is_array($files) ? $files : [$files];
 
-            foreach ($files as $mediaFile) {
-                if ($mediaFile instanceof \Illuminate\Http\UploadedFile) {
-                    $type = str_starts_with($mediaFile->getMimeType(), 'video/') ? 'vid' : 'img';
-                    $path = $mediaFile->store("media/{$type}", 'public'); // Specify disk if needed
+        $hasFile = $request->hasFile($formName);
+        
+        foreach ($files as $mediaFile) {
+            $type = str_starts_with($mediaFile->getMimeType(), 'video/') ? 'vid' : 'img';
+            $path = $mediaFile->store("media/{$type}", 'public'); // Specify disk if needed
 
-                    $media = self::create([
-                        'file_path' => $path,
-                        'file_type' => $type,
-                        'mime_type' => $mediaFile->getMimeType(),
-                        'size' => $mediaFile->getSize(),
-                    ]);
+            $media = self::create([
+                'file_path' => $path,
+                'file_type' => $type,
+                'mime_type' => $mediaFile->getMimeType(),
+                'size' => $mediaFile->getSize(),
+            ]);
 
-                    $fileArray[] = $path;
-                }
-            }
+            $fileArray[] = $path;
         }
 
         return $fileArray;

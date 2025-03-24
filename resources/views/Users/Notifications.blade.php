@@ -109,15 +109,11 @@
             </div>
             <div>
                 <template v-if="hasMore">
-                    <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
-                        <button class="btn btn-primary btn-sm text-white ms-4" v-on:click="loadNextPage(event)">More</button>
+                    <div aria-label="Page navigation" class="mt-0 mb-3 mx-auto text-center" >
+                        <button class="btn btn-primary btn-sm ms-4 text-white text-center" v-on:click="loadNextPage(event)">More</button>
                     </div>
                 </template>
-                <template v-else>
-                    <div aria-label="Page navigation" class="mt-0 mb-3" style="padding-left: 9px;">
-                        <button class="btn btn-link  btn-sm color-notif ms-4">No more notifications</button>
-                    </div>
-                </template>
+                
             </div>
         </div>
     </div>

@@ -66,7 +66,7 @@
                                 <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
                                 <div class="plus-button" v-on:click="clickInput()">+</div>
                             </div>
-                            <input type="file" class="file-input" multiple accept="image/*"
+                            <input type="file" class="file-input" multiple accept="image/*,video/*"
                                 v-on:change="handleFiles(event)">
                         </div>
                     </div>

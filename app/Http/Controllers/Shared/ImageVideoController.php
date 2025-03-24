@@ -23,7 +23,6 @@ class ImageVideoController extends Controller
                 'message' => 'Files uploaded successfully',
                 'files' => ImageVideo::handleMediaUploads($request, 'media2')
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Upload failed',

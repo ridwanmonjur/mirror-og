@@ -22,7 +22,7 @@
 @endphp
 <nav class="navbar px-3 ">
     <a href="{{ route('public.closedBeta.view') }}">
-        <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="">
+        <img width="160" height="25" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="">
     </a>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -59,7 +59,7 @@
 </nav>
 <nav class="mobile-navbar d-centered-at-mobile d-none py-3" id="mobile-navbar">
      <a href="{{ $routeLogo }}">
-        <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="">
+        <img width="160" height="25" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="">
     </a>
     <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2">
          <ul class="navbar-nav">

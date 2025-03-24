@@ -1098,7 +1098,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.preview-item img {
+.preview-item img, .preview-item svg, .preview-item video {
     width: 100%;
     height: 100%;
     object-fit: cover;
