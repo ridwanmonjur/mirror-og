@@ -60,8 +60,8 @@
                     <h5 class="text-start my-3"> Image/Video Evidence <span class="text-red">*</span>
                     </h5>
                     <div class="ps-5 pe-5 text-start">
-                        <div class="upload-container ps-5 pe-5" v-scope="UploadData('createDisputeInputs')"
-                            id="createDisputeInputs" @vue:mounted="init()">
+                        <div class="upload-container ps-5 pe-5" v-scope="UploadData('claim')"
+                            id="claimId" @vue:mounted="init()">
                             <div class="d-flex justify-content-start">
                                 <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
                                 <div class="plus-button" v-on:click="clickInput()">+</div>

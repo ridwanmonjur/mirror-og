@@ -245,7 +245,62 @@ function getAllMatchStatusesData() {
 getAllMatchStatusesData();
 
 
+const fileStore = reactive({
+  disputeClaimFiles: [],
+  disputeResponseFiles: [],
+  
+  activeFileType: null, 
+  
+  addFiles(newFiles, fileType) {
+    if (fileType === 'claim') {
+      this.disputeClaimFiles = [...this.disputeClaimFiles, ...newFiles];
+    } else if (fileType === 'response') {
+      this.disputeResponseFiles = [...this.disputeResponseFiles, ...newFiles];
+    }
+  },
+  
+  getFiles(fileType) {
+    return fileType === 'claim' 
+      ? this.disputeClaimFiles 
+      : this.disputeResponseFiles;
+  },
+  
+  clearFilesByIndex(fileType, index) {
+    if (fileType === 'claim') {
+      this.disputeClaimFiles = this.disputeClaimFiles.filter((_, arrayIndex) => arrayIndex !== index);
+    } else if (fileType === 'response') {
+      this.disputeResponseFiles = this.disputeResponseFiles.filter((_, arrayIndex) => arrayIndex !== index);
+    }
+  },
 
+  async uploadToServer(fileType) {
+    try {
+      const createFormData = new FormData();
+      let files = fileType === 'claim' 
+        ? this.disputeClaimFiles 
+        : this.disputeResponseFiles;
+      files.forEach((file) => {
+        createFormData.append('media2[]', file);
+      });
+
+      console.log({files})
+
+      const csrfToken4 = document.querySelector('meta[name="csrf-token"]').content;
+
+      const uploadResponse = await fetch('/api/media', {
+        method: 'POST',
+        body: createFormData,
+        headers: {
+          'X-CSRF-TOKEN': csrfToken4
+        }
+      });
+
+      return await uploadResponse.json();
+    } catch (error) {
+      window.toastError("Uploading to server failed");
+    }
+  },
+});
 
 
 function BracketData() {
@@ -361,9 +416,10 @@ function BracketData() {
       window.Swal.fire({
         title: 'Changing the winner',
         html: `
-                Are you sure you want to change the winner?
-            `,
+            Are you sure you want to change the winner?
+        `,
         showCancelButton: true,
+        confirmButtonColor: "#43A4D7",
         confirmButtonText: 'Change Declaration',
         cancelButtonText: 'Back',
         padding: '2em',
@@ -415,8 +471,9 @@ function BracketData() {
       window.Swal.fire({
         title: 'Remove the winner',
         html: `
-                Are you sure you want to remove the winner?
-            `,
+            Are you sure you want to remove the winner?
+        `,
+        confirmButtonColor: "#43A4D7",
         showCancelButton: true,
         confirmButtonText: 'Remove Declaration',
         cancelButtonText: 'Back',
@@ -471,11 +528,9 @@ function BracketData() {
           return;
         }
         
-
       if (!resolution_winner) {
         resolution_winner = already_winner == '0' ? '1' : '0';
       }
-
 
       const disputeRef = doc(db, `event/${eventId}/disputes`, id);
       const updateData = {
@@ -485,7 +540,6 @@ function BracketData() {
       };
 
       await updateDoc(disputeRef, updateData);
-
 
       const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
@@ -591,10 +645,6 @@ function BracketData() {
       document.querySelector(`.${classToHide}`).classList.toggle("d-none");
     },
     showImageModal(imgPath) {
-      console.log("zzzzzzzz", imgPath);
-      console.log("zzzzzzzz", imgPath);
-
-      console.log("zzzzzzzz", imgPath);
 
       const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
       document.getElementById('modalImage').src = '/storage/' + imgPath;
@@ -758,7 +808,6 @@ function BracketData() {
           };
         }
 
-
         this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });
 
@@ -908,17 +957,18 @@ function BracketData() {
       window.Swal.fire({
         title: 'Submitting a Dispute',
         html: `
-                    <div class="text-left">
-                        <p class="mt-2 mb-2">A total of TWO (2) dispute submissions are allocated to each team per event. 
-                        A dispute submission will only be consumed when a dispute is submitted.</p>
-                        
-                        <p class="mb-2">You have TWO (2) dispute submissions remaining. Submitting this dispute will consume
-                        one dispute submission and you will have ONE (1) dispute submission remaining.</p>
-                        
-                        <p class="mb-2">If this dispute is resolved in your favour, a dispute submission will be returned to you.</p>
-                        
-                    </div>
-                `,
+          <div class="text-left">
+              <p class="mt-2 mb-2">A total of TWO (2) dispute submissions are allocated to each team per event. 
+              A dispute submission will only be consumed when a dispute is submitted.</p>
+              
+              <p class="mb-2">You have TWO (2) dispute submissions remaining. Submitting this dispute will consume
+              one dispute submission and you will have ONE (1) dispute submission remaining.</p>
+              
+              <p class="mb-2">If this dispute is resolved in your favour, a dispute submission will be returned to you.</p>
+              
+          </div>
+        `,
+        confirmButtonColor: "#43A4D7",
         showCancelButton: true,
         confirmButtonText: 'Submit Dispute',
         cancelButtonText: 'Back',
@@ -927,19 +977,8 @@ function BracketData() {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const event = new CustomEvent('initiate-upload', {
-              bubbles: true,  
-              cancelable: true,  
-              detail: {}  
-            });
-            
-            window.dispatchEvent(event);            
-            const uploadResult = await new Promise((resolve) => {
-              window.uploadResolve = resolve;
-            });
-
-            let { files } = uploadResult;
-
+            let { files } = await fileStore.uploadToServer('claim');
+      
             const disputeDto = {
               report_id: newFormObject.report_id,
               match_number: newFormObject.match_number,
@@ -1011,28 +1050,19 @@ function BracketData() {
       window.Swal.fire({
         title: 'Responding to a Dispute',
         html: `
-                  <p class="mt-2 mb-2">An opponent team has raised a dispute and requires your response.</p>
-                  <p class="mt-2">Responding to a dispute does not consume any dispute submissions.</p>
-                  <p class="mt-2">A dispute submission is only consumed when you raise a dispute and submit it.</p>
-                  <p class="mt-2">A dispute submission will be returned if a dispute resolves in the disputing team's favour.</p>
-              `,
+            <p class="mt-2 mb-2">An opponent team has raised a dispute and requires your response.</p>
+            <p class="mt-2">Responding to a dispute does not consume any dispute submissions.</p>
+            <p class="mt-2">A dispute submission is only consumed when you raise a dispute and submit it.</p>
+            <p class="mt-2">A dispute submission will be returned if a dispute resolves in the disputing team's favour.</p>
+        `,
+        confirmButtonColor: "#43A4D7",
         confirmButtonText: 'Continue',
         width: 500,
         padding: '2em',
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const event = new CustomEvent('initiate-upload', {
-            bubbles: true,  
-            cancelable: true,  
-            detail: {}  
-          });
+          let { files } = await fileStore.uploadToServer('response');
 
-          window.dispatchEvent(event);
-            const uploadResult = await new Promise((resolve) => {
-              window.uploadResolve = resolve;
-            });
-
-          let { files } = uploadResult;
           const disputeRef = doc(db, `event/${eventId}/disputes`, id);
 
           const updateData = {
@@ -1064,14 +1094,13 @@ function BracketData() {
 
 }
 
-function UploadData (domId) {
+function UploadData (type) {
   return {
-    inputFiles: [],
-    handleFiles(event) {
-      console.log({files:this.inputFiles});
-      console.log({files:this.inputFiles});
+    get inputFiles() {
+      return fileStore.getFiles(type)
+    },
 
-      console.log({files:this.inputFiles});
+    handleFiles(event) {
       if (!event.target?.files) return;
 
       const newFiles = Array.from(event.target?.files);
@@ -1082,11 +1111,9 @@ function UploadData (domId) {
         }
       });
       
-      console.log({files:this.inputFiles, newFiles});
-      console.log({files:this.inputFiles, newFiles});
-      console.log({files:this.inputFiles, newFiles});
-      this.inputFiles = [...this.inputFiles, ...newFiles];
-      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
+      fileStore.addFiles(newFiles, type);
+      
+      const uploadArea = document.querySelector(`#${type}Id #uploadArea`);
 
       uploadArea.innerHTML = "";
 
@@ -1099,48 +1126,12 @@ function UploadData (domId) {
       });
       event.target.value = '';
     },
-    async init () {
-      console.log("ZZZZZZZ");
-      const self = this;
-      window.addEventListener('initiate-upload', async function() {
-        await self.uploadToServer('/api/media');
-      });
-    },
+    
     clickInput() {
-      const fileInput = document.querySelector(`#${domId} .file-input`);
+      const fileInput = document.querySelector(`#${type}Id .file-input`);
       fileInput?.click()
     },
-    async uploadToServer(url) {
-      try {
-        const createFormData = new FormData();
-        this.inputFiles.forEach((file, index) => {
-          createFormData.append('media2[]', file);
-        });
-
-        const csrfToken4 = document.querySelector('meta[name="csrf-token"]').content;
-
-        const uploadResponse = await fetch(url, {
-          method: 'POST',
-          body: createFormData,
-          headers: {
-            'X-CSRF-TOKEN': csrfToken4
-          }
-        });
-
-        const uploadResult = await uploadResponse.json();
-        if (window.uploadResolve) {
-          window.uploadResolve(uploadResult);
-          window.uploadResolve = null;
-        }
-
-      } catch (error) {
-        console.error('Upload error:', error);
-        this.$dispatch('upload-error', {
-          error: error.message,
-          uploaderId: domId
-        });
-      }
-    },
+    
     createVideoPreview(file, index) {
       const preview = document.createElement('div');
       preview.className = 'preview-item me-2';
@@ -1161,7 +1152,7 @@ function UploadData (domId) {
       deleteBtn.className = 'delete-btn';
       deleteBtn.addEventListener('click', () => {
         preview.remove();
-        this.inputFiles = this.inputFiles.filter((_, count) => count !== index);
+        fileStore.clearFilesByIndex(type, index);
       });
 
       const fileName = document.createElement('small');
@@ -1171,7 +1162,7 @@ function UploadData (domId) {
       preview.appendChild(deleteBtn);
       preview.appendChild(fileName);
 
-      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
+      const uploadArea = document.querySelector(`#${type}Id #uploadArea`);
       const plusButton = uploadArea.querySelector('.plus-button');
       uploadArea.insertBefore(preview, plusButton);
     },
@@ -1189,7 +1180,7 @@ function UploadData (domId) {
       deleteBtn.innerHTML = '×';
       deleteBtn.addEventListener('click', () => {
         preview.remove();
-        this.inputFiles = this.inputFiles.filter((_, count) => count !== index);
+        fileStore.clearFilesByIndex(type, index);
       });
 
       const reader = new FileReader();
@@ -1205,13 +1196,13 @@ function UploadData (domId) {
       preview.appendChild(deleteBtn);
       preview.appendChild(fileName);
 
-      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
+      const uploadArea = document.querySelector(`#${type}Id #uploadArea`);
       const plusButton = uploadArea.querySelector('.plus-button');
       uploadArea.insertBefore(preview, plusButton);
     },
 
     getImages() {
-      const uploadArea = document.querySelector(`#${domId} #uploadArea`);
+      const uploadArea = document.querySelector(`#${type}Id #uploadArea`);
 
       return Array.from(uploadArea.querySelectorAll('.preview-item img'))
         .map(img => img.src);
@@ -1219,8 +1210,6 @@ function UploadData (domId) {
   };
 }
 
-
-// const uploaderTypes = ['type1', 'type2'];
 
 
 const validateDisputeCreation = async (data) => {

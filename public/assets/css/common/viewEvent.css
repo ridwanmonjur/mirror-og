@@ -316,22 +316,15 @@ input[type="submit"]:active {
     outline: none;
     cursor: pointer;
     padding: 15px 16px;
-    transition: 0.3s;
     color: #2e4b59;
 }
 
-/* Change background color of buttons on hover */
-.tab button:hover {
-    background-color: #ddd;
-}
 
-/* Create an active/current tablink class */
 .tab button.active {
     border-bottom-width: 2px;
     border-bottom-style: solid;    
 }
 
-/* Style the tab content */
 .tabcontent {
     display: none;
     padding: 15px 10px;
