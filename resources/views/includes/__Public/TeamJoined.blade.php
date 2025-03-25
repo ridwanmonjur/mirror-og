@@ -23,7 +23,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2 ">
+                                <div class="col-2 d-flex justify-content-center align-items-center">
                                     <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
                                         class="btn btn-link position-relative  btn-sm gear-icon-btn "
                                         style="z-index: 3;">

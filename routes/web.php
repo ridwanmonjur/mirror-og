@@ -92,8 +92,7 @@ Route::group(['prefix' => 'participant'], function () {
     // Normal login
     Route::get('/signin', [AuthController::class, 'participantSignIn'])
         ->name('participant.signin.view')
-        ->middleware('prevent-back-history')
-        ->middleware('guest');
+        ->middleware('prevent-back-history');
     Route::view('/signup', 'Auth.ParticipantSignUp')->name('participant.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('participant.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('participant.signup.action');
@@ -161,8 +160,7 @@ Route::group(['prefix' => 'organizer'], function () {
     // Normal login
     Route::get('/signin', [AuthController::class, 'organizerSignin'])
         ->name('organizer.signin.view')
-        ->middleware('prevent-back-history')
-        ->middleware('guest');
+        ->middleware('prevent-back-history');
         
     Route::view('/signup', 'Auth.OrganizerSignUp')->name('organizer.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('organizer.signin.action');
