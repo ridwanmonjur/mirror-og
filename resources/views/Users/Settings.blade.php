@@ -28,7 +28,6 @@
                 <div v-scope="AccountComponent()" class="accordion-item border-0 pb-0 mb-0" @vue:mounted="init">
                     <h1 class="accordion-header " id="headingOne">
                         <div class="accordion-button pb-4 rounded-pill border 
-                            zcollapsed 
                             border-0 bg-white"
                             style="padding-top: 35px;" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -69,6 +68,25 @@
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
+                                    <p class="py-0 my-0"> Account Type</p>
+                                    <small class="text-primary text-capitalize">{{strtolower($user->role)}}</small>
+                                </div>
+                                <button v-on:click="window.toastError('Account type is fixed and cannot be changed.')"
+                                    class="btn btn-sm btn-size text-white text-bold bg-secondary py-2 px-3 rounded-pill">
+                                    Change
+                                </button>
+                            </div>
+                             <div
+                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
+                                <div>
+                                    <p class="py-0 my-0"> Account Creation </p>
+                                    <small class="text-primary text-capitalize">{{$user->createdIsoFormat()}}</small>
+                                </div>
+                                <div></div>
+                            </div>
+                             <div
+                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
+                                <div>
                                     <p class="py-0 my-0"> Account Recovery </p>
                                     <small class="text-primary" v-text="recoveryAddress"></small>
                                 </div>
@@ -94,7 +112,7 @@
                 </div>
                 <div class="accordion-item accordion-flush border-0">
                     <h2 class="accordion-header pb-2 border-0" id="headingTwo">
-                        <div class="accordion-button  pt-4 pb-4 rounded-pill zcollapsed border-0 bg-white"
+                        <div class="accordion-button  pt-4 pb-4 rounded-pill {{ $isShowNextAccordion ? '' : 'collapsed' }} border-0 bg-white"
                             type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                             aria-controls="collapseTwo">
                             <b>Payment info</b>
@@ -137,7 +155,7 @@
                                 <div class="accordion" id="nestedAccordion2">
                                     <div class="accordion-item border-0">
                                         <h3 class="accordion-header " id="nestedHeading2">
-                                            <div class="px-0 accordion-button border-top py-4  collapsed bg-white"
+                                            <div class="px-0 accordion-button border-top py-4  {{ $isShowSecondInnerAccordion ? 'collapsed' : '' }} bg-white"
                                                 type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#nestedCollapse2" aria-expanded="false"
                                                 aria-controls="nestedCollapse2">
@@ -240,7 +258,7 @@
                                 <div class="accordion pb-5 " id="nestedAccordion3">
                                     <div class="accordion-item  ">
                                         <h3 class="accordion-header" id="nestedHeading3">
-                                            <div class="px-0 accordion-button border-top  border-1  py-4 collapsed bg-white"
+                                            <div class="px-0 accordion-button border-top  border-1  py-4 {{ $isShowSecondInnerAccordion ? '' : 'collapsed' }} bg-white"
                                                 type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#nestedCollapse3" aria-expanded="false"
                                                 aria-controls="nestedCollapse3">
