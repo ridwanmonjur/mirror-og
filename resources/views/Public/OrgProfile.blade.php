@@ -175,7 +175,9 @@
                     </textarea>
                     <br>
                     <select 
-                        v-model="organizer.industry"
+                        v-change="organizer.industry = event.target.value;"
+                        v-bind:name="organizer.industry"
+                        v-bind:value="organizer.industry || ''"
                         style="width: 220px;"
                         placeholder = "Enter your company industry..."
                         class="form-control form-select border-secondary player-profile__input d-inline" 

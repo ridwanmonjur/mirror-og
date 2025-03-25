@@ -38,7 +38,8 @@ function ParticipantData ()  {
         participant: { ...participantData },
         errorMessage: errorInput?.value,
         isCountriesFetched: false,
-        changeFlagEmoji() {
+        changeFlagEmoji(event) {
+            this.participant.region = event.target.value;
             let countryX = this.countries?.find(elem => elem.id == this.participant.region);
             if (countryX) {
                 this.participant.region_name = countryX.name.en;
@@ -71,10 +72,10 @@ function ParticipantData ()  {
                     this.countries = data.data;
                     const choices2 = document.getElementById('select2-country3');
 
-                    let countriesHtml = "<option value=''>Do not display</option>";
+                    let countriesHtml = `<option value="">Do not display</option>`;
                     data?.data.forEach((value) => {
                         countriesHtml += `
-                        <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
+                        <option value='${value.id}'>${value.emoji_flag} ${value.name.en}</option>
                     `;
                     });
                     if (choices2) {

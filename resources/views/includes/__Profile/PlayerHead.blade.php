@@ -134,7 +134,9 @@
                         <template v-if="countries">
                             <select v-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;"
                                 class="d-inline form-select" data-placeholder="Select a country"
-                                v-model="participant.region">
+                                v-bind:value="participant.region || ''"
+                                v-bind:name="participant.region"
+                            >
                         </template>
                     </span>
                     <span class="me-3">

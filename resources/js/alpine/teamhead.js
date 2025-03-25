@@ -29,7 +29,8 @@ function TeamHead() {
                 }
             ],
         errorMessage: errorInput?.value,
-        changeFlagEmoji() {
+        changeFlagEmoji(event) {
+            this.country = event.target.value;
             const countryX = this.countries?.find(c => c.id === this.country)
             this.country_name = countryX?.name.en || null
             this.country_flag = countryX?.emoji_flag || null
@@ -47,7 +48,7 @@ function TeamHead() {
 
                     data?.data.forEach((value) => {
                         countriesHtml += `
-                            <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
+                            <option value='${value.id}'>${value.emoji_flag} ${value.name.en}</option>
                         `;
                     });
                     if (choices2) {
