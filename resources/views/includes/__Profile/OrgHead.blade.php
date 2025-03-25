@@ -108,6 +108,7 @@
             @if ($isOwnProfile)
                 <div class="text-center">
                     <button v-on:click="reset(); isEditMode = true;"
+                        v-if="!isEditMode"
                         class="oceans-gaming-default-button oceans-gaming-primary-button py-1 px-5 me-3">
                         Edit
                     </button>

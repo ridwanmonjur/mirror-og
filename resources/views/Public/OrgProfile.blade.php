@@ -234,36 +234,46 @@
                         autocomplete="nope"
                     > 
                     <br> <br>
-                    <input
-                        placeholder = "Address Line 1"
-                        class="form-control border-secondary player-profile__input d-inline" 
-                        v-model="address.addressLine1"
-                        autocomplete="off"
-                        autocomplete="nope"
-                    >
                     <input 
-                        placeholder = "Address Line 2"
-                        class="form-control border-secondary player-profile__input d-inline me-4" 
-                        v-model="address.addressLine2"
+                        placeholder="Address Line 1"
+                        class="form-control border-secondary player-profile__input d-inline"
+                        v-bind:value="address.addressLine1 || ''"
+                        v-on:input="address.addressLine1 = event.target.value"
+                        v-bind:name="address.addressLine1"
                         autocomplete="off"
-                        autocomplete="nope"
-                    >
+                    />
+
+                    <!-- Address Line 2 -->
                     <input 
-                        placeholder = "City"
+                        placeholder="Address Line 2"
+                        class="form-control border-secondary player-profile__input d-inline me-4"
+                        v-bind:value="address.addressLine2 || ''"
+                        v-on:input="address.addressLine2 = event.target.value"
+                        v-bind:name="address.addressLine2"
+                        autocomplete="off"
+                    />
+
+                    <!-- City -->
+                    <input 
+                        placeholder="City"
                         style="width: 100px;"
-                        class="form-control border-secondary player-profile__input d-inline me-4" 
-                        v-model="address.city"
+                        class="form-control border-secondary player-profile__input d-inline me-4"
+                        v-bind:value="address.city || ''"
+                        v-on:input="address.city = event.target.value"
+                        v-bind:name="address.city"
                         autocomplete="off"
-                        autocomplete="nope"
-                    >
+                    />
+
+                    <!-- Country -->
                     <input 
                         style="width: 150px;"
-                        placeholder = "Country"
-                        class="form-control border-secondary player-profile__input d-inline" 
-                        v-model="address.country"
+                        placeholder="Country"
+                        class="form-control border-secondary player-profile__input d-inline"
+                        v-bind:value="address.country || ''"
+                        v-on:input="address.country = event.target.value"
+                        v-bind:name="address.country"
                         autocomplete="off"
-                        autocomplete="nope"
-                    >
+                    />
                     <br> <br>
                      
                     <span>
@@ -277,6 +287,7 @@
 
                 </div>
                 <div  v-show="!isEditMode">
+                    <p v-text="organizer.companyName">  </p>
                     <p v-text="organizer.companyDescription">  </p>
                         
                     <p class="mt-2"> 

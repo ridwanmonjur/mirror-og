@@ -17,7 +17,7 @@ const Toast = Swal.mixin({
     timerProgressBar: true
 })
 
-window.showLoading = ({ title = '', html = '', backdrop = true } = {}) => {
+window.showLoading = ({ title = 'Loading...', html = 'Hang on, please', backdrop = true } = {}) => {
     return window.Swal.fire({
       title,
       html,
@@ -32,6 +32,7 @@ window.showLoading = ({ title = '', html = '', backdrop = true } = {}) => {
 };
 
 window.closeLoading = () => {
+    window.Swal.hideLoading();
     window.Swal.close();
 }
 

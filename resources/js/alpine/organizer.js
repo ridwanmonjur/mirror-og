@@ -82,36 +82,35 @@ function OrganizerData() {
             })
         },
         async submitEditProfile(event) {
-            
-            this.errorMessage = null;
-            event.preventDefault();
-            this.userProfile.mobile_no = iti.getNumber();
-            console.log({ number: iti.getNumber() });
+            try {
+                window.showLoading();
+                this.errorMessage = null;
+                event.preventDefault();
+                this.userProfile.mobile_no = iti.getNumber();
 
-            if (!iti.isValidNumber()) {
-                if (document.getElementById("phone").value.trim() == "") {
-                    this.userProfile.mobile_no = null;
-                } else {
-                    this.errorMessage = 'Valid phone number with country code is not chosen!'
-                    return;
+                if (!iti.isValidNumber()) {
+                    if (document.getElementById("phone").value.trim() == "") {
+                        this.userProfile.mobile_no = null;
+                    } else {
+                        window.closeLoading();
+                        this.errorMessage = 'Valid phone number with country code is not chosen!'
+                        return;
+                    }
                 }
-            }
 
-            let file = imageUpload.files[0];
-            let fileFetch = null;
-            if (file) {
-                const fileContent = await readFileAsBase64(file);
+                let file = imageUpload.files[0];
+                let fileFetch = null;
+                if (file) {
+                    const fileContent = await readFileAsBase64(file);
 
-                fileFetch = {
-                    filename: file.name,
-                    type: file.type,
-                    size: file.size  / (1024 * 1024),
-                    content: fileContent
-                };
-            }
+                    fileFetch = {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size  / (1024 * 1024),
+                        content: fileContent
+                    };
+                }
         
-
-            try {  
                 const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -139,10 +138,13 @@ function OrganizerData() {
                     localStorage.setItem('success', true);
                     localStorage.setItem('message', data.message);
                     window.location.replace(currentUrl);
+                    window.closeLoading();
                 } else {
                     throw new Error(data.message);
                 }
+
             } catch (error) {
+                window.closeLoading();
                 let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
 
                 this.errorMessage = errorMessage;

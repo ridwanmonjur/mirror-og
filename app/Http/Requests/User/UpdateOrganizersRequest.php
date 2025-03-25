@@ -27,7 +27,7 @@ class UpdateOrganizersRequest extends FormRequest
             'address' => 'nullable|array',
             'address.id' => 'nullable|exists:user_address,id',
             'address.addressLine1' => 'nullable|required_with:address.city,address.country|string',
-            'address.addressLine2' => 'nullable|string|required_with:address.addressLine1,address.country|string',
+            'address.addressLine2' => 'nullable|string',
             'address.city' => 'nullable|required_with:address.addressLine1,address.country|string',
             'address.country' => 'nullable|required_with:address.addressLine1,address.city|string',
             'address.user_id' => 'nullable',
@@ -60,7 +60,9 @@ class UpdateOrganizersRequest extends FormRequest
         return [
             'userProfile.name.required' => 'The name field is required.',
             'userProfile.demo_email.email' => 'The email field must be a valid email.',
-
+            'address.addressLine1.required_with' => 'The street address is required when city or country is present.',
+            'address.city.required_with' => 'The city is required when street address or country is present.',
+            'address.country.required_with' => 'The country is required when street address or city is present.',
             'userProfile.id.required' => 'The user profile ID is required.',
             'organizer.id.required' => 'The organizer ID is required.',
             'address.addressLine1.string' => 'Address Line 1 must be a string.',
