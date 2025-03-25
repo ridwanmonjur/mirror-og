@@ -96,6 +96,13 @@ function submitSignInUpForm(event) {
             }
 
         }
+
+        if (data.verify && data.validityLink) {
+            let validityDiv = document.querySelector('.emailValidity');
+            validityDiv.classList.remove('d-none');
+            let hyperLink = validityDiv.querySelector('a.validityLink');
+            hyperLink.href = data.validityLink;
+        }
     })
     .catch(error => {
         document.querySelector('.flash-message').innerHTML = `<div class="text-red">An error occurred during form submission. Please try again later</div>`;

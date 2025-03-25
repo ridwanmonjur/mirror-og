@@ -135,7 +135,8 @@ class AuthResetAndVerifyController extends Controller
         Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
         return redirect()
             ->back()
-            ->with('success', 'Verification email has been sent. Please check your inbox.');
+            ->with('success', 'Verification email has been sent. Please check your inbox.')
+            ->with('successEmail', $user->email);
     }
    
 }

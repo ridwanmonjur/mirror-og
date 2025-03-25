@@ -29,17 +29,10 @@
 >
     @csrf
     <div class="flash-message">
-        @if(session('errorEmail'))
-            Click
-            <a
-                style="font-weight: bold; text-decoration: underline;"
-                href="{{ route('user.verify.resend', ['email' => session('errorEmail')]) }}">
-                here
-            </a>
-            to resend verification email.
-        @endif
         @include('includes.Flash')
     </div>
+    @include('Auth.Layout.__SigninVerify')
+
 
     @include('Auth.Layout.__Signin')
 

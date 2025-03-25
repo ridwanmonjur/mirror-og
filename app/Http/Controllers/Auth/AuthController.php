@@ -91,7 +91,7 @@ class AuthController extends Controller
         try {
 
             if ($role === 'organizer') {
-                $user = $this->authService->createUser($validatedData, $role);
+                $user = $this->authService->createUser($validatedData, strtoupper($role));
                 $organizer = new Organizer([
                     'user_id' => $user->id,
                     'companyDescription' => $validatedData['companyDescription'] ?? '',
@@ -101,7 +101,7 @@ class AuthController extends Controller
                 $organizer->save();
             } elseif ($role === 'participant') {
 
-                $user = $this->authService->createUser($validatedData, $role);
+                $user = $this->authService->createUser($validatedData, strtoupper($role));
                 $participant = new Participant([
                     'user_id' => $user->id,
                 ]);
@@ -119,6 +119,8 @@ class AuthController extends Controller
                     [
                         'success' => $roleFirstCapital.' account created and verification email sent. Please verify email now!',
                         'email' => $user->email,
+                        'verify' => true,
+                        'successEmail' => $user->email
                     ]
                 );
         } catch (QueryException $e) {
@@ -127,7 +129,7 @@ class AuthController extends Controller
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                 return redirect()
                     ->route($redirectErrorRoute)
-                    ->with('error', 'The email already exists. Add another email!');
+                    ->with('error', 'The email already exists. Please sign in!');
             }
 
             return redirect()
@@ -161,6 +163,8 @@ class AuthController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'Email not verified. Please verify email first!',
+                        'verify' => true,
+                        'validityLink' => route('user.verify.resend', ['email' => $request->email])
                     ]);
                 }
 
