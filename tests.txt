@@ -1,0 +1,38 @@
+admin
+- SendBetaUser
+
+Auth
+- Forget
+- Signin, Signup (4)
+- Reset
+- Success ???
+
+public
+- about
+- closed
+- contact
+- orgprofile
+- playerprofile
+- verify
+- view event
+
+participant
+-event
+    - checkout
+    - create
+    - edit
+    - not found
+    - results
+    - invitation
+    - manage
+    - matches
+
+- home
+
+organizer
+- event
+    - checkout
+    - join
+    - member
+    - registration
+    - list
