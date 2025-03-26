@@ -258,7 +258,7 @@ class JoinEvent extends Model
         ];
     }
 
-    public static function hasJoinedByOtherTeamsForSameEvent(
+    public static function isPartOfRoster(
         string| int $eventId,
         string| int $userId,
     ): bool {

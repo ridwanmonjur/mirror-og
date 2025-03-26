@@ -26,7 +26,7 @@ class ApproveMemberRequest extends FormRequest
         $validator->after(function ($validator) {
 
             $userId = $this->user_id;
-            if (JoinEvent::hasJoinedByOtherTeamsForSameEvent($this->event_id, $userId)) {
+            if (JoinEvent::isPartOfRoster($this->event_id, $userId)) {
                 $validator->errors()->add('event',  'This user has already joined this event with the roster of another team!');
             };
 

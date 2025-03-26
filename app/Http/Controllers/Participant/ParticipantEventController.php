@@ -181,11 +181,6 @@ class ParticipantEventController extends Controller
             'teamIdList' => $teamIdList,
         ] = Team::getUserTeamListAndPluckIds($user_id);
 
-        $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id);
-        if ($hasJoinedOtherTeams) {
-            return $this->showErrorParticipant('One of your teams has joined this event already!');
-        }
-
         if ($selectTeam) {
             $count = count($selectTeam);
 
@@ -211,9 +206,22 @@ class ParticipantEventController extends Controller
             if ($teamId === null || trim($teamId) === '') {
                 throw new ErrorException('No team has been chosen');
             }
+            
             $isAlreadyMember = TeamMember::isAlreadyMember($teamId, $userId);
-            $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $userId);
-            if ($hasJoinedOtherTeams) {
+            $isPartOfRoster = JoinEvent::isPartOfRoster($id, $userId);
+            $joinTeamButNotRoster = JoinEvent::where('event_details_id', $id)
+                ->where('team_id', $teamId)
+                ->first();
+
+            if ($joinTeamButNotRoster) {
+                $errorMessage = "You have already joined this event with your team before!";
+                return redirect()
+                    ->route('participant.register.manage', ['id' => $teamId])
+                    ->with('errorMessage', $errorMessage)
+                    ->with('scroll', $joinTeamButNotRoster->id) ;
+            }
+
+            if ($isPartOfRoster) {
                 throw new Exception('One of your teams has joined this event already!');
             }
 
@@ -243,21 +251,9 @@ class ParticipantEventController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {
-                $teamId = $request->input('selectedTeamId');
-                $join = JoinEvent::where('event_details_id', $id)
-                    ->where('team_id', $teamId)
-                    ->firstOrFail();
-
-                $errorMessage = "You have already joined this event with your team before!";
-                return redirect()
-                    ->route('participant.register.manage', ['id' => $teamId])
-                    ->with('errorMessage', $errorMessage)
-                    ->with('scroll', $join->id) ;
-            } else {
-                $errorMessage = $e->getMessage();
+                $errorMessage = $e->getMessage();        
+                return $this->showErrorParticipant($errorMessage);
             }
-
-            return $this->showErrorParticipant($errorMessage);
         }
     }
 
@@ -302,8 +298,8 @@ class ParticipantEventController extends Controller
                 'count' => $count,
             ] = Team::getUserTeamListAndCount($user_id);
 
-            $hasJoinedOtherTeams = JoinEvent::hasJoinedByOtherTeamsForSameEvent($id, $user_id);
-            if ($hasJoinedOtherTeams) {
+            $isPartOfRoster = JoinEvent::isPartOfRoster($id, $user_id);
+            if ($isPartOfRoster) {
                 throw new Exception('One of your teams has joined this event already!');
             }
 
