@@ -501,7 +501,6 @@
         </div>
 
        
-        <br><br> <br><br><br><br><br><br>
     </main>
     
     <script src="{{ asset('/assets/js/participant/MemberManagement.js') }}"></script>

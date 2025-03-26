@@ -8,6 +8,7 @@ use App\Jobs\HandleFollowsFriends;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
+use App\Models\RosterCaptain;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -350,6 +351,17 @@ class ParticipantTeamController extends Controller
         $member->actor = $request->actor;
         $member->save();
 
+        if ($member->status=="left") {
+            $captain = TeamCaptain::where([
+                'team_member_id' => $id,
+                'teams_id' => $member->team_id,
+            ])->first();
+
+            if ($captain) {
+                $captain->delete();
+            }
+        }
+
         return response()->json(['success' => true, 'message' => "Team member status updated to {$status}"]);
     }
 
@@ -358,20 +370,16 @@ class ParticipantTeamController extends Controller
         try {
             $existingCaptain = TeamCaptain::where('teams_id', $id)->first();
             
-            $user_id = $request->attributes->get('user')->id;
-
-            $teamMember = TeamMember::where('user_id', $user_id)
-                ->where('id', $existingCaptain->team_member_id)
-                ->first();
-
-            if (!$teamMember || $teamMember?->user_id != $user_id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Only captain can remove himself as captain!'
-                ], 400);
-            }
+            $teamMember = TeamMember::findOrFail($memberId);
             
             if ($existingCaptain) {
+                if ($existingCaptain->team_member_id != $teamMember->id) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Only captain can remove himself as captain!'
+                    ], 400);
+                }
+
                 $existingCaptain->delete();
             }
 
