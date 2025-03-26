@@ -381,6 +381,7 @@ function ChatListComponent() {
             }));
         },
         async blockRequest(e) {
+            window.showLoading();
             const button = e.currentTarget;
             if (!button) return;
 
@@ -391,10 +392,11 @@ function ChatListComponent() {
                 if (!('is_blocked' in data)) {
                     return;
                 }
-
+                window.closeLoading();
                 window.location.reload();
                      
             } catch (error) {
+                window.closeLoading();
                 // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
                 window.toastError('Failed to process your request. Please try again later.');

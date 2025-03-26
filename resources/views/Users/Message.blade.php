@@ -112,7 +112,7 @@
                                     </circle>
                                     <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                 </svg>
-                                <span v-text="currentRoomObj?.otherRoomMember?.i_blocked ? 'Unblock Chat': 'Block Chat'">  </span>
+                                <span v-text="currentRoomObj?.i_blocked ? 'Unblock Chat': 'Block Chat'">  </span>
                             </a></li>
                         <li v-on:click="triggerReportSelection(event);"
                             v-bind:data-user-id="currentRoomObj?.otherRoomMember?.id"
