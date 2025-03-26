@@ -161,7 +161,6 @@ const chatStore = reactive({
                 this.chatMessageList = [ ...results ];
     
             }
-           
          
             isInitialDataFetched = true;
         }, (error) => {
@@ -212,37 +211,32 @@ const roomStore = reactive({
                     data.otherRoomMemberId = data.user2;
                 }
 
-                console.log({blocked: data['blocked_by']});
-
-                
                 data['i_blocked'] = data['blocked_by'] == currentUserId ? true : false;
-
                 data['they_blocked'] = data['blocked_by'] == data.otherRoomMemberId ? true : false;
+                data['i_messaged'] = false;
 
                 if (change.type === "added") {
                     rooms.push(data);
                     length++;
                 }
 
-                if (change.type === "modified") {
-                    const index = this.oldRooms.findIndex(room => room.id == data.id);
-                    if (index !== -1) {
-                        rooms = [
-                            ...rooms.slice(0, index),
-                            data,
-                            ...rooms.slice(index + 1)
-                        ];
+                // if (change.type === "modified") {
+                //     const index = this.oldRooms.findIndex(room => room.id == data.id);
+                //     if (index !== -1) {
+                //         rooms = [
+                //             ...rooms.slice(0, index),
+                //             data,
+                //             ...rooms.slice(index + 1)
+                //         ];
                         
-                        if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
-                            this.currentRoomObj = data;
-                        }
-                    }
+                //         if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
+                //             this.currentRoomObj = data;
+                //         }
+                //     }
     
-                    return;
-                }
+                //     return;
+                // }
             });
-
-            
 
             let route = fetchFirebaseUsersInputRoute.value;
 
@@ -268,8 +262,6 @@ const roomStore = reactive({
                 room['otherRoomMember'] = roomUserIdMap[room['otherRoomMemberId']];
             }
 
-
-            // params 
             if (viewUserProfile && 'id' in viewUserProfile) {
 
                 if (!(viewUserProfile.id in roomUserIdMap)) {
@@ -329,6 +321,22 @@ const roomStore = reactive({
 
         setTimeout(() => { scrollIntoView(); }, 500);
     },
+    updateRoom (id, newRoom) {
+        const index = this.oldRooms.findIndex(room => room.id == id);
+        if (index !== -1) {
+            rooms = [
+                ...rooms.slice(0, index),
+                newRoom,
+                ...rooms.slice(index + 1)
+            ];
+
+            this.oldRooms = [...rooms];
+            
+            if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
+                this.currentRoomObj = newRoom;
+            }
+        }
+    },
     insideCurrentRoom(index) {
         if (index != null) return this.oldRooms[index];
         else return null;
@@ -380,6 +388,7 @@ function ChatListComponent() {
                 detail: { id: userId, userName, userBanner }
             }));
         },
+
         async blockRequest(e) {
             window.showLoading();
             const button = e.currentTarget;
@@ -397,7 +406,6 @@ function ChatListComponent() {
                      
             } catch (error) {
                 window.closeLoading();
-                // Handle errors (you might want to show a notification to the user)
                 console.error('Operation failed:', error);
                 window.toastError('Failed to process your request. Please try again later.');
             }
@@ -442,6 +450,29 @@ function ChatListComponent() {
                     text: value,
                     createdAt: new Date(),
                 });
+
+                if (this.currentRoomObj?.i_messaged) {
+                    let newRoom = {
+                        ...this.currentRoomObj,
+                        i_messaged: true
+                    };
+
+                    try {
+                        let data = await makeRequest(route, 'POST', JSON.stringify({}));           
+                        if (!('is_blocked' in data)) {
+                            return;
+                        }
+                        window.closeLoading();
+                        window.location.reload();
+                             
+                    } catch (error) {
+                        window.closeLoading();
+                        console.error('Operation failed:', error);
+                        window.toastError('Failed to process your request. Please try again later.');
+                    }
+
+                    roomStore.updateRoom(this.currentRoomObj.id, newRoom);
+                } 
 
                scrollIntoView();
 
