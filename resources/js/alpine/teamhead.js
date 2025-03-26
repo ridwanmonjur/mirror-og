@@ -64,23 +64,23 @@ function TeamHead() {
             }
         },
         async submitEditProfile(event) {
-            
-            event.preventDefault();
-            let file = imageUpload.files[0];
-            let fileFetch = null;
-            if (file) {
-                const fileContent = await readFileAsBase64(file);
-
-                fileFetch = {
-                    filename: file.name,
-                    type: file.type,
-                    size: file.size  / (1024 * 1024),
-                    content: fileContent
-                };
-            }
-
-
             try {
+                window.showLoading();
+                event.preventDefault();
+                let file = imageUpload.files[0];
+                let fileFetch = null;
+                if (file) {
+                    const fileContent = await readFileAsBase64(file);
+
+                    fileFetch = {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size  / (1024 * 1024),
+                        content: fileContent
+                    };
+                }
+
+
                 const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
@@ -110,6 +110,7 @@ function TeamHead() {
 
                     localStorage.setItem('success', true);
                     localStorage.setItem('message', data.message);
+                    window.closeLoading();
                     window.location.replace(currentUrl);
                 } else {
                     throw new Error(data.message);
@@ -118,6 +119,7 @@ function TeamHead() {
                 let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
 
                 this.errorMessage = errorMessage;
+                window.closeLoading();
             }
         },
         reset() {

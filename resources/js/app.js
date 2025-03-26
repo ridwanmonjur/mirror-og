@@ -17,22 +17,25 @@ const Toast = Swal.mixin({
     timerProgressBar: true
 })
 
-window.showLoading = ({ title = 'Loading...', html = 'Hang on, please', backdrop = true } = {}) => {
-    return window.Swal.fire({
-      title,
-      html,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showConfirmButton: false,
-      backdrop: backdrop ? 'rgba(0,0,0,0.7)' : 'transparent',
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
+window.showLoading = ({ title = 'Loading...', html = `
+  <div class="d-flex justify-content-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="mt-2">Hang on, please</div>
+`, backdrop = true } = {}) => {
+  return window.Swal.fire({
+    title,
+    html,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    backdrop: backdrop ? 'rgba(0,0,0,0.7)' : 'transparent',
+  });
 };
 
 window.closeLoading = () => {
-    window.Swal.hideLoading();
     window.Swal.close();
 }
 

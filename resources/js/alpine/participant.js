@@ -91,24 +91,26 @@ function ParticipantData ()  {
         },
       
         async submitEditProfile(event) {
-            event.preventDefault();
-            const url = event.target.dataset.url;
-            this.participant.age = Number(this.participant.age);
-
-            let file = imageUpload.files[0];
-            let fileFetch = null;
-            if (file) {
-                const fileContent = await readFileAsBase64(file);
-
-                fileFetch = {
-                    filename: file.name,
-                    type: file.type,
-                    size: file.size  / (1024 * 1024),
-                    content: fileContent
-                };
-            }
-
             try {
+                window.showLoading();
+                event.preventDefault();
+                const url = event.target.dataset.url;
+                this.participant.age = Number(this.participant.age);
+
+                let file = imageUpload.files[0];
+                let fileFetch = null;
+                if (file) {
+                    const fileContent = await readFileAsBase64(file);
+
+                    fileFetch = {
+                        filename: file.name,
+                        type: file.type,
+                        size: file.size  / (1024 * 1024),
+                        content: fileContent
+                    };
+                }
+
+             
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -133,6 +135,7 @@ function ParticipantData ()  {
 
                     localStorage.setItem('success', true);
                     localStorage.setItem('message', data.message);
+                    window.closeLoading();
                     window.location.reload();
 
                 } else {
@@ -142,7 +145,7 @@ function ParticipantData ()  {
                 let errorMessage = error.response?.data?.message || error.message || 'Failed to process your request. Please try again later.';
 
                 this.errorMessage = errorMessage;
-
+                window.closeLoading();
             }
         },
 
