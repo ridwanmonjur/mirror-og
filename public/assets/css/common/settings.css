@@ -54,6 +54,16 @@ main {
     background-repeat: no-repeat;
 }
 
+.accordion-item, .accordion-button {
+    background: rgba(255, 255, 255) !important;
+    background-color: rgba(255, 255, 255) !important;
+}
+
+.accordion-container {
+    max-width: 95vw;
+}
+
+
 .accordion-button, .border-0 {
     outline: 0 !important;
     border: 0 !important;
@@ -87,6 +97,10 @@ main {
     main {
         padding: 20px 0px;
         background-size: 100vw 100vh;
+    }
+
+    .accordion-container {
+        max-width: 60vw;
     }
 }
 

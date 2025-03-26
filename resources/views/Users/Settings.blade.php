@@ -23,7 +23,7 @@
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">
 
-        <div class="w-75 mx-auto">
+        <div class="accordion-container mx-auto">
             <div class="accordion accordion-flush " id="accordionExample">
                 <div v-scope="AccountComponent()" class="accordion-item border-0 pb-0 mb-0" @vue:mounted="init">
                     <h1 class="accordion-header " id="headingOne">
@@ -51,6 +51,19 @@
                                     Change Email Address
                                 </button>
                             </div>
+                             <div
+                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
+                                <div>
+                                    <p class="py-0 my-0"> Account Recovery </p>
+                                    <small class="text-primary" v-text="recoveryAddress"></small>
+                                </div>
+                                <button v-on:click="changeRecoveryEmailAddress(event)"
+                                    class="btn btn-size btn-sm border-primary py-2 rounded-pill"
+                                    data-route="{{ route('user.settings.action') }}"
+                                    data-event-type="{{ $settingsAction['CHANGE_RECOVERY_EMAIL']['key'] }}">
+                                    Change Recovery Email
+                                </button>
+                            </div>
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
@@ -71,10 +84,7 @@
                                     <p class="py-0 my-0"> Account Type</p>
                                     <small class="text-primary text-capitalize">{{strtolower($user->role)}}</small>
                                 </div>
-                                <button v-on:click="window.toastError('Account type is fixed and cannot be changed.')"
-                                    class="btn btn-sm btn-size text-white text-bold bg-secondary py-2 px-3 rounded-pill">
-                                    Change
-                                </button>
+                              
                             </div>
                              <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
@@ -84,19 +94,7 @@
                                 </div>
                                 <div></div>
                             </div>
-                             <div
-                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
-                                <div>
-                                    <p class="py-0 my-0"> Account Recovery </p>
-                                    <small class="text-primary" v-text="recoveryAddress"></small>
-                                </div>
-                                <button v-on:click="changeRecoveryEmailAddress(event)"
-                                    class="btn btn-size btn-sm border-primary py-2 rounded-pill"
-                                    data-route="{{ route('user.settings.action') }}"
-                                    data-event-type="{{ $settingsAction['CHANGE_RECOVERY_EMAIL']['key'] }}">
-                                    Change Recovery Email
-                                </button>
-                            </div>
+                            
                             {{-- <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
