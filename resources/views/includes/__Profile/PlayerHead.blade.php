@@ -52,7 +52,7 @@
                             <a aria-hidden="true" data-fslightbox="lightbox"
                                 data-href="{{ '/' . 'storage/' . $userProfile->userBanner }}"
                                 class="hyperlink-lightbox">
-                                <button class="btn btn-sm p-0 me-2"><svg xmlns="http://www.w3.org/2000/svg"
+                                <button class="btn simple-button btn-sm p-0 me-2"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="20" height="20" fill="currentColor" class="bi bi-eye"
                                         viewBox="0 0 16 16">
                                         <path
@@ -63,7 +63,7 @@
                                 </button>
                             </a>
                             @if ($isUserSame)
-                                <button v-cloak v-show="isEditMode" id="upload-button2" class="btn btn-sm p-0"
+                                <button v-cloak v-show="isEditMode" id="upload-button2" class="btn btn-sm simple-button p-0"
                                     aria-hidden="true">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

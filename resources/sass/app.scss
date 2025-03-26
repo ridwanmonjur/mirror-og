@@ -256,7 +256,10 @@ button {
   overflow: hidden
 }
 
-.simple-button:hover,
+.simple-button::after{
+  display: none !important;
+}
+
 button:hover {
   scale: 1.05;
 }
@@ -272,9 +275,7 @@ button:active:after {
   transition: 0s
 }
 
-.simple-button:active {
-  opacity: 0.7;
-}
+
 
 
 tr .colored-cell {
