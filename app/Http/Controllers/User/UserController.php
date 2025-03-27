@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -62,7 +63,32 @@ class UserController extends Controller
         ]);
     }
 
+    public function createNotification(Request $request) {
+        try {
+            $user = $request->attributes->get('user');
+            $notification = [
+                'user_id' => $request->texterId,
+                'type' => 'teams',
+                'link' =>  route('user.message.view', [
+                    'userId' => $user->id,
+                ]),
+                'icon_type' => 'confirm',
+                'created_at' => DB::raw('NOW()'),
+                'html' => <<<HTML
+                    <span class="notification-gray">
+                        <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}">
+                            {$user->userName}</button>
+                        has texted</button>.
+                    </span>
+                HTML,
+            ];
 
+            NotifcationsUser::insertWithCount([$notification]);
+            return response()->json(['success' => true, 'message' => 'Succeeded'], 201);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 
     public function replaceBackground(BannerUpdateRequest $request)
     {

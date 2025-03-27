@@ -214,7 +214,7 @@ const roomStore = reactive({
 
                 data['i_blocked'] = data['blocked_by'] == currentUserId ? true : false;
                 data['they_blocked'] = data['blocked_by'] == data.otherRoomMemberId ? true : false;
-                // data['i_messaged'] = false;
+                data['i_messaged'] = false;
 
                 if (change.type === "added") {
                     rooms.push(data);
@@ -322,22 +322,22 @@ const roomStore = reactive({
 
         setTimeout(() => { scrollIntoView(); }, 500);
     },
-    // updateRoom (id, newRoom) {
-    //     const index = this.oldRooms.findIndex(room => room.id == id);
-    //     if (index !== -1) {
-    //         rooms = [
-    //             ...rooms.slice(0, index),
-    //             newRoom,
-    //             ...rooms.slice(index + 1)
-    //         ];
+    updateRoom (id, newRoom) {
+        const index = this.oldRooms.findIndex(room => room.id == id);
+        if (index !== -1) {
+            let rooms = [
+                ...this.oldRooms.slice(0, index),
+                newRoom,
+                ...this.oldRooms.slice(index + 1)
+            ];
 
-    //         this.oldRooms = [...rooms];
+            this.oldRooms = [...rooms];
             
-    //         if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
-    //             this.currentRoomObj = newRoom;
-    //         }
-    //     }
-    // },
+            if (this.currentRoomObj && this.currentRoomObj.id == id) {
+                this.currentRoomObj = newRoom;
+            }
+        }
+    },
     insideCurrentRoom(index) {
         if (index != null) return this.oldRooms[index];
         else return null;
@@ -447,34 +447,33 @@ function ChatListComponent() {
                     return;
                 }
 
+                if (!this.currentRoomObj['i_messaged']) {
+                    let newRoom = {
+                        ...this.currentRoomObj,
+                        i_messaged: true
+                    };
+
+                    try {
+                        let { notifRoute } = document.getElementById('sendMessageBtn').dataset;
+                        await makeRequest(notifRoute, 'POST', {
+                            texterId: this.currentRoomObj.otherRoomMember?.id
+                        });           
+                       
+                        roomStore.updateRoom(this.currentRoomObj.id, newRoom);
+
+                    } catch (error) {
+                        console.error('Operation failed:', error);
+                    }
+
+                } 
+
                 await addDoc(collection(db, `room/${roomStore.currentRoomObj.id}/message`), {
                     senderId: loggedUserProfile.id,
                     text: value,
                     createdAt: new Date(),
                 });
 
-                // if (this.currentRoomObj?.i_messaged) {
-                //     let newRoom = {
-                //         ...this.currentRoomObj,
-                //         i_messaged: true
-                //     };
-
-                //     try {
-                //         let data = await makeRequest(route, 'POST', JSON.stringify({}));           
-                //         if (!('is_blocked' in data)) {
-                //             return;
-                //         }
-                //         window.closeLoading();
-                //         window.location.reload();
-                             
-                //     } catch (error) {
-                //         window.closeLoading();
-                //         console.error('Operation failed:', error);
-                //         window.toastError('Failed to process your request. Please try again later.');
-                //     }
-
-                //     roomStore.updateRoom(this.currentRoomObj.id, newRoom);
-                // } 
+                
 
                scrollIntoView();
 
@@ -649,6 +648,7 @@ function ReportBlockComponent () {
 
 async function makeRequest(url, method, data) {
     try {
+        console.log({data});
         const response = await fetch(url, {
             method: method,
             headers: {
@@ -660,7 +660,7 @@ async function makeRequest(url, method, data) {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.message}`);
         }
 
         return await response.json();

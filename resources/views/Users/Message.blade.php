@@ -162,7 +162,9 @@
             </div>
             <div class="chat-input">
                 <textarea placeholder="Enter your message here..."></textarea>
-                <button id="sendMessageBtn" v-on:click="sendMessage">
+                <button id="sendMessageBtn" v-on:click="sendMessage()"
+                    data-notif-route="{{route('notifications.store')}}"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                         class="bi bi-telegram" viewBox="0 0 16 16">
                         <path
