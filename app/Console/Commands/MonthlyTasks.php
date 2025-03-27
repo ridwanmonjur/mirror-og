@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\EventDetail;
 use App\Models\Task;
 use App\Console\Commands\PrinterLoggerTrait;
+use App\Models\NotifcationsUser;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -39,6 +40,8 @@ class MonthlyTasks extends Command
             $twelveMonthsAgo = Carbon::now()->subMonths(12);
             DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twelveMonthsAgo)->delete();
             DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $twelveMonthsAgo)->delete();
+            NotifcationsUser::where('created_at', '<', $twelveMonthsAgo)
+                ->where('type', 'social')->delete();
             Task::where('created_at', '<', $twelveMonthsAgo)->delete();
             $now = Carbon::now();
             $this->logExit($id, $now);

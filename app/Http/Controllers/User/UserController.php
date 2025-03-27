@@ -68,16 +68,16 @@ class UserController extends Controller
             $user = $request->attributes->get('user');
             $notification = [
                 'user_id' => $request->texterId,
-                'type' => 'teams',
+                'img_src' => $user->userBanner,
                 'link' =>  route('user.message.view', [
                     'userId' => $user->id,
                 ]),
-                'icon_type' => 'confirm',
+                'type' => 'social',
                 'created_at' => DB::raw('NOW()'),
                 'html' => <<<HTML
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}">
-                            {$user->userName}</button>
+                            {$user->name}</button>
                         has texted</button>.
                     </span>
                 HTML,
