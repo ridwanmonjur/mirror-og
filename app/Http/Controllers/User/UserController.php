@@ -78,7 +78,7 @@ class UserController extends Controller
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/participant/{$user->id}">
                             {$user->name}</button>
-                        has texted</button>.
+                        has texted you.
                     </span>
                 HTML,
             ];
