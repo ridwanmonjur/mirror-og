@@ -70,7 +70,7 @@ let allNotificationStore = reactive({
     ...createCounterAndCircles(),
 
     async markNotificationRead(id, currentTab) {
-        let url = `/api/notifications/${id}`;
+        let url = `/api/user/notifications/${id}`;
         const response = await fetch( url,  {
             method: 'POST',
             headers: {
@@ -131,7 +131,7 @@ let allNotificationStore = reactive({
         }
 
         try {
-            let url = `/api/notifications?type=${tab}&page=${page}`;
+            let url = `/api/user/notifications?type=${tab}&page=${page}`;
             const response = await fetch( url );
             const data = await response.json();
 

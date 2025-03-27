@@ -50,19 +50,20 @@ Route::group(['middleware' => 'auth'], function () {
         });
         Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);
         Route::get('/user/{id}/reports', [SocialController::class, 'getReports'])->name('users.report.view');
-        Route::get('/notifications', [UserController::class, 'viewNotifications'])->name('notifications.index');
+        Route::get('/user/notifications', [UserController::class, 'viewNotifications'])->name('notifications.index');
 
         Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
         Route::post('/user/settings', [UserController::class, 'changeSettings'])->name('user.settings.action');
+        Route::post('/user/notifications', [UserController::class, 'createNotification'])->name('notifications.store'); 
+        Route::post('/user/notifications/{id}', [UserController::class, 'markAsRead'])->name('notifications.actopn');
 
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
         Route::post('/user/{id}/star', [SocialController::class, 'toggleStar'])->name('users.star.action');
         Route::post('/user/{id}/block', [FirebaseController::class, 'toggleBlock'])->name('users.block.action');
         Route::post('/user/{id}/report', [SocialController::class, 'report'])->name('users.report.action');
         Route::post('/card/intent', [StripeController::class,  'stripeCardIntentCreate'])->name('stripe.stripeCardIntentCreate');
-        Route::post('/notifications/{id}', [UserController::class, 'markAsRead'])->name('notifications.actopn');
     });
 });
 
