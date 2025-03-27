@@ -309,7 +309,7 @@ const roomStore = reactive({
         if (this.roomSnapshot) this.roomSnapshot();
     },
      async changeUser(user) {
-        window.location.href = `/profile/message?userId=${user.id}`;
+        window.location.href = `/user/message?userId=${user.id}`;
     },
     async setCurrentRoom(index) {
         chatStore.resetChatSnapshot();
