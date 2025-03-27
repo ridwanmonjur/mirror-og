@@ -395,7 +395,7 @@ function ChatListComponent() {
             const button = e.currentTarget;
             if (!button) return;
 
-            const route = button.dataset.route;
+            const {route, inputs: userId} = button.dataset;
         
             try {
                 let data = await makeRequest(route, 'POST', JSON.stringify({}));           
@@ -403,6 +403,7 @@ function ChatListComponent() {
                     return;
                 }
                 window.closeLoading();
+                window.location.href = `/user/message?userId=${userId}`;
                 window.location.reload();
                      
             } catch (error) {
