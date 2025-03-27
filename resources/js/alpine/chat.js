@@ -1,6 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, setDoc, getDoc, addDoc, onSnapshot, updateDoc, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, setDoc,  addDoc, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
 
@@ -96,15 +96,16 @@ const chatStore = reactive({
     messagesLength: 0,
    
      async getMessages(id) {
-        let q = query(
-            collection(db, `room/${id}/message`),
-            orderBy("id", "desc")
+        const roomRef = collection(db, `room/${id}/message`);
+
+        let q = query(roomRef,
+            orderBy("__name__", "desc")
         );
+
 
         let isInitialDataFetched = false;
         let prevCreatedAt = null;
        
-        q = query(q);
 
         let subscribeToChat = onSnapshot(q, {
             includeMetadata: true,
