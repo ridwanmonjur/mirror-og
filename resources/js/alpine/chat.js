@@ -221,22 +221,22 @@ const roomStore = reactive({
                     length++;
                 }
 
-                // if (change.type === "modified") {
-                //     const index = this.oldRooms.findIndex(room => room.id == data.id);
-                //     if (index !== -1) {
-                //         rooms = [
-                //             ...rooms.slice(0, index),
-                //             data,
-                //             ...rooms.slice(index + 1)
-                //         ];
+                if (change.type === "modified") {
+                    const index = this.oldRooms.findIndex(room => room.id == data.id);
+                    if (index !== -1) {
+                        rooms = [
+                            ...rooms.slice(0, index),
+                            data,
+                            ...rooms.slice(index + 1)
+                        ];
                         
-                //         if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
-                //             this.currentRoomObj = data;
-                //         }
-                //     }
+                        if (this.currentRoomObj && this.currentRoomObj.id == data.id) {
+                            this.currentRoomObj = data;
+                        }
+                    }
     
-                //     return;
-                // }
+                    return;
+                }
             });
 
             let route = fetchFirebaseUsersInputRoute.value;
