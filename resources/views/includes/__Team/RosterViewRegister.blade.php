@@ -164,7 +164,7 @@
                                     <div class="text-end">
                                         <span>
                                             @if ($joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
-                                                <form action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                                                <form action="{{route('participant.confirmOrCancel.action')}}" id="{{'cancel2form' . $joinEvent->id  }}"  method="POST">
                                                     @csrf
                                                     <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                                                     <input type="hidden" name="join_status" value="canceled">
