@@ -369,7 +369,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                 <div class="upload-container">
                     <label for="image-upload" class="upload-label">
                         <img                       
-                            src="/assets/images/animation/empty-exclamation.gif"
+                            src="/assets/images/404q.png"
                             width="150"
                             height="150"
                             class="object-fit-cover"
