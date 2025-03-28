@@ -515,22 +515,36 @@ class EventDetail extends Model
                 ->where('tier_id', $this->event_tier_id)
                 ->where('type_id', $this->event_type_id)
                 ->first();
-            
-            if ($signupValues) {
-                $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
+
+            if (!$signupValues) {
+                DB::table('event_tier_type_signup_dates')->insert([
+                    'tier_id' => $this->event_tier_id,
+                    'type_id' => $this->event_type_id,
+                    'signup_open' => 28, // Default: 28 days before event
+                    'signup_close' => 3,  // Default: 3 days before event
+                    'normal_signup_start_advanced_close' => 7 // Default: 7 days before event
+                ]);
                 
-                $insertData = [
-                    'event_id' => $this->id,
-                    'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
-                    'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
-                    'normal_signup_start_advanced_close' => $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close)
-                ];
-                
-                DB::table('event_signup_dates')->updateOrInsert(
-                    ['event_id' => $this->id],
-                    $insertData
-                );
+                $signupValues = DB::table('event_tier_type_signup_dates')
+                    ->where('tier_id', $this->event_tier_id)
+                    ->where('type_id', $this->event_type_id)
+                    ->first();
             }
+                
+            $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
+            
+            $insertData = [
+                'event_id' => $this->id,
+                'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
+                'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
+                'normal_signup_start_advanced_close' => $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close)
+            ];
+            
+            DB::table('event_signup_dates')->updateOrInsert(
+                ['event_id' => $this->id],
+                $insertData
+            );
+            
         }
     }
 
