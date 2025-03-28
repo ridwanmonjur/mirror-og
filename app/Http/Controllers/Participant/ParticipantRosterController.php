@@ -130,13 +130,26 @@ class ParticipantRosterController extends Controller
     public function disapproveRosterMember(DisapproveMemberRequest $request)
     {
         try {
-            $joinEvent = JoinEvent::findOrFail( $request->join_events_id)->first();
+            $joinEvent = JoinEvent::findOrFail( $request->join_events_id);
 
             $member = RosterMember::where([
                 'user_id' => $request->user_id,
                 'join_events_id' => $request->join_events_id,
                 'team_id' => $request->team_id
-            ])->first();
+            ])->firstOrFail();
+            if ( isset($joinEvent->roster_captain_id) && $member->id == $joinEvent->roster_captain_id) {
+                $user = $request->attributes->get('user');
+                $userRoster = RosterMember::where([
+                    'join_events_id' => $request->join_events_id,
+                    'user_id' =>  $user->id,
+                ])->first();
+
+                if ($joinEvent->roster_captain_id != $userRoster->id) {
+                    return response()->json(['success' => false, 
+                        'message' => 'Captain can remove himself from roster only!'
+                    ]);
+                }
+            }
 
             $joinEvent->roster_captain_id == $member->id ? null : $joinEvent->roster_captain_id;
             $joinEvent->vote_starter_id == $request->user_id ? null : $joinEvent->vote_starter_id;
@@ -160,6 +173,22 @@ class ParticipantRosterController extends Controller
     {
         try {
             $joinEvent = JoinEvent::findOrFail($request->join_events_id);
+          
+            if (isset($joinEvent->roster_captain_id)) {
+                $user = $request->attributes->get('user');
+                $userRoster = RosterMember::where([
+                    'join_events_id' => $request->join_events_id,
+                    'user_id' => $user->id,
+                ])->first();
+
+                if ($joinEvent->roster_captain_id != $userRoster->id) {
+                    return response()->json([
+                        'success' => false, 
+                        'message' => 'Only captain can remove himself or appoint another as captain.'
+                    ]);
+                }
+            }
+
             $joinEvent->roster_captain_id = $request->roster_captain_id;
             $joinEvent->save();
             return response()->json(['success' => true, 'message' => 'Roster captain created']);
@@ -167,28 +196,5 @@ class ParticipantRosterController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
-
-    public function deleteCaptainRosterMember(Request $request)
-    {
-        try {
-            $request->validate([
-                'join_events_id' => 'required',
-                'team_member_id' => 'required',
-                'teams_id' => 'required',
-            ]);
-
-            $captain = RosterCaptain::where([
-                'join_events_id' => $request->join_events_id,
-                'team_member_id' => $request->team_member_id,
-                'teams_id' => $request->teams_id,
-            ])->first();
-            if ($captain) {
-                $captain->delete();
-            }
-
-            return response()->json(['success' => true, 'message' => 'Roster captain deleted']);
-        } catch (DatabaseQueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Failed to update data', 'error' => $e->getMessage()]);
-        }
-    }
+   
 }
