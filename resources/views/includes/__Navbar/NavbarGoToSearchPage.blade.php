@@ -69,7 +69,7 @@
            <div class="dropdown d-inline-block position-relative" data-reference="parent" data-bs-auto-close="outside" >
                 <a href="#" role="button" class="btn dropdown-toggle px-0  me-2 " id="dropdownMenuGuest" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true" >
-                    <img width="30px" height="24px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
+                    <img width="40px" height="32px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
                     <span class="pt-2 ms-1">Sign In</span>
                 </a>
                 <div class="dropdown-menu shadow-lg dropdown-menu-end text-start border rounded-lg py-0 " 
@@ -105,7 +105,6 @@
     </div>
     <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
         @guest
-            {{-- <img width="50px" height="40px" src="{{ asset('/assets/images/navbar-account.png') }}" alt=""> --}}
             <a class="py-1" href="{{ route('organizer.signin.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                     class="bi bi-person-fill-gear" viewBox="0 0 16 16">

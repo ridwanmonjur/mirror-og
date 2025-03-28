@@ -9,7 +9,7 @@
         v-on:click="changeNotificationTab('social')"    
     >
         
-        <img width="38px" height="38px" src="{{ asset('/assets/images/notif.webp') }}" alt=""
+        <img width="42px" height="42px" src="{{ asset('/assets/images/notif.webp') }}" alt=""
             class="me-0"    
             onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
         >
@@ -141,7 +141,7 @@
             <img
                 class="object-fit-cover rounded-circle border border-primary" 
                 onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
-                src="{{ bladeImageNull($user->userBanner)}}" width="38" height="38">
+                src="{{ bladeImageNull($user->userBanner)}}" width="42" height="42">
         @else 
             <span style="display: inline-block; height: 38px; width: 38px;"
                 class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle me-2">

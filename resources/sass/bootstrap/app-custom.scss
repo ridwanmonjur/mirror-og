@@ -207,20 +207,15 @@ nav svg {
     cursor: pointer;
 }
 
-.hover-bigger:hover,
-.navbar > img:hover,
-nav > img:hover,
-.navbar svg:hover,
-nav svg:hover {
+
+nav img:hover,
+nav svg:hover,
+.py-navbar:hover svg
+{
     transform: scale(1.1);
 }
 
-.navbar img:active,
-nav img:active,
-.navbar svg:active,
-nav svg:active {
-    transform: scale(1.1);
-}
+
 
 .navbar .nav-buttons {
     display: none;
