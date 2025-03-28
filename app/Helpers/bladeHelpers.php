@@ -83,6 +83,7 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
 }
 
 function bladeEventTierImage($eventTier)
+// BADDDDDD
 {
     if ($eventTier) {
         $eventTierLower = strtolower($eventTier);
