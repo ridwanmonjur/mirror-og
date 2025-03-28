@@ -53,9 +53,9 @@
                             <td class="ps-3 pe-0 " style="width: 55px; ">
                                 <a href="{{route('public.participant.view', ['id' => $member2->user->id])}}" class="text-right">
                                    <svg class="mt-1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-</svg>
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                    </svg>
                                 </a>
                             </td> 
                             <td class="pe-3 " style="width: 200px; ">
@@ -104,7 +104,6 @@
                     Event start time: {{$joinEvent->eventDetails->getFormattedStartDate()}} 
                 </p>
             @else
-
                 @if ($joinEvent->payment_status != "completed")
                     <button class="oceans-gaming-default-button  d-inline-block btn " 
                         data-bs-toggle="modal"
@@ -120,7 +119,7 @@
                     && $joinEvent->payment_status == "completed"
                     && $joinEvent->roster_captain_id
                 )
-                    @if ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "pending")
+                    @if ($joinEvent->join_status == "pending")
                         <form  class="{{'confirmform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" method="POST">
                             @csrf
                             <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
@@ -138,27 +137,38 @@
                                 Confirm Registration
                             </button>
                         </form>
-                    @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "confirmed" && !isset($joinEvent->vote_ongoing))
-                        <form class="{{'cancelform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
-                            @csrf
-                            <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                            <input type="hidden" name="join_status" value="canceled">
-                            <button 
-                                data-join-event-id="{{$joinEvent->id}}"
-                                data-form="{{'cancelform' . $random_int}}" 
-                                data-cancel="1"
-                                type="button" 
-                                data-join-status="{{$joinEvent->join_status}}"
-                                data-registration-status="{{$joinEvent->regStatus}}"
-                                onclick="submitConfirmCancelForm(event)" 
-                                class="mt-2 btn py-2 bg-red text-light rounded-pill"
-                            >
-                                Cancel Registration
-                            </button> 
-                            <br>
-                            <p class="text-success mt-2">Your registration is confirmed!</p>
+                    @elseif ($joinEvent->join_status == "confirmed") 
+                        @if(!isset($joinEvent->vote_ongoing))
+                            <form class="{{'cancelform' . $random_int}}" action="{{route('participant.confirmOrCancel.action')}}" id="cancelRegistration" method="POST">
+                                @csrf
+                                <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                                <input type="hidden" name="join_status" value="canceled">
+                                <button 
+                                    data-join-event-id="{{$joinEvent->id}}"
+                                    data-form="{{'cancelform' . $random_int}}" 
+                                    data-cancel="1"
+                                    type="button" 
+                                    data-join-status="{{$joinEvent->join_status}}"
+                                    data-registration-status="{{$joinEvent->regStatus}}"
+                                    onclick="submitConfirmCancelForm(event)" 
+                                    class="mt-2 btn py-2 bg-red text-light rounded-pill"
+                                >
+                                    Cancel Registration
+                                </button> 
+                                <br>
+                                <p class="text-success mt-2">Your registration is confirmed!</p>
+                            </form>
+                        @else
+                           <button
+                                style="cursor: not-allowed; pointer-events: none;"
+                                class="mt-2 btn oceans-gaming-default-button bg-success py-2 rounded-pill px-2">
+                                Registration Confirmed
+                            </button>
                         </form>
-                    @elseif ($joinEvent->payment_status == "completed" && $joinEvent->join_status == "canceled")
+                            <p class="text-red mt-2">A vote to quit is in progress!</p>
+                        @endif
+
+                    @elseif ($joinEvent->join_status == "canceled")
                         <button
                                 style="cursor: not-allowed; pointer-events: none;"
                                 class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
@@ -167,74 +177,70 @@
                         </form>
                     @endif
                 @endif
-                @if ($joinEvent->vote_ongoing)
-                    <p class="text-red mt-2">A vote to quit is in progress!</p>
+                @if ($joinEvent->totalRosterCount == $maxRosterSize)
+                    <div class="mt-2 text-start text-success">
+                        <span class="me-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </span>
+                        <span class="me-1">Roster is filled</span>
+                        <span 
+                            class="  px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
+                        >
+                            <u>Tutorial</u>
+                        </span>
+                    </div>
                 @else
-                    @if ($joinEvent->totalRosterCount == $maxRosterSize)
-                        <div class="mt-2 text-start text-success">
-                            <span class="me-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-                                </svg>
-                            </span>
-                            <span class="me-1">Roster is filled</span>
-                            <span 
-                                class="  px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
-                            >
-                                <u>Tutorial</u>
-                            </span>
-                        </div>
-                    @else
-                        <div class="mt-2 text-start text-red tutorial-button z-99 cursor-pointer">
-                            <span class="me-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                </svg>       
-                            </span>
-                            <span class="me-0">Roster is still empty! Click to start tour.</span>
-                          
-                        </div>
-                    @endif
-                
-                    @if ($joinEvent->payment_status == "completed")
-                        <div class="mt-0 text-start text-success">
-                            <span class="me-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-                                </svg>
-                            </span>
-                            <span class="me-1">Entry fee is fully paid.</span>
-                        </div>
-                    @else
-                        <div class="mt-0 text-start text-red">
-                            <span class="me-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                </svg>       
-                            </span>
-                            <span>Entry fee is not fully paid!</span>
-                        </div>
-                    @endif
-                    @if ($joinEvent->roster_captain_id)
-                        <div class="mt-0 text-start text-success">
-                            <span class="me-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
-                                </svg>
-                            </span>
-                            <span>Roster captain is appointed.</span>
-                        </div>
-                    @else
-                        <div class="mt-0 text-start text-red">
-                            <span class="me-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                                </svg>       
-                            </span>
-                            <span class="me-1">Roster captain is not appointed.</span>
-                            
-                        </div>
-                    @endif
+                    <div class="mt-2 text-start text-red tutorial-button z-99 cursor-pointer">
+                        <span class="me-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>       
+                        </span>
+                        <span class="me-0">Roster is still empty! Click to start tour.</span>
+                        
+                    </div>
+                @endif
+            
+                @if ($joinEvent->payment_status == "completed")
+                    <div class="mt-0 text-start text-success">
+                        <span class="me-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </span>
+                        <span class="me-1">Entry fee is fully paid.</span>
+                    </div>
+                @else
+                    <div class="mt-0 text-start text-red">
+                        <span class="me-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>       
+                        </span>
+                        <span>Entry fee is not fully paid!</span>
+                    </div>
+                @endif
+                @if ($joinEvent->roster_captain_id)
+                    <div class="mt-0 text-start text-success">
+                        <span class="me-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </span>
+                        <span>Roster captain is appointed.</span>
+                    </div>
+                @else
+                    <div class="mt-0 text-start text-red">
+                        <span class="me-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                            </svg>       
+                        </span>
+                        <span class="me-1">Roster captain is not appointed.</span>
+                        
+                    </div>
                 @endif
             @endif
         @else

@@ -233,9 +233,25 @@
                                     <span>Joined</span>
                                 </button>
                                 <br><br>
-                                <a href="{{route('participant.register.manage', 
+                                @if ($existingJoint->join_status == "pending")
+                                   
+                                    <a class="text-primary" href="{{route('participant.register.manage', 
                                     ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
-                                )}}"><u>Manage registration</u></a>
+                                        )}}"><u> Comfirm Registration</u>
+                                    </a>
+                                @elseif  ($existingJoint->join_status == "confirmed")
+                                    <a class="mt-2 text-success" href="{{route('participant.register.manage', 
+                                    ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
+                                        )}}"><u>Manage registration</u>
+                                    </a>
+                                        
+                                @elseif  ($existingJoint->join_status == "canceled")
+                                    <a class="mt-2" href="{{route('participant.register.manage', 
+                                    ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
+                                        )}}"><u>Your registration is canceled.</u>
+                                    </a>
+                                @endif
+                                
                             @else
                                 @guest
                                     <button 

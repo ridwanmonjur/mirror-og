@@ -164,7 +164,7 @@
             </p>
             <div class="  pt-3 tab-size">
                 @if ($teamMembersProcessed['pending']['count'] != 0)
-                    <h5 class="pb-3">Invited Members</h5>
+                    <h5 class="pb-3">Pending Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['pending']['members'] as $member)
                             <div class="card card-member col-10 member-table responsive mb-2"

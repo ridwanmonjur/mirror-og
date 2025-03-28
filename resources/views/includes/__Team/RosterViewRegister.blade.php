@@ -163,134 +163,137 @@
                                 @if ($joinEvent->isUserPartOfRoster) 
                                     <div class="text-end">
                                         <span>
-                                            @if ($joinEvent->join_status == "confirmed" && !$joinEvent->vote_ongoing)
-                                                <form action="{{route('participant.confirmOrCancel.action')}}" id="{{'cancel2form' . $joinEvent->id  }}"  method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                                                    <input type="hidden" name="join_status" value="canceled">
+                                            @if ($joinEvent->join_status == "confirmed") 
+                                                @if (!$joinEvent->vote_ongoing)
+                                                    <form action="{{route('participant.confirmOrCancel.action')}}" class="{{'cancel2form' . $joinEvent->id  }}"  method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                                                        <input type="hidden" name="join_status" value="canceled">
+                                                        <button 
+                                                            data-join-event-id="{{$joinEvent->id}}"
+                                                            data-form="{{'cancel2form' . $joinEvent->id  }}" 
+                                                            type="button"
+                                                            data-cancel="1"
+                                                            data-join-status="{{$joinEvent->join_status}}"
+                                                            data-registration-status="{{$joinEvent->regStatus}}"
+                                                            onclick="submitConfirmCancelForm(event)" 
+                                                            class="btn btn-sm text-light bg-red me-2 rounded-pill"
+                                                        >
+                                                            Leave Event
+                                                        </button> 
+                                                    </form>
+                                                @else 
+                                                    <div class="border py-2 px-2 border-2 ms-3 ms-lg-0 border-primary bg-translucent">
+                                                        <small class="d-inline-block mt-0 mb-1 py-0"><small class="text-red">{{$joinEvent?->voteStarter?->name}}</small> has called a vote.</small>
+                                                        @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit'])) 
+                                                            @if ($currentUser['vote_to_quit'])
+                                                                <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>
+                                                            @else 
+                                                                <small class="d-inline-block text-success mb-1"> You voted to stay in this event.</small>
+                                                            @endif
+                                                        @endif
+                                                    
+                                                        @if ($joinEvent->isUserPartOfRoster && !isset($currentUser['vote_to_quit']))
+                                                            <div class="d-flex justify-content-between">
+                                                                <button 
+                                                                    class="btn btn-sm btn-success text-dark px-2 rounded-pill z-99"
+                                                                    data-vote-to-quit="0"
+                                                                    data-join-event-id="{{$joinEvent->id}}"
+                                                                    data-roster-id="{{ $currentUser['rosterId'] }}"
+                                                                    onclick="voteForEvent(event);"
+                                                                > Stay
+                                                                </button>
+                                                                <button 
+                                                                    class="btn btn-sm bg-red text-white px-2 rounded-pill z-99"
+                                                                    data-vote-to-quit="1"
+                                                                    data-roster-id="{{ $currentUser['rosterId'] }}"
+                                                                    data-join-event-id="{{$joinEvent->id}}"
+                                                                    onclick="voteForEvent(event);"
+                                                                > Leave
+                                                                </button>
+                                                            </div>
+                                                        @else
+                                                            <div class="d-flex justify-content-between px-2">
+                                                                <small class="text-success">Stay</small>
+                                                                <small class="text-red">Leave</small>
+                                                            </div>
+                                                        @endif
+                                                        
+                                                        <div class="d-flex justify-content-between px-2">
+                                                            <span>{{$votes['stayCount']}}</span>
+                                                            </span>{{$votes['leaveCount']}}</span>
+                                                        </div>
+                                                        <div class="px-0 mx-0">
+                                                            <div class="progress d-flex justify-content-between" style="height: 5px; background-color: #f0f0f0;">
+                                                                @foreach ($joinEvent->roster as $roster)
+                                                                    <div 
+                                                                        class="progress-segment {{ $roster->vote_to_quit === 1 ? 'bg-red' : ($roster->vote_to_quit === 0 ? 'bg-primary' : '') }}"
+                                                                        style="
+                                                                            width: {{ 100 / $votes['totalCount'] }}%; 
+                                                                            position: relative;
+                                                                            height: 5px;
+                                                                            cursor: pointer;
+                                                                            order: {{ $roster->vote_to_quit === 1 ? 1 : ($roster->vote_to_quit === 0 ? -1 : 0) }};
+                                                                        "
+                                                                    >
+                                                                    </div>
+                                                                @endforeach
+
+                                                            </div>
+                                                            <div class="d-flex justify-content-between my-1">
+                                                            @foreach ($joinEvent->roster as $roster)
+                                                                    @if ($roster->vote_to_quit !== null)
+                                                                        <img 
+                                                                            class="rounded-circle random-color-circle object-fit-cover"
+                                                                            width="25" 
+                                                                            height="25" 
+                                                                            src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
+                                                                            {!! trustedBladeHandleImageFailureBanner() !!}
+                                                                            style="
+                                                                                order: {{ $roster->vote_to_quit === 1 ? 1 : -1 }};
+                                                                                cursor: pointer;
+                                                                            "
+                                                                            onclick="goToUrl(event, this)"
+                                                                            data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
+                                                                        >  
+                                                                    @else
+                                                                        <div 
+                                                                            class="progress--empty"
+                                                                        >  
+                                                                        </div>
+                                                                    @endif
+                                                                @endforeach
+
+                                                            </div>
+                                                            
+                                                        
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @elseif ($joinEvent->join_status == "pending") 
+                                                @if (!$joinEvent->vote_ongoing) 
                                                     <button 
-                                                        data-join-event-id="{{$joinEvent->id}}"
-                                                        data-form="{{'cancel2form' . $joinEvent->id  }}" 
-                                                        type="button"
-                                                        data-cancel="1"
-                                                        data-join-status="{{$joinEvent->join_status}}"
-                                                        data-registration-status="{{$joinEvent->regStatus}}"
-                                                        onclick="submitConfirmCancelForm(event)" 
-                                                        class="btn btn-sm text-light bg-red me-2 rounded-pill"
+                                                        onclick="disapproveMemberAction(event);"
+                                                        class="btn btn-sm rounded-pill bg-red text-light me-3 z-99"
+                                                        data-join-event-id="{{ $joinEvent->id }}"
+                                                        data-user-id="{{$user->id}}"
+                                                        data-team-id="{{ $selectTeam->id }}"
+                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
                                                     >
-                                                        Leave Event
-                                                    </button> 
-                                                </form>
-                                            @elseif ($joinEvent->join_status == "pending" && !$joinEvent->vote_ongoing) 
-                                                <button 
-                                                    onclick="disapproveMemberAction(event);"
-                                                    class="btn btn-sm rounded-pill bg-red text-light me-3 z-99"
-                                                    data-join-event-id="{{ $joinEvent->id }}"
-                                                    data-user-id="{{$user->id}}"
-                                                    data-team-id="{{ $selectTeam->id }}"
-                                                    data-roster-id="{{ $currentUser['rosterId'] }}"
-                                                >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
-                                                <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
-                                                </svg>
-                                                    Leave Roster
-                                                    {{-- {{$joinEvent?->voteStarter?->name}} --}}
-                                                </button>
-                                                
-                                                <br>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                                                    <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+                                                    </svg>
+                                                        Leave Roster
+                                                    </button>
+                                                    
+                                                    <br>
+                                                @endif
                                             @endif
                                         </span>
                                     </div>
-                                    @if ($joinEvent->vote_ongoing)
-                                        <div class="border py-2 px-2 border-2 ms-3 ms-lg-0 border-primary bg-translucent">
-                                            <small class="d-inline-block mt-0 mb-1 py-0"><small class="text-red">{{$joinEvent?->voteStarter?->name}}</small> has called a vote.</small>
-                                            @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit'])) 
-                                                @if ($currentUser['vote_to_quit'])
-                                                    <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>
-                                                @else 
-                                                    <small class="d-inline-block text-success mb-1"> You voted to stay in this event.</small>
-                                                @endif
-                                            @endif
-                                           
-                                            @if ($joinEvent->isUserPartOfRoster && !isset($currentUser['vote_to_quit']))
-                                                <div class="d-flex justify-content-between">
-                                                    <button 
-                                                        class="btn btn-sm btn-success text-dark px-2 rounded-pill z-99"
-                                                        data-vote-to-quit="0"
-                                                        data-join-event-id="{{$joinEvent->id}}"
-                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
-                                                        onclick="voteForEvent(event);"
-                                                    > Stay
-                                                    </button>
-                                                    <button 
-                                                        class="btn btn-sm bg-red text-white px-2 rounded-pill z-99"
-                                                        data-vote-to-quit="1"
-                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
-                                                        data-join-event-id="{{$joinEvent->id}}"
-                                                        onclick="voteForEvent(event);"
-                                                    > Leave
-                                                    </button>
-                                                </div>
-                                            @else
-                                                <div class="d-flex justify-content-between px-2">
-                                                    <small class="text-success">Stay</small>
-                                                    <small class="text-red">Leave</small>
-                                                </div>
-                                            @endif
-                                             
-                                            <div class="d-flex justify-content-between px-2">
-                                                <span>{{$votes['stayCount']}}</span>
-                                                </span>{{$votes['leaveCount']}}</span>
-                                            </div>
-                                            <div class="px-0 mx-0">
-                                                <div class="progress d-flex justify-content-between" style="height: 5px; background-color: #f0f0f0;">
-                                                    @foreach ($joinEvent->roster as $roster)
-                                                        <div 
-                                                            class="progress-segment {{ $roster->vote_to_quit === 1 ? 'bg-red' : ($roster->vote_to_quit === 0 ? 'bg-primary' : '') }}"
-                                                            style="
-                                                                width: {{ 100 / $votes['totalCount'] }}%; 
-                                                                position: relative;
-                                                                height: 5px;
-                                                                cursor: pointer;
-                                                                order: {{ $roster->vote_to_quit === 1 ? 1 : ($roster->vote_to_quit === 0 ? -1 : 0) }};
-                                                            "
-                                                        >
-                                                        </div>
-                                                    @endforeach
-
-                                                </div>
-                                                <div class="d-flex justify-content-between my-1">
-                                                   @foreach ($joinEvent->roster as $roster)
-                                                        @if ($roster->vote_to_quit !== null)
-                                                            <img 
-                                                                class="rounded-circle random-color-circle object-fit-cover"
-                                                                width="25" 
-                                                                height="25" 
-                                                                src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
-                                                                {!! trustedBladeHandleImageFailureBanner() !!}
-                                                                style="
-                                                                    order: {{ $roster->vote_to_quit === 1 ? 1 : -1 }};
-                                                                    cursor: pointer;
-                                                                "
-                                                                onclick="goToUrl(event, this)"
-                                                                data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
-                                                            >  
-                                                        @else
-                                                              <div 
-                                                                class="progress--empty"
-                                                            >  
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-
-                                                </div>
-                                                
-                                              
-                                            </div>
-                                        </div>
-                                    @endif
+                                    
                                 @else
-                                    @if ($joinEvent->status != "confirmed")
+                                    @if ($joinEvent->join_status == "pending")
                                         <div class="text-end">
                                             <span class="">
                                                 <button 
@@ -309,7 +312,9 @@
                                             </span>
                                         </div>
                                     @endif
-                                    <div class="text-start border border-primary bg-translucent text-dark px-2">
+                                @endif
+                                @if ($joinEvent->join_status == "pending")
+                                    <div class="text-start border border-primary mt-2 bg-translucent text-dark px-2">
                                         <small class="text-dark">You can freely join/leave events until registration is locked!</small>
                                     </div>
                                 @endif
