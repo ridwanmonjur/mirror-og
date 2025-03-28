@@ -828,11 +828,11 @@ function getData(key) {
     return bladeData[key];
 }
 
-function getUrl(name) {
+function getUrlReg(name) {
     return bladeData[name + 'Url'];
 }
 
-let currentUrl = getUrl('register');
+let currentUrl = getUrlReg('register');
 
 let captainMainFormHtml = `<p class='text-center'>
         The captain will be the main form of all  
@@ -845,13 +845,13 @@ function voteForEvent(event) {
     event.preventDefault();
     event.stopPropagation();
     let {rosterId, voteToQuit, joinEventId} = element.dataset;
-    const url = getUrl('vote');
+    const url = getUrlReg('vote');
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {eventDetails: eventDetailsJSON, followCounts} = memberDataContainer.dataset;
     let eventDetails = JSON.parse(eventDetailsJSON);
     Swal.fire({
         html: `
-            <h5> Have you confirmed your decision to ${voteToQuit ? 'leave': 'stay' }? </h5>
+            <h5 class="mt-2"> Have you confirmed your decision in this vote? </h5>
             ${drawEventTable(eventDetails, followCounts)}
         `,
         showDenyButton: true,
@@ -911,7 +911,7 @@ function approveMemberAction(event) {
     let { rosterMap: rosterMapJSON } = rosterMapContainer.dataset;
     let rosterMap = JSON.parse(rosterMapJSON);
 
-    const url = getUrl('approve');
+    const url = getUrlReg('approve');
     
     Swal.fire({
         html: `
@@ -973,7 +973,7 @@ async function disapproveMemberAction(event) {
     event.preventDefault();
     event.stopPropagation();
     let loggedUserId = getData('userId');
-    const url = getUrl('disapprove');
+    const url = getUrlReg('disapprove');
     let {teamId, joinEventId, userId} = element.dataset;
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const {eventDetails: eventDetailsJSON, 
@@ -1044,7 +1044,7 @@ async function capatainMemberAction(event) {
     let element = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    const url = getUrl('rostercaptain');
+    const url = getUrlReg('rostercaptain');
     let loggedUserId = getData('userId');
     let {joinEventId, rosterCaptainId, rosterUserBanner, rosterUserId, rosterUserName} = element.dataset;
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
@@ -1094,7 +1094,6 @@ async function capatainMemberAction(event) {
                     if (responseData.success) {
                         localStorage.setItem('swal', 
                             rosterCaptainId == 0 ? 
-                            
                                 ROSTER_STATUS_ENUMS.CAPTAIN_REMOVE:
                                 ROSTER_STATUS_ENUMS.CAPTAIN_APPROVE 
                         );
@@ -1112,6 +1111,7 @@ async function capatainMemberAction(event) {
                     body: JSON.stringify({
                         'roster_captain_id': rosterCaptainId == 0 ? null : rosterCaptainId,
                         'join_events_id': joinEventId,
+                        'roster_user_id': rosterUserId
                     })
                 }
             );
