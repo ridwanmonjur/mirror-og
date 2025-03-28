@@ -228,12 +228,14 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         try {
+            window.showLoading();
             let addressElement = elements.getElement('address');
 
             const { complete, value: addressValue } = await addressElement.getValue();
 
              if (!complete) {
-                    toastError("Please fill the complete address");
+                window.closeLoading();
+                toastError("Please fill the complete address");
                 return;
             }
 
@@ -265,11 +267,13 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             });
 
             if (error) {
+                window.closeLoading();
                 console.log('Payment confirmation error:', error);
                 window.toastError(error.message || 'Payment failed. Please try again.');
                 return;
             }
 
+            window.closeLoading();
         } catch (error) {
             console.log('Exception caught:', error);
     
@@ -277,7 +281,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                 error.message || 
                 error.error?.message || 
                 'Failed to process your payment. Please try again later.';
-            
+            window.closeLoading();
             window.toastError(errorMessage);
         }
     }
