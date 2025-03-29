@@ -33,7 +33,6 @@ class ParticipantRosterController extends Controller
 
     public function approveRosterMember(ApproveMemberRequest $request)
     {
-
         try{
             RosterMember::create([
                 'user_id' => $request->user_id,
@@ -41,7 +40,6 @@ class ParticipantRosterController extends Controller
                 'team_member_id' => $request->member_id,
                 'team_id' => $request->team_id,
             ]);
-
 
             return response()->json([
                 'success' => true, 
@@ -79,7 +77,15 @@ class ParticipantRosterController extends Controller
                     'eventDetails.user:id,name,userBanner',
                     'eventDetails.tier:id,eventTier'
                 ])
-                ->first();
+                ->firstOrFail();
+            
+            if ($joinEvent && $joinEvent->join_status != 'confirmed') {
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'The vote cannot start now.'
+                ]);
+            }
+           
 
             $team = Team::where('id', $joinEvent->team_id)->first();
             
@@ -173,6 +179,12 @@ class ParticipantRosterController extends Controller
     {
         try {
             $joinEvent = JoinEvent::findOrFail($request->join_events_id);
+            if ($joinEvent->join_status != "pending") {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Roster is now locked.'
+                ]);
+            }
           
             if (isset($joinEvent->roster_captain_id)) {
                 $user = $request->attributes->get('user');

@@ -362,26 +362,7 @@ fetchCountries();
 
 function paintScreen(teamListServerValue, membersCountServerValue, countServerValue) {
     let html = ``;
-    if (countServerValue <= 0) {
-        html += `
-            <div class="wrapper mx-auto">
-            <div class="team-section mx-auto">
-                <div class="upload-container">
-                    <label for="image-upload" class="upload-label">
-                        <img                       
-                            src="/assets/images/404q.png"
-                            width="150"
-                            height="150"
-                            class="object-fit-cover"
-                        >
-                    </label>
-                </div>
-                <h3 class="team-name text-center" id="team-name">No teams yet</h3>
-                <br>
-            </div>
-        </div>
-        `;
-    } else {
+    if (countServerValue > 0)  {
         for (let team of teamListServerValue) {
            
             team['membersCount'] = membersCountServerValue[team?.id] ?? 0;

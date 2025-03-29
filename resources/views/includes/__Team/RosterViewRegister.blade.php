@@ -61,7 +61,7 @@
 
                
                     <div class="row d-flex justify-content-center" >
-                        <div class="col-12 col-lg-6 px-0">
+                        <div class="col-12 col-lg-6 px-2">
                             <ul class="">
                                 @foreach ($joinEvent->roster as $roster)
                                     @php
@@ -158,7 +158,7 @@
                                 @endif
                             </ul>
                         </div>
-                        <div class="col-12 col-lg-6 ps-2 pe-3" onclick="event.stopPropagation();">
+                        <div class="col-12 col-lg-6 px-2 " onclick="event.stopPropagation();">
                             <div class="px-0">
                                 @if ($joinEvent->isUserPartOfRoster) 
                                     <div class="text-end">
@@ -183,8 +183,8 @@
                                                         </button> 
                                                     </form>
                                                 @else 
-                                                    <div class="border py-2 px-2 border-2 ms-3 ms-lg-0 border-primary bg-translucent">
-                                                        <small class="d-inline-block mt-0 mb-1 py-0"><small class="text-red">{{$joinEvent?->voteStarter?->name}}</small> has called a vote.</small>
+                                                    <div class="border py-2 px-2 border-2  text-center text-xl-start mx-2 border-primary bg-translucent">
+                                                        <small class="d-inline-block  mt-0 mb-1 py-0"><small class="text-red">{{$joinEvent?->voteStarter?->name}}</small> has called a vote.</small>
                                                         @if ($joinEvent->isUserPartOfRoster && isset($currentUser['vote_to_quit'])) 
                                                             @if ($currentUser['vote_to_quit'])
                                                                 <small class="d-inline-block text-red mb-1"> You voted to quit this event.</small>

@@ -161,7 +161,7 @@
                         @else
                            <button
                                 style="cursor: not-allowed; pointer-events: none;"
-                                class="mt-2 btn oceans-gaming-default-button bg-success py-2 rounded-pill px-2">
+                                class="mt-2 btn oceans-gaming-default-button bg-success  py-2 rounded-pill px-3">
                                 Registration Confirmed
                             </button>
                         </form>
@@ -184,12 +184,8 @@
                             <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
                             </svg>
                         </span>
-                        <span class="me-1">Roster is filled</span>
-                        <span 
-                            class="  px-1  cursor-pointer text-success tutorial-button position-relative z-99" 
-                        >
-                            <u>Tutorial</u>
-                        </span>
+                        <span class="me-1">Roster is filled.</span>
+                       
                     </div>
                 @else
                     <div class="mt-2 text-start text-red tutorial-button z-99 cursor-pointer">
