@@ -143,14 +143,21 @@ class ParticipantRosterController extends Controller
                 'join_events_id' => $request->join_events_id,
                 'team_id' => $request->team_id
             ])->firstOrFail();
+
             if ( isset($joinEvent->roster_captain_id) && $member->id == $joinEvent->roster_captain_id) {
                 $user = $request->attributes->get('user');
+                $isAcceptedMember = TeamMember::where([
+                    'team_id' => $request->team_id,
+                    'status' => 'accepted',
+                    'user_id' => $request->user_id,
+                ])->exists();
+                
                 $userRoster = RosterMember::where([
                     'join_events_id' => $request->join_events_id,
                     'user_id' =>  $user->id,
                 ])->first();
 
-                if ($joinEvent->roster_captain_id != $userRoster->id) {
+                if ($isAcceptedMember && $joinEvent->roster_captain_id != $userRoster->id) {
                     return response()->json(['success' => false, 
                         'message' => 'Captain can remove himself from roster only!'
                     ]);
@@ -193,7 +200,19 @@ class ParticipantRosterController extends Controller
                     'user_id' => $user->id,
                 ])->first();
 
-                if ($joinEvent->roster_captain_id != $userRoster->id) {
+                $capRoster = RosterMember::find($joinEvent->roster_captain_id);
+
+                if ($capRoster) {
+                    $isAcceptedMember =  TeamMember::where([
+                        'team_id' => $capRoster->team_id,
+                        'status' => 'accepted',
+                        'user_id' => $capRoster->user_id,
+                    ])->exists();
+                } else {
+                    $isAcceptedMember = false;
+                }
+
+                if ($isAcceptedMember && $joinEvent->roster_captain_id != $userRoster->id) {
                     return response()->json([
                         'success' => false, 
                         'message' => 'Only captain can remove himself or appoint another as captain.'

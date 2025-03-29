@@ -20,13 +20,13 @@
                             @else
                                 <p> 
                                     You have <span class="text-success" id="wallet_amount">RM {{$discount_wallet->amount}}</span> in your wallet.
-                                    @if ($discountStatusEnums['COMPLETE'] == $discountStatus)
+                                    @if ($discountStatusEnums['COMPLETE'] == $discountStatus )
                                         <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your discount wallet. </span>
                                         
-                                    @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus)
+                                    @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus && $paymentLowerMin < $payment_amount_min)
                                         <span> You can apply a discount of <span>RM {{$payment_amount_min}}</span> towards reducing your fees. </span>
                                         <br>
-                                        <span class="text-red"> Because the minimum payment for a transaction is about 2.5 RM, depending on currency rates.</span>
+                                        <span class="text-red"> Note: the minimum payment for a transaction is about 2.5 RM, depending on currency rates.</span>
                                     @endif
                                 </p>
                                 <div class="text-center mx-auto input-group mt-4 w-75">
@@ -37,12 +37,14 @@
                                     <input type="hidden" id="payment_intent_id" name="payment_intent_id"> 
                                 </div>
                                 <div class="mx-auto text-center">
-                                    <button 
-                                        type="submit"
-                                        class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
-                                        payment
-                                    </button>
-                                    
+                                    @if ($paymentLowerMin < $payment_amount_min)
+                                        <button 
+                                            type="submit"
+                                            class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
+                                            payment
+                                        </button>
+                                    @endif
+
                                     <button type="button" data-bs-dismiss="modal" id="closeDiscountModal"
                                         class="mt-2 ms-4 py-2 btn oceans-gaming-default-button oceans-gaming-transparent-button">Cancel</button>
                                 </div>
