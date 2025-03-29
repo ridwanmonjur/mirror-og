@@ -655,8 +655,9 @@ function searchPart(e) {
 
     page = 1;
     let noMoreDataElement = document.querySelector('.no-more-data');
-    noMoreDataElement.classList.add('d-none');
-    document.querySelector('.scrolling-pagination').innerHTML = '';
+    noMoreDataElement?.classList.add('d-none');
+    let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
+    if (scrollingPaginationElement) scrollingPaginationElement.innerHTML = '';
     search = e.target.value;
     ENDPOINT = landingEndpoint;
     if (search && String(search).trim() != "") {
