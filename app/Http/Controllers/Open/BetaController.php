@@ -213,7 +213,7 @@ class BetaController extends Controller
             }
 
 
-            return back()->with('success', "Created/ updated new users");
+            return back()->with('success', "Created / updated new users");
           
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());

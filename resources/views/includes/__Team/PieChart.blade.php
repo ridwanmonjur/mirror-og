@@ -165,7 +165,7 @@
                                 Registration Confirmed
                             </button>
                         </form>
-                            <p class="text-red mt-2">A vote to quit is in progress!</p>
+                            <p class="text-red mt-2 py-0 mb-0">A vote to quit is in progress!</p>
                         @endif
 
                     @elseif ($joinEvent->join_status == "canceled")

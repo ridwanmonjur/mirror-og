@@ -395,7 +395,7 @@ class ParticipantEventController extends Controller
                     ]));
                 }
             } else {
-                return back()->with('errorMessage', 'This cancel operation is not permitted at this stage.')
+                return back()->with('errorMessage', 'This cancel operation is not permitted before completing fees & confirming registration.')
                     ->with('scroll', $request->join_event_id) ;
             }
 
