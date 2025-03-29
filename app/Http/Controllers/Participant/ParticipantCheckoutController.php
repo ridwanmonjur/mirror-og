@@ -77,7 +77,8 @@ class ParticipantCheckoutController extends Controller
                 'paymentMethods' => $paymentMethods,
                 'payment_amount_min' => $payment_amount_min,
                 'discountStatusEnums' => $discountStatusEnums,
-                'discountStatus' => $discountStatus
+                'discountStatus' => $discountStatus,
+                'paymentLowerMin' => config("constants.STRIPE.MINIMUM_RM")
             ]);
         } catch (Exception $e) {
             return back()->with('errorMessage', $e->getMessage())
