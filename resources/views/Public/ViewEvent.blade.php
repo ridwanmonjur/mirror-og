@@ -248,7 +248,7 @@
                                 @elseif  ($existingJoint->join_status == "confirmed")
                                     <a class="mt-2 text-success" href="{{route('participant.register.manage', 
                                     ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
-                                        )}}"><u>Manage registration</u>
+                                        )}}"><u>Click to manage your registration</u>
                                     </a>
                                         
                                 @elseif  ($existingJoint->join_status == "canceled")
