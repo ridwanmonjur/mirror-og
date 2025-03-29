@@ -23,8 +23,10 @@
                                     @if ($discountStatusEnums['COMPLETE'] == $discountStatus )
                                         <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your discount wallet. </span>
                                         
-                                    @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus && $paymentLowerMin < $payment_amount_min)
-                                        <span> You can apply a discount of <span>RM {{$payment_amount_min}}</span> towards reducing your fees. </span>
+                                    @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus )
+                                        @if ( $paymentLowerMin < $payment_amount_min )
+                                            <span> You can apply a discount of <span>RM {{$payment_amount_min}}</span> towards reducing your fees. </span>
+                                        @endif
                                         <br>
                                         <span class="text-red"> Note: the minimum payment for a transaction is about 2.5 RM, depending on currency rates.</span>
                                     @endif
