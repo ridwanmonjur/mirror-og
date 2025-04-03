@@ -451,7 +451,6 @@ input[type="time"] {
     transition: opacity 0.3s, transform 0.3s;
     text-align: center;
     transform: scale(0.8);
-    cursor: pointer;
 }
 
 .scroll-images.focused {

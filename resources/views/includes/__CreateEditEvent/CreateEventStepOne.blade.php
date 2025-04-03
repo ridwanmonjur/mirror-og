@@ -13,7 +13,7 @@
                 @if ($category->gameIcon)
                     <div 
                         @class([
-                            'scroll-images game-events',
+                            'scroll-images cursor-pointer game-events',
                             'color-border-success' =>
                                 $event && $category->id == $event->event_category_id,
                         ])
@@ -33,24 +33,24 @@
                     </div>
                 @endif
             @endforeach
-            <div class='scroll-images '>
-                <a href="javascript:void(0)" style="pointer-events: none;cursor: not-allowed;">
+            <div class='scroll-images cursor-pointer'>
+                <a href="javascript:void(0)" >
                     <img 
                         class="border border-dark selectable-image" 
                         src="{{ asset("/storage/images/event_details/valorant.png") }}" 
                         alt="Valorant" 
-                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px; cursor: not-allowed;"
+                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px; "
                     >
                 </a>
                 <h5 style="padding-top: 10px;">Valorant</h5>
             </div>
-            <div class=" scroll-images ">
-                <a href="javascript:void(0)"  style="pointer-events: none;cursor: not-allowed;"> 
+            <div class=" scroll-images " style="pointer-events: none; cursor: not-allowed;">
+                <a href="javascript:void(0)"  > 
                     <img 
                         class="border border-dark selectable-image" 
                         src="{{ asset("/storage/images/event_details/more.png") }}" 
                         alt="More titles to come" 
-                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;  cursor: not-allowed;"
+                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px; "
                     >
                 </a>
                 <h5 style="padding-top: 10px;">and more...</h5>
