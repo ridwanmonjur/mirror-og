@@ -34,26 +34,26 @@
                 @endif
             @endforeach
             <div class='scroll-images '>
-                <a href="javascript:void(0)" onclick="doNotSelectNow('Cannot select Valorant now!')">
+                <a href="javascript:void(0)" style="pointer-events: none;cursor: not-allowed;">
                     <img 
                         class="border border-dark selectable-image" 
                         src="{{ asset("/storage/images/event_details/valorant.png") }}" 
                         alt="Valorant" 
-                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"
+                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px; cursor: not-allowed;"
                     >
                 </a>
                 <h5 style="padding-top: 10px;">Valorant</h5>
             </div>
             <div class=" scroll-images ">
-                <a href="javascript:void(0)" onclick="doNotSelectNow('Only Dota 2 is now available!')"> 
+                <a href="javascript:void(0)"  style="pointer-events: none;cursor: not-allowed;"> 
                     <img 
                         class="border border-dark selectable-image" 
                         src="{{ asset("/storage/images/event_details/more.png") }}" 
                         alt="More titles to come" 
-                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"
+                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;  cursor: not-allowed;"
                     >
                 </a>
-                <h5 style="padding-top: 10px;">More Titles To Come</h5>
+                <h5 style="padding-top: 10px;">and more...</h5>
             </div>
         </div>
         <div class=" d-flex justify-content-between box-width back-next">

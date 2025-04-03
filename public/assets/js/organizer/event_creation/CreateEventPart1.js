@@ -7,15 +7,7 @@ function goToLaunch2ndPage() {
     goToNextScreen('step-launch-2', 'timeline-launch');
 }
 
-function doNotSelectNow(title) {
-    window.Swal.fire({
-        icon: "error",
-        title: "Oops...",   
-        confirmButtonColor: '#43a4d7',
-        text: title
-    });
-    return;
-}
+
 
 function setFormValuesAndNavigate(element) {
     let eventType = element.dataset.eventType;
