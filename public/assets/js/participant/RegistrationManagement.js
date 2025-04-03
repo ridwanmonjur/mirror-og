@@ -646,22 +646,12 @@ addOnLoad(()=> {
     // localStorage.clear();
    
 
-    function initializeRosterTourGuide() {
 
         const rosterItems = document.querySelectorAll('.members-hover');
-        let currentIndex = 0;
-        let isAutoPlaying = false;
-        let autoPlayInterval;
+ 
       
-        const playButton = document.createElement('button');
-        playButton.id = 'playButton';
-        playButton.classList.add('btn', 'btn-primary', 'text-light', 'px-2', 'py-2', 'btn-sm', 'position-fixed', 'end-0',  'me-0', 'shadow-sm'); 
-        playButton.style.top = '70vh';       
-        playButton.innerHTML = 'Roster Tour';
-        playButton.style.zIndex = '10000';
-        document.body.appendChild(playButton);
       
-        function highlightMember(index) {
+      
         
             console.log(index)
             rosterItems.forEach(item => {
@@ -677,125 +667,22 @@ addOnLoad(()=> {
                 item.style.paddingRight = '5px';
                 item.style.paddingTop = '2px';
                 item.style.paddingBottom = '2px';
-            });
       
-          const item = rosterItems[index];
-          if (!item) return;
-          item.style.zIndex = '1050';
-          item.style.position = 'relative';
-          item.style.backgroundColor = 'white';
-          item.style.border = '2px solid #43A4D7';
-          item.style.borderRadius = '4px';
-          item.style.transition = 'all 0.3s ease';
-      
-          item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          
-          if (index == 0) return;
-          const prevItem = rosterItems[index-1];
-          prevItem.style.backgroundColor = 'transparent';
-          prevItem.style.zIndex = '1040';
-          prevItem.style.position = 'relative';
-          prevItem.style.border = '2px solid none';
-
-        }
-      
-        function clearHighlight() {
-          rosterItems.forEach(item => {
-            item.style.border = 'none';
-            item.style.borderRadius = '';
-            item.style.zIndex = '99 !important';
-            if (item.classList.contains('d-none-until-hover-parent2')) {
-                item.classList.add('d-none-until-hover-parent');
-            }
-          });
-
-          removeBackdrop();
-        }
-      
-        function startAutoPlay() {
-          if (isAutoPlaying) return;
-          
-          isAutoPlaying = true;
-          playButton.innerHTML = ' Stop Tour';
-          playButton.classList.replace('btn-primary', 'bg-red');
-          createBackdrop();
-
-          highlightMember(currentIndex);
-          
-          autoPlayInterval = setInterval(() => {
-            currentIndex = currentIndex + 1;
-            if (currentIndex > rosterItems.length) {
-                stopAutoPlay();
-                return;
-            }
-
-            highlightMember(currentIndex);
-          }, 2000);
-        }
-
-        function createBackdrop() {
-            let backdrop = document.createElement('div');
-            backdrop.id = 'highlight-backdrop';
-            backdrop.style.position = 'fixed';
-            backdrop.style.top = '0';
-            backdrop.style.left = '0';
-            backdrop.style.width = '100%';
-            backdrop.style.height = '100%';
-            backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            backdrop.style.zIndex = '1040';  // Bootstrap modal backdrop z-index
-            backdrop.style.transition = 'opacity 0.3s ease';
-            document.body.appendChild(backdrop);
-        }
-
-        function removeBackdrop() {
-            const backdrop = document.getElementById('highlight-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
+       
+            item.style.zIndex = '1050';
+            item.style.position = 'relative';
+            item.style.backgroundColor = 'white';
+            item.style.border = '2px solid #43A4D7';
+            item.style.borderRadius = '4px';
+            item.style.transition = 'all 0.3s ease';
         
-            rosterItems.forEach(item => {
-                item.style.backgroundColor = 'transparent';
-                item.style.zIndex = '1040';
-                item.style.opacity = "1";
-                item.style.position = 'relative';
-                item.style.border = 'none';  
-            });
-        }
-      
-        function stopAutoPlay() {
-          if (!isAutoPlaying) return;
+            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
           
-          isAutoPlaying = false;
-          playButton.innerHTML = 'Roster Management Tour';
-          playButton.classList.replace('bg-red', 'btn-primary');
-          clearInterval(autoPlayInterval);
-          clearHighlight();
-          removeBackdrop();
-          currentIndex = 0;
-        }
       
-        playButton.addEventListener('click', () => {
-        console.log(isAutoPlaying);
-        console.log(isAutoPlaying);
-          if (isAutoPlaying) {
-            stopAutoPlay();
-          } else {
-            console.log("hitt2");
+        
 
-            console.log("hitt2");
-            startAutoPlay();
-          }
-        });
-      }
-
-      
-      initializeRosterTourGuide();
-
-      document.querySelectorAll('.tutorial-button').forEach(button3 => {
-        button3.addEventListener('click', () => {
-          document.getElementById('playButton').click();
-        });
-      });
+     
 
 });
 

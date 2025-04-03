@@ -16,6 +16,11 @@
     z-index: 9999999 !important;
 }
 
+.z-99 {
+    position: relative;
+    z-index: 99;
+}
+
 :root {
     --grid-size: 1fr 1fr; 
 }
