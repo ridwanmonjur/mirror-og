@@ -1,14 +1,14 @@
 <h5 class="mb-3"><u>Teams</u></h5>
 <div class="pb-5" id="current-teams">
     @if (isset($teamList[0]))
-        <div class="row row-cols-1 row-cols-xl-2  gy-2 gx-4 pt-0">
+        <div class="row row-cols-1   gy-2 gx-4">
             @foreach ($teamList as $team)
                 <div class="col">
                     <div class="card h-100 border-0" style="transition: transform 0.2s; cursor: pointer;"
                         onmouseover="this.style.transform='translateY(-2px)'"
                         onmouseout="this.style.transform='translateY(0)'">
                         <div class="card-body border border-2">
-                            <div class="row py-2">
+                            <div class="row">
                                 <div class="col-10 d-flex justify-content-start">
                                     <img src="{{ '/storage' . '/' . $team->teamBanner }}" {!! trustedBladeHandleImageFailure() !!}
                                         class="border object-fit-cover my-2 border-secondary  rounded-circle me-3"
