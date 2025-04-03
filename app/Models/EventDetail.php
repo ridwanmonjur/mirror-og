@@ -291,8 +291,8 @@ class EventDetail extends Model
                 } 
             } 
         } else {
-            $formattedDate = 'Date not set';
-            $formattedTime = 'Time not set';
+            $formattedDate = 'No date';
+            $formattedTime = 'No time';
             $startsIn = 'Not available';
         }
 
