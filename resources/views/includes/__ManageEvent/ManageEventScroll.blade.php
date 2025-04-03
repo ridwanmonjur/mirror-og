@@ -83,7 +83,7 @@
             </div>
             <div class="league_name mt-4 mb-2">
                 <p 
-                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
+                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $eventTierLower }}"><b>{{ $event->eventName }}</b></p>
                 <small class=" px-0 ms-0 pb-2 ">
                     <span class="px-0 text-start">
                         <span class="d-inline text-wrap ">{{ $event->user->name  }}</span>
