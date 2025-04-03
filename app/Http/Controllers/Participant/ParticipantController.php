@@ -60,7 +60,7 @@ class ParticipantController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            $loggedInUser = Auth::user();
+            $loggedInUser = $request->attributes->get('user');
 
             if ($user->role === 'ORGANIZER') {
                 return redirect()->route('public.organizer.view', ['id' => $id]);

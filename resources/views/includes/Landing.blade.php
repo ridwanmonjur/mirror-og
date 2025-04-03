@@ -1,7 +1,7 @@
 @foreach ($events as $event)
     @php
         $status = $event->statusResolved();
-        $eventTierLowerImg = bladeEventTierImage($event->tier ? $event->tier?->eventTier: null);
+        $eventTierLowerImg = bladeImageNull($event->tier ? $event->tier?->tierIcon: null);
         $eventBannerImg = bladeImageNull($event->eventBanner);
         $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
         $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);

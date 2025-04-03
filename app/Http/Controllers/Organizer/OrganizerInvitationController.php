@@ -15,9 +15,9 @@ class OrganizerInvitationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
+    public function index(Request $request, $id)
     {
-        $authUser = Auth::user();
+        $authUser = $request->attributes->get('user');
         $user_id = $authUser->id;
         $teamList = Team::all();
         $tier = $type = $game = null;

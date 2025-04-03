@@ -14,9 +14,16 @@
 </head>
 @php
     use Carbon\Carbon;
+    if ($event?->tier) {
+        $tier = $event->tier->eventTier;
+        $icon = $event->tier->tierIcon;
+    } else {
+        $tier = $icon = null;
+    }
     $tier = $event->tier ? $event->tier?->eventTier : null;
+    
     $eventTierLower = bladeEventTowerLowerClass($tier);
-    $eventTierLowerImg = bladeEventTierImage($tier);
+    $eventTierLowerImg = bladeImageNull($icon);
     $eventBannerImg = bladeImageNull($event->eventBanner);
 
     if (!function_exists('getMedalSvg')) {

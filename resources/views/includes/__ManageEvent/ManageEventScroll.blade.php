@@ -4,133 +4,170 @@
         $status = $event->statusResolved();
         $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
         $tier = $event->tier ? $event->tier?->eventTier : null;
-        $eventTierLower = bladeEventTowerLowerClass($tier);
-        
-        $dateStartArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
-        $dateEndArray = bladeGenerateEventStartEndDateStr($event->endDate, $event->endTime);
-        $datePublishedArray = bladeGenerateEventStartEndDateStr($event->sub_action_public_date, $event->sub_action_public_time);
-        extract($dateStartArray);
 
-        $eventTierLowerImg = bladeEventTierImage($tier);
+         if ($event?->tier) {
+            $eventTierLower = bladeEventTowerLowerClass($tier);
+            $icon = $event->tier->tierIcon;
+        } else {
+            $eventTierLower = $icon = null;
+        }
+        
+
+        $eventTierLowerImg = bladeImageNull($icon);
         $eventBannerImg = bladeImageNull($event->eventBanner);
         $bladeEventGameImage = bladeImageNullq($event->game ? $event->game?->gameIcon : null);
         
-        $eventId = $event->id;
-        $toolTip = '<b>Event ID: </b>' . $eventId . '<br>';
-        $toolTip .= '<b>Description: </b>' . $event->eventDescription . '<br>';
-        $toolTip .= '<b>Start: </b>' . $dateStartArray['timePart'] . ' on ' . $dateStartArray['combinedStr'] . '<br>';
-        $toolTip .= '<b>End: </b>' . $dateEndArray['timePart'] . ' on ' . $dateEndArray['combinedStr'] . '<br>';
-        $toolTip .= '<b>Visibilty: </b>' . $event->sub_action_private . '<br>' ;
-        $toolTip .= '<b>Published date: </b>' . $datePublishedArray['timePart'] . ' on ' . $datePublishedArray['combinedStr'] ;    
+
+        $willShowStartsInCountDown = $status === 'ONGOING';
+        $isEnded = $status === 'ENDED';
+        extract($event->startDatesReadableForLanding($willShowStartsInCountDown));
+       
     @endphp
 
-    <div class="{{ 'rounded-box event-box rounded-box-' . $eventTierLower. ' ' . $eventId }}  " style="margin-bottom: 2.15rem;">
-        <div class="centered-absolute-game-tier">
-            <img src="{{ $eventTierLowerImg }}" width="70" height="70" class="object-fit-cover">
-        </div>
+    <div class="{{ 'rounded-box event-box rounded-box-' . $eventTierLower. ' ' . $event->id }}  " style="margin-bottom: 2.15rem;">
+        <div style="display: flex; justify-content: center;">
+                <button  
+                    @class([
+                        " rounded-pill mt-2 py-2 px-4",
+                        'EventStatus-' .  $status . '-HOME'
+                    ])  
+                    style="padding-top: -150px; position: absolute !important; top: -35px !important; z-index: 111; "
+                >
+                   
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="d-none me-3 bi bi-stopwatch UPCOMING" viewBox="0 0 16 16">
+                    <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"/>
+                    <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
+                    
+                    </svg>
+
+                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="d-none me-3 ONGOING" fill="white"
+                        class="bi bi-broadcast" viewBox="0 0 16 16">
+                        <path
+                            d="M3.05 3.05a7 7 0 0 0 0 9.9.5.5 0 0 1-.707.707 8 8 0 0 1 0-11.314.5.5 0 0 1 .707.707m2.122 2.122a4 4 0 0 0 0 5.656.5.5 0 1 1-.708.708 5 5 0 0 1 0-7.072.5.5 0 0 1 .708.708m5.656-.708a.5.5 0 0 1 .708 0 5 5 0 0 1 0 7.072.5.5 0 1 1-.708-.708 4 4 0 0 0 0-5.656.5.5 0 0 1 0-.708m2.122-2.12a.5.5 0 0 1 .707 0 8 8 0 0 1 0 11.313.5.5 0 0 1-.707-.707 7 7 0 0 0 0-9.9.5.5 0 0 1 0-.707zM10 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0" />
+                    </svg>
+                   
+                 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" 
+                        class="bi bi-flag d-none me-3 ENDED" viewBox="0 0 16 16"
+                    >
+                    <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12 12 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A20 20 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a20 20 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21 21 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21 21 0 0 0 14 7.655V1.222z"/>
+                    </svg>
+                    <span>{{ $status }}</span>
+                </button>
+            </div>
         <div class="{{ 'card-image card-image-' . $eventTierLower }}">
             <img width="100%" height="auto" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
         </div>
         <div class="card-text">
             <div>
                 <div class="flexbox-centered-space flex-wrap-height-at-mobile">
-                    <img src="{{ $bladeEventGameImage }}" 
-                        onerror="this.onerror=null;this.src='{{ asset('assets/images/404q.png') }}';"
-                        alt="menu" width="40" height="40"
-                        class="object-fit-cover rounded-2"
+                    <div>
+                    <img 
+                        src="{{ $eventTierLowerImg }}" 
+                        class="pe-3 tierIcon mt-2"
+                        alt=""
                     >
-                    <button data-bs-toggle="tooltip" data-bs-html="true" title="{{ $toolTip }}"
-                        class="{{ 'activate-tooltip px-3 py-2 rounded-pill '. 'EventStatus-' .  $status }}"
-                        style="padding-top: -150px; text-align: left; font-size: 0.875rem;">
-                        <u> {{ $status }} </u>
-                    </button>
-                    <button style="@php echo $stylesEventRatio; @endphp"
-                        class="px-2 oceans-gaming-default-button oceans-gaming-default-button-small flexbox-centered-space"
-                        style="font-size: 0.875rem;"
-                        >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather mt-1 feather-user">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      
-                        @if ($event->tier)
-                            @foreach ($eventList as $index => $eventDetail)
-                                @if ($index === 0)
-                                    <span>
-                                        {{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}
-                                    </span>
-                                @endif
-                            @endforeach
-                        @else
-                            <span>N.A</span>
-                        @endif
-                    </button>
+                    <img 
+                        src="{{ $bladeEventGameImage }}" 
+                        class="logo2 mt-2 object-fit-cover gameIcon" 
+                        alt=""
+             
+                    >
                 </div>
-                <br>
-                <p class="text-wrap m-0">
-                    <u>{{ $event->eventName ?? 'Choose a name' }}</u></p>
-                <p class="small-text m-0"><i>
-                    {{ $event?->user?->name ?? 'Choose organization name' }}
-                </i></p>
-                <div class="flexbox-welcome">
-                    <div>@php echo $dateStr; @endphp</div>
+                <button class="btn rounded-pill mt-2" style="@php echo $stylesEventRatio; @endphp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                    </svg>
+                    <span>{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
+                </button>
+            </div>
+            <div class="league_name mt-4 mb-2">
+                <p 
+                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
+                <small class=" px-0 ms-0 pb-2 ">
+                    <span class="px-0 text-start">
+                        <span class="d-inline text-wrap ">{{ $event->user->name  }}</span>
+                    </span>
+                    <span class="px-0 text-start d-block d-lg-inline">
+                        <span class="ms-1 me-1 d-inline">
+                            <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                            <circle cx="2" cy="2" r="2" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <span>{{ $followersCount }} followers</span>
+                    </span>
+                </small>
+            </div>
+
+            <div class="">
+                <div class="mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-info">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    &nbsp;
+                    <span>{{ $event->type?->eventType ?? 'Choose a type' }}</span>
                 </div>
+                <div class="mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-user">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    &nbsp;
+                    @if ($event->tier)
+                        <span>RM {{ $event->tier?->tierPrizePool ?? 'No Prize' }}</span>
+                    @else
+                        <span>Select event tier</span>
+                    @endif
+                </div>
+                <div class="mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-dollar-sign">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    &nbsp;
+                    @if ($event->tier)
+                        <span>RM {{ $event->tier?->tierEntryFee ?? 'Free' }} </span>
+                    @else
+                        <span>Entry fee not available</span>
+                    @endif
+                </div>
+                <div>
+                    <h5 @class([
+                        'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier,
+                        ' text-secondary' => $isEnded
+                    ])>
+                        <span> {{$formattedStartDate}} </span>
+                        <span> <span class="ms-3 me-2"><svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+                        <circle cx="2" cy="2" r="2" fill="currentColor"/>
+                        </svg> </span>{{$formattedStartTime}} </span>
+                    </h5>
+                    @if ($willShowStartsInCountDown) 
+                        <div class="text-center">
+                            <p class="my-0 py-0"> Starts in 
+                                <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$formmattedStartsIn}}</span>
+                            </p>
+                        </div>
+                    @else
+                        <div class="text-center mt-1">
+                            <button class="btn btn-small py-1 px-2 border-primary text-primary"> See bracket</button>
+                        </div>
+                    @endif
+                </div>
+            </div>
+               
                 <div style="font-size: 0.9375rem;">
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-user">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        &nbsp;
-                        @if ($event->tier)
-                            <span>RM {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool</span>
-                        @else
-                            <span>Select event tier</span>
-                        @endif
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-dollar-sign">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                        &nbsp;
-                        @if ($event->tier)
-                            <span>RM {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees</span>
-                        @else
-                            <span>Entry fee not available</span>
-                        @endif
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-map-pin">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        &nbsp;
-                        <span>{{ $event->venue ?? 'South East Asia' }}</span>
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-info">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
-                        &nbsp;
-                        <span>{{ $event->type?->eventType ?? 'Choose a type' }}</span>
-                    </div>
                     <div class="d-flex justify-content-around popover-parent">
                         @if (!in_array($status, ['PENDING', 'DRAFT'])) 
                             @if ($status != "ENDED")
-                                <a class="m-0 btn mt-2 mb-2 px-3 py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
+                                <a class="m-0 btn my-1 px-3  py-1 btn-link" href="{{ route('event.invitation.index', $event->id) }}">
                                     <span> <u> Invite </u> </span>
                                 </a>
                             @endif    
@@ -146,11 +183,11 @@
                                 
                             </div>
                         </div>
-                        <button class="popover-button   mt-2  mb-2 btn btn-link">
+                        <button class="popover-button   py-1 my-1 btn btn-link">
                             <u> Results </u>
                         </button>
                         @else
-                            <div class="d-flex justify-content-center align-items-center my-2 py-2">
+                            <div class="d-flex justify-content-center align-items-center my-1 py-1">
                                 <span> <i>Event is now {{strtolower($status)}}. </i> </span>
                             </div>
                         @endif
@@ -158,7 +195,7 @@
                 </div>
                 
             </div>
-            <div class="group-hover flex-wrap d-flex justify-content-center cursor-pointer mb-2">
+            <div class="group-hover flex-wrap d-flex justify-content-center cursor-pointer mb-1">
                    
                     @if (in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED']))
                         <a class="m-0 mb-1 mx-4 p-0" href="{{ route('event.show', $event->id) }}">
@@ -167,16 +204,6 @@
                             <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
                             </svg>
                         </a>
-                        {{-- <a class="m-0 mb-1 mx-4 p-0" >
-                            <button 
-                                class="m-0 p-0" 
-                                style="background-color: transparent; outline: none; border: none;"
-                                type="button" data-bs-toggle="modal" data-bs-target="#shareModal">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/>
-                                </svg>
-                            </button>
-                        </a> --}}
                         <a 
                             data-event-id="{{$event->id}}"
                             class="share-button m-0 mb-1 mx-4 p-0" >
@@ -208,7 +235,7 @@
                     @endif
                      @if (in_array($status, ['UPCOMING', 'ONGOING', 'SCHEDULED']))
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle mb-1 mx-4" viewBox="0 0 16 16"
-                            onclick="cancelEvent(event);"    data-url="{{route('event.destroy.action', ['id' => $eventId])}}"
+                            onclick="cancelEvent(event);"    data-url="{{route('event.destroy.action', ['id' => $event->id])}}"
                         >
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>

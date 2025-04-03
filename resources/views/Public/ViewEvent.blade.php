@@ -18,12 +18,17 @@
 @php
     $status = $event->statusResolved();
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
-    $tier = $event->tier ? $event->tier?->eventTier : null;
+     if ($event?->tier) {
+        $tier = $event->tier->eventTier;
+        $icon = $event->tier->tierIcon;
+    } else {
+        $tier = $icon = null;
+    }
     $type = $event->type ? $event->type?->eventType : null;
     $eventTierLower = bladeEventTowerLowerClass($tier);
     $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
     extract($dateArray);
-    $eventTierLowerImg = bladeEventTierImage($tier);
+    $eventTierLowerImg = bladeImageNull($icon);
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
     $userId = isset($user) ? $user->id : null; 

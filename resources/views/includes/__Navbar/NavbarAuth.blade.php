@@ -143,7 +143,7 @@
                 onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
                 src="{{ bladeImageNull($user->userBanner)}}" width="42" height="42">
         @else 
-            <span style="display: inline-block; height: 38px; width: 38px;"
+            <span style="display: inline-block; height: 42px; width: 42px;"
                 class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle me-2">
                 {{ strtoupper(substr($user->name, 0, 1)) }}
             </span>

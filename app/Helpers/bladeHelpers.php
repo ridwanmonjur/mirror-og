@@ -82,18 +82,7 @@ function bladeGenerateEventStartEndDateStr($startDate, $startTime)
     ];
 }
 
-function bladeEventTierImage($eventTier)
-// BADDDDDD
-{
-    if ($eventTier) {
-        $eventTierLower = strtolower($eventTier);
-        $eventTierLowerImg = asset('/storage'. '/images/event_details'. '/'. $eventTierLower.'.png');
-    } else {
-        $eventTierLowerImg = asset('assets/images/createEvent/question.png');
-    }
 
-    return $eventTierLowerImg;
-}
 
 function bladeImageNull($eventBanner)
 {

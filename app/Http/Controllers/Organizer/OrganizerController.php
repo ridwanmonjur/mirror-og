@@ -34,7 +34,8 @@ class OrganizerController extends Controller
     public function viewProfileById(Request $request, $id)
     {
         try {
-            $loggedInUser = Auth::user();
+            $loggedInUser = $request->attributes->get('user');
+
             $user = User::findOrFail($id);
             if ($user->role === 'PARTICIPANT') {
                 return redirect()->route('public.participant.view', ['id' => $id]);

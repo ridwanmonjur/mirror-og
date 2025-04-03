@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="scrolling-pagination grid-container">
+            <div class="scrolling-pagination featured-events">
                 @include('includes.__ManageEvent.ManageEventScroll')
             </div>
 

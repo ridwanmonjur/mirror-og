@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 use App\Jobs\HandleEventUpdate;
+use App\Models\OrganizerFollow;
 
 class OrganizerEventController extends Controller
 {
@@ -61,7 +62,7 @@ class OrganizerEventController extends Controller
         $user = $request->attributes->get('user');
         $eventTierList = EventTier::byUserOrNullUser($user->id)->get();
         $eventTypeList = EventType::all();
-        $user = Auth::user();
+        $user = $request->attributes->get('user');
         $userId = $user->id;
         $count = 8;
         $organizer = Organizer::where('user_id', $userId)->first();
@@ -82,6 +83,8 @@ class OrganizerEventController extends Controller
             ->where('team_members.status', '=', 'accepted')
             ->groupBy('join_events.event_details_id')
             ->get();
+        
+        $followersCount = OrganizerFollow::where('organizer_user_id', $user->id)->count();
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
        
@@ -91,7 +94,8 @@ class OrganizerEventController extends Controller
             'user',
             'eventCategoryList',
             'eventTierList',
-            'eventTypeList'
+            'eventTypeList',
+            'followersCount'
         );
 
         return view('Organizer.ManageEvent', $outputArray);
