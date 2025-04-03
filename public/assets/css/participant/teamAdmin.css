@@ -48,14 +48,10 @@
 
 .motion-logo {
     display: inline-block;
-    animation: bobbing 1s ease-in-out 2;
     will-change: transform;
     backface-visibility: hidden;
 }
 
-.motion-logo:hover {
-    animation-play-state: paused;
-}
 
 .main1 {
     height: fit-content;
