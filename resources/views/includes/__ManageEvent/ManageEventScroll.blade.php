@@ -195,7 +195,7 @@
                 </div>
                 
             </div>
-            <div class="group-hover flex-wrap d-flex justify-content-center cursor-pointer mb-1">
+            <div class="group-hover flex-wrap d-flex justify-content-center cursor-pointer mb-2">
                    
                     @if (in_array($status, ['UPCOMING', 'DRAFT', 'SCHEDULED']))
                         <a class="m-0 mb-1 mx-4 p-0" href="{{ route('event.show', $event->id) }}">
