@@ -83,7 +83,7 @@
             </div>
             <div class="league_name mt-4 mb-2">
                 <p 
-                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $eventTierLower }}"><b>{{ $event->eventName }}</b></p>
+                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier?->eventTier }}"><b>{{ $event->eventName }}</b></p>
                 <small class=" px-0 ms-0 pb-2 ">
                     <span class="px-0 text-start">
                         <span class="d-inline text-wrap ">{{ $event->user->name  }}</span>
@@ -141,7 +141,7 @@
                 </div>
                 <div>
                     <h5 @class([
-                        'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier,
+                        'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier?->eventTier,
                         ' text-secondary' => $isEnded
                     ])>
                         <span> {{$formattedStartDate}} </span>
@@ -152,7 +152,7 @@
                     @if ($willShowStartsInCountDown) 
                         <div class="text-center">
                             <p class="my-0 py-0"> Starts in 
-                                <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$formmattedStartsIn}}</span>
+                                <span class="{{ ' Color-' . $event->tier?->eventTier }}">{{$formmattedStartsIn}}</span>
                             </p>
                         </div>
                     @else
