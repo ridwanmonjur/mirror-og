@@ -234,9 +234,7 @@ input[type="submit"]:active {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .rounded-box {
-        height: 510px !important;
-    }
+    
 
     
 }
