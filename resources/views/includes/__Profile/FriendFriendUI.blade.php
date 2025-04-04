@@ -124,6 +124,7 @@
         @endif
 
         @if (!$isUserSame && !$friend && $user->role == "PARTICIPANT")
+           
             <button type="button"
                 onclick="formRequestSubmitById('Are you sure you want to send this friend request?' ,'sendFriendRequest')"
                 class="btn btn-primary rounded-pill text-light px-3 py-2 me-2 mt-1">

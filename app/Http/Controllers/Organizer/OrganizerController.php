@@ -34,7 +34,7 @@ class OrganizerController extends Controller
     public function viewProfileById(Request $request, $id)
     {
         try {
-            $loggedInUser = $request->attributes->get('user');
+            $loggedInUser = Auth::user();
 
             $user = User::findOrFail($id);
             if ($user->role === 'PARTICIPANT') {

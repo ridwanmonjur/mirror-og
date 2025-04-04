@@ -50,10 +50,8 @@ class ParticipantTeamController extends Controller
 
     public function teamManagement(Request $request, $id)
     {
-        $user = $request->attributes->get('user');
-        if (is_null($user)) {
-            $user = Auth::user();
-        }
+
+        $user = Auth::user();
 
         $user_id = $user?->id ?? null;
         $selectTeam = Team::where('id', $id)
