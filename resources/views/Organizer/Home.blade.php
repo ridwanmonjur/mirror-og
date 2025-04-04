@@ -8,7 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Home Page</title>
     @include('includes.HeadIcon')
+
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/home.css') }}">
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
 </head>
 
@@ -18,22 +20,28 @@
     <main>
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
        
-        <div class="d-block text-center d-xl-none">
+        
+        <section class="hero user-select-none d-none d-lg-block">
+            <img 
+                onerror="this.onerror=null;this.src='/assets/images/404q.png';"
+                src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
+            >
+        </section>
+
+        <div class="d-block text-center d-lg-none">
             <br><br>
         </div>
-        <div class="d-none text-center d-xl-block">
-            <br><br><br><br>
-        </div>
-        <div class="text__middle ">
-            <p class="head py-0 text-center text-lg-start">What would you like to do?</p>
-        </div>
-       
 
-        <section class="featured-events">
+         <div class="text__middle d-none d-lg-block"
+        >
+            <p class="head py-0 text-center mb-4 text-lg-start">What would you like to do?</p>
+        </div>
+
+        <section class="d-flex flex-wrap justify-content-center">
             <!-- EVENTS -->
             <!-- Box 1 -->
             <a href="{{ route('event.create') }}" class="clickable-box " id="imageLink1">
-                <div class="event">
+                <div class="event d-flex justify-content-center flex-column">
                     <div class="event_head_container">
                         Create an Event
                     </div>
@@ -51,7 +59,7 @@
 
             <!-- Box 2 -->
             <a href="{{ route('event.index') }}" class="clickable-box " id="imageLink2">
-                <div class="event">
+                <div class="event d-flex justify-content-center flex-column">
                     <div class="event_head_container">
                         Manage your events
                     </div>
@@ -70,7 +78,7 @@
 
             <!-- Box 3 -->
             <a href="#" class="clickable-box " role="button" id="imageLink3">
-                <div class="event">
+                <div class="event d-flex justify-content-center flex-column">
                     <div class="event_head_container">
                         Manage your shop
                     </div>

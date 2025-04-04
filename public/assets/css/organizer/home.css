@@ -1,15 +1,19 @@
 
 body {
-    height: 100vh;
     background-image: url("/assets/images/homepage new bg.png");
+    background-size: cover;
     background-position: center;
     margin: 0;
     color: #2E4B59;
+    min-height: 100vh;
     background-size: 100vw 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-size: cover;
-
+    /* animation-name: fadeIn; */
+    animation-duration: 1000ms;
+    /* opacity: 0.5; */
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
 }
 
 @keyframes shrink {
@@ -35,9 +39,7 @@ a {
   }
 
 .clickable-box {
-    width: min(80vw, 400px);
     display: inline-block;
-    margin: auto;
     transition: transform 0.2s ease;
     /* Smooth transition effect */
 }
@@ -49,12 +51,21 @@ a {
 
 /* Hero Section */
 
+
+
 .hero {
     background-size: cover;
     text-align: center;
-    padding: 5rem 0;
+    padding: 0;
     color: #fff;
     cursor: default;
+}
+
+.hero img {
+    width: min(80%, 600px);
+    object-position: center;
+    object-fit: cover;
+    max-height: 40vh;
 }
 
 .hero h1 {
@@ -63,12 +74,20 @@ a {
 }
 
 .text__middle {
-    padding-left: 15%;
-    font-size: 1.25rem;
+    padding-left: 5%;
 }
+
 .text__middle p {
-    font-size: larger;
+    font-size: 1.875rem;
 }
+
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+
 
 .search-form {
     margin-top: 1.5rem;
@@ -108,7 +127,6 @@ a {
 }
 
 .event {
-
     margin-bottom: 3rem;
     margin-left: 20px;
     margin-right: 20px;
@@ -117,6 +135,8 @@ a {
     border: 2px solid rgb(8, 20, 58);
     border-radius: 40px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    width: min(360px, 80vw);
+
 }
 
 .event_head {
@@ -241,7 +261,6 @@ footer {
 .hamburger-menu {
     display: none;
 }
-
 .featured-events .event_head,
 .event_1 .event_head,
 .event_2 .event_head {
@@ -252,13 +271,12 @@ footer {
     bottom: 160px;
 }
 
-.clickable-box {
-    width: 330px;
-}
 
 .nav__items {
     padding: 20px;
 }
+
+
 
 @media ( max-width: 992px) {
     .featured-events .event_head,
@@ -267,9 +285,7 @@ footer {
         display: none;
     }
 
-    .clickable-box {
-        width: 300px !important;
-    }
+   
 
     body {
         background-size: auto 100vh;
@@ -288,8 +304,11 @@ footer {
     }
 
     .text__middle {
-        padding: 0 5vw;
-        font-size: larger;
+        padding-left: 10%;
+    }
+    .text__middle p {
+         font-size: 1.5rem;
+
     }
     /* Featured Events */
     .featured-events {
@@ -332,6 +351,7 @@ footer {
         grid-template-columns: repeat(1, 1fr);
         
     }
+
     .event_head_container {
         color: #173646;
     }

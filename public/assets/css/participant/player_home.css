@@ -95,7 +95,7 @@ main {
 }
 
 .text__middle {
-    padding-left: 15%;
+    padding-left: 5%;
 }
 
 .text__middle p {
@@ -129,7 +129,7 @@ main {
 /* Featured Events */
 
 .featured-events {
-    margin: 0 1vw;
+    margin: 0 0vw;
     gap: 0 2vw;
     padding: 2rem 0 1rem;
     display: grid;
@@ -476,11 +476,11 @@ footer {
     .hero h1 {
         font-size: 1.8rem;
     }
-    .text__middle {
+   .text__middle {
         padding-left: 10%;
     }
     .text__middle p {
-        font-size: 1.5rem;
+         font-size: 1.5rem;
 
     }
 

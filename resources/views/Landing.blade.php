@@ -27,11 +27,15 @@
             >
         </section>
 
-        <div class="text__middle pt-3"
+        <div class="d-block text-center d-lg-none">
+            <br><br>
+        </div>
+
+        <div class="text__middle d-none d-lg-block"
         >
             <p class="head">
             @if (empty(app('request')->input('search')))  
-            What's happening?
+             We've got events for you...
             @else
             Showing search results for '{{app('request')->input('search')}}'
             @endif
@@ -46,7 +50,7 @@
         @if (isset($events[0]))
             <div class="no-more-data d-none"></div>
         @else
-        <div class="no-more-data text-center mx-auto"> We don't have any events to display </div>
+            <div class="no-more-data text-center mx-auto"> We don't have any events to display </div>
         @endif
         <br><br>
         
