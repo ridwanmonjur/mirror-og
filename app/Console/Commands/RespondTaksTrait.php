@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\EventResultMail;
+use App\Models\ActivityLogs;
+use App\Models\EventDetail;
+use App\Models\EventJoinResults;
 use App\Models\NotifcationsUser;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -9,6 +13,8 @@ use Exception;
 
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 trait RespondTaksTrait
@@ -67,45 +73,7 @@ trait RespondTaksTrait
         }
     }
 
-    public function getEndedNotifications($joinList) {
-        $notifications = [];
-        foreach ($joinList as $join) {
-            $memberHtml = <<<HTML
-                <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
-                    {$join->eventDetails->eventName}</button> has now ended. 
-                    </span>
-                HTML;
-            $memberEmail = <<<HTML
-                <span class="notification-gray">
-                    <span class="px-0 border-0 notification-blue" >
-                    {$join->eventDetails->eventName}</span> has now ended. 
-                    </span>
-                HTML;
-            $notifications[$join->id] = [
-                    'member' => [
-                        'type' => 'event',
-                        'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                        'icon_type' => 'ended',
-                        'html' => $memberHtml,
-                        'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail',
-                        'created_at' => DB::raw('NOW()')
-                    ], 
-                    'organizer' => [
-                        'type' => 'event',
-                        'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                        'icon_type' => 'ended',
-                        'html' => $memberHtml,
-                        'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail',
-                        'created_at' => DB::raw('NOW()')
-                    ]
-            ];
-        }
-
-        return $notifications;
-    }
+    
 
     public function getLiveNotifications($joinList) {
         $notifications = [];
@@ -231,7 +199,6 @@ trait RespondTaksTrait
                         ];
 
                         if ($member->user->email) $memberEmails[] = $member->user->email;
-
                     }
 
                     if (!empty($memberEmails)) {
@@ -274,4 +241,171 @@ trait RespondTaksTrait
             
         } 
     }
+
+    public function ordinalPrefix($number)
+    {
+        $number = intval($number);
+
+        if ($number % 100 >= 11 && $number % 100 <= 13) {
+            return $number.'th';
+        }
+
+        switch ($number % 10) {
+            case 1:
+                return $number.'st';
+            case 2:
+                return $number.'nd';
+            case 3:
+                return $number.'rd';
+            default:
+                return $number.'th';
+        }
+    }
+
+    public function handleEndedActivityLogs($logMap, $joinList, $memberIdMap, $taskId) {
+        if (!empty($joinList)) {
+            DB::beginTransaction();
+            try {
+                foreach ($joinList as $join) {
+                    ActivityLogs::findActivityLog([
+                        'subject_type' => User::class,
+                        'object_type' => EventJoinResults::class,
+                        'subject_id' => $memberIdMap[$join->id],
+                        'object_id' => $join->id,
+                        'action' => 'Position',
+                    ])->delete();
+
+                    if (!isset($logMap[$join->id])) {
+                        continue;
+                    }
+
+                    ActivityLogs::createActivityLogs([
+                        'subject_type' => User::class,
+                        'object_type' => EventJoinResults::class,
+                        'subject_id' => $memberIdMap[$join->id],
+                        'object_id' => $join->id,
+                        'action' => 'Position',
+                        'log' => $logMap[$join->id]
+                    ]);
+                }
+
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollBack();
+                $this->logError($taskId, $e);
+            }
+            
+        } 
+        
+    }
+
+    public function getEndedNotifications($joinList) {
+        $notifications = [];
+        $memberIdList = [];
+        $logs = [];
+        foreach ($joinList as $join) {
+            if ($join->position?->position) {
+                $positionString = $this->ordinalPrefix($join->position->position);
+                $memberHtml = <<<HTML
+                    <span class="notification-gray">
+                        <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
+                        {$join->eventDetails->eventName}</button> has now ended. You achieved 
+                        <span class="notification-other"><span class="notification-{$join->position}">
+                            {$positionString}</span></span> position with your team,
+                        <button class="btn-transparent px-0 border-0 notification-entity" 
+                            data-href="/view/team/$join->team->id" alt="Team Link"
+                        >
+                            {$join->team->teamName}</button>. 
+                        </span>
+                    HTML;
+                
+                $activityLog = <<<HTML
+                    <span>
+                        <a class="px-0 border-0" href="/view/team/$join->team->id" alt="Team View">
+                            <img src="/storage/$join->team->teamBanner" 
+                                width="30" height="30"
+                                onerror="this.src='/assets/images/404.png';"
+                                class="object-fit-cover rounded-circle me-2"
+                                alt="Event View"
+                            ></a>
+                        <span class="notification-gray"> You achieved 
+                        {$positionString} position with your team,
+                        <a class="px-0 border-0" href="/view/team/$join->team->id" alt="Team Link">
+                            <span class="notification-blue">{$join->team->teamName}</span></a> in the event, 
+                            <a class="px-0 border-0" href="/event/$join->eventDetails->id" alt="Event Link">
+                            <span class="notification-blue">{$join->eventDetails->eventName}</span></a>. 
+                    </span>
+                HTML;
+
+                $memberEmail = <<<HTML
+                    <span class="notification-gray">
+                        <span class="px-0 border-0 notification-blue" >
+                        {$join->eventDetails->eventName}</span> has now ended.  You achieved 
+                        <span>{$positionString}</span> position with your team,
+                        <span class="px-0 border-0 notification-blue" >{$join->team->teamName}</span>. 
+                    </span>
+                    HTML;
+            } else {
+                $memberHtml = <<<HTML
+                    <span class="notification-gray">
+                        <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
+                        {$join->eventDetails->eventName}</button> has now ended.
+                    </span>
+                    HTML;
+                
+                $activityLog = null;
+
+                $memberEmail = <<<HTML
+                    <span class="notification-gray">
+                        <span class="px-0 border-0 notification-blue" >
+                        {$join->eventDetails->eventName}</span> has now ended.
+                    </span>
+                    HTML;
+            }
+
+            if ($activityLog) {
+
+                $logs[$join->id] = [
+                    'subject_type' => User::class,
+                    'object_type' => EventJoinResults::class,
+                    'object_id' => $join->id,
+                    'action' => 'Position',
+                    'log' => $activityLog
+                ];
+            }
+
+            $notifications[$join->id] = [
+                'member' => [
+                    'type' => 'event',
+                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                    'icon_type' => 'ended',
+                    'html' => $memberHtml,
+                    'mail' => $memberEmail,
+                    'mailClass' => 'EventEndMail',
+                    'created_at' => DB::raw('NOW()')
+                ], 
+                'organizer' => [
+                    'type' => 'event',
+                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                    'icon_type' => 'ended',
+                    'html' => $memberHtml,
+                    'mail' => $memberEmail,
+                    'mailClass' => 'EventEndMail',
+                    'created_at' => DB::raw('NOW()')
+                ]
+            ];
+
+            foreach ($join->roster as $member) {
+                if (!isset($memberIdList[$join->id])) {
+                    $memberIdList[$join->id] = [];
+                }
+
+                $memberIdList[$join->id][] = $member->user_id;
+            }
+        }    
+
+        return [$notifications, $logs, $memberIdList];
+    }
+
+   
 }

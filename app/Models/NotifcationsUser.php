@@ -41,6 +41,13 @@ class NotifcationsUser extends Model
             );
             $counter->incrementCounter($notification->type);
         });
+
+        static::deleted(function ($notification) {
+            $counter = NotificationCounter::firstOrCreate(
+                ['user_id' => $notification->user_id]
+            );
+            $counter->decrementCounter($notification->type);
+        });
     }
 
     public static function insertWithCount(array $notifications)

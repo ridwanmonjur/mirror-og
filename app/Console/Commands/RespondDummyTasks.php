@@ -66,7 +66,7 @@ class RespondDummyTasks extends Command
                 ->get();
                
             $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
-                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user')
+                ->with('members', 'members.user', 'eventDetails', 'eventDetails.user', 'position', 'position')
                 ->get();
 
       

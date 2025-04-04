@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class MonthlyTasks extends Command 
+class WeeklyTasks extends Command 
 {
     use PrinterLoggerTrait;
     /**
@@ -25,9 +25,9 @@ class MonthlyTasks extends Command
      *
      * @var string
      */
-    protected $signature = 'tasks:monthly';
+    protected $signature = 'tasks:weekly';
 
-    protected $description = 'Monthly tasks in the database';
+    protected $description = 'Weekly tasks in the database';
 
     /**
      * Execute the console command.
@@ -37,12 +37,11 @@ class MonthlyTasks extends Command
         $today = Carbon::now();
         $id = $this->logEntry($this->description, $this->signature, '0 0 * *', $today);
         try{
-            $twelveMonthsAgo = Carbon::now()->subMonths(12);
-            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $twelveMonthsAgo)->delete();
-            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $twelveMonthsAgo)->delete();
-            NotifcationsUser::where('created_at', '<', $twelveMonthsAgo)
-                ->where('type', 'social')->delete();
-            Task::where('created_at', '<', $twelveMonthsAgo)->delete();
+            $weekAgo = Carbon::now()->subDays(7);
+            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $weekAgo)->delete();
+            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $weekAgo)->delete();
+            NotifcationsUser::where('created_at', '<', $weekAgo)->delete();
+            Task::where('created_at', '<', $weekAgo)->delete();
             $now = Carbon::now();
             $this->logExit($id, $now);
         } catch (Exception $e) {

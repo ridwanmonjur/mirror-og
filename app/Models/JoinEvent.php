@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -69,6 +70,10 @@ class JoinEvent extends Model
         return $this->hasMany(ParticipantPayment::class, 'join_events_id', 'id');
     }
 
+    public function position(): HasOne 
+    {
+        return $this->hasOne(EventJoinResults::class, 'join_events_id', 'id');
+    }
   
 
     public static function getJoinEventsForTeamWithEventsRosterResults(int|string $team_id): Collection

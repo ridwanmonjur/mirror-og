@@ -39,7 +39,7 @@ class RespondTasks extends Command
     public function getTodayTasksByName()
     {
         $now = Carbon::now();
-        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);        
+        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
             $tasks = Task
@@ -47,7 +47,7 @@ class RespondTasks extends Command
                 ->where('action_time', '>=', $now)
                 ->where('action_time', '<=', $now->addMinutes(30))
                 ->get();
-                
+
             $endedTaskIds= $liveTaskIds = $startedTaskIds = [];
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
@@ -64,16 +64,16 @@ class RespondTasks extends Command
             }
 
             $with = [
-                'roster:id,team_id,user_id', 
-                'members.user:id,name', 
+                'roster:id,team_id,user_id',
+                'members.user:id,name',
                 'eventDetails.user:id,name',
-                'eventDetails.tier:id,eventTier'
+                'eventDetails.tier:id,eventTier',
             ];
 
             $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
                 ->where('join_status', 'confirmed')
                 ->with([
-                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id', 
+                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
                     ...$with,
                 ])
                 ->get();
@@ -81,35 +81,53 @@ class RespondTasks extends Command
             $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
                 ->where('join_status', 'confirmed')
                 ->with([
-                    'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id', 
+                    'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
                     ...$with,
-                ])                
+                ])
                 ->get();
-               
+
             $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
                 ->where('join_status', 'confirmed')
                 ->with([
-                    'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id', 
+                    'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
+                    'position',
+                    'team:id,teamName,teamBanner',
                     ...$with,
-                ])                
+                ])
                 ->get();
 
-      
+            [
+                $processedEndedNotifications, $logs, $memberIdList
+            ] = $this->getEndedNotifications($endedEvents);
+
             $this->handleEventTypes(
-                $this->getEndedNotifications($endedEvents), 
-                $endedEvents, 
+                $processedEndedNotifications,
+                $endedEvents,
+                $taskId
+            );
+
+            $this->handleEndedActivityLogs(
+                $logs,
+                $endedEvents,
+                $memberIdList,
                 $taskId
             );
 
             $this->handleEventTypes(
-                $this->getLiveNotifications($liveEvents), 
-                $liveEvents, 
+                $processedEndedNotifications,
+                $endedEvents,
                 $taskId
             );
 
             $this->handleEventTypes(
-                $this->getStartedNotifications($startedEvents), 
-                $startedEvents, 
+                $this->getLiveNotifications($liveEvents),
+                $liveEvents,
+                $taskId
+            );
+
+            $this->handleEventTypes(
+                $this->getStartedNotifications($startedEvents),
+                $startedEvents,
                 $taskId
             );
 
@@ -123,5 +141,5 @@ class RespondTasks extends Command
         }
     }
 
-    
+
 };

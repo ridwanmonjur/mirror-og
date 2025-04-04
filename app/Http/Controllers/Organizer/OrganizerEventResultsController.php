@@ -58,10 +58,8 @@ class OrganizerEventResultsController extends Controller
      */
     public function store(Request $request)
     {
-        [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
 
         $joinEventsId = $request->join_events_id;
-        $joinEvent = JoinEvent::where('id', $request->join_events_id)->first();
         $existingRow = DB::table('event_join_results')
             ->where('join_events_id', $joinEventsId)
             ->first();
@@ -77,20 +75,7 @@ class OrganizerEventResultsController extends Controller
             ]);
         }
 
-        dispatch(new HandleResults('ChangePosition', [
-            'subject_type' => User::class,
-            'object_type' => EventJoinResults::class,
-            'subject_id' => $memberUserIds,
-            'object_id' => $joinEventsId,
-            'action' => 'Position',
-            'eventId' => $joinEvent->event_details_id,
-            'teamId' => $team->id,
-            'joinEvent' => $joinEvent,
-            'team' => $team,
-            'teamName' => $request->teamName,
-            'image' => $request->teamBanner,
-            'position' => intval($request->position),
-        ]));
+
 
         return response()->json(['success' => true, 'message' => 'Position updated successfully'], 200);
     }
