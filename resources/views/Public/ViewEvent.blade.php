@@ -90,7 +90,7 @@
                     <div class="card-text ">
                         <div>
                             <br class="d-none d-lg-block">
-                            <div class="d-flex justify-content-between flex-wrap align-items-start pb-3">
+                            <div class="d-flex pt-2 justify-content-between flex-wrap align-items-start pb-3">
                                 <h5 class="text-wrap w-75">
                                     {{ $event->eventName ?? 'No name yet' }}
                                 </h5>
@@ -135,17 +135,11 @@
                                             @endguest
                                         </form>
                                         {{-- Share icon --}}
-                                        <svg
-                                            
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                       <svg
                                             data-event-id="{{$event->id}}"
-                                            stroke-linejoin="round" class="feather feather-share-2 svg-hover share-button ">
-                                            <circle cx="18" cy="5" r="3"></circle>
-                                            <circle cx="6" cy="12" r="3"></circle>
-                                            <circle cx="18" cy="19" r="3"></circle>
-                                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-link-45deg share-button" viewBox="0 0 16 16">
+                                            <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                                            <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
                                         </svg>
                                     </div>
                                 </div>
