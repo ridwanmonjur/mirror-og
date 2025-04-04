@@ -74,7 +74,7 @@
         </div>
         <div  v-show="!isEditMode" class="tab-content pb-4 outer-tab px-5" id="Overview">
             <br> 
-            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-center" style="width: min(800px,  80%);">
+            <div class="showcase tab-size showcase-box showcase-column pt-4 grid-4-columns text-center" style="width: min(800px,  100%);">
                 <div> 
                     <h3> {{$lastYearEventsCount}} </h3>
                     <p class="mx-2"> Events Organized in Last Year </p>
@@ -88,7 +88,7 @@
                     <p class="mx-2"> Teams Registered Across All Time </p>
                 </div>
                  <div> 
-                    <h3> {{$tierPrizeCount}} </h3>
+                    <h3 class="currency-comma">RM {{ number_format($tierPrizeCount, 0, '.', ',') }} </h3>
                     <p class="mx-2"> Total Prize Pool Across All Time </p>
                 </div>
             </div>
