@@ -97,7 +97,7 @@ trait RespondTaksTrait
                         'icon_type' => 'live',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail',
+                        'mailClass' => 'EventLiveMail',
                         'created_at' => DB::raw('NOW()')
                     ], 
                     'organizer' => [
@@ -106,7 +106,7 @@ trait RespondTaksTrait
                         'icon_type' => 'live',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'mailClass' => 'EventEndMail',
+                        'mailClass' => 'EventLiveMail',
                         'created_at' => DB::raw('NOW()')
                     ]
             ];
@@ -363,6 +363,21 @@ trait RespondTaksTrait
                     HTML;
             }
 
+            $orgHtml = <<<HTML
+                <span class="notification-gray">
+                    <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
+                    {$join->eventDetails->eventName}</button> has now ended.
+                </span>
+                HTML;
+        
+
+            $orgEmail = <<<HTML
+                <span class="notification-gray">
+                    <span class="px-0 border-0 notification-blue" >
+                    {$join->eventDetails->eventName}</span> has now ended.
+                </span>
+                HTML;
+
             if ($activityLog) {
 
                 $logs[$join->id] = [
@@ -388,8 +403,8 @@ trait RespondTaksTrait
                     'type' => 'event',
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'ended',
-                    'html' => $memberHtml,
-                    'mail' => $memberEmail,
+                    'html' => $orgHtml,
+                    'mail' => $orgEmail,
                     'mailClass' => 'EventEndMail',
                     'created_at' => DB::raw('NOW()')
                 ]
