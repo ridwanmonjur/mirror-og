@@ -2,19 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\EventResultMail;
 use App\Models\ActivityLogs;
-use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\NotifcationsUser;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 use Exception;
 
 use App\Models\PaymentTransaction;
 use App\Models\StripePayment;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 trait RespondTaksTrait
@@ -76,7 +72,7 @@ trait RespondTaksTrait
     
 
     public function getLiveNotifications($joinList) {
-        $notifications = [];
+        $playerNotif = []; $orgNotif = [];
         foreach ($joinList as $join) {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
@@ -90,35 +86,36 @@ trait RespondTaksTrait
                     <span class="notification-blue">{$join->eventDetails->eventName}</span></span> is now live. 
                     </span>
                 HTML;
-            $notifications[$join->id ] = [
-                    'member' => [
-                        'type' => 'event',
-                        'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                        'icon_type' => 'live',
-                        'html' => $memberHtml,
-                        'mail' => $memberEmail,
-                        'mailClass' => 'EventLiveMail',
-                        'created_at' => DB::raw('NOW()')
-                    ], 
-                    'organizer' => [
-                        'type' => 'event',
-                        'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                        'icon_type' => 'live',
-                        'html' => $memberHtml,
-                        'mail' => $memberEmail,
-                        'mailClass' => 'EventLiveMail',
-                        'created_at' => DB::raw('NOW()')
-                    ]
+            $playerNotif[$join->id ] = [
+                'type' => 'event',
+                'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                'icon_type' => 'live',
+                'html' => $memberHtml,
+                'mail' => $memberEmail,
+                'mailClass' => 'EventLiveMail',
+                'created_at' => DB::raw('NOW()')
             ];
+
+            if (!isset($orgNotif[$join->eventDetails->user_id])) {
+                $orgNotif[$join->eventDetails->user_id] = [
+                    'type' => 'event',
+                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                    'icon_type' => 'live',
+                    'html' => $memberHtml,
+                    'user_id' => $join->eventDetails->user_id,
+                    'mail' => $memberEmail,
+                    'mailClass' => 'EventLiveMail',
+                    'created_at' => DB::raw('NOW()')
+                ];
+            }
         }
 
-        return $notifications;
+        return [$playerNotif, $orgNotif];
     }
 
     public function getStartedNotifications($joinList) {
-        $notifications = [];
+        $playerNotif = []; $orgNotif = [];
         foreach ($joinList as $join) {
-            $timeDate = Carbon::parse($join->eventDetails->startDate . ' ' . $join->eventDetails->startTime);
 
             $memberHtml = <<<HTML
                 <span class="notification-gray">
@@ -134,17 +131,8 @@ trait RespondTaksTrait
                     </span>
                 HTML;
             
-            $notifications[$join->id] = [
+            $playerNotif[$join->id] = [
                 'member' => [
-                    'type' => 'event',
-                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                    'icon_type' => 'started',
-                    'html' => $memberHtml,
-                    'mail' => $memberEmail,
-                    'mailClass' => 'EventStartMail',
-                    'created_at' => DB::raw('NOW()')
-                ], 
-                'organizer' => [
                     'type' => 'event',
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'started',
@@ -154,29 +142,44 @@ trait RespondTaksTrait
                     'created_at' => DB::raw('NOW()')
                 ]
             ];
+
+            if (!isset($orgNotif[$join->eventDetails->user_id])) {
+                $orgNotif[$join->eventDetails->user_id] = [
+                    'type' => 'event',
+                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                    'icon_type' => 'started',
+                    'html' => $memberHtml,
+                    'user_id' => $join->eventDetails->user_id,
+                    'mail' => $memberEmail,
+                    'mailClass' => 'EventStartMail',
+                    'created_at' => DB::raw('NOW()')
+                ];
+            }
         }
 
-        return $notifications;
+        return [$playerNotif, $orgNotif];
     }
 
     public function handleEventTypes($notificationMap, $joinList, $taskId) {
+        [$playerNotif, $orgNotif] = $notificationMap;
         if (!empty($joinList)) {
             DB::beginTransaction();
             try {
                 $memberNotification = $organizerNotification = [];
                 foreach ($joinList as $join) {
-                    if (!isset($notificationMap[$join->id])) {
+                    if (!isset($playerNotif[$join->id])) {
                         continue;
                     }
-                    $memberMailClass = 'App\\Mail\\'. $notificationMap[$join->id]['member']['mailClass'];
+
+                    $memberMailClass = 'App\\Mail\\'. $playerNotif[$join->id]['mailClass'];
 
                     if (! class_exists($memberMailClass)) {
                         throw new \InvalidArgumentException("Strategy class {$memberMailClass} does not exist.");
                     }
 
                     $memberMailInvocation = new $memberMailClass([
-                        'text' => $notificationMap[$join->id]['member']['mail'],
-                        'link' =>  $notificationMap[$join->id]['member']['link'],
+                        'text' => $playerNotif[$join->id]['mail'],
+                        'link' =>  $playerNotif[$join->id]['link'],
                     ]);
                     
                     $memberEmails = collect($join->roster)
@@ -191,10 +194,10 @@ trait RespondTaksTrait
                     foreach ($join->roster as $member) {
                         $memberNotification[] = [
                             'user_id' => $member->user->id,
-                            'type' => $notificationMap[$join->id]['member']['type'],
-                            'link' =>  $notificationMap[$join->id]['member']['link'],
-                            'icon_type' => $notificationMap[$join->id]['member']['icon_type'],
-                            'html' => $notificationMap[$join->id]['member']['html'],
+                            'type' => $playerNotif[$join->id]['type'],
+                            'link' =>  $playerNotif[$join->id]['link'],
+                            'icon_type' => $playerNotif[$join->id]['icon_type'],
+                            'html' => $playerNotif[$join->id]['html'],
                             'created_at' => DB::raw('NOW()')
                         ];
 
@@ -205,28 +208,34 @@ trait RespondTaksTrait
                         Mail::to($memberEmails)->send($memberMailInvocation);
                     }
 
+                   
+                }
+
+                foreach ($orgNotif as $notification) {
                     $organizerNotification[] = [
-                        'user_id' => $join->eventDetails->user_id,
-                        'type' => $notificationMap[$join->id]['organizer']['type'],
-                        'link' =>  $notificationMap[$join->id]['organizer']['link'],
-                        'icon_type' => $notificationMap[$join->id]['organizer']['icon_type'],
-                        'html' => $notificationMap[$join->id]['organizer']['html'],
+                        'user_id' => $notification['user_id'],
+                        'type' => $notification['type'],
+                        'link' => $notification['link'],
+                        'icon_type' => $notification['icon_type'],
+                        'html' => $notification['html'],
                         'created_at' => DB::raw('NOW()')
                     ];
-
-                    $orgMailClass = 'App\\Mail\\'. $notificationMap[$join->id]['organizer']['mailClass'];
-
+                    
+                    $orgMailClass = 'App\\Mail\\'. $notification['mailClass'];
+                    
                     if (! class_exists($orgMailClass)) {
                         throw new \InvalidArgumentException("Strategy class {$orgMailClass} does not exist.");
                     }
-
+                    
                     $orgMailInvocation = new $orgMailClass([
-                        'text' => $notificationMap[$join->id]['organizer']['mail'],
-                        'link' =>  $notificationMap[$join->id]['organizer']['link'],
+                        'text' => $notification['mail'],
+                        'link' => $notification['link'],
                     ]);
                     
-                    if ($join->eventDetails->user->email) 
-                        Mail::to($join->eventDetails->user->email)->send($orgMailInvocation);
+                    $user = $notification['user'];
+                    if ($user && $user->email) {
+                        Mail::to($user->email)->send($orgMailInvocation);
+                    }
                 }
 
                 NotifcationsUser::insertWithCount([
@@ -300,7 +309,7 @@ trait RespondTaksTrait
     }
 
     public function getEndedNotifications($joinList) {
-        $notifications = [];
+        $playerNotif = []; $orgNotif = [];
         $memberIdList = [];
         $logs = [];
         foreach ($joinList as $join) {
@@ -389,26 +398,29 @@ trait RespondTaksTrait
                 ];
             }
 
-            $notifications[$join->id] = [
-                'member' => [
-                    'type' => 'event',
-                    'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
-                    'icon_type' => 'ended',
-                    'html' => $memberHtml,
-                    'mail' => $memberEmail,
-                    'mailClass' => 'EventEndMail',
-                    'created_at' => DB::raw('NOW()')
-                ], 
-                'organizer' => [
+            $playerNotif[$join->id] = [
+                'type' => 'event',
+                'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
+                'icon_type' => 'ended',
+                'html' => $memberHtml,
+                'mail' => $memberEmail,
+                'mailClass' => 'EventEndMail',
+                'created_at' => DB::raw('NOW()')
+            ];
+
+            if (!isset($orgNotif[$join->eventDetails->user_id])) {
+                $orgNotif[$join->eventDetails->user_id] = [
                     'type' => 'event',
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'ended',
                     'html' => $orgHtml,
                     'mail' => $orgEmail,
+                    'user_id' => $join->eventDetails->user_id,
+                    'user' => $join->eventDetails->user,
                     'mailClass' => 'EventEndMail',
                     'created_at' => DB::raw('NOW()')
-                ]
-            ];
+                ];
+            }
 
             foreach ($join->roster as $member) {
                 if (!isset($memberIdList[$join->id])) {
@@ -419,7 +431,7 @@ trait RespondTaksTrait
             }
         }    
 
-        return [$notifications, $logs, $memberIdList];
+        return [$playerNotif, $orgNotif, $logs, $memberIdList];
     }
 
    
