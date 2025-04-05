@@ -315,8 +315,8 @@
                                                 data-total-amount="{{ $total }}"
                                                 data-existing-amount="{{ $exisitngSum }}" data-modal-id="{{ $random_int }}"
                                                 name="amount" class="form-control" type="text" default="00.00" value="00.00"
-                                                oninput="moveCursorToEnd(this); updateInput(this);"
-                                                onkeydown="moveCursorToEnd(this); keydown(this); "
+                                                oninput="moveCursorToEnd(this); addPrice(this);"
+                                                onkeydown="moveCursorToEnd(this); keydownPrice(event, this); "
                                             >
                                             <span data-joinEventId="{{ $joinEvent->id }}" 
                                                 dota-pending-amount="{{ $pedning }}"

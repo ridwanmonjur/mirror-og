@@ -462,7 +462,7 @@ let csrfToken5 = document.querySelector('meta[name="csrf-token"]').getAttribute(
 
 let registrationPaymentModalMap = {}; 
 
-function updateInput(input) {
+function addPrice(input) {
     let ogTotal = Number(input.dataset.totalAmount);
     let pending = Number(input.dataset.pendingAmount);
     let modalId = input.dataset.modalId;
@@ -506,7 +506,7 @@ function updateInput(input) {
     putAmount(input.dataset.modalId, newValue, ogTotal, pending, Number(input.dataset.existingAmount));
 }
 
-function keydown(input) {
+function keydownPrice(event, input) {
     let joinEventId = input.dataset.joineventid;
     if (event.key === "Backspace" || event.key === "Delete") { 
         event.preventDefault();
@@ -550,15 +550,49 @@ function putAmount(modalId, inputValue, total, pending, existing) {
 
 function resetInput(button) {
     let input = document.querySelector('#payModal' + button.dataset.modalId + " input[name='amount']");
-    registrationPaymentModalMap[button.dataset.modalId] = 0;
-    input.value = input.defaultValue;
-    let paymentProceedButton = document.getElementById('paymentProceedButton');
-    if (paymentProceedButton.classList.contains('btn-primary')) {
-        paymentProceedButton.classList.remove('btn-primary');
-        paymentProceedButton.classList.add('btn-secondary');
-    }
+    let currentValue = input.value;
+    
+    if (currentValue && parseFloat(currentValue) > 0) {
+        let numValue = parseFloat(currentValue);
+        
+        let newValue = (Math.floor(numValue * 10) / 100).toFixed(2);
+        
 
-    putAmount(button.dataset.modalId, 0.00, Number(button.dataset.totalAmount), Number(button.dataset.pendingAmount), Number(button.dataset.existingAmount));
+        if (newValue.length === 4) {
+            newValue = "0" + newValue;
+        }
+
+        input.value = newValue;
+
+        if (parseFloat(newValue) === 0) {
+            registrationPaymentModalMap[button.dataset.modalId] = 0;
+            
+            let paymentProceedButton = document.getElementById('paymentProceedButton');
+            if (paymentProceedButton.classList.contains('btn-primary')) {
+                paymentProceedButton.classList.remove('btn-primary');
+                paymentProceedButton.classList.add('btn-secondary');
+            }
+        } else {
+            if (registrationPaymentModalMap[button.dataset.modalId] > 0) {
+                registrationPaymentModalMap[button.dataset.modalId]--;
+            }
+        }
+    } else {
+        input.value = "00.00";
+        registrationPaymentModalMap[button.dataset.modalId] = 0;
+        
+        let paymentProceedButton = document.getElementById('paymentProceedButton');
+        if (paymentProceedButton.classList.contains('btn-primary')) {
+            paymentProceedButton.classList.remove('btn-primary');
+            paymentProceedButton.classList.add('btn-secondary');
+        }
+    }
+    
+    putAmount(button.dataset.modalId, parseFloat(input.value), 
+        Number(button.dataset.totalAmount), 
+        Number(button.dataset.pendingAmount), 
+        Number(button.dataset.existingAmount)
+    );
 }
 
 const colors2 = [
