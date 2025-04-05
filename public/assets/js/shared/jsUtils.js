@@ -626,16 +626,15 @@ let {
     landingEndpoint
 } = importantUrlsDiv?.dataset ?? {};
 
-console.log({
-    searchEndpoint,
-    landingEndpoint
-})
+
 
     ENDPOINT = searchEndpoint;
     document.getElementById('search-bar')?.addEventListener(
         "keydown",
         debounce((e) => {
-            searchPart(e);
+            if (e.keyCode === 13 || e.key === 'Enter') {
+                searchPart(e);
+            }
         }, 1000)
     );
     
@@ -648,21 +647,22 @@ console.log({
 
 
 function searchPart(e) {
-    if (e.keyCode === 91 || e.keyCode === 92) {
+    if (e.keyCode === 91 || e.keyCode === 92 || e.keyCode === 18 || e.altKey || 
+        e.keyCode === 17 || e.ctrlKey || 
+        e.keyCode === 93 || e.metaKey
+    ) {        
         e.preventDefault(); 
         return; 
     }
 
-    page = 1;
-    let noMoreDataElement = document.querySelector('.no-more-data');
-    noMoreDataElement?.classList.add('d-none');
-    let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
-    if (scrollingPaginationElement) scrollingPaginationElement.innerHTML = '';
+    
     search = e.target.value;
+
     ENDPOINT = landingEndpoint;
     if (search && String(search).trim() != "") {
         ENDPOINT += "?search=" + search;
     }
+
 
     window.location.href = ENDPOINT;
 }

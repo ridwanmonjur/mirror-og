@@ -228,12 +228,16 @@ nav svg:hover,
     position: relative;
 }
 
+.search-bar svg {
+    left: 15px;
+}
+
 .search-bar input {
     border: 2px solid rgb(175, 165, 165);
     border-radius: 30px;
     padding-top: 4px;
     padding-bottom: 4px;
-    padding-left: 90px;
+    padding-left: 50px;
     width: 400px;
     max-width: 80vw;
     transition-duration: 250ms;
@@ -245,12 +249,35 @@ nav svg:hover,
 
 .search-bar input:focus {
     width: 600px;
+    padding-right: 25ch;
     outline: none !important;
     border-color: #2e4b59 !important;
 }
 
+
+.search-bar-mobile input:focus {
+    padding-right: 5px !important;
+}
+
 input#search-bar:focus + svg {
     stroke: #2e4b59 !important;
+}
+
+.search-bar input:focus ~ .search-hint {
+    display: none;
+}
+  
+.search-hint {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #808080;
+    font-size: 12px;
+    font-style: italic;
+    border-left: 1px solid #808080;
+    padding-left: 5px;
 }
 
 .search-bar svg {
@@ -557,6 +584,8 @@ h5 {
   
 @media (min-width: 640px) {
 
+   
+
     .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
         padding-right: 0 !important;
     }
@@ -579,7 +608,18 @@ button:after {
     margin-top: 5px;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 992px) {
+    .search-bar input:focus ~ .search-hint {
+        display: inline;
+    }
+
+    .search-bar input { 
+        padding-right: 40px;
+    }
+
+    .search-bar input:focus {
+        padding-right: 16ch;
+    }
 
     .heading {
         margin-left: 5%;

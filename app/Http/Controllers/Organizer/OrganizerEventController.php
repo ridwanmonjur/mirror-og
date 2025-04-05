@@ -328,13 +328,16 @@ class OrganizerEventController extends Controller
                 }])
                 ->get();
 
+
             $teamList->each(function (Team $team) use ($event, $user, $id) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$id], 0);
                 dispatch(new HandleEventJoinConfirm('OrgCancel', [
                     'selectTeam' => $team,
                     'user' => $user,
                     'event' => $event,
-                    'discount' => $discountsByUserAndType
+                    'discount' => $discountsByUserAndType,
+                    'join_id' => $joinEvent->id,
+                    'joinEvent' => $joinEvent
                 ]));
             });
 
