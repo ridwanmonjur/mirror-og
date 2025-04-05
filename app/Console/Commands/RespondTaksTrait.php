@@ -103,6 +103,7 @@ trait RespondTaksTrait
                     'icon_type' => 'live',
                     'html' => $memberHtml,
                     'user_id' => $join->eventDetails->user_id,
+                    'user' => $join->eventDetails->user,
                     'mail' => $memberEmail,
                     'mailClass' => 'EventLiveMail',
                     'created_at' => DB::raw('NOW()')
@@ -150,6 +151,7 @@ trait RespondTaksTrait
                     'icon_type' => 'started',
                     'html' => $memberHtml,
                     'user_id' => $join->eventDetails->user_id,
+                    'user' => $join->eventDetails->user,
                     'mail' => $memberEmail,
                     'mailClass' => 'EventStartMail',
                     'created_at' => DB::raw('NOW()')
@@ -211,28 +213,28 @@ trait RespondTaksTrait
                    
                 }
 
-                foreach ($orgNotif as $notification) {
+                foreach ($orgNotif as $notification2) {
                     $organizerNotification[] = [
-                        'user_id' => $notification['user_id'],
-                        'type' => $notification['type'],
-                        'link' => $notification['link'],
-                        'icon_type' => $notification['icon_type'],
-                        'html' => $notification['html'],
+                        'user_id' => $notification2['user_id'],
+                        'type' => $notification2['type'],
+                        'link' => $notification2['link'],
+                        'icon_type' => $notification2['icon_type'],
+                        'html' => $notification2['html'],
                         'created_at' => DB::raw('NOW()')
                     ];
                     
-                    $orgMailClass = 'App\\Mail\\'. $notification['mailClass'];
+                    $orgMailClass = 'App\\Mail\\'. $notification2['mailClass'];
                     
                     if (! class_exists($orgMailClass)) {
                         throw new \InvalidArgumentException("Strategy class {$orgMailClass} does not exist.");
                     }
                     
                     $orgMailInvocation = new $orgMailClass([
-                        'text' => $notification['mail'],
-                        'link' => $notification['link'],
+                        'text' => $notification2['mail'],
+                        'link' => $notification2['link'],
                     ]);
                     
-                    $user = $notification['user'];
+                    $user = $notification2['user'];
                     if ($user && $user->email) {
                         Mail::to($user->email)->send($orgMailInvocation);
                     }

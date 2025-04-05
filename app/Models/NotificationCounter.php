@@ -50,4 +50,17 @@ class NotificationCounter extends Model
                 ->update([$columnName => DB::raw($columnName . ' + 1')]);
         }, 3);
     }
+
+    public static function resetNegativeCounts()
+    {
+        return self::query()
+            ->where('social_count', '<', 1)
+            ->orWhere('teams_count', '<', 1)
+            ->orWhere('event_count', '<', 1)
+            ->update([
+                'social_count' => DB::raw('CASE WHEN social_count < 1 THEN 0 ELSE social_count END'),
+                'teams_count' => DB::raw('CASE WHEN teams_count < 1 THEN 0 ELSE teams_count END'),
+                'event_count' => DB::raw('CASE WHEN event_count < 1 THEN 0 ELSE event_count END')
+            ]);
+    }
 }

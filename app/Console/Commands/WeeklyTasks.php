@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\EventDetail;
+use App\Models\NotificationCounter;
 use App\Models\Task;
 use App\Console\Commands\PrinterLoggerTrait;
 use App\Models\NotifcationsUser;
@@ -41,6 +41,7 @@ class WeeklyTasks extends Command
             DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $weekAgo)->delete();
             DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $weekAgo)->delete();
             NotifcationsUser::where('created_at', '<', $weekAgo)->delete();
+            NotificationCounter::resetNegativeCounts();
             Task::where('created_at', '<', $weekAgo)->delete();
             $now = Carbon::now();
             $this->logExit($id, $now);
