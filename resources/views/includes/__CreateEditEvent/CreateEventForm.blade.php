@@ -203,88 +203,88 @@
 
 <div class="text-center create d-none" id="step-5">
     <div class="welcome text-center" >
-            <h3>
-                STEP 2: Fill in your <span class="text-primary">event details</span>
-            </h3>
+        <h3>
+            STEP 2: Fill in your <span class="text-primary">event details</span>
+        </h3>
         <p>
             First, when is your event happening?
         </p>
-        <br><br>
-        <div class="event-details-form row my-0 mx-auto box-width" >
-            <div class="form-group col-12 col-xl-6 mx-0">
-                <label for="mt-3 startDate">Date of Event</label>
-                <div class="my-3">Tell your players when to mark their calendars</div>
-                 <div class="mx-auto d-flex justify-content-center  ">
-                    <input type="text" id="daterange-display" class="ps-3 rounded-pill" readonly>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi mt-2 ms-3 me-3 bi-calendar-day" viewBox="0 0 16 16">
-                    <path d="M4.684 11.523v-2.3h2.261v-.61H4.684V6.801h2.464v-.61H4v5.332zm3.296 0h.676V8.98c0-.554.227-1.007.953-1.007.125 0 .258.004.329.015v-.613a2 2 0 0 0-.254-.02c-.582 0-.891.32-1.012.567h-.02v-.504H7.98zm2.805-5.093c0 .238.192.425.43.425a.428.428 0 1 0 0-.855.426.426 0 0 0-.43.43m.094 5.093h.672V7.418h-.672z"/>
-                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                    </svg>
-                </div>
-                <div class="box-date d-none">
-                    <div class="box">
-                        <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
-                        <input type="date" id="startDate" onchange="checkValidDate();" name="startDate"
-                            value="{{ $isEventNotNull ? $event->startDate : '' }}" placeholder=" Select a start date"
-                            required
-                        >
-                    </div>
-                    <div class="box">
-                        <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
-                        <input type="date" id="endDate" onchange="checkValidDate();" name="endDate"
-                            value="{{ $isEventNotNull ? $event->endDate : '' }}" placeholder=" Select an end date"
-                            required>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-12 col-xl-6 mx-auto">
-                <label for="mt-3 startTime">Time of Event</label>
-                <div class="my-3">So that your players can set their alarms</div>
+    </div>
+
+    <div class=" row  event-details-form mx-auto box-width" >
+        <div class="form-group px-0 py-0  col-12 col-xl-6 mx-0 mb-3">
+            <label for="startDate">Date of Event</label>
+            <div class="my-3">Tell your players when to mark their calendars</div>
                 <div class="mx-auto d-flex justify-content-center  ">
-                    <input type="text" id="timerange-display" class="ps-3 rounded-pill dropdown" readonly
-                         data-bs-toggle="dropdown" data-bs-auto-close="false"
+                <input type="text" id="daterange-display" class="ps-3 rounded-pill" readonly>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi mt-2 ms-3 me-3 bi-calendar-day" viewBox="0 0 16 16">
+                <path d="M4.684 11.523v-2.3h2.261v-.61H4.684V6.801h2.464v-.61H4v5.332zm3.296 0h.676V8.98c0-.554.227-1.007.953-1.007.125 0 .258.004.329.015v-.613a2 2 0 0 0-.254-.02c-.582 0-.891.32-1.012.567h-.02v-.504H7.98zm2.805-5.093c0 .238.192.425.43.425a.428.428 0 1 0 0-.855.426.426 0 0 0-.43.43m.094 5.093h.672V7.418h-.672z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                </svg>
+            </div>
+            <div class="box-date d-none">
+                <div class="box">
+                    <div class="small-detail" style="font-weight: bold;"><b>Start</b></div>
+                    <input type="date" id="startDate" onchange="checkValidDate();" name="startDate"
+                        value="{{ $isEventNotNull ? $event->startDate : '' }}" placeholder=" Select a start date"
+                        required
                     >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-alarm mt-2 ms-3 me-3" viewBox="0 0 16 16">
-                    <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
-                    <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
-                    </svg>
-                    <div class="dropdown-menu p-3 border border-0 shadow-lg" style="border: 1px solid #d3d3d3 !important; background: #FFFFFF !important; width: min(300px, 90vw);">
-                        <div class="box">
-                            <div class="small-detail" >Start</div>
-                            <div class="flatpickr">
-                                <input type="time" id="startTime" onchange="checkValidStartTime();setTimeRangeDisplay();" name="startTime"
-                                    value="{{ $isEventNotNull ? $event->startTime : '' }}" 
-                                    class="form-control py-1 mx-auto   text-dark" required data-input
-                                    style="border: 1px solid  #d3d3d3 ;"
-                                >
-                                
-                            </div>
+                </div>
+                <div class="box">
+                    <div class="small-detail" style="font-weight: bold;"><b>End</b></div>
+                    <input type="date" id="endDate" onchange="checkValidDate();" name="endDate"
+                        value="{{ $isEventNotNull ? $event->endDate : '' }}" placeholder=" Select an end date"
+                        required>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-12 col-xl-6 mx-auto px-0 py-0 mb-3">
+            <label for="startTime">Time of Event</label>
+            <div class="my-3">So that your players can set their alarms</div>
+            <div class="mx-auto d-flex justify-content-center  ">
+                <input type="text" id="timerange-display" class="ps-3 rounded-pill dropdown" readonly
+                        data-bs-toggle="dropdown" data-bs-auto-close="false"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-alarm mt-2 ms-3 me-3" viewBox="0 0 16 16">
+                <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+                <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+                </svg>
+                <div class="dropdown-menu p-3 border border-0 shadow-lg" style="border: 1px solid #d3d3d3 !important; background: #FFFFFF !important; width: min(300px, 90vw);">
+                    <div class="box">
+                        <div class="small-detail" >Start</div>
+                        <div class="flatpickr">
+                            <input type="time" id="startTime" onchange="checkValidStartTime();setTimeRangeDisplay();" name="startTime"
+                                value="{{ $isEventNotNull ? $event->startTime : '' }}" 
+                                class="form-control py-1 mx-auto   text-dark" required data-input
+                                style="border: 1px solid  #d3d3d3 ;"
+                            >
+                            
                         </div>
-                        <div class="box mt-3">
-                            <div class="small-detail" >End</div>
-                            <div class="flatpickr">
-                                <input type="time" id="endTime" name="endTime" onchange="checkValidEndTime();setTimeRangeDisplay();"
-                                    value="{{ $isEventNotNull ? $event->endTime : '' }}" 
-                                    class="form-control mx-auto py-1   text-dark" required data-input
-                                    style="border: 1px solid  #d3d3d3 ;"
-                                >
-                                
-                            </div>
+                    </div>
+                    <div class="box mt-3">
+                        <div class="small-detail" >End</div>
+                        <div class="flatpickr">
+                            <input type="time" id="endTime" name="endTime" onchange="checkValidEndTime();setTimeRangeDisplay();"
+                                value="{{ $isEventNotNull ? $event->endTime : '' }}" 
+                                class="form-control mx-auto py-1   text-dark" required data-input
+                                style="border: 1px solid  #d3d3d3 ;"
+                            >
+                            
                         </div>
-                        <div class="mt-3 mx-auto">
-                            <button class="btn rounded-pill bg-primary mx-auto text-light" type="button" onclick="closeDropDown()">Close</button>
-                        </div>
+                    </div>
+                    <div class="mt-3 mx-auto">
+                        <button class="btn rounded-pill bg-primary mx-auto text-light" type="button" onclick="closeDropDown()">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class=" d-flex justify-content-between box-width back-next">
-            <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
-                class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
-                class="oceans-gaming-default-button">
-                Next&nbsp;&nbsp;  &gt; </button>
-        </div>
+    </div>
+    <div class=" d-flex justify-content-between box-width back-next">
+        <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
+            class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
+        <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
+            class="oceans-gaming-default-button">
+            Next&nbsp;&nbsp;  &gt; </button>
     </div>
 </div>
 
