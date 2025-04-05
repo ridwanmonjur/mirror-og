@@ -324,7 +324,7 @@ trait RespondTaksTrait
                         <span class="notification-other"><span class="notification-{$join->position}">
                             {$positionString}</span></span> position with your team,
                         <button class="btn-transparent px-0 border-0 notification-entity" 
-                            data-href="/view/team/$join->team->id" alt="Team Link"
+                            data-href="/view/team/{$join->team->id}" alt="Team Link"
                         >
                             {$join->team->teamName}</button>. 
                         </span>
@@ -332,8 +332,8 @@ trait RespondTaksTrait
                 
                 $activityLog = <<<HTML
                     <span>
-                        <a class="px-0 border-0" href="/view/team/$join->team->id" alt="Team View">
-                            <img src="/storage/$join->team->teamBanner" 
+                        <a class="px-0 border-0" href="/view/team/{$join->team->id}" alt="Team View">
+                            <img src="/storage/{$join->team->teamBanner}" 
                                 width="30" height="30"
                                 onerror="this.src='/assets/images/404.png';"
                                 class="object-fit-cover rounded-circle me-2"
@@ -341,9 +341,9 @@ trait RespondTaksTrait
                             ></a>
                         <span class="notification-gray"> You achieved 
                         {$positionString} position with your team,
-                        <a class="px-0 border-0" href="/view/team/$join->team->id" alt="Team Link">
+                        <a class="px-0 border-0" href="/view/team/{$join->team->id}" alt="Team Link">
                             <span class="notification-blue">{$join->team->teamName}</span></a> in the event, 
-                            <a class="px-0 border-0" href="/event/$join->eventDetails->id" alt="Event Link">
+                            <a class="px-0 border-0" href="/event/{$join->eventDetails->id}" alt="Event Link">
                             <span class="notification-blue">{$join->eventDetails->eventName}</span></a>. 
                     </span>
                 HTML;
