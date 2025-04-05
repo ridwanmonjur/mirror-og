@@ -34,7 +34,7 @@
                             onclick="setFormValuesAndNavigate(this)"
                             @class(['container-border'])
                         >
-                            <a href="#" @class([
+                            <a href="javascript:void(0)" @class([
                                 'box_2nd selectable-box ',
                                 ' container-border-dotted ' => $gameCategory->eventType == "League",
                                 'color-border-success' =>
@@ -82,7 +82,7 @@
                         class="featured-events  py-0"
                         onclick="handleTierSelection(this)"
                     >
-                        <a href="#" 
+                        <a href="javascript:void(0)" 
                             role="button"
                             @class([
                             'event pt-2 selectable-box box-tier px-5 mx-2',
@@ -384,8 +384,8 @@
             Finally, some visual aid!
         </p>
     </div>
-    <div class="event-details-form box-width">
-        <div class="form-group ">
+    <div class="event-details-form box-width mx-auto">
+        <div class="form-group mx-auto">
             <label for="eventBanner">Event Banner</label>
             <p class="mt-3" style="font-size: 16px;">A distinctive banner will help your event stand out. </p>
             <p class="description"><i>Minimum resolution: 1400x600 (16:9)</i></p>

@@ -77,7 +77,7 @@
             </a>
 
             <!-- Box 3 -->
-            <a href="#" class="clickable-box " role="button" id="imageLink3">
+            <a href="javascript:void(0)" class="clickable-box " role="button" id="imageLink3">
                 <div class="event d-flex justify-content-center flex-column">
                     <div class="event_head_container">
                         Manage your shop
