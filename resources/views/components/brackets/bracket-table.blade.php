@@ -24,11 +24,9 @@
                     <svg 
                         data-position="{{$bracket['team1_position']}}" 
                         onclick="reportModalShow(event);" 
-                        class="mx-2"
-                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                    </svg>
+                        class="ms-2"
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    
                 @endif
              </td>
              <td class="tournament-bracket__score ">
@@ -36,7 +34,16 @@
              </td>
          </tr>
          <tr class="tournament-bracket__team  bg-translucent px-2 py-3 ">
+          
              <td class="tournament-bracket__pos ">
+                @if (!$isFirst)
+                    <svg 
+                        class="me-2"
+                        data-position="{{$bracket['team2_position']}}" 
+                        onclick="reportModalShow(event);" 
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                   
+                @endif
                  <abbr class="tournament-bracket__code"
                      title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
                  @if ($bracket['team2_id'])
@@ -46,16 +53,7 @@
                  @else
                     <small class="rounded-circle filler border border-secondary " ></small>
                 @endif
-                @if (!$isFirst)
-                    <svg 
-                        data-position="{{$bracket['team2_position']}}" 
-                        onclick="reportModalShow(event);" 
-                        class="mx-2"
-                        xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                    </svg>
-                @endif
+               
              </td>
           
              <td class="tournament-bracket__score ">
