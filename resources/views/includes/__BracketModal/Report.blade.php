@@ -1,5 +1,5 @@
 <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-    <div class="modal-dialog "  style="min-width: 45vw;" >
+    <div class="modal-dialog modal-dialog-centered"  style="min-width: 45vw;" >
         <div class="modal-content " style="background-color: transparent !important; overflow: hidden; ">
             <div class="modal-body m-0 p-0 ">
                 <div class="{{ ' text-center  p-0 ' . 'Team1' . ' ' . 'Team2' }}"
