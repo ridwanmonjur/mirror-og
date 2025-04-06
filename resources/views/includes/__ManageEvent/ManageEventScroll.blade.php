@@ -158,7 +158,7 @@
                     @else
                         <div class="text-center">
                             <p class="my-0 py-0"> 
-                                <span class="{{ ' Color-' . $event->tier?->eventTier }}">Countdown unavailaible</span>
+                                <span class="{{ ' Color-' . $event->tier?->eventTier }}">No start time</span>
                             </p>
                         </div>
                     @endif

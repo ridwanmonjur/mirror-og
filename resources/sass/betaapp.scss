@@ -87,17 +87,21 @@ body.contact {
 }
 
 .bg-support-btn {
-    background-color: #5fb7e6;
+    background: #5fb7e6;
 }
 
 .bg-general-btn {
-    background-color: #5ebb7d;
+    background: #5ebb7d;
+}
+
+.bg-purple-btn {
+    background: #64DBAF;
 }
 
 @media screen and (min-width: 1000px) {
     body.about {
-        max-height: 100vh;
-        overflow-y: hidden !important;
+        max-height: auto !important;
+        overflow-y: auto !important;
     }
 
     body.contact {

@@ -1,12 +1,12 @@
 <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"  style="min-width: 45vw;" >
-        <div class="modal-content " style="background-color: transparent !important; overflow: hidden; ">
-            <div class="modal-body m-0 p-0 ">
-                <div class="{{ ' text-center  p-0 ' . 'Team1' . ' ' . 'Team2' }}"
-                    style="opacity: 1; z-index: 999 !important; ">
+    <div class="modal-dialog modal-dialog-centered "   >
+        <div class="modal-content modal-body-transparent " >
+            <div class="modal-body m-0 p-0  ">
+                <div class="{{ ' popover-report text-center  p-0 ' . 'Team1' . ' ' . 'Team2' }}"
+                >
 
-                    <div class="user-select-none popover-box row justify-content-start border border-dark border px-2 py-2"
-                        style="background-color: white; min-width: min(400px, 100%) !important; ">
+                    <div class="user-select-none popover-box bg-white row justify-content-start border border-dark border px-0 py-0"
+                    >
                         <div class="text-center text-uppercase mt-4">
                             <h5> Match Results: <span  v-text="report.position"></span> </h5>
                             <p class="my-0 p-0" v-text="report.completeMatchStatus"> </p>

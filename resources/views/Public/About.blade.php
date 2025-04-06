@@ -10,6 +10,33 @@
         type="font/woff2" 
         crossorigin
     >
+    <style>
+        .policy-row {
+            padding: 1.5rem 0;
+        }
+        
+        .policy-row:last-child {
+            border-bottom: none;
+        }
+        
+        .policy-svg {
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .policy-svg:hover {
+            transform: scale(1.1);
+        }
+        
+        .pdf-frame {
+            width: 100%;
+            height: 70vh;
+            border: none;
+        }
+       
+    </style>
 @endpush
 @section('content')
     <header>
@@ -45,6 +72,121 @@
                 and connect with people both inside and outside of the gaming space, and to create a lasting ecosystem
                 around the games we love.</p>
         </section>
+        <section class=" mt-5">
+            <h2 class="display-4 px-0 fw-light text-white mb-4">Our policies, terms and conditions</h2>
+            <!-- Privacy Policy Row -->
+            <div class="row">
+                <div class="policy-row col-12 col-lg-4">
+                    <div class="px-2">
+                        <svg class="policy-svg" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#5fb7e6" stroke-width="2"/>
+                            <circle cx="50" cy="35" r="15" fill="#5fb7e6"/>
+                            <path d="M50,55 C35,55 25,65 25,80 L75,80 C75,65 65,55 50,55 Z" fill="#5fb7e6"/>
+                        </svg>
+                    </div>
+                    <div class="px-2">
+                        <h4 class="mt-2">Privacy Policy</h4>
+                        <p>Learn how we collect, use, and protect your personal information.</p>
+                    </div>
+                    <div class="px-2 ">
+                        <button class="btn mt-2 mb-4 bg-support-btn text-white rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy">
+                            View Policy
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Return Policy Row -->
+                <div class="policy-row col-12 col-lg-4">
+                    <div class=" px-2">
+                        <svg class="policy-svg" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                            <!-- Simple circular background -->
+                            <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#5ebb7d" stroke-width="2"/>
+                            
+                            <!-- Simple return arrow -->
+                            <path d="M30,50 L50,30 L50,40 C65,40 70,50 70,65 C60,50 50,50 50,50 L50,60 L30,50 Z" fill="#5ebb7d"/>
+                            </svg>
+                    </div>
+                    <div class="px-2">
+                        <h4 class="mt-2">Return Policy</h4>
+                        <p>Information about our return procedures, refunds, and exchanges.</p>
+                    </div>
+                    <div class="px-2 ">
+                        <button class="btn mt-2 mb-4 bg-general-btn text-white rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy">
+                            View Policy
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Terms and Conditions Row -->
+                <div class="policy-row col-12 col-lg-4">
+                    <div class="px-2">
+                        <svg class="policy-svg" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#64DBAF" stroke-width="2"/>
+                            <rect x="30" y="25" width="40" height="50" fill="#64DBAF" rx="3"/>
+                            <line x1="37" y1="35" x2="63" y2="35" stroke="white" stroke-width="2"/>
+                            <line x1="37" y1="45" x2="63" y2="45" stroke="white" stroke-width="2"/>
+                            <line x1="37" y1="55" x2="63" y2="55" stroke="white" stroke-width="2"/>
+                            <line x1="37" y1="65" x2="55" y2="65" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="px-2">
+                        <h4 class="mt-2">Terms and Conditions</h4>
+                        <p>The legal agreement between you and Driftwood when using our services.</p>
+                    </div>
+                    <div class="px-2">
+                        <button class="btn mt-2 mb-4 bg-purple-btn text-dark rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions">
+                            View T&C 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+         <!-- PDF Modal -->
+        <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pdfModalLabel">Policy Document</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <iframe class="pdf-frame" id="pdfFrame" src="" title="PDF Viewer"></iframe>
+                    </div>
+                    <div class="modal-footer mx-auto">
+                        <button type="button" class="btn text-center btn-secondary px-3 rounded-pill text-white" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pdfModal = document.getElementById('pdfModal');
+            const pdfFrame = document.getElementById('pdfFrame');
+            const modalTitle = document.getElementById('pdfModalLabel');
+            
+            pdfModal.addEventListener('show.bs.modal', function(event) {
+                const trigger = event.relatedTarget;
+                const pdfPath = trigger.getAttribute('data-pdf');
+                const title = trigger.getAttribute('data-title');
+                
+                pdfFrame.src = pdfPath;
+                modalTitle.textContent = title;
+            });
+            
+            pdfModal.addEventListener('hidden.bs.modal', function() {
+                pdfFrame.src = '';
+            });
+        });
+    </script>
 @endsection
 

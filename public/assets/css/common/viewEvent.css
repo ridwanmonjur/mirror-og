@@ -58,7 +58,19 @@ svg:hover {
     margin-left: 30px;
 }
 
+.modal-body-transparent {
+    background: none !important;
+    background-color: transparent !important;
+}
 
+.popover-box {
+    border-radius: 20px;
+}
+
+.popover-report {
+    opacity: 1; 
+    z-index: 999 !important;
+}
 
 .menu-toggle {
     display: block;
