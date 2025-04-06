@@ -67,12 +67,12 @@
                 around the games we love.</p>
         </section>
         <section class=" mt-5">
-            <h2 class="display-4 px-0 fw-light text-white mb-4">Our policies, terms and conditions</h2>
+            <h2 class="display-4 px-0 fw-light text-white mb-4">Legal Guidelines</h2>
             <!-- Privacy Policy Row -->
             <div class="row">
-                <div class="policy-row col-12 col-lg-4">
+                <div class="policy-row col-12 col-lg-4 text-white">
                     <div class="px-2">
-                        <svg class="policy-svg" onclick="openNewTab(event);" data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#5fb7e6" stroke-width="2"/>
                             <circle cx="50" cy="35" r="15" fill="#5fb7e6"/>
                             <path d="M50,55 C35,55 25,65 25,80 L75,80 C75,65 65,55 50,55 Z" fill="#5fb7e6"/>
@@ -80,7 +80,7 @@
                     </div>
                     <div class="px-2">
                         <h4 class="mt-2">Privacy Policy</h4>
-                        <p>Learn how we collect, use, and protect your personal information.</p>
+                        <p>Learn how we collect, use, and protect your personal information, safeguarding mutual interest.</p>
                     </div>
                     <div class="px-2 ">
                         <button 
@@ -95,9 +95,9 @@
                 </div>
                 
                 <!-- Return Policy Row -->
-                <div class="policy-row col-12 col-lg-4">
+                <div class="policy-row col-12 col-lg-4 text-white">
                     <div class=" px-2">
-                        <svg class="policy-svg" onclick="openNewTab(event);" data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <!-- Simple circular background -->
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#5ebb7d" stroke-width="2"/>
                             
@@ -122,9 +122,9 @@
                 </div>
                 
                 <!-- Terms and Conditions Row -->
-                <div class="policy-row col-12 col-lg-4">
+                <div class="policy-row col-12 col-lg-4 text-white">
                     <div class="px-2">
-                        <svg class="policy-svg" onclick="openNewTab(event);" data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#64DBAF" stroke-width="2"/>
                             <rect x="30" y="25" width="40" height="50" fill="#64DBAF" rx="3"/>
                             <line x1="37" y1="35" x2="63" y2="35" stroke="white" stroke-width="2"/>
