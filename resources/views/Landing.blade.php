@@ -33,7 +33,7 @@
 
         <div class="text__middle d-none d-lg-block"
         >
-            <p class="head">
+            <p class="head mt-3">
             @if (empty(app('request')->input('search')))  
              We've got events for you...
             @else

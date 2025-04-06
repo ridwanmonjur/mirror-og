@@ -34,7 +34,7 @@
 
          <div class="text__middle d-none d-lg-block"
         >
-            <p class="head py-0 text-center mb-4 text-lg-start">What would you like to do?</p>
+            <p class="head py-0 text-center mb-4 text-lg-start mt-3">What would you like to do?</p>
         </div>
 
         <section class="d-flex flex-wrap justify-content-center">
