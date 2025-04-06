@@ -158,7 +158,6 @@ bracketBoxList.forEach(item => {
 });
 
 function updateModalShow(event) {
-    window.showLoading();
     event.stopPropagation();
     event.preventDefault();
     const button = event.currentTarget;
@@ -178,7 +177,6 @@ function updateModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
-        window.closeLoading();
         window.toastError("Dataset match results not updated");
         return;
     }
@@ -208,7 +206,6 @@ function updateModalShow(event) {
         selectMap[selectName]?.updateSelectElement(dataset[selectName]);
     })
 
-    window.closeLoading();
     
     try {
         if (!modalElement || !modalElement.classList) {
@@ -246,15 +243,11 @@ function updateModalShow(event) {
 }
 
 function reportModalShow(event) {
-    window.showLoading();
     event.preventDefault();
     const button = event.currentTarget;
     let { position } = button.dataset;
     let triggerParentsPositionIds = previousValues[position];
     if (!triggerParentsPositionIds) {
-        console.error("Positions missing");
-        console.error("Positions missing");
-        window.closeLoading();
         return;
     }
 
@@ -266,7 +259,6 @@ function reportModalShow(event) {
         parentWithDataset.dataset === null || 
         parentWithDataset.dataset.bracket === null
     ) {
-        window.closeLoading();
         return;
     }
 
@@ -293,7 +285,6 @@ function reportModalShow(event) {
     window.dispatchEvent(alpineEvent);
     const modalElement = document.getElementById('reportModal');
     let modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-    window.closeLoading();
     if (modal) {
         modal.show();
     } 
@@ -335,10 +326,13 @@ submitBtnElement?.addEventListener('click', function(event) {
                 let isFinalBracket = false;
                 let {team1, match, team2} = data.data;
                 let currentMatch = null;
+                let currentMatchMobile = null;
                 if (match.team2_position) {
-                    currentMatch = document.querySelector(`.${match.team1_position}.${match.team2_position}`);
+                    currentMatchMobile = document.querySelector(`.tournament-bracket__table.${match.team1_position}.${match.team2_position}`);
+                    currentMatch = document.querySelector(`.tournament-bracket__match.${match.team1_position}.${match.team2_position}`);
                 } else {
-                    currentMatch = document.querySelector(`.${match.team1_position}.finals`);
+                    currentMatchMobile = document.querySelector(`.tournament-bracket__table.${match.team1_position}.${match.team2_position}`);
+                    currentMatch = document.querySelector(`.tournament-bracket__match.${match.team1_position}.finals`);
                 }
                 
                 if (match.stage_name == "U" && match.inner_stage_name == "e1") {
@@ -351,7 +345,6 @@ submitBtnElement?.addEventListener('click', function(event) {
 
                 let currentDataset = JSON.parse(currentMatch.dataset.bracket);
             
-
                 currentDataset.id = match.id;
                 currentDataset.team1_id = match.team1_id;
                 currentDataset.team2_id = match.team2_id;
@@ -367,7 +360,6 @@ submitBtnElement?.addEventListener('click', function(event) {
                     currentDataset.team2_teamName = team2.teamName;
                     currentDataset.team2_teamBanner = team2.teamBanner;
                 }
-
              
 
                 if (currentMatch.dataset) {
@@ -381,14 +373,19 @@ submitBtnElement?.addEventListener('click', function(event) {
                 const parentElements = currentMatch.querySelectorAll(".popover-parent");
                 
                 let imgs = null, smalls = null;
+                let imgsMobile = null, smallsMobile = null;
                 if (isUpperBracketFirstRound) {
                     imgs = currentMatch.querySelectorAll(`img.popover-button`);
+                  
                     smalls = currentMatch.querySelectorAll(`.popover-button.replace_me_with_image`);
+          
                 } else {
                     imgs = currentMatch.querySelectorAll(`.popover-button img`);
                     smalls = currentMatch.querySelectorAll(`small.replace_me_with_image`);
                 }
 
+                imgsMobile = currentMatchMobile.querySelectorAll(`.tournament-bracket__pos img.team`);
+                smallsMobile = currentMatchMobile.querySelectorAll(`.tournament-bracket__pos small.filler`);
 
                 let imgsMap = {}, smallsMap = {};
                 imgs.forEach((img, index)=> {
@@ -410,8 +407,62 @@ submitBtnElement?.addEventListener('click', function(event) {
                     }
 
                     let img = imgs[imgsMap[position]];
+                    let imgMobile = imgsMobile[imgsMap[position]];
                     let small = smalls[smallsMap[position]];
-                    if (!team) {
+                    let smallMobile = smallsMobile[smallsMap[position]]; 
+                    if (team) {
+                        let banner = team.teamBanner;
+                        if (img && 'src' in img) {
+                            if (img.dataset.position == position) {
+                                img.src =  `/storage/${banner}`;
+                            }
+                        } 
+
+                        if (imgMobile && 'src' in imgMobile) {
+                            // if (imgMobile.dataset.position == position) {
+                                imgMobile.src =  `/storage/${banner}`;
+                            // }
+                        } 
+                        
+                        if (small) {
+                            let newImg = document.createElement('img');
+                            small.parentElement.replaceChild(newImg, small);
+                            newImg.src = `/storage/${banner}`;
+                            newImg.style.width = '100%';
+                            newImg.height = '25';
+                            newImg.dataset.position = position;
+                            newImg.onerror = function() {
+                                this.src='/assets/images/404q.png';
+                            };
+
+                            newImg.className = 'popover-button position-absolute w-100 h-100 d-none-when-hover object-fit-cover me-2';
+                            newImg.alt = 'Team View';
+                            newImg.style.zIndex = '99';
+                            newImg.addEventListener('click', reportModalShow);
+                        }
+
+                        if (smallMobile) {
+                            let newImgMobile = document.createElement('img');
+                            smallMobile.parentElement.replaceChild(newImgMobile, smallMobile);
+                            newImgMobile.src = `/storage/${banner}`;
+                            newImgMobile.style.width = '40%';
+                            newImgMobile.height = '40';
+                            newImgMobile.dataset.position = position;
+                            newImgMobile.onerror = function() {
+                                this.src='/assets/images/404q.png';
+                            };
+
+                            newImgMobile.className = 'object-fit-cover team border border-primary rounded-circle';
+                            newImgMobile.alt = 'Team View';
+                        }
+
+                    } else {
+                        if (imgMobile) {
+                            let newSmallMobile = document.createElement('small');
+                            imgMobile.parentElement.replaceChild(newSmallMobile, imgMobile);
+                            newSmallMobile.className = 'rounded-circle filler border border-secondary me-2 ';
+                        }
+
                         if (img) {
                             let newSmall = document.createElement('small');
                             img.parentElement.replaceChild(newSmall, img);
@@ -419,36 +470,12 @@ submitBtnElement?.addEventListener('click', function(event) {
                             newSmall.className = 'popover-button ms-1 position-absolute  replace_me_with_image ';
                             newSmall.style.zIndex = '99';
                             newSmall.dataset.position = position;
-                            newSmall.addEventListener('click', reportModalShow);
-
+                            newSmall.addEventListener('click', reportModalShow);   
                         }
 
-                        continue;
                     }
 
-                    let banner = team?.teamBanner;
-                    if (img && 'src' in img) {
-                        if (img.dataset.position == position) {
-                            img.src =  `/storage/${banner}`;
-                        }
-                    } 
-                        
-                    if (small) {
-                        let img = document.createElement('img');
-                        small.parentElement.replaceChild(img, small);
-                        img.src = `/storage/${banner}`;
-                        img.style.width = '100%';
-                        img.height = '25';
-                        img.dataset.position = position;
-                        img.onerror = function() {
-                            this.src='/assets/images/404q.png';
-                        };
-
-                        img.className = 'popover-button position-absolute w-100 h-100 d-none-when-hover object-fit-cover me-2';
-                        img.alt = 'Team View';
-                        img.style.zIndex = '99';
-                        img.addEventListener('click', reportModalShow);
-                    }
+                   
 
 
                 }

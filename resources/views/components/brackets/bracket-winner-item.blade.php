@@ -6,7 +6,7 @@
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
                 >
-                    <x-brackets.bracket-table :bracket="$bracket" />
+                    <x-brackets.bracket-table :bracket="$bracket"  :isFirst="false" />
 
                     <div class="text-center popover-parent   mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                     >
@@ -55,7 +55,7 @@
                      data-bracket="{{ json_encode($winner) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="winner" data-order="{{ $order }}"
                 >
-                    <x-brackets.bracket-table :bracket="$winner" />
+                    <x-brackets.bracket-table :bracket="$winner"  :isFirst="false" />
                     <div class="text-center mx-auto popover-parent tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                         style="z-index: 998; top: 50%; left: -70%">
                         

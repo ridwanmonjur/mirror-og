@@ -4,7 +4,7 @@
         tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}" data-item-type="middle"
     >
-        <x-brackets.bracket-table :bracket="$bracket" />
+        <x-brackets.bracket-table :bracket="$bracket"  :isFirst="false" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <x-brackets.bracket-middle-item-popover :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
                 :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamName2="$bracket['team2_teamName']" :teamId2="$bracket['team2_id']"

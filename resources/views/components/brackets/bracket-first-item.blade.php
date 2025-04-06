@@ -4,7 +4,7 @@
         data-item-type="first" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
     >
-        <x-brackets.bracket-table :bracket="$bracket" />
+        <x-brackets.bracket-table :bracket="$bracket" :isFirst="true" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen user-select-none position-relative  ">
 
             <x-brackets.bracket-first-item-popover 

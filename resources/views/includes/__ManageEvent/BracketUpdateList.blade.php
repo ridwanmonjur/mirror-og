@@ -4,7 +4,7 @@
     @include('includes.__BracketModal.Dispute')
     @if (isset($bracketList['U']))
  
-        <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
+        <h5 class="mt-4 mb-2 text-start"><u>Upper bracket</u></h5>
         <div class="row mb-2 custom-scrollbar">
             <div class="tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">

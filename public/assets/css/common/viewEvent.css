@@ -155,6 +155,10 @@ input[type="submit"]:active {
     
 }
 
+.popover-team-img {
+    width: 50px;
+    height: 50px;
+}
 
 .rounded-banner-parent:hover .rounded-banner {
     animation: grayscale 2s ease-in-out;
@@ -623,7 +627,7 @@ h2 {
     display: flex;
     flex-direction: column;
 }
-@media (min-width: 1000px) {
+@media (min-width: 992px) {
     .tournament-bracket {
         flex-direction: row;
    }
@@ -667,7 +671,7 @@ h2 {
     margin: auto;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 992px) {
     .selectedDisputeResolveButton {
         width: 30vw;
 
@@ -694,15 +698,10 @@ h2 {
     align-items: flex-start;
     position: relative;
     padding: 2% 0;
-    width: 48%;
+    width: auto;
     transition: padding 0.2s linear;
 }
-.tournament-bracket__item:nth-child(odd) {
-    margin-right: 2%;
-}
-.tournament-bracket__item:nth-child(even) {
-    margin-left: 2%;
-}
+
 .tournament-bracket__item::after {
     transition: width 0.2s linear;
 }
@@ -715,7 +714,7 @@ h2 {
         margin-right: 0;
    }
 }
-@media (min-width: 1000px) {
+@media (min-width: 992px) {
     .tournament-bracket__item {
         padding: 0.5em 1em;
         width: 100%;
@@ -780,14 +779,20 @@ h2 {
 .tournament-bracket__match::before, .tournament-bracket__match::after {
     transition: all 0.2s linear;
 }
-@media (min-width: 600px) {
+
+
+@media (min-width: 992px) {
+    .tournament-bracket__item:nth-child(odd) {
+        margin-right: 2%;
+    }
+    .tournament-bracket__item:nth-child(even) {
+        margin-left: 2%;
+    }
+
     .tournament-bracket__match {
         padding: 0.75em 20px;
-        max-width: 250px;
         margin: auto;
-   }
-}
-@media (min-width: 1000px) {
+    }
     .tournament-bracket__match::before, .tournament-bracket__match::after {
         position: absolute;
         left: 0;
@@ -875,30 +880,28 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 }
 
   
-@media (min-width: 1000px) {
-   
-}
+
 .tournament-bracket__content .tournament-bracket__team:first-child {
     width: 50%;
     order: 0;
     text-align: right;
 }
-@media (min-width: 1000px) and (max-width: 1200pxpx) {
+@media (min-width: 992px) and (max-width: 1200px) {
     .tournament-bracket__content .tournament-bracket__team:first-child {
         align-items: flex-end;
    }
 }
-.tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
+.tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__pos {
     order: 2;
     justify-content: flex-end;
 }
 @media (min-width: 600px) {
-    .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
+    .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__pos {
         order: 0;
    }
 }
-@media (min-width: 1000px) and (max-width: 1200pxpx) {
-    .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__country {
+@media (min-width: 992px) and (max-width: 1200px) {
+    .tournament-bracket__content .tournament-bracket__team:first-child .tournament-bracket__pos {
         flex-direction: column-reverse;
         align-items: flex-end;
    }
@@ -916,18 +919,18 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     order: 2;
     text-align: left;
 }
-@media (min-width: 1000px) and (max-width: 1200pxpx) {
+@media (min-width: 992px) and (max-width: 1200px) {
     .tournament-bracket__content .tournament-bracket__team:last-child {
         align-items: flex-start;
    }
 }
-@media (min-width: 1000px) {
-    .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__country {
+@media (min-width: 992px) {
+    .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__pos {
         justify-content: flex-start;
    }
 }
-@media (min-width: 1000px) and (max-width: 1200pxpx) {
-    .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__country {
+@media (min-width: 992px) and (max-width: 1200px) {
+    .tournament-bracket__content .tournament-bracket__team:last-child .tournament-bracket__pos {
         align-items: flex-start;
    }
 }
@@ -943,12 +946,17 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     white-space: nowrap;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 992px) {
     .tournament-bracket__table {
         display: none;
    }
    .tournament-bracket__displayLargeScreen{
         display: block;
+    }
+
+    .popover-team-img {
+        width: 100px;
+        height: 100px;
     }
 }
 .tournament-bracket__caption {
@@ -979,7 +987,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     left: 2%;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 992px) {
     .tournament-bracket__team {
         flex-direction: column-reverse;
    }
@@ -1000,23 +1008,23 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         top:20px;
     }
 }
-.tournament-bracket__country {
+.tournament-bracket__pos {
     font-size: 0.95rem;
     display: flex;
     margin-top: 0.5em;
     align-items: center;
 }
 @media (max-width: 600px) {
-    .tournament-bracket__country {
+    .tournament-bracket__pos {
         margin-top: 0;
    }
 }
-@media (min-width: 1000px) and (max-width: 1200pxpx) {
-    .tournament-bracket__country {
+@media (min-width: 992px) and (max-width: 1200px) {
+    .tournament-bracket__pos {
         display: flex;
         flex-direction: column;
    }
-    .tournament-bracket__country .tournament-bracket__code {
+    .tournament-bracket__pos .tournament-bracket__code {
         margin-top: 0.2em;
    }
 }
@@ -1034,7 +1042,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         padding: 0 0.25em;
    }
 }
-@media (min-width: 1000px) and (max-width: 1200pxpx) {
+@media (min-width: 992px) and (max-width: 1200px) {
     .tournament-bracket__code {
         padding: 0;
    }
@@ -1215,3 +1223,9 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     min-width: 35px;
     text-align: start !important;
 }
+
+.filler {
+    width: 40px;
+    height: 40px;
+}
+

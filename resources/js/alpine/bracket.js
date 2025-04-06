@@ -1,14 +1,13 @@
 import { initializeApp } from "firebase/app";
 import {
   initializeFirestore, memoryLocalCache, setDoc, serverTimestamp,
-  addDoc, onSnapshot, updateDoc, getDocsFromCache, startAfter, limit, orderBy, doc, query, collection, collectionGroup, getDocs, getDoc, where, or
+  addDoc, onSnapshot, updateDoc,  doc, query, collection, collectionGroup, getDocs, getDoc, where, or
 } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
 
 
-let csrfToken3 = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 const eventId = document.getElementById('eventId')?.value;
 
 window.updateReportDispute = async (reportId, team1Id, team2Id) => {
@@ -193,6 +192,8 @@ function getAllMatchStatusesData() {
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;
+  window.showLoading();
+
   onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
     reportSnapshot.docChanges().forEach((change) => {
       if (change.type === "added") {
@@ -238,8 +239,9 @@ function getAllMatchStatusesData() {
 
     newDataList = {}, modifiedDataList = {};
     newClassList = [], modifiedClassList = [];
+  
+    await window.closeLoading();
   });
-
 }
 
 getAllMatchStatusesData();
