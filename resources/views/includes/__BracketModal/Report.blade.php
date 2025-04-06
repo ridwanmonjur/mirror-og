@@ -6,7 +6,7 @@
                     style="opacity: 1; z-index: 999 !important; ">
 
                     <div class="user-select-none popover-box row justify-content-start border border-dark border px-2 py-2"
-                        style="background-color: white; min-width: min(400px, 100%) !important; border-radius: 25px !important;">
+                        style="background-color: white; min-width: min(400px, 100%) !important; ">
                         <div class="text-center text-uppercase mt-4">
                             <h5> Match Results: <span  v-text="report.position"></span> </h5>
                             <p class="my-0 p-0" v-text="report.completeMatchStatus"> </p>
