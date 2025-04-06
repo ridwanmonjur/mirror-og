@@ -475,9 +475,6 @@ submitBtnElement?.addEventListener('click', function(event) {
 
                     }
 
-                   
-
-
                 }
                
                 closeBtnElement.click();

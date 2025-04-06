@@ -39,9 +39,15 @@ class CreateDummyTasks extends Command
             $todayDate = $today->toDateString();
             $todayTime = $today->toTimeString();
 
-            $launchEvents = EventDetail
-                ::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
-                ->whereNotNull('sub_action_public_date')
+            $launchEvents = EventDetail::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
+                ->whereNotNull('payment_transaction_id')
+                ->where(function ($query) use ($today) {
+                    $query->where(function ($subQuery) {
+                        $subQuery->whereNull('sub_action_public_date')
+                            ->orWhereNull('sub_action_public_time');
+                    })
+                    ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$today]);
+                })
                 ->select(['id', 'sub_action_public_date'])
                 ->limit(5)
                 ->get();

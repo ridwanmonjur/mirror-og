@@ -50,6 +50,10 @@ svg{
     cursor: pointer;
 }
 
+svg:hover {
+    scale: 1.1;
+}
+
 .search-bar2-adjust {
     margin-left: 30px;
 }

@@ -348,9 +348,8 @@ class EventDetail extends Model
                             ->orWhereNull('sub_action_public_time')
                             ->orWhereRaw('CONCAT(sub_action_public_date, " ", sub_action_public_time) < ?', [$currentDateTime]);
                     })
-                    ->where('status', '<>', 'DRAFT')
+                    ->whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
                     ->whereNotNull('payment_transaction_id')
-                    ->where('status', '<>', 'PREVIEW')
                     ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime]);
             } elseif ($status === 'SCHEDULED') {
                 return $query

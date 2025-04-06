@@ -867,7 +867,7 @@ function BracketData() {
       );
 
       this.subscribeToCurrentReportDisputesSnapshot = subscribeToCurrentReportDisputesSnapshot;
-      window.Swal.close();
+      window.closeLoading()
     },
 
     getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
@@ -946,7 +946,7 @@ function BracketData() {
             }
 
             this.dispute = [null, null, null];
-            window.Swal.close();
+            window.closeLoading()
           }
         }
       );
