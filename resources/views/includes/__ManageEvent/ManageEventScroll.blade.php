@@ -12,7 +12,6 @@
             $eventTierLower = $icon = null;
         }
         
-
         $eventTierLowerImg = bladeImageNull($icon);
         $eventBannerImg = bladeImageNull($event->eventBanner);
         $bladeEventGameImage = bladeImageNullq($event->game ? $event->game?->gameIcon : null);
@@ -83,20 +82,18 @@
             </div>
             <div class="league_name mt-4 mb-2">
                 <p 
-                    class="{{ 'text-wrap  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier?->eventTier }}"><b>{{ $event->eventName ?? 'Choose a name' }}</b></p>
-                <small class=" px-0 ms-0 pb-2 ">
-                    <span class="px-0 text-start">
-                        <span class="d-inline text-wrap ">{{ $event->user->name  }}</span>
-                    </span>
-                    <span class="px-0 text-start d-block d-lg-inline">
+                    class="{{ 'text-truncate w-100  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier?->eventTier }}">{{ $event->eventName ?? 'Choose a name' }}</p>
+                <div class="small d-inline-flex  px-0 ms-0 pb-2 text-truncate w-100" >
+                    <div class="  px-0 text-start text-ellipsis me-2" style="max-width: 50%;">{{ $event->user->name  }}</div>
+                    <div class="px-0 text-start ">
                         <span class="ms-1 me-1 d-inline">
                             <svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                             <circle cx="2" cy="2" r="2" fill="currentColor"/>
                             </svg>
                         </span>
                         <span>{{ $followersCount }} followers</span>
-                    </span>
-                </small>
+                    </div>
+                </div>
             </div>
 
             <div class="">

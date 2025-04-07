@@ -4,11 +4,11 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Hi, user!' }}
+    {{ 'Change your email address for Driftwood' }}
 @endsection
 
 @section('emailTitle')
-    {{ 'Request to Change Account Email' }}
+    {{ 'Change your email address for Driftwood' }}
 @endsection
 
 @section('content')
@@ -18,18 +18,18 @@
                 style="background-color: white; margin: 0 auto; padding: 0px; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Hi,</p>
-                        <p>You recently requested for changing your primary email. Click the button below to confirm
-                            it.</p>
+                        <p>Hi.</p>
+                        <p>You recently requested to change the email address with your Driftwood account.</p>
+                        <br>
+                        <p>Click the button below to confirm this change.</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.verify.action', $token) }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
                                 Change email
                             </a>
                         </p>
-                        <p>If you did not request your primary email with us, please ignore this email or contact support if you have
-                            questions.</p>
-                        <p>Thanks,<br>Driftwood</p>
+                        <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
+                        <p>Sincerely,<br>The Driftwood Team</p>
                     </td>
                 </tr>
                 <tr>

@@ -122,7 +122,7 @@ input[type="submit"]:active {
     border-radius: 42px 42px;
     border-width: 3px;
     border-style: solid;
-    height: max-content !important;
+    height: 505px !important;
     /* #8CCD39 */
     margin-bottom: 5%;
     margin: auto;
@@ -240,7 +240,8 @@ input[type="submit"]:active {
 }
 
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 992px) {
+    
     .flexbox-filter {
         width: 50%;
     }
@@ -284,6 +285,9 @@ input[type="submit"]:active {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .rounded-box {
+        height: 515px !important;
+    }
 }
 
 @media screen and (min-width: 1400px) {
@@ -314,6 +318,7 @@ input[type="submit"]:active {
     grid-template-columns: repeat(auto-fill, minmax(80vw, 1fr));
     gap: 1.5rem;
     justify-content: center;
+    grid-auto-rows: 1fr;
 }
 
 /* Dropdown */

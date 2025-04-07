@@ -4,13 +4,13 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Hi.' }}
+    {{ 'Reset your password' }}
 @endsection
 
 @push('head')
 @endpush
 @section('emailTitle')
-    {{ 'Link to Reset Password' }}
+    {{ 'Reset your password' }}
 @endsection
 @section('content')
     <tr>
@@ -19,17 +19,17 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>You recently requested to reset your password for your account. Click the button below to reset
-                            it.</p>
+                        <p>You recently requested a password reset for your account.</p>
+                        <br>
+                        <p>Click the button below to confirm this change.</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.reset.view', $token) }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
                                 Reset Password
                             </a>
                         </p>
-                        <p>If you did not request a password reset, please ignore this email or contact support if you have
-                            questions.</p>
-                        <p>Thanks,<br>Driftwood</p>
+                        <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
+                        <p>Sincerely,<br>The Driftwood Team</p>
                     </td>
                 </tr>
                 <tr>

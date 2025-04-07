@@ -44,7 +44,7 @@
                 </a>
                 <h5 style="padding-top: 10px;">Valorant</h5>
             </div>
-            <div class=" scroll-images " style="pointer-events: none; cursor: not-allowed;">
+            <div class=" scroll-images " style=" cursor: not-allowed;">
                 <a href="javascript:void(0)"  > 
                     <img 
                         class="border border-dark selectable-image" 
