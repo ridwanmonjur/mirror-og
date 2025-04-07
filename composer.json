@@ -109,6 +109,17 @@
             "npm ci",
             "npm run build",
             "rm -rf node_modules"
+        ],
+        "staging": [
+            "rm -rf node_modules",
+            "rm -rf vendor",
+            "rm -f .env",
+            "cp .env.staging .env",
+            "composer2 install --no-dev --optimize-autoloader",
+            "php artisan migrate",
+            "npm ci",
+            "npm run build",
+            "rm -rf node_modules"
         ]
     },
     "extra": {

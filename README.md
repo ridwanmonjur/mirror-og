@@ -25,8 +25,12 @@ Password: 12345678
 # Create environment file for Driftwood
 cp .env.prod .env
 
+
 # Create environment file for Oceans
 cp .env.staging .env
+
+# Generate application key
+php artisan key:generate
 
 # Install Composer dependencies
 composer update
@@ -39,9 +43,6 @@ npm run build
 
 3. Set up environment:
 ```bash
-
-# Generate application key
-php artisan key:generate
 
 # Generate JWT secret
 php artisan jwt:secret
