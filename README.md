@@ -22,6 +22,12 @@ Password: 12345678
 
 2. Install project dependencies:
 ```bash
+# Create environment file for Driftwood
+cp .env.prod .env
+
+# Create environment file for Oceans
+cp .env.staging .env
+
 # Install Composer dependencies
 composer update
 
@@ -33,8 +39,6 @@ npm run build
 
 3. Set up environment:
 ```bash
-# Create environment file
-cp .env.prod .env
 
 # Generate application key
 php artisan key:generate
