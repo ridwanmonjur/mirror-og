@@ -29,9 +29,8 @@
                                 {{$actionName}}
                             </a>
                         </p>
-                        <p>If you did not do this action, please ignore this email or contact support if you have
-                            questions.</p>
-                        <p>Thanks,<br>Driftwood</p>
+                       <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
+                        <p>Sincerely,<br>The Driftwood Team</p>
                     </td>
                 </tr>
                 <tr>

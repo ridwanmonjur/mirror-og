@@ -28,9 +28,8 @@
                                 {{$actionName}}
                             </a>
                         </p>
-                        <p>If you're having trouble with the button above, copy and paste the URL below into your web
-                            questions.</p>
-                        <p>Thanks,<br>Driftwood</p>
+                        <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
+                        <p>Sincerely,<br>The Driftwood Team</p>
                     </td>
                 </tr>
                 <tr>
