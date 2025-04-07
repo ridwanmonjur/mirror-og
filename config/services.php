@@ -37,6 +37,7 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URL'),
         'allowed_hosts' => [
             'driftwood.gg',
+            'oceansgaming.gg',
         ],
     ],
 
@@ -46,6 +47,7 @@ return [
         'redirect' => env('STEAM_REDIRECT_URL'),
         'allowed_hosts' => [
             'driftwood.gg',
+            'oceansgaming.gg'
         ],
     ],
 
