@@ -13,6 +13,7 @@
     <style>
         .policy-row {
             padding: 1.5rem 0;
+            margin-bottom: 1.5rem;
         }
         
         .policy-row:last-child {
@@ -28,6 +29,25 @@
         
         .policy-svg:hover {
             transform: scale(1.1);
+        }
+
+        .grid-template-columns {
+            display: grid;
+            grid-auto-rows: 1fr;
+            grid-template-columns: 1fr;
+        }
+
+        @media screen and (min-width: 992px) { 
+            .grid-template-columns {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .button-down {
+            position: absolute;
+            top: 90%;
+            left: 0%;
+            margin-bottom: 20px;
         }
         
     </style>
@@ -69,8 +89,8 @@
         <section class=" mt-5">
             <h2 class="display-4 px-0 fw-light text-white mb-4">Legal Guidelines</h2>
             <!-- Privacy Policy Row -->
-            <div class="row">
-                <div class="policy-row col-12 col-lg-4 text-white">
+            <div class="grid-template-columns">
+                <div class="policy-row position-relative text-white">
                     <div class="px-2">
                         <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#5fb7e6" stroke-width="2"/>
@@ -85,7 +105,7 @@
                     <div class="px-2 ">
                         <button 
                             onclick="openNewTab(event);"
-                            class="btn mt-2 mb-4 bg-support-btn text-white rounded-pill px-4 py-2"  data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy">
+                            class="btn button-down mt-2 mb-4 bg-support-btn text-white rounded-pill px-4 py-2"  data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy">
                             View Policy
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -95,7 +115,7 @@
                 </div>
                 
                 <!-- Return Policy Row -->
-                <div class="policy-row col-12 col-lg-4 text-white">
+                <div class="policy-row position-relative text-white">
                     <div class=" px-2">
                         <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <!-- Simple circular background -->
@@ -112,7 +132,7 @@
                     <div class="px-2 ">
                         <button 
                             onclick="openNewTab(event);"
-                            class="btn mt-2 mb-4 bg-general-btn text-white rounded-pill px-4 py-2"  data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy">
+                            class="button-down btn mt-2 mb-4 bg-general-btn text-white rounded-pill px-4 py-2"  data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy">
                             View Policy
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -122,7 +142,7 @@
                 </div>
                 
                 <!-- Terms and Conditions Row -->
-                <div class="policy-row col-12 col-lg-4 text-white">
+                <div class="policy-row position-relative text-white">
                     <div class="px-2">
                         <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#64DBAF" stroke-width="2"/>
@@ -140,7 +160,7 @@
                     <div class="px-2">
                         <button 
                             onclick="openNewTab(event);"
-                            class="btn mt-2 mb-4 bg-purple-btn text-dark rounded-pill px-4 py-2"  data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions">
+                            class="button-down btn mt-2 mb-4 bg-purple-btn text-dark rounded-pill px-4 py-2"  data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions">
                             View T&C 
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>

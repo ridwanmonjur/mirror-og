@@ -818,3 +818,20 @@ button:after {
     display: none !important;
 }
 
+.bg-support-btn {
+    background: #5fb7e6;
+}
+
+.bg-general-btn {
+    background: #5ebb7d;
+}
+
+.bg-purple-btn {
+    background: #64DBAF;
+}
+
+.text-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
