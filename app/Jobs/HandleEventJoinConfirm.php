@@ -123,40 +123,10 @@ class ConfirmStrategy
                 'scroll' => $join_id
             ]),
         ]));
-            
-        $organizerNotification = [
-            'user_id' => $event->user->id,
-            'type' => 'teams',
-            'link' =>  route('participant.register.manage', [
-                'id' => $selectTeam->id,
-                'scroll' => $join_id
-            ]),
-            'icon_type' => 'confirm',
-            'created_at' => DB::raw('NOW()'),
-            'html' => <<<HTML
-                <span class="notification-gray">
-                    <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
-                        {$selectTeam->teamName}</button>
-                    has confirmed registration for your event,
-                    <button class="btn-transparent px-0 border-0 Color-{$event->tier->eventTier}" data-href="/event/{$event->id}">
-                        {$event->eventName}</button>.
-                </span>
-            HTML,
-        ];
-
-        if ($event->user->email) {
-            Mail::to($event->user->email)->send(new EventConfirmMail([
-                'team' => $selectTeam,
-                'text' => $html,
-                'link' =>  route('participant.register.manage', [
-                    'id' => $selectTeam->id,
-                    'scroll' => $join_id
-                ]),
-            ]));
-        }
+       
         
         ActivityLogs::insert($allEventLogs);
-        NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
+        NotifcationsUser::insertWithCount($memberNotification);
     }
 }
 
@@ -378,30 +348,7 @@ class VoteEndStrategy
                 </span>
             HTML;
 
-            $organizerNotification = [
-                'user_id' => $event->user->id,
-                'type' => 'teams',
-                'link' =>  route('participant.register.manage', [
-                    'id' => $selectTeam->id,
-                    'scroll' => $join_id
-                ]),
-                'icon_type' => 'quit',
-                'html' => $htmlNotif,
-                'created_at' => DB::raw('NOW()')
-            ];
-            
-            if ($event->user->email) {
-                Mail::to($event->user->email)->send(new VoteEndMail([
-                    'team' => $selectTeam,
-                    'text' => $htmlMail,
-                    'link' =>  route('participant.register.manage', [
-                        'id' => $selectTeam->id,
-                        'scroll' => $join_id
-                    ]),
-                ]));
-            }
-
-            NotifcationsUser::insertWithCount([$organizerNotification, ...$memberNotification]);
+            NotifcationsUser::insertWithCount($memberNotification);
         } else {
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
