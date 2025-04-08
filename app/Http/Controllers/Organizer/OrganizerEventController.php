@@ -108,6 +108,7 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $user->id)->first();
         $count = 8;
         $eventListQuery = EventDetail::generateOrganizerFullQueryForFilter($request);
+        $followersCount = OrganizerFollow::where('organizer_user_id', $user->id)->count();
 
         $eventList = $eventListQuery
             ->where('event_details.user_id', $userId)
@@ -127,7 +128,7 @@ class OrganizerEventController extends Controller
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
         
 
-        $outputArray = compact('eventList', 'count', 'user', 'organizer');
+        $outputArray = compact('eventList', 'count', 'followersCount', 'user', 'organizer');
         $view = view('includes.__ManageEvent.ManageEventScroll', $outputArray)->render();
 
         return response()->json(['html' => $view], 200);
