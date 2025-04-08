@@ -79,6 +79,11 @@ function AccountComponent() {
                 });
                 
                 if (currentEmailInput) {
+                    if (this.emailAddress == currentEmailInput) {
+                        window.toastError("This email address is your current email address. Please enter a new one!");
+                        return;
+                    }
+                
                     let data = await fetch(route, {
                         method: "POST",
                         headers: {
@@ -97,12 +102,11 @@ function AccountComponent() {
                         Swal.fire({
                             confirmButtonColor: '#43A4D7',
                             reverseButtons: true,
-                            icon: 'success',
-                            title: 'Email changed successfully!',
-                            text: `Email updated successfully to '${currentEmailInput}'! A verification email has been sent to your new email. Please verify your new email.` 
+                            icon: 'info',
+                            title: 'Email verification sent!',
+                            text: `A verification email has been sent to your current email, ${this.emailAddress}. Please verify it first.` 
                         });
 
-                        this.emailAddress = currentEmailInput;
                     } else {
                         if (data.message != null) {
                             toastError(data.message);

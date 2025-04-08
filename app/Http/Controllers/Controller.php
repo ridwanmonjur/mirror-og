@@ -23,6 +23,13 @@ class Controller extends BaseController
         return view('Participant.EventNotFound', compact('error'));
     }
 
+    public function showErrorGeneral($error, $args = [])
+    {
+        return view('Public.Error', [
+            'error' => $error,
+        ]);
+    }
+
     public function handleErrorJson(\Exception $e)
     {
         return response()->json([

@@ -19,13 +19,14 @@
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hi.</p>
-                        <p>You recently requested to change the email address with your Driftwood account.</p>
+                        <p>You recently requested to change the email address connected with your Driftwood account from
+                            {{$user->email}} to {{$newEmail}}.</p>
                         <br>
                         <p>Click the button below to confirm this change.</p>
                         <p style="text-align: center;">
-                            <a href="{{ route('user.verify.action', $token) }}"
+                            <a href="{{ route('user.changeEmail.action', ['token' => $token, 'newEmail' => $newEmail]) }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
-                                Change email
+                                Change email {{$user->email}}
                             </a>
                         </p>
                         <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>

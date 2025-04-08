@@ -29,6 +29,21 @@ class UserController extends Controller
         $this->settingsService = $settingsService;
     }
 
+    public function changeEmail(Request $request, $token, $newEmail)
+    {
+        ['success' => $success, 'message' => $message, 'route' => $route] = $this->settingsService->changeMailAction(
+            $token, $newEmail
+        );
+
+        if (! $success) {
+            return $this->showErrorGeneral($message);
+        }
+
+        return redirect()
+            ->route($route)
+            ->with('success', $message);
+    }
+
     public function viewNotifications(Request $request)
     {
         $user = $request->attributes->get('user');

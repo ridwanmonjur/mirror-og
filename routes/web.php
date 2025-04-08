@@ -36,6 +36,7 @@ Route::post('/forget-password', [AuthResetAndVerifyController::class, 'storeForg
 
 // Verify
 Route::get('/account/verify-resend/{email}', [AuthResetAndVerifyController::class, 'verifyResend'])->name('user.verify.resend');
+Route::get('/account/verify/{token}/mail/{newEmail}', [UserController::class, 'changeEmail'])->name('user.changeEmail.action');
 Route::get('/account/verify/{token}', [AuthResetAndVerifyController::class, 'verifyAccount'])->name('user.verify.action');
 Route::view('/account/verify-success/', 'Auth.VerifySuccess')->name('user.verify.success');
 Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInterestedUser'])->name('interestedUser.verify.action');

@@ -20,20 +20,23 @@ class VerifyUserMailChange extends Mailable implements ShouldQueue
     public $user;
     public $token;
 
+    public $newEmail;
+
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Please confirm your new email request.',
+            subject: 'Change your email address for Driftwood.',
         );
     }
 
-    public function __construct(User $user, string $token)
+    public function __construct(User $user, string $token, string $newEmail)
     {
         $this->user = $user;
         $this->token = $token;
+        $this->newEmail = $newEmail;
     }
 
     public function build()
@@ -41,6 +44,7 @@ class VerifyUserMailChange extends Mailable implements ShouldQueue
         return $this->view('Email.verifyEmailChange')->with([
             'token' => $this->token,
             'user' => $this->user,
+            'newEmai' => $this->newEmail
         ]);
     }
 }
