@@ -225,7 +225,7 @@ trait RespondTaksTrait
                         'link' => $notification2['link'],
                         'icon_type' => $notification2['icon_type'],
                         'html' => $notification2['html'],
-                        'created_at' => DB::raw('NOW()')
+                        'created_at' => DB::raw('NOW()'),
                     ];
                     
                     $orgMailClass = 'App\\Mail\\'. $notification2['mailClass'];
@@ -237,6 +237,7 @@ trait RespondTaksTrait
                     $orgMailInvocation = new $orgMailClass([
                         'text' => $notification2['mail'],
                         'link' => $notification2['link'],
+                        'subject' =>  $notification2['subject'],
                     ]);
                     
                     $user = $notification2['user'];

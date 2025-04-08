@@ -53,8 +53,9 @@ class HandleEventUpdate implements ShouldQueue
                         HTML;
 
                     $partialEmail = <<<HTML
-                        The event, <span class="px-0 border-0 notification-blue">{$this->eventDetail->eventName}</span> has 
-                        been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} MYT and ends on {$endTimeDate->format('l, F j, Y')} MYT.
+                        The date and time for your event, <span class="px-0 border-0 notification-blue">{$this->eventDetail->eventName}</span> has been updated to the following:<br>
+                        <b>Start: {$startTimeDate->format('l, jS F Y')} End: {$endTimeDate->format('l, jS F Y')}</b><br>
+                        All registered teams have been notified of this change.
                         HTML;
 
                     $memberHtml = <<<HTML
