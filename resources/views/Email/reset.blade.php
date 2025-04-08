@@ -19,7 +19,8 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>You recently requested a password reset for your account.</p>
+                        <p>Hi, {$userName}!</p>
+                        <p>You recently requested a password reset for your Driftwood account.</p>
                         <br>
                         <p>Click the button below to confirm this change.</p>
                         <p style="text-align: center;">

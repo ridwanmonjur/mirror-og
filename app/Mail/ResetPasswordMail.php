@@ -18,12 +18,14 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
     
     public $image;
     public $token;
+    public $userName;
 
 
-    public function __construct(string $image, string $token)
+    public function __construct(string $image, string $token, string $userName)
     {
         $this->image = $image;
         $this->token = $token;
+        $this->userName = $userName;
     }
 
 
@@ -45,6 +47,7 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
         return $this->view('Email.reset')->with([
             'token' => $this->token,
             'image' => $this->image,
+            'userName' => $this->userName
         ]);
     }
 
