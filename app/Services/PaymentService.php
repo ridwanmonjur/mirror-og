@@ -136,7 +136,7 @@ class PaymentService
         }
 
         $paymentData = DB::table('join_events')
-            ->whereIn('event_details_id', $eventIdList)     
+            ->where('id', $joinEventId)     
             ->update(['join_status' => 'canceled']);
 
         return $summedDiscounts;
