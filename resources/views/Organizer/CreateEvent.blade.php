@@ -17,7 +17,7 @@
         <main>
             <div>
                 <div>
-                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
+                    <form enctype="multipart/form-data" 
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
                         @include('includes.__CreateEditEvent.CreateEventHiddenForm')

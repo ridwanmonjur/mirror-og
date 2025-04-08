@@ -392,6 +392,7 @@ input[type="time"] {
 .form-group textarea {
     height: 120px;
     resize: vertical;
+    white-space: pre-wrap;
 }
 
 .form-group input[type="file"] {

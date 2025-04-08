@@ -17,7 +17,7 @@
         <main>
             <div>
                 <div>
-                    <form enctype="multipart/form-data" onkeydown="return event.key != 'Enter';"
+                    <form enctype="multipart/form-data" 
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf
@@ -36,7 +36,7 @@
                             @include('includes.__CreateEditEvent.CreateEventSuccess')
                         @endif
                     </form>
-                    <form onkeydown="return event.key != 'Enter';" id="cancelEvent" method="POST"
+                    <form  id="cancelEvent" method="POST"
                         action="{{ route('event.updateForm', $event->id) }}"
                     >
                     </form>
