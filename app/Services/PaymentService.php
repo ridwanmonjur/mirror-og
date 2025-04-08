@@ -17,13 +17,12 @@ class PaymentService
         $this->stripeClient = $stripeClient;
     }
 
-    public function refundPaymentsForEvents(array $eventIdList, float $percentCapture): array
+    public function refundPaymentsForEvents(string| int $joinEventId, float $percentCapture): array
     {
-        $paymentData = DB::table('event_details')
-            ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
+        $paymentData = DB::table('join_events')
+            ->where('join_events.id',  $joinEventId )
             ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
             ->join('all_payment_transactions', 'all_payment_transactions.id', '=', 'participant_payments.payment_id')
-            ->whereIn('event_details.id', $eventIdList)
             ->select('all_payment_transactions.payment_id', 'all_payment_transactions.id', 'all_payment_transactions.payment_amount',  
                 'all_payment_transactions.payment_status', 'participant_payments.user_id')
             ->get()
@@ -57,16 +56,15 @@ class PaymentService
                     $updatedPayments[$index]['payment_status'] = 'released';
                     $updatedPayments[$index]['released_amount'] = $refundedAmount;
                 
-                    $percentCapture !== 0.0
+                    $percentCapture != 0
                         ? $paymentIntent->capture(['amount_to_capture' => $item['payment_amount'] * 100 * $percentCapture])
                         : $paymentIntent->cancel();
                 
                     $discountKey = 'released_amount';
                 } else {
-                    if ($percentCapture !== 0) {
-                        $updatedPayments[$index]['payment_status'] = 'couponed';
-                        $updatedPayments[$index]['couponed_amount'] = $refundedAmount;
-                    }
+                    $updatedPayments[$index]['payment_status'] = 'couponed';
+                    $updatedPayments[$index]['couponed_amount'] = $refundedAmount;
+                    
                     
                     $discountKey = 'couponed_amount';
 
@@ -94,8 +92,6 @@ class PaymentService
                 Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
-
-        // dd($paymentData, $updatedDiscounts,$summedDiscounts);
 
 
         if (!empty($updatedPayments)) {
@@ -142,6 +138,7 @@ class PaymentService
         $paymentData = DB::table('join_events')
             ->whereIn('event_details_id', $eventIdList)     
             ->update(['join_status' => 'canceled']);
+
         return $summedDiscounts;
     }
 }

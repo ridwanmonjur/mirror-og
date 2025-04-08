@@ -155,7 +155,7 @@ class VoteStartStrategy
             'joinEvent' => $joinEvent,
         ] = $parameters;
 
-        $teamMembers = $joinEvent->members;
+        $teamMembers = $joinEvent->roster;
         $memberNotification = []; $memberMail = [];
         foreach ($teamMembers as $member) {
             $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
@@ -227,6 +227,7 @@ class OrgCancelStrategy{
 
 class VoteEndStrategy
 {
+    
     public function handle($parameters)
     {
         [
@@ -237,49 +238,71 @@ class VoteEndStrategy
             'join_id' => $join_id,
             'joinEvent' => $joinEvent,
         ] = $parameters;
-        $teamMembers = $joinEvent->members;
+        $teamMembers = $joinEvent->roster;
         $memberMail = [];
         $memberNotification = [];
 
         if ($willQuit) {
             foreach ($teamMembers as $member) {
-                $discount = isset($discountsByUserAndType[$member->user_id]) ? $discountsByUserAndType[$member->user_id] : null;
-                $discountText = '';
+                // $discount = isset($discountsByUserAndType[$member->user_id]) ? $discountsByUserAndType[$member->user_id] : null;
+                // $discountText = '';
 
-                $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;
-                $issetCouponedAmount = isset($discount['couponed_amount']) && $discount['couponed_amount'] > 0;    
-                if ( $issetReleasedAmount || $issetCouponedAmount ) {
-                    $discountText = "You have been returned half of your contribution: ";
+                // $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;
+                // $issetCouponedAmount = isset($discount['couponed_amount']) && $discount['couponed_amount'] > 0;    
+                // if ( $issetReleasedAmount || $issetCouponedAmount ) {
+                //     $discountText = "You have been returned half of your contribution: ";
                     
-                    if ($issetReleasedAmount) {
-                        $discountText .= "RM {$discount['released_amount']} in bank refunds" ;
-                    }
+                //     if ($issetReleasedAmount) {
+                //         $discountText .= "RM {$discount['released_amount']} in bank refunds" ;
+                //     }
                     
-                    if ($issetReleasedAmount && $issetCouponedAmount) {
-                        $discountText .= " &";
-                    }
+                //     if ($issetReleasedAmount && $issetCouponedAmount) {
+                //         $discountText .= " &";
+                //     }
                 
-                    if ($issetCouponedAmount) {
-                        $discountText .= " RM {$discount['couponed_amount']} in coupons.";
-                    }
+                //     if ($issetCouponedAmount) {
+                //         $discountText .= " RM {$discount['couponed_amount']} in coupons.";
+                //     }
+                // }
+
+                if ($joinEvent->status == 'confirmed') {
+                    $htmlMail = <<<HTML
+                        <span class="notification-gray">
+                            Your team, 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                                {$selectTeam->teamName}
+                            </button>, recently started a vote to quit for 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                                {$event->eventName}
+                            </button> by 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
+                                {$event->user->name}
+                            </button>.
+                            Your team has voted to QUIT.
+                            <br>Since your team has already confirmed its registration for this event, your entry fees WILL NOT be refunded.
+                            You may see the details of the vote here:
+                        </span>
+                    HTML;
+                } else {
+                    $htmlMail = <<<HTML
+                        <span class="notification-gray">
+                            Your team, 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
+                                {$selectTeam->teamName}
+                            </button>, recently started a vote to quit for 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
+                                {$event->eventName}
+                            </button> by 
+                            <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
+                                {$event->user->name}
+                            </button>.
+                            Your team has voted to QUIT.
+                            <br>Since your team has not confirmed its registration for this event, any entry fees paid will be returned in full to the respective players within 5 business days.
+                        </span>
+                    HTML;
                 }
 
-                $htmlMail = <<<HTML
-                    <span class="notification-gray">
-                        You have taken part in a vote for participating 
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
-                            {$event->user->name}
-                        </button>'s event,
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/event/{$event->id}">
-                            {$event->eventName}
-                        </button>
-                        with your team, 
-                        <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
-                            {$selectTeam->teamName}</button>. 
-                        Your team has chosen to leave. {$discountText}
-                    </span>
-                HTML;
-
+                
                 $htmlNotif = <<<HTML
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">

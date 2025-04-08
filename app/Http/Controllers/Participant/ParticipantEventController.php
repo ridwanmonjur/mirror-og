@@ -342,6 +342,7 @@ class ParticipantEventController extends Controller
     {
         try {
             $user = $request->attributes->get('user');
+            $errorMessage = null;
             $isToBeConfirmed = $request->join_status === 'confirmed';
             $rosterMember = RosterMember::where([
                 'join_events_id' => $request->join_event_id,
@@ -366,8 +367,24 @@ class ParticipantEventController extends Controller
                 ->with('tier:id,eventTier')
                 ->firstOrFail();
 
-            $isPermitted = $joinEvent->payment_status === 'completed' &&
-                ($request->join_status === 'confirmed' || $request->join_status === 'canceled');
+            if ($isToBeConfirmed) {
+                $isPermitted = $joinEvent->payment_status === 'completed';
+                if (!$isPermitted) $errorMessage = 'Unformtunately, your payment is not yet cleared!';
+
+                $isPermitted = $joinEvent->vote_ongoing == null && $isPermitted;
+                if (!$isPermitted) $errorMessage = 'Unformtunately, the vote is ongoing';
+
+                $isPermitted = $joinEvent->join_status == 'pending';
+                if (!$isPermitted) $errorMessage = $joinEvent->join_stauts == 'confirmed' ? 
+                    'You have already confirmed your registration!' : 'Your registration is already canceled.';
+            } else {
+                $isPermitted = $joinEvent->vote_ongoing == null;
+                if (!$isPermitted) $errorMessage = 'Unformtunately, the vote is ongoing';
+
+                $isPermitted = $joinEvent->join_status == 'pending' || $joinEvent->join_status == 'confirmed';
+                if (!$isPermitted) $errorMessage = $joinEvent->join_stauts == 'canceled' ? 
+                    'You have already canceled your registration!' : 'Your registration is in a weird state.';
+            }
 
             if ($isPermitted) {
                 $joinEvent->load(['roster', 'roster.user']);
@@ -395,7 +412,7 @@ class ParticipantEventController extends Controller
                     ]));
                 }
             } else {
-                return back()->with('errorMessage', 'This cancel operation is not permitted before completing fees & confirming registration.')
+                return back()->with('errorMessage', $errorMessage)
                     ->with('scroll', $request->join_event_id) ;
             }
 

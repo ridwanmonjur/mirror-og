@@ -274,19 +274,36 @@
                                                 @if (!$joinEvent->vote_ongoing) 
                                                     <button 
                                                         onclick="disapproveMemberAction(event);"
-                                                        class="btn btn-sm rounded-pill bg-red text-light me-3 z-99"
+                                                        class="btn btn-sm rounded-pill bg-red text-light me-1 z-99"
                                                         data-join-event-id="{{ $joinEvent->id }}"
                                                         data-user-id="{{$user->id}}"
                                                         data-team-id="{{ $selectTeam->id }}"
                                                         data-roster-id="{{ $currentUser['rosterId'] }}"
                                                     >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
-                                                    <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
-                                                    </svg>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                                                        <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+                                                        </svg>
                                                         Leave Roster
                                                     </button>
                                                     
-                                                    <br>
+                                                    <form action="{{route('participant.confirmOrCancel.action')}}" class="{{'cancel2form' . $joinEvent->id  }} d-inline"  method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
+                                                        <input type="hidden" name="join_status" value="canceled">
+                                                        <button 
+                                                            data-join-event-id="{{$joinEvent->id}}"
+                                                            data-form="{{'cancel2form' . $joinEvent->id  }}" 
+                                                            type="button"
+                                                            data-cancel="1"
+                                                            data-join-status="{{$joinEvent->join_status}}"
+                                                            data-registration-status="{{$joinEvent->regStatus}}"
+                                                            onclick="submitConfirmCancelForm(event)" 
+                                                            style="border: 1px solid red;"
+                                                            class="btn btn-sm text-red bg-white mt-1 rounded-pill me-2"
+                                                        >
+                                                            Leave Event
+                                                        </button> 
+                                                    </form>
                                                 @endif
                                             @endif
                                         </span>
@@ -314,7 +331,7 @@
                                     @endif
                                 @endif
                                 @if ($joinEvent->join_status == "pending")
-                                    <div class="text-start border border-primary mt-2 bg-translucent text-dark px-2">
+                                    <div class="text-start border border-primary my-2 px-2 bg-translucent text-dark mx-2">
                                         <small class="text-dark">You can freely join/leave events until registration is locked!</small>
                                     </div>
                                 @endif

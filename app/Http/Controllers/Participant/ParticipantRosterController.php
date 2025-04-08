@@ -86,13 +86,15 @@ class ParticipantRosterController extends Controller
                 ]);
             }
            
-
             $team = Team::where('id', $joinEvent->team_id)->first();
             
             $joinEvent->vote_starter_id = $user->id;
             [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
             if ($leaveRatio > 0.5) {
-                $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$joinEvent->eventDetails->id], 0.5);
+                if ($joinEvent->status == "pending") {
+                    $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents($joinEvent->id, 0);
+                }
+                
                 dispatch(new HandleEventJoinConfirm('VoteEnd', [
                     'selectTeam' => $team,
                     'user' => $user,

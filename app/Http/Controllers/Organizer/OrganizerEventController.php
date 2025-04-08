@@ -320,24 +320,26 @@ class OrganizerEventController extends Controller
             $event = EventDetail::where('id', $id)
                 ->with('user')
                 ->firstOrFail(); 
-            $teamIdList = JoinEvent::where('event_details_id', $id)->pluck('team_id'); // No need for get() before pluck
 
-            $teamList = Team::whereIn('id', $teamIdList)
-                ->with(["members" => function ($q){
-                    $q->with('user')->where('status', 'accepted'); 
-                }])
+            $joinList = JoinEvent::where('event_details_id', $id)
+                ->whereNot('join_status', 'canceled')
+                ->with(['roster', 'roster.user',
+                    'eventDetails.user:id,name,userBanner',
+                    'eventDetails.tier:id,eventTier',
+                    'team:id,teamName,teamBanner'
+                ])
                 ->get();
 
 
-            $teamList->each(function (Team $team) use ($event, $user, $id) {
-                $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents([$id], 0);
+            $joinList->each(function (JoinEvent $join) use ($event, $user) {
+                $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents($join->id, 0);
                 dispatch(new HandleEventJoinConfirm('OrgCancel', [
-                    'selectTeam' => $team,
+                    'selectTeam' => $join->team,
                     'user' => $user,
                     'event' => $event,
                     'discount' => $discountsByUserAndType,
-                    'join_id' => $joinEvent->id,
-                    'joinEvent' => $joinEvent
+                    'join_id' => $join->id,
+                    'joinEvent' => $join
                 ]));
             });
 
