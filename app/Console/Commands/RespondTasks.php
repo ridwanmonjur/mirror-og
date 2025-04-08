@@ -113,11 +113,6 @@ class RespondTasks extends Command
                 $taskId
             );
 
-            $this->handleEventTypes(
-                $processedEndedNotifications,
-                $endedEvents,
-                $taskId
-            );
 
             $this->handleEventTypes(
                 $this->getLiveNotifications($liveEvents),

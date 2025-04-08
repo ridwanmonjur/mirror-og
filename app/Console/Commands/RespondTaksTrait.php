@@ -93,6 +93,7 @@ trait RespondTaksTrait
                 'html' => $memberHtml,
                 'mail' => $memberEmail,
                 'mailClass' => 'EventLiveMail',
+                'subject' => 'An event you joined has gone live.',
                 'created_at' => DB::raw('NOW()')
             ];
 
@@ -106,6 +107,7 @@ trait RespondTaksTrait
                     'user' => $join->eventDetails->user,
                     'mail' => $memberEmail,
                     'mailClass' => 'EventLiveMail',
+                    'subject' => 'Your event has gone live.',
                     'created_at' => DB::raw('NOW()')
                 ];
             }
@@ -140,6 +142,7 @@ trait RespondTaksTrait
                     'html' => $memberHtml,
                     'mail' => $memberEmail,
                     'mailClass' => 'EventStartMail',
+                    'subject' => 'An event you joined has started.',
                     'created_at' => DB::raw('NOW()')
                 ]
             ];
@@ -154,6 +157,7 @@ trait RespondTaksTrait
                     'user' => $join->eventDetails->user,
                     'mail' => $memberEmail,
                     'mailClass' => 'EventStartMail',
+                    'subject' => 'Your event has started.',
                     'created_at' => DB::raw('NOW()')
                 ];
             }
@@ -182,6 +186,7 @@ trait RespondTaksTrait
                     $memberMailInvocation = new $memberMailClass([
                         'text' => $playerNotif[$join->id]['mail'],
                         'link' =>  $playerNotif[$join->id]['link'],
+                        'subject' =>  $playerNotif[$join->id]['subject'],
                     ]);
                     
                     $memberEmails = collect($join->roster)
@@ -407,6 +412,7 @@ trait RespondTaksTrait
                 'html' => $memberHtml,
                 'mail' => $memberEmail,
                 'mailClass' => 'EventEndMail',
+                'subject' => 'An event you joined has ended.',
                 'created_at' => DB::raw('NOW()')
             ];
 
@@ -420,6 +426,7 @@ trait RespondTaksTrait
                     'user_id' => $join->eventDetails->user_id,
                     'user' => $join->eventDetails->user,
                     'mailClass' => 'EventEndMail',
+                    'subject' => 'Your event has ended.',
                     'created_at' => DB::raw('NOW()')
                 ];
             }

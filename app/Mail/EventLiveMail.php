@@ -36,7 +36,7 @@ class EventLiveMail extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->replyTo(env('MAIL_CC_ADDRESS'))
-            ->subject("Your event is now live.")
+            ->subject($this->body['subject'])
             ->view('Email.event-live')
             ->with([
                 'actionName' => 'View this event!',
