@@ -26,7 +26,7 @@ class VerifyUserMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Please confirm your email to create your account.',
+            subject: 'Verify your Driftwood account',
         );
     }
 

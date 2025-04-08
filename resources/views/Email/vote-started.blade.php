@@ -19,9 +19,10 @@
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>A vote to quit this event has started.</p>
-                        <p style="display: flex; justify-content: start; align-items: center;">
+                        <p>
                             <span>{!! $text !!}</span>
                         </p> 
+                        <p>You may see the details of the vote here: </p>
                         <p style="text-align: center;">
                             <a href="{{ $actionUrl }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">

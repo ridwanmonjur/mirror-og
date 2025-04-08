@@ -40,7 +40,7 @@ class VoteStartMail extends Mailable implements ShouldQueue
             ->view('Email.vote-started')
             ->with([
                 'team' => $this->body['team'],
-                'actionName' => 'Login and view your event registration!',
+                'actionName' => 'See vote details',
                 'actionUrl' => $this->body['link'],
                 'text' => $this->body['text'],  
             ]);

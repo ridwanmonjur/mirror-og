@@ -49,6 +49,23 @@ class ConfirmStrategy
                 </span>
             HTML;
 
+            $htmlMail = <<<HTML
+                <span class="notification-gray">
+                    <span> <b>Hi, {$member->user->name}.</b></span> <br><br>
+                    {$addressPartHTML} confirmed registration for  
+                    <button class="btn-transparent px-0 border-0 notification-blue">
+                        {$event->user->name}
+                    </button>'s event,
+                    <button class="btn-transparent px-0 border-0 notification-blue">
+                        {$event->eventName}
+                    </button>
+                    for your team, 
+                    <button class="btn-transparent px-0 border-0 notification-blue" >
+                        {$selectTeam->teamName}
+                    </button>. 
+                </span>
+            HTML;
+
             $memberNotification[] = [
                 'user_id' => $member->user->id,
                 'type' => 'teams',
@@ -100,7 +117,7 @@ class ConfirmStrategy
 
         Mail::to($memberMail)->send(new EventConfirmMail([
             'team' => $selectTeam,
-            'text' => $html,
+            'text' => $htmlMail,
             'link' =>  route('participant.register.manage', [
                 'id' => $selectTeam->id,
                 'scroll' => $join_id
@@ -173,6 +190,7 @@ class VoteStartStrategy
             HTML;
             $htmlMail = <<<HTML
                 <span class="notification-gray">
+                    <span> <b>Hi, {$member->user->name}.</b></span> <br><br>
                     {$addressPart} have started a vote to <span class="notification-danger" >QUIT</span>  
                     <button class="btn-transparent px-0 border-0 notification-blue">
                         {$event->user->name}
@@ -280,7 +298,6 @@ class VoteEndStrategy
                             </button>.
                             Your team has voted to QUIT.
                             <br>Since your team has already confirmed its registration for this event, your entry fees WILL NOT be refunded.
-                            You may see the details of the vote here:
                         </span>
                     HTML;
                 } else {
@@ -302,7 +319,7 @@ class VoteEndStrategy
                     HTML;
                 }
 
-                
+            
                 $htmlNotif = <<<HTML
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">

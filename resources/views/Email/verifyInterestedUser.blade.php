@@ -19,7 +19,7 @@
                 style="background-color: white; margin: 0 auto; padding: 0px; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Hi,</p>
+                        <p>Hi, interested user!</p>
                         <p>Thank you for your interest in Driftwood's closed beta! Just confirm your email address and you're all good.
                         </p>
                         <p style="text-align: center;">

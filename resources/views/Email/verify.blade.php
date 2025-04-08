@@ -5,11 +5,11 @@
 @extends('Email.Layout.Layout')
 
 @section('emailTitle')
-    {{ 'Verify your Driftwood account' }}
+    {{ '' }}
 @endsection
 
 @section('title')
-    {{ "Verify your Driftwood account" }}
+    {{ "" }}
 @endsection
 
 @section('content')
@@ -19,12 +19,12 @@
                 style="background-color: white; margin: 0 auto; padding: 0px; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Welcome to Driftwood.</p>
+                        <p>Welcome to Driftwood, {{$user->name}}.</p>
                         <p>Please verify your email address by clicking the button below:</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.verify.action', $token) }}"
                                 style="display: inline-block; padding: 10px 20px; font-size: 18px; color: white !important; background-color: {{$secondaryColor}}; text-decoration: none; border-radius: 5px;">
-                                Verify email
+                                Verify email {{$user->email}}
                             </a>
                         </p>
                         <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
