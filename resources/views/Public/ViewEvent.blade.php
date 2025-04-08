@@ -369,7 +369,7 @@
                 <br>
                 <div id="Overview" class="tabcontent" style="display: block; ;">
                     <h5 id="current-title"><u>About this event</u></h5>
-                    <p>{{ $event->eventDescription ?? 'Not added description yet' }} </p>
+                    <p style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
                 <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
