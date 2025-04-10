@@ -295,7 +295,7 @@
                                         {{ $event->tier?->tierPrizePool ?? 'No Prize' }} Prize Pool
                                     </span>
                                 @else
-                                    <span>Tier Prize Pool: Not available</span>
+                                    <span>Not available</span>
                                 @endif
                             </div>
                             <div class="pb-1">
@@ -311,7 +311,7 @@
                                         {{ $event->tier?->tierEntryFee ?? 'Free' }} Entry Fees
                                     </span>
                                 @else
-                                    <span>Tier Entry Fee: Not available</span>
+                                    <span>Not available</span>
                                 @endif
                             </div>
                             <div class="pb-1">
@@ -331,7 +331,7 @@
                                     <line x1="12" y1="16" x2="12" y2="12"></line>
                                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                 </svg>
-                                <span >{{ $type ?? 'Choose event type' }}</span>
+                                <span >{{ $type ?? 'Not available' }}</span>
                             </div>
                             <div class="pb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -342,7 +342,7 @@
                                     <line x1="12" y1="20" x2="12" y2="4"></line>
                                     <line x1="6" y1="20" x2="6" y2="14"></line>
                                 </svg>
-                                <span >{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
+                                <span >{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? '0' }}</span>
                             </div>
                             
                         </div>
@@ -359,8 +359,9 @@
                 <div class="tab ms-0 position-relative tab-viewEvent" >
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
                         onclick="openTab(event, 'Overview', 'current-title'); ">Overview</button>
-                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick="openTab(event, 'Bracket', 'bracket-list'); ">Bracket</button>
+                    <button class=" loading {{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
+                        id="tabLoading"
+                        onclick="checkIfLoading(event); openTab(event, 'Bracket', 'bracket-list'); ">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         onclick="openTab(event, 'Teams', 'current-teams'); ">Teams</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"

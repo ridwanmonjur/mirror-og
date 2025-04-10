@@ -573,3 +573,8 @@ function redirectToTeamPage(teamId) {
     window.location.href = `/view/team/${teamId}`;
 }
 
+function checkIfLoading(event) {
+    if (event.target.classList.contains('loading')) {
+      window.showLoading();
+    }
+ }

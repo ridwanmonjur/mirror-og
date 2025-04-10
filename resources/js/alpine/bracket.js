@@ -186,13 +186,12 @@ function addDotsToContainer(key, value) {
 
 }
 
-function getAllMatchStatusesData() {
+async function getAllMatchStatusesData() {
   const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
   const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;
-  window.showLoading();
 
   onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
     reportSnapshot.docChanges().forEach((change) => {
@@ -239,7 +238,7 @@ function getAllMatchStatusesData() {
 
     newDataList = {}, modifiedDataList = {};
     newClassList = [], modifiedClassList = [];
-  
+    document.getElementById('tabLoading')?.classList.remove('loading')
     await window.closeLoading();
   });
 }
