@@ -75,8 +75,6 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AwardResource::getNavigationItems(),
-                                ...\App\Filament\Resources\EventSignupResource::getNavigationItems(),
-                                ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
                             ]),
          
                    

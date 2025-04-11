@@ -29,6 +29,11 @@ class Team extends Model
         return $this->belongsTo(User::class, 'creator_id');
     }
 
+    public function captain(): HasOne
+    {
+        return $this->hasOne(TeamCaptain::class, 'teams_id', 'id');
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users');

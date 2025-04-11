@@ -1,34 +1,23 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\EventDetailResource\RelationManagers;
 
-use App\Filament\Resources\EventSignupResource\Pages;
-use App\Filament\Resources\EventSignupResource\RelationManagers;
-use App\Models\EventSignup;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventSignupResource extends Resource
+class SignupRelationManager extends RelationManager
 {
-    protected static ?string $model = EventSignup::class;
+    protected static string $relationship = 'signups';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('event_id')
-                ->relationship(
-                    'eventDetails',
-                    'eventName',
-                    fn ($query) => $query->whereNotNull('eventName')
-                ),
                 Forms\Components\DateTimePicker::make('signup_open')
                     ->required(),
                 Forms\Components\DateTimePicker::make('normal_signup_start_advanced_close')
@@ -38,18 +27,16 @@ class EventSignupResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('eventDetails.eventName')
-                    ->label('Event')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('signup_open')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('normal_signup_start_advanced_close')
+                    ->label('Normal Start/Advanced Close')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('signup_close')
@@ -59,29 +46,17 @@ class EventSignupResource extends Resource
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListEventSignups::route('/'),
-            'create' => Pages\CreateEventSignup::route('/create'),
-            'edit' => Pages\EditEventSignup::route('/{record}/edit'),
-        ];
     }
 }

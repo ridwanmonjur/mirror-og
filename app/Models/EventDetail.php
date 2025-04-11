@@ -72,6 +72,11 @@ class EventDetail extends Model
         return $this->hasMany(Matches::class, 'event_details_id', 'id');
     }
 
+    public function signups()
+    {
+        return $this->hasMany(EventSignup::class, 'event_id');
+    }
+
     public static function destroyEventBanner(string| null $file): void
     {
         $fileNameInitial = str_replace('images/events/', '', $file);
