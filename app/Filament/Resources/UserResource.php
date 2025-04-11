@@ -40,6 +40,7 @@ class UserResource extends Resource
                     ->tabs([
                         Tabs\Tab::make('User Information')
                             ->schema([
+                                
                                 TextInput::make('name')
                                     ->required()
                                     ->maxLength(255),
@@ -200,6 +201,9 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\ImageColumn::make('userBanner'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -245,6 +249,7 @@ class UserResource extends Resource
         return [
             RelationManagers\UserProfileRelationManager::class,
             RelationManagers\DiscountsRelationManager::class,
+            RelationManagers\ActivityLogsRelationManager::class,
         ];
     }
 
