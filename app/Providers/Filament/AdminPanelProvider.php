@@ -43,8 +43,6 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...\App\Filament\Resources\UserResource::getNavigationItems(),
                             ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                            ...\App\Filament\Resources\ParticipantResource::getNavigationItems(),
-                            ...\App\Filament\Resources\OrganizerResource::getNavigationItems(),
                             ...\App\Filament\Resources\UserProfileResource::getNavigationItems(),
                             ...\App\Filament\Resources\UserDiscountResource::getNavigationItems(),
                         ]),
