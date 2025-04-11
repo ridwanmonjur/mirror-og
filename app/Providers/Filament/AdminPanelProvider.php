@@ -43,8 +43,6 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...\App\Filament\Resources\UserResource::getNavigationItems(),
                             ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                            ...\App\Filament\Resources\UserProfileResource::getNavigationItems(),
-                            ...\App\Filament\Resources\UserDiscountResource::getNavigationItems(),
                         ]),
                         NavigationGroup::make('Team')
                         ->items([
@@ -70,7 +68,6 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\ParticipantPaymentResource::getNavigationItems(),
                                 ...\App\Filament\Resources\PaymentTransactionResource::getNavigationItems(),
                                 ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
-                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
                             ]),
          
                         NavigationGroup::make('Event Setup')
@@ -80,7 +77,6 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AwardResource::getNavigationItems(),
-                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventSignupResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
                             ]),

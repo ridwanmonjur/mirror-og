@@ -14,6 +14,8 @@ class DiscountsRelationManager extends RelationManager
 {
     protected static string $relationship = 'discounts';
 
+    protected static bool $hasAssociatedRecord = true;
+
     protected static ?string $recordTitleAttribute = 'amount';
 
      
@@ -45,10 +47,15 @@ class DiscountsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                ->visible(fn () => !$this->getOwnerRecord()->discounts()->exists())
+                    ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
+                    ->createAnother(false)
+
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['user_id'] = $this->getOwnerRecord()->id;
                     return $data;
-                }),
+                })
+                
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

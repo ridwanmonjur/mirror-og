@@ -102,25 +102,20 @@ class UserResource extends Resource
                                     ->required()
                                     ->reactive()
                                     ->afterStateUpdated(function ($state, callable $set, $livewire) {
-                                        // Clear related fields when role changes
                                         if ($state === 'ADMIN') {
-                                            // If user has a participant record, delete it
                                             if ($livewire->record && $livewire->record->participant) {
                                                 $livewire->record->participant->delete();
                                                 $livewire->record->refresh();
                                             }
                                             
-                                            // If user has an organizer record, delete it
                                             if ($livewire->record && $livewire->record->organizer) {
                                                 $livewire->record->organizer->delete();
                                                 $livewire->record->refresh();
                                             }
                                             
-                                            // Clear form fields
                                             $set('participant.nickname', null);
                                             $set('organizer.companyName', null);
                                         }
-                                        // If switching to PARTICIPANT, delete any organizer record
                                         else if ($state === 'PARTICIPANT') {
                                             if ($livewire->record && $livewire->record->organizer) {
                                                 $livewire->record->organizer->delete();
@@ -248,6 +243,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\UserProfileRelationManager::class,
             RelationManagers\DiscountsRelationManager::class,
         ];
     }

@@ -36,3 +36,24 @@ organizer
     - member
     - registration
     - list
+
+Small events have a minimum duration of 2 weeks. Timer begins when event begins
+
+Reporting Deadline for Orange matches: End of Day 3
+
+Reporting for Yellow matches opens: Start of Day 4
+// Reporting Deadline for Yellow matches: End of Day 6
+
+// Reporting for Green matches opens: Start of Day 7
+// Reporting Deadline for Green matches: End of Day 8
+
+// Reporting for Blue matches opens: Start of Day 9
+// Reporting Deadline for Blue matches: End of Day 10
+
+// Reporting for Black matches opens: Start of Day 11
+// Reporting Deadline for Black matches: End of Day 12
+
+// Reporting for Final match (finals) opens: Start of Day 13
+// Reporting Deadline for Final match (finals): End of Day 14
+
+// End of Day 14 = End of event
