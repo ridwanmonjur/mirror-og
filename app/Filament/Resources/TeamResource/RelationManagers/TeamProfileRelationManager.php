@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\RelationManagers;
+namespace App\Filament\Resources\TeamResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
 
-class UserProfileRelationManager extends RelationManager
+class TeamProfileRelationManager extends RelationManager
 {
     protected static string $relationship = 'profile';
     protected static bool $hasAssociatedRecord = true;
@@ -25,7 +25,7 @@ class UserProfileRelationManager extends RelationManager
                     ->rgba(),
                 Forms\Components\FileUpload::make('backgroundBanner')
                     ->image()
-                    ->directory('images/user') 
+                    ->directory('images/team') 
                     ->maxSize(5120)
                     ->deleteUploadedFileUsing(function ($file, $livewire) {
                         if ($file && Storage::disk('public')->exists($file)) {
@@ -47,20 +47,22 @@ class UserProfileRelationManager extends RelationManager
                         $record = $owner->profile;
                         $oldBanner = $record->backgroundBanner;
 
-                        $newFilename = 'backgroundBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
-                        $directory = 'images/user';
+                        $newFilename = 'backgroundBanner-' . time() . '.' . $file->getClientOriginalExtension();
+                        $directory = 'images/team';
                         
                         $path = $file->storeAs($directory, $newFilename, 'public');
                         $record->backgroundBanner = $path;
                         $record->save();
                         if ($oldBanner && $oldBanner !== $state) {
-                            $record->destroyUserBanner($oldBanner);
+                            $record->destroyTeanBanner($oldBanner);
                         }
                         return $path;
                     }),
+                
                 Forms\Components\TextInput::make('backgroundGradient')
                     ->label('Background Gradient'),
-                    
+                Forms\Components\TextInput::make('follower_count')
+                    ->label('Follower Count'),
                 Forms\Components\ColorPicker::make('fontColor')
                     ->label('Font Color')
                     ->rgba(),
@@ -84,6 +86,8 @@ class UserProfileRelationManager extends RelationManager
 
                 Tables\Columns\ColorColumn::make('fontColor')
                     ->label('Font Color'),
+                Tables\Columns\TextColumn::make('follower_count')
+                    ->label('Follower Count'),
                 Tables\Columns\ColorColumn::make('frameColor')
                     ->label('Frame Color'),
             ])

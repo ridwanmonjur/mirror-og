@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class TeamResource extends Resource
 {
@@ -32,18 +33,43 @@ class TeamResource extends Resource
                     fn ($query) => $query->where('role', 'PARTICIPANT') 
                 ),
                 Forms\Components\TextInput::make('teamDescription')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('teamBanner')
-                    ->image(),
+                    ->image()
+                    ->directory('images/team') 
+                    ->maxSize(5120)
+                    ->deleteUploadedFileUsing(function ($file, $livewire) {
+                        if ($file && Storage::disk('public')->exists($file)) {
+                            Storage::disk('public')->delete($file);
+                        }
+                        
+                        if ($livewire->record) {
+                            $livewire->record->teamBanner = null;
+                            $livewire->record->save();
+                        }
+                        
+                        return null;
+                    })
+                    ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
+                        // Custom file naming logic here
+                        $oldBanner = $livewire->record->userBanner;
+
+                        $newFilename = 'teamBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                        $directory = 'images/team';
+                        
+                        $path = $file->storeAs($directory, $newFilename, 'public');
+                        $livewire->record->teamBanner = $path;
+                        $livewire->record->save();
+                        if ($oldBanner && $oldBanner !== $state) {
+                            $livewire->record->destroyTeanBanner($oldBanner);
+                        }
+                        return $path;
+                    }),
                 Forms\Components\TextInput::make('country')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('country_name')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('country_flag')
-                    ->required()
                     ->maxLength(255),
             ]);
     }
@@ -92,7 +118,8 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\TeamProfileRelationManager::class,
+            RelationManagers\TeamCaptainRelationManager::class
         ];
     }
 

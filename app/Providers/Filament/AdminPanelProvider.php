@@ -47,8 +47,6 @@ class AdminPanelProvider extends PanelProvider
                         NavigationGroup::make('Team')
                         ->items([
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TeamProfileResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TeamCaptainResource::getNavigationItems(),
                             ...\App\Filament\Resources\TeamMemberResource::getNavigationItems(),
                             ...\App\Filament\Resources\RosterMemberResource::getNavigationItems(),
                         ]),

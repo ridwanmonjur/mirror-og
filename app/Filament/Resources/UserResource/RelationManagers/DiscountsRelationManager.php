@@ -48,7 +48,7 @@ class DiscountsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                 ->visible(fn () => !$this->getOwnerRecord()->discounts()->exists())
-                    ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
+                    // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
                     ->createAnother(false)
 
                 ->mutateFormDataUsing(function (array $data): array {
