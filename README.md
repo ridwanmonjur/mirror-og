@@ -148,12 +148,9 @@ php artisan sweetalert:publish
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-3. Horizon Setup:
-```bash
-php artisan horizon:install
-```
 
-4. Log Viewer:
+
+3. Log Viewer:
 ```bash
 php artisan vendor:publish --tag=log-viewer-assets --force
 ```
