@@ -16,13 +16,12 @@ class UserDiscount extends Model
         'user_id'
     ];
 
+    public $timestamps = NULL;
 
-    /**
-     * Get the user that owns the discount
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
 
 }
