@@ -11,6 +11,7 @@
     'teamName2',
     'winner_next_position',
     'loser_next_position',
+    'deadline'
 ])
  <div class="{{'popover-middle-content text-center d-none py-0 px-0 ' . $position1 . ' ' . $position2 }}" 
     style="opacity: 1; z-index: 999 !important; "
@@ -31,7 +32,7 @@
                     class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
-             <p class="mt-2 mb-0 py-0 text-center popover-title" data-position="{{$position1. 'middle'}}">{{$teamName1}}</p>
+             <p class="mt-2 mb-0 py-0 text-center popover-title" data-position="{{$position1. 'middle'}}">{{$teamName1 ?? '-'}}</p>
             <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2  }}">
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
@@ -52,12 +53,17 @@
                     data-position="{{$position2. 'middle'}}" class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
-            <p class="mt-2 mb-2 py-0 text-center popover-title" data-position="{{$position2. 'middle'}}">{{$teamName2}}</p>
+            <p class="mt-2 mb-2 py-0 text-center popover-title" data-position="{{$position2. 'middle'}}">{{$teamName2 ?? '-'}}</p>
             <div class="{{ 'mt-2 mb-4 py-0 d-flex justify-content-center dotted-score-container ' . $position1 . ' ' . $position2 }}">
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
             </div>
         </div>
+        <div class="col-12"> 
+                <div class="text-center">{{$deadline['readable_date']}}</div>
+
+        </div>
     </div>
+
 </div>

@@ -53,7 +53,7 @@
             <div class="tournament-bracket__item tournament">
                 <div class="tournament-bracket__match middle-item tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
                      data-bracket="{{ json_encode($winner) }}" data-stage_name="{{ $stageName }}"
-                    data-inner_stage_name="winner" data-order="{{ $order }}"
+                    data-inner_stage_name="w" data-order="{{ $order }}"
                 >
                     <x-brackets.bracket-table :bracket="$winner"  :isFirst="false" />
                     <div class="text-center mx-auto popover-parent tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"

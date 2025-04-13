@@ -34,6 +34,7 @@
                 :teamName1="$bracket['team1_teamName']"
                 :winner_next_position="$bracket['winner_next_position']"
                 :loser_next_position="$bracket['loser_next_position']"
+                :deadline="$bracket['deadline']"
             />
 
             <small class="position-absolute winner-label ">
