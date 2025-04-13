@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CreateDummyTasks extends Command 
 {
@@ -85,7 +86,8 @@ class CreateDummyTasks extends Command
         $tasksData = [];
         foreach ($eventIds as $eventId) {
             $tasksData[] = [
-                'event_id' => $eventId,
+                'taskable_id' => $eventId,
+                'taskable_type' => EventDetail::class,
                 'task_name' => $taskName,
                 'action_time' => $dateTime->format('Y-m-d H:i:s'),
                 'created_at' => $now,

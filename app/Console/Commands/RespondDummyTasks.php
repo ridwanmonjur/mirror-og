@@ -46,13 +46,13 @@ class RespondDummyTasks extends Command
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
                     case 'ended':
-                        $endedTaskIds[] = $task->event_id;
+                        $endedTaskIds[] = $task->taskable_id;
                         break;
                     case 'live':
-                        $liveTaskIds[] = $task->event_id;
+                        $liveTaskIds[] = $task->taskable_id;
                         break;
                     case 'started':
-                        $startedTaskIds[] = $task->event_id;
+                        $startedTaskIds[] = $task->taskable_id;
                         break;
                 }
             }
