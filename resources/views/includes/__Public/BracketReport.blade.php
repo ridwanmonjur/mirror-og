@@ -26,7 +26,7 @@
                         'e2' => 'semifinals',
                         'e3' => 'semifinals',
                         'e4' => 'semifinals',
-                        'pre' => 'gold',
+                        'p0' => 'gold',
                     ];
                 @endphp
 
@@ -48,8 +48,8 @@
                 </div>
             </div>
 
-           <x-brackets.bracket-winner-item :bracket="$bracketList['fin']['fin'][0]" :stageName="'fin'" :innerStageName="'fin'" :order="0"
-                :winner="$bracketList['fin']['winner'][0]"
+           <x-brackets.bracket-winner-item :bracket="$bracketList['f']['f'][0]" :stageName="'f'" :innerStageName="'f'" :order="0"
+                :winner="$bracketList['f']['w'][0]"
             />
 
         </div>
@@ -83,9 +83,9 @@
 
             <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                 <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-odd-list">
-                    @foreach ($bracketList['L']['pre1'] as $order => $bracket)
+                    @foreach ($bracketList['L']['p1'] as $order => $bracket)
                         <x-brackets.bracket-middle-item :bracket="$bracket" :order="$order" :stageName="'L'"
-                            :innerStageName="'pre1'"  />
+                            :innerStageName="'p1'"  />
                     @endforeach
                 </div>
             </div>
@@ -93,9 +93,9 @@
 
             <div class="tournament-bracket__round tournament-bracket__round--semifinals">
                 <div class="tournament-bracket__list tournament-bracket__joined-list tournament-bracket__joined-even-list">
-                    @foreach ($bracketList['L']['pre2'] as $order => $bracket)
+                    @foreach ($bracketList['L']['p2'] as $order => $bracket)
                         <x-brackets.bracket-middle-item :bracket="$bracket" :order="$order" :stageName="'L'"
-                            :innerStageName="'pre2'"  />
+                            :innerStageName="'p2'"  />
                     @endforeach
                 </div>
             </div>
