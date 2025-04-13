@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Achievements;
 use App\Models\AwardResults;
+use App\Models\BracketDeadline;
 use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
@@ -48,9 +49,8 @@ class EventMatchService {
                 $teamList->push($joinEvent->team);
             }
         });
-        
-       
 
+        $deadlines = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
         $matchTeamIds = collect();
         $event?->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
             $match->team1 = $teamMap->get($match->team1_id);
@@ -64,32 +64,33 @@ class EventMatchService {
             $previousValues = $this->bracketDataService::PREV_VALUES[$matchesUpperCount];
         } 
 
-        $valuesMap = ['Tournament' => 'tournament', 'League' => 'tournament'];
         
         $tournamentType = $event->type?->eventType;
         if ($tournamentType) {
-            $tournamentTypeFinal = $valuesMap[$tournamentType];
             $bracketList = $this->bracketDataService->produceBrackets(
                 $matchesUpperCount, 
                 $willFixBracketsAsOrganizer,
-                $USER_ENUMS
-            )[$tournamentTypeFinal];
-            // dd($bracketList);
+                $USER_ENUMS, 
+                $deadlines
+            );
+
+
             $bracketList = $event?->matches?->reduce(function ($bracketList, $match) use (
                 $existingJoint, 
                 $willFixBracketsAsOrganizer,
                 $USER_ENUMS,
             ) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-                $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : null;
                 
                 if ($existingJoint) {
-
                     if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }
                     elseif ($match->team2_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM2']; }
+                } else {
+                    $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] :  $USER_ENUMS['IS_PUBLIC'];
+
                 }
             
-                if (!$user_level) { $user_level = $USER_ENUMS['IS_PUBLIC']; }
+
                 $match->user_level = $user_level;
                 
                 $existingData = data_get($bracketList, $path, []);
@@ -109,25 +110,30 @@ class EventMatchService {
                     'team2_position' => $match->team2_position,
                     'team1_name' => $match->team1->name ?? null,
                     'team2_name' => $match->team2->name ?? null,
-                    'user_level' => $match->user_level
+                    'user_level' => $match->user_level,
+                    // 'deadline' => $existingData['deadline']
                 ];
                 
                 $mergedData = array_merge($existingData, $updatedProperties);
                 
                 return data_set($bracketList, $path, $mergedData);
             }, $bracketList);
+
+            // dd($bracketList);
          
         } else {
             $bracketList = [];
         };
         
+            dd($bracketList);
 
         return [
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
             'existingJoint' => $existingJoint,
-            'previousValues' => $previousValues
+            'previousValues' => $previousValues,
+            
         ];
     }
 
