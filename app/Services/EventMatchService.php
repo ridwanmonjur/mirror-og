@@ -74,6 +74,7 @@ class EventMatchService {
                 $deadlines
             );
 
+            // dd($bracketList);
 
             $bracketList = $event?->matches?->reduce(function ($bracketList, $match) use (
                 $existingJoint, 
@@ -125,7 +126,7 @@ class EventMatchService {
             $bracketList = [];
         };
         
-            dd($bracketList);
+            // dd($bracketList);
 
         return [
             'teamList' => $teamList,

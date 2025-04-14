@@ -1187,7 +1187,8 @@ class BracketDataService
                             'team2_position' => 'W6',
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
-                            ...$defaultValues
+                            ...$defaultValues,
+                            'deadline' => $deadlines['U']['e1']
                         ], // 3
                         [
                             'team1_position' => 'W7',
@@ -1271,6 +1272,7 @@ class BracketDataService
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             ...$defaultValues,
+                            'deadline' => $deadlines['L']['p1']
                         ], // 1
                     ],
                     'p2' => [
