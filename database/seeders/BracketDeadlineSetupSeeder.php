@@ -31,8 +31,8 @@ class BracketDeadlineSetupSeeder extends Seeder
                     'p1' => ['start' => 17, 'end'=> 18],
                     'p2' => ['start' => 19, 'end'=> 20],
                 ],
-                'f' => [
-                    'f' => ['start' => 21, 'end'=> 22],
+                'F' => [
+                    'F' => ['start' => 21, 'end'=> 22],
                 ]
             ],
             16 => [
@@ -50,8 +50,8 @@ class BracketDeadlineSetupSeeder extends Seeder
                     'p1' => ['start' => 13, 'end'=> 14],
                     'p2' => ['start' => 15, 'end'=> 16],
                 ],
-                'f' => [
-                    'f' => ['start' => 17, 'end'=> 18],
+                'F' => [
+                    'F' => ['start' => 17, 'end'=> 18],
                 ]
             ],
             8 => [
@@ -66,8 +66,8 @@ class BracketDeadlineSetupSeeder extends Seeder
                     'p1' => ['start' => 9, 'end'=> 10],
                     'p2' => ['start' => 11, 'end'=> 12],
                 ],
-                'f' => [
-                    'f' => ['start' => 13, 'end'=> 14],
+                'F' => [
+                    'F' => ['start' => 13, 'end'=> 14],
                 ]
             ]
         ];

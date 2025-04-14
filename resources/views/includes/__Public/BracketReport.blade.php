@@ -48,8 +48,8 @@
                 </div>
             </div>
 
-           <x-brackets.bracket-winner-item :bracket="$bracketList['f']['f'][0]" :stageName="'f'" :innerStageName="'f'" :order="0"
-                :winner="$bracketList['f']['w'][0]"
+           <x-brackets.bracket-winner-item :bracket="$bracketList['F']['F'][0]" :stageName="'F'" :innerStageName="'F'" :order="0"
+                :winner="$bracketList['F']['W'][0]"
             />
 
         </div>

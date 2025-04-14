@@ -35,7 +35,7 @@ return new class extends Migration
         
         Schema::create('bracket_deadlines', function (Blueprint $table) {
             $table->id();
-            $table->string('stage'); // Like 'L', 'U', 'f'
+            $table->string('stage'); // Like 'L', 'U', 'F'
             $table->string('inner_stage'); // Like 'e1', 'e2', 'p1', etc.
             $table->dateTime('start_date');
             $table->dateTime('end_date');

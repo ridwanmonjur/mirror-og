@@ -23,7 +23,7 @@ class BracketDataService
 
     const PREV_VALUES = [
         32 => [
-            'f' => ['G1', 'G2'],
+            'F' => ['G1', 'G2'],
             'G1' => ['U29', 'U30'],
             'G2' => ['L59', 'L60'],
             //
@@ -138,7 +138,7 @@ class BracketDataService
             'L60' => ['U29', 'U30'],
         ],
         16 => [
-            'f' => ['G1', 'G2'],
+            'F' => ['G1', 'G2'],
             'G1' => ['U13', 'U14'],
             'G2' => ['L27', 'L28'],
             //
@@ -199,7 +199,7 @@ class BracketDataService
             'L28' => ['U13', 'U14'],
         ],
         8 => [
-            'f' => ['G1', 'G2'],
+            'F' => ['G1', 'G2'],
             'G1' => ['U5', 'U6'],
             'G2' => ['L11', 'L12'],
             //
@@ -251,9 +251,9 @@ class BracketDataService
                     'p1' => ['start' => 15, 'end'=> 16], /* 4 */
                     'p2' => ['start' => 17, 'end'=> 18],
                 ],
-                'f' => [
-                    'f' => ['start' => 19, 'end'=> 20],
-                    'w' => ['start' => 21, 'end'=> 22]
+                'F' => [
+                    'F' => ['start' => 19, 'end'=> 20],
+                    'W' => ['start' => 21, 'end'=> 22]
                 ]
             ], 
             16 => [
@@ -270,9 +270,9 @@ class BracketDataService
                     'p1' => ['start' => 11, 'end'=> 12], /* 3 */
                     'p2' => ['start' => 13, 'end'=> 14],
                 ],
-                'f' => [
-                    'f' => ['start' => 15, 'end'=> 16],
-                    'w' => ['start' => 17, 'end'=> 18]
+                'F' => [
+                    'F' => ['start' => 15, 'end'=> 16],
+                    'W' => ['start' => 17, 'end'=> 18]
                 ]
             ], 
             8 => [
@@ -286,9 +286,9 @@ class BracketDataService
                     'p1' => ['start' => 7, 'end'=> 8], /* 2 */
                     'p2' => ['start' => 9, 'end'=> 10],
                 ],
-                'f' => [
-                    'f' => ['start' => 11, 'end'=> 12],
-                    'w' => ['start' => 13, 'end'=> 14]
+                'F' => [
+                    'F' => ['start' => 11, 'end'=> 12],
+                    'W' => ['start' => 13, 'end'=> 14]
                 ]
             ]
         ][$teamNumber];
@@ -305,22 +305,22 @@ class BracketDataService
         
         if ($teamNumber == 32) {
             return [
-                'f' => [
-                    'f' => [[
+                'F' => [
+                    'F' => [[
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
-                        'winner_next_position' => 'f',
+                        'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['f']['f']
+                        'deadline' => $deadlines['F']['F']
                     ]],
-                    'w' => [[
-                        'team1_position' => 'f',
+                    'W' => [[
+                        'team1_position' => 'F',
                         'team2_position' => null,
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['f']['w']
+                        'deadline' => $deadlines['F']['W']
                     ]]
                 ],
                 'U' => [
@@ -857,23 +857,23 @@ class BracketDataService
             ];
         } elseif ($teamNumber == 16) {
             return [
-                'f' => [
-                    'f' => [[                       
+                'F' => [
+                    'F' => [[                       
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
-                        'winner_next_position' => 'f',
+                        'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['f']['f']
+                        'deadline' => $deadlines['F']['F']
 
                     ]],
-                    'w' => [[
-                        'team1_position' => 'f',
+                    'W' => [[
+                        'team1_position' => 'F',
                         'team2_position' => null,
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['f']['w']
+                        'deadline' => $deadlines['F']['W']
                     ]]
                 ],
                 'U' => [
@@ -1146,22 +1146,22 @@ class BracketDataService
             ];
         } else { 
             return [
-                'f' => [
-                    'f' => [[
+                'F' => [
+                    'F' => [[
                         'team1_position' => 'G1',
                         'team2_position' => 'G2',
-                        'winner_next_position' => 'f',
+                        'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['f']['f']
+                        'deadline' => $deadlines['F']['F']
                     ]],
-                    'w' => [[
-                        'team1_position' => 'f',
+                    'W' => [[
+                        'team1_position' => 'F',
                         'team2_position' => null,
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['f']['w']
+                        'deadline' => $deadlines['F']['W']
                     ]]
                 ],
                 'U' => [

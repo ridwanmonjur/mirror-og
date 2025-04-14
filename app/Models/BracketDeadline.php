@@ -166,20 +166,20 @@ class BracketDeadline extends Model
                     'readable_date' => $deadlines['L']['p2']['readable_date'] ?? null
                 ]
             ],
-            'f' => [
-                'f' => [
-                    'start' => $deadlines['f']['f']['start'] ?? null,
-                    'end' => $deadlines['f']['f']['end'] ?? null,
-                    'has_started' => $deadlines['f']['f']['has_started'] ?? null,
-                    'has_ended' => $deadlines['f']['f']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['f']['f']['readable_date'] ?? null
+            'F' => [
+                'F' => [
+                    'start' => $deadlines['F']['F']['start'] ?? null,
+                    'end' => $deadlines['F']['F']['end'] ?? null,
+                    'has_started' => $deadlines['F']['F']['has_started'] ?? null,
+                    'has_ended' => $deadlines['F']['F']['has_ended'] ?? null,
+                    'readable_date' => $deadlines['F']['F']['readable_date'] ?? null
                 ],
-                'w' => [
-                    'start' => $deadlines['f']['w']['start'] ?? null,
-                    'end' => $deadlines['f']['w']['end'] ?? null,
-                    'has_started' => $deadlines['f']['w']['has_started'] ?? null,
-                    'has_ended' => $deadlines['f']['w']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['f']['w']['readable_date'] ?? null
+                'W' => [
+                    'start' => $deadlines['F']['W']['start'] ?? null,
+                    'end' => $deadlines['F']['W']['end'] ?? null,
+                    'has_started' => $deadlines['F']['W']['has_started'] ?? null,
+                    'has_ended' => $deadlines['F']['W']['has_ended'] ?? null,
+                    'readable_date' => $deadlines['F']['W']['readable_date'] ?? null
                 ]
             ]
         ];
@@ -266,20 +266,20 @@ class BracketDeadline extends Model
                     'readable_date' => $deadlines['L']['p2']['readable_date'] ?? null
                 ]
             ],
-            'f' => [
-                'f' => [
-                    'start' => $deadlines['f']['f']['start'] ?? null,
-                    'end' => $deadlines['f']['f']['end'] ?? null,
-                    'has_started' => $deadlines['f']['f']['has_started'] ?? null,
-                    'has_ended' => $deadlines['f']['f']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['f']['f']['readable_date'] ?? null
+            'F' => [
+                'F' => [
+                    'start' => $deadlines['F']['F']['start'] ?? null,
+                    'end' => $deadlines['F']['F']['end'] ?? null,
+                    'has_started' => $deadlines['F']['F']['has_started'] ?? null,
+                    'has_ended' => $deadlines['F']['F']['has_ended'] ?? null,
+                    'readable_date' => $deadlines['F']['F']['readable_date'] ?? null
                 ],
-                'w' => [
-                    'start' => $deadlines['f']['w']['start'] ?? null,
-                    'end' => $deadlines['f']['w']['end'] ?? null,
-                    'has_started' => $deadlines['f']['w']['has_started'] ?? null,
-                    'has_ended' => $deadlines['f']['w']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['f']['w']['readable_date'] ?? null
+                'W' => [
+                    'start' => $deadlines['F']['W']['start'] ?? null,
+                    'end' => $deadlines['F']['W']['end'] ?? null,
+                    'has_started' => $deadlines['F']['W']['has_started'] ?? null,
+                    'has_ended' => $deadlines['F']['W']['has_ended'] ?? null,
+                    'readable_date' => $deadlines['F']['W']['readable_date'] ?? null
                 ]
             ]
         ];
@@ -338,20 +338,20 @@ class BracketDeadline extends Model
                     'readable_date' => $deadlines['L']['p2']['readable_date'] ?? null
                 ]
             ],
-            'f' => [
-                'f' => [
-                    'start' => $deadlines['f']['f']['start'] ?? null,
-                    'end' => $deadlines['f']['f']['end'] ?? null,
-                    'has_started' => $deadlines['f']['f']['has_started'] ?? null,
-                    'has_ended' => $deadlines['f']['f']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['f']['f']['readable_date'] ?? null
+            'F' => [
+                'F' => [
+                    'start' => $deadlines['F']['F']['start'] ?? null,
+                    'end' => $deadlines['F']['F']['end'] ?? null,
+                    'has_started' => $deadlines['F']['F']['has_started'] ?? null,
+                    'has_ended' => $deadlines['F']['F']['has_ended'] ?? null,
+                    'readable_date' => $deadlines['F']['F']['readable_date'] ?? null
                 ],
-                'w' => [
-                    'start' => $deadlines['f']['w']['start'] ?? null,
-                    'end' => $deadlines['f']['w']['end'] ?? null,
-                    'has_started' => $deadlines['f']['w']['has_started'] ?? null,
-                    'has_ended' => $deadlines['f']['w']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['f']['w']['readable_date'] ?? null
+                'W' => [
+                    'start' => $deadlines['F']['W']['start'] ?? null,
+                    'end' => $deadlines['F']['W']['end'] ?? null,
+                    'has_started' => $deadlines['F']['W']['has_started'] ?? null,
+                    'has_ended' => $deadlines['F']['W']['has_ended'] ?? null,
+                    'readable_date' => $deadlines['F']['W']['readable_date'] ?? null
                 ]
             ]
         ];
