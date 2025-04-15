@@ -1,3 +1,8 @@
+@php
+    $isTeam1 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM1'];
+    $isTeam2 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM2'];
+    $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
+@endphp
 <div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
     <div class="tournament-bracket__match tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
         tabindex="0"
@@ -35,6 +40,7 @@
                 :winner_next_position="$bracket['winner_next_position']"
                 :loser_next_position="$bracket['loser_next_position']"
                 :deadline="$bracket['deadline']"
+                :isTeam1="$isTeam1" :isTeam2="$isTeam2" 
             />
 
             <small class="position-absolute winner-label ">

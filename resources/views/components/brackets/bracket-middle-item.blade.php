@@ -1,4 +1,9 @@
-@props(['bracket', 'tournament', 'stageName', 'innerStageName', 'order'])
+@props(['bracket', 'tournament', 'stageName', 'innerStageName', 'order', ])
+@php
+    $isTeam1 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM1'];
+    $isTeam2 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM2'];
+    $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
+@endphp
 <div class="tournament-bracket__item tournament d-none-until-hover2-parent">
     <div class="tournament-bracket__match  middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} popover-parent "
         tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
@@ -9,12 +14,12 @@
             <x-brackets.bracket-middle-item-popover :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
                 :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamName2="$bracket['team2_teamName']" :teamId2="$bracket['team2_id']"
                 :teamName1="$bracket['team1_teamName']" :winner_next_position="$bracket['winner_next_position']" :loser_next_position="$bracket['loser_next_position']" 
-                :deadline="$bracket['deadline']"
+                :deadline="$bracket['deadline']" :isTeam1="$isTeam1" :isTeam2="$isTeam2" 
             />
             <x-brackets.bracket-middle-desktop-item :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
                 :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamId2="$bracket['team2_id']" />
             <small class="position-absolute winner-label ">
-                @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
+                @if($isOrg)
                     <span class="d-none-until-hover2">
                         <svg 
                             data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"

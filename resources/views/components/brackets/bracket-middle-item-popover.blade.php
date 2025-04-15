@@ -11,10 +11,17 @@
     'teamName2',
     'winner_next_position',
     'loser_next_position',
-    'deadline'
+    'deadline',
+    'isTeam1',
+    'isTeam2'
 ])
- <div class="{{'popover-middle-content text-center d-none py-0 px-0 ' . $position1 . ' ' . $position2 }}" 
-    style="opacity: 1; z-index: 999 !important; "
+ <div @class([ 
+        " popover-middle-content text-center d-none py-0 px-0 " . $position1 . ' ' . $position2, 
+        ' warning ' => $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2) 
+    ])
+    data-readable-date="{{$deadline['readable_date']}}"
+    data-position = "{{$isTeam1? $position1 : $position2}}" 
+    
 >
    
     <div class="popover-box row justify-content-start border border-dark border rounded px-2 py-2" 
@@ -62,7 +69,6 @@
         </div>
         <div class="col-12"> 
                 <div class="text-center">{{$deadline['readable_date']}}</div>
-
         </div>
     </div>
 

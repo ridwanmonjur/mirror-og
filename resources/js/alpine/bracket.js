@@ -6,6 +6,91 @@ import {
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
+import tippy from 'tippy.js';
+import { popper } from "@popperjs/core";
+
+window.specialTippy = [];
+window.popoverIdToPopover = window.activePopovers || {};
+window.ourIdToPopoverId = window.ourIdToPopoverId || {};
+
+function getPopover(element) {
+  let popverId = window.ourIdToPopoverId[element];
+  if (popverId) {
+    let popover = window.popoverIdToPopover[popverId];
+    return popover;
+  }
+
+  return null;
+}
+
+window.hideAll = () => {
+  for (let element of window.specialTippy) {
+    let popover = getPopover(element);
+    popover.hide();
+  }
+}
+
+window.showAll = () => {
+  for (let element of window.specialTippy) {
+    let popover = getPopover(element);
+    popover?.show();
+  }
+}
+
+
+function createTippy(parent, html, trigger, options) {
+    return tippy(parent, {
+        content: html,
+        allowHTML: true,
+        placement: 'top',
+        trigger,
+        triggerTarget: parent,
+        // hideOnClick: false,
+        // trigger: 'click',
+        interactive: true,
+        hideOnClick: false,
+        delay: [50, 0],
+        theme: 'light',
+        zIndex: 9999,
+        appendTo: document.body,
+        ...options,        
+    });
+}
+
+window.addPopoverWithIdAndHtml = function (parent, html, trigger="click", options = {}, ourId = null) {
+    if (!parent || !html) return null;
+
+    if (ourId) {
+        let popoverId = window.ourIdToPopoverId[ourId];
+        if (popoverId) {
+            if (popoverId in window.popoverIdToPopover) {
+                window.popoverIdToPopover[popoverId].destroy();
+                const { [popoverId]: removed, ...rest } = window.popoverIdToPopover;
+                window.popoverIdToPopover = rest;
+            }
+        }
+    }
+    
+    const tippyInstance = createTippy(
+        parent, 
+        html, 
+        trigger, 
+        { ...options }
+    );
+
+    window.ourIdToPopoverId[ourId] = tippyInstance.id;
+    window.popoverIdToPopover[tippyInstance.id] = tippyInstance;
+        
+    return tippyInstance;
+}
+
+window.addPopoverWithIdAndChild = function (parent, child, trigger="click", options = {}, ourId) {
+    if (!parent || !child || !child.innerHTML) return null;
+    
+    return window.addPopoverWithIdAndHtml(parent, child.innerHTML, trigger, options, ourId);
+}
+
+
 
 
 const eventId = document.getElementById('eventId')?.value;
@@ -110,6 +195,26 @@ parentElements?.forEach(parent => {
   }
 });
 
+function generateWarningHtml (readableDate, newPositionId) {
+  return `
+    <div class="reportBox row z-99 justify-content-start bg-light border border-dark border rounded px-2 py-2" 
+      style="width: 300px;"
+    >
+      <h5 class="text-center my-0 mb-2 py-0"> 
+        ${newPositionId}
+      </h5>
+      <p class="text-primary text-center my-0 mb-2 py-0"> 
+        You have pending results to report.
+      </p>
+      <small class="text-red small text-center my-0 py-0"> 
+        Time left to report: 
+        ${readableDate}
+      </small>
+    </div>
+
+  `;
+}
+
 function addAllTippy() {
 
   const parentSecondElements = document.querySelectorAll(".middle-item");
@@ -120,11 +225,38 @@ function addAllTippy() {
       let triggerPositionId = trigger.dataset.position;
       let triggerParentsPositionIds = previousValues[triggerPositionId];
       if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
-        let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
+        let classNamesJoined = triggerParentsPositionIds.join(".");
+        let triggerClassName = '.popover-middle-content.' + classNamesJoined;
         let contentElement = document.querySelector(triggerClassName);
-        window.addPopover(trigger, contentElement, 'mouseenter', {
-          interactive: false
-        });
+        if (contentElement) {
+       
+          if (contentElement.classList.contains('warning')) {
+            let {
+              readableDate, position
+            } = contentElement.dataset;
+
+            if (triggerParentsPositionIds.includes(position)) {
+              let tippyId = position + '+' + triggerPositionId;
+              window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(readableDate, triggerPositionId), 'manual', {
+                  onShow(instance) {
+                    const tippyBox = instance.popper;
+                    tippyBox.addEventListener('click', () => {
+                      instance.hide();
+                  });
+    
+                  }
+                }, tippyId);
+    
+              
+  
+              window.specialTippy = [...window.specialTippy, tippyId] 
+            }
+          }
+
+          window.addPopoverWithIdAndChild(trigger, contentElement, 'mouseenter', {
+            interactive: false
+          }, classNamesJoined);
+        }
       }
     })
   });
@@ -180,7 +312,6 @@ function addDotsToContainer(key, value) {
   statusBox?.forEach((element, index) => {
     if ('completeMatchStatus' in value) {
       element.innerHTML = value['completeMatchStatus'];
-
     }
   });
 
@@ -192,11 +323,11 @@ async function getAllMatchStatusesData() {
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;
+  isAddedActionType = true;
 
   onSnapshot(allMatchStatusesQ, async (reportSnapshot) => {
     reportSnapshot.docChanges().forEach((change) => {
       if (change.type === "added") {
-        isAddedActionType = true;
         if (!isLoadedActionType) {
           allDataList[change.doc.id] = change.doc.data();
         } else {
@@ -1273,6 +1404,18 @@ window.onload = () => {
     BracketData,
     UploadData,
   }).mount('#Bracket');
+
+  const reportModalElement = document.getElementById('reportModal');
+  reportModalElement.addEventListener('show.bs.modal', function() {
+      console.log("Modal showing - hiding all tooltips");
+      window.closeAllTippy();
+    });
+
+  reportModalElement.addEventListener('hide.bs.modal', function() {
+      console.log("Modal hiding - showing all tooltips");
+      window.openAllTippy();
+
+  });
 }
 // Alpine.start();
 
