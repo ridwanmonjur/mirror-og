@@ -546,9 +546,14 @@ submitBtnElement?.addEventListener('click', function(event) {
                         let triggerPositionId = trigger.dataset.position;
                         let triggerParentsPositionIds = previousValues[triggerPositionId];
                         if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
-                            let triggerClassName = '.popover-middle-content.' + triggerParentsPositionIds.join(".");
+                            let classNamesJoined = triggerParentsPositionIds.join(".");
+                            let triggerClassName = '.popover-middle-content.' + classNamesJoined;
                             let contentElement = document.querySelector(triggerClassName);
-                            window.addPopover(trigger, contentElement, 'mouseenter');
+                                window.addPopover(trigger, contentElement, 'mouseenter', {}, 
+                                    classNamesJoined + '/' + triggerPositionId  
+                            );
+                        } else {
+                            console.log("Important! NO POPOVER SOMEHOW")
                         }
                     })
                 });
@@ -585,5 +590,9 @@ function redirectToTeamPage(teamId) {
 function checkIfLoading(event) {
     if (event.target.classList.contains('loading')) {
       window.showLoading();
+      event.stopPropagation();
+      return false;
     }
+
+    return true;
  }

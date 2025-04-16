@@ -15,9 +15,13 @@
     'isTeam1',
     'isTeam2'
 ])
- <div class="{{'popover-middle-content text-center d-none py-0 px-0 ' . $position1 . ' ' . $position2 }}" 
+ <div  
     style="opacity: 1; z-index: 999 !important; "
-    
+     @class([" popover-middle-content text-center d-none py-0 px-0 " . $position1 . ' ' . $position2, 
+        ' warning ' => $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2)
+     ]); 
+      data-position="{{$position1}}"
+    style="width: 35px; height: 28px;"
 >
    
     <div class="popover-box row justify-content-start border border-dark border px-2 py-2" 

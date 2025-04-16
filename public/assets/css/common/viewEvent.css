@@ -1009,7 +1009,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
    }
    .tab-viewEvent {
         width: 100%; 
-        left: 10px;
+        left: 0px;
         top: 20px;
         margin: auto;
     }

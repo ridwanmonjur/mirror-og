@@ -1,3 +1,8 @@
+@php
+    $isTeam1 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM1'];
+    $isTeam2 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM2'];
+    $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
+@endphp
 <div class="tournament-bracket tournament-bracket--rounded col-12 col-xl-6 align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
@@ -19,6 +24,7 @@
                         <x-brackets.bracket-winner-item-popover :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
                             :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamName2="$bracket['team2_teamName']" :teamId2="$bracket['team2_id']"
                             :teamName1="$bracket['team1_teamName']" :winner_next_position="$bracket['winner_next_position']" :loser_next_position="$bracket['loser_next_position']" 
+                            :deadline="$bracket['deadline']" :isTeam1="$isTeam1" :isTeam2="$isTeam2" 
                         />
                         @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
                             <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">

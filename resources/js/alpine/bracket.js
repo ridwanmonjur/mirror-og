@@ -61,9 +61,10 @@ window.addPopoverWithIdAndHtml = function (parent, html, trigger="click", option
     if (!parent || !html) return null;
 
     if (ourId) {
+        
         let popoverId = window.ourIdToPopoverId[ourId];
         if (popoverId) {
-            if (popoverId in window.popoverIdToPopover) {
+          if (popoverId in window.popoverIdToPopover) {
                 window.popoverIdToPopover[popoverId].destroy();
                 const { [popoverId]: removed, ...rest } = window.popoverIdToPopover;
                 window.popoverIdToPopover = rest;
@@ -237,25 +238,22 @@ function addAllTippy() {
 
             if (triggerParentsPositionIds.includes(position)) {
               let tippyId = position + '+' + triggerPositionId;
-              window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(readableDate, triggerPositionId), 'manual', {
+              let popover = window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(readableDate, triggerPositionId), 'manual', {
                   onShow(instance) {
                     const tippyBox = instance.popper;
                     tippyBox.addEventListener('click', () => {
                       instance.hide();
                   });
-    
                   }
                 }, tippyId);
-    
-              
-  
+                console.log({popover});
               window.specialTippy = [...window.specialTippy, tippyId] 
             }
           }
 
           window.addPopoverWithIdAndChild(trigger, contentElement, 'mouseenter', {
             interactive: false
-          }, classNamesJoined);
+          }, classNamesJoined + '/' + triggerPositionId);
         }
       }
     })
@@ -264,13 +262,14 @@ function addAllTippy() {
 
 function addTippyToClass(classAndPositionList) {
   for (let classX of classAndPositionList) {
-    const triggers = document.querySelectorAll(`.popover-button.data-position-${classX[1]}`);
+    let [triggerClass, prevClass] = classX;
+    const triggers = document.querySelectorAll(`.popover-button.data-position-${triggerClass}`);
     triggers.forEach((trigger) => {
-      let triggerClassName = '.popover-middle-content.' + classX[0];
+      let triggerClassName = '.popover-middle-content.' + prevClass;
       let contentElement = document.querySelector(triggerClassName);
-      window.addPopover(trigger, contentElement, 'mouseenter', {
+      window.addPopoverWithIdAndHtml(trigger, contentElement, 'mouseenter', {
         interactive: false
-      });
+      }, prevClass + '/' + triggerClassName);
     });
   }
 }
@@ -1407,14 +1406,20 @@ window.onload = () => {
 
   const reportModalElement = document.getElementById('reportModal');
   reportModalElement.addEventListener('show.bs.modal', function() {
-      console.log("Modal showing - hiding all tooltips");
-      window.closeAllTippy();
-    });
+    window.closeAllTippy();
+  });
 
   reportModalElement.addEventListener('hide.bs.modal', function() {
-      console.log("Modal hiding - showing all tooltips");
-      window.openAllTippy();
+    window.openAllTippy();
+  });
 
+  const disputeModalElement = document.getElementById('disputeModal');
+  disputeModalElement.addEventListener('show.bs.modal', function() {
+    window.closeAllTippy();
+  });
+
+  disputeModalElement.addEventListener('hide.bs.modal', function() {
+      window.openAllTippy();
   });
 }
 // Alpine.start();

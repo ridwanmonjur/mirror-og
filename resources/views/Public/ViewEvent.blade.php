@@ -361,7 +361,7 @@
                         onclick=" openTab(event, 'Overview', 'current-title'); closeAllTippy();  ">Overview</button>
                     <button class=" loading {{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         id="tabLoading"
-                        onclick="checkIfLoading(event);  openTab(event, 'Bracket', 'bracket-list'); openAllTippy(); ">Bracket</button>
+                        onclick=" if(checkIfLoading(event)) { openTab(event, 'Bracket', 'bracket-list'); openAllTippy(); }">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         onclick=" openTab(event, 'Teams', 'current-teams'); closeAllTippy(); ">Teams</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
