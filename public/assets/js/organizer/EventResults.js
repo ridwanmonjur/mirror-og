@@ -17,7 +17,10 @@ function loadBearerCompleteHeader() {
     };
 }
  
-window.onload = () => { window.loadMessage(); loadTab(); }
+window.onload = () => { 
+    window.loadMessage(); 
+    loadTab(); 
+}
 
 function reloadUrl(currentUrl, message, tab) {
     if (currentUrl.includes('?')) {

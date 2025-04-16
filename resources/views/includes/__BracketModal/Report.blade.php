@@ -7,9 +7,25 @@
 
                     <div class="user-select-none popover-box bg-white row justify-content-start border border-dark border px-0 py-0"
                     >
-                        <div class="text-center text-uppercase mt-4">
-                            <h5> Match Results: <span  v-text="report.position"></span> </h5>
-                            <p class="my-0 p-0" v-text="report.completeMatchStatus"> </p>
+                        <div class="text-center  mt-4">
+                            <h5 class="text-uppercase"> Match Results: <span  v-text="report.position"></span> </h5>
+                            <p class="my-0 p-0 text-uppercase" v-text="report.completeMatchStatus"> </p>
+                            <template v-if="report.deadline && userLevelEnums['IS_PUBLIC'] != report.userLevel">
+                                <div class="my-0 py-0 ">
+                                    <template v-if="!report.deadline.has_started">
+                                        <div class="text-center small text-primary my-0">
+                                            Reporting available in: 
+                                            <span class="text-center" v-text="report.deadline.readable_date"></span>
+                                        </div>
+                                    </template>
+                                    <template v-if="report.deadline.has_started && !report.deadline.has_ended">
+                                        <div class="text-center text-red small  my-0">
+                                            Time left to report:
+                                            <span class="text-center" v-text="report.deadline.readable_date"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
                         </div>
                         <div class="col-4 px-0">
                             <div>
@@ -20,7 +36,7 @@
                                 >
                             </div>
                             <p class="mt-1 mb-0 py-0" v-text="report.teams[0]?.name"></p>
-                            <div class="mt-1 mb-2 py-0 dotted-score-container">
+                            <div class="my-0 py-0 dotted-score-container">
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
@@ -41,14 +57,15 @@
                                     class="border border-4 popover-team-img rounded-circle object-fit-cover"
                                 >
                             </div>
-                            <p class="mt-1 mb-2 py-0" v-text="report.teams[1]?.name"></p>
-                            <div class="mt-1 mb-2 py-0 dotted-score-container">
+                            <p class="my-0 py-0" v-text="report.teams[1]?.name"></p>
+                            <div class="my-0 py-0 dotted-score-container">
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
 
                             </div>
                         </div>
+                        
                         <hr class="d-none d-lg-block">
                         <div class=" user-select-none row px-0 mx-auto">
                             <div class="col-2 px-0 h-100 d-flex justify-content-center align-items-center">

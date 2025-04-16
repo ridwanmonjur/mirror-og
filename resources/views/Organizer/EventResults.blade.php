@@ -609,7 +609,7 @@
             </div>
             <br>
     </main>
-    @stack('script')
+    
     
     <script src="{{ asset('/assets/js/organizer/EventResults.js') }}"></script>
 

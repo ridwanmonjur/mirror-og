@@ -17,7 +17,7 @@
 ])
  <div @class([ 
         " popover-middle-content text-center d-none py-0 px-0 " . $position1 . ' ' . $position2, 
-        ' warning ' => $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2) 
+        ' warning border-primary ' => $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2) 
     ])
     data-readable-date="{{$deadline['readable_date']}}"
     data-position = "{{$isTeam1? $position1 : $position2}}" 
@@ -68,7 +68,15 @@
             </div>
         </div>
         <div class="col-12"> 
-                <div class="text-center">{{$deadline['readable_date']}}</div>
+            @if($isTeam1 || $isTeam2)
+                @if (!$deadline['has_started'])
+                    <div class="text-center">Reporting available in: </div>
+                    <div class="text-center">{{$deadline['readable_date']}}</div>
+                @elseif ($deadline['has_started'] && !$deadline['has_ended'])
+                    <div class="text-center">Time left to report: </div>
+                    <div class="text-center">{{$deadline['readable_date']}}</div>
+                @endif
+            @endif
         </div>
     </div>
 

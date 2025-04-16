@@ -273,7 +273,7 @@ function reportModalShow(event) {
 
     let dataset = JSON.parse(parentWithDataset.dataset.bracket);
 
-    const alpineEvent = new CustomEvent("currentReportChange", {
+    const alpineEvent = new CustomEvent("changeReport", {
         detail: {
             classNamesWithoutPrecedingDot,
             // team1
@@ -287,7 +287,8 @@ function reportModalShow(event) {
             team2_id: dataset.team2_id,
             team2_teamBanner: dataset.team2_teamBanner,
             team2_teamName:  dataset.team2_teamName,
-            position: position
+            position: position,
+            deadline: dataset.deadline,
 
         }
     });

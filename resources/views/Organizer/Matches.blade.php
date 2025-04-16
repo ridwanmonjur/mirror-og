@@ -26,9 +26,9 @@
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
         <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
-         <div class="heading">
+         <div >
             <u>
-                <h3>
+                <h3 class="ps-3 mt-4">
                     Manage your event bracket
                 </h3>
             </u>
@@ -68,6 +68,11 @@
         </div>
         
         <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
+        <script> 
+            addOnLoad(()=> {
+                window.showLoading();
+            });
+        </script>
     </main>
 </body>
 </html>

@@ -368,7 +368,13 @@ async function getAllMatchStatusesData() {
 
     newDataList = {}, modifiedDataList = {};
     newClassList = [], modifiedClassList = [];
-    document.getElementById('tabLoading')?.classList.remove('loading')
+    let tabLoading = document.getElementById('tabLoading');
+    if (tabLoading) {
+      tabLoading.classList.remove('loading')
+    } else {
+      window.showAll();
+    }
+
     await window.closeLoading();
   });
 }
@@ -467,6 +473,7 @@ function BracketData() {
       userLevel: userLevelEnums['IS_PUBLIC'],
       completeMatchStatus: 'UPCOMING',
       matchStatus: ['UPCOMING', 'UPCOMING', 'UPCOMING'],
+      deadline: null,
       teams: [
         {
           winners: [null, null, null],
@@ -896,7 +903,7 @@ function BracketData() {
         });
       }
 
-      window.addEventListener('currentReportChange', (event) => {
+      window.addEventListener('changeReport', (event) => {
         window.showLoading();
 
         let newReport = null, newReportUI = null;
@@ -937,6 +944,7 @@ function BracketData() {
             ...initialData.report,
             position: dataset.position ?? initialData.report.position,
             userLevel: dataset.user_level ?? initialData.report.userLevel,
+            deadline: dataset.deadline ?? null,
             teams: [
               {
                 ...initialData.report.teams[0],
@@ -944,7 +952,7 @@ function BracketData() {
                 id: dataset.team1_id,
                 position: dataset.team1_position,
                 banner: dataset.team1_teamBanner,
-                name: dataset.team1_teamName
+                name: dataset.team1_teamName ?? '-'
               },
               {
                 ...initialData.report.teams[0],
@@ -952,11 +960,15 @@ function BracketData() {
                 id: dataset.team2_id,
                 position: dataset.team2_position,
                 banner: dataset.team2_teamBanner,
-                name: dataset.team2_teamName
+                name: dataset.team2_teamName ?? '-'
               }
             ],
           };
         }
+
+        console.log({deadline: dataset.deadline, newReport});
+        console.log({deadline: dataset.deadline, newReport});
+        console.log({deadline: dataset.deadline, newReport});
 
         this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });
@@ -1404,22 +1416,20 @@ window.onload = () => {
     UploadData,
   }).mount('#Bracket');
 
-  const reportModalElement = document.getElementById('reportModal');
-  reportModalElement.addEventListener('show.bs.modal', function() {
-    window.closeAllTippy();
-  });
+  const modalIds = ['updateModal', 'reportModal', 'disputeModal'];
 
-  reportModalElement.addEventListener('hide.bs.modal', function() {
-    window.openAllTippy();
-  });
+  modalIds.forEach(modalId => {
+    const modalElement = document.getElementById(modalId);
+    
+    if (modalElement) {
+      modalElement.addEventListener('show.bs.modal', function() {
+        window.closeAllTippy();
+      });
 
-  const disputeModalElement = document.getElementById('disputeModal');
-  disputeModalElement.addEventListener('show.bs.modal', function() {
-    window.closeAllTippy();
-  });
-
-  disputeModalElement.addEventListener('hide.bs.modal', function() {
-      window.openAllTippy();
+      modalElement.addEventListener('hide.bs.modal', function() {
+        window.openAllTippy();
+      });
+    }
   });
 }
 // Alpine.start();
