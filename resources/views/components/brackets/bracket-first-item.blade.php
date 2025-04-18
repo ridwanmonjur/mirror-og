@@ -40,7 +40,9 @@
                 :winner_next_position="$bracket['winner_next_position']"
                 :loser_next_position="$bracket['loser_next_position']"
                 :deadline="$bracket['deadline']"
-                :isTeam1="$isTeam1" :isTeam2="$isTeam2" 
+                :isTeam1="$isTeam1" 
+                :isTeam2="$isTeam2" 
+                :isOrg="$isOrg"
             />
 
             <small class="position-absolute winner-label ">

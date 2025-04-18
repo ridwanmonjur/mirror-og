@@ -13,7 +13,9 @@
     'loser_next_position',
     'deadline',
     'isTeam1',
-    'isTeam2'
+    'isTeam2',
+    'isOrg'
+
 ])
  <div  
     style="opacity: 1; z-index: 999 !important; "
@@ -69,5 +71,16 @@
                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
             </div>
         </div>
+    </div>
+    <div class="col-12"> 
+        @if($isTeam1 || $isTeam2 || $isOrg)
+            @if (!$deadline['has_started'])
+                <div class="text-center">Reporting available in: </div>
+                <div class="text-center">{{$deadline['readable_date']}}</div>
+            @elseif ($deadline['has_started'] && !$deadline['has_ended'])
+                <div class="text-center">Time left to report: </div>
+                <div class="text-center">{{$deadline['readable_date']}}</div>
+            @endif
+        @endif
     </div>
 </div>

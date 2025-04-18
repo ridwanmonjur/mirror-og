@@ -13,7 +13,8 @@
     'loser_next_position',
     'deadline',
     'isTeam1',
-    'isTeam2'
+    'isTeam2',
+    'isOrg'
 ])
  <div @class([ 
         " popover-middle-content text-center d-none py-0 px-0 " . $position1 . ' ' . $position2, 
@@ -68,7 +69,7 @@
             </div>
         </div>
         <div class="col-12"> 
-            @if($isTeam1 || $isTeam2)
+            @if($isTeam1 || $isTeam2 || $isOrg)
                 @if (!$deadline['has_started'])
                     <div class="text-center">Reporting available in: </div>
                     <div class="text-center">{{$deadline['readable_date']}}</div>

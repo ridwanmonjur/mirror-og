@@ -36,7 +36,7 @@
                                 >
                             </div>
                             <p class="mt-1 mb-0 py-0" v-text="report.teams[0]?.name"></p>
-                            <div class="my-0 py-0 dotted-score-container">
+                            <div class="my-0 mb-2 py-0 dotted-score-container">
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>
@@ -58,7 +58,7 @@
                                 >
                             </div>
                             <p class="my-0 py-0" v-text="report.teams[1]?.name"></p>
-                            <div class="my-0 py-0 dotted-score-container">
+                            <div class="my-0 mb-2 py-0 dotted-score-container">
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score"></div>
                                 <div class="d-inline-block rounded-circle me-3 bg-secondary dotted-score d-none"></div>

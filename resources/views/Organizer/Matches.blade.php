@@ -69,7 +69,7 @@
         
         <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
         <script> 
-            addOnLoad(()=> {
+            document.addEventListener("DOMContentLoaded", function() {
                 window.showLoading();
             });
         </script>
