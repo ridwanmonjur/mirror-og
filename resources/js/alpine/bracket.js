@@ -368,14 +368,24 @@ async function getAllMatchStatusesData() {
 
     newDataList = {}, modifiedDataList = {};
     newClassList = [], modifiedClassList = [];
-    let tabLoading = document.getElementById('tabLoading');
+    let tabLoading = document.querySelector('button#tabLoading');
+    console.log({tabLoading});
     if (tabLoading) {
-      tabLoading.classList.remove('loading')
+      
+      tabLoading.classList.remove('loading');
     } else {
       window.showAll();
     }
 
+ 
+
     await window.closeLoading();
+    let isLoading = localStorage.getItem('isLoading');
+      if (isLoading) {
+        tabLoading.click();
+      };
+
+    localStorage.removeItem('isLoading');
   });
 }
 
