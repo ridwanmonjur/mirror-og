@@ -592,6 +592,7 @@ function checkIfLoading(event) {
     if (event.target.classList.contains('loading')) {
       window.showLoading();
       event.stopPropagation();
+      localStorage.setItem('isLoading', 1);
       return false;
     }
 
