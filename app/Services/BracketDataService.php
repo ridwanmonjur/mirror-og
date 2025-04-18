@@ -231,77 +231,17 @@ class BracketDataService
         ],
     ];
 
-    public function getReportDeadlines(int $teamNumber = 32) {
-        
-        return [
-            32 => [
-                'U' => [
-                    'e2' => ['start' => 0, 'end'=> 3], /* 1 */
-                    'e3' => ['start' => 7, 'end'=> 8], /* 2 */
-                    'e4' => ['start' => 11, 'end'=> 12], /* 3 */
-                    'p0' => ['start' => 15, 'end'=> 14], /* 4 */
-                ], 
-                'L' => [
-                    'e1' => ['start' => 0, 'end'=> 3], /* 1 */
-                    'e2' => ['start' => 4, 'end'=> 6],  
-                    'e3' => ['start' => 7, 'end'=> 8], /* 2 */
-                    'e4' => ['start' => 9, 'end'=> 10],
-                    'e5' => ['start' => 11, 'end'=> 12], /* 3 */
-                    'e6' => ['start' => 13, 'end'=> 14],
-                    'p1' => ['start' => 15, 'end'=> 16], /* 4 */
-                    'p2' => ['start' => 17, 'end'=> 18],
-                ],
-                'F' => [
-                    'F' => ['start' => 19, 'end'=> 20],
-                    'W' => ['start' => 21, 'end'=> 22]
-                ]
-            ], 
-            16 => [
-                'U' => [
-                    'e2' => ['start' => 0, 'end'=> 3], /* 1 */
-                    'e3' => ['start' => 7, 'end'=> 8], /* 2 */
-                    'p0' => ['start' => 11, 'end'=> 12], /* 3 */
-                ], 
-                'L' => [
-                    'e1' => ['start' => 0, 'end'=> 3], /* 1 */
-                    'e2' => ['start' => 4, 'end'=> 6],  
-                    'e3' => ['start' => 7, 'end'=> 8], /* 2 */
-                    'e4' => ['start' => 9, 'end'=> 10],
-                    'p1' => ['start' => 11, 'end'=> 12], /* 3 */
-                    'p2' => ['start' => 13, 'end'=> 14],
-                ],
-                'F' => [
-                    'F' => ['start' => 15, 'end'=> 16],
-                    'W' => ['start' => 17, 'end'=> 18]
-                ]
-            ], 
-            8 => [
-                'U' => [
-                    'e2' => ['start' => 0, 'end'=> 3], /* 1 */
-                    'p0' => ['start' => 7, 'end'=> 8], /* 2 */
-                ], 
-                'L' => [
-                    'e1' => ['start' => 0, 'end'=> 3], /* 1 */
-                    'e2' => ['start' => 4, 'end'=> 6],
-                    'p1' => ['start' => 7, 'end'=> 8], /* 2 */
-                    'p2' => ['start' => 9, 'end'=> 10],
-                ],
-                'F' => [
-                    'F' => ['start' => 11, 'end'=> 12],
-                    'W' => ['start' => 13, 'end'=> 14]
-                ]
-            ]
-        ][$teamNumber];
-    }
-
+   
     public function produceBrackets(
             int $teamNumber = 32,
             bool $isOrganizer = true,
-            array $USER_ENUMS,
-            array $deadlines
+            array | null $USER_ENUMS,
+            array | null $deadlines
         ) 
     {
-        $defaultValues = $this->generateDefaultValues($isOrganizer, $USER_ENUMS);
+        $defaultValues = $USER_ENUMS ? 
+            $this->generateDefaultValues($isOrganizer, $USER_ENUMS) 
+            : [];
         
         if ($teamNumber == 32) {
             return [
@@ -312,7 +252,8 @@ class BracketDataService
                         'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['F']['F']
+                        'deadline' => $deadlines ? $deadlines['F']['F'] : null
+
                     ]],
                     'W' => [[
                         'team1_position' => 'F',
@@ -320,7 +261,8 @@ class BracketDataService
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['F']['W']
+                        'deadline' => $deadlines ? $deadlines['F']['W'] : null
+
                     ]]
                 ],
                 'U' => [
@@ -331,7 +273,8 @@ class BracketDataService
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'W3',
@@ -339,7 +282,8 @@ class BracketDataService
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'W5',
@@ -347,7 +291,8 @@ class BracketDataService
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'W7',
@@ -355,7 +300,8 @@ class BracketDataService
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 4
                         [
                             'team1_position' => 'W9',
@@ -363,7 +309,8 @@ class BracketDataService
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 5
                         [
                             'team1_position' => 'W11',
@@ -371,7 +318,8 @@ class BracketDataService
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 6
                         [
                             'team1_position' => 'W13',
@@ -379,7 +327,8 @@ class BracketDataService
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 7
                         [
                             'team1_position' => 'W15',
@@ -387,7 +336,8 @@ class BracketDataService
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 8
                         [
                             'team1_position' => 'W17',
@@ -395,7 +345,8 @@ class BracketDataService
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L9',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 9
                         [
                             'team1_position' => 'W19',
@@ -403,7 +354,8 @@ class BracketDataService
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L10',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 10
                         [
                             'team1_position' => 'W21',
@@ -411,7 +363,8 @@ class BracketDataService
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L11',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 11
                         [
                             'team1_position' => 'W23',
@@ -419,7 +372,8 @@ class BracketDataService
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L12',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 12
                         [
                             'team1_position' => 'W25',
@@ -427,7 +381,8 @@ class BracketDataService
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L13',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 13
                         [
                             'team1_position' => 'W27',
@@ -435,7 +390,8 @@ class BracketDataService
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L14',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 14
                         [
                             'team1_position' => 'W29',
@@ -443,7 +399,8 @@ class BracketDataService
                             'winner_next_position' => 'U15',
                             'loser_next_position' => 'L15',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 15
                         [
                             'team1_position' => 'W31',
@@ -451,7 +408,8 @@ class BracketDataService
                             'winner_next_position' => 'U16',
                             'loser_next_position' => 'L16',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 16
                     ],
                     'e2' => [
@@ -461,7 +419,8 @@ class BracketDataService
                             'winner_next_position' => 'U17',
                             'loser_next_position' => 'L18',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'U3',
@@ -469,7 +428,8 @@ class BracketDataService
                             'winner_next_position' => 'U18',
                             'loser_next_position' => 'L20',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'U5',
@@ -477,7 +437,8 @@ class BracketDataService
                             'winner_next_position' => 'U19',
                             'loser_next_position' => 'L22',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'U7',
@@ -485,7 +446,8 @@ class BracketDataService
                             'winner_next_position' => 'U20',
                             'loser_next_position' => 'L24',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 4
                         [
                             'team1_position' => 'U9',
@@ -493,7 +455,8 @@ class BracketDataService
                             'winner_next_position' => 'U21',
                             'loser_next_position' => 'L26',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 5
                         [
                             'team1_position' => 'U11',
@@ -501,7 +464,8 @@ class BracketDataService
                             'winner_next_position' => 'U22',
                             'loser_next_position' => 'L28',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 6
                         [
                             'team1_position' => 'U13',
@@ -509,7 +473,8 @@ class BracketDataService
                             'winner_next_position' => 'U23',
                             'loser_next_position' => 'L30',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 7
                         [
                             'team1_position' => 'U15',
@@ -517,7 +482,8 @@ class BracketDataService
                             'winner_next_position' => 'U24',
                             'loser_next_position' => 'L32',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 8
                     ],
                     'e3' => [
@@ -527,7 +493,8 @@ class BracketDataService
                             'winner_next_position' => 'U25',
                             'loser_next_position' => 'L42',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e3']
+                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'U19',
@@ -535,7 +502,8 @@ class BracketDataService
                             'winner_next_position' => 'U26',
                             'loser_next_position' => 'L44',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e3']
+                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'U21',
@@ -543,7 +511,8 @@ class BracketDataService
                             'winner_next_position' => 'U27',
                             'loser_next_position' => 'L46',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e3']
+                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'U23',
@@ -551,7 +520,8 @@ class BracketDataService
                             'winner_next_position' => 'U28',
                             'loser_next_position' => 'L48',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e3']
+                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null
+
                         ], // 4
                     ],
                     'e4' => [
@@ -561,7 +531,8 @@ class BracketDataService
                             'winner_next_position' => 'U29',
                             'loser_next_position' => 'L54',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e4']
+                            'deadline' => $deadlines ? $deadlines['U']['e4'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'U27',
@@ -569,7 +540,8 @@ class BracketDataService
                             'winner_next_position' => 'U30',
                             'loser_next_position' => 'L56',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e4']
+                            'deadline' => $deadlines ? $deadlines['U']['e4'] : null
+
                         ], // 2
                     ],
                     'p0' => [
@@ -579,7 +551,8 @@ class BracketDataService
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L60',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['p0']
+                            'deadline' => $deadlines ? $deadlines['U']['p0'] : null
+
                         ], // 1
                     ],
                 ],
@@ -591,7 +564,8 @@ class BracketDataService
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L3',
@@ -599,7 +573,8 @@ class BracketDataService
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'L5',
@@ -607,7 +582,8 @@ class BracketDataService
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'L7',
@@ -615,7 +591,8 @@ class BracketDataService
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 4
                         [
                             'team1_position' => 'L9',
@@ -623,7 +600,8 @@ class BracketDataService
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 5
                         [
                             'team1_position' => 'L11',
@@ -631,7 +609,8 @@ class BracketDataService
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 6
                         [
                             'team1_position' => 'L13',
@@ -639,7 +618,8 @@ class BracketDataService
                             'winner_next_position' => 'L29',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 7
                         [
                             'team1_position' => 'L15',
@@ -647,7 +627,8 @@ class BracketDataService
                             'winner_next_position' => 'L31',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 8
                     ],
                     'e2' => [
@@ -657,7 +638,8 @@ class BracketDataService
                             'winner_next_position' => 'L33',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L19',
@@ -665,7 +647,8 @@ class BracketDataService
                             'winner_next_position' => 'L34',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'L21',
@@ -673,7 +656,8 @@ class BracketDataService
                             'winner_next_position' => 'L35',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'L23',
@@ -681,7 +665,8 @@ class BracketDataService
                             'winner_next_position' => 'L36',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 4
                         [
                             'team1_position' => 'L25',
@@ -689,7 +674,8 @@ class BracketDataService
                             'winner_next_position' => 'L37',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 5
                         [
                             'team1_position' => 'L27',
@@ -697,7 +683,8 @@ class BracketDataService
                             'winner_next_position' => 'L38',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 6
                         [
                             'team1_position' => 'L29',
@@ -705,7 +692,8 @@ class BracketDataService
                             'winner_next_position' => 'L39',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 7
                         [
                             'team1_position' => 'L31',
@@ -713,7 +701,8 @@ class BracketDataService
                             'winner_next_position' => 'L40',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 8
                     ],
                     'e3' => [
@@ -723,7 +712,8 @@ class BracketDataService
                             'winner_next_position' => 'L41',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e3']
+                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L35',
@@ -731,7 +721,8 @@ class BracketDataService
                             'winner_next_position' => 'L43',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e3']
+                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null
+
 
                         ], // 2
                         [
@@ -740,7 +731,8 @@ class BracketDataService
                             'winner_next_position' => 'L45',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e3']
+                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null
+
 
                         ], // 3
                         [
@@ -749,7 +741,8 @@ class BracketDataService
                             'winner_next_position' => 'L47',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e3']
+                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null
+
 
                         ], // 4
                     ],
@@ -760,7 +753,8 @@ class BracketDataService
                             'winner_next_position' => 'L49',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e4']
+                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null
+
 
                         ], // 1
                         [
@@ -769,7 +763,8 @@ class BracketDataService
                             'winner_next_position' => 'L50',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e4']
+                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null
+
 
                         ], // 2
                         [
@@ -778,7 +773,8 @@ class BracketDataService
                             'winner_next_position' => 'L51',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e4']
+                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null
+
 
                         ], // 3
                         [
@@ -787,7 +783,8 @@ class BracketDataService
                             'winner_next_position' => 'L52',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e4']
+                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null
+
 
                         ], // 4
                     ],
@@ -798,7 +795,8 @@ class BracketDataService
                             'winner_next_position' => 'L53',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e5']
+                            'deadline' => $deadlines ? $deadlines['L']['e5'] : null
+
 
                         ], // 1
                         [
@@ -807,7 +805,8 @@ class BracketDataService
                             'winner_next_position' => 'L55',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e5']
+                            'deadline' => $deadlines ? $deadlines['L']['e5'] : null
+
 
                         ], // 2
                     ],
@@ -818,7 +817,8 @@ class BracketDataService
                             'winner_next_position' => 'L57',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e6']
+                            'deadline' => $deadlines ? $deadlines['L']['e6'] : null
+
 
                         ], // 1
                         [
@@ -827,7 +827,8 @@ class BracketDataService
                             'winner_next_position' => 'L58',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e6']
+                            'deadline' => $deadlines ? $deadlines['L']['e6'] : null
+
 
                         ], // 2
                     ],
@@ -838,7 +839,8 @@ class BracketDataService
                             'winner_next_position' => 'L59',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['p1']
+                            'deadline' => $deadlines ? $deadlines['L']['p1'] : null
+
 
                         ], // 1
                     ],
@@ -849,7 +851,8 @@ class BracketDataService
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['p2']
+                            'deadline' => $deadlines ? $deadlines['L']['p2'] : null
+
 
                         ], // 1
                     ],
@@ -864,7 +867,8 @@ class BracketDataService
                         'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['F']['F']
+                        'deadline' => $deadlines ? $deadlines['F']['F'] : null
+
 
                     ]],
                     'W' => [[
@@ -873,7 +877,8 @@ class BracketDataService
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['F']['W']
+                        'deadline' => $deadlines ? $deadlines['F']['W'] : null
+
                     ]]
                 ],
                 'U' => [
@@ -884,7 +889,8 @@ class BracketDataService
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 1
                         [
@@ -893,7 +899,8 @@ class BracketDataService
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 2
                         [
@@ -902,7 +909,8 @@ class BracketDataService
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 3
                         [
@@ -911,7 +919,8 @@ class BracketDataService
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 4
                         [
@@ -920,7 +929,8 @@ class BracketDataService
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 5
                         [
@@ -929,7 +939,8 @@ class BracketDataService
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 6
                         [
@@ -938,7 +949,8 @@ class BracketDataService
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 7
                         [
@@ -947,7 +959,8 @@ class BracketDataService
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
 
                         ], // 8
                     ],
@@ -958,7 +971,8 @@ class BracketDataService
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L10',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
 
                         ], // 1
                         [
@@ -967,7 +981,8 @@ class BracketDataService
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L12',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
 
                         ], // 2
                         [
@@ -976,7 +991,8 @@ class BracketDataService
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L14',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'U7',
@@ -985,7 +1001,8 @@ class BracketDataService
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L16',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 4
                     ],
                     'e3' => [
@@ -995,7 +1012,8 @@ class BracketDataService
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L22',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e3']
+                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'U11',
@@ -1003,7 +1021,8 @@ class BracketDataService
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L24',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e3']
+                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null
+
                         ], // 2
                     ],
                     'p0' => [
@@ -1013,7 +1032,8 @@ class BracketDataService
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L28',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['p0']
+                            'deadline' => $deadlines ? $deadlines['U']['p0'] : null
+
                         ], // 1
                     ],
                 ],
@@ -1025,7 +1045,8 @@ class BracketDataService
                             'winner_next_position' => 'L9',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L3',
@@ -1033,7 +1054,8 @@ class BracketDataService
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'L5',
@@ -1041,7 +1063,8 @@ class BracketDataService
                             'winner_next_position' => 'L13',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'L7',
@@ -1049,7 +1072,8 @@ class BracketDataService
                             'winner_next_position' => 'L15',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 4
                     ],
                     'e2' => [
@@ -1059,7 +1083,8 @@ class BracketDataService
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L11',
@@ -1067,7 +1092,8 @@ class BracketDataService
                             'winner_next_position' => 'L18',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'L13',
@@ -1075,7 +1101,8 @@ class BracketDataService
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'L15',
@@ -1083,7 +1110,8 @@ class BracketDataService
                             'winner_next_position' => 'L20',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 4
                     ],
                     'e3' => [
@@ -1093,7 +1121,8 @@ class BracketDataService
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e3']
+                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L19',
@@ -1101,7 +1130,8 @@ class BracketDataService
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e3']
+                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null
+
                         ], // 2
                     ],
                     'e4' => [
@@ -1111,7 +1141,8 @@ class BracketDataService
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e4']
+                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L23',
@@ -1119,7 +1150,8 @@ class BracketDataService
                             'winner_next_position' => 'L26',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['e4']
+                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null
+
                         ], // 2
                     ],
                     'p1' => [
@@ -1129,7 +1161,8 @@ class BracketDataService
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['p1']
+                            'deadline' => $deadlines ? $deadlines['L']['p1'] : null
+
                         ], // 1
                     ],
                     'p2' => [
@@ -1139,7 +1172,8 @@ class BracketDataService
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['p2']
+                            'deadline' => $deadlines ? $deadlines['L']['p2'] : null
+
                         ], // 1
                     ],
                 ],
@@ -1153,7 +1187,8 @@ class BracketDataService
                         'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['F']['F']
+                        'deadline' => $deadlines ? $deadlines['F']['F'] : null
+
                     ]],
                     'W' => [[
                         'team1_position' => 'F',
@@ -1161,7 +1196,8 @@ class BracketDataService
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines['F']['W']
+                        'deadline' => $deadlines ? $deadlines['F']['W'] : null
+
                     ]]
                 ],
                 'U' => [
@@ -1172,7 +1208,8 @@ class BracketDataService
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'W3',
@@ -1180,7 +1217,8 @@ class BracketDataService
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 2
                         [
                             'team1_position' => 'W5',
@@ -1188,7 +1226,8 @@ class BracketDataService
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 3
                         [
                             'team1_position' => 'W7',
@@ -1196,7 +1235,8 @@ class BracketDataService
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues,
-                            'deadline' => $deadlines['U']['e1']
+                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null
+
                         ], // 4
                     ],
                     'e2' => [
@@ -1206,7 +1246,8 @@ class BracketDataService
                             ...$defaultValues,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'U3',
@@ -1214,7 +1255,8 @@ class BracketDataService
                             ...$defaultValues,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L8',
-                            'deadline' => $deadlines['U']['e2']
+                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null
+
                         ], // 2
                     ],
                     'p0' => [
@@ -1224,7 +1266,8 @@ class BracketDataService
                             ...$defaultValues,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L12',
-                            'deadline' => $deadlines['U']['p0']
+                            'deadline' => $deadlines ? $deadlines['U']['p0'] : null
+
                         ], // 1
                     ],
                 ],
@@ -1236,7 +1279,8 @@ class BracketDataService
                             ...$defaultValues,
                             'winner_next_position' => 'L5',
                             'loser_next_position' => null,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L3',
@@ -1244,7 +1288,8 @@ class BracketDataService
                             ...$defaultValues,
                             'winner_next_position' => 'L7',
                             'loser_next_position' => null,
-                            'deadline' => $deadlines['L']['e1']
+                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null
+
                         ], // 2
                     ],
                     'e2' => [
@@ -1254,7 +1299,8 @@ class BracketDataService
                             'winner_next_position' => 'L9',
                             ...$defaultValues,
                             'loser_next_position' => null,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 1
                         [
                             'team1_position' => 'L7',
@@ -1262,7 +1308,8 @@ class BracketDataService
                             'winner_next_position' => 'L10',
                             ...$defaultValues,
                             'loser_next_position' => null,
-                            'deadline' => $deadlines['L']['e2']
+                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null
+
                         ], // 2
                     ],
                     'p1' => [
@@ -1272,7 +1319,8 @@ class BracketDataService
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['p1']
+                            'deadline' => $deadlines ? $deadlines['L']['p1'] : null
+
                         ], // 1
                     ],
                     'p2' => [
@@ -1282,7 +1330,8 @@ class BracketDataService
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines['L']['p2']
+                            'deadline' => $deadlines ? $deadlines['L']['p2'] : null
+
                         ], // 1
                     ],
                 ],

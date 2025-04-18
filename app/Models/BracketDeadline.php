@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class BracketDeadline extends Model
 {
@@ -32,6 +33,11 @@ class BracketDeadline extends Model
         return $this->belongsTo(EventDetail::class);
     }
 
+    public function tasks(): MorphMany
+    {
+        return $this->morphMany(Task::class, 'taskable');
+    }
+
     public static function getByEventDetail($id, $tierTeamSlot)
 {
     $deadlinesInitial = self::where('event_details_id', $id)->get();
@@ -51,10 +57,8 @@ class BracketDeadline extends Model
         $readableDate = null;
         
         if ($hasStarted && !$hasEnded && $endDate) {
-            // Event has started but not ended - show time until end
             $readableDate = $currentDate->diffForHumans($endDate, true);
         } elseif (!$hasStarted && $startDate) {
-            // Event has not started - show time until start
             $readableDate = $currentDate->diffForHumans($startDate, true);
         }
         

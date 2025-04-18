@@ -8,9 +8,11 @@ use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\Like;
+use App\Models\Matches;
 use App\Models\OrganizerFollow;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Log;
 
 class EventMatchService {
 
@@ -21,9 +23,45 @@ class EventMatchService {
         $this->bracketDataService = $bracketDataService;
     }
 
+    public function createBrackets (EventDetail $event) {
+        // dd($event);
+        if (!isset($event->matches[0])) {
+            $bracketList = $this->bracketDataService->produceBrackets(
+                $event->tier->tierTeamSlot, 
+                false,
+                null, 
+                null
+            );
+
+            $now = now();
+            $matches = [];
+            foreach ($bracketList as $stage_name => $stage_element) {
+                foreach ($stage_element as $inner_stage_name => $inner_stage_element) {
+                    foreach ($inner_stage_element as $order => $element) {
+                        $matches[] = [
+                            'order' => $order,
+                            'event_details_id' => $event->id,
+                            'stage_name' => $stage_name,
+                            'inner_stage_name' => $inner_stage_name,
+                            'team1_position' => $element['team1_position'],
+                            'team2_position' => $element['team2_position'],
+                            'team1_id' => null,
+                            'team2_id' => null,
+                            'created_at' => $now,
+                            'updated_at' => $now,
+                        ];
+                    }
+                }
+            }
+
+
+            Matches::insert($matches);
+        }
+    }
+
     public function generateBrackets(EventDetail $event, 
         bool $willFixBracketsAsOrganizer, 
-        JoinEvent $existingJoint = null,
+        JoinEvent | null $existingJoint,
     ): array {
        
         $USER_ENUMS = config('constants.USER_ACCESS');
@@ -82,18 +120,14 @@ class EventMatchService {
                 $USER_ENUMS,
             ) {
                 $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-                
+                $user_level = null;
                 if ($existingJoint) {
                     if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }
                     elseif ($match->team2_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM2']; }
                 } else {
                     $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] :  $USER_ENUMS['IS_PUBLIC'];
-
                 }
             
-
-                $match->user_level = $user_level;
-                
                 $existingData = data_get($bracketList, $path, []);
                 
                 $updatedProperties = [
@@ -111,7 +145,7 @@ class EventMatchService {
                     'team2_position' => $match->team2_position,
                     'team1_name' => $match->team1->name ?? null,
                     'team2_name' => $match->team2->name ?? null,
-                    'user_level' => $match->user_level,
+                    'user_level' => $user_level,
                     // 'deadline' => $existingData['deadline']
                 ];
                 
@@ -119,15 +153,11 @@ class EventMatchService {
                 
                 return data_set($bracketList, $path, $mergedData);
             }, $bracketList);
-
-            // dd($bracketList);
          
         } else {
             $bracketList = [];
         };
         
-            // dd($bracketList);
-
         return [
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
