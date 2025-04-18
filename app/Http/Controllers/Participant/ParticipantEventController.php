@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Participant;
 
 use App\Events\JoinEventSignuped;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Match\ValidateBracketUpdateRequest;
 use App\Http\Requests\User\LikeRequest;
 use App\Jobs\HandleEventJoinConfirm;
 use App\Models\EventDetail;
@@ -424,4 +425,12 @@ class ParticipantEventController extends Controller
     }
 
   
+    public function validateBracket(ValidateBracketUpdateRequest $request, $id)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully verified!",
+        ]);       
+    }
+
 }

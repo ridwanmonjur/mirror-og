@@ -92,7 +92,7 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::post('/event/{id}/destroy', [OrganizerEventController::class, 'destroy'])->name('event.destroy.action');
             Route::post('/event/{id}/results', action: [OrganizerEventResultsController::class, 'store'])->name('event.results.store');
             Route::post('/event/{id}/notifications', action: [OrganizerEventController::class, 'storeNotify'])->name('event.notify.store');
-            
+            Route::post('/event/{id}/brackets', [ParticipantEventController::class, 'validateBracket'])->name('event.matches.validate');
             Route::post('/event/{id}/matches', [OrganizerEventResultsController::class, 'upsertBracket'])->name('event.matches.upsert');
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
