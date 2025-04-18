@@ -217,7 +217,7 @@
 
                         </div>
                     </div>
-                    <div class="ps-3">
+                    <div class="card-heading">
                         <br class="d-none d-lg-block">
                         @if (session('errorMessage'))
                             <div class="error-message mt-0">
@@ -361,7 +361,9 @@
                         onclick=" openTab(event, 'Overview', 'current-title'); closeAllTippy();  ">Overview</button>
                     <button class=" loading {{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         id="tabLoading"
-                        onclick=" if(checkIfLoading(event)) { openTab(event, 'Bracket', 'bracket-list'); openAllTippy(); }">Bracket</button>
+                        onclick=" 
+                            if (checkIfLoading(event)) { openTab(event, 'Bracket', 'bracket-list'); openAllTippy(); } 
+                        ">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         onclick=" openTab(event, 'Teams', 'current-teams'); closeAllTippy(); ">Teams</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
