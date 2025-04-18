@@ -145,8 +145,8 @@ async function initializeFirebaseAuth() {
     if (!response.ok) {
       throw new Error('Failed to get Firebase token');
     }
-    let currentUser = null;
 
+    let currentUser = null;
     const { token } = await response.json();
 
     const userCredential = await signInWithCustomToken(auth, token);
@@ -530,42 +530,76 @@ function BracketData() {
         realWinners: [...this.report.realWinners],
         teams: [...this.report.teams],
         position: this.report.position,
-        completeMatchStatus: matchNumber == 2 ? "ENDED": "ONGOING"
+        completeMatchStatus: "ONGOING"
       };
 
-      update.matchStatus[matchNumber] = "ENDED";
-      if (matchNumber != 2) {
-        update.matchStatus[matchNumber+1] = "ONGOING";
-      }
+      const result = await window.Swal.fire({
+        title: 'Choosing the winner',
+        html: `
+            Are you sure you want to choose the winner?
+        `,
+        showCancelButton: true,
+        confirmButtonColor: "#43A4D7",
+        confirmButtonText: 'Make Choice',
+        cancelButtonText: 'Back',
+        padding: '2em',
+        confirmButtonColor: '#43A4D7',
+        reverseButtons: true,
+      });
 
-      if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
-        update.organizerWinners[matchNumber] = selectedTeamIndex;
-        update.realWinners[matchNumber] = selectedTeamIndex;
-        update.score = this.calcScores(update);
-      }
+      if (result.isConfirmed) {
+        let validateData = {
+          'team1_id' : this.report.teams[0].id,
+          'team1_position': this.report.teams[0].position,
+          'team2_id' : this.report.teams[1].id,
+          'team2_position': this.report.teams[1].position,
+          'willCheckDeadline': true          
+        };
 
-      if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
-        update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
-        let otherTeamWinner = this.report.teams[otherTeamNumber].winners[matchNumber];
-        if (otherTeamWinner) {
-          if (otherTeamWinner === selectedTeamIndex) {
-            update.realWinners[matchNumber] = selectedTeamIndex;
-          }
+        if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
+          update.organizerWinners[matchNumber] = selectedTeamIndex;
+          update.realWinners[matchNumber] = selectedTeamIndex;
+          update.score = this.calcScores(update);
         }
-        update.score = this.calcScores(update);
 
+        if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+          validateData['my_team_id'] = this.report.teams[teamNumber].id;
+          update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
+          let otherTeamWinner = this.report.teams[otherTeamNumber].winners[matchNumber];
+          if (otherTeamWinner) {
+            if (otherTeamWinner === selectedTeamIndex) {
+              update.realWinners[matchNumber] = selectedTeamIndex;
+            }
+          }
+          update.score = this.calcScores(update);
+        }
+
+        try {
+          const csrfToken5 = document.querySelector('meta[name="csrf-token"]').content;
+          let response = await fetch(`/api/event/${eventId}/brackets`, {
+            method: 'POST',
+            body: JSON.stringify(validateData),
+            headers: {
+              'X-CSRF-TOKEN': csrfToken5,
+              'Content-Type': 'application/json',
+            }
+          });
+
+          response = await response.json(); 
+    
+          if (!response.success) {
+            window.toastError(response.message || 'An error has occurred!');
+            return;
+          }
+
+          await this.saveReport(update);
+        } catch (error) {
+          window.toastError("Problem updating data");
+        }
       }
-
-      try {
-        await this.saveReport(update);
-
-      } catch (error) {
-        window, toastError("Problem updating data");
-      }
-
     },
     async onChangeTeamToWin() {
-      window.Swal.fire({
+      const result = await window.Swal.fire({
         title: 'Changing the winner',
         html: `
             Are you sure you want to change the winner?
@@ -577,50 +611,46 @@ function BracketData() {
         padding: '2em',
         confirmButtonColor: '#43A4D7',
         reverseButtons: true,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          let matchNumber = this.reportUI.matchNumber;
-
-          let update = {
-            organizerWinners: [...this.report.organizerWinners],
-            matchStatus: [...this.report.matchStatus],
-            realWinners: [...this.report.realWinners],
-            teams: [...this.report.teams],
-            position: this.report.position,
-            completeMatchStatus: matchNumber == 2 ? "ENDED": "ONGOING"
-          };
-    
-          update.matchStatus[matchNumber] = "ENDED";
-          if (matchNumber != 2) {
-            update.matchStatus[matchNumber+1] = "ONGOING";
-          }
-
-          if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
-            let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1";
-            update.organizerWinners[matchNumber] = otherIndex;
-            update.realWinners[matchNumber] = otherIndex;
-            update.score = this.calcScores(update);
-
-          }
-
-          if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
-            let teamNumber = this.reportUI.teamNumber;
-            let otherTeamNumber = this.reportUI.otherTeamNumber;
-            let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
-            if (otherIndex) {
-              update.teams[teamNumber].winners[matchNumber] = otherIndex;
-              update.realWinners[matchNumber] = otherIndex;
-            }
-            update.score = this.calcScores(update);
-          }
-
-          await this.saveReport(update);
-        }
       });
+      
+      if (result.isConfirmed) {
+        let matchNumber = this.reportUI.matchNumber;
+
+        let update = {
+          organizerWinners: [...this.report.organizerWinners],
+          matchStatus: [...this.report.matchStatus],
+          realWinners: [...this.report.realWinners],
+          teams: [...this.report.teams],
+          position: this.report.position,
+          completeMatchStatus: "ONGOING"
+        };
+  
+
+        if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
+          let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1";
+          update.organizerWinners[matchNumber] = otherIndex;
+          update.realWinners[matchNumber] = otherIndex;
+          update.score = this.calcScores(update);
+
+        }
+
+        if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+          let teamNumber = this.reportUI.teamNumber;
+          let otherTeamNumber = this.reportUI.otherTeamNumber;
+          let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
+          if (otherIndex) {
+            update.teams[teamNumber].winners[matchNumber] = otherIndex;
+            update.realWinners[matchNumber] = otherIndex;
+          }
+          update.score = this.calcScores(update);
+        }
+
+        await this.saveReport(update);
+      }
     },
     
     async onRemoveTeamToWin() {
-      window.Swal.fire({
+      const result = await window.Swal.fire({
         title: 'Remove the winner',
         html: `
             Are you sure you want to remove the winner?
@@ -632,31 +662,26 @@ function BracketData() {
         padding: '2em',
         confirmButtonColor: '#43A4D7',
         reverseButtons: true,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          let matchNumber = this.reportUI.matchNumber;
-
-          let update = {
-            organizerWinners: [...this.report.organizerWinners],
-            matchStatus: [...this.report.matchStatus],
-            realWinners: [...this.report.realWinners],
-            teams: [...this.report.teams],
-            position: this.report.position,
-            completeMatchStatus: matchNumber == 2 ? "ENDED": "ONGOING"
-          };
-    
-          update.matchStatus[matchNumber] = "ENDED";
-          if (matchNumber != 2) {
-            update.matchStatus[matchNumber+1] = "ONGOING";
-          }
-
-          update.organizerWinners[matchNumber] = null;
-          update.realWinners[matchNumber] = null;
-          update.score = this.calcScores(update);
-
-          await this.saveReport(update);
-        }
       });
+
+      if (result.isConfirmed) {
+        let matchNumber = this.reportUI.matchNumber;
+
+        let update = {
+          organizerWinners: [...this.report.organizerWinners],
+          matchStatus: [...this.report.matchStatus],
+          realWinners: [...this.report.realWinners],
+          teams: [...this.report.teams],
+          position: this.report.position,
+          completeMatchStatus: "ONGOING"
+        };
+  
+        update.organizerWinners[matchNumber] = null;
+        update.realWinners[matchNumber] = null;
+        update.score = this.calcScores(update);
+
+        await this.saveReport(update);
+      }
     },
     async resolveDisputeForm(event) {
       event.preventDefault();
@@ -1420,7 +1445,6 @@ const validateDisputeCreation = async (data) => {
 };
 
 window.onload = () => {
-
   createApp({
     BracketData,
     UploadData,
