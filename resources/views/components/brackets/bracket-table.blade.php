@@ -51,7 +51,7 @@
                          onerror="this.src='/assets/images/404q.png';" 
                          class="object-fit-cover border border-primary team rounded-circle me-2" alt="Team View">
                  @else
-                    <small class="rounded-circle filler border border-secondary " ></small>
+                    <small class="rounded-circle filler border border-secondary me-2" ></small>
                 @endif
                
              </td>
