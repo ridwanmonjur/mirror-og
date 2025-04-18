@@ -216,8 +216,24 @@ class OrganizerEventController extends Controller
             [$eventDetail] = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
-            $eventDetail->makeSignupTables();
-            $eventDetail->createUpdateTask();
+            try {
+                $eventDetail->makeSignupTables();
+            } catch (Exception $e) {
+                throw new Exception('Failed to create signup tables: ' . $e->getMessage());
+            }
+            
+            try {
+                $eventDetail->createUpdateTask();
+            } catch (Exception $e) {
+                throw new Exception('Failed to create event tasks: ' . $e->getMessage());
+            }
+
+            try {
+                $this->eventMatchService->createBrackets($eventDetail);
+            } catch (Exception $e) {
+                throw new Exception('Failed to create event brackets: ' . $e->getMessage());
+            }
+
             DB::commit();
             if ($request->livePreview === 'true') {
                 return redirect('organizer/event/'.$eventDetail->id.'?live=true');
@@ -243,12 +259,12 @@ class OrganizerEventController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $event = EventDetail::findEventWithRelationsAndThrowError($userId,$id);
+
             $status = $event->statusResolved();
 
             if ($status === 'ENDED') {
                 return $this->showErrorOrganizer("Event has already ended id: {$id}");
             }
-
 
             $eventCategory = EventCategory::all();
             $eventTierList = EventTier::byUserOrNullUser($userId)->get();
@@ -277,7 +293,14 @@ class OrganizerEventController extends Controller
             $eventId = $id;
             $user = $request->get('user');
             $userId = $user->id;
-            $eventDetail = EventDetail::findEventWithRelationsAndThrowError($userId,$id);
+
+            $eventDetail = EventDetail::findEventWithRelationsAndThrowError(
+                $userId,
+                $id,
+                null,
+                ['type', 'tier', 'game', 'matches', 'deadlines']
+            );            
+            
             DB::beginTransaction();
 
             if ($eventId) {
@@ -285,8 +308,24 @@ class OrganizerEventController extends Controller
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
                 if (!$isTimeSame) dispatch(new HandleEventUpdate($eventDetail));
-                $eventDetail->createUpdateTask();
-                $eventDetail->makeSignupTables();
+                try {
+                    $eventDetail->makeSignupTables();
+                } catch (Exception $e) {
+                    throw new Exception('Failed to create signup tables: ' . $e->getMessage());
+                }
+                
+                try {
+                    $eventDetail->createUpdateTask();
+                } catch (Exception $e) {
+                    throw new Exception('Failed to create event tasks: ' . $e->getMessage());
+                }
+
+                try {
+                    $this->eventMatchService->createBrackets($eventDetail);
+                } catch (Exception $e) {
+                    throw new Exception('Failed to create event brackets: ' . $e->getMessage());
+                }
+                
                 DB::commit();
                 if ($request->livePreview === 'true') {
                     return redirect('organizer/event/'.$eventId.'/live');
@@ -302,7 +341,7 @@ class OrganizerEventController extends Controller
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', $e->getTraceAsString() . ' ' .$e->getMessage());
+            return back()->with('error', $e->getMessage(). ' ' . $e->getTraceAsString() );
         }
     }
 

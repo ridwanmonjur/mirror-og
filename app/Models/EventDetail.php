@@ -79,7 +79,7 @@ class EventDetail extends Model
 
     public function deadlines()
     {
-        return $this->hasMany(BracketDeadline::class, 'event_id');
+        return $this->hasMany(BracketDeadline::class, 'event_details_id');
     }
 
     public static function destroyEventBanner(string| null $file): void
@@ -183,7 +183,7 @@ class EventDetail extends Model
     {
         $deadlineSetup = BracketDeadlineSetup::where('tier_id', $this->event_tier_id)->first();
             
-        if (!$deadlineSetup) {
+        if (!$deadlineSetup || !$this->deadlines) {
             return; 
         }
         
@@ -214,45 +214,44 @@ class EventDetail extends Model
             }
         }
         
-        DB::beginTransaction();
+        BracketDeadline::insert($deadlinesToCreate);
         
-        try {
-            BracketDeadline::insert($deadlinesToCreate);
-            
-            $createdDeadlines = BracketDeadline::where('event_details_id', $this->id)
-                ->where('created_at', $now)
-                ->get()
-                ->keyBy(function ($deadline) {
-                    return $deadline->stage . '_' . $deadline->inner_stage;
-                });
-            
-            foreach ($deadlineConfig as $stage => $innerStages) {
-                foreach ($innerStages as $innerStage => $times) {
-                    $startDays = $times['start'];
-                    $endDays = $times['end'];
-                    $startReport = $baseDateTime->copy()->addDays($startDays)->toDateTimeString();
-                    $endReport = $baseDateTime->copy()->addDays($endDays)->toDateTimeString();
-                    
-                    $deadlineKey = $stage . '_' . $innerStage;
-                    $deadline = $createdDeadlines[$deadlineKey];
-                    
-                    $tasksToCreate[] = [
-                        'taskable_id' => $deadline->id,
-                        'taskable_type' => BracketDeadline::class,
-                        'task_name' => 'send_report',
-                        'action_time' => $endReport,
-                        'created_at' => $now,
-                    ];
-                }
+        $createdDeadlines = BracketDeadline::where('event_details_id', $this->id)
+            ->where('created_at', $now)
+            ->get()
+            ->keyBy(function ($deadline) {
+                return $deadline->stage . '_' . $deadline->inner_stage;
+            });
+        
+        foreach ($deadlineConfig as $stage => $innerStages) {
+            foreach ($innerStages as $innerStage => $times) {
+                $startDays = $times['start'];
+                $endDays = $times['end'];
+                $startReport = $baseDateTime->copy()->addDays($startDays)->toDateTimeString();
+                $endReport = $baseDateTime->copy()->addDays($endDays)->toDateTimeString();
+                
+                $deadlineKey = $stage . '_' . $innerStage;
+                $deadline = $createdDeadlines[$deadlineKey];
+                
+                $tasksToCreate[] = [
+                    'taskable_id' => $deadline->id,
+                    'taskable_type' => BracketDeadline::class,
+                    'task_name' => 'start_report',
+                    'action_time' => $startReport,
+                    'created_at' => $now,
+                ];
+
+                $tasksToCreate[] = [
+                    'taskable_id' => $deadline->id,
+                    'taskable_type' => BracketDeadline::class,
+                    'task_name' => 'end_report',
+                    'action_time' => $endReport,
+                    'created_at' => $now,
+                ];
             }
-            
-            Task::insert($tasksToCreate);
-            
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
         }
+        
+        Task::insert($tasksToCreate);
     }
 
     public function statusResolved(): string
