@@ -33,7 +33,7 @@
                 </h3>
             </u>
         </div> <br>
-        <div class="px-4 py-4">
+        <div class="px-1 py-4">
             <div  class="d-flex justify-content-center">
                 <div style="width:min(600px, 80vw);" class="border bg-white d-inline-block border-primary shadow-xl px-5 mx-auto text-start  py-3">
                     <div class="d-flex justify-content-start align-items-center">

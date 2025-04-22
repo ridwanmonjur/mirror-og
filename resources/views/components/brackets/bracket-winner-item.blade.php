@@ -3,10 +3,10 @@
     $isTeam2 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM2'];
     $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
 @endphp
-<div class="tournament-bracket tournament-bracket--rounded col-12 col-xl-6 align-items-start">
+<div class="tournament-bracket tournament-bracket--rounded col-12 col-xl-6 d-inline-flex align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold">
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
-            <div class="tournament-bracket__item tournament">
+            <div class="tournament-bracket__item tournament final">
                 <div class="tournament-bracket__match user-select-none middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
@@ -56,7 +56,7 @@
     </div>
     <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
         <div class="tournament-bracket__list  tournament-bracket__joined-list tournament-bracket__joined-even-list">
-            <div class="tournament-bracket__item tournament">
+            <div class="tournament-bracket__item tournament final">
                 <div class="tournament-bracket__match middle-item tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
                      data-bracket="{{ json_encode($winner) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="w" data-order="{{ $order }}"
