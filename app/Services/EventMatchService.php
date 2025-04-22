@@ -25,7 +25,7 @@ class EventMatchService {
 
     public function createBrackets (EventDetail $event) {
         // dd($event);
-        if (!isset($event->matches[0])) {
+        if (!isset($event->matches[0]) && $event?->tier?->tierTeamSlot) {
             $bracketList = $this->bracketDataService->produceBrackets(
                 $event->tier->tierTeamSlot, 
                 false,

@@ -106,6 +106,6 @@
 
     @else
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
-        <p class="mt-2"> Bracket is not set </p>
+        <p class="mt-2"> Bracket is not ready till you choose a tier </p>
     @endif
 </div>
