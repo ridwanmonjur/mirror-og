@@ -229,24 +229,34 @@ class EventDetail extends Model
                 $endDays = $times['end'];
                 $startReport = $baseDateTime->copy()->addDays($startDays)->toDateTimeString();
                 $endReport = $baseDateTime->copy()->addDays($endDays)->toDateTimeString();
+                $orgReport = $baseDateTime->copy()->addDays($endDays)
+                    ->addHours(12)->toDateTimeString();
                 
                 $deadlineKey = $stage . '_' . $innerStage;
                 $deadline = $createdDeadlines[$deadlineKey];
                 
-                $tasksToCreate[] = [
+                $tasksToCreate = [...$tasksToCreate, 
+                    [
                     'taskable_id' => $deadline->id,
                     'taskable_type' => BracketDeadline::class,
                     'task_name' => 'start_report',
                     'action_time' => $startReport,
                     'created_at' => $now,
-                ];
-
-                $tasksToCreate[] = [
+                    ], 
+                    [
                     'taskable_id' => $deadline->id,
                     'taskable_type' => BracketDeadline::class,
                     'task_name' => 'end_report',
                     'action_time' => $endReport,
                     'created_at' => $now,
+                    ],
+                    [
+                        'taskable_id' => $deadline->id,
+                        'taskable_type' => BracketDeadline::class,
+                        'task_name' => 'org_report',
+                        'action_time' => $orgReport,
+                        'created_at' => $now,
+                    ],
                 ];
             }
         }
