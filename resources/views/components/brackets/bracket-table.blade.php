@@ -1,15 +1,15 @@
 @props(['bracket', 'isFirst'])
  <table class="tournament-bracket__table  mx-auto {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
-    style="width: min(300px, 90vw);"
+    style="width: min(300px, 100vw);"
  >
      <thead class="sr-only">
          <tr>
-             <th>Country</th>
+             <th>Team</th>
              <th>Score</th>
          </tr>
      </thead>
      <tbody class="tournament-bracket__content">
-         <tr class="tournament-bracket__team  px-2 py-3 bg-translucent  tournament-bracket__team--winner">
+         <tr class="tournament-bracket__team  px-2 py-3 bg-translucent  tournament-bracket__team--winner ">
              <td class="tournament-bracket__pos ">
                  <abbr class="tournament-bracket__code me-2"
                      title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}
@@ -29,7 +29,7 @@
                     
                 @endif
              </td>
-             <td class="tournament-bracket__score ">
+             <td class="tournament-bracket__score  ">
                  <span class="tournament-bracket__number">0</span>
              </td>
          </tr>
@@ -58,23 +58,27 @@
           
              <td class="tournament-bracket__score ">
                  <span class="tournament-bracket__number dotted-score-box">0</span>
-                  @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
-                        <span >
-                            <svg 
-                                data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
-                                onclick="updateModalShow(event); " style="z-index: 999;"
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-pencil-square  cursor-pointer ms-2" viewBox="0 0 16 16">
-                                <path
-                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd"
-                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                            </svg>
-                        </span>
-                    @endif
+                  
              </td>
-             
+            
          </tr>
          
      </tbody>
  </table>
+ <div class="d-block d-lg-none">
+ @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
+    <span class="h-100">
+        <svg 
+            data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
+            onclick="updateModalShow(event); " style="z-index: 999;"
+            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-pencil-square  cursor-pointer ms-3" viewBox="0 0 16 16">
+            <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+            <path fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+        </svg>
+    </span>
+@endif
+ </div>
+  
