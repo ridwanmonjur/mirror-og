@@ -11,7 +11,7 @@
 
 <div
     class="{{ 
-        'tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light ' .  
+        'tournament-bracket__box  position-relative mx-auto popover-button tournament bg-light border-dashed ' .  
         'data-position-'. $position1
     }}"
     data-position="{{$position1}}"
@@ -30,7 +30,7 @@
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
             class="cursor-pointer ms-1 position-absolute  cursor-pointer me-3 py-2 replace_me_with_image" style="z-index: 99;"
-        >&nbsp;&nbsp;&nbsp;?</small>
+        >&nbsp;&nbsp;???</small>
      @endif
     <span></span>
      

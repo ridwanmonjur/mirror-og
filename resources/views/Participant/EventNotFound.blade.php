@@ -9,9 +9,8 @@
      @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
-   
-
-</head><body style="margin-top: 0 !important;">
+</head>
+<body style="margin-top: 0 !important;">
 @include('includes.__Navbar.NavbarGoToSearchPage')
 
     <main>

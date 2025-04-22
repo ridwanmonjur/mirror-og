@@ -9,8 +9,8 @@
     @if (isset($bracketList['U']))
 
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
-        <div class="mb-2">
-            <div class="tournament-bracket tournament-bracket--rounded ">
+        <div class="mb-2 row">
+            <div class="col-xl-6 tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">
                         @foreach ($bracketList['U']['e1'] as $order => $bracket)
@@ -47,14 +47,13 @@
                 <div class="tournament-bracket__round tournament-bracket__round--gold mt-2">
                 </div>
             </div>
-
-           <x-brackets.bracket-winner-item :bracket="$bracketList['F']['F'][0]" :stageName="'F'" :innerStageName="'F'" :order="0"
-                :winner="$bracketList['F']['W'][0]"
+            <x-brackets.bracket-winner-item :bracket="$bracketList['F']['F'][0]" :stageName="'F'" :innerStageName="'F'" :order="0"
+                    :winner="$bracketList['F']['W'][0]"
             />
 
         </div>
         <h5 class="mb-2 text-start"><u>Lower bracket</u></h5>
-        <div class="tournament-bracket tournament-bracket--rounded custom-scrollbar" >
+        <div class="tournament-bracket tournament-bracket--rounded " >
             @php
                 $rounds = [
                     'e1' => 'tournament-bracket__joined-odd-list',

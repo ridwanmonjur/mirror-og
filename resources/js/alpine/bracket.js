@@ -221,6 +221,8 @@ function addAllTippy() {
   const parentSecondElements = document.querySelectorAll(".middle-item");
 
   parentSecondElements?.forEach(parent => {
+    let dataset = parent.dataset;
+    let {stage_name: stageName, inner_stage_name: innerStageName} = dataset;
     const triggers = parent.querySelectorAll(".popover-button");
     triggers.forEach((trigger) => {
       let triggerPositionId = trigger.dataset.position;
@@ -231,7 +233,9 @@ function addAllTippy() {
         let contentElement = document.querySelector(triggerClassName);
         if (contentElement) {
        
-          if (contentElement.classList.contains('warning')) {
+          if (contentElement.classList.contains('warning') && !(
+            stageName == 'L' && ['e1', 'e3', 'e5'].includes(innerStageName)
+          )) {
             let {
               readableDate, position
             } = contentElement.dataset;
@@ -553,26 +557,8 @@ function BracketData() {
           'team1_position': this.report.teams[0].position,
           'team2_id' : this.report.teams[1].id,
           'team2_position': this.report.teams[1].position,
-          'willCheckDeadline': true          
+          'willCheckDeadline': this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']        
         };
-
-        if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
-          update.organizerWinners[matchNumber] = selectedTeamIndex;
-          update.realWinners[matchNumber] = selectedTeamIndex;
-          update.score = this.calcScores(update);
-        }
-
-        if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
-          validateData['my_team_id'] = this.report.teams[teamNumber].id;
-          update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
-          let otherTeamWinner = this.report.teams[otherTeamNumber].winners[matchNumber];
-          if (otherTeamWinner) {
-            if (otherTeamWinner === selectedTeamIndex) {
-              update.realWinners[matchNumber] = selectedTeamIndex;
-            }
-          }
-          update.score = this.calcScores(update);
-        }
 
         try {
           const csrfToken5 = document.querySelector('meta[name="csrf-token"]').content;
@@ -592,7 +578,26 @@ function BracketData() {
             return;
           }
 
+          if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
+            update.organizerWinners[matchNumber] = selectedTeamIndex;
+            update.realWinners[matchNumber] = selectedTeamIndex;
+            Object.assign(update, this.calcScores(update));
+          }
+  
+          if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+            validateData['my_team_id'] = this.report.teams[teamNumber].id;
+            update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
+            let otherTeamWinner = this.report.teams[otherTeamNumber].winners[matchNumber];
+            if (otherTeamWinner) {
+              if (otherTeamWinner === selectedTeamIndex) {
+                update.realWinners[matchNumber] = selectedTeamIndex;
+              }
+            }
+            update.score = this.calcScores(update);        
+          }
+  
           await this.saveReport(update);
+
         } catch (error) {
           window.toastError("Problem updating data");
         }

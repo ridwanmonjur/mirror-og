@@ -5,8 +5,8 @@
     @if (isset($bracketList['U']))
  
         <h5 class="mt-4 mb-2 text-start"><u>Upper bracket</u></h5>
-        <div class="row mb-2 custom-scrollbar">
-            <div class="tournament-bracket tournament-bracket--rounded ">
+        <div class="row mb-2 custom-scrollbar h-100">
+            <div class="col-12 col-xl-6 d-inline-flex tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">
                         @foreach ($bracketList['U']['e1'] as $order => $bracket)
@@ -51,7 +51,7 @@
 
         </div>
         <h5 class="mb-2 text-start"><u>Lower bracket</u></h5>
-        <div class="tournament-bracket tournament-bracket--rounded custom-scrollbar">
+        <div class="tournament-bracket tournament-bracket--rounded ">
             @php
                 $rounds = [
                     'e1' => 'tournament-bracket__joined-odd-list',
