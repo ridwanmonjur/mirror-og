@@ -377,7 +377,7 @@ input[type="submit"]:active {
         display: none;
         padding: 15px 10px;
         border-top: none;
-        width: 90%;
+        width: 70vw;
     }
 
     .card-heading {
@@ -655,18 +655,18 @@ h2 {
     border: 0;
 }
 .tournament-bracket {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
 }
 @media (min-width: 992px) {
     .tournament-bracket {
         flex-direction: row;
+        padding: 0 !important;
    }
 }
 .tournament-bracket__round {
     display: block;
-    margin-left: -3px;
-    width: 100%;
+    margin-left: 0px;
     /* flex: 1; */
 }
 .tournament-bracket__round-title {
@@ -1040,7 +1040,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     }
 
     .tab-bracketlist {
-        width: 60vw; 
+        width: 70vw; 
         left: 10px;
         top:20px;
     }
@@ -1064,7 +1064,12 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     .tournament-bracket__pos .tournament-bracket__code {
         margin-top: 0.2em;
    }
+
+  
 }
+
+
+
 .tournament-bracket__code {
     padding: 0 0.5em;
     color: #2E4B59;
