@@ -303,6 +303,9 @@ class EventDetail extends Model
         
 
 
+        
+
+
         if ($carbonStartDateTime < $carbonNow) {
             return 'ONGOING';
         }
