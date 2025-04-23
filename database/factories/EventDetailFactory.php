@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\EventDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends Factory<\App\Models\EventDetail>
@@ -18,6 +19,21 @@ final class EventDetailFactory extends Factory
     * @var string
     */
     protected $model = EventDetail::class;
+
+    public static function deleteRelatedTables() {
+  
+        // Disable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
+        // Truncate tables
+        \App\Models\EventDetail::query()->delete();
+        \App\Models\PaymentTransaction::query()->delete();
+        \App\Models\EventType::query()->delete();
+        \App\Models\EventTier::query()->delete();
+        \App\Models\EventCategory::query()->delete();
+        // Re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
 
     /**
     * Define the model's default state.
@@ -45,7 +61,7 @@ final class EventDetailFactory extends Factory
             'event_type_id' => \App\Models\EventType::factory(),
             'event_tier_id' => \App\Models\EventTier::factory(),
             'event_category_id' => \App\Models\EventCategory::factory(),
-            'payment_transaction_id' => fake()->optional()->randomNumber(),
+            'payment_transaction_id' => \App\Models\PaymentTransaction::factory(),
             'willNotify' => fake()->randomNumber(1),
         ];
     }

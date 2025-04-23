@@ -3,6 +3,7 @@ namespace Tests\Unit;
 
 use App\Models\Matches;
 use App\Models\BracketDeadline;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Mockery;
@@ -15,17 +16,7 @@ class DeadlineTasksTest extends TestCase
     {
         parent::setUp();
         
-        // Disable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
-        // Truncate tables
-        DB::table('users')->truncate();
-        DB::table('organizers')->truncate();
-        DB::table('participants')->truncate();
-        DB::table('notification_counters')->truncate();
-        DB::table('user_address')->truncate();
-        // Re-enable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        UserFactory::deleteRelatedTables();
 
     }
 
@@ -59,17 +50,25 @@ class DeadlineTasksTest extends TestCase
     /** @test */
     public function it_resolves_scores_and_assigns_next_match_teams()
     {
-        $eventId = 1;
+
+        $user = \App\Models\User::factory()->create();
+        $team1 = \App\Models\Team::factory()->create();
+        $team2 = \App\Models\Team::factory()->create();
+    
+        // Create event details connected to that user
+        $eventDetail = \App\Models\EventDetail::factory()->create([
+            'user_id' => $user->id
+        ]);
 
         // Seed a "next match"
         $nextMatch = Matches::factory()->create([
-            'event_details_id' => $eventId,
-            'team1_position' => 99,
+            'event_details_id' => $eventDetail->id,
+            'team1_position' => '99',
             'team1_id' => null,
         ]);
 
         $deadline = BracketDeadline::factory()->create([
-            'event_details_id' => $eventId,
+            'event_details_id' => $eventDetail->id,
         ]);
 
         $trait = new class {
@@ -84,8 +83,8 @@ class DeadlineTasksTest extends TestCase
         };
 
         $bracket = [
-            'team1_id' => 101,
-            'team2_id' => 102,
+            'team1_id' => $team1->id,
+            'team2_id' => $team2->id,
             'winner_next_position' => 99,
             'loser_next_position' => null,
         ];
@@ -94,7 +93,7 @@ class DeadlineTasksTest extends TestCase
 
         $nextMatch->refresh();
 
-        $this->assertEquals(101, $nextMatch->team1_id);
+        $this->assertEquals($team1->id, $nextMatch->team1_id);
     }
 
     protected function tearDown(): void

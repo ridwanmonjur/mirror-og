@@ -20,7 +20,7 @@ class UserFactory extends Factory
      */
     protected $model = User::class;
 
-    public function deleteRelatedTables() {
+    public static function deleteRelatedTables() {
   
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -46,7 +46,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => bcrypt('123456'), // password
             'remember_token' => Str::random(60),
             'role' => 'PARTICIPANT', // Default role
             'status' => null,
