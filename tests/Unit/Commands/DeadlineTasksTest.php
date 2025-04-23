@@ -3,6 +3,7 @@ namespace Tests\Unit;
 
 use App\Models\Matches;
 use App\Models\BracketDeadline;
+use Database\Factories\TeamFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ class DeadlineTasksTest extends TestCase
         parent::setUp();
         
         UserFactory::deleteRelatedTables();
+        TeamFactory::deleteRelatedTables();
 
     }
 
