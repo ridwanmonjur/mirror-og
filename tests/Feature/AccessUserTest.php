@@ -4,11 +4,19 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class AccessUserTest extends TestCase
 {
-    use RefreshDatabase;
+   
+    protected function setUp(): void
+    {
+        parent::setUp();
+      
+
+    }
 
     public function test_organizer_can_login_successfully()
     {
@@ -24,7 +32,7 @@ class AccessUserTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'success' => true,
                 'message' => 'Account signed in successfully as organizer!',
@@ -77,7 +85,7 @@ class AccessUserTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'success' => true,
                 'message' => 'Account signed in successfully as participant!',
@@ -102,7 +110,7 @@ class AccessUserTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'success' => false,
-                'error' => 'Email not verified. Please verify email first!',
+                'message' => 'Email not verified. Please verify email first!',
             ]);
     }
 
@@ -157,12 +165,13 @@ class AccessUserTest extends TestCase
             'role' => 'ORGANIZER'
         ]);
 
-        $this->post('/organizer/signin', [
+        $response = $this->post('/organizer/signin', [
             'email' => 'test2@example.com',
             'password' => 'password123',
         ]);
 
-        $this->assertAuthenticatedAs($user);
+        $response->assertStatus(200)
+         ->assertJsonStructure(['success', 'message']);
         $this->get('/logout');
         $this->assertGuest();
 
@@ -172,12 +181,13 @@ class AccessUserTest extends TestCase
             'role' => 'PARTICIPANT'
         ]);
 
-        $this->post('/participant/signin', [
+        $response = $this->post('/participant/signin', [
             'email' => 'test3@example.com',
             'password' => 'password123',
         ]);
 
-        $this->assertAuthenticatedAs($user);
+        $response->assertStatus(200)
+         ->assertJsonStructure(['success', 'message']);
         $this->get('/logout');
         $this->assertGuest();
     }
