@@ -33,7 +33,7 @@
                     
                      <p class="text-success mt-2">
                         The dispute has been resolved in favor of 
-                        <span v-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name"> </span>
+                        <span  class="text-primary" v-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner].name"> </span>
                     </p>
                     <div class="mt-2">
                        <div class="d-flex justify-content-center">
