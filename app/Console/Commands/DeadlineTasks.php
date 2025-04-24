@@ -102,99 +102,9 @@ class DeadlineTasks extends Command
                 }
             }
 
-            foreach ($startedBracketDeadlines as $deadline) {
-                $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-                if (!$bracket) {
-                    continue;
-                }
-
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-
-                if ($snapshot->exists()) {
-                    $matchStatusData = $snapshot->data();
-                    $docRef->update([['path' => 'matchStatus', 'value' => 'ONGOING']]);
-                }
-            }
-
-            foreach ($endBracketDeadlines as $deadline) {
-                $updateValues = [['path' => 'matchStatus', 'value' => 'ENDED']];
-
-                $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-                if (!$bracket) {
-                    continue;
-                }
-
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-
-                if ($snapshot->exists()) {
-                    $matchStatusData = $snapshot->data();
-                    $scores = $matchStatusData['scores'] ?? null;
-
-                    if (is_array($scores)) {
-                        if ($scores[0] == $scores[1]) {
-                            [ $realWinners, $scores, $updated ] = $this->equalizeScoreMissing($matchStatusData);
-                            if ($updated && $scores[0] != $scores[1]) {
-                                $updateValues = [
-                                    ...$updateValues,
-                                    ['path' => 'realWinners', 'value' => $realWinners],
-                                    ['path' => 'scores', 'value' => $scores]
-                                ];
-                            }
-                        } 
-
-                        $this->resolveScores( $bracket, $scores, $deadline);
-                    }
-
-                    $docRef->update($updateValues);
-                }
-            }
-
-            foreach ($orgBracketDeadlines as $deadline) {
-                $updateValues = [];
-                $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-                if (!$bracket) {
-                    continue;
-                }
-
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-
-                if ($snapshot->exists()) {
-                    $matchStatusData = $snapshot->data();
-                    $scores = $matchStatusData['scores'] ?? null;
-                    if (is_array($scores)) {
-                        if ($scores[0] == $scores[1]) {
-                            [ $realWinners, $scores, $updated ] = $this->equalizeScoreMissing($matchStatusData);
-                            if ($updated) {
-                                if ( $scores[0] == $scores[1]) {
-                                    $updateValues = [
-                                        ...$updateValues,
-                                        ['path' => 'realWinners', 'value' => $realWinners],
-                                        ['path' => 'scores', 'value' => $scores]
-                                    ];
-                                   
-                                   
-                                } else {
-                                    $updateValues = [
-                                        ...$updateValues,
-                                       // todo something for new winner chosen at random
-                                    ];
-                                }
-
-                                $docRef->update($updateValues);
-
-                            }
-                        }
-                        
-                        $this->resolveScores( $bracket, $scores, $deadline);
-                    }
-                }
-            }
+            $this->handleStartedTasks($startedBracketDeadlines);
+            $this->handleEndedTasks($endBracketDeadlines);
+            $this->handleOrgTasks($orgBracketDeadlines);
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
@@ -204,5 +114,5 @@ class DeadlineTasks extends Command
         }
     }
 
-    
+
 }

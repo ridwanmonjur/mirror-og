@@ -1,6 +1,6 @@
 <div>
 
-    @include('includes.__BracketModal.__Report.ExistingChoices')
+    @include('includes.__BracketModal.__Report.ExistingChoicesTeam')
     <template v-if="!report.realWinners[reportUI.matchNumber]">
         <div>
             <template
@@ -63,8 +63,8 @@
                 </div>
             </template>
             <template
-                v-if="report.teams[reportUI.teamNumber].winners[reportUI.matchNumber] &&
-                    !report.teams[reportUI.otherTeamNumber].winners[reportUI.matchNumber] 
+                v-if="report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber] &&
+                    !report.teams[reportUI.otherTeamNumber]?.winners[reportUI.matchNumber] 
                 "
             >
                 <div class="mt-2">
