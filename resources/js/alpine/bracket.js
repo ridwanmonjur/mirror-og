@@ -196,7 +196,40 @@ parentElements?.forEach(parent => {
   }
 });
 
-function generateWarningHtml (readableDate, newPositionId) {
+  
+function updateAllCountdowns() {
+  const diffDateElements = document.querySelectorAll(`.diffDate1`);
+  
+  diffDateElements.forEach(element => {
+    const targetDateStr = element.getAttribute('data-diff-date');
+      let countdownText = diffDateWithNow(targetDateStr);
+      element.innerHTML = countdownText;
+  });
+}
+
+function diffDateWithNow(targetDate) {
+  targetDate = new Date(targetDate);
+  console.log({targetDate: targetDate.toString()});
+  const now = new Date();
+  let countdownText = '';
+      
+  if (targetDate > now) {
+    const diffMs = targetDate - now;
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (days > 0) countdownText += `${days}d `;
+    if (hours > 0) countdownText += `${hours}h `;
+    if (minutes > 0 ) countdownText += `${minutes}m `;
+  } else {
+    countdownText = 'Time over';
+  } 
+  return countdownText;
+}
+
+function generateWarningHtml (diffDate, newPositionId) {
+  let diffDateFormat = diffDateWithNow(diffDate);
   return `
     <div class="reportBox row z-99 justify-content-start bg-light border border-dark border rounded px-2 py-2" 
       style="width: 300px;"
@@ -209,15 +242,15 @@ function generateWarningHtml (readableDate, newPositionId) {
       </p>
       <small class="text-red small text-center my-0 py-0"> 
         Time left to report: 
-        ${readableDate}
+        <span class="diffDate1" data-diff-date="${diffDate}">${diffDateFormat}</span>
       </small>
     </div>
 
   `;
 }
 
-function addAllTippy() {
 
+function addAllTippy() {
   const parentSecondElements = document.querySelectorAll(".middle-item");
 
   parentSecondElements?.forEach(parent => {
@@ -237,12 +270,12 @@ function addAllTippy() {
             stageName == 'L' && ['e1', 'e3', 'e5'].includes(innerStageName)
           )) {
             let {
-              readableDate, position
+              diffDate, position
             } = contentElement.dataset;
 
             if (triggerParentsPositionIds.includes(position)) {
               let tippyId = position + '+' + triggerPositionId;
-              let popover = window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(readableDate, triggerPositionId), 'manual', {
+              let popover = window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(diffDate, triggerPositionId), 'manual', {
                   onShow(instance) {
                     const tippyBox = instance.popper;
                     tippyBox.addEventListener('click', () => {
@@ -263,6 +296,7 @@ function addAllTippy() {
     })
   });
 }
+
 
 function addTippyToClass(classAndPositionList) {
   for (let classX of classAndPositionList) {
@@ -394,7 +428,8 @@ async function getAllMatchStatusesData() {
 }
 
 getAllMatchStatusesData();
-
+updateAllCountdowns();
+setInterval(updateAllCountdowns, 60000);
 
 const fileStore = reactive({
   disputeClaimFiles: [],
@@ -456,6 +491,39 @@ const fileStore = reactive({
     }
   },
 });
+
+function CountDown (options) {
+  return {
+    targetDate: null,
+    dateText: null,
+    intervalId: null,
+    
+    init() {
+      if (this.$refs.foo) {
+        const el = this.$refs.foo;
+        this.targetDate = el.dataset.diffDate;
+      } else {
+        this.targetDate = options.targetDate;
+      }
+
+      this.dateText = diffDateWithNow(this.targetDate);
+      this.startTimer();
+    },
+    
+    startTimer() {
+      this.intervalId = setInterval(() => {
+        this.dateText = diffDateWithNow(this.targetDate);
+      }, 60000);
+    },
+    
+    stopTimer() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+    },
+  };
+}
 
 
 function BracketData() {
@@ -1453,6 +1521,7 @@ window.onload = () => {
   createApp({
     BracketData,
     UploadData,
+    CountDown
   }).mount('#Bracket');
 
   const modalIds = ['updateModal', 'reportModal', 'disputeModal'];
