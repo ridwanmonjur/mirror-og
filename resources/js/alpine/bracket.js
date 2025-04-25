@@ -209,7 +209,6 @@ function updateAllCountdowns() {
 
 function diffDateWithNow(targetDate) {
   targetDate = new Date(targetDate);
-  console.log({targetDate: targetDate.toString()});
   const now = new Date();
   let countdownText = '';
       
@@ -407,7 +406,6 @@ async function getAllMatchStatusesData() {
     newDataList = {}, modifiedDataList = {};
     newClassList = [], modifiedClassList = [];
     let tabLoading = document.querySelector('button#tabLoading');
-    console.log({tabLoading});
     if (tabLoading) {
       
       tabLoading.classList.remove('loading');
@@ -649,7 +647,7 @@ function BracketData() {
           if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
             update.organizerWinners[matchNumber] = selectedTeamIndex;
             update.realWinners[matchNumber] = selectedTeamIndex;
-            Object.assign(update, this.calcScores(update));
+            update.score = this.calcScores(update);     
           }
   
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
@@ -844,6 +842,7 @@ function BracketData() {
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
     async saveReport(report) {
+      console.log({report});
       const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
@@ -1074,9 +1073,6 @@ function BracketData() {
           };
         }
 
-        console.log({deadline: dataset.deadline, newReport});
-        console.log({deadline: dataset.deadline, newReport});
-        console.log({deadline: dataset.deadline, newReport});
 
         this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });

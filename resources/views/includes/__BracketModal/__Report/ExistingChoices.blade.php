@@ -35,14 +35,14 @@
         <template v-if="report.deadline.has_ended">
             <small class="d-block">
                 <span>No winner declared by either team. 
-                    <template v-if="report.organizerWinners[reportUI.matchNumber]">
+                    <template v-if="report.organizerWinners && report.organizerWinners[reportUI.matchNumber]">
                         <div>
                             <small>
                                 Winner declared by organizer.
                             </small>
                         </div>
                     </template>
-                    <template v-if="report.randomWinners[reportUI.matchNumber]">
+                    <template v-if="report.randomWinners && report.randomWinners[reportUI.matchNumber]">
                         <div>
                             <small>
                                 Winner automatically chosen at random.
