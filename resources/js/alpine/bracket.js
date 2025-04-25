@@ -7,7 +7,7 @@ import {
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
 import tippy from 'tippy.js';
-import { initialBracketData, calcScores, createReportDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
+import { initialBracketData, calcScores, updateReportFromFirestore, createReportTemp, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
 
 window.specialTippy = [];
 window.popoverIdToPopover = window.activePopovers || {};
@@ -191,11 +191,6 @@ parentElements?.forEach(parent => {
     });
   }
 });
-
-  
-
-
-
 
 
 function addAllTippy() {
@@ -488,7 +483,7 @@ function BracketData() {
       let otherTeamNumber = this.reportUI.otherTeamNumber;
       let matchNumber = this.reportUI.matchNumber;
       let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
-      let update = createReportDto(this.report);
+      let update = createReportTemp(this.report);
 
       const result = await window.Swal.fire({
         title: 'Choosing the winner',
@@ -574,7 +569,7 @@ function BracketData() {
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
 
-        let update = createReportDto(this.report);
+        let update = createReportTemp(this.report);
   
 
         if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
@@ -618,7 +613,7 @@ function BracketData() {
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
 
-        let update = createReportDto(this.report);
+        let update = createReportTemp(this.report);
   
         update.organizerWinners[matchNumber] = null;
         update.realWinners[matchNumber] = null;
@@ -714,45 +709,31 @@ function BracketData() {
       button.classList.add('bg-primary', 'text-light');
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
-    async saveReport(report) {
+    async saveReport(tempState) {
       const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
 
       try {
-        let _report = {};
-        _report['score'] = [report?.score[0] ?? "0", report?.score[1] ?? "0"];
-        _report['matchStatus'] = report.matchStatus;
-        _report['realWinners'] = report.realWinners;
-        _report['organizerWinners'] = report.organizerWinners;
-        _report['team1Winners'] = report.teams[0]?.winners;
-        _report['team2Winners'] = report.teams[1]?.winners;
-        _report['team1Id'] = report.teams[0].id;
-        _report['team2Id'] = report.teams[1].id;
-        _report['position'] = report.position;
-        _report['completeMatchStatus'] = report.completeMatchStatus;
-        await setDoc(docRef, _report);
-
-        this.report = {
-          ...this.report,
-          organizerWinners: _report.organizerWinners,
-          id: _report['id'],
-          matchStatus: _report.matchStatus,
-          completeMatchStatus: _report.completeMatchStatus,
-          realWinners: _report.realWinners,
-          teams: [
-            {
-              ...this.report.teams[0],
-              score: _report.score[0],
-              winners: _report.team1Winners
-            },
-            {
-              ...this.report.teams[1],
-              score: _report.score[1],
-              winners: _report.team2Winners
-            }
-          ]
+        let firestoreDoc = {
+          score: [tempState?.score[0] ?? "0", tempState?.score[1] ?? "0"],
+          matchStatus: [...tempState.matchStatus],
+          realWinners: tempState.realWinners,
+          organizerWinners: tempState.organizerWinners,
+          team1Winners: tempState.teams[0]?.winners,
+          team2Winners: tempState.teams[1]?.winners,
+          team1Id: tempState.teams[0].id,
+          team2Id: tempState.teams[1].id,
+          position: tempState.position,
+          completeMatchStatus: tempState.completeMatchStatus,
+          randomWinners: [...tempState.randomWinners],
+          defaultWinner: [...tempState.defaultWinner],
+          disqualified: tempState.disqualified,
+          disputeResolved: [...tempState.disputeResolved]
         };
+
+        await setDoc(docRef, firestoreDoc);
+        this.report = updateReportFromFirestore(this.report, firestoreDoc);
 
         if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
           this.setDisabled(this.reportUI);
@@ -993,42 +974,8 @@ function BracketData() {
         async (reportSnapshot) => {
           if (reportSnapshot.exists()) {
             let data = reportSnapshot.data();
-            let {
-              score,
-              matchStatus,
-              realWinners,
-              organizerWinners,
-              team1Winners,
-              team2Winners,
-              completeMatchStatus
-            } = data;
-
-            if (!score) {
-              score = [0, 0];
-            }
-
-            this.report = {
-              ...newReport,
-              organizerWinners,
-              id: reportSnapshot.id,
-              matchStatus,
-              completeMatchStatus,
-              realWinners,
-              teams: [
-                {
-                  ...newReport.teams[0],
-                  winners: team1Winners,
-                  score: score[0],
-                },
-                {
-                  ...newReport.teams[1],
-                  winners: team2Winners,
-                  score: score[1],
-                }
-              ]
-            }
-
-
+            data['id'] = reportSnapshot.id;
+            this.report = updateReportFromFirestore(newReport, data)
             if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) {
               this.setDisabled(newReportUI);
             }
@@ -1053,13 +1000,9 @@ function BracketData() {
 
             this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
           } else {
-            this.report = {
-              ...newReport
-            };
+            this.report = { ...newReport };
 
-            this.reportUI = {
-              ...newReportUI,
-            }
+            this.reportUI = { ...newReportUI }
 
             this.dispute = [null, null, null];
             window.closeLoading()
@@ -1139,15 +1082,14 @@ function BracketData() {
             };
 
             validateDisputeCreation(disputeDto);
-
-            const disputesRef = collection(db, `event/${eventId}/disputes`);
-            const docRef = await addDoc(disputesRef, disputeDto);
+            let newDisputeId = `${this.report.teams[0].position}${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
+            const disputesRef = db(db, `event/${eventId}/disputes`, newDisputeId);
+            await setDoc(disputesRef, disputeDto);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              let id = docRef.id;
               let data = docSnap.data();
               this.dispute = this.dispute.map((item, index) => 
-                index == disputeDto['match_number'] ? { ...data, id } : item
+                index == disputeDto['match_number'] ? { ...data, id: newDisputeId } : item
               );
             }
 
@@ -1407,5 +1349,4 @@ window.onload = () => {
     }
   });
 }
-// Alpine.start();
 

@@ -19,6 +19,10 @@ const initialBracketData = (userTeamId) => ({
     report: {
         id: null,
         organizerWinners: [null, null, null],
+        randomWinners: [null, null, null],
+        defaultWinner: [null, null, null],
+        disqualified: false,
+        disputeResolved: [null, null, null],
         realWinners: [null, null, null],
         userLevel: userLevelEnums['IS_PUBLIC'],
         completeMatchStatus: 'UPCOMING',
@@ -57,14 +61,18 @@ function calcScores(update) {
     return [score1, score2];
 }
 
-function createReportDto (report) {
+function createReportTemp (report) {
     let update = {
         organizerWinners: [...report.organizerWinners],
         matchStatus: [...report.matchStatus],
         realWinners: [...report.realWinners],
         teams: [...report.teams],
         position: report.position,
-        completeMatchStatus: report.completeMatchStatus
+        completeMatchStatus: report.completeMatchStatus,
+        randomWinners: [...report.randomWinners],
+        defaultWinner: [...report.defaultWinner],
+        disqualified: report.disqualified,
+        disputeResolved: [...report.disputeResolved],
     }
     
     return update;
@@ -121,10 +129,40 @@ function updateAllCountdowns() {
     `;
   }
 
+  function updateReportFromFirestore(baseReport, sourceData) {
+    const score = sourceData.score || [0, 0];
+    
+    return {
+      ...baseReport,
+      organizerWinners: sourceData.organizerWinners,
+      id: sourceData.id || sourceData.reportSnapshot?.id,
+      matchStatus: sourceData.matchStatus,
+      completeMatchStatus: sourceData.completeMatchStatus,
+      realWinners: sourceData.realWinners,
+      randomWinners: sourceData.randomWinners,
+      defaultWinner: sourceData.defaultWinner,
+      disqualified: sourceData.disqualified,
+      disputeResolved: sourceData.disputeResolved,
+      teams: [
+        {
+          ...baseReport.teams[0],
+          score: score[0],
+          winners: sourceData.team1Winners
+        },
+        {
+          ...baseReport.teams[1],
+          score: score[1],
+          winners: sourceData.team2Winners
+        }
+      ]
+    };
+  }
+
 export {
     initialBracketData,
     calcScores,
-    createReportDto,
+    createReportTemp,
+    updateReportFromFirestore,
     updateAllCountdowns,
     diffDateWithNow,
     generateWarningHtml

@@ -33,21 +33,21 @@
 <template v-else>
     <span class="d-block">
         <template v-if="report.deadline.has_ended">
-            <span class="d-block">
+            <span class="d-inline-block">
                 <span>No winner declared by either team. 
                     <template v-if="report.organizerWinners && report.organizerWinners[reportUI.matchNumber]">
-                        <div>
+                        <span>
                             <span>
                                 Winner declared by organizer.
                             </span>
-                        </div>
+                        </span>
                     </template>
                     <template v-if="report.randomWinners && report.randomWinners[reportUI.matchNumber]">
-                        <div>
+                        <span>
                             <span>
                                 Winner automatically chosen at random.
                             </span>
-                        </div>
+                        </span>
                     </template>
                 </span>
             </span>

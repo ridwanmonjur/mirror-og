@@ -1,30 +1,30 @@
 <template v-if="report.teams[reportUI.otherTeamNumber]?.winners[reportUI.matchNumber] || report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]">
-    <small class="d-block">
+    <span class="d-block">
         <template v-if="report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]">
-            <small class="d-block">
+            <span class="d-block">
                 You declared
-                <small class="text-primary"
+                <span class="text-primary"
                     v-text="report.teams[report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]]?.name">
-                </small>
-                to be the winner for Game <small v-text="reportUI.matchNumber+1"> </small>
-            </small>
+                </span>
+                to be the winner for Game <span v-text="reportUI.matchNumber+1"> </span>
+            </span>
         </template>
 
         <template v-if="report.teams[reportUI.otherTeamNumber]?.winners[reportUI.matchNumber] ">
-            <small class="d-block">
+            <span class="d-block">
                 Opponent Team declared
-                <small class="text-primary"
+                <span class="text-primary"
                     v-text="report.teams[report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]]?.name">
-                </small>
-                to be the winner for Game <small v-text="reportUI.matchNumber+1"> </small>
-            </small>
+                </span>
+                to be the winner for Game <span v-text="reportUI.matchNumber+1"> </span>
+            </span>
         </template>
         <template v-else>
-            <small class="d-block">
+            <span class="d-block">
                 <template v-if="report.deadline.has_started && !report.deadline.has_ended">
                     <i class="d-block text-secondary">
                         Waiting for the other team to declare the winner for Game
-                        <small v-text="reportUI.matchNumber+1"> </small>
+                        <span v-text="reportUI.matchNumber+1"> </span>
                     </i>
                 </template>
                 <template v-if="report.deadline.has_ended">
@@ -32,41 +32,41 @@
                         Opponent didn't report any results.
                     </i>
                 </template>
-                <small class="d-block">
+                <span class="d-block">
         </template>
         <template v-if="report.organizerWinners[reportUI.matchNumber]">
             <div>
-                <small>
+                <span>
                     Organizer has chosen
-                    <small class="text-primary"
-                        v-text="report.teams[report.organizerWinners[reportUI.matchNumber]].name"> </small>
+                    <span class="text-primary"
+                        v-text="report.teams[report.organizerWinners[reportUI.matchNumber]].name"> </span>
                     to be the winner
-                </small>
+                </span>
             </div>
         </template>
-    </small>
+    </span>
 </template>
 <template v-else>
-    <small class="d-block">
+    <span class="d-block">
         <template v-if="report.deadline.has_ended">
-            <small class="d-block">
+            <span class="d-block">
                 <span>No winner declared by either team. 
                     <template v-if="report.organizerWinners[reportUI.matchNumber]">
-                        <div>
-                            <small>
+                        <span>
+                            <span>
                                 Winner declared by organizer.
-                            </small>
-                        </div>
+                            </span>
+                        </span>
                     </template>
                     <template v-if="report.randomWinners[reportUI.matchNumber]">
-                        <div>
-                            <small>
+                        <span>
+                            <span>
                                 Winner automatically chosen at random.
-                            </small>
-                        </div>
+                            </span>
+                        </span>
                     </template>
                 </span>
-            </small>
+            </span>
         </template>
-    </small>
+    </span>
 </template>

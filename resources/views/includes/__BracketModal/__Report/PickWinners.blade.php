@@ -3,14 +3,14 @@
     <img v-bind:src=" report.teams[0]?.banner ? '/storage/' + report.teams[0].banner : '/assets/images/.png' " alt="Team Banner" width="35" height="35"
         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-    <small class="ms-2 py-0" v-text="report.teams[0]?.name"></small>
+    <span class="ms-2 py-0" v-text="report.teams[0]?.name"></span>
 </button>
 <button v-on:click="selectTeamToWin(event, 1)" :disabled="getDisabled()"
     class="selectedButton ps-0 btn d-block rounded-pill w-100 mv-auto py-0 border border-dark text-start">
     <img v-bind:src="report.teams[1]?.banner ? '/storage/' + report.teams[1].banner : '/assets/images/.png' " alt="Team Banner" width="35" height="35"
         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
         class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
-    <small class="ms-2 py-0" v-text="report.teams[1]?.name"></small>
+    <span class="ms-2 py-0" v-text="report.teams[1]?.name"></span>
 </button>
     <p  
         v-text="reportUI.statusText"

@@ -103,8 +103,7 @@ class EventMatchService {
         } 
 
         
-        $tournamentType = $event->type?->eventType;
-        if ($tournamentType) {
+       
             $bracketList = $this->bracketDataService->produceBrackets(
                 $matchesUpperCount, 
                 $willFixBracketsAsOrganizer,
@@ -154,9 +153,7 @@ class EventMatchService {
                 return data_set($bracketList, $path, $mergedData);
             }, $bracketList);
          
-        } else {
-            $bracketList = [];
-        };
+        
         
         return [
             'teamList' => $teamList,
