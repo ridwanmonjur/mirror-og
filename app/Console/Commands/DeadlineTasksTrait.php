@@ -174,7 +174,7 @@ trait DeadlineTasksTrait
             }
 
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
+            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('brackets')->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
@@ -193,7 +193,7 @@ trait DeadlineTasksTrait
             }
 
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
+            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('brackets')->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
@@ -216,7 +216,7 @@ trait DeadlineTasksTrait
             }
 
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
+            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('brackets')->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {

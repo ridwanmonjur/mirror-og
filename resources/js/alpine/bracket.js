@@ -97,7 +97,7 @@ window.addPopoverWithIdAndChild = function (parent, child, trigger="click", opti
 const eventId = document.getElementById('eventId')?.value;
 
 window.updateReportDispute = async (reportId, team1Id, team2Id) => {
-  const reportRef = doc(db, `event/${eventId}/match_status`, reportId);
+  const reportRef = doc(db, `event/${eventId}/brackets`, reportId);
   const docSnap = await getDoc(reportRef);
   if (docSnap.exists()) {
     const updateData = {
@@ -355,7 +355,7 @@ function addDotsToContainer(key, value) {
 }
 
 async function getAllMatchStatusesData() {
-  const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+  const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
   const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
@@ -791,7 +791,7 @@ function BracketData() {
 
       await updateDoc(disputeRef, updateData);
 
-      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
 
@@ -844,7 +844,7 @@ function BracketData() {
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
     async saveReport(report) {
-      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
 
@@ -1120,7 +1120,7 @@ function BracketData() {
     },
 
     getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
-      const currentReportRef = doc(db, `event/${eventId}/match_status`, classNamesWithoutPrecedingDot);
+      const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
       let subscribeToCurrentReportSnapshot = onSnapshot(
         currentReportRef,
         async (reportSnapshot) => {
