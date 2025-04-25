@@ -1014,7 +1014,7 @@ function BracketData() {
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
 
-        let newReport = null, newReportUI = null;
+        let newReport = {}, newReportUI = {};
 
         let dataset = event?.detail ?? null;
 
