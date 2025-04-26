@@ -1,5 +1,5 @@
 <div class="my-0 py-0">
-    <div>
+    <div class="my-0 py-0">
         <svg class="border border-dark border-2 rounded-circle py-1" fill="#2e4b59" version="1.1" id="Capa_1"
             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px" height="64px"
             viewBox="0 0 973.1 973.1" xml:space="preserve" stroke="#2e4b59" stroke-width="15.5696">

@@ -1,8 +1,9 @@
+<div class="my-0 py-0">
 <template v-if="report.teams[reportUI.otherTeamNumber]?.winners[reportUI.matchNumber] || report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]">
-    <span class="d-block">
+    <span class="d-block fst-italic fs-7">
 
         <template v-if="report.teams[0]?.winners[reportUI.matchNumber]">
-            <span class="d-block">
+            <span class="d-block ">
                 <span v-text="report.teams[0].name"> </span>
                 declared
                 <span class="text-primary" v-text="report.teams[report.teams[0].winners[reportUI.matchNumber]].name"> </span>
@@ -11,7 +12,7 @@
         </template>
 
         <template v-if="report.teams[1].winners[reportUI.matchNumber] ">
-            <span class="d-block">
+            <span class="d-block fst-italic fs-7">
                 <span v-text="report.teams[1]?.name"> </span>       
                 declared
                 <span  class="text-primary" v-text="report.teams[report.teams[1]?.winners[reportUI.matchNumber]]?.name"> </span>
@@ -20,7 +21,7 @@
         </template>
 
         <template v-if="report.organizerWinners[reportUI.matchNumber]">
-            <div>
+            <div class="fst-italic fs-7">
                 <span>
                     Organizer has chosen
                     <span  class="text-primary" v-text="report.teams[report.organizerWinners[reportUI.matchNumber]].name"> </span>
@@ -31,7 +32,7 @@
     </span>
 </template>
 <template v-else>
-    <span class="d-block">
+    <span class="d-block fst-italic fs-7">
         <template v-if="report.deadline.has_ended">
             <span class="d-inline-block">
                 <span>No winner declared by either team. 
@@ -54,3 +55,4 @@
         </template>
     </span>
 </template>
+</div>
