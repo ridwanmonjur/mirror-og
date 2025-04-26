@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\EventMatchService;
 use Illuminate\Database\Seeder;
 use App\Models\EventDetail;
 use App\Models\BracketDeadlineSetup;
@@ -11,6 +12,14 @@ use Carbon\Carbon;
 
 class BracketDeadlinesSeeder extends Seeder
 {
+    private $eventMatchService;
+
+    public function __construct(
+        EventMatchService $eventMatchService
+    )
+    {
+        $this->eventMatchService = $eventMatchService;
+    }
     /**
      * Run the database seeds.
      */
@@ -24,6 +33,7 @@ class BracketDeadlinesSeeder extends Seeder
         
         foreach ($eventDetails as $detail) {
             $detail->createStructuredDeadlines();
+            $this->eventMatchService->createBrackets($detail);
         }
         
         $this->command->info('Bracket deadlines have been created successfully!');

@@ -15,8 +15,8 @@ use App\Models\Matches;
 
 class DeadlineTasks extends Command
 {
-    use PrinterLoggerTrait, RespondTaksTrait;
 
+    use DeadlineTasksTrait, PrinterLoggerTrait;
     /**
      * The name and signature of the console command.
      *
@@ -40,8 +40,8 @@ class DeadlineTasks extends Command
         $this->getTodayTasksByName();
     }
 
-    private $bracketDataService;
-    private $firestore;
+    protected $bracketDataService;
+    protected $firestore;
 
     public function __construct(BracketDataService $bracketDataService)
     {
@@ -102,99 +102,9 @@ class DeadlineTasks extends Command
                 }
             }
 
-            foreach ($startedBracketDeadlines as $deadline) {
-                $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-                if (!$bracket) {
-                    continue;
-                }
-
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-
-                if ($snapshot->exists()) {
-                    $matchStatusData = $snapshot->data();
-                    $docRef->update([['path' => 'matchStatus', 'value' => 'ONGOING']]);
-                }
-            }
-
-            foreach ($endBracketDeadlines as $deadline) {
-                $updateValues = [['path' => 'matchStatus', 'value' => 'ENDED']];
-
-                $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-                if (!$bracket) {
-                    continue;
-                }
-
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-
-                if ($snapshot->exists()) {
-                    $matchStatusData = $snapshot->data();
-                    $scores = $matchStatusData['scores'] ?? null;
-
-                    if (is_array($scores)) {
-                        if ($scores[0] == $scores[1]) {
-                            [ $realWinners, $scores, $updated ] = $this->equalizeScoreMissing($matchStatusData);
-                            if ($updated && $scores[0] != $scores[1]) {
-                                $updateValues = [
-                                    ...$updateValues,
-                                    ['path' => 'realWinners', 'value' => $realWinners],
-                                    ['path' => 'scores', 'value' => $scores]
-                                ];
-                            }
-                        } 
-
-                        $this->resolveScores( $bracket, $scores, $deadline);
-                    }
-
-                    $docRef->update($updateValues);
-                }
-            }
-
-            foreach ($orgBracketDeadlines as $deadline) {
-                $updateValues = [];
-                $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-                if (!$bracket) {
-                    continue;
-                }
-
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('match_status')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-
-                if ($snapshot->exists()) {
-                    $matchStatusData = $snapshot->data();
-                    $scores = $matchStatusData['scores'] ?? null;
-                    if (is_array($scores)) {
-                        if ($scores[0] == $scores[1]) {
-                            [ $realWinners, $scores, $updated ] = $this->equalizeScoreMissing($matchStatusData);
-                            if ($updated) {
-                                if ( $scores[0] == $scores[1]) {
-                                    $updateValues = [
-                                        ...$updateValues,
-                                        ['path' => 'realWinners', 'value' => $realWinners],
-                                        ['path' => 'scores', 'value' => $scores]
-                                    ];
-                                   
-                                   
-                                } else {
-                                    $updateValues = [
-                                        ...$updateValues,
-                                       // todo something for new winner chosen at random
-                                    ];
-                                }
-
-                                $docRef->update($updateValues);
-
-                            }
-                        }
-                        
-                        $this->resolveScores( $bracket, $scores, $deadline);
-                    }
-                }
-            }
+            $this->handleStartedTasks($startedBracketDeadlines);
+            $this->handleEndedTasks($endBracketDeadlines);
+            $this->handleOrgTasks($orgBracketDeadlines);
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
@@ -204,145 +114,5 @@ class DeadlineTasks extends Command
         }
     }
 
-    public function resolveScores(array $bracket, array $scores, BracketDeadline $deadline) {
-        $winner_id =  null;
-        $loser_id =  null;
 
-        if ($scores[0] == $scores[1]) {
-            $winner_chosen = rand(0, 1);
-            if ($winner_chosen == 0) {
-                $winner_id = $bracket['team1_id'] ?? null;
-                $loser_id = $bracket['team2_id'] ?? null;
-            } else {
-                $winner_id = $bracket['team2_id'] ?? null;
-                $loser_id = $bracket['team1_id'] ?? null;
-            }
-        } else {
-            if ($scores[0] > $scores[1]) {
-                $winner_id = $bracket['team1_id'] ?? null;
-                $loser_id = $bracket['team2_id'] ?? null;
-            } 
-    
-            if ($scores[0] < $scores[1]) {
-                $winner_id = $bracket['team2_id'] ?? null;
-                $loser_id = $bracket['team1_id'] ?? null;
-            }
-        }
-
-        $next_position = $bracket['winner_next_position'];
-        $winnerMatches = Matches::where('event_details_id', $deadline->event_details_id)
-            ->where(function($query) use ($next_position) {
-                $query->where('team1_position', $next_position)
-                    ->orWhere('team2_position', $next_position);
-            })
-            ->get();
-
-        foreach ($winnerMatches as $match) {
-            $updated = false;
-            
-            if ($match->team1_position == $next_position && $match->team1_id != $winner_id) {
-                $match->team1_id = $winner_id;
-                $updated = true;
-            }
-            
-            if ($match->team2_position == $next_position && $match->team2_id != $winner_id) {
-                $match->team2_id = $winner_id;
-                $updated = true;
-            }
-            
-            if ($updated) {
-                $match->save();
-            }
-        }
-
-        $loserNextPosition = $bracket['loser_next_position'];
-        if (!$loserNextPosition) return;
-        $loserMatches = Matches::where('event_details_id', $deadline->event_details_id)
-            ->where(function($query) use ($loserNextPosition) {
-                $query->where('team1_position', $loserNextPosition)
-                    ->orWhere('team2_position', $loserNextPosition);
-            })
-            ->get();
-        
-        foreach ($loserMatches as $match) {
-            $updated = false;
-            
-            if ($match->team1_position == $loserNextPosition && $match->team1_id != $loser_id) {
-                $match->team1_id = $loser_id;
-                $updated = true;
-            }
-            
-            if ($match->team2_position == $loserNextPosition && $match->team2_id != $loser_id) {
-                $match->team2_id = $loser_id;
-                $updated = true;
-            }
-            
-            if ($updated) {
-                $match->save();
-            }
-        }
-    }
-
-    public function equalizeScoreMissing($matchStatusData) {
-        $team1Winners = $matchStatusData['team1Winners'] ?? [null, null, null];
-        $team2Winners = $matchStatusData['team2Winners'] ?? [null, null, null];
-        $realWinners = $matchStatusData['realWinners'] ?? [null, null, null];
-        $scores = [0, 0];
-        $updated = false;
-        
-        for ($i = 0; $i < 3; $i++) {
-            if (!isset($team1Winners[$i]) && isset($team2Winners[$i])) {
-                $updated = true;
-                $realWinners[$i] = $team2Winners[$i];
-            }
-            if (!isset($team2Winners[$i]) && isset($team1Winners[$i])) {
-                $updated = true;
-                $realWinners[$i] = $team1Winners[$i];
-            }
-            
-            if (isset($realWinners[$i])) {
-                if ($realWinners[$i] === 0) {
-                    $scores[0]++;
-                } elseif ($realWinners[$i] === 1) {
-                    $scores[1]++;
-                }
-            }
-        }
-        
-        return [
-            $realWinners,
-            $scores,
-            $updated
-        ];
-    }
-
-    public function randomScoreTie($matchStatusData) {
-        $team1Winners = $matchStatusData['team1Winners'] ?? [null, null, null];
-        $team2Winners = $matchStatusData['team2Winners'] ?? [null, null, null];
-        $realWinners = $matchStatusData['realWinners'] ?? [null, null, null];
-        $scores = [0, 0];
-        $updated = false;
-        
-        for ($i = 0; $i < 3; $i++) {
-            if (!isset($team1Winners[$i]) && !isset($team2Winners[$i]) && !isset($realWinners[$i])) {
-                // Both teams have null winner, choose randomly
-                $updated = true;
-                $realWinners[$i] = rand(0, 1);
-            }
-            
-            if (isset($realWinners[$i])) {
-                if ($realWinners[$i] === 0) {
-                    $scores[0]++;
-                } elseif ($realWinners[$i] === 1) {
-                    $scores[1]++;
-                }
-            }
-        }
-        
-        return [
-            $realWinners,
-            $scores,
-            $updated
-        ];
-    }
 }

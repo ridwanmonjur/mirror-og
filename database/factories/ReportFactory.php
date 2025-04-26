@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Database\Factories;
+
+use App\Models\Report;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<\App\Models\Report>
+ */
+final class ReportFactory extends Factory
+{
+    /**
+    * The name of the factory's corresponding model.
+    *
+    * @var string
+    */
+    protected $model = Report::class;
+
+    /**
+    * Define the model's default state.
+    *
+    * @return array
+    */
+    public function definition(): array
+    {
+        return [
+            'reporter_id' => \App\Models\User::factory(),
+            'reported_user_id' => \App\Models\User::factory(),
+            'reason' => fake()->word,
+            'description' => fake()->optional()->text,
+            'status' => fake()->randomElement(['pending', 'investigating', 'resolved']),
+            'admin_notes' => fake()->optional()->text,
+        ];
+    }
+}

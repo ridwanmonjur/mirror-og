@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Database\Factories;
+
+use App\Models\AwardResults;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends Factory<\App\Models\AwardResults>
+ */
+final class AwardResultsFactory extends Factory
+{
+    /**
+    * The name of the factory's corresponding model.
+    *
+    * @var string
+    */
+    protected $model = AwardResults::class;
+
+    /**
+    * Define the model's default state.
+    *
+    * @return array
+    */
+    public function definition(): array
+    {
+        return [
+            'join_events_id' => fake()->randomNumber(),
+            'award_id' => \App\Models\Award::factory(),
+            'team_id' => \App\Models\Team::factory(),
+        ];
+    }
+}

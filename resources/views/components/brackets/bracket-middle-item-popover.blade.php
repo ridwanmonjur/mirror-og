@@ -20,9 +20,8 @@
         " popover-middle-content text-center d-none py-0 px-0 " . $position1 . ' ' . $position2, 
         ' warning border-primary ' => $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2) 
     ])
-    data-readable-date="{{$deadline['readable_date']}}"
+    data-diff-date="{{$deadline['diff_date']}}"
     data-position = "{{$isTeam1? $position1 : $position2}}" 
-    
 >
    
     <div class="popover-box row justify-content-start border border-dark border rounded px-2 py-2" 
@@ -72,10 +71,10 @@
             @if($isTeam1 || $isTeam2 || $isOrg)
                 @if (!$deadline['has_started'])
                     <div class="text-center">Reporting available in: </div>
-                    <div class="text-center">{{$deadline['readable_date']}}</div>
+                    <div class="text-center diffDate1" data-diff-date="{{$deadline['diff_date']}}"></div>
                 @elseif ($deadline['has_started'] && !$deadline['has_ended'])
                     <div class="text-center">Time left to report: </div>
-                    <div class="text-center">{{$deadline['readable_date']}}</div>
+                    <div class="text-center diffDate1" data-diff-date="{{$deadline['diff_date']}}"></div>
                 @endif
             @endif
         </div>

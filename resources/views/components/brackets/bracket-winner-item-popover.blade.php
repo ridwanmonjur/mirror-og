@@ -76,10 +76,10 @@
         @if($isTeam1 || $isTeam2 || $isOrg)
             @if (!$deadline['has_started'])
                 <div class="text-center">Reporting available in: </div>
-                <div class="text-center">{{$deadline['readable_date']}}</div>
+                <div class="text-center diffDate1" data-diff-date="{{$deadline['diff_date']}}"></div>
             @elseif ($deadline['has_started'] && !$deadline['has_ended'])
                 <div class="text-center">Time left to report: </div>
-                <div class="text-center">{{$deadline['readable_date']}}</div>
+                <div class="text-center diffDate1" data-diff-date="{{$deadline['diff_date']}}"></div>
             @endif
         @endif
     </div>

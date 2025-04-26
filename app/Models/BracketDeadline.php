@@ -54,12 +54,12 @@ class BracketDeadline extends Model
         $hasStarted = $startDate && $currentDate->gte($startDate);
         $hasEnded = $endDate && $currentDate->gte($endDate);
         
-        $readableDate = null;
+        $diffDate = null;
         
         if ($hasStarted && !$hasEnded && $endDate) {
-            $readableDate = $currentDate->diffForHumans($endDate, true);
+            $diffDate = $deadlineInital->end_date;
         } elseif (!$hasStarted && $startDate) {
-            $readableDate = $currentDate->diffForHumans($startDate, true);
+            $diffDate = $deadlineInital->start_date;
         }
         
         $deadlines[$stage][$innerStage] = [
@@ -67,7 +67,7 @@ class BracketDeadline extends Model
             'end' => $deadlineInital->end_date,
             'has_started' => $hasStarted,
             'has_ended' => $hasEnded,
-            'readable_date' => $readableDate
+            'diff_date' => $diffDate
         ];
     }
 
@@ -81,35 +81,35 @@ class BracketDeadline extends Model
                     'end' => $deadlines['U']['e1']['end'] ?? null,
                     'has_started' => $deadlines['U']['e1']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e1']['diff_date'] ?? null
                 ],
                 'e2' => [
                     'start' => $deadlines['U']['e2']['start'] ?? null,
                     'end' => $deadlines['U']['e2']['end'] ?? null,
                     'has_started' => $deadlines['U']['e2']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e2']['diff_date'] ?? null
                 ],
                 'e3' => [
                     'start' => $deadlines['U']['e3']['start'] ?? null,
                     'end' => $deadlines['U']['e3']['end'] ?? null,
                     'has_started' => $deadlines['U']['e3']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e3']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e3']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e3']['diff_date'] ?? null
                 ],
                 'e4' => [
                     'start' => $deadlines['U']['e4']['start'] ?? null,
                     'end' => $deadlines['U']['e4']['end'] ?? null,
                     'has_started' => $deadlines['U']['e4']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e4']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e4']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e4']['diff_date'] ?? null
                 ],
                 'p0' => [
                     'start' => $deadlines['U']['p0']['start'] ?? null,
                     'end' => $deadlines['U']['p0']['end'] ?? null,
                     'has_started' => $deadlines['U']['p0']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['p0']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['p0']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['p0']['diff_date'] ?? null
                 ]
             ],
             'L' => [
@@ -118,56 +118,56 @@ class BracketDeadline extends Model
                     'end' => $deadlines['L']['e1']['end'] ?? null,
                     'has_started' => $deadlines['L']['e1']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e1']['diff_date'] ?? null
                 ],
                 'e2' => [
                     'start' => $deadlines['L']['e2']['start'] ?? null,
                     'end' => $deadlines['L']['e2']['end'] ?? null,
                     'has_started' => $deadlines['L']['e2']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e2']['diff_date'] ?? null
                 ],
                 'e3' => [
                     'start' => $deadlines['L']['e3']['start'] ?? null,
                     'end' => $deadlines['L']['e3']['end'] ?? null,
                     'has_started' => $deadlines['L']['e3']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e3']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e3']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e3']['diff_date'] ?? null
                 ],
                 'e4' => [
                     'start' => $deadlines['L']['e4']['start'] ?? null,
                     'end' => $deadlines['L']['e4']['end'] ?? null,
                     'has_started' => $deadlines['L']['e4']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e4']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e4']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e4']['diff_date'] ?? null
                 ],
                 'e5' => [
                     'start' => $deadlines['L']['e5']['start'] ?? null,
                     'end' => $deadlines['L']['e5']['end'] ?? null,
                     'has_started' => $deadlines['L']['e5']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e5']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e5']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e5']['diff_date'] ?? null
                 ],
                 'e6' => [
                     'start' => $deadlines['L']['e6']['start'] ?? null,
                     'end' => $deadlines['L']['e6']['end'] ?? null,
                     'has_started' => $deadlines['L']['e6']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e6']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e6']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e6']['diff_date'] ?? null
                 ],
                 'p1' => [
                     'start' => $deadlines['L']['p1']['start'] ?? null,
                     'end' => $deadlines['L']['p1']['end'] ?? null,
                     'has_started' => $deadlines['L']['p1']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['p1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['p1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['p1']['diff_date'] ?? null
                 ],
                 'p2' => [
                     'start' => $deadlines['L']['p2']['start'] ?? null,
                     'end' => $deadlines['L']['p2']['end'] ?? null,
                     'has_started' => $deadlines['L']['p2']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['p2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['p2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['p2']['diff_date'] ?? null
                 ]
             ],
             'F' => [
@@ -176,14 +176,14 @@ class BracketDeadline extends Model
                     'end' => $deadlines['F']['F']['end'] ?? null,
                     'has_started' => $deadlines['F']['F']['has_started'] ?? null,
                     'has_ended' => $deadlines['F']['F']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['F']['F']['readable_date'] ?? null
+                    'diff_date' => $deadlines['F']['F']['diff_date'] ?? null
                 ],
                 'W' => [
                     'start' => $deadlines['F']['W']['start'] ?? null,
                     'end' => $deadlines['F']['W']['end'] ?? null,
                     'has_started' => $deadlines['F']['W']['has_started'] ?? null,
                     'has_ended' => $deadlines['F']['W']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['F']['W']['readable_date'] ?? null
+                    'diff_date' => $deadlines['F']['W']['diff_date'] ?? null
                 ]
             ]
         ];
@@ -195,35 +195,35 @@ class BracketDeadline extends Model
                     'end' => $deadlines['U']['e1']['end'] ?? null,
                     'has_started' => $deadlines['U']['e1']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e1']['diff_date'] ?? null
                 ],
                 'e2' => [
                     'start' => $deadlines['U']['e2']['start'] ?? null,
                     'end' => $deadlines['U']['e2']['end'] ?? null,
                     'has_started' => $deadlines['U']['e2']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e2']['diff_date'] ?? null
                 ],
                 'e3' => [
                     'start' => $deadlines['U']['e3']['start'] ?? null,
                     'end' => $deadlines['U']['e3']['end'] ?? null,
                     'has_started' => $deadlines['U']['e3']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e3']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e3']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e3']['diff_date'] ?? null
                 ],
                 'e5' => [
                     'start' => $deadlines['U']['e5']['start'] ?? null,
                     'end' => $deadlines['U']['e5']['end'] ?? null,
                     'has_started' => $deadlines['U']['e5']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e5']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e5']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e5']['diff_date'] ?? null
                 ],
                 'p0' => [
                     'start' => $deadlines['U']['p0']['start'] ?? null,
                     'end' => $deadlines['U']['p0']['end'] ?? null,
                     'has_started' => $deadlines['U']['p0']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['p0']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['p0']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['p0']['diff_date'] ?? null
                 ]
             ],
             'L' => [
@@ -232,42 +232,42 @@ class BracketDeadline extends Model
                     'end' => $deadlines['L']['e1']['end'] ?? null,
                     'has_started' => $deadlines['L']['e1']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e1']['diff_date'] ?? null
                 ],
                 'e2' => [
                     'start' => $deadlines['L']['e2']['start'] ?? null,
                     'end' => $deadlines['L']['e2']['end'] ?? null,
                     'has_started' => $deadlines['L']['e2']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e2']['diff_date'] ?? null
                 ],
                 'e3' => [
                     'start' => $deadlines['L']['e3']['start'] ?? null,
                     'end' => $deadlines['L']['e3']['end'] ?? null,
                     'has_started' => $deadlines['L']['e3']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e3']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e3']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e3']['diff_date'] ?? null
                 ],
                 'e4' => [
                     'start' => $deadlines['L']['e4']['start'] ?? null,
                     'end' => $deadlines['L']['e4']['end'] ?? null,
                     'has_started' => $deadlines['L']['e4']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e4']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e4']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e4']['diff_date'] ?? null
                 ],
                 'p1' => [
                     'start' => $deadlines['L']['p1']['start'] ?? null,
                     'end' => $deadlines['L']['p1']['end'] ?? null,
                     'has_started' => $deadlines['L']['p1']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['p1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['p1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['p1']['diff_date'] ?? null
                 ],
                 'p2' => [
                     'start' => $deadlines['L']['p2']['start'] ?? null,
                     'end' => $deadlines['L']['p2']['end'] ?? null,
                     'has_started' => $deadlines['L']['p2']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['p2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['p2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['p2']['diff_date'] ?? null
                 ]
             ],
             'F' => [
@@ -276,14 +276,14 @@ class BracketDeadline extends Model
                     'end' => $deadlines['F']['F']['end'] ?? null,
                     'has_started' => $deadlines['F']['F']['has_started'] ?? null,
                     'has_ended' => $deadlines['F']['F']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['F']['F']['readable_date'] ?? null
+                    'diff_date' => $deadlines['F']['F']['diff_date'] ?? null
                 ],
                 'W' => [
                     'start' => $deadlines['F']['W']['start'] ?? null,
                     'end' => $deadlines['F']['W']['end'] ?? null,
                     'has_started' => $deadlines['F']['W']['has_started'] ?? null,
                     'has_ended' => $deadlines['F']['W']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['F']['W']['readable_date'] ?? null
+                    'diff_date' => $deadlines['F']['W']['diff_date'] ?? null
                 ]
             ]
         ];
@@ -295,21 +295,21 @@ class BracketDeadline extends Model
                     'end' => $deadlines['U']['e1']['end'] ?? null,
                     'has_started' => $deadlines['U']['e1']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e1']['diff_date'] ?? null
                 ],
                 'e2' => [
                     'start' => $deadlines['U']['e2']['start'] ?? null,
                     'end' => $deadlines['U']['e2']['end'] ?? null,
                     'has_started' => $deadlines['U']['e2']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['e2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['e2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['e2']['diff_date'] ?? null
                 ],
                 'p0' => [
                     'start' => $deadlines['U']['p0']['start'] ?? null,
                     'end' => $deadlines['U']['p0']['end'] ?? null,
                     'has_started' => $deadlines['U']['p0']['has_started'] ?? null,
                     'has_ended' => $deadlines['U']['p0']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['U']['p0']['readable_date'] ?? null
+                    'diff_date' => $deadlines['U']['p0']['diff_date'] ?? null
                 ]
             ],
             'L' => [
@@ -318,28 +318,28 @@ class BracketDeadline extends Model
                     'end' => $deadlines['L']['e1']['end'] ?? null,
                     'has_started' => $deadlines['L']['e1']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e1']['diff_date'] ?? null
                 ],
                 'e2' => [
                     'start' => $deadlines['L']['e2']['start'] ?? null,
                     'end' => $deadlines['L']['e2']['end'] ?? null,
                     'has_started' => $deadlines['L']['e2']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['e2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['e2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['e2']['diff_date'] ?? null
                 ],
                 'p1' => [
                     'start' => $deadlines['L']['p1']['start'] ?? null,
                     'end' => $deadlines['L']['p1']['end'] ?? null,
                     'has_started' => $deadlines['L']['p1']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['p1']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['p1']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['p1']['diff_date'] ?? null
                 ],
                 'p2' => [
                     'start' => $deadlines['L']['p2']['start'] ?? null,
                     'end' => $deadlines['L']['p2']['end'] ?? null,
                     'has_started' => $deadlines['L']['p2']['has_started'] ?? null,
                     'has_ended' => $deadlines['L']['p2']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['L']['p2']['readable_date'] ?? null
+                    'diff_date' => $deadlines['L']['p2']['diff_date'] ?? null
                 ]
             ],
             'F' => [
@@ -348,14 +348,14 @@ class BracketDeadline extends Model
                     'end' => $deadlines['F']['F']['end'] ?? null,
                     'has_started' => $deadlines['F']['F']['has_started'] ?? null,
                     'has_ended' => $deadlines['F']['F']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['F']['F']['readable_date'] ?? null
+                    'diff_date' => $deadlines['F']['F']['diff_date'] ?? null
                 ],
                 'W' => [
                     'start' => $deadlines['F']['W']['start'] ?? null,
                     'end' => $deadlines['F']['W']['end'] ?? null,
                     'has_started' => $deadlines['F']['W']['has_started'] ?? null,
                     'has_ended' => $deadlines['F']['W']['has_ended'] ?? null,
-                    'readable_date' => $deadlines['F']['W']['readable_date'] ?? null
+                    'diff_date' => $deadlines['F']['W']['diff_date'] ?? null
                 ]
             ]
         ];
