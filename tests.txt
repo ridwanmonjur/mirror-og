@@ -106,3 +106,12 @@ organiser response page
 use placeholder ui doesnt matter
 in this case, we're the organiser so it doesnt have to be pretty since only we will be seeing it. just make it functional doesnt matter how. we'll worry about making something presentable another time
 
+
+1) Timer done
+2) Waiting for opponent team/ opponent team didnt report
+3) or if none, no winner chosen
+4) if 0-0 no winner (before deadline) or disqualified (after deadline)
+5) if no consensus
+
+default winner
+winner random 

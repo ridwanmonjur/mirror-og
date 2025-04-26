@@ -69,7 +69,7 @@ function voteYes(joinEventId) {
     let eventDetails = JSON.parse(eventDetailsJSON);
     
     successSwal(`
-        <h5 class="my-4">You have voted to stay in this event!</h5>
+        <h5 class="my-4">Your event vote has been registered!</h5>
         ${drawEventTable(eventDetails, followCounts)}
     `, () => scrollSwal(joinEventId));
 }
@@ -80,7 +80,7 @@ function voteNo(joinEventId) {
     let eventDetails = JSON.parse(eventDetailsJSON);
     
     successSwal(`
-        <h5 class="my-4">You have voted to leave this roster!</h5>
+        <h5 class="my-4">Your event vote has been registered!</h5>
         ${drawEventTable(eventDetails, followCounts)}
         
     `, () => scrollSwal(joinEventId));

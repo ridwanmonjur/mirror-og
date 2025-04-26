@@ -17,30 +17,48 @@
                             <span v-text="report.teams[report.realWinners[reportUI.matchNumber]]?.name"> </span>
                             has been resolved as the winner.
                         </p>
-                        <template
-                            v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']">
-                            <div class="mt-2">
-                                <p class="text-success mt-2">
-                                    <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
-                                    </span> has conceded the dispute. Winner is to be decided by the organizer.
-                                </p>
-                            </div>
-                        </template>
-                        <template
-                            v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
-                            <div class="mt-2">
-                                <p class="text-success mt-2">
-                                    The responder has conceded the dispute. The disputee is declared as the winner.
-                                </p>
-                            </div>
-                        </template>
-                        <template
-                            v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['ORGANIZER']">
-                            <div class="mt-2">
-                                <p class="text-success mt-2">
-                                    Winner has been decided by the organizer.
-                                </p>
-                            </div>
+                        <template v-if="dispute[reportUI.matchNumber]">
+                            <template
+                                v-if="dispute[reportUI.matchNumber].resolution_resolved_by == disputeLevelEnums['DISPUTEE']">
+                                <div class="mt-2">
+                                    <p class="text-success mt-2">
+                                        <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                                        </span> has conceded the dispute. Winner is to be decided by the organizer.
+                                    </p>
+                                </div>
+                            </template>
+                            <template
+                                v-else-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
+                                <div class="mt-2">
+                                    <p class="text-success mt-2">
+                                        The responder has conceded the dispute. The disputee is declared as the winner.
+                                    </p>
+                                </div>
+                            </template>
+                            <template
+                                v-else-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['ORGANIZER']">
+                                <div class="mt-2">
+                                    <p class="text-success mt-2">
+                                        Winner has been decided by the organizer.
+                                    </p>
+                                </div>
+                            </template>
+                            <template
+                                v-else="dispute[reportUI.matchNumber]?.resolution_resolved_by == 'time' ">
+                                <div class="mt-2">
+                                    <p class="text-success mt-2">
+                                        Winner has been decided by timeout.
+                                    </p>
+                                </div>
+                            </template>
+                            <template
+                                v-else>
+                                <div class="mt-2">
+                                    <p class="text-success mt-2">
+                                        Winner has been decided randomly.
+                                    </p>
+                                </div>
+                            </template>
                         </template>
 
                         <template v-if="userLevelEnums['IS_ORGANIZER'] == report.userLevel">

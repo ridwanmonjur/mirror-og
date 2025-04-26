@@ -7,7 +7,7 @@ import {
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
 import tippy from 'tippy.js';
-import { popper } from "@popperjs/core";
+import { initialBracketData, calcScores, updateReportFromFirestore, createReportTemp, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
 
 window.specialTippy = [];
 window.popoverIdToPopover = window.activePopovers || {};
@@ -36,7 +36,6 @@ window.showAll = () => {
     popover?.show();
   }
 }
-
 
 function createTippy(parent, html, trigger, options) {
     return tippy(parent, {
@@ -91,13 +90,10 @@ window.addPopoverWithIdAndChild = function (parent, child, trigger="click", opti
     return window.addPopoverWithIdAndHtml(parent, child.innerHTML, trigger, options, ourId);
 }
 
-
-
-
 const eventId = document.getElementById('eventId')?.value;
 
 window.updateReportDispute = async (reportId, team1Id, team2Id) => {
-  const reportRef = doc(db, `event/${eventId}/match_status`, reportId);
+  const reportRef = doc(db, `event/${eventId}/brackets`, reportId);
   const docSnap = await getDoc(reportRef);
   if (docSnap.exists()) {
     const updateData = {
@@ -196,28 +192,8 @@ parentElements?.forEach(parent => {
   }
 });
 
-function generateWarningHtml (readableDate, newPositionId) {
-  return `
-    <div class="reportBox row z-99 justify-content-start bg-light border border-dark border rounded px-2 py-2" 
-      style="width: 300px;"
-    >
-      <h5 class="text-center my-0 mb-2 py-0"> 
-        ${newPositionId}
-      </h5>
-      <p class="text-primary text-center my-0 mb-2 py-0"> 
-        You have pending results to report.
-      </p>
-      <small class="text-red small text-center my-0 py-0"> 
-        Time left to report: 
-        ${readableDate}
-      </small>
-    </div>
-
-  `;
-}
 
 function addAllTippy() {
-
   const parentSecondElements = document.querySelectorAll(".middle-item");
 
   parentSecondElements?.forEach(parent => {
@@ -237,12 +213,12 @@ function addAllTippy() {
             stageName == 'L' && ['e1', 'e3', 'e5'].includes(innerStageName)
           )) {
             let {
-              readableDate, position
+              diffDate, position
             } = contentElement.dataset;
 
             if (triggerParentsPositionIds.includes(position)) {
               let tippyId = position + '+' + triggerPositionId;
-              let popover = window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(readableDate, triggerPositionId), 'manual', {
+              let popover = window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(diffDate, triggerPositionId), 'manual', {
                   onShow(instance) {
                     const tippyBox = instance.popper;
                     tippyBox.addEventListener('click', () => {
@@ -250,7 +226,6 @@ function addAllTippy() {
                   });
                   }
                 }, tippyId);
-                console.log({popover});
               window.specialTippy = [...window.specialTippy, tippyId] 
             }
           }
@@ -263,6 +238,7 @@ function addAllTippy() {
     })
   });
 }
+
 
 function addTippyToClass(classAndPositionList) {
   for (let classX of classAndPositionList) {
@@ -321,7 +297,7 @@ function addDotsToContainer(key, value) {
 }
 
 async function getAllMatchStatusesData() {
-  const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+  const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
   const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
@@ -373,7 +349,6 @@ async function getAllMatchStatusesData() {
     newDataList = {}, modifiedDataList = {};
     newClassList = [], modifiedClassList = [];
     let tabLoading = document.querySelector('button#tabLoading');
-    console.log({tabLoading});
     if (tabLoading) {
       
       tabLoading.classList.remove('loading');
@@ -394,7 +369,8 @@ async function getAllMatchStatusesData() {
 }
 
 getAllMatchStatusesData();
-
+updateAllCountdowns();
+setInterval(updateAllCountdowns, 60000);
 
 const fileStore = reactive({
   disputeClaimFiles: [],
@@ -457,85 +433,57 @@ const fileStore = reactive({
   },
 });
 
+function CountDown (options) {
+  return {
+    targetDate: null,
+    dateText: null,
+    intervalId: null,
+    
+    init() {
+      if (this.$refs.foo) {
+        const el = this.$refs.foo;
+        this.targetDate = el.dataset.diffDate;
+      } else {
+        this.targetDate = options.targetDate;
+      }
+
+      this.dateText = diffDateWithNow(this.targetDate);
+      this.startTimer();
+    },
+    
+    startTimer() {
+      this.intervalId = setInterval(() => {
+        this.dateText = diffDateWithNow(this.targetDate);
+      }, 60000);
+    },
+    
+    stopTimer() {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+    },
+  };
+}
+
+const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
+let initialData = initialBracketData(userTeamId);
 
 function BracketData() {
 
   const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums' ?? '[]').value);
-  const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
-  let initialData = {
-    firebaseUser: null,
-    disputeLevelEnums: {
-      'ORGANIZER': 1,
-      'DISPUTEE': 2,
-      'RESPONDER': 3
-    },
-    subscribeToMatchStatusesSnapshot: null,
-    subscribeToCurrentReportSnapshot: null,
-    subscribeToCurrentReportDisputesSnapshot: null,
-    reportUI: {
-      matchNumber: 0,
-      userTeamId,
-      teamNumber: 0,
-      otherTeamNumber: 1,
-      disabled: [false, false, false],
-      statusText: 'Select a winner for Game 1'
-    },
-    report: {
-      id: null,
-      organizerWinners: [null, null, null],
-      realWinners: [null, null, null],
-      userLevel: userLevelEnums['IS_PUBLIC'],
-      completeMatchStatus: 'UPCOMING',
-      matchStatus: ['UPCOMING', 'UPCOMING', 'UPCOMING'],
-      deadline: null,
-      teams: [
-        {
-          winners: [null, null, null],
-          id: null,
-          position: "",
-          banner: "",
-          name: "No team chosen yet",
-          score: 0,
-        },
-        {
-          id: null,
-          position: "",
-          banner: "",
-          name: "No team chosen yet",
-          winners: [null, null, null],
-          score: 0,
-        }
-      ],
-      position: ""
-    },
-    dispute: [
-      null,
-      null,
-      null
-    ],
-  };
+  
   
   return {
     ...initialData,
     userLevelEnums,
-    calcScores(update) {
-      let score1 = update.realWinners?.reduce((acc, value) => acc + (value == "0" ? 1 : 0), 0);
-      let score2 = update.realWinners?.reduce((acc, value) => acc + (value == "1" ? 1 : 0), 0);
-      return [score1, score2];
-    },
+   
     async onSubmitSelectTeamToWin() {
       let teamNumber = this.reportUI.teamNumber;
       let otherTeamNumber = this.reportUI.otherTeamNumber;
       let matchNumber = this.reportUI.matchNumber;
       let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
-      let update = {
-        organizerWinners: [...this.report.organizerWinners],
-        matchStatus: [...this.report.matchStatus],
-        realWinners: [...this.report.realWinners],
-        teams: [...this.report.teams],
-        position: this.report.position,
-        completeMatchStatus: "ONGOING"
-      };
+      let update = createReportTemp(this.report);
 
       const result = await window.Swal.fire({
         title: 'Choosing the winner',
@@ -581,7 +529,7 @@ function BracketData() {
           if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
             update.organizerWinners[matchNumber] = selectedTeamIndex;
             update.realWinners[matchNumber] = selectedTeamIndex;
-            Object.assign(update, this.calcScores(update));
+            update.score = calcScores(update);     
           }
   
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
@@ -593,7 +541,7 @@ function BracketData() {
                 update.realWinners[matchNumber] = selectedTeamIndex;
               }
             }
-            update.score = this.calcScores(update);        
+            update.score = calcScores(update);        
           }
   
           await this.saveReport(update);
@@ -621,21 +569,14 @@ function BracketData() {
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
 
-        let update = {
-          organizerWinners: [...this.report.organizerWinners],
-          matchStatus: [...this.report.matchStatus],
-          realWinners: [...this.report.realWinners],
-          teams: [...this.report.teams],
-          position: this.report.position,
-          completeMatchStatus: "ONGOING"
-        };
+        let update = createReportTemp(this.report);
   
 
         if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
           let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1";
           update.organizerWinners[matchNumber] = otherIndex;
           update.realWinners[matchNumber] = otherIndex;
-          update.score = this.calcScores(update);
+          update.score = calcScores(update);
 
         }
 
@@ -647,7 +588,7 @@ function BracketData() {
             update.teams[teamNumber].winners[matchNumber] = otherIndex;
             update.realWinners[matchNumber] = otherIndex;
           }
-          update.score = this.calcScores(update);
+          update.score = calcScores(update);
         }
 
         await this.saveReport(update);
@@ -672,18 +613,11 @@ function BracketData() {
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
 
-        let update = {
-          organizerWinners: [...this.report.organizerWinners],
-          matchStatus: [...this.report.matchStatus],
-          realWinners: [...this.report.realWinners],
-          teams: [...this.report.teams],
-          position: this.report.position,
-          completeMatchStatus: "ONGOING"
-        };
+        let update = createReportTemp(this.report);
   
         update.organizerWinners[matchNumber] = null;
         update.realWinners[matchNumber] = null;
-        update.score = this.calcScores(update);
+        update.score = calcScores(update);
 
         await this.saveReport(update);
       }
@@ -723,7 +657,7 @@ function BracketData() {
 
       await updateDoc(disputeRef, updateData);
 
-      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
 
@@ -775,45 +709,31 @@ function BracketData() {
       button.classList.add('bg-primary', 'text-light');
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
-    async saveReport(report) {
-      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/match_status`);
+    async saveReport(tempState) {
+      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
 
       try {
-        let _report = {};
-        _report['score'] = [report?.score[0] ?? "0", report?.score[1] ?? "0"];
-        _report['matchStatus'] = report.matchStatus;
-        _report['realWinners'] = report.realWinners;
-        _report['organizerWinners'] = report.organizerWinners;
-        _report['team1Winners'] = report.teams[0]?.winners;
-        _report['team2Winners'] = report.teams[1]?.winners;
-        _report['team1Id'] = report.teams[0].id;
-        _report['team2Id'] = report.teams[1].id;
-        _report['position'] = report.position;
-        _report['completeMatchStatus'] = report.completeMatchStatus;
-        await setDoc(docRef, _report);
-
-        this.report = {
-          ...this.report,
-          organizerWinners: _report.organizerWinners,
-          id: _report['id'],
-          matchStatus: _report.matchStatus,
-          completeMatchStatus: _report.completeMatchStatus,
-          realWinners: _report.realWinners,
-          teams: [
-            {
-              ...this.report.teams[0],
-              score: _report.score[0],
-              winners: _report.team1Winners
-            },
-            {
-              ...this.report.teams[1],
-              score: _report.score[1],
-              winners: _report.team2Winners
-            }
-          ]
+        let firestoreDoc = {
+          score: [tempState?.score[0] ?? "0", tempState?.score[1] ?? "0"],
+          matchStatus: [...tempState.matchStatus],
+          realWinners: tempState.realWinners,
+          organizerWinners: tempState.organizerWinners,
+          team1Winners: tempState.teams[0]?.winners,
+          team2Winners: tempState.teams[1]?.winners,
+          team1Id: tempState.teams[0].id,
+          team2Id: tempState.teams[1].id,
+          position: tempState.position,
+          completeMatchStatus: tempState.completeMatchStatus,
+          randomWinners: [...tempState.randomWinners],
+          defaultWinners: [...tempState.defaultWinners],
+          disqualified: tempState.disqualified,
+          disputeResolved: [...tempState.disputeResolved]
         };
+
+        await setDoc(docRef, firestoreDoc);
+        this.report = updateReportFromFirestore(this.report, firestoreDoc);
 
         if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
           this.setDisabled(this.reportUI);
@@ -946,10 +866,9 @@ function BracketData() {
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
 
-        let newReport = null, newReportUI = null;
+        let newReport = {}, newReportUI = {};
 
-        let dataset = event?.detail ?? null;
-
+        let eventUpdate = event?.detail ?? null;
 
         this.clearSelection();
         if (this.subscribeToMatchStatusesSnapshot)
@@ -957,13 +876,13 @@ function BracketData() {
         if (this.subscribeToCurrentReportDisputesSnapshot)
           this.subscribeToCurrentReportDisputesSnapshot();
 
-        let teamNumber = dataset?.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
-          (dataset.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
+        let teamNumber = eventUpdate?.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
+          (eventUpdate.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
 
         let otherTeamNumber = teamNumber === 0 ? 1 : 0;
 
 
-        if (!dataset) {
+        if (!eventUpdate) {
           newReport = {
             ...initialData.report,
           };
@@ -982,35 +901,32 @@ function BracketData() {
 
           newReport = {
             ...initialData.report,
-            position: dataset.position ?? initialData.report.position,
-            userLevel: dataset.user_level ?? initialData.report.userLevel,
-            deadline: dataset.deadline ?? null,
+            position: eventUpdate.position ?? initialData.report.position,
+            userLevel: eventUpdate.user_level ?? initialData.report.userLevel,
+            deadline: eventUpdate.deadline ?? null,
             teams: [
               {
                 ...initialData.report.teams[0],
                 winners: initialData.report.teams[0].winners,
-                id: dataset.team1_id,
-                position: dataset.team1_position,
-                banner: dataset.team1_teamBanner,
-                name: dataset.team1_teamName ?? '-'
+                id: eventUpdate.team1_id,
+                position: eventUpdate.team1_position,
+                banner: eventUpdate.team1_teamBanner,
+                name: eventUpdate.team1_teamName ?? '-'
               },
               {
                 ...initialData.report.teams[0],
                 winners: initialData.report.teams[1].winners,
-                id: dataset.team2_id,
-                position: dataset.team2_position,
-                banner: dataset.team2_teamBanner,
-                name: dataset.team2_teamName ?? '-'
+                id: eventUpdate.team2_id,
+                position: eventUpdate.team2_position,
+                banner: eventUpdate.team2_teamBanner,
+                name: eventUpdate.team2_teamName ?? '-'
               }
             ],
           };
         }
 
-        console.log({deadline: dataset.deadline, newReport});
-        console.log({deadline: dataset.deadline, newReport});
-        console.log({deadline: dataset.deadline, newReport});
 
-        this.getCurrentReportSnapshot(dataset.classNamesWithoutPrecedingDot, newReport, newReportUI);
+        this.getCurrentReportSnapshot(eventUpdate.classNamesWithoutPrecedingDot, newReport, newReportUI);
       });
 
       // Swal.close();
@@ -1052,48 +968,14 @@ function BracketData() {
     },
 
     getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
-      const currentReportRef = doc(db, `event/${eventId}/match_status`, classNamesWithoutPrecedingDot);
+      const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
       let subscribeToCurrentReportSnapshot = onSnapshot(
         currentReportRef,
         async (reportSnapshot) => {
           if (reportSnapshot.exists()) {
             let data = reportSnapshot.data();
-            let {
-              score,
-              matchStatus,
-              realWinners,
-              organizerWinners,
-              team1Winners,
-              team2Winners,
-              completeMatchStatus
-            } = data;
-
-            if (!score) {
-              score = [0, 0];
-            }
-
-            this.report = {
-              ...newReport,
-              organizerWinners,
-              id: reportSnapshot.id,
-              matchStatus,
-              completeMatchStatus,
-              realWinners,
-              teams: [
-                {
-                  ...newReport.teams[0],
-                  winners: team1Winners,
-                  score: score[0],
-                },
-                {
-                  ...newReport.teams[1],
-                  winners: team2Winners,
-                  score: score[1],
-                }
-              ]
-            }
-
-
+            data['id'] = reportSnapshot.id;
+            this.report = updateReportFromFirestore(newReport, data)
             if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) {
               this.setDisabled(newReportUI);
             }
@@ -1118,13 +1000,9 @@ function BracketData() {
 
             this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
           } else {
-            this.report = {
-              ...newReport
-            };
+            this.report = { ...newReport };
 
-            this.reportUI = {
-              ...newReportUI,
-            }
+            this.reportUI = { ...newReportUI }
 
             this.dispute = [null, null, null];
             window.closeLoading()
@@ -1204,15 +1082,15 @@ function BracketData() {
             };
 
             validateDisputeCreation(disputeDto);
-
-            const disputesRef = collection(db, `event/${eventId}/disputes`);
-            const docRef = await addDoc(disputesRef, disputeDto);
+            let newDisputeId = `${this.report.teams[0].position}${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
+            const disputesRef = db(db, `event/${eventId}/disputes`, newDisputeId);
+            await setDoc(disputesRef, disputeDto);
+            // TODO cloud functions
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-              let id = docRef.id;
               let data = docSnap.data();
               this.dispute = this.dispute.map((item, index) => 
-                index == disputeDto['match_number'] ? { ...data, id } : item
+                index == disputeDto['match_number'] ? { ...data, id: newDisputeId } : item
               );
             }
 
@@ -1453,6 +1331,7 @@ window.onload = () => {
   createApp({
     BracketData,
     UploadData,
+    CountDown
   }).mount('#Bracket');
 
   const modalIds = ['updateModal', 'reportModal', 'disputeModal'];
@@ -1471,5 +1350,4 @@ window.onload = () => {
     }
   });
 }
-// Alpine.start();
 

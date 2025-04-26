@@ -234,11 +234,10 @@ class OrganizerEventResultsController extends Controller
     }
 
     public function viewMatches(Request $request, $id) {
-        $eventType = $request->query('eventType');
         $event = EventDetail::with(['type'])->findOrFail($id);
 
-        if ($event->type->eventType !== $eventType) {
-            return $this->showErrorOrganizer("Event with id: {$id} must be of type: {$event->type->eventType}");
+        if (!$event->type->eventType) {
+            return $this->showErrorOrganizer("Event with id: {$id} cannot be of this type: {$event->type->eventType}");
         }
 
         $event->load([
@@ -258,7 +257,7 @@ class OrganizerEventResultsController extends Controller
 
         return view('Organizer.Matches', [
             'id' => $id,
-            'eventType' => $eventType,
+            'eventType' => $event->type->eventType,
             'event' => $event,
             ...$bracket,
         ]);

@@ -25,7 +25,7 @@ class AuthConrollerTest extends TestCase
 
         $response = $this->get('/logout');
 
-        $response->assertRedirect('/');
+        $response->assertRedirect('/home');
 
         $this->assertGuest();
     }

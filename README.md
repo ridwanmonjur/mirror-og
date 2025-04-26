@@ -63,12 +63,23 @@ ln -s storage/app/public public/storage
 # Copy storage assets
 
 cp -r public/assets/images/storage/images/* storage/app/public/images
+
+# Backup
+php artisan db:backup --path=database/backups/dev.sql
+
+# Restore
+php artisan db:restore --path=database/backups/dev.sql
+
 ```
 
 5. Database setup:
 ```bash
+
 # Run migrations
 php artisan migrate
+
+# Create factory
+php artisan generate:factory
 
 # Import SQL data (if needed)
 # The data is located in database/migrations/data.sql

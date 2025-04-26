@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentTransaction extends Model
 {
+    use HasFactory;
     public const UPDATED_AT = null;
 
     protected $fillable = ['payment_id', 'payment_status', 'payment_amount', 
