@@ -123,6 +123,7 @@ class EventMatchService {
                 if ($existingJoint) {
                     if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }
                     elseif ($match->team2_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM2']; }
+                    else { $user_level = $USER_ENUMS['IS_PUBLIC']; }
                 } else {
                     $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] :  $USER_ENUMS['IS_PUBLIC'];
                 }
@@ -147,6 +148,7 @@ class EventMatchService {
                     'user_level' => $user_level,
                     // 'deadline' => $existingData['deadline']
                 ];
+
                 
                 $mergedData = array_merge($existingData, $updatedProperties);
                 
