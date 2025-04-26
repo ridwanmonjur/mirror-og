@@ -1,5 +1,6 @@
+<div class="my-0 py-0">
 <template v-if="report.teams[reportUI.otherTeamNumber]?.winners[reportUI.matchNumber] || report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]">
-    <span class="d-block">
+    <span class="d-block fst-italic fs-7">
         <template v-if="report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]">
             <span class="d-block">
                 You declared
@@ -47,7 +48,7 @@
     </span>
 </template>
 <template v-else>
-    <span class="d-block">
+    <span class="d-block fst-italic fs-7">
         <template v-if="report.deadline.has_ended">
             <span class="d-block">
                 <span>No winner declared by either team. 
@@ -70,3 +71,4 @@
         </template>
     </span>
 </template>
+</div>
