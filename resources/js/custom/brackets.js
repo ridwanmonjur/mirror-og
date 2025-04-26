@@ -20,7 +20,7 @@ const initialBracketData = (userTeamId) => ({
         id: null,
         organizerWinners: [null, null, null],
         randomWinners: [null, null, null],
-        defaultWinner: [null, null, null],
+        defaultWinners: [null, null, null],
         disqualified: false,
         disputeResolved: [null, null, null],
         realWinners: [null, null, null],
@@ -70,7 +70,7 @@ function createReportTemp (report) {
         position: report.position,
         completeMatchStatus: report.completeMatchStatus,
         randomWinners: [...report.randomWinners],
-        defaultWinner: [...report.defaultWinner],
+        defaultWinners: [...report.defaultWinners],
         disqualified: report.disqualified,
         disputeResolved: [...report.disputeResolved],
     }
@@ -140,7 +140,7 @@ function updateAllCountdowns() {
       completeMatchStatus: sourceData.completeMatchStatus,
       realWinners: sourceData.realWinners,
       randomWinners: sourceData.randomWinners,
-      defaultWinner: sourceData.defaultWinner,
+      defaultWinners: sourceData.defaultWinners,
       disqualified: sourceData.disqualified,
       disputeResolved: sourceData.disputeResolved,
       teams: [

@@ -727,7 +727,7 @@ function BracketData() {
           position: tempState.position,
           completeMatchStatus: tempState.completeMatchStatus,
           randomWinners: [...tempState.randomWinners],
-          defaultWinner: [...tempState.defaultWinner],
+          defaultWinners: [...tempState.defaultWinners],
           disqualified: tempState.disqualified,
           disputeResolved: [...tempState.disputeResolved]
         };
@@ -1085,6 +1085,7 @@ function BracketData() {
             let newDisputeId = `${this.report.teams[0].position}${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = db(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
+            // TODO cloud functions
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               let data = docSnap.data();
