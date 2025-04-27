@@ -155,7 +155,6 @@ final class EventDetailFactory extends Factory
             return;
         }
 
-        $venues = ['Online', 'Gaming Arena', 'Convention Center', 'E-Sports Stadium', 'University Campus', 'Community Center'];
 
         for ($i = 0; $i < 2; $i++) {
             $eventName = $category->gameTitle . ' Match ' . $eventIndex + 1;
@@ -165,7 +164,7 @@ final class EventDetailFactory extends Factory
 
             $paymentTransaction = \App\Models\PaymentTransaction::factory()->create();
 
-            $event = EventDetail::firstOrCreate([
+            $event = EventDetail::updateOrCreate([
                 'eventName' => $eventName,
             ],[
                 'startDate' => $startDate,
@@ -176,7 +175,7 @@ final class EventDetailFactory extends Factory
                 'eventBanner' => 'images/event_details/banner1.png',
                 'eventTags' => $category->gameTitle . ',esports,gaming,competition',
                 'status' => 'ONGOING',
-                'venue' => fake()->randomElement($venues),
+                'venue' => 'MY',
                 'user_id' => $user->id,
                 'event_type_id' => $type->id,
                 'event_tier_id' => $tier->id,

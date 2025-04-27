@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Services\Firebase;
+use App\Services\FirestoreService;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Contract\Auth;
@@ -17,12 +18,14 @@ class FirebaseController extends Controller
 {
     private $auth;
     private $firestore;
+    private FirestoreService $firestoreService;
 
 
-    public function __construct(Auth $auth, Firestore $firestore) 
+    public function __construct(Auth $auth, Firestore $firestore, FirestoreService $firestoreService) 
     {
         $this->auth = $auth;
         $this->firestore = $firestore;
+        $this->firestoreService = $firestoreService;
     }
 
     public function createToken()
@@ -154,5 +157,50 @@ class FirebaseController extends Controller
                 'success' => false
             ]);
         }
+    }
+
+    /**
+     * Create specific match documents with predefined winners
+     *
+     * @return array Response with status and document references
+     */
+    public function createSpecificMatchDocuments(Request $request, $id)
+    {
+        // Define the document specifications with document IDs as keys
+        $documentSpecs = [
+            'W1.W2' => [
+                'team1Winners' => ['0', null, null]
+            ],
+            'W3.W4' => [
+                'team1Winners' => ['0', '1', null]
+            ],
+            'W5.W6' => [
+                'team1Winners' => ['0', '1', '1']
+            ],
+            'W7.W8' => [
+                'team1Winners' => ['1', '1', '1'],
+                'team2Winners' => ['1', '0', '1']
+            ]
+        ];
+
+        // Prepare arrays for batch document creation
+        $customValuesArray = [];
+        $specificIds = [];
+
+        // Convert associative array to indexed arrays for createBatchDocuments
+        foreach ($documentSpecs as $documentId => $customValues) {
+            $specificIds[] = $documentId;
+            $customValuesArray[] = $customValues;
+        }
+
+        // Create the documents using batch operation
+        return $this->firestoreService->createBatchDocuments(
+            $id,
+            'match',           // Base ID (not used since we provide specific IDs)
+            count($specificIds), // Count of documents
+            $customValuesArray,
+            'matches',         // Collection name
+            $specificIds
+        );
     }
 }

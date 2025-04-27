@@ -47,7 +47,7 @@ final class TeamMemberFactory extends Factory
         $participantModel = [];
         
         for ($i = 1; $i <= 20; $i++) {
-            $user = User::firstOrCreate([
+            $user = User::updateOrCreate([
                 'email' => "testplayer$i@example.com",
             ],[
                 'name' => "TestPlayer$i",
@@ -69,7 +69,7 @@ final class TeamMemberFactory extends Factory
                 'updated_at' => now(),
             ]);
             
-            NotificationCounter::firstOrCreate([
+            NotificationCounter::updateOrCreate([
                 'user_id' => $user->id,
             ],[
                 'user_id' => $user->id,
@@ -88,14 +88,14 @@ final class TeamMemberFactory extends Factory
         
         $teams = [];
 
-        for ($i = 1; $i < 4; $i++) {
-            $team = Team::firstOrCreate([
+        for ($i = 0; $i <= 3; $i++) {
+            $team = Team::updateOrCreate([
                 'teamName' => "Team $i"
             ],
             [
                 'creator_id' => $creatorUsers[$i]->id, 
                 'teamDescription' => "Description for Team $i",
-                'teamBanner' => "team$i.png", 
+                'teamBanner' => "images/team/team$i.png", 
                 'country' => 'DZ',
                 'country_name' => 'Algeria',
                 'country_flag' => '🇩🇿',
@@ -107,7 +107,7 @@ final class TeamMemberFactory extends Factory
         $members = [];
         foreach ($teams as $team) {
             foreach ($participants as $participant) {
-                $member = TeamMember::firstOrCreate([
+                $member = TeamMember::updateOrCreate([
                     'user_id' => $participant->id,
                 ],
                 [

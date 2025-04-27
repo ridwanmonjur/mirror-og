@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Open;
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
 use Carbon\Carbon;
+use Database\Factories\BracketsFactory;
 use Database\Factories\EventDetailFactory;
 use Database\Factories\JoinEventFactory;
 use Illuminate\Http\JsonResponse;
@@ -32,12 +33,12 @@ class MiscController extends Controller
     public function seedBrackets(): JsonResponse
     {
         try {
-            $eventDetailFactory = new EventDetailFactory();
-            $eventDetailFactory->deleteRelatedTables();
-
-            $joinEventFactory = new JoinEventFactory();
-            $result = $joinEventFactory->seed();
-            $eventIds = collect($result['events'])->pluck('id')->toArray();
+            $factory = new BracketsFactory();
+            $seed = $factory->seed();
+            [
+                'eventIds' => $eventIds,
+                'result' => $result
+            ] = $seed;
             return response()->json([
                 'success' => true,
                 'message' => 'Seeding completed successfully',
@@ -47,6 +48,7 @@ class MiscController extends Controller
                     'join_events_count' => count($result['joinEvents']),
                 ]
             ], 200);
+            
         } catch (\Exception $e) {
             // Return error response if something goes wrong
             return response()->json([

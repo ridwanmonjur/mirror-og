@@ -25,6 +25,28 @@ class EventDetail extends Model
 
 
     protected $table = 'event_details';
+    protected $fillable = [
+        'eventDefinitions',
+        'eventName',
+        'startDate',
+        'endDate',
+        'startTime',
+        'endTime',
+        'eventDescription',
+        'eventBanner',
+        'eventTags',
+        'status',
+        'venue',
+        'sub_action_public_date',
+        'sub_action_public_time',
+        'sub_action_private',
+        'user_id',
+        'event_type_id',
+        'event_tier_id',
+        'event_category_id',
+        'payment_transaction_id',
+        'willNotify',
+    ];
 
     protected $guarded = [];
 

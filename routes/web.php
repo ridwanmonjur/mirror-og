@@ -14,6 +14,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\User\ChatController;
@@ -44,6 +45,7 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
 Route::get('/seed/brackets', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/{id}/brackets', [FirebaseController::class, 'createSpecificMatchDocuments']);
 
 
 // Logout

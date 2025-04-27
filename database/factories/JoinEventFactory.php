@@ -57,7 +57,7 @@ final class JoinEventFactory extends Factory
         $joinEvents = [];
         foreach ($events as $event) {
             foreach ($teams as $team) {
-                $joinEvent = JoinEvent::firstOrCreate([
+                $joinEvent = JoinEvent::updateOrCreate([
                     'event_details_id' => $event->id,
                     'team_id' => $team->id,
                 ],
@@ -65,7 +65,7 @@ final class JoinEventFactory extends Factory
                 [
                     'team_id' => $team->id,
                     'joiner_id' => $team->creator_id,
-                    'joiner_participant_id' => $team->creator_id,
+                    'joiner_participant_id' => $team->user->participant->id,
                     'payment_status' => 'completed', // Accepted payment status
                     'join_status' => 'confirmed',    // Accepted join status
                     'vote_ongoing' => 0,
