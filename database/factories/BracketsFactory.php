@@ -2,14 +2,14 @@
 namespace Database\Factories;
 
 use App\Models\EventDetail;
-use App\Models\Matches;
+use App\Models\Brackets;
 use App\Models\Team;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class MatchesFactory extends Factory
+class BracketsFactory extends Factory
 {
-    protected $model = Matches::class;
+    protected $model = Brackets::class;
 
     public function definition(): array
     {

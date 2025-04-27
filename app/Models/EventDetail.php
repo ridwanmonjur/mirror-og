@@ -69,7 +69,7 @@ class EventDetail extends Model
 
     public function matches(): HasMany
     {
-        return $this->hasMany(Matches::class, 'event_details_id', 'id');
+        return $this->hasMany(Brackets::class, 'event_details_id', 'id');
     }
 
     public function signups()

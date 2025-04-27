@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Unit;
 
-use App\Models\Matches;
+use App\Models\Brackets;
 use App\Models\BracketDeadline;
 use Database\Factories\TeamFactory;
 use Database\Factories\UserFactory;
@@ -63,7 +63,7 @@ use Tests\TestCase;
 //         ]);
 
 //         // Seed a "next match"
-//         $nextMatch = Matches::factory()->create([
+//         $nextMatch = Brackets::factory()->create([
 //             'event_details_id' => $eventDetail->id,
 //             'team1_position' => '99',
 //             'team1_id' => null,

@@ -8,7 +8,7 @@ use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\Like;
-use App\Models\Matches;
+use App\Models\Brackets;
 use App\Models\OrganizerFollow;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -55,7 +55,7 @@ class EventMatchService {
             }
 
 
-            Matches::insert($matches);
+            Brackets::insert($matches);
         }
     }
 
