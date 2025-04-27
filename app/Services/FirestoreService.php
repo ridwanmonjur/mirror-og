@@ -55,7 +55,7 @@ class FirestoreService
                 
                 $defaultDocument = [
                     'completeMatchStatus' => 'UPCOMING',
-                    'defaultWinner' => [null, null, null],
+                    'defaultWinners' => [null, null, null],
                     'disputeResolved' => [null, null, null],
                     'disqualified' => false,
                     'matchStatus' => ['UPCOMING', 'UPCOMING', 'UPCOMING'],

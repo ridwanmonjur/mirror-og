@@ -45,8 +45,8 @@ class BracketsFactory extends Factory
     }
 
     public function seed() {
-        $eventDetailFactory = new EventDetailFactory();
-        $eventDetailFactory->deleteRelatedTables();
+        // $eventDetailFactory = new EventDetailFactory();
+        // $eventDetailFactory->deleteRelatedTables();
 
         $joinEventFactory = new JoinEventFactory();
         $result = $joinEventFactory->seed();
