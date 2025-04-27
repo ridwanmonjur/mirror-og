@@ -1,6 +1,6 @@
 <div class="mt-2">
     <div>
-        <img v-bind:src="report.teams[report.realWinners[reportUI.matchNumber]]?.banner ? 
+        <img v-bind:src="report.realWinners[reportUI.matchNumber] && report.teams[report.realWinners[reportUI.matchNumber]]?.banner ? 
             '/storage/' + report.teams[report.realWinners[reportUI.matchNumber]].banner : 
             '/assets/images/.png'
             " alt="Team Banner"

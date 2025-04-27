@@ -18,6 +18,13 @@ class JoinEvent extends Model
 
     protected $table = 'join_events';
 
+    protected $fillable = ['id', 'event_details_id', 'created_at', 
+        'updated_at', 'team_id', 'joiner_id', 'joiner_participant_id',
+        'payment_status', 'join_status', 'vote_ongoing', 'vote_starter_id',
+        'roster_captain_id'
+    ];
+
+
 
     public function user(): BelongsTo
     {

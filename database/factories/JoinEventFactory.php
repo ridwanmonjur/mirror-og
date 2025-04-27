@@ -38,4 +38,49 @@ final class JoinEventFactory extends Factory
             'roster_captain_id' => \App\Models\RosterMember::factory(),
         ];
     }
+
+
+    public function seed() {
+        // Store the events and teams
+        $events = [];
+        $eventFactory = new EventDetailFactory();
+        
+        for ($i = 0; $i < 3; $i++) {
+            $result = $eventFactory->seed($i);
+            $events[] = $result['event'];
+        }
+        
+        $teamMemberFactory = new TeamMemberFactory();
+        $teamResult = $teamMemberFactory->seed();
+        $teams = $teamResult['teams'];
+        
+        $joinEvents = [];
+        foreach ($events as $event) {
+            foreach ($teams as $team) {
+                $joinEvent = JoinEvent::firstOrCreate([
+                    'event_details_id' => $event->id,
+                    'team_id' => $team->id,
+                ],
+                
+                [
+                    'team_id' => $team->id,
+                    'joiner_id' => $team->creator_id,
+                    'joiner_participant_id' => $team->creator_id,
+                    'payment_status' => 'completed', // Accepted payment status
+                    'join_status' => 'confirmed',    // Accepted join status
+                    'vote_ongoing' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                
+                $joinEvents[] = $joinEvent;
+            }
+        }
+        
+        return [
+            'events' => $events,
+            'teams' => $teams,
+            'joinEvents' => $joinEvents
+        ];
+    }
 }

@@ -22,7 +22,7 @@ class Team extends Model
 
     protected $table = 'teams';
 
-    protected $fillable = ['teamName', 'teamDescription', 'country', 'country_name', 'country_flag'];
+    protected $fillable = ['teamName', 'creator_id', 'teamDescription', 'country', 'country_name', 'country_flag'];
 
     public function user(): BelongsTo
     {

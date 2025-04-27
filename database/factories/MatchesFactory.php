@@ -26,4 +26,8 @@ class MatchesFactory extends Factory
             'updated_at' => now(),
         ];
     }
+
+    public function seed() {
+        
+    }
 }

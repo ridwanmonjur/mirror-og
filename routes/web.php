@@ -41,9 +41,10 @@ Route::get('/account/verify/{token}', [AuthResetAndVerifyController::class, 'ver
 Route::view('/account/verify-success/', 'Auth.VerifySuccess')->name('user.verify.success');
 Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInterestedUser'])->name('interestedUser.verify.action');
 
-// Countries and games
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
+Route::get('/seed/brackets', [MiscController::class, 'seedBrackets']);
+
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
