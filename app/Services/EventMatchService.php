@@ -11,8 +11,6 @@ use App\Models\Like;
 use App\Models\Brackets;
 use App\Models\OrganizerFollow;
 use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Facades\Log;
 
 class EventMatchService {
 

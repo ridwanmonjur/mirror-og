@@ -50,7 +50,13 @@ class BracketsFactory extends Factory
 
         $joinEventFactory = new JoinEventFactory();
         $result = $joinEventFactory->seed();
+
         $events = collect($result['events']);
+        $participants = collect($result['participants']);
+        $organizer = collect($result['organizer']);
+        $organizerEmail = $organizer->pluck('email')->toArray();
+        $partcipantEmails = $participants->pluck('email')->toArray();
+        $eventIds = $events->pluck('id')->toArray();
         $teams = $result['teams'];
 
         foreach ($events as $detail) {
@@ -72,11 +78,12 @@ class BracketsFactory extends Factory
             );
         }
         
-        $eventIds = $events->pluck('id')->toArray();
 
         return [
             'eventIds' => $eventIds,
-            'result' => $result
+            'result' => $result,
+            'organizers' => $organizerEmail,
+            'participants' => $partcipantEmails
         ];
     }
 

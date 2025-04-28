@@ -35,7 +35,6 @@ class FirestoreService
      */
     public function createBatchDocuments(
         string| int $eventId,
-        string $baseId, 
         int $count, 
         array $customValuesArray = [], 
         string $collectionName = 'matches',
@@ -50,7 +49,7 @@ class FirestoreService
             $docRefs = [];
             
             for ($i = 0; $i < $count; $i++) {
-                $documentId = !empty($specificIds[$i]) ? $specificIds[$i] : $baseId . '_' . ($i + 1);
+                $documentId = $specificIds[$i] ;
                 $customValues = $customValuesArray[$i] ?? [];
                 
                 $defaultDocument = [
@@ -82,7 +81,6 @@ class FirestoreService
                 $results[] = [
                     'status' => 'pending',
                     'documentId' => $documentId,
-                    'documentPath' => $collectionName.'/'.$documentId
                 ];
             }
             
