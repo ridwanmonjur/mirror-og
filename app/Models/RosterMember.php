@@ -12,7 +12,7 @@ class RosterMember extends Model
     use HasFactory;
 
     protected $table = 'roster_members';
-    protected $fillable = ['user_id', 'join_events_id', 'team_id', 'team_member_id', ];
+    protected $fillable = ['user_id', 'join_events_id', 'team_id', 'team_member_id', 'vote_to_quit' ];
 
     public function user(): BelongsTo
     {

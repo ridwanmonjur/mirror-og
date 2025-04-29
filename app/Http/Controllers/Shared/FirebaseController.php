@@ -136,7 +136,8 @@ class FirebaseController extends Controller
                         $roomRef = $roomCollectionRef->document($document->id());
                         $roomRef->update([
                             ['path' => 'blocked_by', 'value' => $authenticatedUser->id]
-                        ]);                }
+                        ]);                
+                    }
                     
                     foreach ($snapshot2 as $document) {
                         $roomRef = $roomCollectionRef->document($document->id());
@@ -169,16 +170,39 @@ class FirebaseController extends Controller
         // Define the document specifications with document IDs as keys
         $documentSpecs = [
             'W1.W2' => [
-                'team1Winners' => ['0', null, null]
+                'team1Winners' => ['0', null, null] // DEFAULT WINNERS
             ],
             'W3.W4' => [
-                'team1Winners' => ['0', '1', null]
+                'team1Winners' => ['0', '1', null] // DEFAULT WINNERS
             ],
             'W5.W6' => [
-                'team1Winners' => ['0', '1', '1']
+                'team1Winners' => ['0', '1', '1'] 
             ],
             'W7.W8' => [
+                'team1Winners' => ['1', '1', '1'],  // RANDOM WINNERS
+                'team2Winners' => ['1', '0', '1']
+            ],
+            'W9.W10' => [
+                'team1Winners' => ['0', '1', '0'],
+                'team2Winners' => ['1', '0', '1']
+            ],
+            'W11.W12' => [
+                'team1Winners' => [null,null,null],
+                'team2Winners' => [null,null,null]
+            ],
+            'L3.L4' => [
+                'team1Winners' => ['0', '1', '0'],
+                'team2Winners' => ['1', '0', '1']
+            ],
+            'L5.L6' => [
+                'team1Winners' => ['0', '1', '1']
+            ],
+            'L7.L8' => [
                 'team1Winners' => ['1', '1', '1'],
+                'team2Winners' => ['1', '0', '1']
+            ],
+            'L9.L10' => [
+                'team1Winners' => ['0', '1', '0'],
                 'team2Winners' => ['1', '0', '1']
             ]
         ];
@@ -193,13 +217,11 @@ class FirebaseController extends Controller
             $customValuesArray[] = $customValues;
         }
 
-        // Create the documents using batch operation
         return $this->firestoreService->createBatchDocuments(
             $id,
-            'match',           // Base ID (not used since we provide specific IDs)
-            count($specificIds), // Count of documents
+            count($specificIds), 
             $customValuesArray,
-            'matches',         // Collection name
+            'matches',         
             $specificIds
         );
     }

@@ -17,7 +17,7 @@ class BracketDataService
             'team2_teamName' => 'No team',
             'team2_teamBanner' => null,
             'team2_roster' => null,
-            'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER']: null
+            'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER']: $USER_ENUMS['IS_PUBLIC']
         ];
     }
 

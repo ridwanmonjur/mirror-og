@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\JoinEvent;
+use App\Models\RosterMember;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -43,20 +44,25 @@ final class JoinEventFactory extends Factory
     public function seed() {
         // Store the events and teams
         $events = [];
+        $organizers = [];
         $eventFactory = new EventDetailFactory();
         
-        for ($i = 0; $i < 3; $i++) {
-            $result = $eventFactory->seed($i);
-            $events[] = $result['event'];
-        }
+        $result = $eventFactory->seed(0);
+        $events[] = $result['event'];
+        $organizers[] = $result['organizer'];
         
         $teamMemberFactory = new TeamMemberFactory();
         $teamResult = $teamMemberFactory->seed();
         $teams = $teamResult['teams'];
-        
+        $members = $teamResult['members'];
+        foreach ($teams as $team) { 
+            $team->load(['user', 'user.participant']);
+        }
+
         $joinEvents = [];
         foreach ($events as $event) {
             foreach ($teams as $team) {
+                
                 $joinEvent = JoinEvent::updateOrCreate([
                     'event_details_id' => $event->id,
                     'team_id' => $team->id,
@@ -66,8 +72,8 @@ final class JoinEventFactory extends Factory
                     'team_id' => $team->id,
                     'joiner_id' => $team->creator_id,
                     'joiner_participant_id' => $team->user->participant->id,
-                    'payment_status' => 'completed', // Accepted payment status
-                    'join_status' => 'confirmed',    // Accepted join status
+                    'payment_status' => 'completed', 
+                    'join_status' => 'confirmed',    
                     'vote_ongoing' => 0,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -76,11 +82,28 @@ final class JoinEventFactory extends Factory
                 $joinEvents[] = $joinEvent;
             }
         }
+
+        foreach ($joinEvents as $joinEvent) {
+            foreach ($members as $teamMember) {
+             
+                // Create new roster member
+                RosterMember::updateOrCreate([
+                    'user_id' => $teamMember->user_id,
+                    'join_events_id' => $joinEvent->id,
+                    'team_member_id' => $teamMember->id,
+                ],[
+                    'team_id' => $joinEvent->team_id,
+                    'vote_to_quit' => false,
+                ]);
+                
+            }
+        }
         
         return [
             'events' => $events,
-            'teams' => $teams,
-            'joinEvents' => $joinEvents
+            'joinEvents' => $joinEvents,
+            'organizer' => $organizers,
+            ...$teamResult
         ];
     }
 }
