@@ -40,17 +40,12 @@ class DeadlineTasks extends Command
     }
 
     protected $bracketDataService;
-    protected $firestore;
 
     public function __construct(BracketDataService $bracketDataService)
     {
         parent::__construct(); 
         
         $this->bracketDataService = $bracketDataService;
-        
-        $factory = new \Kreait\Firebase\Factory();
-        $credentialsPath = env('FIREBASE_CREDENTIALS', storage_path('firebase/firebase_credentials.json'));
-        $this->firestore = $factory->withServiceAccount($credentialsPath)->createFirestore();
     }
 
     public function getTodayTasksByName()
