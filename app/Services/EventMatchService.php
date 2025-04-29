@@ -88,7 +88,7 @@ class EventMatchService {
 
         $deadlines = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
         $matchTeamIds = collect();
-        $event?->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
+        $event->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
             $match->team1 = $teamMap->get($match->team1_id);
             $match->team2 = $teamMap->get($match->team2_id);
             $matchTeamIds->push($match->team1_id, $match->team2_id);
@@ -99,19 +99,16 @@ class EventMatchService {
         else {
             $previousValues = $this->bracketDataService::PREV_VALUES[$matchesUpperCount];
         } 
-
-        
        
-            $bracketList = $this->bracketDataService->produceBrackets(
-                $matchesUpperCount, 
-                $willFixBracketsAsOrganizer,
-                $USER_ENUMS, 
-                $deadlines
-            );
+        $bracketList = $this->bracketDataService->produceBrackets(
+            $matchesUpperCount, 
+            $willFixBracketsAsOrganizer,
+            $USER_ENUMS, 
+            $deadlines
+        );
 
-            // dd($bracketList);
 
-            $bracketList = $event?->matches?->reduce(function ($bracketList, $match) use (
+            $bracketList = $event->matches?->reduce(function ($bracketList, $match) use (
                 $existingJoint, 
                 $willFixBracketsAsOrganizer,
                 $USER_ENUMS,
@@ -144,7 +141,6 @@ class EventMatchService {
                     'team1_name' => $match->team1->name ?? null,
                     'team2_name' => $match->team2->name ?? null,
                     'user_level' => $user_level,
-                    // 'deadline' => $existingData['deadline']
                 ];
 
                 

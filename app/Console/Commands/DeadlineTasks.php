@@ -40,18 +40,15 @@ class DeadlineTasks extends Command
     }
 
     protected $bracketDataService;
-    protected $firestore;
 
+     
     public function __construct(BracketDataService $bracketDataService)
     {
-        parent::__construct(); 
+        parent::__construct();
         
-        $this->bracketDataService = $bracketDataService;
-        
-        $factory = new \Kreait\Firebase\Factory();
-        $credentialsPath = env('FIREBASE_CREDENTIALS', storage_path('firebase/firebase_credentials.json'));
-        $this->firestore = $factory->withServiceAccount($credentialsPath)->createFirestore();
+        $this->initializeDeadlineTasksTrait($bracketDataService);
     }
+
 
     public function getTodayTasksByName()
     {
@@ -85,7 +82,6 @@ class DeadlineTasks extends Command
 
             $eventDetailsIds = $bracketDeadlines->pluck('event_details_id')->unique()->filter()->toArray();
             $bracketInfoMap = [];
-            $bracketPlaceMap = [];
             $eventDetails = EventDetail::whereIn('id', $eventDetailsIds)
                 ->with(['eventTier', 'matches'])
                 ->get();
@@ -95,15 +91,12 @@ class DeadlineTasks extends Command
                 if (!isset($bracketInfoMap[$detail->id]) && isset($detail->eventTier?->tierTeamSlot)) {
                     $bracketInfoMap[$detail->id] = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
 
-                    $detail->matches?->foreach(function ($match) use ($detail, &$bracketPlaceMap) {
-                        $bracketPlaceMap[$detail->id . '.' . $match->team1_position . '.' . $match->team2_position] = $match;
-                    });
                 }
             }
 
             $this->handleStartedTasks($startedBracketDeadlines);
-            $this->handleEndedTasks($endBracketDeadlines);
-            $this->handleOrgTasks($orgBracketDeadlines);
+            $this->handleEndedTasks($endBracketDeadlines, $bracketInfoMap);
+            $this->handleOrgTasks($orgBracketDeadlines, $bracketInfoMap);
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);

@@ -839,4 +839,11 @@ class EventDetail extends Model
 
         return $fileNameFinal;
     }
+
+    public function scopeWithEventTierAndFilteredMatches($query, $bracketDeadlines)
+    {
+        return $query->with(['eventTier', 'matches' => function($query) use ($bracketDeadlines) {
+            $query->filterByDeadlines($bracketDeadlines);
+        }]);
+    }
 }
