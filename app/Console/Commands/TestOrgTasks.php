@@ -33,22 +33,17 @@ class TestOrgTasks extends Command
         
         try {
             $taskableId = $this->argument('taskable_id');
-            $bracketInfoMap = [];
-            $eventDetails = EventDetail::whereIn('id', [$taskableId])
-                ->with(['eventTier', 'matches'])
-                ->get();
             $bracketDeadlines = BracketDeadline::whereIn('event_details_id', [$taskableId])->get();
+            $eventDetails = EventDetail::whereIn('id', [$taskableId])
+                ->withEventTierAndFilteredMatches($bracketDeadlines)
+                ->get();
 
             foreach ($eventDetails as $detail) {
-                if (!isset($bracketInfoMap[$detail->id]) && isset($detail->eventTier?->tierTeamSlot)) {
-                    $bracketInfoMap[$detail->id] = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
-                }
+                $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
+                $this->handleOrgTasks($detail->matches, $bracketInfo);
             }
             
-            $this->handleOrgTasks($bracketDeadlines, $bracketInfoMap);
-            
             $this->logExit($taskId, Carbon::now());
-            return 0;
             
         } catch (\Exception $e) {
             $this->error('Error: ' . $e->getMessage());
