@@ -71,7 +71,7 @@ trait DeadlineTasksTrait
             }
         }
 
-        $loserNextPosition = $bracket['loser_next_position'];
+        $loserNextPosition = $extraBracket['loser_next_position'];
         if (!$loserNextPosition) return;
         $loserBrackets = Brackets::where('event_details_id', $bracket['event_details_id'])
             ->where(function($query) use ($loserNextPosition) {
@@ -163,7 +163,6 @@ trait DeadlineTasksTrait
             ];
         }
 
-        Log::info(">>>disputes");
         return [
             $updateReportValues,
             $disputeRefList,
@@ -229,7 +228,6 @@ trait DeadlineTasksTrait
         }
 
         $scores = $this->calcScores($realWinners);
-        Log::info(">>>>noScores" . ' ' . $noScores);
         if ($noScores == 3) {
             $updated = true;
             $disqualified = true; 
@@ -306,9 +304,13 @@ trait DeadlineTasksTrait
                     $updateDisputeValues, 
                     $updateValues 
                 ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $extraBracket );
-                $docRef->update($updateValues);
+                if (!empty($updateValues)) {
+                    $docRef->update($updateValues);
+                }
                 foreach ($disputeRefList as $index =>  $disputeRef) {
-                    $disputeRef?->update($updateDisputeValues[$index]);
+                    if (!empty($updateDisputeValues[$index])) {
+                        $disputeRef?->update($updateDisputeValues[$index]);
+                    }
                 }
             }
         }
@@ -329,9 +331,16 @@ trait DeadlineTasksTrait
                     $updateDisputeValues, 
                     $updateValues 
                 ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $extraBracket, true );
-                $docRef->update($updateValues);
+                Log::info(">>>>UPDATE " );
+                Log::info( $updateValues);
+
+                if (!empty($updateValues)) {
+                    $docRef->update($updateValues);
+                }
                 foreach ($disputeRefList as $index =>  $disputeRef) {
-                    $disputeRef?->update($updateDisputeValues[$index]);
+                    if (!empty($updateDisputeValues[$index])) {
+                        $disputeRef?->update($updateDisputeValues[$index]);
+                    }
                 }
             }
         }

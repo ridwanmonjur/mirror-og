@@ -79,24 +79,32 @@ class DeadlineTasks extends Command
             $startedBracketDeadlines = $bracketDeadlines->whereIn('id', $startedTaskIds);
             $endBracketDeadlines = $bracketDeadlines->whereIn('id', $endTaskIds);
             $orgBracketDeadlines = $bracketDeadlines->whereIn('id', $orgTaskIds);
-
-            $eventDetailsIds = $bracketDeadlines->pluck('event_details_id')->unique()->filter()->toArray();
-            $bracketInfoMap = [];
-            $eventDetails = EventDetail::whereIn('id', $eventDetailsIds)
-                ->with(['eventTier', 'matches'])
+            
+            $startDetails = EventDetail::whereIn('id', $startedTaskIds)
+                ->withEventTierAndFilteredMatches($startedBracketDeadlines)
                 ->get();
 
-            foreach ($eventDetails as $detail) {
-                // check if doesnt exist then fill only
-                if (!isset($bracketInfoMap[$detail->id]) && isset($detail->eventTier?->tierTeamSlot)) {
-                    $bracketInfoMap[$detail->id] = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
+            $orgDetails = EventDetail::whereIn('id', $orgTaskIds)
+                ->withEventTierAndFilteredMatches($orgBracketDeadlines)
+                ->get();
 
-                }
+            $endDetails = EventDetail::whereIn('id', $endTaskIds)
+                ->withEventTierAndFilteredMatches($endBracketDeadlines)
+                ->get();
+            
+            foreach ($startDetails as $detail) {
+                $this->handleStartedTasks($detail->matches);
             }
 
-            $this->handleStartedTasks($startedBracketDeadlines);
-            $this->handleEndedTasks($endBracketDeadlines, $bracketInfoMap);
-            $this->handleOrgTasks($orgBracketDeadlines, $bracketInfoMap);
+            foreach ($endDetails as $detail) {
+                $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
+                $this->handleEndedTasks($detail->matches, $bracketInfo);
+            }
+
+            foreach ($orgDetails as $detail) {
+                $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
+                $this->handleOrg($detail->matches, $bracketInfo);
+            }
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
