@@ -186,6 +186,10 @@ class FirebaseController extends Controller
                 'team1Winners' => ['0', '1', '0'],
                 'team2Winners' => ['1', '0', '1']
             ],
+            'W11.W12' => [
+                'team1Winners' => [null,null,null],
+                'team2Winners' => [null,null,null]
+            ],
             'L3.L4' => [
                 'team1Winners' => ['0', '1', '0'],
                 'team2Winners' => ['1', '0', '1']
