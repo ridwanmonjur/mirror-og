@@ -969,11 +969,13 @@ function BracketData() {
 
     getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
       const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
+      console.log(classNamesWithoutPrecedingDot);
       let subscribeToCurrentReportSnapshot = onSnapshot(
         currentReportRef,
         async (reportSnapshot) => {
           if (reportSnapshot.exists()) {
             let data = reportSnapshot.data();
+            console.log({data});
             data['id'] = reportSnapshot.id;
             this.report = updateReportFromFirestore(newReport, data)
             if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) {
@@ -1009,6 +1011,11 @@ function BracketData() {
           }
         }
       );
+
+      console.log(this.report);
+      console.log(this.report);
+      console.log(this.report);
+      console.log(this.report);
 
       this.subscribeToCurrentReportSnapshot = subscribeToCurrentReportSnapshot;
     },

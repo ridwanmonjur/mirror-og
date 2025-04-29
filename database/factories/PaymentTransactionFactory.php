@@ -32,6 +32,7 @@ final class PaymentTransactionFactory extends Factory
             'coupon_amount' => fake()->optional()->word,
             'payment_amount' => fake()->word,
             'released_amount' => fake()->optional()->word,
+            // 'user_id' => \App\Models\User::factory()
         ];
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+namespace Tests\Mocks;
 use Kreait\Firebase\Contract\Firestore;
 use Mockery;
+
 
 trait MocksFirestore
 {

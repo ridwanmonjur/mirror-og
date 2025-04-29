@@ -11,7 +11,7 @@ use App\Services\BracketDataService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use App\Models\Matches;
+use App\Models\Brackets;
 use Illuminate\Database\Eloquent\Collection;
 
 trait DeadlineTasksTrait
@@ -69,14 +69,14 @@ trait DeadlineTasksTrait
         
 
         $next_position = $bracket['winner_next_position'];
-        $winnerMatches = Matches::where('event_details_id', $deadline->event_details_id)
+        $winnerBrackets = Brackets::where('event_details_id', $deadline->event_details_id)
             ->where(function($query) use ($next_position) {
                 $query->where('team1_position', $next_position)
                     ->orWhere('team2_position', $next_position);
             })
             ->get();
 
-        foreach ($winnerMatches as $match) {
+        foreach ($winnerBrackets as $match) {
             $updated = false;
             
             if ($match->team1_position == $next_position && $match->team1_id != $winner_id) {
@@ -96,14 +96,14 @@ trait DeadlineTasksTrait
 
         $loserNextPosition = $bracket['loser_next_position'];
         if (!$loserNextPosition) return;
-        $loserMatches = Matches::where('event_details_id', $deadline->event_details_id)
+        $loserBrackets = Brackets::where('event_details_id', $deadline->event_details_id)
             ->where(function($query) use ($loserNextPosition) {
                 $query->where('team1_position', $loserNextPosition)
                     ->orWhere('team2_position', $loserNextPosition);
             })
             ->get();
         
-        foreach ($loserMatches as $match) {
+        foreach ($loserBrackets as $match) {
             $updated = false;
             
             if ($match->team1_position == $loserNextPosition && $match->team1_id != $loser_id) {

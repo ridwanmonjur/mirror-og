@@ -11,7 +11,6 @@ use App\Services\BracketDataService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use App\Models\Matches;
 
 class DeadlineTasks extends Command
 {
@@ -113,6 +112,5 @@ class DeadlineTasks extends Command
             $this->logError($taskId, $e);
         }
     }
-
 
 }

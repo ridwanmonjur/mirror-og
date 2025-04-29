@@ -14,6 +14,7 @@ use App\Http\Controllers\Participant\ParticipantController;
 use App\Http\Controllers\Participant\ParticipantEventController;
 use App\Http\Controllers\Participant\ParticipantRosterController;
 use App\Http\Controllers\Participant\ParticipantTeamController;
+use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\User\ChatController;
@@ -41,9 +42,11 @@ Route::get('/account/verify/{token}', [AuthResetAndVerifyController::class, 'ver
 Route::view('/account/verify-success/', 'Auth.VerifySuccess')->name('user.verify.success');
 Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInterestedUser'])->name('interestedUser.verify.action');
 
-// Countries and games
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
+Route::get('/seed/brackets', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/{id}/brackets', [FirebaseController::class, 'createSpecificMatchDocuments']);
+
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
@@ -176,7 +179,7 @@ Route::group(['prefix' => 'organizer'], function () {
             // Organizer home
             Route::get('/home', [OrganizerEventController::class, 'home'])->name('organizer.home.view');
             Route::get('/event/{id}/results', [OrganizerEventResultsController::class, 'index'])->name('event.awards.index');
-            Route::get('/event/{id}/matches', [OrganizerEventResultsController::class, 'viewMatches'])->name('event.matches.index');
+            Route::get('/event/{id}/matches', [OrganizerEventResultsController::class, 'viewBrackets'])->name('event.matches.index');
 
             // Event manage
             Route::resource('/event', OrganizerEventController::class, [
