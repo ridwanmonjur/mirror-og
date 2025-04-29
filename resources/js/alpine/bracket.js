@@ -1090,7 +1090,7 @@ function BracketData() {
 
             validateDisputeCreation(disputeDto);
             let newDisputeId = `${this.report.teams[0].position}${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
-            const disputesRef = db(db, `event/${eventId}/disputes`, newDisputeId);
+            const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
             // TODO cloud functions
             const docSnap = await getDoc(docRef);
