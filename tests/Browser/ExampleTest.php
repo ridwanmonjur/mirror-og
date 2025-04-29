@@ -9,7 +9,6 @@ use Tests\DuskTestCase;
 
 class ExampleTest extends DuskTestCase
 {
-    use DatabaseTruncation;
 
     /**
      * A basic browser test example.

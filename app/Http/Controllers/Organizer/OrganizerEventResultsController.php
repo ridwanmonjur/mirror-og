@@ -11,7 +11,7 @@ use App\Models\AwardResults;
 use App\Models\EventDetail;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
-use App\Models\Matches;
+use App\Models\Brackets;
 use App\Models\Team;
 use App\Models\User;
 use App\Services\EventMatchService;
@@ -233,7 +233,7 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
-    public function viewMatches(Request $request, $id) {
+    public function viewBrackets(Request $request, $id) {
         $event = EventDetail::with(['type'])->findOrFail($id);
 
         if (!$event->type->eventType) {
@@ -255,7 +255,7 @@ class OrganizerEventResultsController extends Controller
         );
 
 
-        return view('Organizer.Matches', [
+        return view('Organizer.Brackets', [
             'id' => $id,
             'eventType' => $event->type->eventType,
             'event' => $event,
@@ -270,11 +270,11 @@ class OrganizerEventResultsController extends Controller
             $validatedData = $request->validated();
     
             $match = isset($validatedData['id']) 
-                ? Matches::findOrFail($validatedData['id']) 
-                : new Matches;
+                ? Brackets::findOrFail($validatedData['id']) 
+                : new Brackets;
             
             if (!$match->id) {
-                Matches::where([
+                Brackets::where([
                     'team1_position' => $match->team1_position,
                     'team2_position' => $match->team2_position,
                     'event_details_id' => $match->event_details_id

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\MatchesResource\Pages;
-use App\Filament\Resources\MatchesResource\RelationManagers;
-use App\Models\Matches;
+use App\Filament\Resources\BracketsResource\Pages;
+use App\Filament\Resources\BracketsResource\RelationManagers;
+use App\Models\Brackets;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class MatchesResource extends Resource
+class BracketsResource extends Resource
 {
-    protected static ?string $model = Matches::class;
+    protected static ?string $model = Brackets::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -100,9 +100,9 @@ class MatchesResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMatches::route('/'),
-            'create' => Pages\CreateMatches::route('/create'),
-            'edit' => Pages\EditMatches::route('/{record}/edit'),
+            'index' => Pages\ListBrackets::route('/'),
+            'create' => Pages\CreateBrackets::route('/create'),
+            'edit' => Pages\EditBrackets::route('/{record}/edit'),
         ];
     }
 }

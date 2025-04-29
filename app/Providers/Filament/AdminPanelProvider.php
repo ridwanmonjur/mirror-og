@@ -56,7 +56,7 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
                                 // ...\App\Filament\Resources\EventJoinResultsResource::getNavigationItems(),
-                                ...\App\Filament\Resources\MatchesResource::getNavigationItems(),
+                                ...\App\Filament\Resources\BracketsResource::getNavigationItems(),
                             ])
                             ->collapsible(false),
                         

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Match;
 
 use App\Models\BracketDeadline;
 use App\Models\EventDetail;
-use App\Models\Matches;
+use App\Models\Brackets;
 use App\Models\TeamMember;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -22,7 +22,7 @@ class ValidateBracketUpdateRequest extends FormRequest
         $user = $this->user();
         $now = now();
 
-        $match = Matches::where([
+        $match = Brackets::where([
             'team1_id' => $this->team1_id,
             'team1_position' => $this->team1_position,
             'team2_id' => $this->team2_id,

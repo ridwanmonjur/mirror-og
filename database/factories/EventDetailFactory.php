@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\EventCategory;
 use App\Models\EventDetail;
+use App\Models\EventTier;
+use App\Models\EventType;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @extends Factory<\App\Models\EventDetail>
@@ -14,17 +19,17 @@ use Illuminate\Support\Facades\DB;
 final class EventDetailFactory extends Factory
 {
     /**
-    * The name of the factory's corresponding model.
-    *
-    * @var string
-    */
-    protected $model = EventDetail::class;
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = \App\Models\EventDetail::class;
 
-    public static function deleteRelatedTables() {
-  
+    public static function deleteRelatedTables()
+    {
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         // Truncate tables
         \App\Models\EventDetail::query()->delete();
         \App\Models\PaymentTransaction::query()->delete();
@@ -36,10 +41,10 @@ final class EventDetailFactory extends Factory
     }
 
     /**
-    * Define the model's default state.
-    *
-    * @return array
-    */
+     * Define the model's default state.
+     *
+     * @return array
+     */
     public function definition(): array
     {
         return [
@@ -63,6 +68,128 @@ final class EventDetailFactory extends Factory
             'event_category_id' => \App\Models\EventCategory::factory(),
             'payment_transaction_id' => \App\Models\PaymentTransaction::factory(),
             'willNotify' => fake()->randomNumber(1),
+        ];
+    }
+
+    /**
+     * Run the database seeds.
+     */
+    public function seed($eventIndex)
+    {
+        $user = User::factory()->create();
+
+        $eventCategory = EventCategory::where('gameTitle', 'Dota 2')->first();
+        if (!$eventCategory) {
+            $eventCategory = EventCategory::create([
+                'gameTitle' => 'Dota 2',
+                'gameIcon' => 'images/event_details/dota2.png',
+                'eventDefinitions' => 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.',
+                'user_id' => $user->id,
+            ]);
+        }
+
+        $eventTiers = [
+            [
+                'eventTier' => 'Starfish',
+                'tierIcon' => 'images/event_details/starfish.png',
+                'tierTeamSlot' => '8',
+                'tierPrizePool' => '5000',
+                'tierEntryFee' => '10',
+                'user_id' => $user->id,
+            ],
+            [
+                'eventTier' => 'Turtle',
+                'tierIcon' => 'images/event_details/turtle.png',
+                'tierTeamSlot' => '16',
+                'tierPrizePool' => '10000',
+                'tierEntryFee' => '20',
+                'user_id' => $user->id,
+            ],
+            [
+                'eventTier' => 'Dolphin',
+                'tierIcon' => 'images/event_details/dolphin.png',
+                'tierTeamSlot' => '32',
+                'tierPrizePool' => '15000',
+                'tierEntryFee' => '30',
+                'user_id' => $user->id,
+            ],
+        ];
+
+        foreach ($eventTiers as $tierData) {
+            $existingTier = EventTier::where('eventTier', $tierData['eventTier'])->first();
+            if (!$existingTier) {
+                EventTier::create($tierData);
+            }
+        }
+
+        $eventTypes = [
+            [
+                'eventType' => 'Tournament',
+                'eventDefinitions' => 'Competitive gaming event with multiple rounds and elimination',
+            ],
+            [
+                'eventType' => 'League',
+                'eventDefinitions' => 'Regular season format with standings and playoffs',
+            ],
+        ];
+
+        foreach ($eventTypes as $typeData) {
+            $existingType = EventType::where('eventType', $typeData['eventType'])->first();
+            if (!$existingType) {
+                EventType::create($typeData);
+            }
+        }
+
+        Log::info($eventTypes);
+
+        return $this->createSampleEvents($user, 'Dolphin', 'Tournament', $eventIndex);
+    }
+
+    private function createSampleEvents($user, $eventTier, $eventType, $eventIndex)
+    {
+        $category = EventCategory::where('gameTitle', 'Dota 2')->first();
+        $tier = EventTier::where('eventTier', $eventTier)->first();
+        $type = EventType::where('eventType', $eventType)->first();
+
+        if (!$category || !$eventTier || !$eventType) {
+            return;
+        }
+
+
+        for ($i = 0; $i < 2; $i++) {
+            $eventName = $category->gameTitle . ' Match ' . $eventIndex + 1;
+            
+            $startDate = fake()->dateTimeBetween('now', '+2 days')->format('Y-m-d');
+            $endDate = date('Y-m-d', strtotime($startDate . ' +2 days'));
+
+            $paymentTransaction = \App\Models\PaymentTransaction::factory()->create();
+
+            $event = EventDetail::updateOrCreate([
+                'eventName' => $eventName,
+            ],[
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'startTime' => fake()->time('H:i:s'),
+                'endTime' => fake()->time('H:i:s'),
+                'eventDescription' => 'Join us for this exciting event!',
+                'eventBanner' => 'images/event_details/banner1.png',
+                'eventTags' => $category->gameTitle . ',esports,gaming,competition',
+                'status' => 'ONGOING',
+                'venue' => 'MY',
+                'user_id' => $user->id,
+                'event_type_id' => $type->id,
+                'event_tier_id' => $tier->id,
+                'event_category_id' => $category->id,
+                'payment_transaction_id' => $paymentTransaction->id,
+                'willNotify' => fake()->numberBetween(0, 1),
+            ]);
+        }
+
+        Log::info($user); 
+        Log::info($event);
+        return [
+            'organizer' => $user,
+            'event' => $event,
         ];
     }
 }
