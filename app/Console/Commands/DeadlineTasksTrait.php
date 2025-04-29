@@ -13,47 +13,24 @@ use Exception;
 use Illuminate\Console\Command;
 use App\Models\Brackets;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 trait DeadlineTasksTrait
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $signature = 'tasks:deadline';
-
-    protected $description = 'Respond tasks in the database';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {
-        $this->getTodayTasksByName();
-    }
-
     protected $bracketDataService;
     protected $firestore;
 
-    public function __construct(BracketDataService $bracketDataService)
+
+    
+    protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService)
     {
-        parent::__construct(); 
-        
         $this->bracketDataService = $bracketDataService;
         
         $factory = new \Kreait\Firebase\Factory();
-        $credentialsPath = env('FIREBASE_CREDENTIALS', storage_path('firebase/firebase_credentials.json'));
-        $this->firestore = $factory->withServiceAccount($credentialsPath)->createFirestore();
+        $this->firestore = $factory->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS' )))->createFirestore();
     }
 
-    public function resolveNextStage(array $bracket, array $scores, BracketDeadline $deadline) {
+    public function resolveNextStage( $bracket, array $extraBracket, array $scores) {
         $winner_id =  null;
         $loser_id =  null;
        
@@ -68,8 +45,8 @@ trait DeadlineTasksTrait
         }
         
 
-        $next_position = $bracket['winner_next_position'];
-        $winnerBrackets = Brackets::where('event_details_id', $deadline->event_details_id)
+        $next_position = $extraBracket['winner_next_position'];
+        $winnerBrackets = Brackets::where('event_details_id', $bracket['event_details_id'])
             ->where(function($query) use ($next_position) {
                 $query->where('team1_position', $next_position)
                     ->orWhere('team2_position', $next_position);
@@ -96,7 +73,7 @@ trait DeadlineTasksTrait
 
         $loserNextPosition = $bracket['loser_next_position'];
         if (!$loserNextPosition) return;
-        $loserBrackets = Brackets::where('event_details_id', $deadline->event_details_id)
+        $loserBrackets = Brackets::where('event_details_id', $bracket['event_details_id'])
             ->where(function($query) use ($loserNextPosition) {
                 $query->where('team1_position', $loserNextPosition)
                     ->orWhere('team2_position', $loserNextPosition);
@@ -139,57 +116,54 @@ trait DeadlineTasksTrait
         $updateReportValues = [];
         $updateDisputeValues = [null, null, null];
         $disputeRefList = [null, null, null];
-        for ($i = 0; $i < 3; $i++) { 
-            $newRef = null;
-            
+        for ($i = 0; $i < 3; $i++) {             
             if (!isset($realWinners[$i])) {
                 if (!isset($disputeResolved[$i])) {
                     $disputePath =  $bracket['team1_position'] . '.' . $bracket['team2_position'] . '.' . $i;
                     $disputeRef = $this->firestore->database()->collection('event')->document($eventId)->collection('disputes')->document($disputePath);
-                    $disputeDoc = $disputeRef->snapshot();
+                    $disputeDoc = $disputeRef?->snapshot();
                     if ($disputeDoc->exists()) {
                         $data = $disputeDoc->data();
                         // Case 1: One team filed a dispute but the other hasn't responded yet
                         if ($data['dispute_teamNumber'] && !isset($data['response_teamId'])) {
                             $isUpdatedDispute = true;
-                            $realWinners[$i] = $data['dispute_teamNumber'];
+                            $realWinners[$i] = (string) $data['dispute_teamNumber'];
                             $disputeResolved[$i] = true;
                             $updateDisputeValues[$i] = [ 
-                                'resolution_winner' => $data['dispute_teamNumber'],
+                                'resolution_winner' => (string) $data['dispute_teamNumber'],
                                 'resolution_resolved_by' => 'time',
                             ];
-                            $newRef = $disputeRef;
+                            $disputeRefList[$i] = $disputeRef;
                         } else {
                             // Case 2: Both teams filed conflicting claims and we're set to break conflicts
                             if ($willBreakConflicts && isset($data['response_teamNumber']) ) {
                                 $isUpdatedDispute = true;
-                                $realWinners[$i] = rand(0, 1) ? $data['dispute_teamNumber'] : $data['response_teamNumber'];
+                                $realWinners[$i] = rand(0, 1) ? (string) $data['dispute_teamNumber'] : (string) $data['response_teamNumber'];
                                 $disputeResolved[$i] = true;
                                 $updateDisputeValues[$i] = [ 
-                                    'resolution_winner' => $realWinners[$i],
+                                    'resolution_winner' => (string) $realWinners[$i],
                                     'resolution_resolved_by' => null,
                                 ];
-                                $newRef = $disputeRef;
+                                $disputeRefList[$i] = $disputeRef;
                             }
                         }   
                     }
                 }
             }
-
-            $disputeRefList[] = $newRef;
         }
 
-        $scores = $this->calcScores($scores);
+        $scores = $this->calcScores($realWinners);
 
         if ($isUpdatedDispute) {
 
             $updateReportValues = [ 
                 'realWinners' => $realWinners,
-                'scores' => $scores,
+                'score' => $scores,
                 'disputeResolved' => $disputeResolved,
             ];
         }
 
+        Log::info(">>>disputes");
         return [
             $updateReportValues,
             $disputeRefList,
@@ -218,16 +192,22 @@ trait DeadlineTasksTrait
         $noScores = 0;
         $updated = false;
         $newUpdate = [];
+        $disqualified = false;
         
         for ($i = 0; $i < 3; $i++) {
             if (!isset($realWinners[$i])) {
                 // Complete but conflict
                 if (isset($team2Winners[$i]) && isset($team1Winners[$i])) { 
+                    if ($team2Winners[$i] == $team1Winners[$i]) {
+                        $updated = true;
+                        $winner_chosen = (string) $team1Winners[$i];
+                        $realWinners[$i] = $winner_chosen;
+                    }
                     if ($willBreakTiesAndConflicts) {
                         $disputeResolved = $matchStatusData['disputeResolved'] ?? [null, null, null];
                         if (!isset($disputeResolved[$i]) || $disputeResolved[$i]) {
                             $updated = true;
-                            $winner_chosen = rand(0, 1);
+                            $winner_chosen = (string) rand(0, 1);
                             $realWinners[$i] = $winner_chosen;
                             $randomWinners[$i] = true;
                         }
@@ -236,23 +216,23 @@ trait DeadlineTasksTrait
                     // Only team 2 submitted a winner
                     $updated = true;
                     $defaultWinners[$i] = true;
-                    $realWinners[$i] = 1; // Team 2 wins
+                    $realWinners[$i] = (string) $team2Winners[$i]; // Team 2 wins
                 } elseif (isset($team1Winners[$i]) && !isset($team2Winners[$i])) {
                     // Only team 1 submitted a winner
                     $updated = true;
                     $defaultWinners[$i] = true;
-                    $realWinners[$i] = 0; // Team 1 wins
+                    $realWinners[$i] = (string) $team1Winners[$i]; // Team 1 wins
                 } else {
                     $noScores++;
                 }
             }
         }
 
-        $scores = $this->calcScores($scores);
-
+        $scores = $this->calcScores($realWinners);
+        Log::info(">>>>noScores" . ' ' . $noScores);
         if ($noScores == 3) {
             $updated = true;
-            $newUpdate['disqualified'] = true; 
+            $disqualified = true; 
         } elseif ($willBreakTiesAndConflicts) {
             // Break Tie
             if ($scores[0] == $scores[1]) {
@@ -262,7 +242,7 @@ trait DeadlineTasksTrait
                             $disputeResolved = $matchStatusData['disputeResolved'] ?? [null, null, null];
                             if (!isset($disputeResolved[$i]) || $disputeResolved[$i]) {
                                 $updated = true;
-                                $realWinners[$i] = rand(0, 1);
+                                $realWinners[$i] = (string) rand(0, 1);
                                 $randomWinners[$i] = true;
                             }
                         }
@@ -274,9 +254,10 @@ trait DeadlineTasksTrait
         if ($updated) {
             $newUpdate = [ 
                 'realWinners' => $realWinners,
-                'scores' => $scores,
+                'score' => $scores,
                 'defaultWinners' => $defaultWinners,
-                'randomWinners' => $randomWinners
+                'randomWinners' => $randomWinners,
+                'disqualified' => $disqualified
             ];
         }
         
@@ -287,34 +268,36 @@ trait DeadlineTasksTrait
     }
 
 
-    public function handleStartedTasks(Collection $startedBracketDeadlines) {
-        foreach ($startedBracketDeadlines as $deadline) {
-            $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-            if (!$bracket) {
-                continue;
-            }
+    public function handleStartedTasks(Collection $startedBrackets) {
+        foreach ($startedBrackets as $bracket) {
 
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('brackets')->document($matchStatusPath);
+            $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
-                $docRef->update([['path' => 'matchStatus', 'value' => 'ONGOING']]);
-            }
+                $docRef->update([
+                    ['path' => 'matchStatus', 'value' => ['ONGOING', 'UPCOMING', 'UPCOMING']],
+                    ['path' => 'completeMatchStatus', 'value' => 'ONGOING']
+                ]);
+            } 
         }
     }
 
-    public function handleEndedTasks(Collection $endBracketDeadlines) {
-        foreach ($endBracketDeadlines as $deadline) {
-            $updateValues = [['path' => 'matchStatus', 'value' => 'ENDED']];
-
-            $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-            if (!$bracket) {
-                continue;
-            }
+    public function handleEndedTasks(Collection $endBrackets, $bracketInfo) {
+        foreach ($endBrackets as $bracket) {
+            $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
+            $updateValues = [
+                ['path' => 'matchStatus', 'value' => ['ENDED', 'ENDED', 'ENDED']],
+                ['path' => 'completeMatchStatus', 'value' => 'ENDED']
+            ];
 
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('brackets')->document($matchStatusPath);
+            $docRef = $this->firestore->database()
+                ->collection('event')
+                ->document($bracket['event_details_id'])
+                ->collection('brackets')
+                ->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
@@ -322,26 +305,22 @@ trait DeadlineTasksTrait
                 [   $disputeRefList,
                     $updateDisputeValues, 
                     $updateValues 
-                ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $deadline );
+                ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $extraBracket );
                 $docRef->update($updateValues);
                 foreach ($disputeRefList as $index =>  $disputeRef) {
-                    $disputeRef->update($updateDisputeValues[$index]);
+                    $disputeRef?->update($updateDisputeValues[$index]);
                 }
             }
         }
 
     }
     
-    public function handleOrgTasks(Collection $orgBracketDeadlines) {
-        foreach ($orgBracketDeadlines as $deadline) {
+    public function handleOrgTasks(Collection $orgBracketDeadlines, $bracketInfo) {
+        foreach ($orgBracketDeadlines as $bracket) {
             $updateValues = [];
-            $bracket = $bracketInfoMap[$deadline->event_details_id][$deadline->stage][$deadline->inner_stage_name] ?? null;
-            if (!$bracket) {
-                continue;
-            }
-
+            $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($deadline->event_details_id)->collection('brackets')->document($matchStatusPath);
+            $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
@@ -349,23 +328,23 @@ trait DeadlineTasksTrait
                 [   $disputeRefList,
                     $updateDisputeValues, 
                     $updateValues 
-                ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $deadline, true );
+                ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $extraBracket, true );
                 $docRef->update($updateValues);
                 foreach ($disputeRefList as $index =>  $disputeRef) {
-                    $disputeRef->update($updateDisputeValues[$index]);
+                    $disputeRef?->update($updateDisputeValues[$index]);
                 }
             }
         }
     }
 
-    protected function interpretDeadlines($matchStatusData, $updateValues, $bracket, $deadline, $afterOrganizerDeadline = false) {
+    protected function interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $afterOrganizerDeadline = false) {
         [
             $updateReportValues,
             $disputeRefList,
             $updateDisputeValues,
             $isUpdatedDispute
-        ] = $this->handleDisputes($matchStatusData, $bracket, $deadline->event_details_id, $afterOrganizerDeadline);
-
+        ] = $this->handleDisputes($matchStatusData, $bracket, $bracket['event_details_id'], $afterOrganizerDeadline);
+        
         if ($isUpdatedDispute) {
             $updateValues = $this->updateValueByPath($updateValues, $updateReportValues);
             $matchStatusData = $this->updateValueByPath($matchStatusData, $updateReportValues, true);
@@ -381,7 +360,7 @@ trait DeadlineTasksTrait
             $matchStatusData = $this->updateValueByPath($matchStatusData, $newUpdate, true);
         }
 
-        $this->resolveNextStage($bracket, $matchStatusData['scores'], $deadline);
+        $this->resolveNextStage($bracket, $extraBracket, $matchStatusData['score']);
         
         return [ 
             $disputeRefList,

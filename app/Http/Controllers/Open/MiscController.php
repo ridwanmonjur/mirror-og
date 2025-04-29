@@ -12,7 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Io238\ISOCountries\Models\Country;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 
 class MiscController extends Controller
 {
@@ -30,6 +31,48 @@ class MiscController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
+    public function seedStart(Request $request, $id): JsonResponse {
+        Cache::flush();
+
+        $exitCode = Artisan::call('tasks:start', [
+            'taskable_id' => $id
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'Command executed',
+            'output' => Artisan::output()
+        ]);
+    }
+
+    public function seedEnd(Request $request, $id): JsonResponse {
+        Cache::flush();
+
+        $exitCode = Artisan::call('tasks:end', [
+            'taskable_id' => $id
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'Command executed',
+            'output' => Artisan::output()
+        ]);
+    }
+
+    public function seedOrg(Request $request, $id): JsonResponse {
+        Cache::flush();
+
+        $exitCode = Artisan::call('tasks:org', [
+            'taskable_id' => $id
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'Command executed',
+            'output' => Artisan::output()
+        ]);
+    }
+
     public function seedBrackets(): JsonResponse
     {
         try {
@@ -37,15 +80,16 @@ class MiscController extends Controller
             $seed = $factory->seed();
             [
                 'eventIds' => $eventIds,
-                'result' => $result
+                'participants' => $participants,
+                'organizers' => $organizers
             ] = $seed;
             return response()->json([
                 'success' => true,
                 'message' => 'Seeding completed successfully',
                 'data' => [
                     'events_count' => $eventIds,
-                    'teams_count' => count($result['teams']),
-                    'join_events_count' => count($result['joinEvents']),
+                    'participants' => $participants,
+                    'organizers' => $organizers
                 ]
             ], 200);
             

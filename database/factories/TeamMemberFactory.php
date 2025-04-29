@@ -44,9 +44,8 @@ final class TeamMemberFactory extends Factory
     {
         
         $participants = [];
-        $participantModel = [];
         
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $user = User::updateOrCreate([
                 'email' => "testplayer$i@example.com",
             ],[
@@ -81,20 +80,20 @@ final class TeamMemberFactory extends Factory
             ]);
             
             $participants[] = $user;
-            $participantModel[] = $participant;
         }
         
-        $creatorUsers = [$participants[0], $participants[6], $participants[11], $participants[15]];
+        $creatorUsers = [$participants[0], $participants[5]];
         
         $teams = [];
 
-        for ($i = 0; $i <= 3; $i++) {
+        for ($i = 0; $i <= 1; $i++) {
+            $index = $i + 1;
             $team = Team::updateOrCreate([
-                'teamName' => "Team $i"
+                'teamName' => "Team $index"
             ],
             [
                 'creator_id' => $creatorUsers[$i]->id, 
-                'teamDescription' => "Description for Team $i",
+                'teamDescription' => "Description for Team $index",
                 'teamBanner' => "images/team/team$i.png", 
                 'country' => 'DZ',
                 'country_name' => 'Algeria',
@@ -105,28 +104,41 @@ final class TeamMemberFactory extends Factory
         }
         
         $members = [];
-        foreach ($teams as $team) {
-            foreach ($participants as $participant) {
-                $member = TeamMember::updateOrCreate([
-                    'user_id' => $participant->id,
-                ],
-                [
-                    'team_id' => $team->id,
-                    'status' => "accepted",
-                    'actor' => 'team',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+        $participantsCount = count($participants);
+        $teamsCount = count($teams);
+        $participantsPerTeam = 5;
 
-            $members[] = $member;
+        for ($teamIndex = 0; $teamIndex < min($teamsCount, 2); $teamIndex++) {
+            $team = $teams[$teamIndex];
+            
+            $startIndex = $teamIndex * $participantsPerTeam;
+            $endIndex = min($startIndex + $participantsPerTeam, $participantsCount);
+            
+            for ($i = $startIndex; $i < $endIndex; $i++) {
+                $participant = $participants[$i];
+                
+                $member = TeamMember::updateOrCreate(
+                    [
+                        'user_id' => $participant->id,
+                        'team_id' => $team->id,
+                    ],
+                    [
+                        'status' => "accepted",
+                        'actor' => 'team',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]
+                );
+                
+                $members[] = $member;
+            }
         }
+
         
         return [
             'participants' => $participants,
-            'participantModel' => $participantModel,
             'teams' => $teams,
-            'member' => $members
+            'members' => $members
         ];
     }
 }
