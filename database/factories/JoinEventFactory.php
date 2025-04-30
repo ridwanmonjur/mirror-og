@@ -41,13 +41,15 @@ final class JoinEventFactory extends Factory
     }
 
 
-    public function seed() {
+    public function seed($options = [
+        'event' => []
+    ]) {
         // Store the events and teams
         $events = [];
         $organizers = [];
         $eventFactory = new EventDetailFactory();
         
-        $result = $eventFactory->seed(0);
+        $result = $eventFactory->seed(0, $options['event']);
         $events[] = $result['event'];
         $organizers[] = $result['organizer'];
         

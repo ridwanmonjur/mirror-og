@@ -33,51 +33,55 @@ class MiscController extends Controller
 
     public function seedStart(Request $request, $id): JsonResponse {
         Cache::flush();
-
-        $exitCode = Artisan::call('tasks:start', [
-            'taskable_id' => $id
+    
+        $exitCode = Artisan::call('tasks:deadline', [
+            'type' => 1,
+            '--event_id' => (string) $id
         ]);
         
         return response()->json([
             'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Command executed',
-            'output' => Artisan::output()
+            'message' => 'Start tasks executed',
         ]);
     }
-
+    
     public function seedEnd(Request $request, $id): JsonResponse {
         Cache::flush();
-
-        $exitCode = Artisan::call('tasks:end', [
-            'taskable_id' => $id
+    
+        $exitCode = Artisan::call('tasks:deadline', [
+            'type' => 2,
+            '--event_id' => (string) $id
         ]);
         
         return response()->json([
             'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Command executed',
-            'output' => Artisan::output()
+            'message' => 'End tasks executed',
         ]);
     }
-
+    
     public function seedOrg(Request $request, $id): JsonResponse {
         Cache::flush();
-
-        $exitCode = Artisan::call('tasks:org', [
-            'taskable_id' => $id
+    
+        $exitCode = Artisan::call('tasks:deadline', [
+            'type' => 3,
+            '--event_id' => (string) $id
         ]);
         
         return response()->json([
             'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Command executed',
-            'output' => Artisan::output()
+            'message' => 'Org tasks executed',
         ]);
     }
 
-    public function seedBrackets(): JsonResponse
+    public function seedBrackets(Request $request, $type): JsonResponse
     {
         try {
             $factory = new BracketsFactory();
-            $seed = $factory->seed();
+            $seed = $factory->seed([
+                'event' => [
+                    'eventTier' => $type
+                ]
+            ]);
             [
                 'eventIds' => $eventIds,
                 'participants' => $participants,
