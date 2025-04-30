@@ -207,11 +207,9 @@ class FirebaseController extends Controller
             ]
         ];
 
-        // Prepare arrays for batch document creation
         $customValuesArray = [];
         $specificIds = [];
 
-        // Convert associative array to indexed arrays for createBatchDocuments
         foreach ($documentSpecs as $documentId => $customValues) {
             $specificIds[] = $documentId;
             $customValuesArray[] = $customValues;
