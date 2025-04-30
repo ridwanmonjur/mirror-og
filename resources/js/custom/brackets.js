@@ -111,13 +111,13 @@ function updateAllCountdowns() {
   function generateWarningHtml (diffDate, newPositionId) {
     let diffDateFormat = diffDateWithNow(diffDate);
     return `
-      <div class="reportBox row z-99 justify-content-start bg-light border border-dark border rounded px-2 py-2" 
-        style="width: 300px;"
+      <div class="reportBox row z-99 justify-content-start bg-light border border-dark border rounded px-0 py-1" 
+        style="width: 260px;"
       >
-        <h5 class="text-center my-0 mb-2 py-0"> 
-          ${newPositionId}
-        </h5>
-        <p class="text-primary text-center my-0 mb-2 py-0"> 
+        <p class="text-center my-0 py-0 fs-6"> 
+          <u>${newPositionId}</u>
+        </p>
+        <p class="text-primary text-center my-0 mb-1 py-0"> 
           You have pending results to report.
         </p>
         <small class="text-red small text-center my-0 py-0"> 

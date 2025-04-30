@@ -74,7 +74,7 @@ final class EventDetailFactory extends Factory
     /**
      * Run the database seeds.
      */
-    public function seed($eventIndex)
+    public function seed($eventIndex, $options)
     {
         $user = User::factory()->create();
 
@@ -142,7 +142,7 @@ final class EventDetailFactory extends Factory
 
         Log::info($eventTypes);
 
-        return $this->createSampleEvents($user, 'Dolphin', 'Tournament', $eventIndex);
+        return $this->createSampleEvents($user, $options['eventTier'], 'Tournament', $eventIndex);
     }
 
     private function createSampleEvents($user, $eventTier, $eventType, $eventIndex)

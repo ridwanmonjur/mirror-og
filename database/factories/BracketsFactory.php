@@ -44,12 +44,16 @@ class BracketsFactory extends Factory
         ];
     }
 
-    public function seed() {
+    public function seed($options = [
+        'event' => [
+            'eventTier' => 'Dolphin'
+        ]
+    ]) {
         // $eventDetailFactory = new EventDetailFactory();
         // $eventDetailFactory->deleteRelatedTables();
 
         $joinEventFactory = new JoinEventFactory();
-        $result = $joinEventFactory->seed();
+        $result = $joinEventFactory->seed($options);
 
         $events = collect($result['events']);
         $participants = collect($result['participants']);
@@ -65,7 +69,7 @@ class BracketsFactory extends Factory
             $this->updateBracketTeams(
                 $detail->id, 
                 'U', 
-                ['e1', 'e3', 'e5', 'p1'],
+                ['e1', 'e3', 'e5', 'p2'],
                 $teams
             );
             
@@ -73,7 +77,7 @@ class BracketsFactory extends Factory
             $this->updateBracketTeams(
                 $detail->id, 
                 'L', 
-                ['e2', 'e4', 'p1'],
+                ['e2', 'e4', 'p2'],
                 $teams
             );
         }
