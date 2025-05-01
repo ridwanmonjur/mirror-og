@@ -28,6 +28,7 @@ class ImageVideo extends Model
 
         $hasFile = $request->hasFile($formName);
         
+        if (!$hasFile ) return [];
         foreach ($files as $mediaFile) {
             $type = str_starts_with($mediaFile->getMimeType(), 'video/') ? 'vid' : 'img';
             $path = $mediaFile->store("media/{$type}", 'public'); // Specify disk if needed

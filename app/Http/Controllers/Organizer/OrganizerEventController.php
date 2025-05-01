@@ -228,11 +228,6 @@ class OrganizerEventController extends Controller
                 throw new Exception('Failed to create event tasks: ' . $e->getMessage());
             }
 
-            try {
-                $this->eventMatchService->createBrackets($eventDetail);
-            } catch (Exception $e) {
-                throw new Exception('Failed to create event brackets: ' . $e->getMessage());
-            }
 
             DB::commit();
             if ($request->livePreview === 'true') {
@@ -320,11 +315,6 @@ class OrganizerEventController extends Controller
                     throw new Exception('Failed to create event tasks: ' . $e->getMessage());
                 }
 
-                try {
-                    $this->eventMatchService->createBrackets($eventDetail);
-                } catch (Exception $e) {
-                    throw new Exception('Failed to create event brackets: ' . $e->getMessage());
-                }
                 
                 DB::commit();
                 if ($request->livePreview === 'true') {

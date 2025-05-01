@@ -15,7 +15,7 @@
             <span class="d-block">
                 Opponent Team declared
                 <span class="text-primary"
-                    v-text="report.teams[report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]]?.name">
+                    v-text="report.teams[report.teams[reportUI.otherTeamNumber]?.winners[reportUI.matchNumber]]?.name">
                 </span>
                 to be the winner for Game <span v-text="reportUI.matchNumber+1"> </span>
             </span>
@@ -40,7 +40,7 @@
                 <span>
                     Organizer has chosen
                     <span class="text-primary"
-                        v-text="report.teams[report.organizerWinners[reportUI.matchNumber]].name"> </span>
+                        v-text="report.teams[report.organizerWinners[reportUI.matchNumber]]?.name"> </span>
                     to be the winner
                 </span>
             </div>
