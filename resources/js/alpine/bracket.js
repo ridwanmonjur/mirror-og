@@ -1089,11 +1089,11 @@ function BracketData() {
             };
 
             validateDisputeCreation(disputeDto);
-            let newDisputeId = `${this.report.teams[0].position}${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
+            let newDisputeId = `${this.report.teams[0].position}.${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
             // TODO cloud functions
-            const docSnap = await getDoc(docRef);
+            const docSnap = await getDoc(disputesRef);
             if (docSnap.exists()) {
               let data = docSnap.data();
               this.dispute = this.dispute.map((item, index) => 
