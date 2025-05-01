@@ -91,7 +91,7 @@ class DeadlineTasks extends Command
                     ->get();
                 foreach ($endDetails as $detail) {
                     $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
-                    $this->handleEndedTasks($detail->matches, $bracketInfo);
+                    $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->eventTier->id);
                 }
             }
 
@@ -102,7 +102,7 @@ class DeadlineTasks extends Command
                     ->get();
                 foreach ($orgDetails as $detail) {
                     $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
-                    $this->handleOrg($detail->matches, $bracketInfo);
+                    $this->handleOrg($detail->matches, $bracketInfo, $detail->eventTier->id);
                 }
             }
 

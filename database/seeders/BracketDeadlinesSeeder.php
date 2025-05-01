@@ -33,7 +33,6 @@ class BracketDeadlinesSeeder extends Seeder
         
         foreach ($eventDetails as $detail) {
             $detail->createStructuredDeadlines();
-            $this->eventMatchService->createBrackets($detail);
         }
         
         $this->command->info('Bracket deadlines have been created successfully!');
