@@ -72,7 +72,7 @@
                         
                         <hr class="d-none d-lg-block">
                         <div class=" user-select-none row px-0 mx-auto">
-                            <div class="col-2 px-0 h-100 d-flex justify-content-center align-items-center">
+                            <div class="col-2 col-lg-1 px-0 h-100 d-flex justify-content-center align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" 
                                     v-bind:class="{ 'd-none': reportUI.matchNumber === 0 }"
                                     v-on:click="changeMatchNumber(-1) "
@@ -81,7 +81,7 @@
                                 <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                                 </svg>
                             </div>
-                            <div class="col-8 px-0">
+                            <div class="col-8 col-lg-10 px-0">
                                 <p>
                                     Game <span v-text="reportUI.matchNumber+1"> </span>
                                     <span class="text-success" v-text="report.matchStatus[reportUI.matchNumber]"></span> 
@@ -101,7 +101,7 @@
                                 </template>
                                 <br>
                             </div> 
-                            <div class="col-2 px-0 h-100 d-flex justify-content-center align-items-center">
+                            <div class="col-2 col-lg-1 px-0 h-100 d-flex justify-content-center align-items-center">
                                <svg
                                 v-on:click="changeMatchNumber(1)"
                                 xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#7f7f7f" 

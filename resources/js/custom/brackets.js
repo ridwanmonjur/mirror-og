@@ -189,6 +189,41 @@ function createDisputeDto (newFormObject, files) {
   return disputeDto ;
 }
 
+async function showSwal(options = {}) {
+  const defaults = {
+    title: 'Submitting a Dispute',
+    html: `Hi`,
+    confirmButtonText: 'Submit Dispute',
+    cancelButtonText: 'Back',
+    confirmButtonColor: "#43A4D7",
+    padding: '2em',
+    reverseButtons: true,
+    showCancelButton: true,
+  };
+
+  const settings = { ...defaults, ...options };
+
+  try {
+    const result = await window.Swal.fire({
+      title: settings.title,
+      html: settings.html,
+      confirmButtonColor: settings.confirmButtonColor,
+      showCancelButton: true,
+      confirmButtonText: settings.confirmButtonText,
+      cancelButtonText: settings.cancelButtonText,
+      padding: '2em',
+      reverseButtons: true,
+    });
+    
+    return result;
+  } catch (error) {
+    console.error('Error in showSwal:', error);
+    throw error;
+  }
+}
+
+
+
 export {
   initialBracketData,
   calcScores,
@@ -198,4 +233,5 @@ export {
   diffDateWithNow,
   generateWarningHtml,
   createDisputeDto,
+  showSwal
 };

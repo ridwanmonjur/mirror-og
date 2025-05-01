@@ -342,23 +342,17 @@ class EventDetail extends Model
             ->where('event_id', $this->id)
             ->first();
 
-
         if (!$signupDates) {
             return config('constants.SIGNUP_STATUS.CLOSED');
         }
 
         $now = Carbon::now();
-
         if ($now->between($signupDates->signup_open, $signupDates->normal_signup_start_advanced_close)) {
             return config('constants.SIGNUP_STATUS.EARLY');
         } elseif ($now->between($signupDates->normal_signup_start_advanced_close, $signupDates->signup_close)) {
             return config('constants.SIGNUP_STATUS.NORMAL');
-        // } else {
-        //     return config('constants.SIGNUP_STATUS.CLOSED');
-        // }
-        // MUST REMOVE THIS
-         } else {
-            return config('constants.SIGNUP_STATUS.NORMAL');
+        } else {
+            return config('constants.SIGNUP_STATUS.CLOSED');
         }
     }
 
