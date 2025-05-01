@@ -4,9 +4,9 @@
 
         <template v-if="report.teams[0]?.winners[reportUI.matchNumber]">
             <span class="d-block ">
-                <span v-text="report.teams[0].name"> </span>
+                <span v-text="report.teams[0]?.name"> </span>
                 declared
-                <span class="text-primary" v-text="report.teams[report.teams[0].winners[reportUI.matchNumber]].name"> </span>
+                <span class="text-primary" v-text="report.teams[report.teams[0].winners[reportUI.matchNumber]]?.name"> </span>
                 to be the winner for Game <span v-text="reportUI.matchNumber+1"> </span>
             </span>
         </template>
@@ -24,7 +24,7 @@
             <div class="fst-italic fs-7">
                 <span>
                     Organizer has chosen
-                    <span  class="text-primary" v-text="report.teams[report.organizerWinners[reportUI.matchNumber]].name"> </span>
+                    <span  class="text-primary" v-text="report.teams[report.organizerWinners[reportUI.matchNumber]]?.name"> </span>
                     to be the winner for Game <span v-text="reportUI.matchNumber+1"> </span>
                 </span>
             </div>
