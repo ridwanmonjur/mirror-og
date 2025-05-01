@@ -323,15 +323,15 @@ async function fetchMembers(event = null) {
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-1  py-1">
-                                <span class=" d-inline-block ${!captainJson || member.id != captainJson?.team_member_id && 'd-none'}">
+                                <span class="  ">
                                     <img 
-                                        class="z-99 rounded-pill me-1 captain-crown"
+                                        class="z-99 rounded-pill me-1 captain-crown ${captainJson && member.id == captainJson.team_member_id ? ' d-inline-block' : '  d-none '} "
                                         height="20" 
                                         width="20" 
                                         src="/assets/images/participants/crown-straight.png"
                                     >
                                 </span>
-                                ${member?.user?.name}
+                                ${member?.user?.name}sss
                                 <span class="fs-4 ms-3">${member?.user?.participant?.region_flag }</span>
                             </h6>
                             <td class="text-secondary">${window.formatDateLuxon(member.created_at)}</td>
