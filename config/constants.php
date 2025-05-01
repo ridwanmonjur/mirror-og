@@ -246,7 +246,8 @@ return [
         'OVER' => 1,
         'EARLY' => 2,
         'NORMAL' => 3,
-        'TOO_EARLY' => 4
+        'TOO_EARLY' => 4,
+        'CLOSED' => 5
     ],
 
     'SETTINGS_ROUTE_ACTION' => [
