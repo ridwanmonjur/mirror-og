@@ -680,10 +680,10 @@ function BracketData() {
 
         
         if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-          this.setDisabled({...this.reportUI, matchNumber: match_number});
+          this.setDisabled({...this.reportUI, matchNumber: Number(match_number)});
         }  else {
           this.reportUI = {
-            ...this.reportUI, matchNumber: match_number
+            ...this.reportUI, matchNumber: Number(match_number)
           }
         }
       } catch (error) {
@@ -939,7 +939,11 @@ function BracketData() {
             let data = change.doc.data();
             let id = change.doc.id;
 
-            if (change.type === "added" || change.type === "modified") {
+            if (change.type=="modified") {
+              return;
+            }
+
+            if (change.type === "added" ) {
               allDisputes[data['match_number']] = {
                 ...data, id
               };
