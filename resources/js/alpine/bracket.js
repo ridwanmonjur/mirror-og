@@ -939,10 +939,6 @@ function BracketData() {
             let data = change.doc.data();
             let id = change.doc.id;
 
-            // if (change.type=="modified") {
-              // return;
-            // }
-
             if (change.type === "added"|| change.type == "modified") {
               allDisputes[data['match_number']] = {
                 ...data, id
@@ -962,16 +958,21 @@ function BracketData() {
 
     getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
       const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
-      console.log(classNamesWithoutPrecedingDot);
+      let initialLoad = true;
+
       let subscribeToCurrentReportSnapshot = onSnapshot(
         currentReportRef,
         async (reportSnapshot) => {
           if (reportSnapshot.exists()) {
             let data = reportSnapshot.data();
-            console.log({data});
             data['id'] = reportSnapshot.id;
             this.report = updateReportFromFirestore(newReport, data)
             if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) {
+              if (!initialLoad) {
+                let matchNumber = this.reportUI.matchNumber;
+                newReportUI['matchNumber'] = matchNumber;
+              }
+
               this.setDisabled(newReportUI);
             }
 
@@ -994,19 +995,16 @@ function BracketData() {
             })
 
             this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
+            initialLoad = false;
           } else {
             this.report = { ...newReport };
             this.reportUI = { ...newReportUI }
             this.dispute = [null, null, null];
-            window.closeLoading()
+            window.closeLoading();
+            initialLoad = false;
           }
         }
       );
-
-      console.log(this.report);
-      console.log(this.report);
-      console.log(this.report);
-      console.log(this.report);
 
       this.subscribeToCurrentReportSnapshot = subscribeToCurrentReportSnapshot;
     },
@@ -1073,14 +1071,14 @@ function BracketData() {
             };
 
             await updateDoc(reportRef, updatedRemaining);
-
-            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-              this.setDisabled({...this.reportUI, matchNumber: Number(currentMatch)});
-            }  else {
-              this.reportUI = {
-                ...this.reportUI, matchNumber: Number(currentMatch)
-              }
-            }
+            this.setDisabled({...this.reportUI});
+            // if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
+            //   this.setDisabled({...this.reportUI, matchNumber: Number(currentMatch)});
+            // }  else {
+            //   this.reportUI = {
+            //     ...this.reportUI, matchNumber: Number(currentMatch)
+            //   }
+            // }
 
             window.Toast.fire({
               icon: 'success',
@@ -1144,25 +1142,14 @@ function BracketData() {
           };
 
           await updateDoc(disputeRef, updateData);
-          const docSnap = await getDoc(disputeRef);
-          if (docSnap.exists()) {
-            let id = disputeRef.id;
-            let data = docSnap.data();
-            
-            this.dispute = this.dispute.map((item, index) => 
-              index == match_number ? { ...data, id } : item
-            );
+          let disputeResolved = [...this.report.disputeResolved];
+          disputeResolved[this.reportUI.matchNumber] = false;
+          let updatedRemaining = {
+            disputeResolved
+          };
 
-            const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
-            const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-            const reportRef = doc(allMatchStatusesCollectionRef, customDocId);
-            let disputeResolved = [...this.report.disputeResolved];
-            disputeResolved[this.reportUI.matchNumber] = false;
-            let updatedRemaining = {
-              disputeResolved
-            };
-            await updateDoc(reportRef, updatedRemaining);
-          }
+          await updateDoc(reportRef, updatedRemaining);
+          
         } else {
           handleCancelResponse();
         }
