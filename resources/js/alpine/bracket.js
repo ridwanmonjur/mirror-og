@@ -793,12 +793,14 @@ function BracketData() {
     },
 
     changeMatchNumber(increment) {
+      let newNo = Number(this.reportUI.matchNumber) + Number(increment);
+      let demoNo = newNo + 1;
       this.reportUI = {
         ...this.reportUI,
-        matchNumber: this.reportUI.matchNumber + increment,
-        statusText: this.reportUI.disabled[this.reportUI.matchNumber + increment] ?
+        matchNumber: newNo,
+        statusText: this.reportUI.disabled[newNo] ?
           'Selection is not yet available.' :
-          `Select a winner for Game ${this.reportUI.matchNumber + 1 + increment}`
+          `Select a winner for Game ${demoNo}`
       };
 
     },
