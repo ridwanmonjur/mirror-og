@@ -8,7 +8,7 @@
                         v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == dispute[reportUI.matchNumber]?.dispute_teamNumber">
                         <div class="mt-2">
                             <p class="text-success mt-2">
-                                <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber].name">
+                                <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber]?.name">
                                 </span> has conceded the dispute. Winner is to be decided by the organizer.
                             </p>
                         </div>

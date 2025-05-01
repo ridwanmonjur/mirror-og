@@ -136,7 +136,7 @@
                                             class="response_form d-none row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
                                             <form method="POST" v-on:submit="respondDisputeForm(event)" id="respondForm">
                                                 <input type="hidden" name="action" value="respond">
-                                                <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.matchNumber]?.id">
+                                                <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.teamNumber]?.id">
                                                 <input type="hidden" name="response_teamNumber" v-bind:value="reportUI.teamNumber">
                                                 <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber]?.match_number">
                                                 <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber]?.id">
@@ -186,7 +186,7 @@
                         {{-- <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
                             @include('includes.__BracketModal.__Dispute.Winner')
                         </template> --}}
-                         <template v-if="dispute[reportUI.matchNumber]?.resolution_winner"> 
+                         <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner"> 
                             @include('includes.__BracketModal.__Dispute.MissingWinner')
                         </template>
                         <br>
@@ -197,7 +197,7 @@
                             </button>
                         </div>
                         <br>
-                        <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner && report.teams[reportUI.teamNumber]?.id == dispute[reportUI.matchNumber]?.dispute_teamId">
+                        <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner && reportUI.teamNumber == dispute[reportUI.matchNumber]?.dispute_teamNumber">
                             <div class="text-center">
                                 <form method="POST" v-on:submit="resolveDisputeForm(event)">
                                     <input type="hidden" name="action" value="resolve">

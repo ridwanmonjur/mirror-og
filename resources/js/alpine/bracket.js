@@ -653,16 +653,15 @@ function BracketData() {
       await updateDoc(disputeRef, updateData);
       const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-      const docRef = doc(allMatchStatusesCollectionRef, customDocId);
+      const reportRef = doc(allMatchStatusesCollectionRef, customDocId);
 
       try {
         let newRealWinners = [...this.report.realWinners];
         let matchStatusNew = [...this.report.matchStatus];
         let disputeResolved = [...this.report.disputeResolved];
-
         disputeResolved[this.reportUI.matchNumber] = true;
         if (match_number != 2) {
-          matchStatusNew[Number(match_number)+1] = "ONGOING";
+          matchStatusNew[Number(this.reportUI.matchNumber)+1] = "ONGOING";
         }
         newRealWinners[this.reportUI.matchNumber] = resolution_winner;
         
@@ -675,25 +674,17 @@ function BracketData() {
 
         updatedRemaining['score'] = calcScores(updatedRemaining);
         
-        await updateDoc(docRef, updatedRemaining);
+        await updateDoc(reportRef, updatedRemaining);
 
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          let id = docRef.id;
-          let data = docSnap.data();
-
-          this.report = {
-            ...this.report,
-            ...updatedRemaining
-          };
-
-          this.dispute = this.dispute.map((item, index) => 
-            index == updateData[this.reportUI.matchNumber] ? { ...data, id } : item
-          );
         
-          if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-            this.setDisabled(this.reportUI);
-          } 
+
+        
+        if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
+          this.setDisabled({...this.reportUI, matchNumber: match_number});
+        }  else {
+          this.reportUI = {
+            ...this.reportUI, matchNumber: match_number
+          }
         }
       } catch (error) {
         console.error("Error adding document: ", error);
@@ -1061,19 +1052,12 @@ function BracketData() {
             let { files } = await fileStore.uploadToServer('claim');
       
             let disputeDto = createDisputeDto(newFormObject, files);
-
+            let currentMatch = this.reportUI.matchNumber;
             validateDisputeCreation(disputeDto);
             let newDisputeId = `${this.report.teams[0].position}.`+`${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
-            // TODO cloud functions
-            const docSnap = await getDoc(disputesRef);
-            if (docSnap.exists()) {
-              let data = docSnap.data();
-              this.dispute = this.dispute.map((item, index) => 
-                index == disputeDto['match_number'] ? { ...data, id: newDisputeId } : item
-              );
-            }
+            
 
             const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
             const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
@@ -1085,6 +1069,14 @@ function BracketData() {
             };
 
             await updateDoc(reportRef, updatedRemaining);
+
+            if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
+              this.setDisabled({...this.reportUI, matchNumber: Number(currentMatch)});
+            }  else {
+              this.reportUI = {
+                ...this.reportUI, matchNumber: Number(currentMatch)
+              }
+            }
 
             window.Toast.fire({
               icon: 'success',
