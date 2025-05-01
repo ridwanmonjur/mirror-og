@@ -91,7 +91,7 @@ class MiscController extends Controller
                 'success' => true,
                 'message' => 'Seeding completed successfully',
                 'data' => [
-                    'events_count' => $eventIds,
+                    'events' => $eventIds,
                     'participants' => $participants,
                     'organizers' => $organizers
                 ]
