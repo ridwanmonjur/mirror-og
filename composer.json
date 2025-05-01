@@ -110,9 +110,7 @@
             "npm ci",
             "npm run build",
             "rm -rf node_modules",
-            "php artisan config:cache",
-            "php artisan route:cache",
-            "php artisan view:cache'"
+            "php artisan config:cache"
         ],
         "staging": [
             "rm -rf node_modules",
