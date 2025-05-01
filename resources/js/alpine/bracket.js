@@ -939,11 +939,11 @@ function BracketData() {
             let data = change.doc.data();
             let id = change.doc.id;
 
-            if (change.type=="modified") {
-              return;
-            }
+            // if (change.type=="modified") {
+              // return;
+            // }
 
-            if (change.type === "added" ) {
+            if (change.type === "added"|| change.type == "modified") {
               allDisputes[data['match_number']] = {
                 ...data, id
               };
@@ -1063,8 +1063,6 @@ function BracketData() {
             let newDisputeId = `${this.report.teams[0].position}.`+`${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
-            
-
             const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
             const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
             const reportRef = doc(allMatchStatusesCollectionRef, customDocId);

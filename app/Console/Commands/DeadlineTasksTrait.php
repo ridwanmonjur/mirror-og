@@ -155,14 +155,14 @@ trait DeadlineTasksTrait
         $disputeRefList = [null, null, null];
         for ($i = 0; $i < 3; $i++) {             
             if (!isset($realWinners[$i])) {
-                if (!isset($disputeResolved[$i])) {
+                if (!$disputeResolved[$i]) {
                     $disputePath =  $bracket['team1_position'] . '.' . $bracket['team2_position'] . '.' . $i;
                     $disputeRef = $this->firestore->database()->collection('event')->document($eventId)->collection('disputes')->document($disputePath);
                     $disputeDoc = $disputeRef?->snapshot();
                     if ($disputeDoc->exists()) {
                         $data = $disputeDoc->data();
                         // Case 1: One team filed a dispute but the other hasn't responded yet
-                        if ($data['dispute_teamNumber'] && !isset($data['response_teamId'])) {
+                        if (isset($data['dispute_teamNumber']) && !isset($data['response_teamId'])) {
                             $isUpdatedDispute = true;
                             $realWinners[$i] = (string) $data['dispute_teamNumber'];
                             $disputeResolved[$i] = true;
@@ -354,10 +354,11 @@ trait DeadlineTasksTrait
 
     }
     
-    public function handleOrgTasks(Collection $orgBracketDeadlines, $bracketInfo, $tierId) {
-        foreach ($orgBracketDeadlines as $bracket) {
-            $updateValues = [];
+    public function handleOrgTasks(Collection $orgBrackets, $bracketInfo, $tierId) {
+        foreach ($orgBrackets as $bracket) {
             $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
+            $updateValues = [];
+
             $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
             $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
             $snapshot = $docRef->snapshot();
@@ -368,9 +369,9 @@ trait DeadlineTasksTrait
                     $updateDisputeValues, 
                     $updateValues 
                 ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, true );
-                Log::info(">>>>UPDATE " );
+                Log::info(">>>>UPDATE " . $matchStatusPath);
                 Log::info( $updateValues);
-
+                Log::info( $updateDisputeValues);
                 if (!empty($updateValues)) {
                     $docRef->update($updateValues);
                 }
