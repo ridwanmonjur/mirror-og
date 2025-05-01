@@ -7,7 +7,7 @@ import {
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
 import tippy from 'tippy.js';
-import { initialBracketData, calcScores, updateReportFromFirestore, createReportTemp, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
+import { initialBracketData, calcScores, updateReportFromFirestore, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
 
 window.specialTippy = [];
 window.popoverIdToPopover = window.activePopovers || {};
@@ -568,16 +568,12 @@ function BracketData() {
       
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
-
         let update = createReportTemp(this.report);
-  
-
         if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
           let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1";
           update.organizerWinners[matchNumber] = otherIndex;
           update.realWinners[matchNumber] = otherIndex;
           update.score = calcScores(update);
-
         }
 
         if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
@@ -612,9 +608,7 @@ function BracketData() {
 
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
-
         let update = createReportTemp(this.report);
-  
         update.organizerWinners[matchNumber] = null;
         update.realWinners[matchNumber] = null;
         update.score = calcScores(update);
@@ -622,6 +616,7 @@ function BracketData() {
         await this.saveReport(update);
       }
     },
+
     async resolveDisputeForm(event) {
       event.preventDefault();
       const form = event.currentTarget;
@@ -656,28 +651,31 @@ function BracketData() {
       };
 
       await updateDoc(disputeRef, updateData);
-
       const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(allMatchStatusesCollectionRef, customDocId);
 
       try {
-        let winnerNew = [...this.report.realWinners];
-        let updatedRemaining = {
-          matchStatus: [...this.report.matchStatus],
-          completeMatchStatus: match_number == 2 ? "ENDED": "ONGOING"
-        };
-  
-        updatedRemaining.matchStatus[match_number] = "ENDED";
+        let newRealWinners = [...this.report.realWinners];
+        let matchStatusNew = [...this.report.matchStatus];
+        let disputeResolved = [...this.report.disputeResolved];
+
+        disputeResolved[this.reportUI.matchNumber] = true;
         if (match_number != 2) {
-          updatedRemaining.matchStatus[Number(match_number)+1] = "ONGOING";
+          matchStatusNew[Number(match_number)+1] = "ONGOING";
         }
+        newRealWinners[this.reportUI.matchNumber] = resolution_winner;
         
-        winnerNew[this.reportUI.matchNumber] = resolution_winner;
-        await updateDoc(docRef, {
-          winners: winnerNew,
-          ...updatedRemaining
-        });
+        let updatedRemaining = {
+          matchStatus: matchStatusNew,
+          completeMatchStatus: match_number == 2 ? "ENDED": "ONGOING",
+          realWinners: newRealWinners,
+          disputeResolved,
+        };
+
+        updatedRemaining['score'] = calcScores(updatedRemaining);
+        
+        await updateDoc(docRef, updatedRemaining);
 
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -686,7 +684,7 @@ function BracketData() {
 
           this.report = {
             ...this.report,
-            realWinners : [...winnerNew]
+            ...updatedRemaining
           };
 
           this.dispute = this.dispute.map((item, index) => 
@@ -748,11 +746,9 @@ function BracketData() {
     },
     showImageModal(imgPath, mediaType) {
       const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
-            
       const imagePreview = document.getElementById('imagePreview');
       const videoPreview = document.getElementById('videoPreview');
       const videoSource = document.getElementById('videoSource');
-      
       imagePreview.style.display = 'none';
       videoPreview.style.display = 'none';
       
@@ -767,6 +763,7 @@ function BracketData() {
       
       if (modal) modal.show();
     },
+
     selectTeamToWin(event, index) {
       this.clearSelection();
       let selectedButton = event.currentTarget;
@@ -803,6 +800,7 @@ function BracketData() {
 
       });
     },
+
     changeMatchNumber(increment) {
       this.reportUI = {
         ...this.reportUI,
@@ -813,9 +811,11 @@ function BracketData() {
       };
 
     },
+    
     getDisabled() {
       return this.reportUI.disabled[this.reportUI.matchNumber];
     },
+    
     setDisabled(reportUI = {}) {
       let disabledList = [false, false, false];
 
@@ -829,6 +829,7 @@ function BracketData() {
         disabled: [...disabledList]
       };
     },
+    
     resetDotsToContainer() {
       let parent = document.getElementById('reportModal');
       let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
@@ -842,10 +843,9 @@ function BracketData() {
         });
       });
     },
+    
     async init() {
-
       if (hiddenUserId) {
-      
         const { user, claims } = await initializeFirebaseAuth();
         this.firebaseUser = user;
         this.userClaims = claims;
@@ -865,11 +865,8 @@ function BracketData() {
 
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
-
         let newReport = {}, newReportUI = {};
-
         let eventUpdate = event?.detail ?? null;
-
         this.clearSelection();
         if (this.subscribeToMatchStatusesSnapshot)
           this.subscribeToMatchStatusesSnapshot();
@@ -880,8 +877,6 @@ function BracketData() {
           (eventUpdate.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
 
         let otherTeamNumber = teamNumber === 0 ? 1 : 0;
-
-
         if (!eventUpdate) {
           newReport = {
             ...initialData.report,
@@ -958,6 +953,7 @@ function BracketData() {
             }
           });
 
+          console.log({allDisputes});
 
           this.dispute = [...allDisputes];
         }
@@ -1003,9 +999,7 @@ function BracketData() {
             this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
           } else {
             this.report = { ...newReport };
-
             this.reportUI = { ...newReportUI }
-
             this.dispute = [null, null, null];
             window.closeLoading()
           }
@@ -1066,30 +1060,10 @@ function BracketData() {
           try {
             let { files } = await fileStore.uploadToServer('claim');
       
-            const disputeDto = {
-              report_id: newFormObject.report_id,
-              match_number: newFormObject.match_number,
-              event_id: newFormObject.event_id,
-              dispute_userId: newFormObject.dispute_userId,
-              dispute_teamId: newFormObject.dispute_teamId,
-              dispute_teamNumber: newFormObject.dispute_teamNumber,
-              dispute_reason: newFormObject.dispute_reason,
-              dispute_description: newFormObject.dispute_description || null,
-              dispute_image_videos: files,
-              // Initialize optional fields as null
-              response_userId: null,
-              response_teamId: null,
-              response_teamNumber: null,
-              response_explanation: null,
-              resolution_winner: null,
-              resolution_resolved_by: null,
-
-              created_at: serverTimestamp(),
-              updated_at: serverTimestamp()
-            };
+            let disputeDto = createDisputeDto(newFormObject, files);
 
             validateDisputeCreation(disputeDto);
-            let newDisputeId = `${this.report.teams[0].position}.${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
+            let newDisputeId = `${this.report.teams[0].position}.`+`${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
             // TODO cloud functions
@@ -1100,6 +1074,17 @@ function BracketData() {
                 index == disputeDto['match_number'] ? { ...data, id: newDisputeId } : item
               );
             }
+
+            const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
+            const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
+            const reportRef = doc(allMatchStatusesCollectionRef, customDocId);
+            let disputeResolved = [...this.report.disputeResolved];
+            disputeResolved[this.reportUI.matchNumber] = false;
+            let updatedRemaining = {
+              disputeResolved
+            };
+
+            await updateDoc(reportRef, updatedRemaining);
 
             window.Toast.fire({
               icon: 'success',
@@ -1171,6 +1156,16 @@ function BracketData() {
             this.dispute = this.dispute.map((item, index) => 
               index == match_number ? { ...data, id } : item
             );
+
+            const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
+            const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
+            const reportRef = doc(allMatchStatusesCollectionRef, customDocId);
+            let disputeResolved = [...this.report.disputeResolved];
+            disputeResolved[this.reportUI.matchNumber] = false;
+            let updatedRemaining = {
+              disputeResolved
+            };
+            await updateDoc(reportRef, updatedRemaining);
           }
         } else {
           handleCancelResponse();

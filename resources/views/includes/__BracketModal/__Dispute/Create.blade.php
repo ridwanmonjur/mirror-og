@@ -1,5 +1,4 @@
 <div>
-    {{-- CREATE FORM --}}
     <form method="POST" v-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
         <input type="hidden" name="action" value="create">
         <input type="hidden" name="event_id" value="{{ $event->id }}">
