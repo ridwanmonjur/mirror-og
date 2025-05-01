@@ -7,7 +7,7 @@ import {
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
 import tippy from 'tippy.js';
-import { initialBracketData, calcScores, updateReportFromFirestore, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
+import { initialBracketData, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
 
 window.specialTippy = [];
 window.popoverIdToPopover = window.activePopovers || {};
@@ -485,18 +485,10 @@ function BracketData() {
       let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
       let update = createReportTemp(this.report);
 
-      const result = await window.Swal.fire({
+      const result = await showSwal({
         title: 'Choosing the winner',
-        html: `
-            Are you sure you want to choose the winner?
-        `,
-        showCancelButton: true,
-        confirmButtonColor: "#43A4D7",
+        html: `Are you sure you want to choose the winner?`,
         confirmButtonText: 'Make Choice',
-        cancelButtonText: 'Back',
-        padding: '2em',
-        confirmButtonColor: '#43A4D7',
-        reverseButtons: true,
       });
 
       if (result.isConfirmed) {
@@ -520,7 +512,6 @@ function BracketData() {
           });
 
           response = await response.json(); 
-    
           if (!response.success) {
             window.toastError(response.message || 'An error has occurred!');
             return;
@@ -552,20 +543,12 @@ function BracketData() {
       }
     },
     async onChangeTeamToWin() {
-      const result = await window.Swal.fire({
+      const result = await showSwal({
         title: 'Changing the winner',
-        html: `
-            Are you sure you want to change the winner?
-        `,
-        showCancelButton: true,
-        confirmButtonColor: "#43A4D7",
+        html: `Are you sure you want to change the winner?`,
         confirmButtonText: 'Change Declaration',
-        cancelButtonText: 'Back',
-        padding: '2em',
-        confirmButtonColor: '#43A4D7',
-        reverseButtons: true,
       });
-      
+     
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
         let update = createReportTemp(this.report);
@@ -592,19 +575,12 @@ function BracketData() {
     },
     
     async onRemoveTeamToWin() {
-      const result = await window.Swal.fire({
+      const result = await showSwal({
         title: 'Remove the winner',
-        html: `
-            Are you sure you want to remove the winner?
-        `,
-        confirmButtonColor: "#43A4D7",
-        showCancelButton: true,
-        confirmButtonText: 'Remove Declaration',
-        cancelButtonText: 'Back',
-        padding: '2em',
-        confirmButtonColor: '#43A4D7',
-        reverseButtons: true,
+        html: `Are you sure you want to remove the winner?`,
+        confirmButtonText: 'Change Declaration',
       });
+
 
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
@@ -673,12 +649,7 @@ function BracketData() {
         };
 
         updatedRemaining['score'] = calcScores(updatedRemaining);
-        
-        await updateDoc(reportRef, updatedRemaining);
-
-        
-
-        
+        await updateDoc(reportRef, updatedRemaining);        
         if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
           this.setDisabled({...this.reportUI, matchNumber: Number(match_number)});
         }  else {
@@ -1030,7 +1001,7 @@ function BracketData() {
       const { reportReason, otherReasonText, ...newFormObject } = formObject;
       formObject = null;
       newFormObject['dispute_reason'] = dispute_reason;
-      window.Swal.fire({
+      const result = await showSwal({
         title: 'Submitting a Dispute',
         html: `
           <div class="text-left">
@@ -1044,19 +1015,14 @@ function BracketData() {
               
           </div>
         `,
-        confirmButtonColor: "#43A4D7",
-        showCancelButton: true,
         confirmButtonText: 'Submit Dispute',
-        cancelButtonText: 'Back',
-        padding: '2em',
-        reverseButtons: true,
-      }).then(async (result) => {
+      });
+      
         if (result.isConfirmed) {
           try {
             let { files } = await fileStore.uploadToServer('claim');
       
             let disputeDto = createDisputeDto(newFormObject, files);
-            let currentMatch = this.reportUI.matchNumber;
             validateDisputeCreation(disputeDto);
             let newDisputeId = `${this.report.teams[0].position}.`+`${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
@@ -1072,13 +1038,6 @@ function BracketData() {
 
             await updateDoc(reportRef, updatedRemaining);
             this.setDisabled({...this.reportUI});
-            // if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-            //   this.setDisabled({...this.reportUI, matchNumber: Number(currentMatch)});
-            // }  else {
-            //   this.reportUI = {
-            //     ...this.reportUI, matchNumber: Number(currentMatch)
-            //   }
-            // }
 
             window.Toast.fire({
               icon: 'success',
@@ -1088,9 +1047,8 @@ function BracketData() {
             console.error("Error adding document: ", error);
           }
         }
-      });
-
     },
+
     async respondDisputeForm(event) {
       event.preventDefault();
       const form = event.target;
@@ -1113,7 +1071,7 @@ function BracketData() {
         return;
       }
 
-      window.Swal.fire({
+      const result = await showSwal({
         title: 'Responding to a Dispute',
         html: `
             <p class="mt-2 mb-2">An opponent team has raised a dispute and requires your response.</p>
@@ -1121,11 +1079,11 @@ function BracketData() {
             <p class="mt-2">A dispute submission is only consumed when you raise a dispute and submit it.</p>
             <p class="mt-2">A dispute submission will be returned if a dispute resolves in the disputing team's favour.</p>
         `,
-        confirmButtonColor: "#43A4D7",
         confirmButtonText: 'Continue',
         width: 500,
-        padding: '2em',
-      }).then(async (result) => {
+
+      });
+    
         if (result.isConfirmed) {
           let { files } = await fileStore.uploadToServer('response');
 
@@ -1153,8 +1111,8 @@ function BracketData() {
         } else {
           handleCancelResponse();
         }
-      });
-    }
+      }
+    
   };
 
 }
