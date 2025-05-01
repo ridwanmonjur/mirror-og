@@ -24,7 +24,7 @@
                         </div>
                     </template>
 
-                    <div class="mt-2 mb-3">
+                    <div class="mt-2 mb-2">
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-sm border rounded-pill text-primary border-primary" data-bs-toggle="modal"
                                 data-bs-target="#disputeModal" data-bs-dismiss="modal"> Show dispute </button>
@@ -77,7 +77,7 @@
                                     <p class="text-red mt-2">
                                         The results of this match are disputed.
                                     </p>
-                                    <div class="mt-2 mb-3">
+                                    <div class="mt-2 mb-2">
                                         <div class="d-flex justify-content-center">
                                             <button class="btn btn-sm border rounded-pill text-primary border-primary"
                                                 data-bs-toggle="modal" data-bs-target="#disputeModal"

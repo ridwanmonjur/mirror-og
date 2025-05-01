@@ -6,7 +6,7 @@
             </div>
               <div class="modal-body text-center p-0">
                 <!-- Image container (hidden for videos) -->
-                <img id="imagePreview" class="img-fluid object-fit-cover" alt="Full size image" style="max-height: 70vh; display: none;">
+                <img id="imagePreview" class="img-fluid object-fit-cover mx-auto" alt="Full size image" style="max-height: 70vh; display: none;">
                 
                 <!-- Video container (hidden for images) -->
                 <video id="videoPreview" controls class="img-fluid" style="max-height: 70vh; display: none;">

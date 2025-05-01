@@ -9,7 +9,7 @@
                     </div>
                     
                     <div class="preview-container" >
-                        <img id="imagePreview" class="img-fluid">
+                        <img id="imagePreview" class="img-fluid mx-auto">
                     </div>
                 </div>
             </div>
