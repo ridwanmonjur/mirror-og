@@ -11,7 +11,7 @@
                     href="{{route('participant.member.manage', ['id'=> $selectTeam->id ])}}"
                     clss="ms-2  small py-1 mx-0"
                 > 
-                <button role="btn" class="btn text-primary text-primary  cursor-pointer  px-2">
+                <button role="btn" class="btn  simple-button text-primary text-primary  cursor-pointer  px-2">
                     Manage Members
                 </button>
             </span>
