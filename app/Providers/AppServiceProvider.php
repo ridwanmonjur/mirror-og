@@ -47,6 +47,9 @@ class AppServiceProvider extends ServiceProvider
                 && in_array($request->user()->email, [
                     'mjrrdn@gmail.com',
                     'mjrrdnasm@gmail.com',
+                    'ridwan@driftwood.gg',
+                    'zach@driftwood.gg',
+                    'leigh@driftwood.gg',
                     env('MAIL_CC_ADDRESS')
                 ]);
             }
