@@ -173,10 +173,9 @@ uploadButton2?.addEventListener("click", function () {
 imageUpload?.addEventListener("change", uploadImageToBanner);
 function uploadImageToBanner(event) {
     var file = event.target.files[0];
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if (!validTypes.includes(file.type)) {
-        toastError("Please select only PNG or JPG/JPEG images!");
-        imageUpload.value = ""; 
+    if (!file.type.startsWith('image/')) {
+        toastError("Please select an image file!");
+        imageUpload.value = "";
         return;
     }
     
