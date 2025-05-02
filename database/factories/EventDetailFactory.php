@@ -76,7 +76,9 @@ final class EventDetailFactory extends Factory
      */
     public function seed($eventIndex, $options)
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'role'=> 'ORGANIZER'
+        ]);
 
         $eventCategory = EventCategory::where('gameTitle', 'Dota 2')->first();
         if (!$eventCategory) {

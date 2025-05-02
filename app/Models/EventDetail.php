@@ -162,11 +162,11 @@ class EventDetail extends Model
         $now = now();
 
         $status = $this->statusResolved();
-        Task::where('taskable_id', $this->id)
+        Task::where('taskable_id', $this->getKey())
             ->where('taskable_type', EventDetail::class)
             ->delete();
 
-        if ($status !== 'PENDING' || $status!= 'DRAFT' || $status !== 'PREVIEW') {
+        if ($status !== 'PENDING' && $status!= 'DRAFT' && $status !== 'PREVIEW') {
             $tasksData = [
                 [
                     'taskable_id' => $this->getKey(),
@@ -185,14 +185,15 @@ class EventDetail extends Model
             ];
 
             if ($this->sub_action_public_date) {
-                $tasksData[] = [
-                    [
-                        'event_id' => $this->getKey(),
-                        'task_name' => 'live',
-                        'action_time' => date_create_from_format('Y-m-d', $this->sub_action_public_date),
-                        'created_at' => $now,
-                    ]
+                $tasksData[] = 
+                [
+                    'task_name' => 'live',
+                    'action_time' => $this->sub_action_public_date . ' ' . $this->sub_action_public_time,
+                    'created_at' => $now,
+                    'taskable_id' => $this->getKey(),
+                    'taskable_type' => EventDetail::class,  
                 ];
+                
             }
 
             Task::insert($tasksData);
@@ -217,6 +218,7 @@ class EventDetail extends Model
         
         $deadlinesToCreate = [];
         $tasksToCreate = [];
+
 
         foreach ($deadlineConfig as $stage => $innerStages) {
             foreach ($innerStages as $innerStage => $times) {
