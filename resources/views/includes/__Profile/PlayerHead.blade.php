@@ -11,7 +11,7 @@
     <input type="hidden" id="initialParticipantData" value="{{ json_encode($userProfile->participant) }}">
     <div class="d-flex justify-content-end align-items-center py-0 my-0 mb-2 mx-3 flex-wrap">
         @if ($isUserSame)
-            <input type="file" id="backgroundInput" accept=".png, .jpg, .jpeg, image/png, image/jpeg" class="d-none">
+            <input type="file" id="backgroundInput" accept="image/*" class="d-none">
             <button data-bs-toggle="offcanvas" data-bs-target="#profileDrawer" v-on:click="isEditMode=false" v-cloak
                 v-show="!isEditMode" {{-- onclick="document.getElementById('backgroundInput').click();" --}}
                 class="btn btn-secondary text-light rounded-pill py-2 me-3 fs-7">
