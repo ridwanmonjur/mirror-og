@@ -42,7 +42,7 @@
                 </div>
             </label>
             @if ($isUserSame)
-                <input type="file" id="image-upload" accept=".png, .jpg, .jpeg, image/png, image/jpeg"
+                <input type="file" id="image-upload" accept="image/*"
                     style="display: none;">
             @endif
         </div>
