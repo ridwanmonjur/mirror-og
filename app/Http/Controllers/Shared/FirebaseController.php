@@ -186,7 +186,11 @@ class FirebaseController extends Controller
                 'team1Winners' => ['0', '1', '0'],
                 'team2Winners' => ['1', '0', '1']
             ],
-            'W11.W12' => [
+            'W11.W1' => [
+                'team1Winners' => ['0', '1', '0'],
+                'team2Winners' => ['1', '0', '1']
+            ],
+            'W13.W14' => [
                 'team1Winners' => [null,null,null],
                 'team2Winners' => [null,null,null]
             ],
@@ -219,7 +223,6 @@ class FirebaseController extends Controller
             $id,
             count($specificIds), 
             $customValuesArray,
-            'matches',         
             $specificIds
         );
     }

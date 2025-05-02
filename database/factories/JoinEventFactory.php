@@ -87,17 +87,16 @@ final class JoinEventFactory extends Factory
 
         foreach ($joinEvents as $joinEvent) {
             foreach ($members as $teamMember) {
-             
-                // Create new roster member
-                RosterMember::updateOrCreate([
-                    'user_id' => $teamMember->user_id,
-                    'join_events_id' => $joinEvent->id,
-                    'team_member_id' => $teamMember->id,
-                ],[
-                    'team_id' => $joinEvent->team_id,
-                    'vote_to_quit' => false,
-                ]);
-                
+                if ($teamMember->team_id == $joinEvent->team_id) {
+                    RosterMember::updateOrCreate([
+                        'user_id' => $teamMember->user_id,
+                        'join_events_id' => $joinEvent->id,
+                        'team_member_id' => $teamMember->id,
+                    ],[
+                        'team_id' => $joinEvent->team_id,
+                        'vote_to_quit' => false,
+                    ]);
+                }
             }
         }
         

@@ -49,8 +49,6 @@ class BracketsFactory extends Factory
             'eventTier' => 'Dolphin'
         ]
     ]) {
-        // $eventDetailFactory = new EventDetailFactory();
-        // $eventDetailFactory->deleteRelatedTables();
 
         $joinEventFactory = new JoinEventFactory();
         $result = $joinEventFactory->seed($options);
