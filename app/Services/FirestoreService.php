@@ -29,7 +29,6 @@ class FirestoreService
      * @param string $baseId Base ID prefix for documents
      * @param int $count Number of documents to create
      * @param array $customValuesArray Array of custom values for each document
-     * @param string $collectionName The collection name
      * @param array $specificIds Optional array of specific IDs to use instead of sequential ones
      * @return array Response with status and document references
      */
@@ -37,7 +36,6 @@ class FirestoreService
         string| int $eventId,
         int $count, 
         array $customValuesArray = [], 
-        string $collectionName = 'matches',
         array $specificIds = []
     ) {
         $results = [];
