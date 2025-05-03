@@ -51,22 +51,7 @@ class StripeController extends Controller
                
             }
 
-            $paymentIntentDB = PaymentIntent::where([
-                'user_id' => $user->id,
-                'status' => 'requires_payment_method'
-            ])->first();
-
-            try {
-                $paymentIntentStripe = $paymentIntentDB?->payment_intent_id ?
-                    $this->stripeClient->retrieveStripePaymentByPaymentId($paymentIntentDB?->payment_intent_id)
-                    : null;
-            
-                $willCreateNewPaymentIntent = ! ($paymentIntentDB && $paymentIntentStripe 
-                    && $paymentIntentStripe?->status === 'requires_payment_method');
-            } catch (Exception $e) {
-                $paymentIntentStripe = null;
-                $willCreateNewPaymentIntent = true;
-            }
+            $paymentIntentStripe = null;
 
             $paymentIntentStripeBody = [
                 'amount' => +$request->paymentAmount * 100,
@@ -79,9 +64,7 @@ class StripeController extends Controller
                 $paymentIntentStripeBody['capture_method'] = 'automatic_async' ;
             }
             
-            if ($willCreateNewPaymentIntent) {
-                $paymentIntentStripeBody['customer'] = $customer->id;
-                $paymentIntentDB?->delete();
+            $paymentIntentStripeBody['customer'] = $customer->id;
 
                 $paymentIntentStripe = $this->stripeClient->createPaymentIntent($paymentIntentStripeBody);
                 
@@ -93,19 +76,8 @@ class StripeController extends Controller
                     'status' => $paymentIntentStripe->status,
                 ];
         
-                $paymentIntentDB = PaymentIntent::insert($paymentIntentDBBody);
-            } else {
-                $paymentIntentStatus = 'retrieved';
-
-
-                $this->stripeClient->updatePaymentIntent($paymentIntentStripe->id, $paymentIntentStripeBody);
-
-                $paymentIntentDB->update([
-                    'customer_id' => $customer->id,
-                    'status' => $paymentIntentStripe->status,
-                    'amount' => $request->paymentAmount,
-                ]);
-            }
+                PaymentIntent::insert($paymentIntentDBBody);
+           
 
             $responseData = [
                 'success' => 'true',
