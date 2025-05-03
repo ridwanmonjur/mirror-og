@@ -225,8 +225,11 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             console.error("Error initializing Stripe Card Payment:", error);
         }
     }
+
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
+        const submitButton = event.target;
+        submitButton.disabled = true;
         try {
             window.showLoading();
             let addressElement = elements.getElement('address');
@@ -236,6 +239,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
              if (!complete) {
                 window.closeLoading();
                 toastError("Please fill the complete address");
+                submitButton.disabled = false;
                 return;
             }
 
@@ -270,6 +274,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                 window.closeLoading();
                 console.log('Payment confirmation error:', error);
                 window.toastError(error.message || 'Payment failed. Please try again.');
+                submitButton.disabled = false;
                 return;
             }
 
@@ -283,7 +288,8 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                 'Failed to process your payment. Please try again later.';
             window.closeLoading();
             window.toastError(errorMessage);
-        }
+            submitButton.disabled = false;
+        } 
     }
     async function initializeStripeEWalletPayment() {
 

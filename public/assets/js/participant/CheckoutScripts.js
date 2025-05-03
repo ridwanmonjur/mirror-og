@@ -271,9 +271,11 @@ class PaymentProcessor {
     }
 
    
+    
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
+        submitButton.disabled = true;
         try {
             window.showLoading();
             const addressElement = elements.getElement('address');
@@ -282,6 +284,7 @@ class PaymentProcessor {
              if (!complete) {
                 window.closeLoading();
                 toastError("Please fill the complete address");
+                submitButton.disabled = false;
                 return;
             }
 
@@ -315,6 +318,7 @@ class PaymentProcessor {
                 window.closeLoading();
                 console.log('Payment confirmation error:', error);
                 window.toastError(error.message || 'Payment failed. Please try again.');
+                submitButton.disabled = false;
                 return;
             }
 
@@ -328,7 +332,9 @@ class PaymentProcessor {
                 'Failed to process your payment. Please try again later.';
             window.closeLoading();
             window.toastError(errorMessage);
-        }
+            submitButton.disabled = false;
+
+        } 
     }
     async function initializeStripeEWalletPayment() {
 
