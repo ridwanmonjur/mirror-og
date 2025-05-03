@@ -375,7 +375,7 @@
                     <p style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
-                <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
+                <div id="Bracket" v-scope="BracketData()"
                      class="tabcontent " >
                     @include('includes.__Public.BracketReport')
                 </div>
