@@ -197,14 +197,14 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::get('/event/{id}/invitation', [OrganizerInvitationController::class, 'index'])->name('event.invitation.index');
             Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
             // Success page
-            Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->middleware('prevent-back-button')
+            Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->middleware('prevent-back-history')
                 ->name('organizer.success.view');
 
             // Live page
-            Route::get('event/{event}/live', [OrganizerEventController::class, 'show'])->middleware('prevent-back-button')
+            Route::get('event/{event}/live', [OrganizerEventController::class, 'show'])->middleware('prevent-back-history')
                 ->name('organizer.live.view');
             // Checkout page
-            Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])->middleware('prevent-back-button')
+            Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])->middleware('prevent-back-history')
                 ->name('organizer.checkout.view');
             Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])->name('organizer.checkout.transition');
 
