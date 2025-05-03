@@ -26,7 +26,6 @@ class StripeController extends Controller
             $customer = $paymentIntentStripe = null;
             $paymentIntentStatus = 'created';
             $customerStatus = 'created';
-            $willCreateNewPaymentIntent = true;
             $isParticipant = $request->role === "PARTICIPANT";
             $isManualCaptureMethod = false;
             if ($isParticipant) {
