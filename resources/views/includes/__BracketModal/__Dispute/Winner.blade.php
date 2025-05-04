@@ -1,5 +1,5 @@
-<div class="my-0 py-0" v-if="dispute[reportUI.matchNumber] && dispute[reportUI.matchNumber].dispute_teamNumber">
-    <template >
+<div class="my-0 py-0" >
+    <template v-if="dispute[reportUI.matchNumber] && dispute[reportUI.matchNumber].dispute_teamNumber">
         <div class="row">
             <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                 <div class="row justify-content-start bg-light border border-3 border rounded px-2 py-2">
@@ -24,7 +24,7 @@
                                     <div class="my-0 py-0">
                                     <template
                                         v-if="
-                                        dispute[reportUI.matchNumber].resolution_resolved_by == disputeLevelEnums['DISPUTEE']
+                                        dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']
                                         && dispute[reportUI.matchNumber]?.dispute_teamNumber
                                         && report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.name
                                     ">

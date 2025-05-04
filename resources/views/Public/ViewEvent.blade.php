@@ -86,7 +86,7 @@
                        
                     </div>
                 </div>
-                <div class="grid-container-two-columns-at-desktop">
+                <div class="grid-container-two-columns-at-desktop px-3">
                     <div class="card-text ">
                         <div>
                             <br class="d-none d-lg-block">
@@ -375,7 +375,7 @@
                     <p style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
-                <div id="Bracket" @vue:mounted="init" v-scope="BracketData()"
+                <div id="Bracket" v-scope="BracketData()"
                      class="tabcontent " >
                     @include('includes.__Public.BracketReport')
                 </div>

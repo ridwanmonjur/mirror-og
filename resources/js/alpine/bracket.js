@@ -809,6 +809,7 @@ function BracketData() {
     },
     
     async init() {
+      console.log(">>>init>>>");
       if (hiddenUserId) {
         const { user, claims } = await initializeFirebaseAuth();
         this.firebaseUser = user;
@@ -1278,19 +1279,29 @@ window.onload = () => {
   }).mount('#Bracket');
 
   const modalIds = ['updateModal', 'reportModal', 'disputeModal'];
+let isModalOpening = false;
 
-  modalIds.forEach(modalId => {
-    const modalElement = document.getElementById(modalId);
-    
-    if (modalElement) {
-      modalElement.addEventListener('show.bs.modal', function() {
-        window.closeAllTippy();
-      });
+modalIds.forEach(modalId => {
+  const modalElement = document.getElementById(modalId);
+  
+  if (modalElement) {
+    modalElement.addEventListener('show.bs.modal', function() {
+      isModalOpening = true;
+      window.closeAllTippy();
+    });
 
-      modalElement.addEventListener('hide.bs.modal', function() {
-        window.openAllTippy();
-      });
-    }
-  });
+    modalElement.addEventListener('shown.bs.modal', function() {
+      isModalOpening = false;
+    });
+
+    modalElement.addEventListener('hide.bs.modal', function() {
+      setTimeout(() => {
+        if (!isModalOpening) {
+          window.openAllTippy();
+        }
+      }, 200);
+    });
+  }
+});
 }
 

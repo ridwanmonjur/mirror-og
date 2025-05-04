@@ -24,15 +24,15 @@ class FirestoreService
 
     
     /**
-     * Create or overwrite multiple documents with specified IDs and customizable values
+     * Create or overwrite multiple reports with specified IDs and customizable values
      *
-     * @param string $baseId Base ID prefix for documents
-     * @param int $count Number of documents to create
-     * @param array $customValuesArray Array of custom values for each document
+     * @param string $baseId Base ID prefix for reports
+     * @param int $count Number of reports to create
+     * @param array $customValuesArray Array of custom values for each report
      * @param array $specificIds Optional array of specific IDs to use instead of sequential ones
-     * @return array Response with status and document references
+     * @return array Response with status and report references
      */
-    public function createBatchDocuments(
+    public function createBatchReports(
         string| int $eventId,
         int $count, 
         array $customValuesArray = [], 
@@ -47,10 +47,10 @@ class FirestoreService
             $docRefs = [];
             
             for ($i = 0; $i < $count; $i++) {
-                $documentId = $specificIds[$i] ;
+                $reportId = $specificIds[$i] ;
                 $customValues = $customValuesArray[$i] ?? [];
                 
-                $defaultDocument = [
+                $defaultReport = [
                     'completeMatchStatus' => 'UPCOMING',
                     'defaultWinners' => [null, null, null],
                     'disputeResolved' => [null, null, null],
@@ -67,18 +67,18 @@ class FirestoreService
                     'team2Winners' => [null, null, null]
                 ];
                 
-                $documentData = array_merge($defaultDocument, $customValues);
+                $reportData = array_merge($defaultReport, $customValues);
                 
                 $docRef = $firestoreDB->collection('event')
                     ->document((string)$eventId)
                     ->collection('brackets')
-                    ->document($documentId);                
-                $batch->set($docRef, $documentData, ['merge' => false]); // Ensure complete overwrite
+                    ->document($reportId);                
+                $batch->set($docRef, $reportData, ['merge' => false]); // Ensure complete overwrite
                 
-                $docRefs[$documentId] = $docRef;
+                $docRefs[$reportId] = $docRef;
                 $results[] = [
-                    'status' => 'pending',
-                    'documentId' => $documentId,
+                    'statusReport' => 'pending',
+                    'reportId' => $reportId,
                 ];
             }
             
@@ -87,20 +87,106 @@ class FirestoreService
             
             // Update results to success after commit
             foreach ($results as &$result) {
-                $result['status'] = 'success';
-                $result['message'] = 'Document created or overwritten successfully';
+                $result['statusReport'] = 'success';
+                $result['messageReport'] = 'Report created or overwritten successfully';
             }
             
             return [
-                'status' => 'success',
-                'message' => 'Batch operation completed - all documents created or overwritten',
-                'results' => $results
+                'statusReport' => 'success',
+                'messageReport' => 'Batch operation completed - all reports created or overwritten',
+                'resultsReport' => $results
             ];
         } catch (\Exception $e) {
             return [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'results' => $results
+                'statusReport' => 'error',
+                'messageReport' => $e->getMessage(),
+                'resultsReport' => $results
+            ];
+        }
+    }
+
+    /**
+     * Create or overwrite multiple dispute documents with specified IDs
+     *
+     * @param string|int $eventId Event ID
+     * @param int $count Number of disputes to create
+     * @param array $customValuesArray Array of custom values for each dispute
+     * @param array $specificIds Array of specific IDs to use for disputes
+     * @return array Response with status and dispute references
+     */
+    public function createBatchDisputes(
+        string|int $eventId,
+        int $count, 
+        array $customValuesArray = [], 
+        array $specificIds = []
+    ) {
+        $results = [];
+        
+        try {
+            $firestoreDB = $this->firestore->database();
+            
+            $batch = $firestoreDB->batch();
+            $docRefs = [];
+            
+            for ($i = 0; $i < $count; $i++) {
+                $disputeId = $specificIds[$i];
+                $customValues = $customValuesArray[$i] ?? [];
+                
+                $defaultDispute = [
+                    'created_at' => FieldValue::serverTimestamp(),
+                    'dispute_description' => null,
+                    'dispute_image_videos' => [],
+                    'dispute_reason' => null,
+                    'dispute_teamId' => null,
+                    'dispute_teamNumber' => null,
+                    'dispute_userId' => null,
+                    'event_id' => (string)$eventId,
+                    'match_number' => null,
+                    'report_id' => null,
+                    'resolution_resolved_by' => null,
+                    'resolution_winner' => null,
+                    'response_explanation' => null,
+                    'response_teamId' => null,
+                    'response_teamNumber' => null,
+                    'response_userId' => null,
+                    'updated_at' => FieldValue::serverTimestamp()
+                ];
+                
+                $disputeData = array_merge($defaultDispute, $customValues);
+                
+                $docRef = $firestoreDB->collection('event')
+                    ->document((string)$eventId)
+                    ->collection('disputes')
+                    ->document($disputeId);
+                    
+                $batch->set($docRef, $disputeData, ['merge' => false]); // Ensure complete overwrite
+                
+                $docRefs[$disputeId] = $docRef;
+                $results[] = [
+                    'statusDispute' => 'pending',
+                    'disputeId' => $disputeId,
+                ];
+            }
+            
+            // Commit the batch
+            $batch->commit();
+            
+            // Update results to success after commit
+            foreach ($results as &$result) {
+                $result['statusDispute'] = 'success';
+                $result['messageDispute'] = 'Dispute created or overwritten successfully';
+            }
+            
+            return [
+                'statusDispute' => 'success',
+                'messageDispute' => 'Batch operation completed - all disputes created or overwritten',
+                'resultsDispute' => $results
+            ];
+        } catch (\Exception $e) {
+            return [
+                'statusDispute' => 'error',
+                'messageDispute' => $e->getMessage(),
+                'resultsDispute' => $results
             ];
         }
     }

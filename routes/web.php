@@ -45,7 +45,7 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
 Route::get('/seed/{type}/type', [MiscController::class, 'seedBrackets']);
-Route::get('/seed/{id}/brackets', [FirebaseController::class, 'createSpecificMatchDocuments']);
+Route::get('/seed/{id}/brackets', [FirebaseController::class, 'seedMatches']);
 Route::get('/seed/{id}/start', [MiscController::class, 'seedStart']);
 Route::get('/seed/{id}/end', [MiscController::class, 'seedEnd']);
 Route::get('/seed/{id}/org', [MiscController::class, 'seedOrg']);

@@ -35,14 +35,20 @@
                         </h2>
                     </div>
                     <div class="col-md-6">
-                        <p class="text-white mb-4">
-                            We're currently accepting closed beta users. If you're interested to join the closed beta, just submit your email address and wait for an invitation via email.
-                        </p>
-                        <form id="emailForm" class="d-flex">
-                            @csrf
-                            <input type="email" class="ps-5 rounded-pill py-2 me-2 form-control" placeholder="enter your email address" id="emailInput" name="email">
-                            <button id="submitButton" type="submit" class="mx-auto submit-button submit-button-border text-white py-2 rounded-pill ps-3 pe-4" data-url="{{ route('public.interest.action') }}">Submit</button>
-                        </form>
+                        <div>
+                            <p class="text-white mb-4">
+                                We're currently accepting closed beta users. If you're interested to join the closed beta, just submit your email address and wait for an invitation via email.
+                            </p>
+                            <form id="emailForm" class="d-flex flex-wrap">
+                                @csrf
+                                <input type="email" class="flex-grow-1 border ps-4 rounded-pill py-2 me-2" placeholder="enter your email address" id="emailInput" name="email">
+                                <button id="submitButton" type="submit" class="submit-button submit-button-border text-white py-2 rounded-pill px-2" data-url="{{ route('public.interest.action') }}">Submit</button>
+                            </form>
+                        </div>
+                        <div class="d-flex align-items-center mt-3 flex-wrap">
+                            <p class="flex-grow-1 py-0 my-0 text-light"> Ahoy! If you're already a closed beta user, you can sign into Driftwood here: </p>
+                            <a href="{{route('participant.signin.view')}}" role="button" id="submitButton"  class="submit-button submit-button-border text-white py-2 px-3 rounded-pill ">Sign in</a>
+                        </div>
                     </div>
                 </div>
             </div>

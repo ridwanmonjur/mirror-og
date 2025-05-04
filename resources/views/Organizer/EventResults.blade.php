@@ -117,7 +117,7 @@
                                     >
                                     <div>
                                         <p class="py-0 my-0 ms-2 mb-2"> {{ $event->eventName }} </p>
-                                        <small class="py-0 my-0 ms-2">
+                                        <small class="py-0 my-0 ms-2 d-inline-block text-truncate">
                                             Description: {{ $event->eventDescription }}
                                         </small>
                                     </div>
