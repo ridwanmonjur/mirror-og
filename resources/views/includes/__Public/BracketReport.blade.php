@@ -9,7 +9,7 @@
     @if (isset($bracketList['U']))
 
         <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
-        <div class="mb-2 row">
+        <div class="mb-2 row px-0 mx-0">
             <div class="col-xl-6 tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">
                     <div class="tournament-bracket__list">

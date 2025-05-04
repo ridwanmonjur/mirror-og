@@ -20,7 +20,7 @@
     @include('googletagmanager::body')
         @include('includes.__Navbar.NavbarGoToSearchPage')
  
-    <main id="Bracket" @vue:mounted="init" v-scope="BracketData()" class="position-relative">
+    <main id="Bracket"  v-scope="BracketData()" class="position-relative">
         <input type="hidden" id="eventId" value="{{$event->id}}">
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
@@ -43,7 +43,7 @@
                         >
                         <div>
                             <p class="py-0 my-0 ms-2 mb-2"> {{ $event->eventName }} </p>
-                            <small class="py-0 my-0 ms-2">
+                            <small class="py-0 my-0 ms-2 d-inline-block text-truncate">
                                 Description: {{ $event->eventDescription }}
                             </small>
                         </div>

@@ -106,7 +106,7 @@ function diffDateWithNow(targetDate) {
 
     if (days > 0) countdownText += `${days}d `;
     if (hours > 0) countdownText += `${hours}h `;
-    if (minutes > 0) countdownText += `${minutes}m `;
+    if (minutes > 0 && days <=0) countdownText += `${minutes}m `;
   } else {
     countdownText = 'Time over';
   }

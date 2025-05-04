@@ -183,10 +183,10 @@
                             </div>
                         </template> 
                         
-                        {{-- <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
+                        <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
                             @include('includes.__BracketModal.__Dispute.Winner')
-                        </template> --}}
-                         <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner"> 
+                        </template> 
+                         <template v-else> 
                             @include('includes.__BracketModal.__Dispute.MissingWinner')
                         </template>
                         <br>

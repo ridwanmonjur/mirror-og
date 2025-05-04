@@ -165,7 +165,7 @@ class FirebaseController extends Controller
      *
      * @return array Response with status and document references
      */
-    public function createSpecificMatchDocuments(Request $request, $id)
+    public function seedMatches(Request $request, $id)
     {
         // Define the document specifications with document IDs as keys
         $documentSpecs = [
@@ -186,7 +186,7 @@ class FirebaseController extends Controller
                 'team1Winners' => ['0', '1', '0'],
                 'team2Winners' => ['1', '0', '1']
             ],
-            'W11.W1' => [
+            'W11.W12' => [
                 'team1Winners' => ['0', '1', '0'],
                 'team2Winners' => ['1', '0', '1']
             ],
@@ -219,11 +219,62 @@ class FirebaseController extends Controller
             $customValuesArray[] = $customValues;
         }
 
-        return $this->firestoreService->createBatchDocuments(
+        $reports = $this->firestoreService->createBatchReports(
             $id,
             count($specificIds), 
             $customValuesArray,
             $specificIds
         );
+
+        $disputeSpecs = [
+            'W11.W12.0' => [
+                'dispute_image_videos' => ['media/img/bskyGLaPbr8503Oz8yvC1uUDJiPhFv8JyTk6HJmf.jpg'],
+                'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
+                'dispute_teamId' => '24',
+                'dispute_teamNumber' => '0',
+                'dispute_userId' => '86',
+                'match_number' => '0',
+                'report_id' => 'W11.W12'
+            ],
+            'W11.W12.1' => [
+                'dispute_description' => 'Team 24 is disputing the result of match 1',
+                'dispute_reason' => 'Disputed game result due to server lag/disconnection.',
+                'dispute_teamId' => '24',
+                'dispute_teamNumber' => '0',
+                'dispute_userId' => '86',
+                'match_number' => '1',
+                'report_id' => 'W11.W12'
+            ],
+            'W11.W12.2' => [
+                'dispute_description' => 'Both teams using restricted characters',
+                'dispute_image_videos' => [
+                    'media/img/dispute_evidence_1.jpg',
+                    'media/img/dispute_evidence_2.jpg'
+                ],
+                'dispute_reason' => 'Disputed game result due to use of prohibited characters/hero/content.',
+                'dispute_teamId' => '24',
+                'dispute_teamNumber' => '0',
+                'dispute_userId' => '86',
+                'match_number' => '2',
+                'report_id' => 'W11.W12'
+            ]
+        ];
+    
+        $customValuesArray = [];
+        $specificIds = [];
+    
+        foreach ($disputeSpecs as $disputeId => $customValues) {
+            $specificIds[] = $disputeId;
+            $customValuesArray[] = $customValues;
+        }
+    
+        $disputes = $this->firestoreService->createBatchDisputes(
+            $id,
+            count($specificIds), 
+            $customValuesArray,
+            $specificIds
+        );
+
+        return  [...$disputes, ...$reports];
     }
 }
