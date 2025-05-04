@@ -86,7 +86,7 @@
                        
                     </div>
                 </div>
-                <div class="grid-container-two-columns-at-desktop">
+                <div class="grid-container-two-columns-at-desktop px-3">
                     <div class="card-text ">
                         <div>
                             <br class="d-none d-lg-block">

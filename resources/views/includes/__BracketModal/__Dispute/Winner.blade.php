@@ -24,7 +24,7 @@
                                     <div class="my-0 py-0">
                                     <template
                                         v-if="
-                                        dispute[reportUI.matchNumber].resolution_resolved_by == disputeLevelEnums['DISPUTEE']
+                                        dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']
                                         && dispute[reportUI.matchNumber]?.dispute_teamNumber
                                         && report.teams[dispute[reportUI.matchNumber].dispute_teamNumber]?.name
                                     ">

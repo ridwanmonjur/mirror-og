@@ -4,7 +4,7 @@
     $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
 @endphp
 <div class="tournament-bracket tournament-bracket--rounded col-12 col-xl-6 d-inline-flex align-items-start">
-    <div class="tournament-bracket__round  tournament-bracket__round--gold">
+    <div class="tournament-bracket__round  tournament-bracket__round--gold w-100-mobile">
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div class="tournament-bracket__item tournament final">
                 <div class="tournament-bracket__match user-select-none middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
