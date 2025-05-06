@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\EventCancelNotification;
 use App\Notifications\EventConfirmNotification;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,6 +65,32 @@ class Team extends Model
         return $this->hasOne(TeamProfile::class, 'team_id');
     }
 
+    public function scopePaginatedSearch(Builder $query, ?string $searchTerm = null, ?string $cursor = null, int $limit = 5): Builder
+    {
+        $query->select([
+            'id', 
+            'teamName', 
+            'creator_id', 
+            'teamDescription', 
+            'teamBanner', 
+            'country', 
+            'country_name',
+            'country_flag'
+        ]);
+
+        if (!empty($searchTerm)) {
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('teamName', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('country_name', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        if ($cursor) {
+            $query->where('id', '>', $cursor);
+        }
+
+        return $query->orderBy('id', 'asc')->limit($limit);
+    }
    
 
     public function findTeamFollowerByUserId(int $userId)
