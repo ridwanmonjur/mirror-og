@@ -42,6 +42,8 @@ class EventTierResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('eventTier')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('tierIcon')
@@ -52,9 +54,6 @@ class EventTierResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tierEntryFee')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
             ])
             ->filters([
                 //

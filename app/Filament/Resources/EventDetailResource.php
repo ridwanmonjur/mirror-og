@@ -23,8 +23,6 @@ class EventDetailResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('eventDefinitions')
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('eventName')
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('startDate'),
@@ -67,46 +65,16 @@ class EventDetailResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('eventBanner')
                 ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('startDate')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('endDate')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('startTime'),
-                Tables\Columns\TextColumn::make('endTime'),
-                Tables\Columns\TextColumn::make('eventDescription')
-                    ->searchable(),
-               
-                Tables\Columns\TextColumn::make('eventTags')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('venue')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sub_action_public_date')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sub_action_public_time')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sub_action_private')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('type.eventType')
                     ->numeric()
                     ->sortable(),

@@ -23,16 +23,12 @@ class BracketsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('order')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('team1_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('team2_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('event_details_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('team1_id')
+                    ->relationship('team1', 'teamName') ,
+                Forms\Components\Select::make('team2_id')
+                    ->relationship('team2', 'teamName') ,
+                // Forms\Components\Select::make('event_details_id')
+                //     ->relationship('event', 'eventName') ,
                 Forms\Components\TextInput::make('team1_position')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('team2_position')
@@ -41,6 +37,9 @@ class BracketsResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('inner_stage_name')
                     ->maxLength(255),
+                Forms\Components\TextInput::make('order')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -48,26 +47,27 @@ class BracketsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order')
+                Tables\Columns\TextColumn::make('id'),
+
+                Tables\Columns\TextColumn::make('team1.teamName')
+                    ->label('Team 1')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team1_id')
+                Tables\Columns\TextColumn::make('team2.teamName')
+                    ->label('Team 2')
+
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('team2_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('event_details_id')
+                Tables\Columns\TextColumn::make('event.eventName')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('team1_position')
+                    ->label('Pos 1')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('team2_position')
+                    ->label('Pos 2')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('stage_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('inner_stage_name')
-                    ->searchable(),
+              
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -101,8 +101,8 @@ class BracketsResource extends Resource
     {
         return [
             'index' => Pages\ListBrackets::route('/'),
-            'create' => Pages\CreateBrackets::route('/create'),
-            'edit' => Pages\EditBrackets::route('/{record}/edit'),
+            // 'create' => Pages\CreateBrackets::route('/create'),
+            // 'edit' => Pages\EditBrackets::route('/{record}/edit'),
         ];
     }
 }

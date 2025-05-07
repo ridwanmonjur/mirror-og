@@ -29,12 +29,27 @@ class JoinEventResource extends Resource
                 Forms\Components\Select::make('team_id')
                     ->relationship('team', 'id')
                     ->required(),
-                Forms\Components\TextInput::make('joiner_id')
+                Forms\Components\Select::make('joiner_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('joiner_participant_id')
-                    ->required()
-                    ->numeric(),
+                    ->label('Participant')
+                    ->options(function () {
+                        return \App\Models\User::where('role', 'PARTICIPANT')
+                            ->pluck('name', 'id');
+                    })
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            // Find the participant ID related to the selected user
+                            $participant = \App\Models\User::find($state)?->participant;
+                            if ($participant) {
+                                $set('joiner_participant_id', $participant->id);
+                            }
+                        }
+                    }),
+                
+                // Hidden field for joiner_participant_id
+                Forms\Components\Hidden::make('joiner_participant_id')
+                    ->required(),
                 Forms\Components\TextInput::make('payment_status')
                     ->required(),
                 Forms\Components\TextInput::make('join_status')
@@ -43,8 +58,26 @@ class JoinEventResource extends Resource
                     ->relationship('voteStarter', 'name')
                     ->required(),
                 Forms\Components\Toggle::make('vote_ongoing'),
-                Forms\Components\TextInput::make('roster_captain_id')
-                    ->numeric(),
+                Forms\Components\Select::make('roster_captain_id')
+                    ->required()
+                    ->label('Roster Captain')
+                    ->options(function (callable $get) {
+                        // Get the selected team ID
+                        $teamId = $get('team_id');
+                        
+                        if (!$teamId) {
+                            return [];
+                        }
+                        
+                        // Get roster members belonging to the selected team
+                        return \App\Models\RosterMember::query()
+                            ->where('team_id', $teamId)
+                            ->with('user')
+                            ->get()
+                            ->mapWithKeys(function ($member) {
+                                return [$member->id => $member->user->name];
+                            });
+                    })
             ]);
     }
 
@@ -52,6 +85,8 @@ class JoinEventResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('eventDetails.eventName')
                     ->numeric()
                     ->sortable(),
@@ -66,10 +101,7 @@ class JoinEventResource extends Resource
                 Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('joiner_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('joiner_participant_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_status'),
@@ -79,9 +111,6 @@ class JoinEventResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('vote_ongoing')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('roster_captain_id')
-                    ->numeric()
-                    ->sortable(),
             ])
             ->filters([
                 //

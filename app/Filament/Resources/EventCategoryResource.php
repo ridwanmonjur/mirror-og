@@ -38,15 +38,11 @@ class EventCategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('gameTitle')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('gameIcon')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
+                Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
