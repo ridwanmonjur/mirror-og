@@ -34,10 +34,12 @@ class EventTypeResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('eventType')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('eventDefinitions')
+                    // ->searchable(),
             ])
             ->filters([
                 //

@@ -40,6 +40,8 @@ class ParticipantFollowResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('followerUser.name')
                     ->numeric()
                     ->sortable(),
@@ -79,8 +81,8 @@ class ParticipantFollowResource extends Resource
     {
         return [
             'index' => Pages\ListParticipantFollows::route('/'),
-            'create' => Pages\CreateParticipantFollow::route('/create'),
-            'edit' => Pages\EditParticipantFollow::route('/{record}/edit'),
+            // 'create' => Pages\CreateParticipantFollow::route('/create'),
+            // 'edit' => Pages\EditParticipantFollow::route('/{record}/edit'),
         ];
     }
 }

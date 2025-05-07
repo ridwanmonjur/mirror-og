@@ -46,6 +46,8 @@ class AwardResultsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('join_events_id')
                     ->numeric()
                     ->sortable(),
@@ -80,8 +82,8 @@ class AwardResultsResource extends Resource
     {
         return [
             'index' => Pages\ListAwardResults::route('/'),
-            'create' => Pages\CreateAwardResults::route('/create'),
-            'edit' => Pages\EditAwardResults::route('/{record}/edit'),
+            // 'create' => Pages\CreateAwardResults::route('/create'),
+            // 'edit' => Pages\EditAwardResults::route('/{record}/edit'),
         ];
     }
 }

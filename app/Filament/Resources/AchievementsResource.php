@@ -39,6 +39,8 @@ class AchievementsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('join_event_id')
@@ -73,8 +75,8 @@ class AchievementsResource extends Resource
     {
         return [
             'index' => Pages\ListAchievements::route('/'),
-            'create' => Pages\CreateAchievements::route('/create'),
-            'edit' => Pages\EditAchievements::route('/{record}/edit'),
+            // 'create' => Pages\CreateAchievements::route('/create'),
+            // 'edit' => Pages\EditAchievements::route('/{record}/edit'),
         ];
     }
 }

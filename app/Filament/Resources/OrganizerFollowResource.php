@@ -40,6 +40,8 @@ class OrganizerFollowResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('participantUser.name')
                     ->numeric()
                     ->label('Participant')
@@ -80,8 +82,8 @@ class OrganizerFollowResource extends Resource
     {
         return [
             'index' => Pages\ListOrganizerFollows::route('/'),
-            'create' => Pages\CreateOrganizerFollow::route('/create'),
-            'edit' => Pages\EditOrganizerFollow::route('/{record}/edit'),
+            // 'create' => Pages\CreateOrganizerFollow::route('/create'),
+            // 'edit' => Pages\EditOrganizerFollow::route('/{record}/edit'),
         ];
     }
 }

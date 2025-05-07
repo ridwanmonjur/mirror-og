@@ -43,6 +43,8 @@ class TeamMemberResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
@@ -84,8 +86,8 @@ class TeamMemberResource extends Resource
     {
         return [
             'index' => Pages\ListTeamMembers::route('/'),
-            'create' => Pages\CreateTeamMember::route('/create'),
-            'edit' => Pages\EditTeamMember::route('/{record}/edit'),
+            // 'create' => Pages\CreateTeamMember::route('/create'),
+            // 'edit' => Pages\EditTeamMember::route('/{record}/edit'),
         ];
     }
 }

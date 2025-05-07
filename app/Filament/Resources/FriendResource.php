@@ -43,6 +43,8 @@ class FriendResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('user1.name')
                     ->label('User 1')
                     ->numeric()
@@ -89,8 +91,8 @@ class FriendResource extends Resource
     {
         return [
             'index' => Pages\ListFriends::route('/'),
-            'create' => Pages\CreateFriend::route('/create'),
-            'edit' => Pages\EditFriend::route('/{record}/edit'),
+            // 'create' => Pages\CreateFriend::route('/create'),
+            // 'edit' => Pages\EditFriend::route('/{record}/edit'),
         ];
     }
 }

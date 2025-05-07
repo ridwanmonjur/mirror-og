@@ -101,6 +101,8 @@ class ActivityLogsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image'),
@@ -162,8 +164,8 @@ class ActivityLogsResource extends Resource
     {
         return [
             'index' => Pages\ListActivityLogs::route('/'),
-            'create' => Pages\CreateActivityLogs::route('/create'),
-            'edit' => Pages\EditActivityLogs::route('/{record}/edit'),
+            // 'create' => Pages\CreateActivityLogs::route('/create'),
+            // 'edit' => Pages\EditActivityLogs::route('/{record}/edit'),
         ];
     }
 }

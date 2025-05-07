@@ -42,6 +42,8 @@ class PaymentTransactionResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('payment_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('payment_status')
@@ -84,8 +86,8 @@ class PaymentTransactionResource extends Resource
     {
         return [
             'index' => Pages\ListPaymentTransactions::route('/'),
-            'create' => Pages\CreatePaymentTransaction::route('/create'),
-            'edit' => Pages\EditPaymentTransaction::route('/{record}/edit'),
+            // 'create' => Pages\CreatePaymentTransaction::route('/create'),
+            // 'edit' => Pages\EditPaymentTransaction::route('/{record}/edit'),
         ];
     }
 }

@@ -47,6 +47,7 @@ class RosterMemberResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
@@ -94,8 +95,8 @@ class RosterMemberResource extends Resource
     {
         return [
             'index' => Pages\ListRosterMembers::route('/'),
-            'create' => Pages\CreateRosterMember::route('/create'),
-            'edit' => Pages\EditRosterMember::route('/{record}/edit'),
+            // 'create' => Pages\CreateRosterMember::route('/create'),
+            // 'edit' => Pages\EditRosterMember::route('/{record}/edit'),
         ];
     }
 }

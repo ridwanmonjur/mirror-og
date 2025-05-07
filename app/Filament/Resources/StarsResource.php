@@ -39,6 +39,8 @@ class StarsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
@@ -78,8 +80,8 @@ class StarsResource extends Resource
     {
         return [
             'index' => Pages\ListStars::route('/'),
-            'create' => Pages\CreateStars::route('/create'),
-            'edit' => Pages\EditStars::route('/{record}/edit'),
+            // 'create' => Pages\CreateStars::route('/create'),
+            // 'edit' => Pages\EditStars::route('/{record}/edit'),
         ];
     }
 }

@@ -45,6 +45,8 @@ class PaymentIntentResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
@@ -90,8 +92,8 @@ class PaymentIntentResource extends Resource
     {
         return [
             'index' => Pages\ListPaymentIntents::route('/'),
-            'create' => Pages\CreatePaymentIntent::route('/create'),
-            'edit' => Pages\EditPaymentIntent::route('/{record}/edit'),
+            // 'create' => Pages\CreatePaymentIntent::route('/create'),
+            // 'edit' => Pages\EditPaymentIntent::route('/{record}/edit'),
         ];
     }
 }

@@ -38,6 +38,8 @@ class LikeResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
@@ -77,8 +79,8 @@ class LikeResource extends Resource
     {
         return [
             'index' => Pages\ListLikes::route('/'),
-            'create' => Pages\CreateLike::route('/create'),
-            'edit' => Pages\EditLike::route('/{record}/edit'),
+            // 'create' => Pages\CreateLike::route('/create'),
+            // 'edit' => Pages\EditLike::route('/{record}/edit'),
         ];
     }
 }

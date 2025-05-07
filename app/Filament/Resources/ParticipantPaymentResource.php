@@ -43,6 +43,8 @@ class ParticipantPaymentResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('team_members_id')
                     ->numeric()
                     ->sortable(),
@@ -90,8 +92,8 @@ class ParticipantPaymentResource extends Resource
     {
         return [
             'index' => Pages\ListParticipantPayments::route('/'),
-            'create' => Pages\CreateParticipantPayment::route('/create'),
-            'edit' => Pages\EditParticipantPayment::route('/{record}/edit'),
+            // 'create' => Pages\CreateParticipantPayment::route('/create'),
+            // 'edit' => Pages\EditParticipantPayment::route('/{record}/edit'),
         ];
     }
 }
