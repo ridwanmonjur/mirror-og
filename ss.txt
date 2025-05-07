@@ -31,7 +31,9 @@ php artisan make:filament-relation-manager UserResource notificationCount user_i
 php artisan make:filament-relation-manager UserResource notificationList user_id
 
 php artisan make:filament-relation-manager TeamResource members team_id
-php artisan make:filament-relation-manager TeamResource roster team_id
+
+php artisan make:filament-relation-manager JoinEventResource roster join_events_id
+
 
 brackets_setup
 bracket_deadlines

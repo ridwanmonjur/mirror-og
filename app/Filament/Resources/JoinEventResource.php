@@ -105,11 +105,7 @@ class JoinEventResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_status'),
                 Tables\Columns\TextColumn::make('join_status'),
-                Tables\Columns\TextColumn::make('voteStarter.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('vote_ongoing')
-                    ->boolean(),
+               
             ])
             ->filters([
                 //
@@ -127,7 +123,7 @@ class JoinEventResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            JoinEventResource\RelationManagers\RosterRelationManager::class
         ];
     }
 
