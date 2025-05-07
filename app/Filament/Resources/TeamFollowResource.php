@@ -17,7 +17,6 @@ class TeamFollowResource extends Resource
 {
     protected static ?string $model = TeamFollow::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

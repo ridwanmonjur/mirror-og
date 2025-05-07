@@ -9,4 +9,5 @@ class Award extends Model
 {
     use HasFactory;
     protected $table = 'awards';
+    protected $fillable = ['title', 'image', 'description'];
 }

@@ -105,25 +105,17 @@ class ActivityLogsResource extends Resource
 
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
-                Tables\Columns\TextColumn::make('subject_type')
-                    ->label('Subject Type')
-                    ->formatStateUsing(fn (string $state): string => class_basename($state))
-                    ->sortable(),
-                
-                Tables\Columns\TextColumn::make('subject.name') // Assuming related model has 'name' field
-                    ->label('Subject')
-                    ->searchable()
-                    ->sortable(),
-                    Tables\Columns\TextColumn::make('object_type')
+               
+                Tables\Columns\TextColumn::make('action')
+                    ->searchable(),
+
+               
+                Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')
                     ->formatStateUsing(fn (string $state): string => class_basename($state))
                     ->sortable(),
                 
-                Tables\Columns\TextColumn::make('object.id')
-                    ->label('Object')
-                    ->searchable()
-                    ->sortable(),
+               
                 // Tables\Columns\TextColumn::make('subject_type')
                 //     ->searchable(),
                 // Tables\Columns\TextColumn::make('subject_id')

@@ -30,7 +30,6 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationLabel = 'Users';
 
     public static function form(Form $form): Form
@@ -231,8 +230,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('mobile_no')
-                    ->searchable(),
+               
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -265,8 +263,14 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\UserProfileRelationManager::class,
-            RelationManagers\DiscountsRelationManager::class,
+            RelationManagers\AddressRelationManager::class,
             RelationManagers\ActivityLogsRelationManager::class,
+            RelationManagers\NotificationCountRelationManager::class,
+            RelationManagers\NotificationListRelationManager::class,
+            
+            RelationManagers\DiscountsRelationManager::class,
+
+
         ];
     }
 

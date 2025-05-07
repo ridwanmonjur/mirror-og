@@ -32,6 +32,8 @@ class TeamCaptainRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
+                Tables\Columns\TextColumn::make(name: 'id'),
+
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Captain Name')
                     ->sortable(),
@@ -40,7 +42,10 @@ class TeamCaptainRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->visible(fn () => !$this->getOwnerRecord()->user()->exists())
+                // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
+                ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

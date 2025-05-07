@@ -84,11 +84,8 @@ class EventDetailResource extends Resource
                 Tables\Columns\TextColumn::make('game.gameTitle')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_transaction_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('willNotify')
-                    ->boolean(),
+             
+           
             ])
             ->filters([
                 //

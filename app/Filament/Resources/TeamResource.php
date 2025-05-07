@@ -19,7 +19,6 @@ class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -140,7 +139,10 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
+        
+
             RelationManagers\TeamProfileRelationManager::class,
+            RelationManagers\MembersRelationManager::class,
             RelationManagers\TeamCaptainRelationManager::class
         ];
     }

@@ -52,15 +52,10 @@ class PaymentTransactionResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('coupon_amount')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('payment_amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('released_amount')
-                    ->numeric()
-                    ->sortable(),
+              
             ])
             ->filters([
                 //
