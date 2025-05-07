@@ -17,7 +17,6 @@ class PaymentIntentResource extends Resource
 {
     protected static ?string $model = PaymentIntent::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

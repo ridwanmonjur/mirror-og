@@ -17,7 +17,6 @@ class BlocksResource extends Resource
 {
     protected static ?string $model = Blocks::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

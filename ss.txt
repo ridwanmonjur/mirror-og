@@ -25,7 +25,7 @@ event countdown - event details (overview tab)
 0th position
 2. roster view bug
 
-
+follows missing
 php artisan make:filament-relation-manager UserResource address user_id
 php artisan make:filament-relation-manager UserResource notificationCount user_id
 php artisan make:filament-relation-manager UserResource notificationList user_id
@@ -62,3 +62,5 @@ team_members
 
 user_discounts
 address
+
+follows missing

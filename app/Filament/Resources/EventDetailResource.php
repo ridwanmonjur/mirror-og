@@ -17,7 +17,6 @@ class EventDetailResource extends Resource
 {
     protected static ?string $model = EventDetail::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

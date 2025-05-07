@@ -17,7 +17,6 @@ class InterestedUserResource extends Resource
 {
     protected static ?string $model = InterestedUser::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

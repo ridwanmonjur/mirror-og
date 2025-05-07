@@ -17,7 +17,6 @@ class EventTierResource extends Resource
 {
     protected static ?string $model = EventTier::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

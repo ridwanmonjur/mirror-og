@@ -17,7 +17,6 @@ class EventTypeResource extends Resource
 {
     protected static ?string $model = EventType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

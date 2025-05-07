@@ -17,7 +17,6 @@ class StarsResource extends Resource
 {
     protected static ?string $model = Stars::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

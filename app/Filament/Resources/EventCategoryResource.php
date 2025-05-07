@@ -17,7 +17,6 @@ class EventCategoryResource extends Resource
 {
     protected static ?string $model = EventCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

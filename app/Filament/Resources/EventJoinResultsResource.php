@@ -17,7 +17,6 @@ class EventJoinResultsResource extends Resource
 {
     protected static ?string $model = EventJoinResults::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
