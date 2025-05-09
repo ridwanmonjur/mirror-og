@@ -391,6 +391,7 @@ class ParticipantEventController extends Controller
                 $joinEvent->load(['roster', 'roster.user']);
                 if ($isToBeConfirmed) {
                     $joinEvent->join_status = $request->join_status;
+
                     dispatch(new HandleEventJoinConfirm('Confirm', [
                         'selectTeam' => $team,
                         'user' => $user,
@@ -400,6 +401,12 @@ class ParticipantEventController extends Controller
                     ]));
                     $joinEvent->save();
                 } else {
+                    $rosterCount = $joinEvent->roster->count();
+                    if ($rosterCount == 1) {
+                        $joinEvent->join_status = "left";
+                        $joinEvent->save();
+                    }
+
                     $joinEvent->vote_starter_id = $user->id;
                     $joinEvent->vote_ongoing = true;
                     $joinEvent->save();

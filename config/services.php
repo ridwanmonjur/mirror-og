@@ -41,6 +41,11 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
     'steam' => [
         'client_id' => null,
         'client_secret' => '8AE02B51B52FA9BD6BB683EB4585A651',
