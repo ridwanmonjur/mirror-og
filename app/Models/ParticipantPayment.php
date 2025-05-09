@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ParticipantPayment extends Model
 {
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+    
     protected $table = 'participant_payments';
-
     protected $fillable = [
         'team_members_id',
         'user_id',

@@ -28,8 +28,7 @@ class EventDetailResource extends Resource
                 Forms\Components\DatePicker::make('endDate'),
                 Forms\Components\TextInput::make('startTime'),
                 Forms\Components\TextInput::make('endTime'),
-                Forms\Components\TextInput::make('eventDescription')
-                    ->maxLength(255),
+                Forms\Components\Textarea::make('eventDescription'),
                 Forms\Components\FileUpload::make('eventBanner')
                     ->image(),
                 Forms\Components\TextInput::make('eventTags')
@@ -53,8 +52,6 @@ class EventDetailResource extends Resource
                     ->relationship('eventTier', 'eventTier'),
                 Forms\Components\Select::make('event_category_id')
                     ->relationship('game', 'gameTitle'),
-                Forms\Components\TextInput::make('payment_transaction_id')
-                    ->numeric(),
                 Forms\Components\Toggle::make('willNotify')
                     ->required(),
             ]);
@@ -103,6 +100,7 @@ class EventDetailResource extends Resource
     {
         return [
             RelationManagers\SignupRelationManager::class,
+            RelationManagers\PTransactionsRelationManager::class
         ];
     }
 

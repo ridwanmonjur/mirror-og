@@ -26,8 +26,10 @@ class BracketsResource extends Resource
                     ->relationship('team1', 'teamName') ,
                 Forms\Components\Select::make('team2_id')
                     ->relationship('team2', 'teamName') ,
-                // Forms\Components\Select::make('event_details_id')
-                //     ->relationship('event', 'eventName') ,
+                Forms\Components\Select::make('event_details_id')
+                    ->relationship('event', 'eventName', function ($query) {
+                        return $query->whereNotNull('eventName');
+                    }),
                 Forms\Components\TextInput::make('team1_position')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('team2_position')

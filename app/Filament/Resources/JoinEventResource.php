@@ -20,13 +20,19 @@ class JoinEventResource extends Resource
 
     public static function form(Form $form): Form
     {
+
+        
         return $form
             ->schema([
                 Forms\Components\Select::make('event_details_id')
-                    ->relationship('eventDetails', 'id')
+                    ->relationship('eventDetails', 'eventName', function ($query) {
+                        return $query->whereNotNull('eventName');
+                    })
                     ->required(),
+                Forms\Components\TextInput::make('results.position')
+                    ->maxLength(25),
                 Forms\Components\Select::make('team_id')
-                    ->relationship('team', 'id')
+                    ->relationship('team', 'teamName')
                     ->required(),
                 Forms\Components\Select::make('joiner_id')
                     ->required()
@@ -49,34 +55,47 @@ class JoinEventResource extends Resource
                 // Hidden field for joiner_participant_id
                 Forms\Components\Hidden::make('joiner_participant_id')
                     ->required(),
-                Forms\Components\TextInput::make('payment_status')
-                    ->required(),
-                Forms\Components\TextInput::make('join_status')
-                    ->required(),
+                Forms\Components\Select::make('payment_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'completed' => 'Completed',
+                        'waived' => 'Waived'
+                    ])
+                    ->required()
+                    ->default('pending'),
+            
+                Forms\Components\Select::make('join_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'confirmed' => 'Confirmed',
+                        'canceled' => 'Canceled'
+                    ])
+                    ->required()
+                    ->default('pending'),
                 Forms\Components\Select::make('vote_starter_id')
                     ->relationship('voteStarter', 'name')
                     ->required(),
-                Forms\Components\Toggle::make('vote_ongoing'),
                 Forms\Components\Select::make('roster_captain_id')
-                    ->required()
                     ->label('Roster Captain')
                     ->options(function (callable $get) {
                         // Get the selected team ID
-                        $teamId = $get('team_id');
+                        $id = $get('id');
                         
-                        if (!$teamId) {
+                        if (!$id) {
                             return [];
                         }
                         
                         // Get roster members belonging to the selected team
                         return \App\Models\RosterMember::query()
-                            ->where('team_id', $teamId)
+                            ->where('join_events_id', $id)
                             ->with('user')
                             ->get()
                             ->mapWithKeys(function ($member) {
                                 return [$member->id => $member->user->name];
                             });
-                    })
+                    }),
+                Forms\Components\Toggle::make('vote_ongoing'),
+                
             ]);
     }
 
@@ -123,7 +142,10 @@ class JoinEventResource extends Resource
     public static function getRelations(): array
     {
         return [
-            JoinEventResource\RelationManagers\RosterRelationManager::class
+            JoinEventResource\RelationManagers\RosterRelationManager::class,
+            JoinEventResource\RelationManagers\ResultsRelationManager::class,
+            JoinEventResource\RelationManagers\PaymentsRelationManager::class
+
         ];
     }
 

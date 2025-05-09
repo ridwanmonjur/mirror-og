@@ -33,14 +33,18 @@ php artisan make:filament-relation-manager UserResource notificationList user_id
 php artisan make:filament-relation-manager TeamResource members team_id
 
 php artisan make:filament-relation-manager JoinEventResource roster join_events_id
+php artisan make:filament-relation-manager JoinEventResource results join_events_id
+php artisan make:filament-relation-manager JoinEventResource payments join_events_id
+php artisan make:filament-relation-manager EventDetail paymentTransaction payment_transaction_id 
+
 
 
 brackets_setup
 bracket_deadlines
 bracket_deadlines_setup
 
-event_invitations
-event_join_results
+event_invitations next
+event_join_results next achievements, awards
 event_signup_dates
 event_tier_type_signup_dates
 
@@ -55,14 +59,14 @@ interested_user
 notifications
 notifCounter
 
-org_discount
+org_discount next
 reports
 stars
 
 roster_members
 team_members
 
-user_discounts
+user_discounts 
 address
 
 follows missing
