@@ -22,7 +22,7 @@ class OrganizerInvitationController extends Controller
         $teamList = Team::all();
         $tier = $type = $game = null;
 
-        $event = EventDetail::with('invitationList')
+        $event = EventDetail::with(['invitationList', 'invitationList.team'])
             ->where('user_id', $user_id)
             ->find($id);
 
@@ -41,6 +41,16 @@ class OrganizerInvitationController extends Controller
     public function store(Request $request)
     {
         $team = Team::where('id', $request->team_id)->first();
+        $isExistsBefore = EventInvitation::where('team_id', $request->team_id)
+            ->where('event_id', $request->event_id)
+            ->exists();
+        if ($isExistsBefore) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already sent an invitation to this team!',
+            ]);
+        }
+
         $invitation = new EventInvitation();
         $invitation->organizer_user_id = $request->organizer_id;
         $invitation->event_id = $request->event_id;
@@ -48,8 +58,8 @@ class OrganizerInvitationController extends Controller
         $invitation->save();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Payment successful',
+            'success' => 'true',
+            'message' => 'Invitation has been sent successfully.',
             'data' => [
                 'invitation' => $invitation,
                 'team' => $team,
@@ -57,11 +67,11 @@ class OrganizerInvitationController extends Controller
         ]);
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        $invitation = EventInvitation::find($id);
-        $invitation->delete();
+        $invitation = EventInvitation::find($request->inviteId);
+        $invitation?->delete();
 
-        return response()->json(['success' => 'Invitation deleted successfully.']);
+        return response()->json(['success' => true, 'message' => 'Invitation deleted successfully.']);
     }
 }
