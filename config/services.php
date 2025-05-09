@@ -21,6 +21,10 @@ return [
         'scheme' => 'https',
     ],
 
+    'firebase' => env('FIREBASE_CREDENTIALS' ),
+    'mail_address' => config('services.mail_address'),
+
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
@@ -30,6 +34,8 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+
+    'mail' => config('services.mail_address'),
 
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),

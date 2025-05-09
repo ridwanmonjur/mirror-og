@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Console\Command;
 use App\Models\Brackets;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -23,12 +24,12 @@ trait DeadlineTasksTrait
 
 
     
-    protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService)
+    protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService, $firebaseConfig)
     {
         $this->bracketDataService = $bracketDataService;
-        
+        Log::info(">>>>" . $firebaseConfig);
         $factory = new \Kreait\Firebase\Factory();
-        $this->firestore = $factory->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS' )))->createFirestore();
+        $this->firestore = $factory->withServiceAccount(base_path($firebaseConfig))->createFirestore();
     }
 
     public function resolveNextStage( $bracket, array $extraBracket, array $scores, $tierId) {

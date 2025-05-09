@@ -11,6 +11,7 @@ use App\Services\BracketDataService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 class DeadlineTasks extends Command
@@ -36,8 +37,9 @@ class DeadlineTasks extends Command
     public function __construct(BracketDataService $bracketDataService)
     {
         parent::__construct();
+        $firebaseConfig = Config::get('services.firebase');
 
-        $this->initializeDeadlineTasksTrait($bracketDataService);
+        $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig);
     }
 
     public function handle()

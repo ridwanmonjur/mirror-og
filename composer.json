@@ -81,12 +81,25 @@
             "@php artisan key:generate --ansi"
         ],
         "dev": [
-            "@php artisan cache:clear",
-            "@php artisan config:clear",
-            "@php artisan view:clear",
-            "@php artisan route:clear",
-            "@php artisan queue:restart",
-            "./dev.sh"
+            "php artisan clear-compiled",
+            "php artisan cache:clear",
+            "php artisan config:clear",
+            "php artisan route:clear",
+            "php artisan view:clear",
+            "php artisan event:clear",
+            "php artisan optimize:clear",
+            "rm -rf bootstrap/cache/*.php",
+            
+            "php artisan migrate",
+            
+            "# Generate all types of cache",
+            "php artisan config:cache",
+            "php artisan route:cache",
+            "php artisan view:cache",
+            "php artisan event:cache",
+            "php artisan optimize",
+            "composer dump-autoload -o",
+            "php artisan serve"
         ],
         "local": [
             "rm -f .env",

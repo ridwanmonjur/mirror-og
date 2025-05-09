@@ -35,7 +35,7 @@ class VoteStartMail extends Mailable implements ShouldQueue
     
     public function build()
     {
-        return $this->replyTo(env('MAIL_CC_ADDRESS'))
+        return $this->replyTo(config('services.mail_address'))
             ->subject("A vote on event participation has started.")
             ->view('Email.vote-started')
             ->with([
