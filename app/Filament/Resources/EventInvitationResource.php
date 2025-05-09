@@ -17,7 +17,6 @@ class EventInvitationResource extends Resource
 {
     protected static ?string $model = EventInvitation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -39,6 +38,8 @@ class EventInvitationResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('organizer.name')
                     ->numeric()
                     ->sortable(),
@@ -85,8 +86,8 @@ class EventInvitationResource extends Resource
     {
         return [
             'index' => Pages\ListEventInvitations::route('/'),
-            'create' => Pages\CreateEventInvitation::route('/create'),
-            'edit' => Pages\EditEventInvitation::route('/{record}/edit'),
+            // 'create' => Pages\CreateEventInvitation::route('/create'),
+            // 'edit' => Pages\EditEventInvitation::route('/{record}/edit'),
         ];
     }
 }

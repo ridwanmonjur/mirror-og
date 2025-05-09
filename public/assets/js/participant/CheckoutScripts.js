@@ -275,6 +275,8 @@ class PaymentProcessor {
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
+        const submitButton = event.target;
+
         submitButton.disabled = true;
         try {
             window.showLoading();

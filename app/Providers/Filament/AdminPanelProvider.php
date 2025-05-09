@@ -47,26 +47,19 @@ class AdminPanelProvider extends PanelProvider
                         NavigationGroup::make('Team')
                         ->items([
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TeamMemberResource::getNavigationItems(),
-                            ...\App\Filament\Resources\RosterMemberResource::getNavigationItems(),
                         ]),
-                        NavigationGroup::make('Event Results')
+                        NavigationGroup::make('Event Details')
                             ->items([
                                 ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
                                 // ...\App\Filament\Resources\EventJoinResultsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\BracketsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
+                                ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
                             ])
                             ->collapsible(false),
                         
-                        NavigationGroup::make('Event Join & Organize')
-                            ->items([
-                                ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
-                                ...\App\Filament\Resources\ParticipantPaymentResource::getNavigationItems(),
-                                ...\App\Filament\Resources\PaymentTransactionResource::getNavigationItems(),
-                                ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
-                            ]),
          
                         NavigationGroup::make('Event Setup')
                             ->items([

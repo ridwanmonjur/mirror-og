@@ -17,7 +17,6 @@ class EventTypeResource extends Resource
 {
     protected static ?string $model = EventType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -34,10 +33,12 @@ class EventTypeResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('eventType')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('eventDefinitions')
+                    // ->searchable(),
             ])
             ->filters([
                 //

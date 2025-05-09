@@ -17,7 +17,6 @@ class TeamFollowResource extends Resource
 {
     protected static ?string $model = TeamFollow::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -38,6 +37,7 @@ class TeamFollowResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('team.teamName')
                     ->numeric()
                     ->sortable(),
@@ -69,8 +69,8 @@ class TeamFollowResource extends Resource
     {
         return [
             'index' => Pages\ListTeamFollows::route('/'),
-            'create' => Pages\CreateTeamFollow::route('/create'),
-            'edit' => Pages\EditTeamFollow::route('/{record}/edit'),
+            // 'create' => Pages\CreateTeamFollow::route('/create'),
+            // 'edit' => Pages\EditTeamFollow::route('/{record}/edit'),
         ];
     }
 }

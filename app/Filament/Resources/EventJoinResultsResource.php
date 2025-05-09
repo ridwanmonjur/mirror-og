@@ -17,7 +17,6 @@ class EventJoinResultsResource extends Resource
 {
     protected static ?string $model = EventJoinResults::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -35,6 +34,8 @@ class EventJoinResultsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('join_events_id')
                     ->numeric()
                     ->sortable(),
@@ -66,8 +67,8 @@ class EventJoinResultsResource extends Resource
     {
         return [
             'index' => Pages\ListEventJoinResults::route('/'),
-            'create' => Pages\CreateEventJoinResults::route('/create'),
-            'edit' => Pages\EditEventJoinResults::route('/{record}/edit'),
+            // 'create' => Pages\CreateEventJoinResults::route('/create'),
+            // 'edit' => Pages\EditEventJoinResults::route('/{record}/edit'),
         ];
     }
 }

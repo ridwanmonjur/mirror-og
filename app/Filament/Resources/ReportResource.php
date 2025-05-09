@@ -17,7 +17,6 @@ class ReportResource extends Resource
 {
     protected static ?string $model = Report::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -47,6 +46,8 @@ class ReportResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('reporter.name')
                     ->numeric()
                     ->sortable(),
@@ -54,9 +55,7 @@ class ReportResource extends Resource
                     ->label('Reported User')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('reason')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status'),
+               
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -90,8 +89,8 @@ class ReportResource extends Resource
     {
         return [
             'index' => Pages\ListReports::route('/'),
-            'create' => Pages\CreateReport::route('/create'),
-            'edit' => Pages\EditReport::route('/{record}/edit'),
+            // 'create' => Pages\CreateReport::route('/create'),
+            // 'edit' => Pages\EditReport::route('/{record}/edit'),
         ];
     }
 }

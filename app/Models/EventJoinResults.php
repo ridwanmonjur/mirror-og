@@ -19,6 +19,7 @@ class EventJoinResults extends Model
         return $this->belongsTo(EventDetail::class, 'event_id');
     }
 
+    
     public static function getEventJoinResults(int| string $id): Collection
     {
         return DB::table('join_events')

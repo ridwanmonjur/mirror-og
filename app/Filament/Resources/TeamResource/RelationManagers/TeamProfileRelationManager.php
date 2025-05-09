@@ -62,6 +62,7 @@ class TeamProfileRelationManager extends RelationManager
                 Forms\Components\TextInput::make('backgroundGradient')
                     ->label('Background Gradient'),
                 Forms\Components\TextInput::make('follower_count')
+                    ->default(0)
                     ->label('Follower Count'),
                 Forms\Components\ColorPicker::make('fontColor')
                     ->label('Font Color')
@@ -76,6 +77,8 @@ class TeamProfileRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make(name: 'id'),
+
                 Tables\Columns\ColorColumn::make('backgroundColor')
                     ->label('Background Color'),
                 Tables\Columns\ImageColumn::make('backgroundBanner'),

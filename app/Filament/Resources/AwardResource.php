@@ -17,7 +17,6 @@ class AwardResource extends Resource
 {
     protected static ?string $model = Award::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -36,6 +35,8 @@ class AwardResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image'),
@@ -74,8 +75,8 @@ class AwardResource extends Resource
     {
         return [
             'index' => Pages\ListAwards::route('/'),
-            'create' => Pages\CreateAward::route('/create'),
-            'edit' => Pages\EditAward::route('/{record}/edit'),
+            // 'create' => Pages\CreateAward::route('/create'),
+            // 'edit' => Pages\EditAward::route('/{record}/edit'),
         ];
     }
 }
