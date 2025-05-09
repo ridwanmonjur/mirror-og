@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Team\TeamSearchRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Jobs\HandleFollowsFriends;
 use App\Models\EventJoinResults;
@@ -471,6 +472,38 @@ class ParticipantTeamController extends Controller
         } catch (Exception $e) {
             return back()->with('errorMessage', $e->getMessage());
         }
+    }
+
+    /**
+     * Get paginated teams for select dropdown
+     *
+     * @param TeamSearchRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(TeamSearchRequest $request)
+    {
+        $params = $request->searchParams();
+        
+        $teams = Team::paginatedSearch(
+            $params['query'], 
+            $params['cursor'], 
+            $params['perPage'] + 1
+        )->get();
+
+        $hasMore = $teams->count() > $params['perPage'];
+        if ($hasMore) {
+            $teams->pop();
+        }
+
+        $nextCursor = $hasMore ? $teams->last()->id : null;
+
+        $response = [
+            'data' => $teams,
+            'has_more' => $hasMore,
+            'next_cursor' => $nextCursor
+        ];
+
+        return response()->json($response);
     }
   
     protected function handleTeamManagement($selectTeam, $eventId, $request, $page, $redirect = false)

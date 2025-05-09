@@ -17,22 +17,18 @@ class EventDetailResource extends Resource
 {
     protected static ?string $model = EventDetail::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('eventDefinitions')
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('eventName')
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('startDate'),
                 Forms\Components\DatePicker::make('endDate'),
                 Forms\Components\TextInput::make('startTime'),
                 Forms\Components\TextInput::make('endTime'),
-                Forms\Components\TextInput::make('eventDescription')
-                    ->maxLength(255),
+                Forms\Components\Textarea::make('eventDescription'),
                 Forms\Components\FileUpload::make('eventBanner')
                     ->image(),
                 Forms\Components\TextInput::make('eventTags')
@@ -56,8 +52,6 @@ class EventDetailResource extends Resource
                     ->relationship('eventTier', 'eventTier'),
                 Forms\Components\Select::make('event_category_id')
                     ->relationship('game', 'gameTitle'),
-                Forms\Components\TextInput::make('payment_transaction_id')
-                    ->numeric(),
                 Forms\Components\Toggle::make('willNotify')
                     ->required(),
             ]);
@@ -67,46 +61,16 @@ class EventDetailResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('eventBanner')
                 ->searchable(),
-                Tables\Columns\TextColumn::make('eventDefinitions')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('startDate')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('endDate')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('startTime'),
-                Tables\Columns\TextColumn::make('endTime'),
-                Tables\Columns\TextColumn::make('eventDescription')
-                    ->searchable(),
-               
-                Tables\Columns\TextColumn::make('eventTags')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('venue')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sub_action_public_date')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sub_action_public_time')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sub_action_private')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('type.eventType')
                     ->numeric()
                     ->sortable(),
@@ -116,11 +80,8 @@ class EventDetailResource extends Resource
                 Tables\Columns\TextColumn::make('game.gameTitle')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_transaction_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('willNotify')
-                    ->boolean(),
+             
+           
             ])
             ->filters([
                 //
@@ -139,6 +100,7 @@ class EventDetailResource extends Resource
     {
         return [
             RelationManagers\SignupRelationManager::class,
+            RelationManagers\PTransactionsRelationManager::class
         ];
     }
 

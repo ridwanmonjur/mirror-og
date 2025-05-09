@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\TeamResource\RelationManagers;
+namespace App\Filament\Resources\JoinEventResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -10,19 +10,24 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TeamCaptainRelationManager extends RelationManager
+class ResultsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'captain';
+    protected static string $relationship = 'results';
+    
+    protected static ?string $recordTitleAttribute = 'position';
+    
+    protected static ?string $title = 'Results';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('team_member_id')
-                    ->relationship('user', 'name', 
-                        fn (Builder $query) => $query->where('role', 'PARTICIPANT')
-                    )
-                    ->label('Captain')
+                // No need to show join_events_id as it will be automatically handled
+                // by the relation manager
+                Forms\Components\TextInput::make('position')
+                    ->label('Position')
+                    ->integer()
+                    ->minValue(1)
                     ->required(),
             ]);
     }
@@ -30,12 +35,9 @@ class TeamCaptainRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('id')
+            ->recordTitleAttribute('position')
             ->columns([
-                Tables\Columns\TextColumn::make(name: 'id'),
-
-                Tables\Columns\TextColumn::make('user.name')
-                    ->label('Captain Name')
+                Tables\Columns\TextColumn::make('position')
                     ->sortable(),
             ])
             ->filters([
@@ -43,9 +45,9 @@ class TeamCaptainRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => !$this->getOwnerRecord()->user()->exists())
+                ->visible(fn () => !$this->getOwnerRecord()->results()->exists())
                 // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                ->createAnother(false),
+                ->createAnother(false)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

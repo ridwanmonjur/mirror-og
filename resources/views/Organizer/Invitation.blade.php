@@ -8,6 +8,7 @@
     <title>Event Invitation</title>
      @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
+    <meta name="page-component" content="teamSelect">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
 </head>
 
@@ -25,7 +26,9 @@
                 data-event-id="{{ $event->id }}"
                 data-user-id="{{ $user_id }}"
                 data-route-show="{{ route('event.show', $event->id) }}"
-                data-route-invitation-store="{{ route('event.invitation.store', $event->id) }}">
+                data-route-invitation-store="{{ route('event.invitation.store', $event->id) }}"
+                data-route-invitation-destroy="{{ route('event.invitation.destroy', $event->id) }}"
+            >
             </div>
 
             @include('includes.__CreateEditEvent.CreateEventTimelineBox')
@@ -38,11 +41,11 @@
                     </u>
                     <br>
                     <div>
-                        <select class="form-control form-select" style="max-width: 300px; margin: auto;">
-                            @foreach ($teamList as $team)
-                                <option value="{{$team->id}}">{{ $team->teamName }}</option>
-                            @endforeach
-                        </select>
+                        <div class="w-75 mx-auto">
+                            <select id="team-select"  class="d-block w-100" placeholder="Select a person..." >
+                                <option value="">Select a person...</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
                         <br>
@@ -50,13 +53,29 @@
                     </div>
                 </div>
                 <div class="added-participant">
-                    <br>
                     @forelse ($event->invitationList as $invitation)
-                    <p>{{ $invitation->team?->teamName }}</p>
+                        <div id="invite-{{$invitation->id}}" class="d-flex text-center my-2 mx-auto align-items-center justify-content-center">
+                                <img src="/storage/{{ $invitation->team?->teamName }}" 
+                                class="team-banner border border-dark  object-fit-cover rounded-circle "  
+                                onerror="this.src='/assets/images/404q.png';"
+                                width="30" height="30"
+                            >
+                            <p class="ms-1 me-1 d-inline my-0 py-0">{{ $invitation->team?->teamName }}</p>
+                            <span class="me-1">{{ $invitation->team?->country_flag }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                data-invitation-id = {{$invitation->id}}
+                                onclick="removeParticant(event)"
+                                class="text-red border border-danger cursor-pointer rounded-circle p-0 ms-2"
+                            >
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </div>
                     @empty
-                    <p class="hide-if-participant">No teams invited yet</p>
+                    <p class="hide-if-participant mt-3">No teams invited yet</p>
                     @endforelse
                 </div>
+                <br>
                 <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 5px 20px; background-color: white; color: #2e4b59; border: 1px solid black; margin: auto;">
                     Go to event page
                 </button>
@@ -66,9 +85,5 @@
         </div>
         <br><br>
     </main>
-    <script src="{{ asset('/assets/js/organizer/event_creation/CreateEventPart1.js') }}"></script>
-    <script src="{{ asset('/assets/js/organizer/event_creation/timeline.js') }}"></script>
-    <script src="{{ asset('/assets/js/organizer/event_creation/event_create.js') }}"></script>
-    
-    <script src="{{ asset('/assets/js/organizer/event_creation/CreateEventPart2.js') }}"></script>
+   
 </body>

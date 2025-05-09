@@ -4,12 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Brackets extends Model
 {
     use HasFactory;
 
     protected $table = 'brackets';
+
+    public function team1(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'team1_id', 'id');
+    }
+
+    public function team2(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'team2_id', 'id');
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(EventDetail::class, 'event_details_id', 'id');
+    }
 
     protected $fillable = [
         'order',
@@ -23,6 +39,7 @@ class Brackets extends Model
         'team1_points',
         'team2_points',
         'event',
+        'event_details_id',
         'stage_name',
         'inner_stage_name',
         'status',

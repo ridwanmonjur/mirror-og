@@ -18,7 +18,6 @@ class ActivityLogsResource extends Resource
 {
     protected static ?string $model = ActivityLogs::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -101,27 +100,21 @@ class ActivityLogsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
-                Tables\Columns\TextColumn::make('subject_type')
-                    ->label('Subject Type')
-                    ->formatStateUsing(fn (string $state): string => class_basename($state))
-                    ->sortable(),
-                
-                Tables\Columns\TextColumn::make('subject.name') // Assuming related model has 'name' field
-                    ->label('Subject')
-                    ->searchable()
-                    ->sortable(),
-                    Tables\Columns\TextColumn::make('object_type')
+               
+                Tables\Columns\TextColumn::make('action')
+                    ->searchable(),
+
+               
+                Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')
                     ->formatStateUsing(fn (string $state): string => class_basename($state))
                     ->sortable(),
                 
-                Tables\Columns\TextColumn::make('object.id')
-                    ->label('Object')
-                    ->searchable()
-                    ->sortable(),
+               
                 // Tables\Columns\TextColumn::make('subject_type')
                 //     ->searchable(),
                 // Tables\Columns\TextColumn::make('subject_id')
@@ -162,8 +155,8 @@ class ActivityLogsResource extends Resource
     {
         return [
             'index' => Pages\ListActivityLogs::route('/'),
-            'create' => Pages\CreateActivityLogs::route('/create'),
-            'edit' => Pages\EditActivityLogs::route('/{record}/edit'),
+            // 'create' => Pages\CreateActivityLogs::route('/create'),
+            // 'edit' => Pages\EditActivityLogs::route('/{record}/edit'),
         ];
     }
 }

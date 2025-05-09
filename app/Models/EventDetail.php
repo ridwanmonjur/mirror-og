@@ -84,6 +84,11 @@ class EventDetail extends Model
         return $this->belongsTo(EventCategory::class, 'event_category_id');
     }
 
+    public function paymentTransaction(): BelongsTo
+    {
+        return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
+    }
+
     public function joinEvents(): HasMany
     {
         return $this->hasMany(JoinEvent::class, 'event_details_id', 'id');

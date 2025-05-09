@@ -24,16 +24,22 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Io238\ISOCountries\Models\Country;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationLabel = 'Users';
 
     public static function form(Form $form): Form
     {
+        $countries = [];
+        
+        foreach (Country::all() as $country) {
+            $countries[$country->id] = $country->name;
+        }
+
         return $form
             ->schema([
                 Tabs::make('User Management')
@@ -150,16 +156,28 @@ class UserResource extends Resource
                                         Textarea::make('participant.bio'),
                                         TextInput::make('participant.age')
                                             ->numeric(),
-                                        TextInput::make('participant.region')
-                                            ->maxLength(255),
                                         DatePicker::make('participant.birthday'),
-                                        TextInput::make('participant.region_name')
-                                            ->default('')
-                                            ->maxLength(255),
-                                        TextInput::make('participant.region_flag')
-                                            ->maxLength(255),
-                                        Toggle::make('participant.isAgeVisible')
-                                            ->default(true),
+                                        Select::make('participant.region')
+                                            ->label('Country')
+                                            ->options($countries)
+                                            ->reactive()
+                                            ->afterStateUpdated(function ($state, callable $set) {
+                                                if ($state) {
+                                                    $country = Country::find($state);
+                                                    if ($country) {
+                                                        $set('region_name', $country->name);
+                                                        $set('region_flag', $country->flag);
+                                                    } else {
+                                                        $set('region_name', null);
+                                                        $set('region_flag', null);
+                                                    }
+                                                }
+                                            })
+                                            ->searchable()
+                                            ->placeholder('Select a country'),
+                                        Forms\Components\Hidden::make('participant.region_name'),
+                                        Forms\Components\Hidden::make('participant.region_flag'),
+                                        Toggle::make('participant.isAgeVisible')->default(true)
                                     ])
                             ])
                             ->visible(fn (callable $get) => $get('role') === 'PARTICIPANT'),
@@ -201,9 +219,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->searchable()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('userBanner'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -214,8 +230,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('mobile_no')
-                    ->searchable(),
+               
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -248,8 +263,14 @@ class UserResource extends Resource
     {
         return [
             RelationManagers\UserProfileRelationManager::class,
-            RelationManagers\DiscountsRelationManager::class,
+            RelationManagers\AddressRelationManager::class,
             RelationManagers\ActivityLogsRelationManager::class,
+            RelationManagers\NotificationCountRelationManager::class,
+            RelationManagers\NotificationListRelationManager::class,
+            
+            RelationManagers\DiscountsRelationManager::class,
+
+
         ];
     }
 

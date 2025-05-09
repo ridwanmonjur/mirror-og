@@ -12,7 +12,7 @@ class AwardResults extends Model
 {
     use HasFactory;
     protected $table = 'awards_results';
-    public $fillable = ['join_events_id', 'awards_id', 'team_id'];
+    public $fillable = ['join_events_id', 'award_id', 'team_id'];
 
     public function team(): BelongsTo
     {

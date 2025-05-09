@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user/{id}/logs', [ParticipantController::class, 'getActivityLogs'])->name('activity-logs.index');
 Route::get('/user/{id}/connections', [SocialController::class, 'getConnections'])->name('user.connections.index')->middleware('prevent-back-history');
 Route::post('/event/{id}/invitation', [OrganizerInvitationController::class, 'store'])->name('event.invitation.store');
+Route::post('/event/{id}/inviteDestroy', [OrganizerInvitationController::class, 'destroy'])->name('event.invitation.destroy');
 
 Route::prefix('media')->group(function () {
     Route::post('/', [ImageVideoController::class, 'upload']);
@@ -48,6 +49,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
+        Route::get('/teams/search', [ParticipantTeamController::class, 'search']);
+
         Route::post('/event/{id}/brackets', [ParticipantEventController::class, 'validateBracket'])->name('event.matches.validate');
 
         Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);

@@ -13,15 +13,23 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
+use Io238\ISOCountries\Models\Country;
 
 class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
+        // Make sure the countries are loaded
+        $countries = [];
+        
+        // Get all country codes and names from the package
+        foreach (Country::all() as $country) {
+            $countries[$country->id] = $country->name;
+        }
+        
         return $form
             ->schema([
                 Forms\Components\TextInput::make('teamName')
@@ -65,12 +73,26 @@ class TeamResource extends Resource
                         }
                         return $path;
                     }),
-                Forms\Components\TextInput::make('country')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('country_name')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('country_flag')
-                    ->maxLength(255),
+                Forms\Components\Select::make('country')
+                    ->label('Country')
+                    ->options($countries)
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            $country = Country::find($state);
+                            if ($country) {
+                                $set('country_name', $country->name);
+                                $set('country_flag', $country->flag);
+                            }
+                        } else {
+                            $set('country_name', null);
+                            $set('country_flag', null);
+                        }
+                    })
+                    ->searchable()
+                    ->placeholder('Select a country'),
+                Forms\Components\Hidden::make('country_name'),
+                Forms\Components\Hidden::make('country_flag'),
             ]);
     }
 
@@ -78,12 +100,18 @@ class TeamResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\ImageColumn::make('teamBanner'),
+
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Team Creator')
                     ->numeric()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('country_name')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -92,15 +120,8 @@ class TeamResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('teamDescription')
-                    ->searchable(),
-                Tables\Columns\ImageColumn::make('teamBanner'),
-                Tables\Columns\TextColumn::make('country')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('country_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('country_flag')
-                    ->searchable(),
+               
+              
             ])
             ->filters([
                 //
@@ -118,7 +139,10 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
+        
+
             RelationManagers\TeamProfileRelationManager::class,
+            RelationManagers\MembersRelationManager::class,
             RelationManagers\TeamCaptainRelationManager::class
         ];
     }

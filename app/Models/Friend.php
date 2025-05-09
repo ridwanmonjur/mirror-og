@@ -29,7 +29,7 @@ class Friend extends Model
 
     public function actor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user2_id', 'id');
+        return $this->belongsTo(User::class, 'actor_id', 'id');
     }
 
 

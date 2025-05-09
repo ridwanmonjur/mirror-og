@@ -17,7 +17,6 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -38,6 +37,7 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('event_id')
                     ->numeric()
                     ->sortable(),
@@ -79,8 +79,8 @@ class TaskResource extends Resource
     {
         return [
             'index' => Pages\ListTasks::route('/'),
-            'create' => Pages\CreateTask::route('/create'),
-            'edit' => Pages\EditTask::route('/{record}/edit'),
+            // 'create' => Pages\CreateTask::route('/create'),
+            // 'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
     }
 }

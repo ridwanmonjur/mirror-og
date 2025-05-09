@@ -17,7 +17,6 @@ class BlocksResource extends Resource
 {
     protected static ?string $model = Blocks::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -37,6 +36,8 @@ class BlocksResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
+
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
@@ -77,8 +78,8 @@ class BlocksResource extends Resource
     {
         return [
             'index' => Pages\ListBlocks::route('/'),
-            'create' => Pages\CreateBlocks::route('/create'),
-            'edit' => Pages\EditBlocks::route('/{record}/edit'),
+            // 'create' => Pages\CreateBlocks::route('/create'),
+            // 'edit' => Pages\EditBlocks::route('/{record}/edit'),
         ];
     }
 }

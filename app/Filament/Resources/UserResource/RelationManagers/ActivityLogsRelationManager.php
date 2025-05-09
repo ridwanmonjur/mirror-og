@@ -38,6 +38,8 @@ class ActivityLogsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('action')
             ->columns([
+                Tables\Columns\TextColumn::make(name: 'id'),
+
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image'),

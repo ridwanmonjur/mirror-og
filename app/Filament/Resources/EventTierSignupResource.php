@@ -17,7 +17,6 @@ class EventTierSignupResource extends Resource
 {
     protected static ?string $model = EventTierSignup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
