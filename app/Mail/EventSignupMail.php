@@ -35,7 +35,7 @@ class EventSignupMail extends Mailable implements ShouldQueue
     
     public function build()
     {
-        return $this->replyTo(env('MAIL_CC_ADDRESS'))
+        return $this->replyTo(config('services.mail_address'))
             ->subject("The team has completed signup!")
             ->view('Email.event-signuped')
             ->with([
