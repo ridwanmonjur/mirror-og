@@ -39,7 +39,7 @@
         data-team-id="{{ $teamId }}"
         data-event-id="{{ $event->id }}"
         data-event-type="{{ $event->getRegistrationStatus() }}"
-        data-stripe-key="{{ env('STRIPE_KEY') }}"
+            data-stripe-key="{{ config('services.stripe.key') }}"
         data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
         data-checkout-transition-url="{{ route('participant.checkout.transition') }}"
     >    

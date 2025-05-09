@@ -15,8 +15,13 @@ class StripePayment
 
     public function __construct()
     {
-        $this->stripeClient = new StripeClient(env('STRIPE_SECRET'));
-    }
+        $stripeSecret = config('services.stripe.secret');
+    
+        if (empty($stripeSecret)) {
+            throw new \Exception('Stripe secret key is not configured.');
+        }
+        
+        $this->stripeClient = new StripeClient($stripeSecret);    }
 
     public function createStripeCustomer(string $name, string $email): ?Customer
     {
