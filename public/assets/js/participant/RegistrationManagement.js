@@ -386,6 +386,7 @@ function submitConfirmCancelForm(event) {
 
         }).then((result) => {
             if (result.isConfirmed) {
+
                 if (registrationStatus == registrationStatusEnum['NORMAL']) {
                     showNormalRegistration();
                 }
@@ -394,6 +395,11 @@ function submitConfirmCancelForm(event) {
                     || registrationStatus == registrationStatusEnum['TOO_EARLY']
                 ) {
                     showEarlyRosterConfirmation();
+                } else {
+                    Swal.fire ({
+                        icon: 'error',
+                        title: 'Error, too late to register!'
+                    })
                 }
             }
         });
@@ -687,12 +693,8 @@ addOnLoad(()=> {
       
       
         
-            console.log(index)
             rosterItems.forEach(item => {
-                if (item.classList.contains('d-none-until-hover-parent')) {
-                    item.classList.remove('d-none-until-hover-parent');
-                    item.classList.add('d-none-until-hover-parent2');
-                }
+                
 
                 item.style.border = 'none';
                 item.style.borderRadius = '';
@@ -704,11 +706,7 @@ addOnLoad(()=> {
       
        
             item.style.zIndex = '1050';
-            item.style.position = 'relative';
-            item.style.backgroundColor = 'white';
-            item.style.border = '2px solid #43A4D7';
-            item.style.borderRadius = '4px';
-            item.style.transition = 'all 0.3s ease';
+         
         
             item.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
