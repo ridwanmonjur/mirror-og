@@ -109,7 +109,7 @@ return [
 
         // 'staging' => [
         //     'name' => 'Staging',
-        //     'host' => 'https://staging.example.com/log-viewer',
+        //     'host' => 'https://staging.driftwood.gg/log-viewer',
         //     'auth' => [      // Example of HTTP Basic auth
         //         'username' => 'username',
         //         'password' => 'password',
@@ -118,7 +118,7 @@ return [
         //
         // 'production' => [
         //     'name' => 'Production',
-        //     'host' => 'https://example.com/log-viewer',
+        //     'host' => 'https://driftwood.gg/log-viewer',
         //     'auth' => [      // Example of Bearer token auth
         //         'token' => env('LOG_VIEWER_PRODUCTION_TOKEN'),
         //     ],

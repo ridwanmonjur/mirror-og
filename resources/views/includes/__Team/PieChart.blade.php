@@ -155,8 +155,7 @@
                                 >
                                     Cancel Registration
                                 </button> 
-                                <br>
-                                <p class="text-success mt-2">Your registration is confirmed!</p>
+                               
                             </form>
                         @else
                            <button
@@ -164,17 +163,10 @@
                                 class="mt-2 btn oceans-gaming-default-button bg-success  py-2 rounded-pill px-3">
                                 Registration Confirmed
                             </button>
-                        </form>
                             <p class="text-red mt-2 py-0 mb-0">A vote to quit is in progress!</p>
                         @endif
 
-                    @elseif ($joinEvent->join_status == "canceled")
-                        <button
-                                style="cursor: not-allowed; pointer-events: none;"
-                                class="mt-2 btn oceans-gaming-default-button oceans-gaming-gray-button px-2">
-                                Registration Canceled
-                            </button>
-                        </form>
+    
                     @endif
                 @endif
                 @if ($joinEvent->totalRosterCount == $maxRosterSize)
@@ -243,6 +235,12 @@
             <p class="text-center text-primary"> 
                 Join the roster to contribute to the entry fee
             </p>
+        @endif
+
+        @if ($joinEvent->join_status == "confirmed") 
+            <button class="btn rounded-pill btn-success text-dark px-3 py-2 mt-1">Confirmed Registration!</button>
+        @elseif ($joinEvent->join_status == "canceled") 
+            <button class="btn rounded-pill bg-red text-white px-3 py-2 mt-1">Canceled Registration!</button>
         @endif
     </div>
     <div class="modal fade" id={{ 'payModal' . $random_int }} tabindex="-1"

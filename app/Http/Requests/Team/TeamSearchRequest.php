@@ -71,7 +71,7 @@ class TeamSearchRequest extends FormRequest
         return [
             'query' => $validated['q'] ?? '',
             'cursor' => $validated['cursor'] ?? null,
-            'perPage' => $validated['per_page'] ?? 5,
+            'perPage' => $validated['per_page'] ?? 15,
         ];
     }
 }

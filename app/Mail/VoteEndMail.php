@@ -35,7 +35,7 @@ class VoteEndMail extends Mailable implements ShouldQueue
     
     public function build()
     {
-        return $this->replyTo(env('MAIL_CC_ADDRESS'))
+        return $this->replyTo(config('services.mail_address'))
             ->subject("A vote to quit has concluded.")
             ->view('Email.vote-ended')
             ->with([

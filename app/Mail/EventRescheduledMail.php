@@ -35,7 +35,7 @@ class EventRescheduledMail extends Mailable implements ShouldQueue
     
     public function build()
     {
-        return $this->replyTo(env('MAIL_CC_ADDRESS'))
+        return $this->replyTo(config('services.mail_address'))
             ->subject("Your event has been rescheduled!")
             ->view('Email.event-rescheduled')
             ->with([

@@ -45,6 +45,7 @@
     <div @class([
         'event  mx-auto event-width cursor-pointer visible-until-hover-parent position-relative ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
+        
     ]) >
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img 
@@ -52,7 +53,7 @@
                 {!! trustedBladeHandleImageFailureBanner() !!} @class([
                 'opacity-until-hover object-fit-cover border-0 w-100 h-100 ',
             ])
-                style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
+                style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px; "
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
                 >
             <div class="pt-3 mt-2 position-absolute custom-scrollbar w-100" 
@@ -163,9 +164,23 @@
                                 @if ($joinEvent->isUserPartOfRoster) 
                                     <div class="text-end">
                                         <span>
-                                            @if ($joinEvent->join_status == "confirmed") 
+                                            {{-- @if ($joinEvent->join_status == "confirmed")  --}}
+                                                <button 
+                                                        onclick="disapproveMemberAction(event);"
+                                                        class="btn btn-sm rounded-pill bg-red text-light me-1 my-1 z-99"
+                                                        data-join-event-id="{{ $joinEvent->id }}"
+                                                        data-user-id="{{$user->id}}"
+                                                        data-team-id="{{ $selectTeam->id }}"
+                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                                                        <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+                                                        </svg>
+                                                        Leave Roster
+                                                    </button>
                                                 @if (!$joinEvent->vote_ongoing)
-                                                    <form action="{{route('participant.confirmOrCancel.action')}}" class="{{'cancel2form' . $joinEvent->id  }}"  method="POST">
+
+                                                    <form action="{{route('participant.confirmOrCancel.action')}}" class="{{'cancel2form' . $joinEvent->id  }} d-inline"  method="POST">
                                                         @csrf
                                                         <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
                                                         <input type="hidden" name="join_status" value="canceled">
@@ -177,7 +192,7 @@
                                                             data-join-status="{{$joinEvent->join_status}}"
                                                             data-registration-status="{{$joinEvent->regStatus}}"
                                                             onclick="submitConfirmCancelForm(event)" 
-                                                            class="btn btn-sm text-light bg-red me-2 rounded-pill"
+                                                            class="btn btn-sm my-1 text-red border border-danger bg-light me-2 rounded-pill"
                                                         >
                                                             Leave Event
                                                         </button> 
@@ -270,42 +285,7 @@
                                                         </div>
                                                     </div>
                                                 @endif
-                                            @elseif ($joinEvent->join_status == "pending") 
-                                                @if (!$joinEvent->vote_ongoing) 
-                                                    <button 
-                                                        onclick="disapproveMemberAction(event);"
-                                                        class="btn btn-sm rounded-pill bg-red text-light me-1 z-99"
-                                                        data-join-event-id="{{ $joinEvent->id }}"
-                                                        data-user-id="{{$user->id}}"
-                                                        data-team-id="{{ $selectTeam->id }}"
-                                                        data-roster-id="{{ $currentUser['rosterId'] }}"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
-                                                        <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
-                                                        </svg>
-                                                        Leave Roster
-                                                    </button>
-                                                    
-                                                    <form action="{{route('participant.confirmOrCancel.action')}}" class="{{'cancel2form' . $joinEvent->id  }} d-inline"  method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="join_event_id" value="{{$joinEvent->id}}">
-                                                        <input type="hidden" name="join_status" value="canceled">
-                                                        <button 
-                                                            data-join-event-id="{{$joinEvent->id}}"
-                                                            data-form="{{'cancel2form' . $joinEvent->id  }}" 
-                                                            type="button"
-                                                            data-cancel="1"
-                                                            data-join-status="{{$joinEvent->join_status}}"
-                                                            data-registration-status="{{$joinEvent->regStatus}}"
-                                                            onclick="submitConfirmCancelForm(event)" 
-                                                            style="border: 1px solid red;"
-                                                            class="btn btn-sm text-red bg-white mt-1 rounded-pill me-2"
-                                                        >
-                                                            Leave Event
-                                                        </button> 
-                                                    </form>
-                                                @endif
-                                            @endif
+                                          
                                         </span>
                                     </div>
                                     

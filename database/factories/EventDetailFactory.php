@@ -8,6 +8,7 @@ use App\Models\EventCategory;
 use App\Models\EventDetail;
 use App\Models\EventTier;
 use App\Models\EventType;
+use App\Models\Organizer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
@@ -76,8 +77,29 @@ final class EventDetailFactory extends Factory
      */
     public function seed($eventIndex, $options)
     {
-        $user = User::factory()->create([
-            'role'=> 'ORGANIZER'
+       
+
+        $user = User::updateOrCreate([
+            'email' => "org1@driftwood.gg",
+        ],[
+            'name' => "Org1",
+            'email_verified_at' => now(),
+            'password' => bcrypt('123456'),
+            'remember_token' => \Illuminate\Support\Str::random(10),
+            'role' => 'PARTICIPANT',
+            'status' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
+        Organizer::updateOrCreate([
+            'user_id' => $user->id,
+        ],
+        [
+            'companyName' => 'Company X',
+            'companyDescription' => 'Company X Desc',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $eventCategory = EventCategory::where('gameTitle', 'Dota 2')->first();

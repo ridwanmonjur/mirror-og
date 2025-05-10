@@ -31,7 +31,7 @@
             >
             </div>
 
-            @include('includes.__CreateEditEvent.CreateEventTimelineBox')
+                    @include('includes.__CreateEditEvent.CreateEventSuccessTimelineBox')
             <br>
             <div class="text-center" style="margin:auto; border-color: black; background: white; max-width: 60vw; min-height: 60vh;display:flex;flex-direction:column; justify-content:space-between;">
                 <div>
@@ -61,7 +61,6 @@
                                 width="30" height="30"
                             >
                             <p class="ms-1 me-1 d-inline my-0 py-0">{{ $invitation->team?->teamName }}</p>
-                            <span class="me-1">{{ $invitation->team?->country_flag }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                 data-invitation-id = {{$invitation->id}}
                                 onclick="removeParticant(event)"

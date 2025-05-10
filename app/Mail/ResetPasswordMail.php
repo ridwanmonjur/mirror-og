@@ -35,7 +35,7 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'PLease confirm your password reset request.',
+            subject: 'Please confirm your password reset request.',
         );
     }
 

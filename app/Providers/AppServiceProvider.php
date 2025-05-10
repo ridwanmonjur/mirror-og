@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
                     'ridwan@driftwood.gg',
                     'zach@driftwood.gg',
                     'leigh@driftwood.gg',
-                    env('MAIL_CC_ADDRESS')
+                    config('services.mail_address')
                 ]);
             }
 
