@@ -164,7 +164,7 @@
                                 @if ($joinEvent->isUserPartOfRoster) 
                                     <div class="text-end">
                                         <span>
-                                            @if ($joinEvent->join_status == "confirmed") 
+                                            {{-- @if ($joinEvent->join_status == "confirmed")  --}}
                                                 @if (!$joinEvent->vote_ongoing)
                                                     <form action="{{route('participant.confirmOrCancel.action')}}" class="{{'cancel2form' . $joinEvent->id  }}"  method="POST">
                                                         @csrf
@@ -271,7 +271,7 @@
                                                         </div>
                                                     </div>
                                                 @endif
-                                            @elseif ($joinEvent->join_status == "pending") 
+                                            @if ($joinEvent->join_status == "pending") 
                                                 @if (!$joinEvent->vote_ongoing) 
                                                     <button 
                                                         onclick="disapproveMemberAction(event);"

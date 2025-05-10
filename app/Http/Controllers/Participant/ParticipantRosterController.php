@@ -78,14 +78,7 @@ class ParticipantRosterController extends Controller
                     'eventDetails.tier:id,eventTier'
                 ])
                 ->firstOrFail();
-            
-            if ($joinEvent && $joinEvent->join_status != 'confirmed') {
-                return response()->json([
-                    'success' => true, 
-                    'message' => 'The vote cannot start now.'
-                ]);
-            }
-           
+       
             $team = Team::where('id', $joinEvent->team_id)->first();
             
             $joinEvent->vote_starter_id = $user->id;

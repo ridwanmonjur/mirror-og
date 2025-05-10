@@ -9,6 +9,8 @@
 
 @section('title')
     {{ 'The participation vote for the team is now over.' }}
+@endsection
+
 @section('content')
     <tr>
         <td style="padding: 0; text-align: center;">
