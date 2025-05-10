@@ -66,6 +66,7 @@ cp -r public/assets/images/storage/images/* storage/app/public/images
 
 # Backup
 php artisan db:backup --path=database/backups/dev.sql
+php artisan db:backup --path=database/backups/prod.sql
 
 # Restore
 php artisan db:restore --path=database/backups/dev.sql
