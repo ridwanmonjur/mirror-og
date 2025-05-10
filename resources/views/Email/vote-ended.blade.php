@@ -16,7 +16,6 @@
                 style="background-color: white; margin: 0 auto; padding: 0; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Hi, {$userName}!</p>
                         <p style="display: flex; justify-content: start; align-items: center;">
                             <span>{!! $text !!}</span>
                         </p> 
