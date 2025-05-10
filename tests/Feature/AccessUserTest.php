@@ -21,14 +21,14 @@ class AccessUserTest extends TestCase
     public function test_organizer_can_login_successfully()
     {
         User::factory()->create([
-            'email' => 'organizer@example.com',
+            'email' => 'organizer@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'ORGANIZER',
             'email_verified_at' => now(),
         ]);
 
         $response = $this->postJson('/organizer/signin', [
-            'email' => 'organizer@example.com',
+            'email' => 'organizer@driftwood.gg',
             'password' => 'password123',
         ]);
 
@@ -42,19 +42,19 @@ class AccessUserTest extends TestCase
     public function test_user_cannot_login_with_incorrect_credentials()
     {
         User::createOrFirst([
-            'email' => 'test2@example.com',
+            'email' => 'test2@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'ORGANIZER'
         ]);
 
         User::createOrFirst([
-            'email' => 'test3@example.com',
+            'email' => 'test3@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'PARTICIPANT'
         ]);
 
         $response = $this->post('/participant/signin', [
-            'email' => 'test2@example.com',
+            'email' => 'test2@driftwood.gg',
             'password' => 'wrongpassword',
         ]);
 
@@ -62,7 +62,7 @@ class AccessUserTest extends TestCase
         $this->assertGuest();
 
         $response = $this->post('/organizer/signin', [
-            'email' => 'test3@example.com',
+            'email' => 'test3@driftwood.gg',
             'password' => 'wrongpassword',
         ]);
 
@@ -74,14 +74,14 @@ class AccessUserTest extends TestCase
     public function test_participant_can_login_successfully()
     {
         $user = User::factory()->create([
-            'email' => 'participant@example.com',
+            'email' => 'participant@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'PARTICIPANT',
             'email_verified_at' => now(),
         ]);
 
         $response = $this->postJson('/participant/signin', [
-            'email' => 'participant@example.com',
+            'email' => 'participant@driftwood.gg',
             'password' => 'password123',
         ]);
 
@@ -96,14 +96,14 @@ class AccessUserTest extends TestCase
     public function test_unverified_email_returns_error()
     {
         $user = User::factory()->create([
-            'email' => 'unverified@example.com',
+            'email' => 'unverified@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'ORGANIZER',
             'email_verified_at' => null,
         ]);
 
         $response = $this->postJson('/organizer/signin', [
-            'email' => 'unverified@example.com',
+            'email' => 'unverified@driftwood.gg',
             'password' => 'password123',
         ]);
 
@@ -117,14 +117,14 @@ class AccessUserTest extends TestCase
     public function test_incorrect_password_returns_error()
     {
         $user = User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'test@driftwood.gg',
             'password' => bcrypt('correctpassword'),
             'role' => 'ORGANIZER',
             'email_verified_at' => now(),
         ]);
 
         $response = $this->postJson('/organizer/signin', [
-            'email' => 'test@example.com',
+            'email' => 'test@driftwood.gg',
             'password' => 'wrongpassword',
         ]);
 
@@ -138,14 +138,14 @@ class AccessUserTest extends TestCase
     public function test_incorrect_role_returns_error()
     {
         $user = User::factory()->create([
-            'email' => 'participant2@example.com',
+            'email' => 'participant2@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'PARTICIPANT',
             'email_verified_at' => now(),
         ]);
 
         $response = $this->postJson('/organizer/signin', [
-            'email' => 'participant2@example.com',
+            'email' => 'participant2@driftwood.gg',
             'password' => 'password123',
         ]);
 
@@ -160,13 +160,13 @@ class AccessUserTest extends TestCase
     public function test_user_can_login_with_correct_credentials()
     {
         $user = User::createOrFirst([
-            'email' => 'test4@example.com',
+            'email' => 'test4@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'ORGANIZER'
         ]);
 
         $response = $this->post('/organizer/signin', [
-            'email' => 'test4@example.com',
+            'email' => 'test4@driftwood.gg',
             'password' => 'password123',
         ]);
 
@@ -176,13 +176,13 @@ class AccessUserTest extends TestCase
         $this->assertGuest();
 
         $user = User::createOrFirst([
-            'email' => 'test5@example.com',
+            'email' => 'test5@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'PARTICIPANT'
         ]);
 
         $response = $this->post('/participant/signin', [
-            'email' => 'test5@example.com',
+            'email' => 'test5@driftwood.gg',
             'password' => 'password123',
         ]);
 

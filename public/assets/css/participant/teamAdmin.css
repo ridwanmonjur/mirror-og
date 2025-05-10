@@ -308,6 +308,7 @@
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
     align-content: center;
     overflow: hidden;
+    max-width: 430px;
 }
 
 .event #eventBanner {
@@ -486,7 +487,7 @@
 
 
 .opacity-parent-until-hover:hover .opacity-until-hover{
-    opacity: 0.3;
+    opacity: 0.6;
     z-index: -1;
 }
 
@@ -562,6 +563,10 @@
 }
 
 @media screen and (min-width: 992px) {
+    .event {
+        max-width: 1000px;
+    }
+
     .invisible-until-hover {
         visibility: hidden;
     }

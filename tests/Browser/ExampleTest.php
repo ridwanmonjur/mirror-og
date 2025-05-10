@@ -24,7 +24,7 @@ class ExampleTest extends DuskTestCase
     // public function test_participant_can_login_successfully()
     // {
     //     User::factory()->create([
-    //         'email' => 'participant@example.com',
+    //         'email' => 'participant@driftwood.gg',
     //         'password' => bcrypt('password123'),
     //         'role' => 'PARTICIPANT',
     //         'email_verified_at' => now(),
@@ -35,7 +35,7 @@ class ExampleTest extends DuskTestCase
     //     $this->browse(function ($browser) {
     //         $browser->visit('/login')
     //             ->assertSee('Login')
-    //             ->type('email', 'participant@example.com')
+    //             ->type('email', 'participant@driftwood.gg')
     //             ->type('password', 'password123')
     //             ->assertChecked('remember')->press('Login')
     //             ->assertPathIs('/participant/home')  

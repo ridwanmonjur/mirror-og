@@ -403,21 +403,24 @@ class ParticipantEventController extends Controller
                 } else {
                     $rosterCount = $joinEvent->roster->count();
                     if ($rosterCount == 1) {
-                        $joinEvent->join_status = "left";
+                        $errorMessage = "You're just one member. Please leave the roster instead!";
+                        return back()->with('errorMessage', $errorMessage)
+                            ->with('scroll', $request->join_event_id) ;
+                    } else {
+                        $joinEvent->vote_starter_id = $user->id;
+                        $joinEvent->vote_ongoing = true;
                         $joinEvent->save();
+    
+                        dispatch(new HandleEventJoinConfirm('VoteStart', [
+                            'selectTeam' => $team,
+                            'user' => $user,
+                            'joinEvent' => $joinEvent,
+                            'event' => $event,
+                            'join_id' => $joinEvent->id
+                        ]));
                     }
 
-                    $joinEvent->vote_starter_id = $user->id;
-                    $joinEvent->vote_ongoing = true;
-                    $joinEvent->save();
 
-                    dispatch(new HandleEventJoinConfirm('VoteStart', [
-                        'selectTeam' => $team,
-                        'user' => $user,
-                        'joinEvent' => $joinEvent,
-                        'event' => $event,
-                        'join_id' => $joinEvent->id
-                    ]));
                 }
             } else {
                 return back()->with('errorMessage', $errorMessage)

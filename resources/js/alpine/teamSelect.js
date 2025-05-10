@@ -5,11 +5,12 @@ const teamSelect = new TomSelect('#team-select', {
     labelField: 'teamName',    
     searchField: ['teamName'],  
     plugins: ['virtual_scroll'],
-    maxOptions: 5,
-    preload: true, 
+    maxOptions: null,
     firstUrl: function (query) {
         return '/api/teams/search?q=' + encodeURIComponent(query);
     },
+    preload: 'focus', 
+    openOnFocus: true,
     load: function (query, callback) {
         const url = this.getUrl(query);
 
@@ -31,16 +32,14 @@ const teamSelect = new TomSelect('#team-select', {
     render: {
         option: function (item, escape) {
             return `<div class='d-flex justify-content-start align-items-center'>
-            <div class="w-50 d-inline-block text-start text-truncate">
+            <div class="d-inline-block text-start text-truncate">
                     <img src="/storage/${escape(item.teamBanner)}" 
                         class="team-banner object-fit-cover rounded-circle "  
                         onerror="this.src='/assets/images/404q.png';"
                         width="40" height="40"
                     >
                     <p class="mx-3 d-inline-block my-0 py-0">${escape(item.teamName)}</p>
-                    <span class="mx-2 fs-7">${item.country_flag}</span>
                 </div>
-            <p class="mx-2 d-none text-start w-50 text-muted d-lg-inline-block text-truncate my-0 py-0">${escape(item.teamDescription)}</p>
             </div>`;
         },
         item: function (item, escape) {
@@ -55,29 +54,7 @@ const teamSelect = new TomSelect('#team-select', {
                     <span class="mx-2">${item.country_flag}</span>
             </div>`;
         },
-        // no_results: function(data, escape) {
-        //     return '<div class="no-results">No teams found</div>';
-        // },
-        onInitialize: function() {
-            const self = this;
-            
-            self.load('');
-        },
-        loading_more: function (data, escape) {
-            return `<div class="loading-more-results w-100 py-2 d-flex align-items-center">
-    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-    Loading more teams
-</div>`;
-        }
+       
     },
 });
 
-// document.querySelector('#team-select').addEventListener('focus', function () {
-//     if (!teamSelect.isOpen) {
-//         if (teamSelect.lastQuery === '') {
-//             teamSelect.load('');
-//         }
-//         teamSelect.open();
-//     }
-
-// });

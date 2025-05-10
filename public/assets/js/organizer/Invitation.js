@@ -77,7 +77,7 @@ function addParticant() {
 }
 
 function removeParticant(event) {
-    let crossItem = event.target;
+    let crossItem = event.currentTarget;
     let inviteId = crossItem.dataset.invitationId;
     
     fetch(eventData.dataset.routeInvitationDestroy, {

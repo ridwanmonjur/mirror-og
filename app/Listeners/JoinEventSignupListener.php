@@ -38,6 +38,7 @@ class JoinEventSignupListener implements ShouldQueue
 
             $notifHtml = <<<HTML
                 <span class="notification-gray">
+                    <b>Hi, {$member->user->name}.</b><br><br>
                     You have signed up for  
                     <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/organizer/{$event2->event->user->id}">
                         {$event2->event->user->name}
