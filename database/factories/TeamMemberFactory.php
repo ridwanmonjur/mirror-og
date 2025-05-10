@@ -59,8 +59,10 @@ final class TeamMemberFactory extends Factory
                 'updated_at' => now(),
             ]);
             
-            $participant = Participant::create([
+            $participant = Participant::updateOrCreate([
                 'user_id' => $user->id,
+            ],
+            [
                 'nickname' => "TestPlayer$i",
                 'age' => fake()->numberBetween(13, 60),
                 'isAgeVisible' => 1,
