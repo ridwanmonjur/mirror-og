@@ -45,6 +45,7 @@
     <div @class([
         'event  mx-auto event-width cursor-pointer visible-until-hover-parent position-relative ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
+        
     ]) >
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img 
@@ -52,7 +53,7 @@
                 {!! trustedBladeHandleImageFailureBanner() !!} @class([
                 'opacity-until-hover object-fit-cover border-0 w-100 h-100 ',
             ])
-                style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px;"
+                style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px; "
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
                 >
             <div class="pt-3 mt-2 position-absolute custom-scrollbar w-100" 
@@ -299,7 +300,7 @@
                                                             data-registration-status="{{$joinEvent->regStatus}}"
                                                             onclick="submitConfirmCancelForm(event)" 
                                                             style="border: 1px solid red;"
-                                                            class="btn btn-sm text-red bg-white mt-1 rounded-pill me-2"
+                                                            class="btn btn-sm text-red bg-white  rounded-pill me-2"
                                                         >
                                                             Leave Event
                                                         </button> 
