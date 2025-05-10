@@ -91,6 +91,7 @@ class ParticipantRosterController extends Controller
             $joinEvent->vote_starter_id = $user->id;
             [$leaveRatio, $stayRatio] = $joinEvent->decideRosterLeaveVote();
             if ($leaveRatio > 0.5) {
+                $discountsByUserAndType = null;
                 if ($joinEvent->status == "pending") {
                     $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents($joinEvent->id, 0);
                 }
@@ -139,6 +140,7 @@ class ParticipantRosterController extends Controller
     {
         try {
             $joinEvent = JoinEvent::findOrFail( $request->join_events_id);
+            $user = $request->attributes->get('user');
 
             $member = RosterMember::where([
                 'user_id' => $request->user_id,
@@ -147,7 +149,6 @@ class ParticipantRosterController extends Controller
             ])->firstOrFail();
 
             if ( isset($joinEvent->roster_captain_id) && $member->id == $joinEvent->roster_captain_id) {
-                $user = $request->attributes->get('user');
                 $isAcceptedMember = TeamMember::where([
                     'team_id' => $request->team_id,
                     'status' => 'accepted',
@@ -159,7 +160,7 @@ class ParticipantRosterController extends Controller
                     'user_id' =>  $user->id,
                 ])->first();
 
-                if ($isAcceptedMember && $joinEvent->roster_captain_id != $userRoster->id) {
+                if ($isAcceptedMember && $joinEvent->roster_captain_id != $userRoster?->id) {
                     return response()->json(['success' => false, 
                         'message' => 'Captain can remove himself from roster only!'
                     ]);
@@ -214,7 +215,7 @@ class ParticipantRosterController extends Controller
                     $isAcceptedMember = false;
                 }
 
-                if ($isAcceptedMember && $joinEvent->roster_captain_id != $userRoster->id) {
+                if ($isAcceptedMember && $joinEvent->roster_captain_id != $userRoster?->id) {
                     return response()->json([
                         'success' => false, 
                         'message' => 'Only captain can remove himself or appoint another as captain.'
