@@ -232,30 +232,10 @@ class VoteEndStrategy
 
         if ($willQuit) {
             foreach ($teamMembers as $member) {
-                // $discount = isset($discountsByUserAndType[$member->user_id]) ? $discountsByUserAndType[$member->user_id] : null;
-                // $discountText = '';
-
-                // $issetReleasedAmount = isset($discount['released_amount']) && $discount['released_amount'] > 0;
-                // $issetCouponedAmount = isset($discount['couponed_amount']) && $discount['couponed_amount'] > 0;    
-                // if ( $issetReleasedAmount || $issetCouponedAmount ) {
-                //     $discountText = "You have been returned half of your contribution: ";
-                    
-                //     if ($issetReleasedAmount) {
-                //         $discountText .= "RM {$discount['released_amount']} in bank refunds" ;
-                //     }
-                    
-                //     if ($issetReleasedAmount && $issetCouponedAmount) {
-                //         $discountText .= " &";
-                //     }
-                
-                //     if ($issetCouponedAmount) {
-                //         $discountText .= " RM {$discount['couponed_amount']} in coupons.";
-                //     }
-                // }
-
                 if ($joinEvent->status == 'confirmed') {
                     $htmlMail = <<<HTML
                         <span class="notification-gray">
+                            <b>Hi, {$member->user->name}.</b><br>
                             Your team, 
                             <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                                 {$selectTeam->teamName}
@@ -273,6 +253,7 @@ class VoteEndStrategy
                 } else {
                     $htmlMail = <<<HTML
                         <span class="notification-gray">
+                            <b>Hi, {$member->user->name}.</b><br>
                             Your team, 
                             <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                                 {$selectTeam->teamName}
@@ -315,6 +296,12 @@ class VoteEndStrategy
                 if ($member->user->email) {
                     $memberMail[] = $member->user->email;
                 }
+
+
+                $joinEvent->vote_ongoing = false;
+                $joinEvent->join_status = "canceled";
+
+                $joinEvent->save();
             }
 
             Mail::to($memberMail)->send(new VoteEndMail([
@@ -328,6 +315,7 @@ class VoteEndStrategy
 
             $htmlMail = <<<HTML
                 <span class="notification-gray">
+                    <b>Hi, {$member->user->name}.</b><br>
                     <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/team/{$selectTeam->id}">
                         <span class="notification-blue">{$selectTeam->teamName}</span> 
                     </button>
@@ -349,6 +337,24 @@ class VoteEndStrategy
             HTML;
 
             NotifcationsUser::insertWithCount($memberNotification);
+
+            $rosterHistoryData = $teamMembers->map(function ($member) {
+                return [
+                    'user_id' => $member->user_id,
+                    'join_events_id' => $member->join_events_id,
+                    'team_member_id' => $member->team_member_id,
+                    'team_id' => $member->team_id,
+                    'vote_to_quit' => $member->vote_to_quit,
+                    'created_at' => $member->created_at,
+                    'updated_at' => now(),
+                ];
+            })->toArray();
+        
+            DB::table('roster_history')->insert($rosterHistoryData);
+        
+            $memberIds = $teamMembers->pluck('id')->toArray();
+        
+            DB::table('roster_members')->whereIn('id', $memberIds)->delete();
         } else {
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
@@ -364,6 +370,7 @@ class VoteEndStrategy
             foreach ($teamMembers as $member) {
                 $htmlMail = <<<HTML
                     <span class="notification-gray">
+                        <b>Hi, {$member->user->name}.</b><br>
                         You have taken part in a vote for participating 
                         <button class="btn-transparent px-0 border-0 notification-blue" data-href="/view/organizer/{$event->user->id}">
                             {$event->user->name}
@@ -403,6 +410,9 @@ class VoteEndStrategy
                     'scroll' => $join_id
                 ]),
             ]));
+
+            $joinEvent->vote_ongoing = false;
+            $joinEvent->save();
 
             NotifcationsUser::insertWithCount($memberNotification);
         }
