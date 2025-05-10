@@ -105,7 +105,7 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'role' => 'ADMIN',
-                'email' => 'admin@example.com',
+                'email' => 'admin@driftwood.gg',
                 'name' => 'Admin',
             ];
         });

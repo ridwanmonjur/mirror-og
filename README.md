@@ -12,7 +12,7 @@
 
 ## Admin Credentials
 ```
-Email: admin@example.com
+Email: admin@driftwood.gg
 Password: 12345678
 ```
 

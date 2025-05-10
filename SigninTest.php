@@ -19,7 +19,7 @@
     // {
     //     $userPost = [
     //         'username' => 'Test Signup Participant',
-    //         'email' => 'Participant@example.com',
+    //         'email' => 'Participant@driftwood.gg',
     //         'password' => 'password123',
     //         'confirmPassword' => "password123"
     //     ];
@@ -46,7 +46,7 @@
 
     //     $userPost = [
     //         'username' => 'Test Signup Organizer',
-    //         'email' => 'organizer@example.com',
+    //         'email' => 'organizer@driftwood.gg',
     //         'password' => 'password123',
     //         'companyDescription' => 'zzzzzzzzzzzzzzzzzzzzzzzzzzz',
     //         'companyName' => 'companyZZZZZZZZZZZZZZZZZZZ',

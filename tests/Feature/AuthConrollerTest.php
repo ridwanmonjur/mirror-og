@@ -13,7 +13,7 @@ class AuthConrollerTest extends TestCase
     public function test_logout_action()
     {
         $user = User::createOrFirst(
-            ['email' => 'test@example.com'],
+            ['email' => 'test@driftwood.gg'],
             [
                 'name' => 'Test User',
                 'password' => Hash::make('password'),

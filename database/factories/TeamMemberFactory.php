@@ -47,7 +47,7 @@ final class TeamMemberFactory extends Factory
         
         for ($i = 1; $i <= 10; $i++) {
             $user = User::updateOrCreate([
-                'email' => "testplayer$i@example.com",
+                'email' => "tester$i@driftwood.gg",
             ],[
                 'name' => "TestPlayer$i",
                 'email_verified_at' => now(),

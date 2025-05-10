@@ -1,6 +1,6 @@
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `email_verified_token`, `email_verified_expires_at`, `password`, `country_code`, `mobile_no`, `role`, `status`, `remember_token`, `created_at`,  `google_id`) VALUES
-(1, 'Admin', 'admin@example.com', NULL, '08XknKWJLm8nUlEK11oYtie7bnRV7tKA4nLhA9yt4ZyaWmrFeVh00H0eGnzFpR78', NULL, '$2y$10$3b8hd9PNVg/ikULcrGgg/enkqjdqBSbZmgzwpxBzM7Ps2fW3SEkCa', NULL, NULL, 'ADMIN', NULL, NULL, '2023-11-05 20:36:17',  NULL),
+(1, 'Admin', 'admin@driftwood.gg', NULL, '08XknKWJLm8nUlEK11oYtie7bnRV7tKA4nLhA9yt4ZyaWmrFeVh00H0eGnzFpR78', NULL, '$2y$10$3b8hd9PNVg/ikULcrGgg/enkqjdqBSbZmgzwpxBzM7Ps2fW3SEkCa', NULL, NULL, 'ADMIN', NULL, NULL, '2023-11-05 20:36:17',  NULL),
 (2, 'o_zach', 'o_zach@gmail.com', '2023-11-05 20:44:48', NULL, NULL, '$2y$10$sDcA25DcYz.IpB3/TKxRP.kbnDc0LzSe..pGFc3g1FNIICGSmSsLi', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-05 20:44:22', NULL),
 (3, 'Driftwood', 'oceans@gmail.com', '2023-11-06 07:42:46', NULL, NULL, '$2y$10$0li6SVWriI9KTW.4LazL0eCR6q4TfBvbmWoqCH3rcAwEz3lEUyWgq', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 07:42:08', NULL),
 (4, 'o_leigh', 'o_leigh@gmail.com', '2023-11-06 17:46:09', NULL, NULL, '$2y$10$WUWJt5tJ4M6Domo78yjYXuQlJAEr3DHJVM0LMN8lcW1HgZkpnVbmW', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 17:45:20',  NULL),
