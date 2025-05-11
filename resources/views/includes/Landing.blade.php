@@ -13,7 +13,7 @@
         style="background-color: rgba(255, 255, 255, 0.7);"
         
     >
-        <a class="d-block" href="/event/{{ $event['id'] }}">
+        <a class="d-block" href="/event/{{ $event['id'] }}?title={{$event->slug}}" >
             <div style="display: flex; justify-content: center;">
                 <button  
                     @class([

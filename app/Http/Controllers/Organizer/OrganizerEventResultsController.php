@@ -33,7 +33,7 @@ class OrganizerEventResultsController extends Controller
     public function index(Request $request, $id)
     {
         $event = EventDetail::with(['tier', 'user'])
-            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id', 'user_id'])
+            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id', 'user_id', 'slug'])
             ->where('id', $id)
             ->firstOrFail();
 
@@ -91,7 +91,7 @@ class OrganizerEventResultsController extends Controller
             $joinEvent = DB::table('join_events')
                 ->where('team_id', $request->team_id)
                 ->where('event_details_id', $request->input('event_details_id'))
-                ->select('id', 'team_id')
+                ->select('id', 'team_id', 'slug')
                 ->first();
             $awardExists = DB::table('awards')->where('id', $request->input('award_id'))->exists();
             $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
@@ -137,7 +137,7 @@ class OrganizerEventResultsController extends Controller
             [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
 
             $joinEvent = DB::table('join_events')
-                ->select('id', 'team_id')
+                ->select('id', 'team_id', 'slug')
                 ->where('team_id', $request->team_id)
                 ->where('event_details_id', $request->input('event_details_id'))
                 ->first();
@@ -244,7 +244,7 @@ class OrganizerEventResultsController extends Controller
             'tier',
             'type',
             'joinEvents.team' => function ($query) {
-                $query->select('teams.id', 'teamName', 'teamBanner');
+                $query->select('teams.id', 'teamName', 'teamBanner', 'slug');
             },
         ]);
         

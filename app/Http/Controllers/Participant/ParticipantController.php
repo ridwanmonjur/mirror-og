@@ -63,7 +63,7 @@ class ParticipantController extends Controller
             $loggedInUser = Auth::user();
 
             if ($user->role === 'ORGANIZER') {
-                return redirect()->route('public.organizer.view', ['id' => $id]);
+                return redirect()->route('public.organizer.view', ['id' => $id, 'title' => $user->slug]);
             }
             if ($user->role === 'ADMIN') {
                 return $this->showErrorParticipant('This is an admin view!');

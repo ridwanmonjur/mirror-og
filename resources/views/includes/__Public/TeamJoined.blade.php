@@ -24,7 +24,7 @@
                                     </div>
                                 </div>
                                 <div class="col-2 d-flex justify-content-center align-items-center">
-                                    <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
+                                    <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
                                         class="btn btn-link position-relative  btn-sm gear-icon-btn "
                                         style="z-index: 3;">
                                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
@@ -37,7 +37,7 @@
 
                             </div>
                         </div>
-                        <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
+                        <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
                             class="position-absolute top-0 start-0 w-100 h-100"></a>
                     </div>
                 </div>
