@@ -25,7 +25,41 @@
     <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
     <meta property="twitter:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
 
-    <link rel="alternate" type="application/rss+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+    <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+
+     <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Driftwood",
+                "url": "https://driftwood.gg",
+                "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+                "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
+                "sameAs": [
+                    "https://twitter.com/DriftwoodEsports",
+                    "https://facebook.com/DriftwoodEsports",
+                    "https://discord.gg/driftwood"
+                ]
+            }
+        </script>
+
+        <!-- Structured Data for WebApplication -->
+        <script type="application/ld+json">
+            {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Web",
+            "offers": {
+                "@type": "Offer",
+                "price": "600 RM - 6000 RM",
+                "priceCurrency": "RM",
+                "description": "Closed beta access"
+                }
+            }
+        </script>
 </head>
 
 <body>
@@ -73,39 +107,7 @@
         
         
         <script type="module" src="{{ asset('/assets/js/shared/Landing.js') }}"></script>
-        <script type="application/ld+json">
-            {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Driftwood",
-            "url": "https://driftwood.gg",
-            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
-            "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
-            "sameAs": [
-                "https://twitter.com/DriftwoodEsports",
-                "https://facebook.com/DriftwoodEsports",
-                "https://discord.gg/driftwood"
-            ]
-            }
-        </script>
-
-        <!-- Structured Data for WebApplication -->
-        <script type="application/ld+json">
-        {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Driftwood",
-        "url": "https://driftwood.gg",
-        "applicationCategory": "GameApplication",
-        "operatingSystem": "Web",
-        "offers": {
-            "@type": "Offer",
-            "price": "600 RM - 6000 RM",
-            "priceCurrency": "RM",
-            "description": "Closed beta access"
-            }
-        }
-        </script>
+       
     </main>
 </body>
 

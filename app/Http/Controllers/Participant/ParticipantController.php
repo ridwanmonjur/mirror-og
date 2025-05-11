@@ -78,26 +78,41 @@ class ParticipantController extends Controller
 
     public function editProfile(UpdateParticipantsRequest $request)
     {
-        $validatedData = $request->validated();
-        $participant = Participant::findOrFail($validatedData['participant']['id']);
-        $participant->update($validatedData['participant']);
-        $user = User::findOrFail($validatedData['user']['id']);
-        $user->update($validatedData['user']);
-        $user->uploadUserBanner($request);
-       
-        if (isset($participant->region)) {
-            $region = Country::select('emoji_flag', 'name', 'id')
-                ->findOrFail($participant->region);
-        } else {
-            $region = null;
-        }
+        try {
+            $validatedData = $request->validated();
+            $participant = Participant::findOrFail($validatedData['participant']['id']);
+            $participant->update($validatedData['participant']);
+            $user = User::findOrFail($validatedData['user']['id']);
+            $user->slugify();
+            $user->update($validatedData['user']);
+            $user->uploadUserBanner($request);
+        
+            if (isset($participant->region)) {
+                $region = Country::select('emoji_flag', 'name', 'id')
+                    ->findOrFail($participant->region);
+            } else {
+                $region = null;
+            }
 
-        return response()->json([
-            'message' => 'Participant updated successfully',
-            'success' => true,
-            'age' => $participant->age,
-            'region' => $region,
-        ], 200);
+            return response()->json([
+                'message' => 'Participant updated successfully',
+                'success' => true,
+                'age' => $participant->age,
+                'region' => $region,
+            ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if($e->errorInfo[1] == 1062) {
+                return response()->json([
+                    'message' => 'This username was taken. Please change to another name.',
+                    'success' => false
+                ], 422);
+            }
+    
+            return response()->json([
+                'message' => 'Error updating participant: ' . $e->getMessage(),
+                'success' => false,
+            ], 400);
+        } 
     }
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)

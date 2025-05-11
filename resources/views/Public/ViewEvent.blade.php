@@ -56,8 +56,41 @@
         ])
     </head>
     
-    <link rel="alternate" type="application/rss+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
-
+    <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": "{{ $event->eventName }}",
+            "description": "{{ $event->eventDescription }}",
+            "image": "{{ asset($eventBannerImg) }}",
+            "startDate": "{{ $event->startDate }}T{{ $event->startTime }}",
+            "endDate": "{{ $event->endDate ?? $event->startDate }}",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/{{ $event->venue == 'Online' ? 'OnlineEventAttendanceMode' : 'Global' }}",
+            "location": {
+                "@type": "{{ $event->venue == 'Online' ? 'VirtualLocation' : 'Global' }}",
+                "name": "{{ $event->venue }}",
+                "address": "{{ $event->venue }}"
+            },
+            "organizer": {
+                "@type": "Person",
+                "name": "{{ $event->user->name }}",
+                "url": "{{ route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug]) }}"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
+                "priceCurrency": "MYR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "{{ now()->toIso8601String() }}"
+            },
+            "performer": {
+                "@type": "SportsTeam",
+                "name": "Multiple Teams"
+            }
+        }
+    </script>
 <body>
     @include('googletagmanager::body')
 
@@ -417,37 +450,37 @@
     </main>
     <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
    <script type="application/ld+json">
-    {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    "name": "{{ $event->eventName }}",
-    "description": "{{ $event->eventDescription }}",
-    "image": "{{ asset($eventBannerImg) }}",
-    "startDate": "{{ $event->startDate }}T{{ $event->startTime }}",
-    "endDate": "{{ $event->endDate ?? $event->startDate }}",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "eventAttendanceMode": "https://schema.org/{{ $event->venue == 'Online' ? 'OnlineEventAttendanceMode' : 'Global' }}",
-    "location": {
-        "@type": "{{ $event->venue == 'Online' ? 'VirtualLocation' : 'Global' }}",
-        "name": "{{ $event->venue }}",
-        "address": "{{ $event->venue }}"
-    },
-    "organizer": {
-        "@type": "Person",
-        "name": "{{ $event->user->name }}",
-        "url": "{{ route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug]) }}"
-    },
-    "offers": {
-        "@type": "Offer",
-        "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
-        "priceCurrency": "MYR",
-        "availability": "https://schema.org/InStock",
-        "validFrom": "{{ now()->toIso8601String() }}"
-    },
-    "performer": {
-        "@type": "SportsTeam",
-        "name": "Multiple Teams"
-    }
-    }
-</script>
+        {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": "{{ $event->eventName }}",
+            "description": "{{ $event->eventDescription }}",
+            "image": "{{ asset($eventBannerImg) }}",
+            "startDate": "{{ $event->startDate }}T{{ $event->startTime }}",
+            "endDate": "{{ $event->endDate ?? $event->startDate }}",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/{{ $event->venue == 'Online' ? 'OnlineEventAttendanceMode' : 'Global' }}",
+            "location": {
+                "@type": "{{ $event->venue == 'Online' ? 'VirtualLocation' : 'Global' }}",
+                "name": "{{ $event->venue }}",
+                "address": "{{ $event->venue }}"
+            },
+            "organizer": {
+                "@type": "Person",
+                "name": "{{ $event->user->name }}",
+                "url": "{{ route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug]) }}"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
+                "priceCurrency": "MYR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "{{ now()->toIso8601String() }}"
+            },
+            "performer": {
+                "@type": "SportsTeam",
+                "name": "Multiple Teams"
+            }
+        }
+    </script>
 </html>

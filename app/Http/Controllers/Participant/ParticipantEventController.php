@@ -331,6 +331,16 @@ class ParticipantEventController extends Controller
             session()->flash('errorMessage', 'You already have 5 teams!');
 
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if($e->errorInfo[1] == 1062) {
+                $errorMessage = 'This team name was taken. Please change to another name.';
+            } else {
+                $errorMessage = 'Error updating team: ' . $e->getMessage();
+            }
+    
+            DB::rollBack();
+            session()->flash('errorMessage', $errorMessage);
+            return view('Participant.CreateTeamToRegister', ['id' => $id]);
         } catch (Exception $e) {
             DB::rollBack();
             $errorMessage = $e->getMessage();

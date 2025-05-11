@@ -79,6 +79,7 @@ class OrganizerController extends Controller
                 }
                 $userProfile = User::where('id', $user->id)->first();
                 $userProfile->fill($validatedData['userProfile']);
+                $userProfile->slugify();
                 $userProfile->save();
 
                 $organizer = isset($validatedData['organizer']['id'])
@@ -102,6 +103,18 @@ class OrganizerController extends Controller
                             'userProfile' => $userProfile
                         ]
                 ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if($e->errorInfo[1] == 1062) {
+                return response()->json([
+                    'message' => 'This username was taken. Please change to another name.',
+                    'success' => false
+                ], 422);
+            }
+    
+            return response()->json([
+                'message' => 'Error updating organizer: ' . $e->getMessage(),
+                'success' => false,
+            ], 400);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'success' => false], 400);
         }

@@ -19,6 +19,54 @@
     <meta name="twitter:title" content="Contact Driftwood - Community Support">
     <meta name="twitter:description" content="Get support, ask questions, or discuss business opportunities with Driftwood esports platform.">
     <meta property="twitter:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
+      <!-- Structured Data for Contact Page -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact Driftwood",
+            "url": "https://driftwood.gg/contact",
+            "description": "Contact page for Driftwood esports community platform",
+            "publisher": {
+                "@type": "Organization",
+                "name": "Driftwood",
+                "logo": {
+                "@type": "ImageObject",
+                "url": "https://driftwood.gg/assets/images/dw_logo.webp"
+                }
+            }
+        }
+    </script>
+
+    <!-- Organization Schema with Contact Points -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "contactPoint": [
+                {
+                "@type": "ContactPoint",
+                "email": "supportmain@driftwood.gg",
+                "contactType": "customer support",
+                "availableLanguage": "English"
+                },
+                {
+                "@type": "ContactPoint",
+                "email": "handshake@driftwood.gg",
+                "contactType": "sales",
+                "availableLanguage": "English"
+                }
+            ],
+            "sameAs": [
+                "https://facebook.com/DriftwoodEsports",
+                "https://twitter.com/DriftwoodEsports",
+                "https://instagram.com/DriftwoodEsports",
+                "https://discord.gg/driftwood"
+            ]
+        }
+    </script>
 @endpush
 
 @section('content')
@@ -115,53 +163,6 @@
         </div>
 
     </main>
-    <!-- Structured Data for Contact Page -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "ContactPage",
-        "name": "Contact Driftwood",
-        "url": "https://driftwood.gg/contact",
-        "description": "Contact page for Driftwood esports community platform",
-        "publisher": {
-            "@type": "Organization",
-            "name": "Driftwood",
-            "logo": {
-            "@type": "ImageObject",
-            "url": "https://driftwood.gg/assets/images/dw_logo.webp"
-            }
-        }
-    }
-    </script>
-
-    <!-- Organization Schema with Contact Points -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Driftwood",
-        "url": "https://driftwood.gg",
-        "contactPoint": [
-            {
-            "@type": "ContactPoint",
-            "email": "supportmain@driftwood.gg",
-            "contactType": "customer support",
-            "availableLanguage": "English"
-            },
-            {
-            "@type": "ContactPoint",
-            "email": "handshake@driftwood.gg",
-            "contactType": "sales",
-            "availableLanguage": "English"
-            }
-        ],
-        "sameAs": [
-            "https://facebook.com/DriftwoodEsports",
-            "https://twitter.com/DriftwoodEsports",
-            "https://instagram.com/DriftwoodEsports",
-            "https://discord.gg/driftwood"
-        ]
-    }
-    </script>
+  
 @endsection
 

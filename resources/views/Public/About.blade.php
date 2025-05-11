@@ -60,6 +60,33 @@
         }
         
     </style>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+            "description": "Driftwood is an esports community platform bringing competitive gamers together through tournaments, events, and community building.",
+            "sameAs": [
+                "https://twitter.com/DriftwoodEsports",
+                "https://facebook.com/DriftwoodEsports",
+                "https://linkedin.com/company/driftwood-esports"
+            ]
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "mainEntity": {
+                "@type": "Organization",
+                "name": "Driftwood",
+                "description": "Esports community platform connecting competitive gamers"
+            }
+        }
+    </script>
+
 @endpush
 @section('content')
     <header>
@@ -200,30 +227,4 @@
         }
     </script>
 @endsection
-<script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Driftwood",
-        "url": "https://driftwood.gg",
-        "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
-        "description": "Driftwood is an esports community platform bringing competitive gamers together through tournaments, events, and community building.",
-        "sameAs": [
-            "https://twitter.com/DriftwoodEsports",
-            "https://facebook.com/DriftwoodEsports",
-            "https://linkedin.com/company/driftwood-esports"
-        ]
-    }
-</script>
-<script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "AboutPage",
-        "mainEntity": {
-            "@type": "Organization",
-            "name": "Driftwood",
-            "description": "Esports community platform connecting competitive gamers"
-        }
-    }
-</script>
 

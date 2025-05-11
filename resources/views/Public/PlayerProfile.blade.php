@@ -10,6 +10,50 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/participant.js'])
+    <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+    <!-- Dynamic Meta Tags -->
+    <title>{{ $userProfile->name }} - Player Profile</title>
+    <meta name="description" content="{{ $userProfile->name }} has participated in {{ $totalEventsCount }} events with {{ $wins }} tournament wins. View player stats, teams, and achievements.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="{{ $userProfile->name }} - Esports Player Profile">
+    <meta property="og:description" content="Professional esports player with {{ $wins }} tournament wins and {{ $streak }} win streak.">
+    <meta property="og:image" content="{{ $userProfile->profileBanner ? asset('storage/' . $userProfile->profileBanner) : asset('assets/images/default-player-og.jpg') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="profile">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ $userProfile->name }} - Esports Player">
+    <meta name="twitter:description" content="Professional esports player with {{ $wins }} tournament wins.">
+    <meta name="twitter:image" content="{{ $userProfile->profileBanner ? asset('storage/' . $userProfile->profileBanner) : asset('assets/images/default-player-twitter.jpg') }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ route('public.participant.view', ['id' => $userProfile->id]) }}">
+    
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "{{ $userProfile->name }}",
+        "url": "{{ route('public.participant.view', ['id' => $userProfile->id]) }}",
+        @if($userProfile->profileBanner)
+        "image": "{{ asset('storage/' . $userProfile->profileBanner) }}",
+        @endif
+        "description": "Professional esports player",
+        "memberOf": [
+            @foreach($teamList as $team)
+            {
+                "@type": "SportsTeam",
+                "name": "{{ $team->teamName }}",
+                "url": "{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+            }{{ !$loop->last ? ',' : '' }}
+            @endforeach
+        ]
+    }
+    </script>
 </head>
 @php
     $isUserSame = false;
@@ -186,6 +230,7 @@
                                         <div class="d-flex align-items-center justify-content-between my-2">
                                             <div class="d-flex align-items-center flex-grow-1">
                                                 <img src="{{ '/storage' . '/' . $team->teamBanner }}"
+                                                    loading="lazy"
                                                     {!! trustedBladeHandleImageFailure() !!}
                                                     class="border border-secondary rounded-circle me-3"
                                                     style="object-fit: cover;" width="50" height="50"
@@ -236,6 +281,7 @@
                                         <div class="d-flex align-items-center justify-content-between my-2">
                                             <div class="d-flex align-items-center flex-grow-1">
                                                 <img src="{{ '/storage' . '/' . $team->teamBanner }}"
+                                                    loading="lazy"
                                                     {!! trustedBladeHandleImageFailure() !!}
                                                     class="border border-secondary rounded-circle me-3"
                                                     style="object-fit: cover;" width="50" height="50"

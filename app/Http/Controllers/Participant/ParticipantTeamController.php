@@ -190,6 +190,8 @@ class ParticipantTeamController extends Controller
 
             $validatedData = $request->validated();
             $team = Team::findOrFail($request['id']);
+            $team->teamName = $request['teamName'];
+            $team->slugify();
             $team->update($validatedData);
             if (isset($team->country)) {
                 $country = Country::select('emoji_flag', 'name', 'id')
@@ -205,6 +207,18 @@ class ParticipantTeamController extends Controller
                 'success' => true,
                 'country' => $country,
             ], 200);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if($e->errorInfo[1] == 1062) {
+                return response()->json([
+                    'message' => 'This team name was taken. Please change to another name.',
+                    'success' => false
+                ], 422);
+            }
+    
+            return response()->json([
+                'message' => 'Error updating team: ' . $e->getMessage(),
+                'success' => false,
+            ], 400);
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
 
@@ -446,33 +460,20 @@ class ParticipantTeamController extends Controller
                 return redirect()->route('participant.team.view', ['id' => $user_id]);
             }
             return back()->with('errorMessage', "You can't create more than 5 teams!");
-        } catch (Exception $e) {
-            return back()->with('errorMessage', $e->getMessage());
-        }
-    }
-
-    public function teamEditStore(Request $request, $id)
-    {
-        try {
-            $team = Team::findOrFail($id);
-            $user_id = $request->attributes->get('user')->id;
-            $existingTeam = Team::where('teamName', $request->input('teamName'))->first();
-
-            if (isset($existingTeam)) {
-                if ($existingTeam['id'] !== $team->id) {
-                    throw ValidationException::withMessages([
-                        'teamName' => 'Team name already exists. Please choose a different name.',
-                    ]);
-                }
+        } catch (\Illuminate\Database\QueryException $e) {
+            if($e->errorInfo[1] == 1062) {
+                $errorMessage = 'This team name was taken. Please change to another name.';
+            } else {
+                $errorMessage = 'Error updating team: ' . $e->getMessage();
             }
+            return back()->with('errorMessage', $errorMessage);
 
-            $team = Team::validateAndSaveTeam($request, $team, $user_id);
-
-            return redirect()->route('participant.team.view', ['id' => $user_id]);
         } catch (Exception $e) {
             return back()->with('errorMessage', $e->getMessage());
         }
     }
+
+    
 
     /**
      * Get paginated teams for select dropdown

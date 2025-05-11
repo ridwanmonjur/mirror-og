@@ -22,7 +22,18 @@
     <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
     <meta property="twitter:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
 
-
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+            "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
+            "sameAs": [
+            ]
+        }
+    </script>
 @endpush
 
 @section('content')
@@ -112,19 +123,5 @@
         </section>
        
     </main>
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Driftwood",
-            "url": "https://driftwood.gg",
-            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
-            "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
-            "sameAs": [
-            ]
-        }
-    </script>
-
-  
 @endsection
 
