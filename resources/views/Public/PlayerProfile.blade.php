@@ -201,7 +201,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
+                                            <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
                                                 class="btn gear-icon-btn border-secondary btn-sm rounded-circle position-relative"
                                                 style="z-index: 3;">
                                                 <svg width="20" height="20" viewBox="0 0 24 24"
@@ -212,7 +212,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
+                                    <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
                                         class="position-absolute top-0 start-0 w-100 h-100"></a>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
+                                            <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
                                                 class="btn gear-icon-btn border-secondary btn-sm rounded-circle position-relative"
                                                 style="z-index: 3;">
                                                 <svg width="20" height="20" viewBox="0 0 24 24"
@@ -261,7 +261,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="{{ route('public.team.view', ['id' => $team->id]) }}"
+                                    <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
                                         class="position-absolute top-0 start-0 w-100 h-100"></a>
                                 </div>
                             </div>
