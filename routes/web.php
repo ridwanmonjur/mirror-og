@@ -23,9 +23,9 @@ use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
-Route::redirect('/', '/closedbeta', 301);
+Route::view('/','Public.ClosedBeta')->name('public.closedBeta.view');
 Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
-Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
+// Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Public.About')->name('public.about.view');
 Route::view('/contact', 'Public.Contact')->name('public.contact.view');
 
@@ -55,13 +55,13 @@ Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.acti
 
 // Search bar
 Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
-Route::get('/event/{id}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view')
+Route::get('/event/{id}/{title?}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view')
     ->middleware('prevent-back-history');
-Route::get('/view/team/{id}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view')
+Route::get('/view/team/{id}/{title?}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view')
     ->middleware('prevent-back-history');
-Route::get('/view/participant/{id}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
+Route::get('/view/participant/{id}/{title?}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
     ->middleware('prevent-back-history');
-Route::get('/view/organizer/{id}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')
+Route::get('/view/organizer/{id}/{title?}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')
     ->middleware('prevent-back-history');
 
 
