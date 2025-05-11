@@ -64,9 +64,10 @@ Route::get('/view/participant/{id}/{title?}', [ParticipantController::class, 'vi
 Route::get('/view/organizer/{id}/{title?}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')
     ->middleware('prevent-back-history');
 
-
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
+
+Route::feeds();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|organizer'], function () {

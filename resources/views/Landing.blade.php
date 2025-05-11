@@ -25,8 +25,7 @@
     <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
     <meta property="twitter:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
 
-
-
+    <link rel="alternate" type="application/rss+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
 </head>
 
 <body>

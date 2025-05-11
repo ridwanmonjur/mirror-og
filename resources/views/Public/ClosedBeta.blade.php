@@ -21,6 +21,8 @@
     <meta name="twitter:title" content="Driftwood - Community Esports Platform">
     <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
     <meta property="twitter:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
+
+
 @endpush
 
 @section('content')
