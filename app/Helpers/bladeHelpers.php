@@ -1,8 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-
-
+use Illuminate\Support\Str;
 
 // function bladeGetPaymentLogos($logoType)
 // {
@@ -29,6 +28,10 @@ function fixTimeToRemoveSeconds($time)
     }
 
     return $time;
+}
+
+function bladeSlug ($title) {
+    return $title ? Str::slug($title) : '';
 }
 
 function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants)

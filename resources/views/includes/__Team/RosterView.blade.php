@@ -7,7 +7,7 @@
         "d-block"
     ])>
     <div class="position-absolute d-flex w-100 justify-content-center" style="top: -20px; ">
-        <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
+        <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => bladeSlug($joinEvent->eventDetails->eventName)]) }}">
             @if (in_array($joinEvent->status, ['ONGOING', 'UPCOMING']))
                 <ul class="achievement-list px-4">
                     <li>
@@ -37,7 +37,7 @@
         'event mx-auto event-width cursor-pointer visible-until-hover-parent',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
-        <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
+        <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => bladeSlug($joinEvent->eventDetails->eventName)]) }}">
             <img {!! trustedBladeHandleImageFailureBanner() !!}
                 id="eventBanner"
                 @class([
@@ -59,7 +59,7 @@
                     <ul class="d-flex justify-content-start flex-column align-items-start">
                         @foreach ($joinEvent->roster as $roster)
                             <li onclick="goToUrl(event, this)"
-                                data-url="{{ route('public.participant.view', ['id' => $roster->user->id]) }}"
+                                data-url="{{ route('public.participant.view', ['id' => $roster->user->id, 'title' => bladeSlug($roster->user->name)]) }}"
                                 class="list-unstyled"
                             >
                                  <img class="rounded-circle object-fit-cover random-color-circle ms-1 me-2 mb-1" width="25" height="25" 
@@ -77,7 +77,7 @@
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-6 col-xl-5 d-flex justify-content-start d my-1 px-0">
                     <a class="d-flex w-100 justify-content-start align-items-center"
-                        href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
+                        href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => bladeSlug($joinEvent->eventDetails->eventName)]) }}">
 
                         <img 
                             {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
@@ -89,7 +89,7 @@
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
-                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id]) }}"
+                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails->user->id, 'title' => bladeSlug($joinEvent->eventDetails->user->name) ]) }}"
                     class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
@@ -124,7 +124,7 @@
 
                     @guest
                         <button type="button"
-                            onclick="event.preventDefault(); event.stopPropagation(); reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails?->user_id]) }}')"
+                            onclick="event.preventDefault(); event.stopPropagation(); reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->eventDetails?->user_id, 'title' => bladeSlug($joinEvent->eventDetails?->user?->name)]) }}')"
                             class=" roster-button  {{ 'followButton' . $joinEvent->eventDetails?->user_id }} "
                         >
                             Follow
