@@ -36,13 +36,17 @@ class GenerateSitemap extends Command
             ->add(Url::create('/home'))
             ->add(Url::create('/about'))
             ->add(Url::create('/contact'));
+
+        $sitemap->add(Url::create('/feeds/events')
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
+            ->setPriority(0.9));
         
         EventDetail::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
             ->chunk(50, function ($events) use (&$sitemap) {
             foreach ($events as $event) {
                 $sitemap->add(Url::create("/event/{$event->id}/{$event->eventName}")
                     ->setLastModificationDate($event->updated_at)
-                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                     ->setPriority(0.8));
             }
         });

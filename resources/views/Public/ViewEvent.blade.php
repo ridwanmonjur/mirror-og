@@ -35,7 +35,7 @@
     <meta property="og:image" content="{{ asset($eventBannerImg) }}">
     <link rel="canonical" href="{{ route('public.event.view', $event->id) }}">
     <meta property="og:url" content="{{ route('public.event.view', $event->id) }}">
-    <meta name="title" content="{{ $event->eventName }} - Event ID {{ $event->id }}">
+    <meta name="title" content="{{ $event->eventName }}">
     <meta property="og:type" content="event">
     <meta property="og:site_name" content="Driftwood GG">
 
@@ -55,6 +55,8 @@
             'resources/js/custom/share.js'
         ])
     </head>
+    
+    <link rel="alternate" type="application/rss+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
 
 <body>
     @include('googletagmanager::body')
