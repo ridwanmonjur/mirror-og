@@ -4,12 +4,29 @@
 <head>
     @include('googletagmanager::head')
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     <title>Driftwood</title>
+    <meta name="description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
+    <meta name="keywords" content="community esports, esports platform, competitive gaming, esports community, amateur esports, esports tournament, gaming community, closed beta, play meet chill">
+
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Driftwood - The Best Place for Community Esports">
+    <meta property="og:description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://driftwood.gg/">
+    <meta property="og:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
+
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Driftwood - Community Esports Platform">
+    <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
+    <meta property="twitter:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
+
+
+
 </head>
 
 <body>
@@ -22,6 +39,7 @@
         
         <section class="hero user-select-none d-none d-lg-block">
             <img 
+                loading="lazy"  alt="Driftwood Esports Event"
                 onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                 src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
             >
@@ -56,7 +74,39 @@
         
         
         <script type="module" src="{{ asset('/assets/js/shared/Landing.js') }}"></script>
+        <script type="application/ld+json">
+            {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+            "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
+            "sameAs": [
+                "https://twitter.com/DriftwoodEsports",
+                "https://facebook.com/DriftwoodEsports",
+                "https://discord.gg/driftwood"
+            ]
+            }
+        </script>
 
+        <!-- Structured Data for WebApplication -->
+        <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Driftwood",
+        "url": "https://driftwood.gg",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "600 RM - 6000 RM",
+            "priceCurrency": "RM",
+            "description": "Closed beta access"
+            }
+        }
+        </script>
     </main>
 </body>
 

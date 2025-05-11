@@ -4,13 +4,23 @@
 @section('body-class', '')
 @push('styles')
     <meta name="page-component" content="beta">
-    <link 
-        rel="preload" 
-        href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
-        as="font" 
-        type="font/woff2" 
-        crossorigin
-    >
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
+    <meta name="keywords" content="community esports, esports platform, competitive gaming, esports community, amateur esports, esports tournament, gaming community, closed beta, play meet chill">
+
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Driftwood - The Best Place for Community Esports">
+    <meta property="og:description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://driftwood.gg">
+    <meta property="og:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Driftwood - Community Esports Platform">
+    <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
+    <meta property="twitter:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
 @endpush
 
 @section('content')
@@ -47,7 +57,7 @@
                         </div>
                         <div class="d-flex align-items-center mt-3 flex-wrap">
                             <p class="flex-grow-1 py-0 my-0 text-light"> Ahoy! If you're already a closed beta user, you can sign into Driftwood here: </p>
-                            <a href="{{route('participant.signin.view')}}" role="button" id="submitButton"  class="submit-button submit-button-border text-white py-2 px-3 rounded-pill ">Sign in</a>
+                            <a href="{{route('participant.signin.view')}}" title="Participant signin link" role="button" id="submitButton"  class="submit-button submit-button-border text-white py-2 px-3 rounded-pill ">Sign in</a>
                         </div>
                     </div>
                 </div>
@@ -100,4 +110,19 @@
         </section>
        
     </main>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+            "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
+            "sameAs": [
+            ]
+        }
+    </script>
+
+  
 @endsection
+
