@@ -72,6 +72,7 @@ class UserResource extends Resource
                                     ->image()
                                     ->directory('images/user') 
                                     ->maxSize(5120)
+                                    ->visible(fn (string $context): bool => $context === 'edit')
                                     ->deleteUploadedFileUsing(function ($file, $livewire) {
                                         if ($file && Storage::disk('public')->exists($file)) {
                                             Storage::disk('public')->delete($file);
@@ -85,19 +86,25 @@ class UserResource extends Resource
                                         return null;
                                     })
                                     ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
-                                        // Custom file naming logic here
-                                        $oldBanner = $livewire->record->userBanner;
+                                        // Generate new filename regardless of creation or edit
+                                            $newFilename = 'userBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                            $directory = 'images/user';
+                                            $path = $file->storeAs($directory, $newFilename, 'public');
+                                            
+                                            // For edit mode, handle the existing record
+                                            if ($livewire->record) {
+                                                $oldBanner = $livewire->record->userBanner;
+                                                $livewire->record->userBanner = $path;
+                                                $livewire->record->save();
+                                                
+                                                if ($oldBanner && $oldBanner !== $state) {
+                                                    $livewire->record->destroyUserBanner($oldBanner);
+                                                }
+                                            }
+                                            
+                                            // Always return the path so it can be stored in the form data
+                                            return $path;
 
-                                        $newFilename = 'userBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
-                                        $directory = 'images/user';
-                                        
-                                        $path = $file->storeAs($directory, $newFilename, 'public');
-                                        $livewire->record->userBanner = $path;
-                                        $livewire->record->save();
-                                        if ($oldBanner && $oldBanner !== $state) {
-                                            $livewire->record->destroyUserBanner($oldBanner);
-                                        }
-                                        return $path;
                                     }),
                                 
                                 Select::make('role')
@@ -219,7 +226,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\ImageColumn::make('userBanner'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()

@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class DatabaseRestore extends Command
 {
-    protected $signature = 'db:restore {--path=database/backups/backup.sql : Path to the backup file}';
+    protected $signature = 'tasks:restore-db {--path=database/backups/backup.sql : Path to the backup file}';
     protected $description = 'Restore the database from a SQL file';
 
     public function handle()

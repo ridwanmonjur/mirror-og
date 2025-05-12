@@ -13,7 +13,7 @@
         style="background-color: rgba(255, 255, 255, 0.7);"
         
     >
-        <a class="d-block" href="/event/{{ $event['id'] }}">
+        <a class="d-block" href="/event/{{ $event['id'] }}/{{$event->slug}}" title="Event {{$event->slug}}">
             <div style="display: flex; justify-content: center;">
                 <button  
                     @class([
@@ -44,19 +44,21 @@
                     <span>{{ $status }}</span>
                 </button>
             </div>
-            <img src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover " style="min-height: 150px !important; ">
+            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover " style="min-height: 150px !important; ">
             <div class="frame1 d-flex justify-content-between flex-wrap px-3">
                 <div>
                     <img 
                         src="{{ $eventTierLowerImg }}" 
+                        loading="lazy"  
+                        alt="{{ $eventTierLowerImg }}"
                         class="pe-3 tierIcon mt-2"
                         alt=""
                     >
                     <img 
                         src="{{ $bladeEventGameImage }}" 
                         class="logo2 mt-2 object-fit-cover gameIcon" 
-                        alt=""
-             
+                        alt="{{ $event->game?->gameIcon }}"
+                        loading="lazy"
                     >
                 </div>
                 <button class="btn rounded-pill mt-2" style="@php echo $stylesEventRatio; @endphp">

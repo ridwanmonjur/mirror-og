@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 // use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
@@ -299,5 +300,9 @@ class User extends Authenticatable implements FilamentUser
             }
             // dd("File does not exist");
         }
+    }
+
+    public function slugify () {
+        $this->slug = Str::slug($this->name);
     }
 }

@@ -236,13 +236,16 @@ document.getElementById('load-more')?.addEventListener('click', function(event) 
         });
 });
 
-function getUrl(inputId, id = null) {
+function getUrl(inputId, id = null, title = null) {
     let url = document.getElementById(inputId).value;
     if (url === null) {
         console.error("Null input: ", url);
     }
     if (id !== null) {
         url = url.replace(':id', id);
+    }
+    if (title !== null) {
+        url = url.replace(':title', title);
     }
     return url;
 }

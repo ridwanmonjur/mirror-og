@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 
 class Team extends Model
@@ -356,6 +357,7 @@ class Team extends Model
         ], $customMessages);
         
         $team->teamName = $request->input('teamName');
+        $team->slug = Str::slug($team->teamName);
         $team->creator_id = $user_id;
         $team->save();
         
@@ -433,5 +435,9 @@ class Team extends Model
                 unlink($fileNameFinal);
             }
         }
+    }
+
+    public function slugify () {
+        $this->slug = Str::slug($this->teamName);
     }
 }

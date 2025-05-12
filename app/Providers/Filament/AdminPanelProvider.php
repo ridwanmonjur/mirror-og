@@ -39,13 +39,11 @@ class AdminPanelProvider extends PanelProvider
                             ->url(fn (): string => Dashboard::getUrl())
                     )
                     ->groups([
-                        NavigationGroup::make('User')
+                        NavigationGroup::make('User & Teams')
                         ->items([
                             ...\App\Filament\Resources\UserResource::getNavigationItems(),
                             ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                        ]),
-                        NavigationGroup::make('Team')
-                        ->items([
+                        
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
                         ]),
                         NavigationGroup::make('Event Details')
@@ -53,8 +51,6 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
-                                // ...\App\Filament\Resources\EventJoinResultsResource::getNavigationItems(),
-                                ...\App\Filament\Resources\BracketsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
                                 ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
                             ])
