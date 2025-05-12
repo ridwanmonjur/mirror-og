@@ -17,12 +17,38 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Support\Str;
 
-class EventDetail extends Model
+use Illuminate\Validation\UnauthorizedException;
+use Spatie\Feed\Feedable;
+use Spatie\Feed\FeedItem;
+
+
+class EventDetail extends Model implements Feedable
 {
     use HasFactory;
 
+    public function toFeedItem(): FeedItem
+    {
+        return FeedItem::create()
+            ->id($this->id)
+            ->title("Results: {$this->eventName}")
+            ->summary(Str::limit($this->eventDescription ?? '', 155))
+            ->updated($this->updated_at)
+            ->link(route('public.event.view', [
+                'id' => $this->id
+            ]))
+            ->authorName($this->user->name ?? 'Anonymous');
+    }
+
+    public static function getFeedItems()
+    {
+        return EventDetail::with(['user'])
+            ->whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get();
+    }
 
     protected $table = 'event_details';
     protected $fillable = [

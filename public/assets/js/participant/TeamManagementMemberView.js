@@ -311,7 +311,7 @@ async function fetchMembers(event = null) {
             onmouseover="this.style.transform='translateY(-2px)'" 
             onmouseout="this.style.transform='translateY(0)'"
         >
-            <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}');" >
+            <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}', '${member?.user?.slug}');" >
                 <div class="row align-items-center">
                     <div class="col-12 col-lg-11 d-flex align-items-center gap-3">
                         <div class="position-relative">
@@ -331,7 +331,7 @@ async function fetchMembers(event = null) {
                                         src="/assets/images/participants/crown-straight.png"
                                     >
                                 </span>
-                                ${member?.user?.name}sss
+                                ${member?.user?.name}
                                 <span class="fs-4 ms-3">${member?.user?.participant?.region_flag }</span>
                             </h6>
                             <td class="text-secondary">${window.formatDateLuxon(member.created_at)}</td>
@@ -400,8 +400,9 @@ searchInputs.forEach((searchInput, index) => {
 
 window.onbeforeunload = function(){window.location.reload();}
 
-function redirectToProfilePage(userId) {
+function redirectToProfilePage(userId, title) {
     let route = document.getElementById('profile_route').value;
     route = route.replace(':id', userId);
+    route = route.replace(':title', title);
     window.location.href = route;
 }

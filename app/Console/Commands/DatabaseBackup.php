@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseBackup extends Command
 {
-    protected $signature = 'db:backup {--path=database/backups/backup.sql : Path to save the backup}';
+    protected $signature = 'tasks:backup {--path=database/backups/backup.sql : Path to save the backup}';
     protected $description = 'Backup the database to a SQL file';
 
     public function handle()

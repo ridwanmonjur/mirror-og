@@ -5,11 +5,64 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizer Profile Page</title>
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/organizer.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
+    <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+    <title>{{ $userProfile->organizer?->companyName ?? $userProfile->name }} - Event Organizer</title>
+    <meta name="description" content="{{ Str::limit($userProfile->organizer?->companyDescription ?? 'Professional esports event organizer hosting tournaments with ' . number_format($tierPrizeCount, 0, '.', ',') . ' in prize pools.', 155) }}">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="{{ $userProfile->organizer?->companyName ?? $userProfile->name }} - Esports Event Organizer">
+    <meta property="og:description" content="{{ Str::limit($userProfile->organizer?->companyDescription ?? 'Professional esports event organizer', 200) }}">
+    <meta property="og:image" content="{{ $userProfile->profileBanner ? asset('storage/' . $userProfile->profileBanner) : asset('assets/images/default-organizer-og.jpg') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="profile">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $userProfile->organizer?->companyName ?? $userProfile->name }} - Event Organizer">
+    <meta name="twitter:description" content="{{ Str::limit($userProfile->organizer?->companyDescription ?? 'Professional esports event organizer', 200) }}">
+    <meta name="twitter:image" content="{{ $userProfile->profileBanner ? asset('storage/' . $userProfile->profileBanner) : asset('assets/images/default-organizer-twitter.jpg') }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ route('public.organizer.view', ['id' => $userProfile->id, 'title' => $userProfile->name]) }}">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ $userProfile->organizer?->companyName ?? $userProfile->name }}",
+        "description": "{{ $userProfile->organizer?->companyDescription }}",
+        "url": "{{ route('public.organizer.view', ['id' => $userProfile->id]) }}",
+        @if($userProfile->profileBanner)
+        "logo": "{{ asset('storage/' . $userProfile->profileBanner) }}",
+        @endif
+        @if($userProfile->organizer?->website_link)
+        "sameAs": [
+            "{{ $userProfile->organizer->website_link }}",
+            @if($userProfile->organizer->facebook_link)
+            "{{ $userProfile->organizer->facebook_link }}",
+            @endif
+            @if($userProfile->organizer->instagram_link)
+            "{{ $userProfile->organizer->instagram_link }}",
+            @endif
+            @if($userProfile->organizer->twitter_link)
+            "{{ $userProfile->organizer->twitter_link }}"
+            @endif
+        ],
+        @endif
+        "address": {
+            "@type": "PostalAddress",
+            @if($userProfile->address)
+            "streetAddress": "{{ $userProfile->address->addressLine1 }} {{ $userProfile->address->addressLine2 }}",
+            "addressLocality": "{{ $userProfile->address->city }}",
+            "addressCountry": "{{ $userProfile->address->country }}"
+            @endif
+        }
+    }
+    </script>
 </head>
 @php
     $isUserSame = false;

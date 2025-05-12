@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    @include('googletagmanager::head')
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Event</title>
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/viewEvent.css') }}">
-    @include('includes.HeadIcon')
-    @vite([ 'resources/sass/app.scss', 
-        'resources/js/app.js', 
-        'resources/js/alpine/bracket.js',
-        'resources/js/custom/share.js'
-    ])
-</head>
-
 @php
     $status = $event->statusResolved();
     $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
@@ -34,6 +20,77 @@
     $userId = isset($user) ? $user->id : null; 
 @endphp
 
+<head>
+    @include('googletagmanager::head')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $event->eventName }} | {{ $tier ?? 'Tournament' }} {{ $type ?? 'Event' }} - RM {{ $event->tier?->tierPrizePool ?? '0' }} Prize Pool | Driftwood GG</title>
+        <!-- Essential Meta Tags -->
+    <meta name="description" content="{{ Str::limit($event->eventDescription, 155) ?? 'Join ' . $event->eventName . ' - ' . ($event->tier?->tierPrizePool ? 'RM ' . $event->tier?->tierPrizePool . ' Prize Pool' : '') . ' | ' . $type . ' event starting ' . $combinedStr }}">
+    <meta name="keywords" content="{{ $event->eventName }}, {{ $event->game?->name ?? 'gaming' }}, esports tournament, {{ $tier ?? 'tournament' }}, {{ $event->venue ?? 'SEA' }}, gaming event">
+
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:title" content="{{ $event->eventName }} - {{ $tier ?? 'Event' }} Tournament">
+    <meta property="og:description" content="{{ Str::limit($event->eventDescription, 155) }}">
+    <meta property="og:image" content="{{ asset($eventBannerImg) }}">
+    <link rel="canonical" href="{{ route('public.event.view', $event->id) }}">
+    <meta property="og:url" content="{{ route('public.event.view', $event->id) }}">
+    <meta name="title" content="{{ $event->eventName }}">
+    <meta property="og:type" content="event">
+    <meta property="og:site_name" content="Driftwood GG">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $event->eventName }}">
+    <meta name="twitter:description" content="{{ Str::limit($event->eventDescription, 155) }}">
+    <meta name="twitter:image" content="{{ asset($eventBannerImg) }}">
+
+    <!-- Additional SEO Tags -->
+    <meta name="author" content="{{ $event->user->name }}">
+        <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="{{ asset('/assets/css/common/viewEvent.css') }}">
+        @include('includes.HeadIcon')
+        @vite([ 'resources/sass/app.scss', 
+            'resources/js/app.js', 
+            'resources/js/alpine/bracket.js',
+            'resources/js/custom/share.js'
+        ])
+    </head>
+    
+    <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": "{{ $event->eventName }}",
+            "description": "{{ $event->eventDescription }}",
+            "image": "{{ asset($eventBannerImg) }}",
+            "startDate": "{{ $event->startDate }}T{{ $event->startTime }}",
+            "endDate": "{{ $event->endDate ?? $event->startDate }}",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/{{ $event->venue == 'Online' ? 'OnlineEventAttendanceMode' : 'Global' }}",
+            "location": {
+                "@type": "{{ $event->venue == 'Online' ? 'VirtualLocation' : 'Global' }}",
+                "name": "{{ $event->venue }}",
+                "address": "{{ $event->venue }}"
+            },
+            "organizer": {
+                "@type": "Person",
+                "name": "{{ $event->user->name }}",
+                "url": "{{ route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug]) }}"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
+                "priceCurrency": "MYR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "{{ now()->toIso8601String() }}"
+            },
+            "performer": {
+                "@type": "SportsTeam",
+                "name": "Multiple Teams"
+            }
+        }
+    </script>
 <body>
     @include('googletagmanager::body')
 
@@ -58,10 +115,10 @@
         <div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img class="side-image-absolute-top " src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="side-image-absolute-top " src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img class="side-image-absolute-bottom slideInRight" src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="side-image-absolute-bottom slideInRight" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div>
@@ -74,11 +131,11 @@
                 <div>
                     <div class="mx-2  position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
+                            <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
                                 width="120" height="90">
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
-                            <img width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
+                            <img loading="lazy"  alt="{{ $event->eventName }}" width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
                                 @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
                                 alt="" 
                             >
@@ -91,9 +148,9 @@
                         <div>
                             <br class="d-none d-lg-block">
                             <div class="d-flex pt-2 justify-content-between flex-wrap align-items-start pb-3">
-                                <h5 class="text-wrap w-75">
+                                <h1 class="text-wrap w-75 fs-5 my-0 py-0 text-start">
                                     {{ $event->eventName ?? 'No name yet' }}
-                                </h5>
+                                </h1>
                                 <div>
                                     <div>
                                         <form class="d-inline" method="POST"
@@ -147,14 +204,14 @@
                             <div class="flexbox-centered-space card-subtitle">
                                 <div class="flexbox-centered-space">
                                     @if ($bladeEventGameImage)
-                                        <img style="display: inline;" src="{{ $bladeEventGameImage }}"
+                                        <img loading="lazy"  alt="{{ $eventTierLower }}" style="display: inline;" src="{{ $bladeEventGameImage }}"
                                             class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu">
                                     @else 
                                         <div class="{{ 'rounded-image rounded-box-' . $eventTierLower }}" alt="menu"> </div>
                                     @endif
                                     &nbsp;
                                     <div class="card-organizer d-flex ms-2 justify-content-center flex-col">
-                                        <a href="{{route('public.organizer.view', ['id'=> $event->user->id])}}">
+                                        <a href="{{route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug ])}}">
                                             <p style="display: inline;"><u>{{ $event->user->name ?? 'Add' }} </u> </p>
                                         </a>
                                         <p class="small-text m-0" id="followCount" data-count="{{ $followersCount }}">
@@ -371,7 +428,7 @@
                 </div>
                 <br>
                 <div id="Overview" class="tabcontent" style="display: block; ;">
-                    <h5 id="current-title"><u>About this event</u></h5>
+                    <h2 id="current-title" class="fs-5 text-start"><u>About this event</u></h2>
                     <p style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
@@ -392,5 +449,38 @@
         </div>
     </main>
     <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
-   
+   <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": "{{ $event->eventName }}",
+            "description": "{{ $event->eventDescription }}",
+            "image": "{{ asset($eventBannerImg) }}",
+            "startDate": "{{ $event->startDate }}T{{ $event->startTime }}",
+            "endDate": "{{ $event->endDate ?? $event->startDate }}",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/{{ $event->venue == 'Online' ? 'OnlineEventAttendanceMode' : 'Global' }}",
+            "location": {
+                "@type": "{{ $event->venue == 'Online' ? 'VirtualLocation' : 'Global' }}",
+                "name": "{{ $event->venue }}",
+                "address": "{{ $event->venue }}"
+            },
+            "organizer": {
+                "@type": "Person",
+                "name": "{{ $event->user->name }}",
+                "url": "{{ route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug]) }}"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
+                "priceCurrency": "MYR",
+                "availability": "https://schema.org/InStock",
+                "validFrom": "{{ now()->toIso8601String() }}"
+            },
+            "performer": {
+                "@type": "SportsTeam",
+                "name": "Multiple Teams"
+            }
+        }
+    </script>
 </html>

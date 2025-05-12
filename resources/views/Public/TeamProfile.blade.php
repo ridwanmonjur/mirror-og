@@ -5,11 +5,42 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Management</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamAdmin.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/manage_team.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('includes.HeadIcon')
+    <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
+    <title>{{ $selectTeam->teamName }} - Team Profile</title>
+    <meta name="description" content="{{ $selectTeam->teamName }} has {{ $selectTeam->members_count }} members, {{ $totalEventsCount }} events joined, and {{ $wins }} tournament wins.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="{{ $selectTeam->teamName }} - Esports Team">
+    <meta property="og:description" content="Professional esports team with {{ $wins }} tournament wins and {{ $streak }} win streak.">
+    <meta property="og:image" content="{{ asset('storage/' . $selectTeam->teamBanner) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ $selectTeam->teamName }} - Esports Team">
+    <meta name="twitter:description" content="Professional esports team with {{ $wins }} tournament wins.">
+    <meta name="twitter:image" content="{{ asset('storage/' . $selectTeam->teamBanner) }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ route('public.team.view', ['id' => $selectTeam->id]) }}">
+   
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "SportsTeam",
+            "name": "{{ $selectTeam->teamName }}",
+            "url": "{{ route('public.team.view', ['id' => $selectTeam->id]) }}",
+            "logo": "{{ asset('storage/' . $selectTeam->teamBanner) }}",
+            "sport": "Esports",
+            "numberOfMembers": {{ $selectTeam->members_count }},
+        }
+    </script>
 </head>
 @auth
     @php
@@ -24,7 +55,7 @@
     @include('includes.__Team.TeamHead') 
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
-        <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id']) }}">
+        <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id', 'title' => ':title']) }}">
         <div class="tabs">
             <button class="tab-button outer-tab py-2 tab-button-active "
                 onclick="showTab(event, 'Overview')">Overview</button>

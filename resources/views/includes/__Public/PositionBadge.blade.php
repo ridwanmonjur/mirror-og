@@ -73,7 +73,9 @@
 
                                     </div>
                                     <div class="d-flex flex-column justify-content-center my-2">
-                                        <a href="{{ route('public.event.view', $event->id) }}">
+                                        <a href="{{ route('public.event.view', ['id' => $event->id, 'title' => $event->slug ] ) }}"
+                                             title="{{ $event->eventName }} Esports Tournament"
+                                        >
 
                                             <h6 class="mb-1 text-wrap py-0">{{ $event->eventName }}</h6>
                                             <div class="text-body-secondary py-1 text-wrap ">
@@ -101,6 +103,7 @@
                                         <span class="text-body-secondary small">-</span>
                                     @endif
                                     <a href="{{ route('public.event.view', $event->id) }}"
+                                        title="{{ $event->eventName }} Esports Tournament"
                                         class="text-decoration-none text-body-secondary">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">

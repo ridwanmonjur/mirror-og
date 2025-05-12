@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    <url>
+        <loc>http://localhost:8000</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/home</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/about</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/contact</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/feeds/events</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/35/Forgot to name my event!</loc>
+        <lastmod>2025-01-22T18:48:24+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/47/Outstanding Upcoming Event</loc>
+        <lastmod>2025-03-28T10:23:05+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/48/Event 2</loc>
+        <lastmod>2025-03-28T10:25:22+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/49/EVENT 3</loc>
+        <lastmod>2025-03-28T10:35:12+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/52/Outstanding Upcoming Event</loc>
+        <lastmod>2025-04-08T10:24:25+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/58/Outstanding Upcoming Event</loc>
+        <lastmod>2025-04-22T14:34:09+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/event/61/Dota 2 Match 1</loc>
+        <lastmod>2025-05-01T04:26:53+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/1/Team 222</loc>
+        <lastmod>2024-09-30T00:09:22+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/2/What tttt</loc>
+        <lastmod>2024-09-30T00:10:19+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/3/called</loc>
+        <lastmod>2024-10-04T22:27:53+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/4/Create</loc>
+        <lastmod>2024-10-23T07:32:53+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/6/Create &amp; Register</loc>
+        <lastmod>2024-11-05T03:41:05+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/13/aaa !!!!!!!!!!!$%&amp;</loc>
+        <lastmod>2024-12-11T03:10:00+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/16/saddas</loc>
+        <lastmod>2024-12-14T08:14:17+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/22/Execution</loc>
+        <lastmod>2025-03-23T10:38:46+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/23/Excaliburs</loc>
+        <lastmod>2025-03-25T16:52:12+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/24/Team 1</loc>
+        <lastmod>2025-05-01T04:17:47+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/25/Team 2</loc>
+        <lastmod>2025-05-01T04:17:47+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/team/26/TEAM-22</loc>
+        <lastmod>2025-05-11T13:14:06+00:00</lastmod>
+
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/6/zzzzuser</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/7/p_zach</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/8/p_ridwanuser</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/17/ridwan-at-work-monjur22</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/18/ridwan-at-work-monjur</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/20/Ridwan Bin Monjur user2</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/21/Ridwan Monjur user 3</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/86/TestPlayer1</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/87/TestPlayer2</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/88/TestPlayer3</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/89/TestPlayer4</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/90/TestPlayer5</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/91/TestPlayer6</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/92/TestPlayer7</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/93/TestPlayer8</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/94/TestPlayer9</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/95/TestPlayer10</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/participant/104/Org1</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/2/o_zachtttwwww</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/4/o_leigh</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/5/ridwanmonjur</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/63/oceansgamingmy@gmail.com</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/67/mjrrdn12@gmail.com</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/80/Ridwan At Work Monjur</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/view/organizer/106/mjrrdn2@gmail.com</loc>
+    
+            </url>
+</urlset>

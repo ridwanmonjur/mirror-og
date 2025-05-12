@@ -19,7 +19,7 @@
 >
     @include('googletagmanager::body')
 
-    <input type="hidden" id="publicParticipantViewUrl" value="{{ route('public.participant.view', ['id' => ':id']) }}">
+    <input type="hidden" id="publicParticipantViewUrl" value="{{ route('public.participant.view', ['id' => ':id', 'title' => ':title']) }}">
 
     @include('includes.__Navbar.NavbarGoToSearchPage')
     <main 

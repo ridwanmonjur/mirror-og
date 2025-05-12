@@ -3,13 +3,22 @@
 @section('title', 'Driftwood - About Us')
 @section('body-class', 'about')
 @push('styles')
-    <link 
-        rel="preload" 
-        href="https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
-        as="font" 
-        type="font/woff2" 
-        crossorigin
-    >
+    <meta name="description" content="Learn about Driftwood - the esports community platform connecting competitive gamers, organizing tournaments, and building a lasting ecosystem for gaming enthusiasts worldwide.">
+    <meta name="keywords" content="esports community, gaming platform, competitive gaming, esports tournaments, gaming community, LAN cafes, esports ecosystem">
+
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="About Driftwood | Esports Community Platform - Bringing Gamers Together">
+    <meta property="og:description" content="Learn about Driftwood - the esports community platform connecting competitive gamers, organizing tournaments, and building a lasting ecosystem for gaming enthusiasts worldwide.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://driftwood.gg/about">
+    <meta property="og:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
+
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Driftwood | Esports Community Platform">
+    <meta name="twitter:description" content="Learn about Driftwood - the esports community platform connecting competitive gamers">
+    <meta name="twitter:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp"> 
+    
     <style>
         .policy-row {
             padding: 1.5rem 0;
@@ -51,6 +60,33 @@
         }
         
     </style>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Driftwood",
+            "url": "https://driftwood.gg",
+            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+            "description": "Driftwood is an esports community platform bringing competitive gamers together through tournaments, events, and community building.",
+            "sameAs": [
+                "https://twitter.com/DriftwoodEsports",
+                "https://facebook.com/DriftwoodEsports",
+                "https://linkedin.com/company/driftwood-esports"
+            ]
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "mainEntity": {
+                "@type": "Organization",
+                "name": "Driftwood",
+                "description": "Esports community platform connecting competitive gamers"
+            }
+        }
+    </script>
+
 @endpush
 @section('content')
     <header>
@@ -64,7 +100,7 @@
     <main style="padding: 5vh 10vw ;">
         {{-- Para 1 --}}
         <section class="mb-5">
-            <h2 class="display-4 fw-light text-white mb-4">What is Driftwood about?</h2>
+            <h1 class="display-4 fw-light text-white mb-4">What is Driftwood about?</h1>
             <p class="text-white mb-3">Driftwood is about bringing people who love esports closer together.</p>
             <p class="text-white mb-3 text-justify">To us, esports is something that can form bonds between friends, family, and
                 community. We want to share our passion for esports with those around us, and we want to enable you to share
@@ -90,7 +126,7 @@
             <h2 class="display-4 px-0 fw-light text-white mb-4">Legal Guidelines</h2>
             <!-- Privacy Policy Row -->
             <div class="grid-template-columns">
-                <div class="policy-row position-relative text-white">
+                <article class="policy-row position-relative text-white">
                     <div class="px-2">
                         <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Privacy Policy (Apr 2025).pdf" data-title="Privacy Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#5fb7e6" stroke-width="2"/>
@@ -99,7 +135,7 @@
                         </svg>
                     </div>
                     <div class="px-2">
-                        <h4 class="mt-2">Privacy Policy</h4>
+                        <h3 class="mt-2">Privacy Policy</h3>
                         <p>Learn how we collect, use, and protect your personal information, safeguarding mutual interest.</p>
                     </div>
                     <div class="px-2 ">
@@ -112,10 +148,10 @@
                             </svg>
                         </button>
                     </div>
-                </div>
+                </article>
                 
                 <!-- Return Policy Row -->
-                <div class="policy-row position-relative text-white">
+                <article class="policy-row position-relative text-white">
                     <div class=" px-2">
                         <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Return Policy (Apr 2025).pdf" data-title="Return Policy" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <!-- Simple circular background -->
@@ -126,7 +162,7 @@
                             </svg>
                     </div>
                     <div class="px-2">
-                        <h4 class="mt-2">Return Policy</h4>
+                        <h3 class="mt-2">Return Policy</h3>
                         <p>Information about our return procedures, refunds, and exchanges.</p>
                     </div>
                     <div class="px-2 ">
@@ -139,10 +175,10 @@
                             </svg>
                         </button>
                     </div>
-                </div>
+                </article>
                 
                 <!-- Terms and Conditions Row -->
-                <div class="policy-row position-relative text-white">
+                <article class="policy-row position-relative text-white">
                     <div class="px-2">
                         <svg class="policy-svg"  data-pdf="/assets/pdf/Driftwood Terms and Conditions (Apr 2025).pdf" data-title="Terms and Conditions" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="45" fill="#ffffff" stroke="#64DBAF" stroke-width="2"/>
@@ -154,7 +190,7 @@
                         </svg>
                     </div>
                     <div class="px-2">
-                        <h4 class="mt-2">Terms and Conditions</h4>
+                        <h3 class="mt-2">Terms and Conditions</h3>
                         <p>The legal agreement between you and Driftwood when using our services.</p>
                     </div>
                     <div class="px-2">
@@ -167,7 +203,7 @@
                             </svg>
                         </button>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
         
@@ -186,7 +222,7 @@
                 link.click();
                 document.body.removeChild(link);
             } else {
-                window.open(pdfPath, '_blank');
+                window.open(pdfPath, '_blank', 'noopener,noreferrer');
             }
         }
     </script>

@@ -105,7 +105,7 @@
                                     </svg>
                                 </div>
                                 <a class="position-absolute top-0 start-0 w-100 h-100"
-                                    href="{{ route('public.team.view', ['id' => $joinEventAndTeam->team_id]) }}"></a>
+                                    href="{{ route('public.team.view', ['id' => $joinEventAndTeam->team_id, 'title' => $joinEventAndTeam->slug]) }}"></a>
                             </div>
                         </div>
                     </div>

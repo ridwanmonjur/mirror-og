@@ -32,7 +32,7 @@
         'event  mx-auto event-width cursor-pointer',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
-        <a href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
+        <a href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug ]) }}">
             <img 
                 id="eventBanner"
                 {!! trustedBladeHandleImageFailureBanner() !!}
@@ -47,7 +47,7 @@
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-6 col-xl-5 d-flex justify-content-start d my-1 px-0">
                     <a class="d-flex w-100 justify-content-start align-items-center"
-                        href="{{ route('public.event.view', ['id' => $joinEvent->id]) }}">
+                        href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug]) }}">
 
                         <img 
                             {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
@@ -59,7 +59,7 @@
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
-                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id]) }}"
+                    data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id, 'title' => $joinEvent->user->slug ]) }}"
                     class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
                     <img 
                         {!! trustedBladeHandleImageFailureBanner() !!}
@@ -89,7 +89,7 @@
 
                     @guest
                         <button type="button"
-                            onclick="reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->user_id]) }}')"
+                            onclick="reddirectToLoginWithIntened('{{ route('public.organizer.view', ['id' => $joinEvent->user_id, 'title'=> $joinEvent?->user?->slug]) }}')"
                             class="  roster-button  {{ 'followButton' . $joinEvent->user_id }}"
                         >
                             Follow
