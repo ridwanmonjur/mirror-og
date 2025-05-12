@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 
 @section('title', 'Driftwood - Community Esports')
 @section('body-class', '')
