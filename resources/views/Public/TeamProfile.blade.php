@@ -55,7 +55,7 @@
     @include('includes.__Team.TeamHead') 
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
-        <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id']) }}">
+        <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id', 'title' => ':title']) }}">
         <div class="tabs">
             <button class="tab-button outer-tab py-2 tab-button-active "
                 onclick="showTab(event, 'Overview')">Overview</button>

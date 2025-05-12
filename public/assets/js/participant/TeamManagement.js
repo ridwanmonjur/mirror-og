@@ -33,8 +33,9 @@ searchInputs.forEach((searchInput, index) => {
 
 window.onbeforeunload = function(){window.location.reload();}
 
-function redirectToProfilePage(userId) {
+function redirectToProfilePage(userId, title) {
     let route = document.getElementById('profile_route').value;
     route = route.replace(':id', userId);
+    route = route.replace(':title', title);
     window.location.href = route;
 }

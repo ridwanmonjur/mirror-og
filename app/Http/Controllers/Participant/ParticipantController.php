@@ -83,8 +83,11 @@ class ParticipantController extends Controller
             $participant = Participant::findOrFail($validatedData['participant']['id']);
             $participant->update($validatedData['participant']);
             $user = User::findOrFail($validatedData['user']['id']);
+            if ($validatedData['user']['name']) $user->name = $validatedData['user']['name'];
             $user->slugify();
+            
             $user->update($validatedData['user']);
+
             $user->uploadUserBanner($request);
         
             if (isset($participant->region)) {

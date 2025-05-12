@@ -369,8 +369,8 @@ searchInputs.forEach((searchInput, index) => {
     });
 });
 
-function redirectToProfilePage(userId) {
-    window.location.href = getUrl('publicParticipantViewUrl', userId);
+function redirectToProfilePage(userId, title) {
+    window.location.href = getUrl('publicParticipantViewUrl', userId, title);
 }
 
 
@@ -665,7 +665,7 @@ async function fetchMembers(event = null) {
                 <tr class="st py-2">
                     <td class="colorless-col px-0 mx-0   cursor-pointer  ">
                         <svg 
-                            onclick="redirectToProfilePage(${user.id});"
+                            onclick="redirectToProfilePage(${user.id}, ${user.name});"
                             class="gear-icon-btn"
                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                             class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -674,7 +674,7 @@ async function fetchMembers(event = null) {
                                 d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
                         </svg>
                     </td>
-                    <td class="colored-cell px-1   cursor-pointer  " onclick="redirectToProfilePage(${user.id});">
+                    <td class="colored-cell px-1   cursor-pointer  " onclick="redirectToProfilePage(${user.id}, ${user.name});">
                         <div class="player-info">
                             <img 
                                 onerror="this.onerror=null;this.src='/assets/images/404.png';"

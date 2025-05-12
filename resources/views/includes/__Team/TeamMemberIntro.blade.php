@@ -1,5 +1,5 @@
 <div class="col-12 col-lg-10 d-flex justify-content-start align-items-center">
-    <img onclick="redirectToProfilePage({{ $member->user_id }});" width="45" height="45"
+    <img onclick="redirectToProfilePage({{ $member->user_id }}, '{{ $member->user->name }}');" width="45" height="45"
         src="{{ bladeImageNull($member->user->userBanner) }}"
         {!! trustedBladeHandleImageFailure() !!}
         class="me-3 random-color-circle cursor-pointer rounded-circle object-fit-cover">
@@ -14,7 +14,7 @@
                     src="/assets/images/participants/crown-straight.png"
                 >
             @endif
-            <u onclick="redirectToProfilePage({{ $member->user_id }});"
+            <u onclick="redirectToProfilePage({{ $member->user_id }}, '{{ $member->user->name }}');"
                 class="cursor-pointer"
             >{{ $member->user->name }}</u></h6>
              <span class="fs-5 ms-2 ">
