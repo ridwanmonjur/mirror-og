@@ -45,7 +45,7 @@ class GenerateSitemap extends Command
             ->chunk(50, function ($events) use (&$sitemap) {
             foreach ($events as $event) {
                 $sitemap->add(Url::create("/event/{$event->id}/{$event->eventName}")
-                    ->setLastModificationDate($event->updated_at)
+                    ->setLastModificationDate($event->created_at)
                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
                     ->setPriority(0.8));
             }
@@ -55,7 +55,7 @@ class GenerateSitemap extends Command
             foreach ($teams as $team) {
                 $teamTitle = $team->teamName ;
                 $sitemap->add(Url::create("/view/team/{$team->id}/{$teamTitle}")
-                    ->setLastModificationDate($team->updated_at)
+                    ->setLastModificationDate($team->created_at)
                     ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
                     ->setPriority(0.7));
             }
@@ -66,7 +66,7 @@ class GenerateSitemap extends Command
                 foreach ($participants as $participant) {
                     $participantName = $participant->name ;
                     $sitemap->add(Url::create("/view/participant/{$participant->id}/{$participantName}")
-                        ->setLastModificationDate($participant->updated_at)
+                        // ->setLastModificationDate($participant->created_at)
                         ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
                         ->setPriority(0.6));
                 }
@@ -77,7 +77,7 @@ class GenerateSitemap extends Command
                 foreach ($organizers as $organizer) {
                     $organizerName = $organizer->name ;
                     $sitemap->add(Url::create("/view/organizer/{$organizer->id}/{$organizerName}")
-                        ->setLastModificationDate($organizer->updated_at)
+                        // ->setLastModificationDate($organizer->created_at)
                         ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
                         ->setPriority(0.6));
                 }
