@@ -311,7 +311,7 @@ async function fetchMembers(event = null) {
             onmouseover="this.style.transform='translateY(-2px)'" 
             onmouseout="this.style.transform='translateY(0)'"
         >
-            <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}', '${member?.user?.name}');" >
+            <div class="card-body cursor-pointer" onclick="redirectToProfilePage('${member.user_id}', '${member?.user?.slug}');" >
                 <div class="row align-items-center">
                     <div class="col-12 col-lg-11 d-flex align-items-center gap-3">
                         <div class="position-relative">

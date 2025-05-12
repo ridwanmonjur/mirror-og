@@ -78,6 +78,8 @@ class OrganizerController extends Controller
                    
                 }
                 $userProfile = User::where('id', $user->id)->first();
+                if ($validatedData['userProfile']['name']) $user->name = $validatedData['userProfile']['name'];
+
                 $userProfile->fill($validatedData['userProfile']);
                 $userProfile->slugify();
                 $userProfile->save();

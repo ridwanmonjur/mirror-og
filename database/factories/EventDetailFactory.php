@@ -86,8 +86,8 @@ final class EventDetailFactory extends Factory
             'email_verified_at' => now(),
             'password' => bcrypt('123456'),
             'remember_token' => \Illuminate\Support\Str::random(10),
-            'role' => 'PARTICIPANT',
             'status' => null,
+            'role' => 'ORGANIZER',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
