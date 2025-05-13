@@ -56,8 +56,8 @@ class InterestedUserResource extends Resource
     {
         return [
             'index' => Pages\ListInterestedUsers::route('/'),
-            'create' => Pages\CreateInterestedUser::route('/create'),
-            'edit' => Pages\EditInterestedUser::route('/{record}/edit'),
+            // 'create' => Pages\CreateInterestedUser::route('/create'),
+            // 'edit' => Pages\EditInterestedUser::route('/{record}/edit'),
         ];
     }
 }

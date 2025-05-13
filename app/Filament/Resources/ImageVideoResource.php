@@ -80,8 +80,8 @@ class ImageVideoResource extends Resource
     {
         return [
             'index' => Pages\ListImageVideos::route('/'),
-            'create' => Pages\CreateImageVideo::route('/create'),
-            'edit' => Pages\EditImageVideo::route('/{record}/edit'),
+            // 'create' => Pages\CreateImageVideo::route('/create'),
+            // 'edit' => Pages\EditImageVideo::route('/{record}/edit'),
         ];
     }
 }

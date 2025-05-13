@@ -153,7 +153,7 @@ class JoinEventResource extends Resource
     {
         return [
             'index' => Pages\ListJoinEvents::route('/'),
-            'create' => Pages\CreateJoinEvent::route('/create'),
+            // 'create' => Pages\CreateJoinEvent::route('/create'),
             'edit' => Pages\EditJoinEvent::route('/{record}/edit'),
         ];
     }

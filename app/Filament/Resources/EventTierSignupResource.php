@@ -85,7 +85,7 @@ class EventTierSignupResource extends Resource
     {
         return [
             'index' => Pages\ListEventTierSignups::route('/'),
-            'create' => Pages\CreateEventTierSignup::route('/create'),
+            // 'create' => Pages\CreateEventTierSignup::route('/create'),
             'edit' => Pages\EditEventTierSignup::route('/{record}/edit'),
         ];
     }

@@ -71,7 +71,7 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\LikeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\TeamFollowResource::getNavigationItems(),
                                 ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
-                                ...\App\Filament\Resources\StarsResource::getNavigationItems(),
+                                // ...\App\Filament\Resources\StarsResource::getNavigationItems(),
                             ]),
                     ]);
             })

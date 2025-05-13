@@ -64,7 +64,7 @@ class EventTypeResource extends Resource
     {
         return [
             'index' => Pages\ListEventTypes::route('/'),
-            'create' => Pages\CreateEventType::route('/create'),
+            // 'create' => Pages\CreateEventType::route('/create'),
             'edit' => Pages\EditEventType::route('/{record}/edit'),
         ];
     }

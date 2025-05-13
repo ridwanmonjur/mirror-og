@@ -115,7 +115,7 @@ class EventDetailResource extends Resource
     {
         return [
             'index' => Pages\ListEventDetails::route('/'),
-            'create' => Pages\CreateEventDetail::route('/create'),
+            // 'create' => Pages\CreateEventDetail::route('/create'),
             'edit' => Pages\EditEventDetail::route('/{record}/edit'),
         ];
     }

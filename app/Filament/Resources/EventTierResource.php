@@ -78,7 +78,7 @@ class EventTierResource extends Resource
     {
         return [
             'index' => Pages\ListEventTiers::route('/'),
-            'create' => Pages\CreateEventTier::route('/create'),
+            // 'create' => Pages\CreateEventTier::route('/create'),
             'edit' => Pages\EditEventTier::route('/{record}/edit'),
         ];
     }
