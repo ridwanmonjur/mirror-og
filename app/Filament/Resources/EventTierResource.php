@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class EventTierResource extends Resource
 {
     protected static ?string $model = EventTier::class;
+    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
 
     public static function form(Form $form): Form

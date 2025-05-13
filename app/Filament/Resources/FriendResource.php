@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class FriendResource extends Resource
 {
     protected static ?string $model = Friend::class;
+    
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
 
     public static function form(Form $form): Form

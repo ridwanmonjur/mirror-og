@@ -19,6 +19,7 @@ class InterestedUserResource extends Resource
 {
     protected static ?string $model = InterestedUser::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-star';
 
     protected static ?string $navigationLabel = 'Interested Users';
 

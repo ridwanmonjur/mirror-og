@@ -17,6 +17,7 @@ class JoinEventResource extends Resource
 {
     protected static ?string $model = JoinEvent::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
     public static function form(Form $form): Form
     {
