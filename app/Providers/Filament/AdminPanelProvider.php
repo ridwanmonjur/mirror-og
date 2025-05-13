@@ -49,8 +49,6 @@ class AdminPanelProvider extends PanelProvider
                         NavigationGroup::make('Event Details')
                             ->items([
                                 ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
                                 ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
                             ])
@@ -62,8 +60,6 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AwardResource::getNavigationItems(),
                             ]),
          
                    
