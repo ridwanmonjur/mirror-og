@@ -58,6 +58,7 @@ class TeamResource extends Resource
                         
                         return null;
                     })
+                    ->visible(fn (string $context): bool => $context === 'edit')
                     ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
                         // Custom file naming logic here
                         $oldBanner = $livewire->record->userBanner;

@@ -806,6 +806,7 @@ class EventDetail extends Model implements Feedable
 
         $eventDetail->status = $eventDetail->statusResolved();
         $eventDetail->willNotify = true;
+        $eventDetail->slug = Str::slug($eventDetail->eventName);
 
         return [$eventDetail, $isTimeSame];
     }
