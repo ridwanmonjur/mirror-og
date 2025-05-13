@@ -62,6 +62,11 @@ class JoinEvent extends Model
         return $this->hasMany(RosterMember::class, 'join_events_id', 'id');
     }
 
+    public function rosterHistory(): HasMany
+    {
+        return $this->hasMany(RosterHistory::class, 'join_events_id', 'id');
+    }
+
     public function results(): HasMany
     {
         return $this->hasMany(EventJoinResults::class, 'join_events_id', 'id');

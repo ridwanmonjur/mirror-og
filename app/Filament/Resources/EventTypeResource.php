@@ -17,6 +17,7 @@ class EventTypeResource extends Resource
 {
     protected static ?string $model = EventType::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
     {
@@ -64,7 +65,7 @@ class EventTypeResource extends Resource
     {
         return [
             'index' => Pages\ListEventTypes::route('/'),
-            'create' => Pages\CreateEventType::route('/create'),
+            // 'create' => Pages\CreateEventType::route('/create'),
             'edit' => Pages\EditEventType::route('/{record}/edit'),
         ];
     }

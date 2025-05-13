@@ -116,7 +116,6 @@
             "npm run build",
             "rm -rf node_modules",
                         
-            "php artisan migrate",
 
             "php artisan clear-compiled",
             "php artisan cache:clear",

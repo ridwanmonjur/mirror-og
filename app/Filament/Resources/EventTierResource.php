@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class EventTierResource extends Resource
 {
     protected static ?string $model = EventTier::class;
+    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
 
     public static function form(Form $form): Form
@@ -33,6 +34,9 @@ class EventTierResource extends Resource
                 Forms\Components\TextInput::make('tierEntryFee')
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
                     ->relationship('user', 'name'),
             ]);
     }
@@ -78,7 +82,7 @@ class EventTierResource extends Resource
     {
         return [
             'index' => Pages\ListEventTiers::route('/'),
-            'create' => Pages\CreateEventTier::route('/create'),
+            // 'create' => Pages\CreateEventTier::route('/create'),
             'edit' => Pages\EditEventTier::route('/{record}/edit'),
         ];
     }

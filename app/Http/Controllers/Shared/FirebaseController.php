@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brackets;
+use App\Models\EventDetail;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -276,5 +278,30 @@ class FirebaseController extends Controller
         );
 
         return  [...$disputes, ...$reports];
+    }
+
+    public function showBrackets(Request $request, $eventId)
+    {
+        $event = EventDetail::with(['tier'])->where('id', $eventId)->first();
+        $ogBrackets = Brackets::where('event_details_id', $event->id)->with(['team1', 'team2'])->get();
+        $brackets = $this->firestoreService->generateBrackets( $ogBrackets);
+        return view('admin.brackets', compact('brackets', 'event'));
+    }
+
+    public function createBrackets(Request $request)
+    {
+        // Validate the request data
+        // $validated = $request->validate([
+        //     'title' => 'required|string|max:255',
+        //     'content' => 'required|string',
+        //     // Add any other fields your Post model has
+        // ]);
+
+        // Create the post
+        // $post = Post::create($validated);
+
+        // // Redirect to the newly created post with a success message
+        // return redirect()->route('posts.show', $post)
+        //     ->with('success', 'Post created successfully.');
     }
 }

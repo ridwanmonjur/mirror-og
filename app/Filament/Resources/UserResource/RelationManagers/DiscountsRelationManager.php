@@ -24,11 +24,16 @@ class DiscountsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric()
-                    ->prefix('RM')                   
-                    ->label('Discount Amount'),
+                Forms\Components\Section::make()
+                ->schema([
+                    Forms\Components\TextInput::make('amount')
+                        ->required()
+                        ->numeric()
+                        ->prefix('RM')                   
+                        ->label('Discount Amount'),
+                ])
+                ->description('Discounts can be given to users who are organizers, but organizers must make payments and cannot use discounts.')
+                ->columnSpan('full'),
             ]);
     }
 
@@ -38,13 +43,10 @@ class DiscountsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('amount')
                     ->prefix('RM ')     
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
               
             ])
-            ->filters([
-                //
-            ])
+            
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                 ->visible(fn () => !$this->getOwnerRecord()->discounts()->exists())
@@ -60,11 +62,6 @@ class DiscountsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

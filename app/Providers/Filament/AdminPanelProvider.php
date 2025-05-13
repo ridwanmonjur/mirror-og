@@ -39,18 +39,25 @@ class AdminPanelProvider extends PanelProvider
                             ->url(fn (): string => Dashboard::getUrl())
                     )
                     ->groups([
-                        NavigationGroup::make('User & Teams')
+                        NavigationGroup::make('Users')
                         ->items([
                             ...\App\Filament\Resources\UserResource::getNavigationItems(),
-                            ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                        
+                            // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
+                            ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
+                            ...\App\Filament\Resources\ReportResource::getNavigationItems(),
+                            ...\App\Filament\Resources\FriendResource::getNavigationItems(),
+                            ...\App\Filament\Resources\LikeResource::getNavigationItems(),
+                            ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
+                            ...\App\Filament\Resources\ParticipantFollowResource::getNavigationItems(),
+                            ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
+                            NavigationItem::make('Onboarding Email')
+                                ->icon('heroicon-o-envelope')
+                                ->url(route('admin.onboardBeta.view')),
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
                         ]),
                         NavigationGroup::make('Event Details')
                             ->items([
                                 ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AwardResultsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\JoinEventResource::getNavigationItems(),
                                 ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
                             ])
@@ -62,21 +69,13 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AchievementsResource::getNavigationItems(),
-                                ...\App\Filament\Resources\AwardResource::getNavigationItems(),
+                                // ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
+
+                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
                             ]),
          
                    
-                        NavigationGroup::make(label: 'Social')
-                            ->items([
-                                ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
-                                ...\App\Filament\Resources\ReportResource::getNavigationItems(),
-                                ...\App\Filament\Resources\FriendResource::getNavigationItems(),
-                                ...\App\Filament\Resources\LikeResource::getNavigationItems(),
-                                ...\App\Filament\Resources\TeamFollowResource::getNavigationItems(),
-                                ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
-                                ...\App\Filament\Resources\StarsResource::getNavigationItems(),
-                            ]),
+                        
                     ]);
             })
             ->id('admin')
