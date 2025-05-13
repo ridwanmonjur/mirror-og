@@ -19,10 +19,17 @@ class EventInvitationsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('organizer_user_id')
-                    ->relationship('organizer', 'name'),
-                Forms\Components\Select::make('participant_user_id')
-                    ->relationship('participant', 'name'),
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->label('Organizer')
+                    ->searchable()
+                    ->relationship('organizer', 'name', 
+                    fn ($query) => $query->where('role', 'ORGANIZER') ),
+          
                 Forms\Components\Select::make('team_id')
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->searchable()
                     ->relationship('team', 'teamName'),
             ]);
     }
@@ -34,8 +41,6 @@ class EventInvitationsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('organizer.name')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('participant.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('team.teamName')
                     ->sortable(),
