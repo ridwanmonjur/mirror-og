@@ -152,7 +152,7 @@ class TeamResource extends Resource
     {
         return [
             'index' => Pages\ListTeams::route('/'),
-            'create' => Pages\CreateTeam::route('/create'),
+            // 'create' => Pages\CreateTeam::route('/create'),
             'edit' => Pages\EditTeam::route('/{record}/edit'),
         ];
     }
