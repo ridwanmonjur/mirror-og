@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TeamResource\RelationManagers;
 
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -24,7 +25,11 @@ class TeamFollowRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->label('Followee')
+                    ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
+                    ->searchable()
                     ->required(),
             ]);
     }

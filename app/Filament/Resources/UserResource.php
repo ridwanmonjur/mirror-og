@@ -271,7 +271,7 @@ class UserResource extends Resource
         return [
             RelationManagers\UserProfileRelationManager::class,
             RelationManagers\AddressRelationManager::class,
-            RelationManagers\ActivityLogsRelationManager::class,
+            // RelationManagers\ActivityLogsRelationManager::class,
             RelationManagers\NotificationCountRelationManager::class,
             RelationManagers\NotificationListRelationManager::class,
             

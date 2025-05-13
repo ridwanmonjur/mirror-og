@@ -37,6 +37,10 @@ class TeamResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('creator_id')
                     ->required()
+                    ->label("Creator")
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
                     ->relationship('user', 'name', 
                     fn ($query) => $query->where('role', 'PARTICIPANT') 
                 ),

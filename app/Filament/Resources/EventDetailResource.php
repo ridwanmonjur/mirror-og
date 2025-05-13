@@ -44,7 +44,12 @@ class EventDetailResource extends Resource
                 Forms\Components\TextInput::make('sub_action_private')
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->label('Organizer')
+                    ->searchable()
+                    ->relationship('user', 'name', 
+                    fn ($query) => $query->where('role', 'ORGANIZER') )
                     ->required(),
                 Forms\Components\Select::make('event_type_id')
                     ->relationship('type', 'eventType'),
@@ -66,26 +71,14 @@ class EventDetailResource extends Resource
                 ->searchable(),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type.eventType')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('eventTier.eventTier')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('game.gameTitle')
-                    ->numeric()
-                    ->sortable(),
-             
-           
             ])
-            ->filters([
-                //
-            ])
+          
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('Brackets')

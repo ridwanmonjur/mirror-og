@@ -73,7 +73,23 @@ class JoinEventResource extends Resource
                     ->required()
                     ->default('pending'),
                 Forms\Components\Select::make('vote_starter_id')
-                    ->relationship('voteStarter', 'name')
+                    ->options(function (callable $get) {
+                        // Get the selected team ID
+                        $id = $get('id');
+                        
+                        if (!$id) {
+                            return [];
+                        }
+                        
+                        // Get roster members belonging to the selected team
+                        return \App\Models\RosterMember::query()
+                            ->where('join_events_id', $id)
+                            ->with('user')
+                            ->get()
+                            ->mapWithKeys(function ($member) {
+                                return [$member->id => $member->user->name];
+                            });
+                    })
                     ->required(),
                 Forms\Components\Select::make('roster_captain_id')
                     ->label('Roster Captain')
@@ -159,3 +175,4 @@ class JoinEventResource extends Resource
         ];
     }
 }
+

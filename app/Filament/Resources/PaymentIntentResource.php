@@ -22,9 +22,12 @@ class PaymentIntentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->relationship('user', 'name') 
+                    ->required(),
                 Forms\Components\TextInput::make('payment_intent_id')
                     ->required()
                     ->maxLength(255),
@@ -45,14 +48,13 @@ class PaymentIntentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-
-                Tables\Columns\TextColumn::make('user_id')
+                // TODO
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_intent_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('customer_id')
-                    ->searchable(),
+               
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')

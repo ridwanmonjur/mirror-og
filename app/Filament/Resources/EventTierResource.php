@@ -33,6 +33,9 @@ class EventTierResource extends Resource
                 Forms\Components\TextInput::make('tierEntryFee')
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
                     ->relationship('user', 'name'),
             ]);
     }

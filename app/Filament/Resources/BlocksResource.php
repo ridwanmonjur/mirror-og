@@ -23,10 +23,18 @@ class BlocksResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+               
                     ->required()
                     ->relationship('user', 'name'),
                 Forms\Components\Select::make('blocked_user_id')
                     ->required()
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                  
                     ->label('Blocked User')
                     ->relationship('blockedUser', 'name')
             ]);
@@ -59,6 +67,8 @@ class BlocksResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
