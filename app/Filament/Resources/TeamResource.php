@@ -140,8 +140,7 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
-        
-
+            RelationManagers\TeamFollowRelationManager::class,
             RelationManagers\TeamProfileRelationManager::class,
             RelationManagers\MembersRelationManager::class,
             RelationManagers\TeamCaptainRelationManager::class

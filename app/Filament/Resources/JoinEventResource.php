@@ -144,7 +144,8 @@ class JoinEventResource extends Resource
         return [
             JoinEventResource\RelationManagers\RosterRelationManager::class,
             JoinEventResource\RelationManagers\ResultsRelationManager::class,
-            JoinEventResource\RelationManagers\PaymentsRelationManager::class
+            JoinEventResource\RelationManagers\PaymentsRelationManager::class,
+            JoinEventResource\RelationManagers\RosterHistoryRelationManager::class
 
         ];
     }
