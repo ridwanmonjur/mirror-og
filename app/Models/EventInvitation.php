@@ -14,7 +14,7 @@ class EventInvitation extends Model
 
     protected $table = 'event_invitations';
 
-    protected $fillabe = ['organizer_user_id', 'participant_user_id', 'team_id', 'event_id'];
+    protected $fillable = ['organizer_user_id', 'participant_user_id', 'team_id', 'event_id'];
 
     public function organizer(): BelongsTo
     {

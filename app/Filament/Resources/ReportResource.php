@@ -17,6 +17,7 @@ class ReportResource extends Resource
 {
     protected static ?string $model = Report::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-flag';
 
     public static function form(Form $form): Form
     {
@@ -24,11 +25,17 @@ class ReportResource extends Resource
             ->schema([
                 Forms\Components\Select::make('reporter_id')
                     ->relationship('reporter', 'name')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
                     ->required(),
                 Forms\Components\Select::make('reported_user_id')
                     ->relationship('reportedUser', 'name')
                     ->label('Reported User')
-
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                  
                     ->required(),
                 Forms\Components\TextInput::make('reason')
                     ->required()
@@ -70,6 +77,8 @@ class ReportResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

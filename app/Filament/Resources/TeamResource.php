@@ -19,6 +19,7 @@ class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -37,6 +38,10 @@ class TeamResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('creator_id')
                     ->required()
+                    ->label("Creator")
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
                     ->relationship('user', 'name', 
                     fn ($query) => $query->where('role', 'PARTICIPANT') 
                 ),
@@ -58,6 +63,7 @@ class TeamResource extends Resource
                         
                         return null;
                     })
+                    ->visible(fn (string $context): bool => $context === 'edit')
                     ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
                         // Custom file naming logic here
                         $oldBanner = $livewire->record->userBanner;
@@ -139,8 +145,7 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
-        
-
+            RelationManagers\TeamFollowRelationManager::class,
             RelationManagers\TeamProfileRelationManager::class,
             RelationManagers\MembersRelationManager::class,
             RelationManagers\TeamCaptainRelationManager::class
@@ -151,7 +156,7 @@ class TeamResource extends Resource
     {
         return [
             'index' => Pages\ListTeams::route('/'),
-            'create' => Pages\CreateTeam::route('/create'),
+            // 'create' => Pages\CreateTeam::route('/create'),
             'edit' => Pages\EditTeam::route('/{record}/edit'),
         ];
     }

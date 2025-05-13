@@ -17,6 +17,7 @@ class JoinEventResource extends Resource
 {
     protected static ?string $model = JoinEvent::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
     public static function form(Form $form): Form
     {
@@ -73,7 +74,23 @@ class JoinEventResource extends Resource
                     ->required()
                     ->default('pending'),
                 Forms\Components\Select::make('vote_starter_id')
-                    ->relationship('voteStarter', 'name')
+                    ->options(function (callable $get) {
+                        // Get the selected team ID
+                        $id = $get('id');
+                        
+                        if (!$id) {
+                            return [];
+                        }
+                        
+                        // Get roster members belonging to the selected team
+                        return \App\Models\RosterMember::query()
+                            ->where('join_events_id', $id)
+                            ->with('user')
+                            ->get()
+                            ->mapWithKeys(function ($member) {
+                                return [$member->id => $member->user->name];
+                            });
+                    })
                     ->required(),
                 Forms\Components\Select::make('roster_captain_id')
                     ->label('Roster Captain')
@@ -144,7 +161,8 @@ class JoinEventResource extends Resource
         return [
             JoinEventResource\RelationManagers\RosterRelationManager::class,
             JoinEventResource\RelationManagers\ResultsRelationManager::class,
-            JoinEventResource\RelationManagers\PaymentsRelationManager::class
+            JoinEventResource\RelationManagers\PaymentsRelationManager::class,
+            JoinEventResource\RelationManagers\RosterHistoryRelationManager::class
 
         ];
     }
@@ -153,8 +171,9 @@ class JoinEventResource extends Resource
     {
         return [
             'index' => Pages\ListJoinEvents::route('/'),
-            'create' => Pages\CreateJoinEvent::route('/create'),
+            // 'create' => Pages\CreateJoinEvent::route('/create'),
             'edit' => Pages\EditJoinEvent::route('/{record}/edit'),
         ];
     }
 }
+

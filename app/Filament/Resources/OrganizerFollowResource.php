@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class OrganizerFollowResource extends Resource
 {
     protected static ?string $model = OrganizerFollow::class;
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
 
     public static function form(Form $form): Form

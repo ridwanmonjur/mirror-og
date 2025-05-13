@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class FriendResource extends Resource
 {
     protected static ?string $model = Friend::class;
+    
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
 
     public static function form(Form $form): Form
@@ -23,18 +25,24 @@ class FriendResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user1_id')
+                    ->relationship('user1', 'name', 
+                    fn ($query) => $query->where('role', 'PARTICIPANT') 
+                    )
                     ->label('User 1')
-                    ->relationship('user1', 'name')
                     ->required(),
                 Forms\Components\Select::make('user2_id')
-                ->label('User 1')    
-                ->relationship('user2', 'name')
-                    ->required(),
+                    ->label('User 2')    
+                    ->required()
+                    ->relationship('user2', 'name', 
+                        fn ($query) => $query->where('role', 'PARTICIPANT') 
+                ),
+               
                 Forms\Components\Select::make('actor_id')
                     ->required()
                     ->relationship('actor', 'name'),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Forms\Components\Select::make('status')
+                    ->required()
+                    ->options(['pending', 'accepted','rejected','left']),
             ]);
     }
 
@@ -65,12 +73,15 @@ class FriendResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status'),
+                
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

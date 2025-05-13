@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Kreait\Firebase\Contract\Firestore;
 use Google\Cloud\Firestore\FieldValue;
+use Illuminate\Support\Collection;
 
 class FirestoreService
 {
@@ -189,5 +190,32 @@ class FirestoreService
                 'resultsDispute' => $results
             ];
         }
+    }
+
+    public function generateBrackets(Collection $matches): array {
+        $brackets = [];
+        foreach ($matches as $bracket) {
+            $team1Name = $bracket?->team1?->teamName;
+            $team2Name = $bracket?->team2?->teamName;
+            $data = [];
+
+            if ($bracket['team1_position'] && $bracket['team2_position']) {
+                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
+                $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
+                $snapshot = $docRef->snapshot();
+                if ($snapshot->exists()) {
+                    $data = $snapshot->data();
+                }
+            }
+          
+            $brackets[] = [
+                ...$bracket->toArray(),
+                ...$data,
+                'team1Name' => $team1Name,
+                'team2Name' => $team2Name
+            ];
+        }
+
+        return $brackets;
     }
 }

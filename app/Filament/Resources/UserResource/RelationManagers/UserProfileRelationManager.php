@@ -40,6 +40,7 @@ class UserProfileRelationManager extends RelationManager
                         
                         return null;
                     })
+                    ->visible(fn (string $context): bool => $context === 'edit')
                     ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
                         $owner = $livewire->getOwnerRecord();
                         $record = $owner->profile;

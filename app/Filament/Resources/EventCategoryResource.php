@@ -17,6 +17,7 @@ class EventCategoryResource extends Resource
 {
     protected static ?string $model = EventCategory::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
 
     public static function form(Form $form): Form
     {
@@ -75,8 +76,8 @@ class EventCategoryResource extends Resource
     {
         return [
             'index' => Pages\ListEventCategories::route('/'),
-            'create' => Pages\CreateEventCategory::route('/create'),
-            'edit' => Pages\EditEventCategory::route('/{record}/edit'),
+            // 'create' => Pages\CreateEventCategory::route('/create'),
+            // 'edit' => Pages\EditEventCategory::route('/{record}/edit'),
         ];
     }
 }

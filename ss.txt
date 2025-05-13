@@ -38,35 +38,68 @@ php artisan make:filament-relation-manager JoinEventResource payments join_event
 php artisan make:filament-relation-manager EventDetail paymentTransaction payment_transaction_id 
 
 
+achievements not needed
+activity_logs (done) but bug
+all_payment_transactions (done) relation
+awards not needed
+awards_results not needed
+blocks (done)
+brackets not needed
+brackets_setup  n.a.
+bracket_deadlines n.a.
+bracket_deadline_setup n.a.
+captains (done) relation
+disputes n.a.remove
+event_categories (done)
+event_details (done)
+event_invitations  (done)
+event_join_results (done)
+event_signup_dates zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+event_tier
+event_tier_type_signup_dates 
+event_type (done)
+failed_jobs n.a.
+firebase_user_active_at n.a.
+friends (done)
 
-brackets_setup
-bracket_deadlines
-bracket_deadlines_setup
 
-event_invitations next
-event_join_results next achievements, awards
-event_signup_dates
-event_tier_type_signup_dates
-
-firebase_user_active_at
-
-games
-games_user
-image_videos
-
-interested_user
-
-notifications
-notifCounter
-
-org_discount next
-reports
-stars
-
-roster_members
-team_members
-
-user_discounts 
-address
-
-follows missing
+games n.a.
+game_user n.a.
+image_videos n.a.
+interested_user (done)
+jobs na.a.
+join_events (done)
+likes (done)
+migrations n.a.
+monitored_scheduled_tasks n.a.
+monitored_scheduled_task_log_items n.a. 
+notifications2 (done)
+notification_counters (done)
+organizers (done)
+organizer_create_event_discounts (done)
+organizer_follows (done)
+participants (done)
+participant_follows (done)
+participant_payments (done) relation
+password_reset_tokens n.a.
+payment_intents (done) 
+permissions n.a.
+personal_access_tokens n.a.
+pulse_aggregates n.a.
+pulse_entries n.a.
+pulse_values n.a.
+reports (done)
+roles n.a.
+role_has_permissions n.a.
+roster_history (done) relation
+roster_members (done) relation
+stars (done)
+tasks n.a.
+teams (done)
+team_follows (done)
+team_members (done)
+team_profile (done)
+users (done)
+user_address (done)
+user_discounts (done)
+user_profile (done)

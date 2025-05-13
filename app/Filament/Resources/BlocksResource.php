@@ -17,16 +17,25 @@ class BlocksResource extends Resource
 {
     protected static ?string $model = Blocks::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-no-symbol';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+               
                     ->required()
                     ->relationship('user', 'name'),
                 Forms\Components\Select::make('blocked_user_id')
                     ->required()
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                  
                     ->label('Blocked User')
                     ->relationship('blockedUser', 'name')
             ]);
@@ -59,6 +68,8 @@ class BlocksResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -32,6 +32,9 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = 'Users';
 
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+
     public static function form(Form $form): Form
     {
         $countries = [];
@@ -271,7 +274,7 @@ class UserResource extends Resource
         return [
             RelationManagers\UserProfileRelationManager::class,
             RelationManagers\AddressRelationManager::class,
-            RelationManagers\ActivityLogsRelationManager::class,
+            // RelationManagers\ActivityLogsRelationManager::class,
             RelationManagers\NotificationCountRelationManager::class,
             RelationManagers\NotificationListRelationManager::class,
             

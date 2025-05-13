@@ -28,6 +28,8 @@ class TeamFollow extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public $timestamps = false;
+
     public static function getFollowersPaginate($teamId, $loggedUserId, $perPage, $page = 1, $search = null)
     {
         $select = [
