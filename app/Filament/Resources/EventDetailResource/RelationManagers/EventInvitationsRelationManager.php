@@ -1,32 +1,25 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\EventDetailResource\RelationManagers;
 
-use App\Filament\Resources\EventInvitationResource\Pages;
-use App\Filament\Resources\EventInvitationResource\RelationManagers;
-use App\Models\EventInvitation;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EventInvitationResource extends Resource
+class EventInvitationsRelationManager extends RelationManager
 {
-    protected static ?string $model = EventInvitation::class;
+    protected static string $relationship = 'invitationList';
 
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('organizer_user_id')
                     ->relationship('organizer', 'name'),
-                Forms\Components\Select::make('event_id')
-                    ->relationship('event', 'eventName', fn ($query) => $query->whereNotNull('eventName')),
-              
                 Forms\Components\Select::make('participant_user_id')
                     ->relationship('participant', 'name'),
                 Forms\Components\Select::make('team_id')
@@ -34,23 +27,17 @@ class EventInvitationResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-
                 Tables\Columns\TextColumn::make('organizer.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('event.eventName')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('participant.name')
-                    ->numeric()
                     ->sortable(),
-                    Tables\Columns\TextColumn::make('team.teamName')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('team.teamName')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -60,34 +47,21 @@ class EventInvitationResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
             ])
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListEventInvitations::route('/'),
-            // 'create' => Pages\CreateEventInvitation::route('/create'),
-            // 'edit' => Pages\EditEventInvitation::route('/{record}/edit'),
-        ];
     }
 }

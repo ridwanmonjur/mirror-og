@@ -107,7 +107,8 @@ class EventDetailResource extends Resource
     {
         return [
             RelationManagers\SignupRelationManager::class,
-            RelationManagers\PTransactionsRelationManager::class
+            RelationManagers\PTransactionsRelationManager::class,
+            RelationManagers\EventInvitationsRelationManager::class
         ];
     }
 
