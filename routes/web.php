@@ -84,9 +84,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth'], function () {
-        Route::redirect('/profile', '/admin', 301)
-            ->name('admin.profile.view')
-            ->middleware('prevent-back-history');
+        Route::redirect('/profile', '/admin', 301)->name('admin.profile.view')->middleware('prevent-back-history');
+        Route::get('/brackets/{eventId}', [FirebaseController::class, 'showBrackets'])->name('admin.brackets.index');
+        Route::post('/brackets{eventId}', [FirebaseController::class, 'storeBrackets'])->name('admin.brackets.store');
+        Route::post('/brackets/{eventId}/scores', [FirebaseController::class, 'storeScores'])->name('admin.brackets.scores');
         Route::group(['middleware' => 'check-permission:admin'], function () {
             Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
             Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');

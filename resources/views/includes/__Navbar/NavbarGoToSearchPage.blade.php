@@ -17,9 +17,8 @@
             $routeLogo = route('public.landing.view');
         } else if ($role == 'ORGANIZER') {
             $routeLogo = route('organizer.home.view');
-        }
-        else {
-            $routeLogo = route('public.landing.view');
+        } else {
+            $routeLogo = '/admin';
         }
 
         $notificationsCount = $user->load('notificationCount')->notificationCount;    
