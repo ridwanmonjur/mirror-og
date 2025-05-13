@@ -88,6 +88,13 @@ class EventDetailResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('Brackets')
+                    ->label('Brackets')
+                    ->icon('heroicon-m-squares-2x2') 
+                    ->url(function (EventDetail $record) {
+                        return route('admin.brackets.index', $record->id) ;
+                    })
+                ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
