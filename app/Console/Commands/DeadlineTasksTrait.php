@@ -21,14 +21,15 @@ trait DeadlineTasksTrait
 {
     protected $bracketDataService;
     protected $firestore;
-
+    protected $disputeEnums;
 
     
-    protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService, $firebaseConfig)
+    protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService, $firebaseConfig, $disputeEnums)
     {
         $this->bracketDataService = $bracketDataService;
         Log::info(">>>>" . $firebaseConfig);
         $factory = new \Kreait\Firebase\Factory();
+        $this->disputeEnums = $disputeEnums;
         $this->firestore = $factory->withServiceAccount(base_path($firebaseConfig))->createFirestore();
     }
 
@@ -169,7 +170,7 @@ trait DeadlineTasksTrait
                             $disputeResolved[$i] = true;
                             $updateDisputeValues[$i] = [ 
                                 'resolution_winner' => (string) $data['dispute_teamNumber'],
-                                'resolution_resolved_by' => 'time',
+                                'resolution_resolved_by' => $this->disputeEnums['TIME'],
                             ];
                             $disputeRefList[$i] = $disputeRef;
                         } else {
@@ -180,7 +181,7 @@ trait DeadlineTasksTrait
                                 $disputeResolved[$i] = true;
                                 $updateDisputeValues[$i] = [ 
                                     'resolution_winner' => (string) $realWinners[$i],
-                                    'resolution_resolved_by' => null,
+                                    'resolution_resolved_by' => $this->disputeEnums['RANDOM'],
                                 ];
                                 $disputeRefList[$i] = $disputeRef;
                             }

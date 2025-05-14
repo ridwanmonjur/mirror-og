@@ -48,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
                 'mjrrdnasm@gmail.com',
                 'ridwan@driftwood.gg',
                 'zach@driftwood.gg',
+                'admin@driftwood.gg',
                 'leigh@driftwood.gg',
             ];
             
@@ -64,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
                     'ridwan@driftwood.gg',
                     'zach@driftwood.gg',
                     'leigh@driftwood.gg',
+                    'admin@driftwood.gg',
                     config('services.mail_address')
                 ]);
             }
