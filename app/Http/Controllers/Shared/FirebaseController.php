@@ -284,8 +284,15 @@ class FirebaseController extends Controller
     {
         $event = EventDetail::with(['tier'])->where('id', $eventId)->first();
         $ogBrackets = Brackets::where('event_details_id', $event->id)->with(['team1', 'team2'])->get();
-        $brackets = $this->firestoreService->generateBrackets( $ogBrackets);
+        $brackets = $this->firestoreService->generateBrackets( $ogBrackets, $event->id);
         return view('admin.brackets', compact('brackets', 'event'));
+    }
+
+    public function showDisputes(Request $request, $eventId)
+    {
+        $event = EventDetail::with(['tier'])->where('id', $eventId)->first();
+        $disputes = $this->firestoreService->generateDisputes( $event->id);
+        return view('admin.reports', compact('disputes', 'event'));
     }
 
     public function createBrackets(Request $request)

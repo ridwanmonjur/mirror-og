@@ -8,7 +8,9 @@ const initialBracketData = (userTeamId) => ({
   disputeLevelEnums: {
     'ORGANIZER': 1,
     'DISPUTEE': 2,
-    'RESPONDER': 3
+    'RESPONDER': 3,
+    'TIME': 4,
+    'RANDOM': 5
   },
   subscribeToMatchStatusesSnapshot: null,
   subscribeToCurrentReportSnapshot: null,

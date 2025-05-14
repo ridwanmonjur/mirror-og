@@ -62,7 +62,7 @@
         
         <!-- Brackets Modal with Input Fields -->
         <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detailsModalTitle">Match Brackets Details</h5>
@@ -70,18 +70,10 @@
                     </div>
                     <div class="modal-body" v-if="selectedMatch">
                         <form id="bracketsForm">
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">ID</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="id" :value="selectedMatch.id">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">Order</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="order" :value="selectedMatch.order">
-                                </div>
-                            </div>
+                           
+                            <input type="hidden"  name="id" :value="selectedMatch.id">
+                               
+                            <input type="hidden" name="order" :value="selectedMatch.order">
                             <div class="mb-3 row">
                                 <label class="col-12 col-lg-4 col-xl-3 col-form-label">Team 1 ID</label>
                                 <div class="col-12 col-lg-8 col-xl-9">
@@ -94,12 +86,9 @@
                                     <input type="text" class="form-control" name="team2_id" :value="selectedMatch.team2_id">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">Event Details ID</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="event_details_id" :value="selectedMatch.event_details_id">
-                                </div>
-                            </div>
+                            
+                            <input type="hidden" class="form-control" name="event_details_id" :value="selectedMatch.event_details_id">
+                                
                             <div class="mb-3 row">
                                 <label class="col-12 col-lg-4 col-xl-3 col-form-label">Team 1 Position</label>
                                 <div class="col-12 col-lg-8 col-xl-9">
@@ -112,30 +101,14 @@
                                     <input type="text" class="form-control" name="team2_position" :value="selectedMatch.team2_position">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">Stage Name</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="stage_name" :value="selectedMatch.stage_name">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">Inner Stage Name</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="inner_stage_name" :value="selectedMatch.inner_stage_name">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">Created At</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="created_at" :value="selectedMatch.created_at">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
-                                <label class="col-12 col-lg-4 col-xl-3 col-form-label">Updated At</label>
-                                <div class="col-12 col-lg-8 col-xl-9">
-                                    <input type="text" class="form-control" name="updated_at" :value="selectedMatch.updated_at">
-                                </div>
-                            </div>
+                           
+                            <input type="hidden" name="stage_name" :value="selectedMatch.stage_name">
+                        
+                    
+                            <input type="hidden"  name="inner_stage_name" :value="selectedMatch.inner_stage_name">
+                                
+                            <input type="hidden"  name="created_at" :value="selectedMatch.created_at">
+                            <input type="hidden" name="updated_at" :value="selectedMatch.updated_at">
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -148,7 +121,7 @@
         
         <!-- Scores Modal with Input Fields -->
         <div class="modal fade" id="scoresModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Match Scores Details</h5>
@@ -160,7 +133,12 @@
                                 <div class="mb-3 row">
                                     <label class="col-12 col-lg-4 col-xl-3 col-form-label">Complete Match Status</label>
                                     <div class="col-12 col-lg-8 col-xl-9">
-                                        <input type="text" class="form-control" name="completeMatchStatus" :value="selectedMatch.completeMatchStatus">
+                                        <select class="form-select d-inline" :name="completeMatchStatus" :value="selectedMatch.completeMatchStatus">
+                                                <option value="null">No status</option>
+                                                <option value="UPCOMING">UPCOMING</option>
+                                                <option value="ONGOING">ONGOING</option>
+                                                <option value="ENDED">ENDED</option>
+                                            </select>
                                     </div>
                                 </div>
                                 
@@ -169,7 +147,11 @@
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.disputeResolved" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'disputeResolved['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'disputeResolved['+index+']'" :value="value">
+                                                <option value="null">No teams</option>
+                                                <option value="0">Team 1</option>
+                                                <option value="1">Team 2</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -179,11 +161,15 @@
                                     <label class="col-12 col-lg-4 col-xl-3 col-form-label">Organizer Winners</label>
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.organizerWinners" :key="index">
-                                            <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'organizerWinners['+index+']'" :value="value">
+                                        <span class="input-group-text d-inline">Match @{{index + 1}}</span>
+                                        <select class="form-select d-inline" :name="'organizerWinners['+index+']'" :value="value">
+                                            <option value="null">No teams</option>
+                                            <option value="0">Team 1</option>
+                                            <option value="1">Team 2</option>
+                                        </select>
                                         </div>
                                     </div>
-                                </div>
+                                    </div>
                                 
                                 <div class="mb-3 row">
                                     <label class="col-12 col-lg-4 col-xl-3 col-form-label">Disqualified</label>
@@ -198,7 +184,11 @@
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.team2Winners" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'team2Winners['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'team2Winners['+index+']'" :value="value">
+                                                <option value="null">No teams</option>
+                                                <option value="0">Team 1</option>
+                                                <option value="1">Team 2</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -209,7 +199,11 @@
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.team1Winners" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'team1Winners['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'team1Winners['+index+']'" :value="value">
+                                                <option value="null">No teams</option>
+                                                <option value="0">Team 1</option>
+                                                <option value="1">Team 2</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +226,11 @@
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.defaultWinners" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'defaultWinners['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'defaultWinners['+index+']'" :value="value">
+                                                <option value="null">No teams</option>
+                                                <option value="0">Team 1</option>
+                                                <option value="1">Team 2</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -252,12 +250,17 @@
                                 </div>
                                 
                                 <!-- For matchStatus -->
-                                <div class="mb-3 row" v-if="selectedMatch.matchStatus">
+                               <div class="mb-3 row" v-if="selectedMatch.matchStatus">
                                     <label class="col-12 col-lg-4 col-xl-3 col-form-label">Match Status</label>
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.matchStatus" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'matchStatus['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'matchStatus['+index+']'" :value="value">
+                                                <option value="null">No status</option>
+                                                <option value="UPCOMING">UPCOMING</option>
+                                                <option value="ONGOING">ONGOING</option>
+                                                <option value="ENDED">ENDED</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -275,7 +278,11 @@
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.realWinners" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'realWinners['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'realWinners['+index+']'" :value="value">
+                                                <option value="null">No teams</option>
+                                                <option value="0">Team 1</option>
+                                                <option value="1">Team 2</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -286,7 +293,11 @@
                                     <div class="col-12 col-lg-8 col-xl-9 d-flex justify-content-center">
                                         <div class="input-group mb-2" v-for="(value, index) in selectedMatch.randomWinners" :key="index">
                                             <span class="input-group-text d-inline">Match @{{index + 1}}</span>
-                                            <input type="text" class="form-control d-inline" :name="'randomWinners['+index+']'" :value="value">
+                                            <select class="form-select d-inline" :name="'randomWinners['+index+']'" :value="value">
+                                                <option value="null">No teams</option>
+                                                <option value="0">Team 1</option>
+                                                <option value="1">Team 2</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

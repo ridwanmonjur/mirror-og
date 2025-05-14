@@ -38,8 +38,9 @@ class DeadlineTasks extends Command
     {
         parent::__construct();
         $firebaseConfig = Config::get('services.firebase');
+        $disputeEnums = Config::get('constants.DISPUTE');
 
-        $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig);
+        $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
     }
 
     public function handle()

@@ -63,6 +63,7 @@ class EventMatchService {
     ): array {
        
         $USER_ENUMS = config('constants.USER_ACCESS');
+        $DISPUTTE_ENUMS = config('constants.DISPUTE');
 
         $joinEventIds = $event->joinEvents->pluck('id');
 
@@ -157,7 +158,7 @@ class EventMatchService {
             'bracketList' => $bracketList,
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues,
-            
+            'DISPUTE_ACCESS' => $DISPUTTE_ENUMS
         ];
     }
 
