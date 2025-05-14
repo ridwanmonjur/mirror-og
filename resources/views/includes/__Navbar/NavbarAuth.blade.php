@@ -1,3 +1,4 @@
+@if ($user->role != 'ADMIN')
 <div 
     id="notif-dropdown" 
     v-scope="PageNotificationComponent()"
@@ -20,7 +21,6 @@
         </span>
         
     </a>
-
     <div class="dropdown-menu border dropdown-menu-end shadow-lg mx-2 py-2 py-0" style="border-radius: 10px; right: -12px; top: 120%; font-size: 14px; width: 600px;"
         aria-labelledby="dropNotification"
         onclick="event.stopPropagation()"
@@ -134,6 +134,8 @@
 
     </div>
 </div>
+@endif
+
 <div class="dropdown me-2"  data-bs-auto-close="true" >
     <a href="#" role="button" class="btn m-0 p-0" id="dropUser" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
