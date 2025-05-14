@@ -10,10 +10,12 @@ use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
 use App\Services\BracketDataService;
 use App\Models\StripePayment;
+use App\Models\User;
 use App\Services\EventMatchService;
 use App\Services\PaymentService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Opcodes\LogViewer\Facades\LogViewer;
@@ -40,6 +42,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('viewPulse', function (?User $user) {
+            $allowedEmails = [
+                'mjrrdn@gmail.com',
+                'mjrrdnasm@gmail.com',
+                'ridwan@driftwood.gg',
+                'zach@driftwood.gg',
+                'leigh@driftwood.gg',
+            ];
+            
+            return $user && in_array($user->email, $allowedEmails);
+        });
+
         View::share('USER_ACCESS', config('constants.USER_ACCESS'));
         LogViewer::auth(function ($request) {
             if (app()->environment('production')) {
