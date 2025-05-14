@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 /* THIS IS THE UNSIGNED VIEW */
 // Home
 Route::view('/','Public.ClosedBeta')->name('public.closedBeta.view');
+Route::redirect( '/closedbeta','/');
+
 Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
 // Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Public.About')->name('public.about.view');
