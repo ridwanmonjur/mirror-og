@@ -25,6 +25,8 @@
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
         <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
+        <input type="hidden" id="disputeLevelEnums" value="{{json_encode($DISPUTE_ACCESS)}}">
+
         <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
          <div >
             <u>

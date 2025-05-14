@@ -54,7 +54,7 @@
                                             </p>
                                         </div>
                                     </template>
-                                    <template v-else="dispute[reportUI.matchNumber]?.resolution_resolved_by == 'time' ">
+                                    <template v-else-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == disputeLevelEnums['TIME'] ">
                                         <div class="mt-2">
                                             <p class="text-success mt-2">
                                                 Winner has been decided by timeout.

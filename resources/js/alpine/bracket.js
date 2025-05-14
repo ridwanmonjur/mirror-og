@@ -472,11 +472,15 @@ let initialData = initialBracketData(userTeamId);
 function BracketData() {
 
   const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums' ?? '[]').value);
-  
+  const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums' ?? '[]').value);
+  console.log({disputeLevelEnums});
+  console.log({disputeLevelEnums});
+  console.log({disputeLevelEnums});
   
   return {
     ...initialData,
     userLevelEnums,
+    disputeLevelEnums,
    
     async onSubmitSelectTeamToWin() {
       let teamNumber = this.reportUI.teamNumber;

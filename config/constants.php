@@ -236,6 +236,13 @@ return [
         'IS_PUBLIC' => 3,
         'IS_ORGANIZER' => 4,
     ],
+    'DISPUTE' => [
+        'ORGANIZER' => 1,
+        'DISPUTEE' => 2,
+        'RESPONDER' => 3,
+        'TIME' => 4,
+        'RANDOM' => 5
+    ],
     'QUEUE_TRIES' => 3,
     'STRIPE' => [
         'ZER0' => 0.05,

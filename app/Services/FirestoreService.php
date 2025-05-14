@@ -192,30 +192,53 @@ class FirestoreService
         }
     }
 
-    public function generateBrackets(Collection $matches): array {
+    public function generateDisputes(string $eventId): array {
+        $docRef = $this->firestore->database()->collection('event')->document($eventId)->collection('disputes');
+        $documents = $docRef->documents();
+        $disputes = [];
+        
+        foreach ($documents as $document) {
+            if ($document->exists()) {
+                $disputes[] = [...$document->data(), 'id' => $document->id()];
+            }
+        }
+
+        return $disputes;
+    }
+
+    public function generateBrackets(Collection $matches, string| int $eventId): array {
+
+        $allBracketDocs = $this->firestore->database()
+            ->collection('event')
+            ->document($eventId)
+            ->collection('brackets')
+            ->documents();
+
+        $bracketDataByPath = [];
+        foreach ($allBracketDocs as $doc) {
+            $bracketDataByPath[$doc->id()] = $doc->data();
+        }
+
         $brackets = [];
         foreach ($matches as $bracket) {
             $team1Name = $bracket?->team1?->teamName;
             $team2Name = $bracket?->team2?->teamName;
-            $data = [];
-
+            
+            $additionalData = [];
             if ($bracket['team1_position'] && $bracket['team2_position']) {
                 $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
-                $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
-                $snapshot = $docRef->snapshot();
-                if ($snapshot->exists()) {
-                    $data = $snapshot->data();
+                if (isset($bracketDataByPath[$matchStatusPath])) {
+                    $additionalData = $bracketDataByPath[$matchStatusPath];
                 }
             }
-          
+            
             $brackets[] = [
                 ...$bracket->toArray(),
-                ...$data,
+                ...$additionalData,
                 'team1Name' => $team1Name,
                 'team2Name' => $team2Name
             ];
         }
-
         return $brackets;
     }
 }

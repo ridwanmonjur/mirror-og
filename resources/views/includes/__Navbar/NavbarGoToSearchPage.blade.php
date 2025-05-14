@@ -138,20 +138,23 @@
                         </div>
                     @endif
                     <p style="text-overflow: ellipsis; overflow: hidden; font-size: larger;" class="text-start ms-3 my-0">
-                        <b>{{ $user->name }}</b>
+                        <b>{{ $user->name }} {{$user->role}}</b>
                     </p>
                 </div>
             </div>
-            @if ($user->role == 'PARTICIPANT' || $user->role == 'ADMIN')
+            @if ($user->role == 'PARTICIPANT')
                 <a href="{{ url('/participant/team/create/' ) }}" class="py-1">Create a Team</a>
                 <a href="{{ url('/participant/team/list/' ) }}" class="py-1">Team List</a>
                 <a href="{{ route('user.notif.view' ) }}" class="py-1">Team Requests</a>
             @endif
-            @if ($user->role == 'ORGANIZER' || $user->role == 'ADMIN')
+            @if ($user->role == 'ORGANIZER')
                 <a class="py-1" href="{{ route('event.create') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event</a>
                 <a class="py-1" href="{{ route('event.index') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Manage event</a>
             @endif
-            <a class="py-1" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
+            @if ($user->role == 'ADMIN')
+                <a class="py-1" style="text-decoration: none;" href="/admin">Panel</a>
+            @endif
+                <a class="py-1" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
         @endauth
     </div>
     <div class="text-center cursor-pointer mb-2"

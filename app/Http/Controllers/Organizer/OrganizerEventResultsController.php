@@ -301,6 +301,17 @@ class OrganizerEventResultsController extends Controller
                 $joinEventId = null;
             }
 
+            // TODO 
+            // find order
+            // $bracketSetup = DB::table('brackets_setup')
+            // ->where('event_tier_id', $tierId) 
+            // ->where(function($query) use ($next_position) {
+            //     $query->where('team1_position', $next_position)
+            //         ->orWhere('team2_position', $next_position);
+            // })
+            // ->first();
+            // also stage_name, inner_stage & order
+
             if ($joinEventId && $team1) {
                 // TODO only for first brackets
                 $team1->load(['roster' => function($query) use ($joinEventId) {

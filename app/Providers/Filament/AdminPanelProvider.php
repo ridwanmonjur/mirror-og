@@ -39,21 +39,25 @@ class AdminPanelProvider extends PanelProvider
                             ->url(fn (): string => Dashboard::getUrl())
                     )
                     ->groups([
-                        NavigationGroup::make('Users')
+                        NavigationGroup::make('Users & Teams')
                         ->items([
                             ...\App\Filament\Resources\UserResource::getNavigationItems(),
                             // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                            ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
-                            ...\App\Filament\Resources\ReportResource::getNavigationItems(),
-                            ...\App\Filament\Resources\FriendResource::getNavigationItems(),
-                            ...\App\Filament\Resources\LikeResource::getNavigationItems(),
-                            ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
-                            ...\App\Filament\Resources\ParticipantFollowResource::getNavigationItems(),
+                           
                             ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
                             NavigationItem::make('Onboarding Email')
                                 ->icon('heroicon-o-envelope')
                                 ->url(route('admin.onboardBeta.view')),
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
+                        ]),
+                        NavigationGroup::make('Social')
+                            ->items([
+                                ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
+                                ...\App\Filament\Resources\ReportResource::getNavigationItems(),
+                                ...\App\Filament\Resources\FriendResource::getNavigationItems(),
+                                ...\App\Filament\Resources\LikeResource::getNavigationItems(),
+                                ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
+                                ...\App\Filament\Resources\ParticipantFollowResource::getNavigationItems(),
                         ]),
                         NavigationGroup::make('Event Details')
                             ->items([
