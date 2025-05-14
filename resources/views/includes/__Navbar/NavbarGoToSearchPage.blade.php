@@ -138,7 +138,7 @@
                         </div>
                     @endif
                     <p style="text-overflow: ellipsis; overflow: hidden; font-size: larger;" class="text-start ms-3 my-0">
-                        <b>{{ $user->name }} {{$user->role}}</b>
+                        <b>{{ $user->name }} </b>
                     </p>
                 </div>
             </div>
