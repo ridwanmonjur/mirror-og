@@ -4,7 +4,6 @@ import { initializeFirestore, memoryLocalCache, setDoc,  addDoc, onSnapshot, ord
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
 
-
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -49,8 +48,6 @@ const scrollIntoView = () => {
     
     const lastMessage = chatContainer.lastElementChild;
     if (lastMessage) {
-        // maybe
-        // { behavior: 'smooth', 'bottom': true }
         lastMessage.scrollIntoView({ behavior: 'smooth' });
     } 
 }

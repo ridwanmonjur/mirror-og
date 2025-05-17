@@ -279,7 +279,7 @@ class OrganizerEventResultsController extends Controller
                     'team2_position' => $match->team2_position,
                     'event_details_id' => $match->event_details_id
                 ])->doesntExistOr(function () {
-                    throw new \ErrorException("Event exists already!");
+                    throw new \ErrorException("There is already an event with this ID!");
                 });
 
             }

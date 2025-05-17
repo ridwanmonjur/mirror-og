@@ -207,7 +207,6 @@ class FirestoreService
     }
 
     public function generateBrackets(Collection $matches, string| int $eventId): array {
-
         $allBracketDocs = $this->firestore->database()
             ->collection('event')
             ->document($eventId)
@@ -221,22 +220,30 @@ class FirestoreService
 
         $brackets = [];
         foreach ($matches as $bracket) {
-            $team1Name = $bracket?->team1?->teamName;
-            $team2Name = $bracket?->team2?->teamName;
             
             $additionalData = [];
-            if ($bracket['team1_position'] && $bracket['team2_position']) {
-                $matchStatusPath = $bracket['team1_position'] . '.' . $bracket['team2_position'];
+                $matchStatusPath = $bracket->team1_position . '.' . $bracket->team2_position;
                 if (isset($bracketDataByPath[$matchStatusPath])) {
                     $additionalData = $bracketDataByPath[$matchStatusPath];
+                } else {
+                    $additionalData = [
+                        "organizerWinners" => [null, null, null],
+                        "disputeResolved" => [null, null, null],
+                        "disqualified" => false,
+                        "team2Winners" => [null, null, null],
+                        "team1Winners" => [null, null, null],
+                        "score" => [0,0],
+                        "defaultWinners" => [null, null, null],
+                        "position" => "U9",
+                        "matchStatus" => [null, null, null],
+                        "randomWinners" => [null, null, null],
+                        "realWinners" => [null, null, null]
+                    ];
                 }
-            }
             
             $brackets[] = [
-                ...$bracket->toArray(),
+                ... (array) $bracket,
                 ...$additionalData,
-                'team1Name' => $team1Name,
-                'team2Name' => $team2Name
             ];
         }
         return $brackets;
