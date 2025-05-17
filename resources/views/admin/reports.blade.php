@@ -20,7 +20,7 @@
         
         <!-- Add Create New Dispute button -->
         <div class="mb-3">
-            <button class="btn btn-success" v-on:click="createNewDispute()" 
+            <button class="btn rounded-pill btn-success" v-on:click="createNewDispute()" 
                     data-bs-toggle="modal" data-bs-target="#disputeModal">
                 Create New Dispute
             </button>
@@ -31,7 +31,6 @@
                 <tr>
                     <th class="text-center">Report ID</th>
                     <th class="text-center">Match Number</th>
-                    <th class="text-center">Event ID</th>
                     <th class="text-center">Dispute Reason</th>
                     <th class="text-center">Dispute Team</th>
                     <th class="text-center">Status</th>
@@ -41,17 +40,16 @@
             <tbody>
                 <tr v-for="dispute in disputes">
                     <td  class="text-center" v-text="dispute.report_id"></td>
-                    <td  class="text-center" v-text="dispute.match_number+1"></td>
-                    <td  class="text-center" v-text="dispute.event_id"></td>
+                    <td  class="text-center" v-text="Number(dispute.match_number)+1"></td>
                     <td  class="text-center" v-text="dispute.dispute_reason"></td>
-                    <td  class="text-center" v-text="dispute.dispute_teamId"></td>
+                    <td  class="text-center" v-text="teams[dispute.dispute_teamId]?.teamName"></td>
                     <td class="text-center" >
-                        <span v-if="dispute.resolution_winner > 0" class="badge bg-success">Resolved</span>
-                        <span v-else class="badge bg-warning">Pending</span>
+                        <span v-if="dispute.resolution_winner > 0" class="badge bg-success text-dark ">Resolved</span>
+                        <span v-else class="badge bg-warning text-dark ">Pending</span>
 
                     </td>
                     <td class="text-center" >
-                        <button class="btn btn-primary btn-sm" v-on:click="openModal(dispute)" 
+                        <button class="btn rounded-pill btn-primary text-white  btn-sm" v-on:click="openModal(dispute)" 
                                 data-bs-toggle="modal" data-bs-target="#disputeModal">
                             Resolve
                         </button>
@@ -74,8 +72,15 @@
                           
                             <input type="hidden"  name="id" :value="selectedDispute.id" readonly>
                         
-                            <input type="hidden"  name="report_id" :value="selectedDispute.report_id">
-                             
+                             <div class="form-floating mb-3">
+                                <select class="form-select" v-bind:id ="'selectedDispute.report_id'" name="report_id" v-bind:value="selectedDispute.report_id">
+                                   <option v-for="setup in setups" :key="setup" v-bind:value="setup" > 
+                                        @{{setup}}
+                                    </option>
+                                </select>
+                                <label>Report</label>
+
+                            </div>
                             <div class="form-floating mb-3">
                                 <select class="form-select" v-bind:id ="'match_number'" name="match_number" v-bind:value="selectedDispute.match_number">
                                     <option value="null">No teams</option>
@@ -92,17 +97,21 @@
                             
                             <div class="mb-3 form-floating">
                                 <select class="form-control" name="dispute_userId" v-model="selectedDispute.dispute_userId">
-                                    <option value="" >Select User</option>
+                                    <option value="null" >Select User</option>
                                     <option v-for="user in users" :key="user.user_id" v-bind:value="user.user_id" > 
-                                        <span v-text="user.name"></span>
+                                        @{{user.name + ' | ' + user.teamName}}
                                     </option>
                                 </select>
                                 <label >Dispute User</label>
                              </div>
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" name="dispute_teamId" :value="selectedDispute.dispute_teamId">
-                                <label >Dispute Team ID</label>
-
+                                <select class="form-control" name="dispute_teamId" v-model="selectedDispute.dispute_teamId">
+                                    <option value="null" >Select Team</option>
+                                    <option v-for="team in teams" :key="team.id" v-bind:value="team.id" > 
+                                        @{{team.teamName}}
+                                    </option>
+                                </select>
+                                <label >Dispute Team</label>
                             </div>
                             <div class="mb-3 form-floating">
                                 <select class="form-select" v-bind:id ="'dispute_teamNumber'" name="dispute_teamNumber" v-bind:value="selectedDispute.dispute_teamNumber">
@@ -125,7 +134,7 @@
                             <div class="mb-2">
                                 <template v-if="selectedDispute?.dispute_image_videos && selectedDispute?.dispute_image_videos[0]">
                                     <div>
-                                        <p class="my-0">Dispute Image/ Video Evidence: </p>
+                                        <p class="my-0">Dispute Evidence: </p>
                                         <div class="d-flex justify-content-start">
                                             <template v-for="imgVideo in selectedDispute.dispute_image_videos"
                                                 :key="imgVideo">
@@ -151,14 +160,28 @@
                                         </div>
                                     </div>
                                 </template>
+                                <template v-else>
+                                    <span> No video evidence.
+                                </template>
                             </div>
+
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" name="response_userId" :value="selectedDispute.response_userId">
-                                <label>Response User</label>
-                            </div>
+                                <select class="form-control" name="response_userId" v-model="selectedDispute.response_userId">
+                                    <option value="null" >Select User</option>
+                                    <option v-for="user in users" :key="user.user_id" v-bind:value="user.user_id" > 
+                                        @{{user.name + ' | ' + user.teamName}}
+                                    </option>
+                                </select>
+                                <label >Response User</label>
+                             </div>
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" name="response_teamId" :value="selectedDispute.response_teamId">
-                                <label>Response Team</label>
+                                <select class="form-control" name="response_teamId" v-model="selectedDispute.response_teamId">
+                                    <option value="null" >Select Team</option>
+                                    <option v-for="team in teams" :key="team.id" v-bind:value="team.id" > 
+                                        @{{team.teamName}}
+                                    </option>
+                                </select>
+                                <label >Response Team</label>
                             </div>
 
                              <div class="mb-3 form-floating">
@@ -176,8 +199,12 @@
                             </div>
                            
                             <div class="mb-3 form-floating">
-                                <input type="text" class="form-control" name="resolution_resolved_by" :value="selectedDispute.resolution_resolved_by">
-
+                                <select class="form-select" id ="resolution_resolved_by" name="resolution_resolved_by" v-bind:value="selectedDispute.resolution_resolved_by">
+                                    <option value="null" ></option>
+                                    <option v-for="[disputeCode, disputeRole] in Object.entries(disputeRoles)" :key="disputeRole" v-bind:value="disputeCode" > 
+                                        @{{disputeRole}}
+                                    </option>
+                                </select>
                                 <label >Resolution Resolved by</label>
                             </div>
                             <div class="mb-3 form-floating">
@@ -188,15 +215,12 @@
                                 </select>
                                         
                                 <label >Resolution Winner</label>
-
                             </div>
-                            
-                           
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" v-on:click="saveChanges('dispute')">Save Changes</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn rounded-pill btn-primary text-white " v-on:click="saveChanges('dispute')">Save Changes</button>
+                        <button type="button" class="btn rounded-pill btn-secondary text-white " data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -225,6 +249,8 @@
         <input type="hidden" id="disputes-data" value="{{ json_encode($disputes) }}">
         <input type="hidden" id="teams-data" value="{{ json_encode($teams) }}">
         <input type="hidden" id="users-data" value="{{ json_encode($users) }}">
+        <input type="hidden" id="dispute-roles-data" value="{{ json_encode($disputeRoles) }}">
+        <input type="hidden" id="setup-data" value="{{ json_encode($setup) }}">
 
     </div>
     

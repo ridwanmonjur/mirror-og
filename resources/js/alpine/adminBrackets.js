@@ -149,6 +149,11 @@ function createDisputes () {
     const disputesData = JSON.parse(disputesDataInput.value);
     const usersDataInput = document.getElementById('users-data');
     const usersData = JSON.parse(usersDataInput.value);
+    const disputeRolesInput = document.getElementById('dispute-roles-data');
+    const disputeRolesData = JSON.parse(disputeRolesInput.value);
+    const setupDataInput = document.getElementById('setup-data');
+    const setupData = JSON.parse(setupDataInput.value);
+
     return {
         init() {
             console.log("Disputes initiaed!");
@@ -156,6 +161,8 @@ function createDisputes () {
 
         teams: teamsData,
         disputes: disputesData,
+        disputeRoles : disputeRolesData,
+        setups: setupData,
         users: usersData,
         selectedDispute: null,
         resolutionData: {

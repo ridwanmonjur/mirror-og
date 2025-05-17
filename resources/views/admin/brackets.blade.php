@@ -77,7 +77,7 @@
              <div class="modal-dialog ">
                  <div class="modal-content">
                      <div class="modal-header">
-                         <h5 class="modal-title mx-auto text-center " id="detailsModalTitle">Match Brackets Details</h5>
+                         <h5 class="modal-title  " id="detailsModalTitle">Match Brackets Details</h5>
                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                      </div>
                      <div class="modal-body" v-if="selectedMatch">
@@ -89,7 +89,7 @@
                              <input type="hidden" name="order" v-bind:value="selectedMatch.order">
                              <div class="mb-3 form-floating">
                                 <select class="form-control" name="team1_id" v-model="selectedMatch.team1_id">
-                                    <option value="">Select Team 1</option>
+                                    <option value="null">Select Team 1</option>
                                     <option v-for="team in teams" :key="team.id" v-bind:value="team.id"
                                         v-text="team.teamName">
                                     </option>
@@ -98,7 +98,7 @@
                              </div>
                              <div class="mb-3 form-floating" v-show="selectedMatch.team1_position != 'F'">
                                 <select class="form-control" name="team2_id" v-model="selectedMatch.team2_id">
-                                    <option value="">Select Team 2</option>
+                                    <option value="null">Select Team 2</option>
                                     <option v-for="team in teams" :key="team.id" v-bind:value="team.id"
                                         v-text="team.teamName">
                                     </option>
@@ -147,7 +147,7 @@
              <div class="modal-dialog modal-xl">
                  <div class="modal-content">
                      <div class="modal-header">
-                         <h5 class="modal-title mx-auto text-center ">Match Scores Details</h5>
+                         <h5 class="modal-title  ">Match Scores Details</h5>
                          <button type="button" class="btn-close" data-bs-dismiss="modal"
                              aria-label="Close"></button>
                      </div>
