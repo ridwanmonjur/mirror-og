@@ -168,6 +168,7 @@ trait RespondTaksTrait
 
     public function handleEventTypes($notificationMap, $joinList, $taskId) {
         [$playerNotif, $orgNotif] = $notificationMap;
+
         if (!empty($joinList)) {
             DB::beginTransaction();
             try {
@@ -257,6 +258,8 @@ trait RespondTaksTrait
             }
             
         } 
+
+        // dd("zzwwwz");
     }
 
     public function ordinalPrefix($number)

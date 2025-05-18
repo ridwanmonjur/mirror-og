@@ -91,7 +91,7 @@ class MiscController extends Controller
         Cache::flush();
     
         $exitCode = Artisan::call('tasks:respond', [
-            'type' => 2,
+            'type' => 3,
             '--event_id' => (string) $id
         ]);
         
@@ -104,8 +104,8 @@ class MiscController extends Controller
     public function seedLiveEvent(Request $request, $id): JsonResponse {
         Cache::flush();
     
-        $exitCode = Artisan::call('tasks:deadline', [
-            'type' => 3,
+        $exitCode = Artisan::call('tasks:respond', [
+            'type' => 2,
             '--event_id' => (string) $id
         ]);
         

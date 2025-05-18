@@ -50,24 +50,27 @@ class RespondTasks extends Command
                     ->where('action_time', '>=', $now)
                     ->where('action_time', '<=', $now->addMinutes(30))
                     ->get();
-            
-                foreach ($tasks as $task) {
-                    switch ($task->task_name) {
-                        case 'ended':
-                            $endedTaskIds[] = $task->taskable_id;
-                            break;
-                        case 'live':
-                            $liveTaskIds[] = $task->taskable_id;
-                            break;
-                        case 'started':
-                            $startedTaskIds[] = $task->taskable_id;
-                            break;
-                    }
-                }
             } else {
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->get(); 
+                $tasks = Task::where('taskable_id', $eventIdInt)->get();   
+                // dd("sss", $eventIdInt, $tasks);  
             }
+
+            foreach ($tasks as $task) {
+                switch ($task->task_name) {
+                    case 'ended':
+                        $endedTaskIds[] = $task->taskable_id;
+                        break;
+                    case 'live':
+                        $liveTaskIds[] = $task->taskable_id;
+                        break;
+                    case 'started':
+                        $startedTaskIds[] = $task->taskable_id;
+                        break;
+                }
+            }
+
+            // dd(vars: $tasks);
 
             $with = [
                 'roster:id,team_id,user_id',
@@ -76,37 +79,18 @@ class RespondTasks extends Command
                 'eventDetails.tier:id,eventTier',
             ];
 
-            $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
-                ->where('join_status', 'confirmed')
-                ->with([
-                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
-                    ...$with,
-                ])
-                ->get();
-
-            $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
-                ->where('join_status', 'confirmed')
-                ->with([
-                    'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
-                    ...$with,
-                ])
-                ->get();
-
-            $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
-                ->where('join_status', 'confirmed')
-                ->with([
-                    'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
-                    'position',
-                    'team:id,teamName,teamBanner',
-                    ...$with,
-                ])
-                ->get();
-
-
             if ($type == 0 || $type == 1) {
-                EventDetail::whereIn('id', $startedTaskIds)->update(['status', 'ONGOING']);
-                $this->capturePayments($startedTaskIds, $taskId);
+                $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
+                    ->where('join_status', 'confirmed')
+                    ->with([
+                        'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                        ...$with,
+                    ])
+                    ->get();
 
+
+                EventDetail::whereIn('id', $startedTaskIds)->update(['status' => 'ONGOING']);
+                $this->capturePayments($startedTaskIds, $taskId);
                 $this->handleEventTypes(
                     $this->getStartedNotifications($startedEvents),
                     $startedEvents,
@@ -115,7 +99,16 @@ class RespondTasks extends Command
             }
 
             if ($type == 0 || $type == 2) {
-                EventDetail::whereIn('id', $liveTaskIds)->update(['status', 'UPCOMING']);
+
+                $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
+                ->where('join_status', 'confirmed')
+                ->with([
+                    'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
+                    ...$with,
+                ])
+                ->get();
+
+                EventDetail::whereIn('id', $liveTaskIds)->update(['status' => 'UPCOMING']);
                 $this->handleEventTypes(
                     $this->getLiveNotifications($liveEvents),
                     $liveEvents,
@@ -123,9 +116,19 @@ class RespondTasks extends Command
                 );
             }
 
-
             if ($type == 0 || $type == 3) {
-                EventDetail::whereIn('id', $liveTaskIds)->update(['status', 'ENDED']);
+                $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
+                    ->where('join_status', 'confirmed')
+                    ->with([
+                        'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
+                        'position',
+                        'team:id,teamName,teamBanner',
+                        ...$with,
+                    ])
+                    ->get();
+
+
+                EventDetail::whereIn('id', $endedTaskIds)->update(['status' => 'ENDED']);
 
                 [
                     $processedEndedNotifications, $logs, $memberIdList
@@ -147,7 +150,6 @@ class RespondTasks extends Command
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
-            return $tasks;
         } catch (Exception $e) {
             $this->logError($taskId, $e);
         }

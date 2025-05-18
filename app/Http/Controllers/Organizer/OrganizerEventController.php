@@ -28,6 +28,7 @@ use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 use App\Jobs\HandleEventUpdate;
 use App\Models\OrganizerFollow;
+use App\Jobs\CreateUpdateEventTask;
 
 class OrganizerEventController extends Controller
 {
@@ -217,15 +218,15 @@ class OrganizerEventController extends Controller
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
             try {
-                $eventDetail->makeSignupTables();
+               
             } catch (Exception $e) {
                 throw new Exception('Failed to create signup tables: ' . $e->getMessage());
             }
             
             try {
-                $eventDetail->createUpdateTask();
+                CreateUpdateEventTask::dispatch($eventDetail);
             } catch (Exception $e) {
-                throw new Exception('Failed to create event tasks: ' . $e->getMessage());
+                throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
             }
 
 
@@ -304,15 +305,9 @@ class OrganizerEventController extends Controller
                 $eventDetail->save();
                 if (!$isTimeSame) dispatch(new HandleEventUpdate($eventDetail));
                 try {
-                    $eventDetail->makeSignupTables();
+                    CreateUpdateEventTask::dispatch($eventDetail);
                 } catch (Exception $e) {
-                    throw new Exception('Failed to create signup tables: ' . $e->getMessage());
-                }
-                
-                try {
-                    $eventDetail->createUpdateTask();
-                } catch (Exception $e) {
-                    throw new Exception('Failed to create event tasks: ' . $e->getMessage());
+                    throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
                 }
 
                 
