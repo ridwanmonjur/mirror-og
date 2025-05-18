@@ -1,4 +1,4 @@
-import { getDoc, updateDoc, initializeFirestore, memoryLocalCache, doc } from "firebase/firestore";
+import { getDoc, updateDoc, initializeFirestore, memoryLocalCache, doc, collection, setDoc, serverTimestamp } from "firebase/firestore";
 import { createApp }  from "petite-vue";
 import { initializeApp } from "firebase/app";
 
@@ -18,6 +18,36 @@ const app = initializeApp(firebaseConfig);
 const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
+
+
+async function saveReport(tempState, report) {
+    const allMatchStatusesCollectionRef = collection(db, `event/${report.event_details_id}/brackets`);
+    const customDocId = `${report.team1_position}.${report.team2_position}`;
+    const docRef = doc(allMatchStatusesCollectionRef, customDocId);
+
+    try {
+      let firestoreDoc = {
+        score: [tempState?.score[0] ?? "0", tempState?.score[1] ?? "0"],
+        matchStatus: [...tempState.matchStatus],
+        realWinners: tempState.realWinners,
+        organizerWinners: tempState.organizerWinners,
+        team1Winners: tempState.team1Winners,
+        team2Winners: tempState.team2Winners,
+        team1Id: tempState.team1_id,
+        team2Id: tempState.team2_id,
+        position: tempState.position,
+        completeMatchStatus: tempState.completeMatchStatus,
+        randomWinners: [...tempState.randomWinners],
+        defaultWinners: [...tempState.defaultWinners],
+        disqualified: tempState.disqualified,
+        disputeResolved: [...tempState.disputeResolved]
+      };
+
+      await setDoc(docRef, firestoreDoc, { merge: true });
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+}
 
 function createBrackets () {
     const bracketsDataInput = document.getElementById('brackets-data');
@@ -84,12 +114,8 @@ function createBrackets () {
                     modalTitle.textContent = 'Match Brackets Details';
                 }
 
-
                 const updatedMatch = { ...this.selectedMatch, ...updatedData };
-
-
                 console.log('Saving changes for match:', this.selectedMatch.id, 'Type:', type);
-              
 
                 const endpoint = formElement.action;
 
@@ -131,6 +157,17 @@ function createBrackets () {
                             } : value 
                     });
                 }
+            } else {
+                const updatedMatch = { ...this.selectedMatch, ...updatedData };
+                console.log({updatedMatch, selectedMatch: this.selectedMatch});
+                await saveReport(updatedMatch, this.selectedMatch);
+                this.brackets = this.brackets.map((value) => {
+                    return (value.team1_position == updatedMatch['team1_position'] && value.team2_position == updatedMatch['team2_position']) ?
+                        {
+                            ...this.selectedMatch,
+                           ...updatedMatch
+                        } : value 
+                });
             }
 
             const modalElement = document.getElementById(type === 'brackets' ? 'detailsModal' : 'scoresModal');
@@ -141,6 +178,7 @@ function createBrackets () {
         }
     };
 }
+
 
 function createDisputes () {
     const teamsDataInput = document.getElementById('teams-data');
