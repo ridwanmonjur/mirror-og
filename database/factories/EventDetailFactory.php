@@ -209,11 +209,11 @@ final class EventDetailFactory extends Factory
                 'willNotify' => fake()->numberBetween(0, 1),
             ]);
 
-            $event->makeSignupTables();
+            $event->createRegistrationTask();
 
-            $event->createUpdateTask();
+            $event->createStatusUpdateTask();
     
-            $event->createStructuredDeadlines();
+            $event->createDeadlinesTask();
         }
 
       

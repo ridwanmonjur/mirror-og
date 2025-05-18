@@ -32,7 +32,7 @@ class BracketDeadlinesSeeder extends Seeder
             ->get();
         
         foreach ($eventDetails as $detail) {
-            $detail->createStructuredDeadlines();
+            $detail->createDeadlinesTask();
         }
         
         $this->command->info('Bracket deadlines have been created successfully!');

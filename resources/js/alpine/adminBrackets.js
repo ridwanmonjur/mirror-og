@@ -1,6 +1,7 @@
 import { getDoc, updateDoc, initializeFirestore, memoryLocalCache, doc, collection, setDoc, serverTimestamp } from "firebase/firestore";
 import { createApp }  from "petite-vue";
 import { initializeApp } from "firebase/app";
+import Swal from "sweetalert2";
 
 
 
@@ -158,6 +159,7 @@ function createBrackets () {
                     });
                 }
             } else {
+                
                 const updatedMatch = { ...this.selectedMatch, ...updatedData };
                 console.log({updatedMatch, selectedMatch: this.selectedMatch});
                 await saveReport(updatedMatch, this.selectedMatch);
@@ -179,6 +181,47 @@ function createBrackets () {
     };
 }
 
+async function saveDisputes(disputeDto) {
+    const reportRef = doc(db, `event/${disputeDto.event_id}/brackets`, disputeDto.report_id);
+    console.log(`event/${disputeDto.event_id}/reports/${disputeDto.report_id}`);
+    
+    try {
+        const reportSnap = await getDoc(reportRef);
+        
+        if (!reportSnap.exists()) {
+            Swal.fire({
+                icon: 'error',
+                'text' : "No such report exists!",
+                confirmButtonColor: '#43A4D7'
+            });
+            return;
+        }
+        let newDisputeId = `${disputeDto.report_id}.`+`${disputeDto.match_number}`;
+        const disputesRef = doc(db, `event/${disputeDto.event_id}/disputes`, newDisputeId);
+        await setDoc(disputesRef, disputeDto, { merge: true });
+        
+        const reportData = reportSnap.data();
+        let disputeResolved = Array.isArray(reportData.disputeResolved) ? 
+            [...reportData.disputeResolved] : [null, null, null];
+        disputeResolved[disputeDto.match_number] = true;
+        
+        await updateDoc(reportRef, {
+            disputeResolved: disputeResolved
+        });
+
+        Swal.fire({
+            icon: 'success',
+            'text' : "Dispute saved successfully!",
+            confirmButtonColor: '#43A4D7'
+
+        });
+        
+    } catch (error) {
+        console.error("Error saving dispute: ", error);
+        toast.error("Error saving dispute: " + error.message);
+    }
+}
+
 
 function createDisputes () {
     const teamsDataInput = document.getElementById('teams-data');
@@ -191,6 +234,7 @@ function createDisputes () {
     const disputeRolesData = JSON.parse(disputeRolesInput.value);
     const setupDataInput = document.getElementById('setup-data');
     const setupData = JSON.parse(setupDataInput.value);
+    const eventId = document.getElementById('event-id').value;
 
     return {
         init() {
@@ -227,7 +271,7 @@ function createDisputes () {
                 updated_at: new Date().toISOString(),
                 response_teamId: null,
                 dispute_teamNumber: '',
-                event_id: '',
+                event_id: eventId,
                 dispute_teamId: ''
             };
             
@@ -265,7 +309,7 @@ function createDisputes () {
             };
         },
         
-        saveChanges: function(type) {
+        saveChanges: async function() {
             if (!this.selectedDispute) return;
             
             const formElement = document.getElementById('disputeForm');
@@ -300,34 +344,22 @@ function createDisputes () {
                 }
             }
             
-            this.selectedDispute.updated_at = new Date().toISOString();
+            this.selectedDispute.updated_at = new serverTimestamp();
             if (isCreating) {
-                this.selectedDispute.created_at = new Date().toISOString();
+                this.selectedDispute.created_at = new serverTimestamp();
             }
             
-            if (isCreating) {
-                console.log('Creating new dispute:', this.selectedDispute);
-                this.disputes.push(JSON.parse(JSON.stringify(this.selectedDispute)));
-            } else {
-                console.log('Saving changes for dispute:', this.selectedDispute.id);
-                const index = this.disputes.findIndex(d => d.id === this.selectedDispute.id);
-                if (index !== -1) {
-                    this.disputes.splice(index, 1, JSON.parse(JSON.stringify(this.selectedDispute)));
-                    console.log('Updated dispute in array');
-                }
-            }
+            const updatedDispute = { ...this.selectedDispute, ...formValues };
+            console.log({updatedDispute, selectedDispute: this.selectedDispute});
+            await saveDisputes(updatedDispute, this.selectedDispute);
+            this.disputes = this.disputes.map((value) => {
+                return (value.report_id == this.selectedDispute.report_id && value.match_number == this.selectedDispute.match_number) ?
+                    {
+                        ...this.selectedDispute,
+                        ...updatedDispute
+                    } : value 
+            });
             
-            // Here you would add API call logic to save to server
-            // For example:
-            // const endpoint = isCreating ? '/api/disputes' : '/api/disputes/' + this.selectedDispute.id;
-            // const method = isCreating ? 'POST' : 'PUT';
-            // fetch(endpoint, {
-            //     method: method,
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(this.selectedDispute)
-            // })
-            
-            // Close the modal after saving
             const modalElement = document.getElementById('disputeModal');
             const modal = bootstrap.Modal.getInstance(modalElement);
             if (modal) {

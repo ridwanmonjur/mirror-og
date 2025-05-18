@@ -26,7 +26,7 @@ class RespondTasks extends Command
      *
      * @var string
      */
-    protected $signature = 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 0=all} {--event_id= : Optional event ID to filter tasks}';
+    protected $signature = 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 4=reg_over, 0=all} {--event_id= : Optional event ID to filter tasks}';
 
     protected $description = 'Respond tasks in the database';
 
@@ -42,7 +42,7 @@ class RespondTasks extends Command
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
-            $endedTaskIds= $liveTaskIds = $startedTaskIds = [];
+            $endedTaskIds= []; $liveTaskIds = []; $startedTaskIds = []; $regOverTaskIds = [];
 
             if ($type === 0) {
                 $tasks = Task
@@ -67,6 +67,9 @@ class RespondTasks extends Command
                     case 'started':
                         $startedTaskIds[] = $task->taskable_id;
                         break;
+                    case 'reg_over':
+                        $regOverTaskIds[] = $task->taskable_id;
+                        break;
                 }
             }
 
@@ -90,12 +93,15 @@ class RespondTasks extends Command
 
 
                 EventDetail::whereIn('id', $startedTaskIds)->update(['status' => 'ONGOING']);
-                $this->capturePayments($startedTaskIds, $taskId);
                 $this->handleEventTypes(
                     $this->getStartedNotifications($startedEvents),
                     $startedEvents,
                     $taskId
                 );
+            }
+
+            if ($type == 0 || $type == 4) {
+                $this->capturePayments($regOverTaskIds, $taskId);
             }
 
             if ($type == 0 || $type == 2) {
