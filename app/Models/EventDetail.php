@@ -195,6 +195,7 @@ class EventDetail extends Model implements Feedable
         $status = $this->statusResolved();
         Task::where('taskable_id', $this->getKey())
             ->where('taskable_type', EventDetail::class)
+            ->whereIn('task_name', ['started', 'ended', 'live'])
             ->delete();
 
         if ($status !== 'PENDING' && $status!= 'DRAFT' && $status !== 'PREVIEW') {
@@ -237,19 +238,24 @@ class EventDetail extends Model implements Feedable
     {
         $deadlineSetup = BracketDeadlineSetup::where('tier_id', $this->event_tier_id)->first();
             
-        if (!$deadlineSetup || !$this->deadlines) {
+        if (!$deadlineSetup) {
             return; 
         }
+
+        Task::where('taskable_id', $this->getKey())
+            ->where('taskable_type', EventDetail::class)
+            ->whereIn('task_name', ['start_report', 'end_report', 'org_report'])
+            ->delete();
+        
+        BracketDeadline::where('event_details_id', $this->id)->delete();
         
         $deadlineConfig = $deadlineSetup->deadline_config;
         
-        BracketDeadline::where('event_details_id', $this->id)->delete();
         $baseDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
         $now = now();
         
         $deadlinesToCreate = [];
         $tasksToCreate = [];
-
 
         foreach ($deadlineConfig as $stage => $innerStages) {
             foreach ($innerStages as $innerStage => $times) {
@@ -292,18 +298,18 @@ class EventDetail extends Model implements Feedable
                 
                 $tasksToCreate = [...$tasksToCreate, 
                     [
-                    'taskable_id' => $deadline->id,
-                    'taskable_type' => BracketDeadline::class,
-                    'task_name' => 'start_report',
-                    'action_time' => $startReport,
-                    'created_at' => $now,
+                        'taskable_id' => $deadline->id,
+                        'taskable_type' => BracketDeadline::class,
+                        'task_name' => 'start_report',
+                        'action_time' => $startReport,
+                        'created_at' => $now,
                     ], 
                     [
-                    'taskable_id' => $deadline->id,
-                    'taskable_type' => BracketDeadline::class,
-                    'task_name' => 'end_report',
-                    'action_time' => $endReport,
-                    'created_at' => $now,
+                        'taskable_id' => $deadline->id,
+                        'taskable_type' => BracketDeadline::class,
+                        'task_name' => 'end_report',
+                        'action_time' => $endReport,
+                        'created_at' => $now,
                     ],
                     [
                         'taskable_id' => $deadline->id,
@@ -321,6 +327,7 @@ class EventDetail extends Model implements Feedable
 
     public function statusResolved(): string
     {
+        // PROBABLY CAN REMOVE THIS FUNCTION NOW!!!
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
             $this->sub_action_public_date,
             $this->sub_action_public_time
@@ -361,6 +368,7 @@ class EventDetail extends Model implements Feedable
         if ($carbonPublishedDateTime && $carbonPublishedDateTime > $carbonNow) {
             return 'SCHEDULED';
         }
+
         return 'UPCOMING';
     }
 
@@ -659,7 +667,7 @@ class EventDetail extends Model implements Feedable
     }
 
     public function makeSignupTables(): void {
-        if (!is_null($this->event_tier_id) && !is_null($this->event_type_id)) {
+        if ($this->event_tier_id && $this->event_type_id) {
             $signupValues = DB::table('event_tier_type_signup_dates')
                 ->where('tier_id', $this->event_tier_id)
                 ->where('type_id', $this->event_type_id)
@@ -780,7 +788,7 @@ class EventDetail extends Model implements Feedable
             if ($request->launch_visible === 'public') {
                 $launch_date = $request->launch_date_public;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
-            } elseif ($request->launch_visible === 'private') {
+            } else {
                 $launch_date = $request->launch_date_private;
                 $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
             }

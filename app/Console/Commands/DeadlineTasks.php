@@ -4,7 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\EventDetail;
 use App\Models\Task;
-use App\Console\Commands\PrinterLoggerTrait;
+use App\Console\Traits\PrinterLoggerTrait;
+use App\Console\Traits\DeadlineTasksTrait;
 use App\Models\BracketDeadline;
 use App\Models\JoinEvent;
 use App\Services\BracketDataService;

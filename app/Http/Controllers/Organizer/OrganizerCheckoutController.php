@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CreateUpdateEventTask;
 use App\Models\Discount;
 use App\Models\EventDetail;
 use App\Models\PaymentTransaction;
@@ -116,7 +117,13 @@ class OrganizerCheckoutController extends Controller
                     }
 
                     $event->save();
-                    $event->createUpdateTask();
+                    try {
+                        $event->createUpdateTask();
+                        $event->createStructuredDeadlines();
+                    } catch (Exception $e) {
+                        throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
+                    }
+
                     DB::commit();
                     return view('Organizer.CheckoutEventSuccess', [
                         'event' => $event,

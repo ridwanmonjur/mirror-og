@@ -73,6 +73,61 @@ class MiscController extends Controller
         ]);
     }
 
+    public function seedStartEvent(Request $request, $id): JsonResponse {
+        Cache::flush();
+    
+        $exitCode = Artisan::call('tasks:respond', [
+            'type' => 1,
+            '--event_id' => (string) $id
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'Start tasks executed',
+        ]);
+    }
+    
+    public function seedEndEvent(Request $request, $id): JsonResponse {
+        Cache::flush();
+    
+        $exitCode = Artisan::call('tasks:respond', [
+            'type' => 3,
+            '--event_id' => (string) $id
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'End tasks executed',
+        ]);
+    }
+    
+    public function seedLiveEvent(Request $request, $id): JsonResponse {
+        Cache::flush();
+    
+        $exitCode = Artisan::call('tasks:respond', [
+            'type' => 2,
+            '--event_id' => (string) $id
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'Live tasks executed',
+        ]);
+    }
+
+    public function seedAllEvent(Request $request, $id): JsonResponse {
+        Cache::flush();
+    
+        $exitCode = Artisan::call('tasks:respond', [
+            'type' => 0,
+        ]);
+        
+        return response()->json([
+            'status' => $exitCode === 0 ? 'success': 'failed',
+            'message' => 'All tasks executed',
+        ]);
+    }
+
     public function seedBrackets(Request $request, $type): JsonResponse
     {
         try {
