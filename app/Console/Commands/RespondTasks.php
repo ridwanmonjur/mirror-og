@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Task;
-use App\Console\Commands\PrinterLoggerTrait;
+use App\Console\Traits\PrinterLoggerTrait;
+use App\Console\Traits\RespondTaksTrait;
+use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use Carbon\Carbon;
 use Exception;
@@ -24,7 +26,7 @@ class RespondTasks extends Command
      *
      * @var string
      */
-    protected $signature = 'tasks:respond';
+    protected $signature = 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 0=all} {--event_id= : Optional event ID to filter tasks}';
 
     protected $description = 'Respond tasks in the database';
 
@@ -32,35 +34,39 @@ class RespondTasks extends Command
     /**
      * Execute the console command.
      */
-    public function handle(){
-        $this->getTodayTasksByName();
-    }
-
-    public function getTodayTasksByName()
-    {
+    public function handle() {
         $now = Carbon::now();
+        $type = (int) $this->argument('type');
+        $eventId = $this->option('event_id');
+
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
-            $tasks = Task
-                ::whereDate('action_time', $today)
-                ->where('action_time', '>=', $now)
-                ->where('action_time', '<=', $now->addMinutes(30))
-                ->get();
-
             $endedTaskIds= $liveTaskIds = $startedTaskIds = [];
-            foreach ($tasks as $task) {
-                switch ($task->task_name) {
-                    case 'ended':
-                        $endedTaskIds[] = $task->taskable_id;
-                        break;
-                    case 'live':
-                        $liveTaskIds[] = $task->taskable_id;
-                        break;
-                    case 'started':
-                        $startedTaskIds[] = $task->taskable_id;
-                        break;
+
+            if ($type === 0) {
+                $tasks = Task
+                    ::whereDate('action_time', $today)
+                    ->where('action_time', '>=', $now)
+                    ->where('action_time', '<=', $now->addMinutes(30))
+                    ->get();
+            
+                foreach ($tasks as $task) {
+                    switch ($task->task_name) {
+                        case 'ended':
+                            $endedTaskIds[] = $task->taskable_id;
+                            break;
+                        case 'live':
+                            $liveTaskIds[] = $task->taskable_id;
+                            break;
+                        case 'started':
+                            $startedTaskIds[] = $task->taskable_id;
+                            break;
+                    }
                 }
+            } else {
+                $eventIdInt = (int) $eventId;
+                $tasks = Task::where('taskable_id', $eventIdInt)->get(); 
             }
 
             $with = [
@@ -96,37 +102,48 @@ class RespondTasks extends Command
                 ])
                 ->get();
 
-            [
-                $processedEndedNotifications, $logs, $memberIdList
-            ] = $this->getEndedNotifications($endedEvents);
 
-            $this->handleEventTypes(
-                $processedEndedNotifications,
-                $endedEvents,
-                $taskId
-            );
+            if ($type == 0 || $type == 1) {
+                EventDetail::whereIn('id', $startedTaskIds)->update(['status', 'ONGOING']);
+                $this->capturePayments($startedTaskIds, $taskId);
 
-            $this->handleEndedActivityLogs(
-                $logs,
-                $endedEvents,
-                $memberIdList,
-                $taskId
-            );
+                $this->handleEventTypes(
+                    $this->getStartedNotifications($startedEvents),
+                    $startedEvents,
+                    $taskId
+                );
+            }
+
+            if ($type == 0 || $type == 2) {
+                EventDetail::whereIn('id', $liveTaskIds)->update(['status', 'UPCOMING']);
+                $this->handleEventTypes(
+                    $this->getLiveNotifications($liveEvents),
+                    $liveEvents,
+                    $taskId
+                );
+            }
 
 
-            $this->handleEventTypes(
-                $this->getLiveNotifications($liveEvents),
-                $liveEvents,
-                $taskId
-            );
+            if ($type == 0 || $type == 3) {
+                EventDetail::whereIn('id', $liveTaskIds)->update(['status', 'ENDED']);
 
-            $this->handleEventTypes(
-                $this->getStartedNotifications($startedEvents),
-                $startedEvents,
-                $taskId
-            );
+                [
+                    $processedEndedNotifications, $logs, $memberIdList
+                ] = $this->getEndedNotifications($endedEvents);
 
-            $this->capturePayments($startedTaskIds, $taskId);
+                $this->handleEventTypes(
+                    $processedEndedNotifications,
+                    $endedEvents,
+                    $taskId
+                );
+
+                $this->handleEndedActivityLogs(
+                    $logs,
+                    $endedEvents,
+                    $memberIdList,
+                    $taskId
+                );
+            }
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);

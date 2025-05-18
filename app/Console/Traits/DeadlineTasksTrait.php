@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Traits;
 
 use App\Models\EventDetail;
 use App\Models\Task;

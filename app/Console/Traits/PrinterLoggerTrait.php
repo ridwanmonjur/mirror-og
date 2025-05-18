@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Traits;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
