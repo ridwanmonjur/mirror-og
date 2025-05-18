@@ -382,20 +382,5 @@ class FirebaseController extends Controller
         return view('admin.reports', compact('disputes', 'event', 'teams', 'users', 'disputeRoles', 'setup'));
     }
 
-    public function createBrackets(Request $request)
-    {
-        // Validate the request data
-        // $validated = $request->validate([
-        //     'title' => 'required|string|max:255',
-        //     'content' => 'required|string',
-        //     // Add any other fields your Post model has
-        // ]);
-
-        // Create the post
-        // $post = Post::create($validated);
-
-        // // Redirect to the newly created post with a success message
-        // return redirect()->route('posts.show', $post)
-        //     ->with('success', 'Post created successfully.');
-    }
+    
 }

@@ -198,7 +198,8 @@ final class EventDetailFactory extends Factory
                 'eventDescription' => 'Join us for this exciting event!',
                 'eventBanner' => 'images/event_details/banner1.png',
                 'eventTags' => $category->gameTitle . ',esports,gaming,competition',
-                'status' => 'ONGOING',
+                'status' => 'SCHEDULED',
+                'sub_action_private' => 'private',
                 'venue' => 'MY',
                 'user_id' => $user->id,
                 'event_type_id' => $type->id,
@@ -207,10 +208,17 @@ final class EventDetailFactory extends Factory
                 'payment_transaction_id' => $paymentTransaction->id,
                 'willNotify' => fake()->numberBetween(0, 1),
             ]);
+
+            $event->makeSignupTables();
+
+            $event->createUpdateTask();
+    
+            $event->createStructuredDeadlines();
         }
 
+      
+
         Log::info($user); 
-        Log::info($event);
         return [
             'organizer' => $user,
             'event' => $event,

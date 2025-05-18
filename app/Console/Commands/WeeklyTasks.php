@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\NotificationCounter;
 use App\Models\Task;
-use App\Console\Commands\PrinterLoggerTrait;
+use App\Console\Traits\PrinterLoggerTrait;
 use App\Models\NotifcationsUser;
 use Carbon\Carbon;
 use Exception;

@@ -51,6 +51,10 @@ Route::get('/seed/{id}/brackets', [FirebaseController::class, 'seedMatches']);
 Route::get('/seed/{id}/start', [MiscController::class, 'seedStart']);
 Route::get('/seed/{id}/end', [MiscController::class, 'seedEnd']);
 Route::get('/seed/{id}/org', [MiscController::class, 'seedOrg']);
+Route::get('/seed/{id}/startEvent', [MiscController::class, 'seedStartEvent']);
+Route::get('/seed/{id}/liveEvent', [MiscController::class, 'seedLiveEvent']);
+Route::get('/seed/{id}/endEvent', [MiscController::class, 'seedEndEvent']);
+Route::get('/seed/{id}/allEvent', [MiscController::class, 'seedAllEvent']);
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
