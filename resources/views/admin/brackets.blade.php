@@ -19,6 +19,18 @@
      <div id="brackets" v-scope="createBrackets()" @vue:mounted="init" class="px-5 mt-4">
          <h2>Match Details</h2>
 
+        <div  class="text-start">
+            <div  class=" d-inline-block  text-start  py-3">
+                
+                    <img {!! trustedBladeHandleImageFailureBanner() !!}
+                        src="{{ '/storage' . '/'.  $event['eventBanner'] }}"
+                        class="object-fit-cover float-left border border-primary rounded-circle me-1" width="30" height="30"
+                    >
+                   
+                    <p class="py-0 my-0 ms-2 mb-2 d-inline"> {{ $event['eventName'] }} </p>
+                
+            </div>
+        </div>
         
 
          <table class="table table-striped">
@@ -153,7 +165,7 @@
                      </div>
                      <div class="modal-body" v-if="selectedMatch">
                          <form id="scoresForm">
-                             <div class="mb-3 row" v-if="selectedMatch.completeMatchStatus">
+                             <div class="mb-3 row" >
                                  <label  class="col-12 col-lg-4 col-xl-3 col-form-label">Complete Match Status</label>
                                  <div class="col-12 col-lg-6 col-xl-4 " >
                                      <select class="form-select d-inline" name="completeMatchStatus"
