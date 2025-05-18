@@ -118,8 +118,8 @@ class OrganizerCheckoutController extends Controller
 
                     $event->save();
                     try {
-                        $event->createUpdateTask();
-                        $event->createStructuredDeadlines();
+                        $event->createStatusUpdateTask();
+                        $event->createDeadlinesTask();
                     } catch (Exception $e) {
                         throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
                     }

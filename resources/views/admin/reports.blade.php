@@ -44,7 +44,7 @@
                     <td  class="text-center" v-text="dispute.dispute_reason"></td>
                     <td  class="text-center" v-text="teams[dispute.dispute_teamId]?.teamName"></td>
                     <td class="text-center" >
-                        <span v-if="dispute.resolution_winner > 0" class="badge bg-success text-dark ">Resolved</span>
+                        <span v-if="dispute.resolution_winner >= 0" class="badge bg-success text-dark ">Resolved</span>
                         <span v-else class="badge bg-warning text-dark ">Pending</span>
 
                     </td>
@@ -251,6 +251,7 @@
         <input type="hidden" id="users-data" value="{{ json_encode($users) }}">
         <input type="hidden" id="dispute-roles-data" value="{{ json_encode($disputeRoles) }}">
         <input type="hidden" id="setup-data" value="{{ json_encode($setup) }}">
+        <input type="hidden" id="event-id" value="{{ json_encode($event['id']) }}">
 
     </div>
     
