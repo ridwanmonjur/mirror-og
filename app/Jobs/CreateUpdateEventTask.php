@@ -34,9 +34,9 @@ class CreateUpdateEventTask implements ShouldQueue
     public function handle()
     {
         try {
-            $this->eventDetail->makeSignupTables();
-            $this->eventDetail->createUpdateTask();
-            $this->eventDetail->createStructuredDeadlines();
+            $this->eventDetail->createRegistrationTask();
+            $this->eventDetail->createStatusUpdateTask();
+            $this->eventDetail->createDeadlinesTask();
         } catch (Exception $e) {
             // Log the error
             logger()->error('Failed to create event tasks: ' . $e->getMessage());
