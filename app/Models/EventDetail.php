@@ -242,12 +242,14 @@ class EventDetail extends Model implements Feedable
             return; 
         }
 
-        Task::where('taskable_id', $this->getKey())
-            ->where('taskable_type', EventDetail::class)
-            ->whereIn('task_name', ['start_report', 'end_report', 'org_report'])
+        $deadlines = BracketDeadline::where('event_details_id', $this->id)->get();
+        $deadlinesPast = $deadlines->pluck("id");
+        
+        Task::whereIn('taskable_id', $deadlinesPast)
+            ->where('taskable_type', BracketDeadline::class)
             ->delete();
         
-        BracketDeadline::where('event_details_id', $this->id)->delete();
+        BracketDeadline::whereIn('id', $deadlinesPast)->delete();
         
         $deadlineConfig = $deadlineSetup->deadline_config;
         
