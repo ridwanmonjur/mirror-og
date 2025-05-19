@@ -43,9 +43,9 @@
                             src="{{ '/storage' . '/'.  $event->eventBanner }}"
                             class="object-fit-cover float-left border border-primary rounded-circle me-1" width="30" height="30"
                         >
-                        <div>
-                            <p class="py-0 my-0 ms-2 mb-2"> {{ $event->eventName }} </p>
-                            <small class="py-0 my-0 ms-2 d-inline-block text-truncate">
+                        <div class="position-relative w-100">
+                            <p class="py-0 my-0 mx-2 mb-2 "> {{ $event->eventName }} </p>
+                            <small class="py-0 my-0 mx-2 d-inline-block text-truncate w-100"  >
                                 Description: {{ $event->eventDescription }}
                             </small>
                         </div>

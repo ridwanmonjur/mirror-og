@@ -38,6 +38,7 @@
         "laravel/sail": "^1.18",
         "laravel/ui": "^4.2",
         "mockery/mockery": "^1.4.4",
+        "nextbuild/database-viewer": "^1.0",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/phpinsights": "^2.11",
         "phpunit/phpunit": "^10.1",
