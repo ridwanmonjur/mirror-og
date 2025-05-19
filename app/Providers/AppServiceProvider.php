@@ -42,32 +42,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('viewPulse', function (?User $user) {
-            $allowedEmails = [
-                'mjrrdn@gmail.com',
-                'mjrrdnasm@gmail.com',
-                'ridwan@driftwood.gg',
-                'zach@driftwood.gg',
-                'admin@driftwood.gg',
-                'leigh@driftwood.gg',
-            ];
+        $allowedEmails = [
+            'mjrrdn@gmail.com',
+            'mjrrdnasm@gmail.com',
+            'ridwan@driftwood.gg',
+            'zach@driftwood.gg',
+            'admin@driftwood.gg',
+            'leigh@driftwood.gg',
+            config('services.mail_address'),
+            'justforus@driftwood.gg'
+        ];
+
+        Gate::define('viewPulse', function (?User $user) use ($allowedEmails) {
+           
             
             return $user && in_array($user->email, $allowedEmails);
         });
 
         View::share('USER_ACCESS', config('constants.USER_ACCESS'));
-        LogViewer::auth(function ($request) {
+        LogViewer::auth(function ($request) use ($allowedEmails) {
             if (app()->environment('production')) {
                 return $request->user()
-                && in_array($request->user()->email, [
-                    'mjrrdn@gmail.com',
-                    'mjrrdnasm@gmail.com',
-                    'ridwan@driftwood.gg',
-                    'zach@driftwood.gg',
-                    'leigh@driftwood.gg',
-                    'admin@driftwood.gg',
-                    config('services.mail_address')
-                ]);
+                && in_array($request->user()->email, $allowedEmails);
             }
 
             return true;
