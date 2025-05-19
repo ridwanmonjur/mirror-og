@@ -80,7 +80,7 @@
                             <circle cx="2" cy="2" r="2" fill="currentColor"/>
                             </svg>
                         </span>
-                        <span>{{ $event->user->follows_count }} followers</span>
+                        <span>{{ $event->user->follows_count }} follower{{ bladePluralPrefix($event->user->follows_count) }}</span>
                     </div>
                 </div>
             </div>

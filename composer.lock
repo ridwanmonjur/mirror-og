@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5083196a26aed5be147f9ebb8a84990d",
+    "content-hash": "586c46d43c3a266d35bc5f187c201fd9",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -13028,6 +13028,60 @@
                 }
             ],
             "time": "2025-04-29T12:36:36+00:00"
+        },
+        {
+            "name": "nextbuild/database-viewer",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/next-build/database-viewer.git",
+                "reference": "4a5881bc0375e5234d3d962e345f196284e3fa2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/next-build/database-viewer/zipball/4a5881bc0375e5234d3d962e345f196284e3fa2f",
+                "reference": "4a5881bc0375e5234d3d962e345f196284e3fa2f",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "DatabaseViewer": "NextBuild\\DatabaseViewer\\Facade"
+                    },
+                    "providers": [
+                        "NextBuild\\DatabaseViewer\\DatabaseViewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NextBuild\\DatabaseViewer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saptarshi Dey",
+                    "email": "saptarshi7047@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel package for viewing databases",
+            "homepage": "https://github.com/Next-Build/database-viewer",
+            "keywords": [
+                "database-manager",
+                "database-viewer",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/next-build/database-viewer/issues",
+                "source": "https://github.com/next-build/database-viewer/tree/v1.0.0"
+            },
+            "time": "2024-08-28T09:49:14+00:00"
         },
         {
             "name": "nunomaduro/collision",
