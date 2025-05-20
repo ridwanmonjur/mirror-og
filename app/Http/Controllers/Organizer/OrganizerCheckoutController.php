@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\CreateUpdateEventTask;
-use App\Models\Discount;
+use App\Models\EventCreateCoupon;
 use App\Models\EventDetail;
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
@@ -52,11 +52,11 @@ class OrganizerCheckoutController extends Controller
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
                 'customer' => $user->stripe_customer_id,
             ]);
-            [$fee, $isDiscountApplied, $error] = array_values(
-                Discount::createDiscountFeeObject($request->coupon, $event->tier?->tierPrizePool)
+            [$fee, $isEventCreateCouponApplied, $error] = array_values(
+                EventCreateCoupon::createEventCreateCouponFeeObject($request->coupon, $event->tier?->tierPrizePool)
             );
 
-            if ($isDiscountApplied) {
+            if ($isEventCreateCouponApplied) {
                 session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon}!");
             } elseif (! is_null($error)) {
                 session()->flash('errorMessageCoupon', $error);

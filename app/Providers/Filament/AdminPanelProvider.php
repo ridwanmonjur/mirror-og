@@ -75,7 +75,7 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
                                 // ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
 
-                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventCreateCouponResource::getNavigationItems(),
                             ]),
          
                    

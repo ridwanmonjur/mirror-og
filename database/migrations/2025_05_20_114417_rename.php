@@ -10,6 +10,9 @@ return new class extends Migration
     {
         Schema::rename('user_discounts', 'user_wallet');
 
+        Schema::rename('user_discounts', 'user_wallet');
+
+
         Schema::table('user_wallet', function (Blueprint $table) {
             if (Schema::hasColumn('user_wallet', 'amount')) {
                 $table->renameColumn('amount', 'usable_balance');
@@ -17,6 +20,35 @@ return new class extends Migration
 
             if (!Schema::hasColumn('user_wallet', 'current_balance')) {
                 $table->decimal('current_balance', 10, 2)->default(0);
+            }
+
+            if (!Schema::hasColumn('user_wallet', 'stripe_connect_id')) {
+                $table->string('stripe_connect_id')->nullable();
+            }
+            
+            $columnsToAdd = [
+                'payouts_enabled' => 'boolean',
+                'details_submitted' => 'boolean',
+                'charges_enabled' => 'boolean',
+                'has_bank_account' => 'boolean',
+                'bank_last4' => 'string',
+                'bank_name' => 'string',
+                'balance' => 'decimal',
+                'last_payout_at' => 'timestamp'
+            ];
+            
+            foreach ($columnsToAdd as $column => $type) {
+                if (!Schema::hasColumn('user_wallet', $column)) {
+                    if ($type === 'boolean') {
+                        $table->boolean($column)->default(false);
+                    } elseif ($type === 'string') {
+                        $table->string($column)->nullable();
+                    } elseif ($type === 'decimal') {
+                        $table->decimal($column, 10, 2)->default(0);
+                    } elseif ($type === 'timestamp') {
+                        $table->timestamp($column)->nullable();
+                    }
+                }
             }
         });
     }
