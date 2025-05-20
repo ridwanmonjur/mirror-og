@@ -33,7 +33,7 @@ final class EventDetailFactory extends Factory
 
         // Truncate tables
         \App\Models\EventDetail::query()->delete();
-        \App\Models\PaymentTransaction::query()->delete();
+        \App\Models\RecordStripe::query()->delete();
         \App\Models\EventType::query()->delete();
         \App\Models\EventTier::query()->delete();
         \App\Models\EventCategory::query()->delete();
@@ -67,7 +67,7 @@ final class EventDetailFactory extends Factory
             'event_type_id' => \App\Models\EventType::factory(),
             'event_tier_id' => \App\Models\EventTier::factory(),
             'event_category_id' => \App\Models\EventCategory::factory(),
-            'payment_transaction_id' => \App\Models\PaymentTransaction::factory(),
+            'payment_transaction_id' => \App\Models\RecordStripe::factory(),
             'willNotify' => fake()->randomNumber(1),
         ];
     }
@@ -186,7 +186,7 @@ final class EventDetailFactory extends Factory
             $startDate = fake()->dateTimeBetween('now', '+2 days')->format('Y-m-d');
             $endDate = date('Y-m-d', strtotime($startDate . ' +2 days'));
 
-            $paymentTransaction = \App\Models\PaymentTransaction::factory()->create();
+            $paymentTransaction = \App\Models\RecordStripe::factory()->create();
 
             $event = EventDetail::updateOrCreate([
                 'eventName' => $eventName,

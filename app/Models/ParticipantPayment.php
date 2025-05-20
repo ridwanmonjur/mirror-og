@@ -28,6 +28,6 @@ class ParticipantPayment extends Model
 
     public function transaction(): BelongsTo
     {
-        return $this->belongsTo(PaymentTransaction::class, 'payment_id', 'id');
+        return $this->belongsTo(RecordStripe::class, 'payment_id', 'id');
     }
 }

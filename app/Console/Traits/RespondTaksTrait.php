@@ -9,7 +9,7 @@ use App\Models\NotifcationsUser;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-use App\Models\PaymentTransaction;
+use App\Models\RecordStripe;
 use App\Models\StripePayment;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
@@ -63,7 +63,7 @@ trait RespondTaksTrait
             if (!empty($releasedPayments)) {
                 // Use updateMultiple or batch update method
                 foreach ($releasedPayments as $payment) {
-                    PaymentTransaction::where('id', $payment['id'])
+                    RecordStripe::where('id', $payment['id'])
                         ->update(['payment_status' => $payment['payment_status']]);
                 }
             }
@@ -147,7 +147,7 @@ trait RespondTaksTrait
             DB::beginTransaction();
             try {
                 foreach ($updatedPayments as $payment) {
-                    PaymentTransaction::where('id', $payment['id'])
+                    RecordStripe::where('id', $payment['id'])
                         ->update(['payment_status' => $payment['payment_status']]);
                 }
                 DB::commit();

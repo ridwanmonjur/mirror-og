@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\PaymentTransaction;
+use App\Models\RecordStripe;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -98,7 +98,7 @@ class PaymentService
             DB::beginTransaction();
             try {
                 foreach ($updatedPayments as $payment) {
-                    PaymentTransaction::where('payment_id', $payment['payment_id'])
+                    RecordStripe::where('payment_id', $payment['payment_id'])
                         ->update(['payment_status' => $payment['payment_status']]);
                 }
                 DB::commit();

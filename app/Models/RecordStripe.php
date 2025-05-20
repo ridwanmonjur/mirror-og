@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentTransaction extends Model
+class RecordStripe extends Model
 {
     use HasFactory;
     public const UPDATED_AT = null;

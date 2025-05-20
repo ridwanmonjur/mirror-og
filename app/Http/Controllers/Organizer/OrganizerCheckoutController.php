@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\CreateUpdateEventTask;
 use App\Models\Discount;
 use App\Models\EventDetail;
-use App\Models\PaymentTransaction;
+use App\Models\RecordStripe;
 use App\Models\StripePayment;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -97,7 +97,7 @@ class OrganizerCheckoutController extends Controller
                     $paymentIntent['amount_received'] === $paymentIntent['amount'] &&
                     $paymentIntent['metadata']['eventId'] === $id
                 ) {
-                    $transaction = PaymentTransaction::createTransaction(
+                    $transaction = RecordStripe::createTransaction(
                         $intentId,
                         $paymentIntent['status'],
                         $paymentIntent['amount'] / 100

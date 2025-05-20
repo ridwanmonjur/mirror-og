@@ -7,7 +7,7 @@ use App\Http\Requests\Match\ShowCheckoutRequest;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
-use App\Models\PaymentTransaction;
+use App\Models\RecordStripe;
 use App\Models\RosterMember;
 use App\Models\StripePayment;
 use Exception;
@@ -110,7 +110,7 @@ class ParticipantCheckoutController extends Controller
                 }
             }
 
-            $transaction = new PaymentTransaction([
+            $transaction = new RecordStripe([
                 'payment_id' => null,
                 'payment_status' => 'succeeded_applied_discount',
                 'payment_amount' => $request->discount_applied_amount
@@ -191,7 +191,7 @@ class ParticipantCheckoutController extends Controller
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
 
-                    $transaction = PaymentTransaction::createTransaction(
+                    $transaction = RecordStripe::createTransaction(
                         $intentId,
                         $paymentIntent['status'],
                         $paymentDone
