@@ -38,7 +38,6 @@ class JoinEventSignupListener implements ShouldQueue
 
             $notifHtml = <<<HTML
                 <span class="notification-gray">
-                    <b>Hi, {$member->user->name}.</b><br><br>
                     You have signed up for  
                     <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/organizer/{$event2->event->user->id}">
                         {$event2->event->user->name}
@@ -52,6 +51,13 @@ class JoinEventSignupListener implements ShouldQueue
                     Please complete and confirm your registration for this event.
                 </span>
             HTML;
+
+            $notifEmailPart = <<<HTML
+            <p><b>Hi, {$member->user->name}.</b><br><br></p>
+            HTML;
+
+            $notifEmail = $notifEmailPart . $notifHtml;
+
 
             $memberNotification[] = [
                 'user_id' => $member->user->id,
@@ -73,7 +79,7 @@ class JoinEventSignupListener implements ShouldQueue
 
         Mail::to($memberMail)->send(new EventSignupMail([
             'team' => $event2->selectTeam,
-            'text' => $notifHtml,
+            'text' => $notifEmail,
             'link' =>  route('participant.register.manage', [
                 'id' => $event2->selectTeam->id,
                 'scroll' => $event2->join_id

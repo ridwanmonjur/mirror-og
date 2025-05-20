@@ -21,7 +21,29 @@ class StripePayment
             throw new \Exception('Stripe secret key is not configured.');
         }
         
-        $this->stripeClient = new StripeClient($stripeSecret);    }
+        $this->stripeClient = new StripeClient($stripeSecret);    
+    }
+
+    /**
+         * Cancel a payment intent
+         *
+         * @param string|int|null $paymentId The ID of the payment intent to cancel
+         * @param array $options Additional options for cancellation
+         * @return \Stripe\PaymentIntent|null The canceled payment intent or null if payment ID is not provided
+         * @throws \Exception If there's an error during cancellation
+     */
+    public function cancelPaymentIntent(string|int|null $paymentId, array $options = []): ?PaymentIntent
+    {
+        if ($paymentId) {
+            try {
+                return $this->stripeClient->paymentIntents->cancel($paymentId, $options);
+            } catch (\Stripe\Exception\ApiErrorException $e) {
+                throw new \Exception("Failed to cancel payment intent: {$e->getMessage()}", $e->getCode(), $e);
+            }
+        }
+
+        return null;
+    }
 
     public function createStripeCustomer(string $name, string $email): ?Customer
     {
