@@ -50,19 +50,19 @@ class DiscountCheckoutRequest extends FormRequest
                 ->sum('payment_amount');
 
             $user = $this->attributes->get('user');
-            $userDiscount = DB::table('user_discounts')
+            $userWallet = DB::table('user_wallet')
                 ->where('user_id', $user->id)
                 ->first();
 
-            if (!$userDiscount || $userDiscount->amount < 0) {
+            if (!$userWallet ||  $userWallet->usable_balance < 0) {
                 $validator->errors()->add('discount', "Discount doesn't exist!");
                 return;
             }
 
-            if ($userDiscount->amount < $this->amount) {
+            if ( $userWallet->usable_balance < $this->amount) {
                 $is_complete_payment = false;
                 $this->discount_applied_amount = min(
-                    $userDiscount->amount,
+                     $userWallet->usable_balance,
                     ($total - $participantPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
                 );
             }
@@ -70,7 +70,7 @@ class DiscountCheckoutRequest extends FormRequest
             $pendingBeforeDiscount = $this->total - $participantPaymentSum ;
             $pendingAfterDiscount = $pendingBeforeDiscount - $this->discount_applied_amount;
 
-            if ($userDiscount->amount - $this->discount_applied_amount < 0) {
+            if ( $userWallet->usable_balance - $this->discount_applied_amount < 0) {
                 $validator->errors()->add(
                     'amount',
                     "Not enough money in discount wallet!"
@@ -105,7 +105,7 @@ class DiscountCheckoutRequest extends FormRequest
             $new_amount_to_pay_after_discount = $this->amount - $this->discount_applied_amount;
 
             $this->attributes->add([
-                'user_discount' => $userDiscount,
+                'user_wallet' => $userWallet,
                 'new_amount_after_discount' => $new_amount_to_pay_after_discount,
                 'complete_payment' => $is_complete_payment,
                 'pending_total_after_discount' => $pendingAfterDiscount

@@ -69,7 +69,6 @@ class PaymentProcessor {
         eventType: variablesDiv.dataset.eventType,
         stripeKey: variablesDiv.dataset.stripeKey,
         stripeCardIntentUrl: variablesDiv.dataset.stripeCardIntentUrl,
-        discountCheckoutUrl: variablesDiv.dataset.discountCheckoutUrl,
         checkoutTransitionUrl: variablesDiv.dataset.checkoutTransitionUrl
     };
 

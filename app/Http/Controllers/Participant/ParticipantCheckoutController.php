@@ -36,7 +36,7 @@ class ParticipantCheckoutController extends Controller
             $user = $request->attributes->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
             
-            $discount_wallet = DB::table('user_discounts')
+            $user_wallet = DB::table('user_wallet')
                 ->where('user_id', $user->id)
                 ->first();
 
@@ -46,13 +46,13 @@ class ParticipantCheckoutController extends Controller
             ]);
             
             $discountStatusEnums = config("constants.DISCOUNT_STATUS");
-            $discountStatus = (is_null($discount_wallet) || $discount_wallet?->amount < 0) ? $discountStatusEnums['ABSENT']:  $discountStatusEnums['COMPLETE'];
+            $discountStatus = (is_null($user_wallet) || $user_wallet?->usable_balance < 0) ? $discountStatusEnums['ABSENT']:  $discountStatusEnums['COMPLETE'];
             $payment_amount_min = $pendingAfterDiscount = 0.0;
             if ($discountStatus != $discountStatusEnums['ABSENT']) {
                 $payment_amount_min = $request->amount;
-                if ($discount_wallet->amount < $request->amount) {
+                if ($user_wallet->usable_balance < $request->amount) {
                     $payment_amount_min = min(
-                        $discount_wallet->amount,
+                        $user_wallet->usable_balance,
                         ($request->total - $request->participantPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
                     );
 
@@ -71,7 +71,7 @@ class ParticipantCheckoutController extends Controller
                 'joinEventId' => $request->joinEventId,
                 'memberId' => $request->memberId,
                 'event' => $request->event,
-                'discount_wallet' => $discount_wallet,
+                'user_wallet' => $user_wallet,
                 'isUser' => true,
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
@@ -86,20 +86,20 @@ class ParticipantCheckoutController extends Controller
         }
     }
 
-    public function discountCheckout(DiscountCheckoutRequest $request)
+    public function walletCheckout(DiscountCheckoutRequest $request)
     {
         $user = $request->attributes->get('user');
         DB::beginTransaction();
         try {
-            $userDiscount = $request->attributes->get('user_discount');
+            $userWallet = $request->attributes->get('user_wallet');
             $newAmount = $request->attributes->get('new_amount_after_discount');
             $isCompletePayment = $request->attributes->get('complete_payment');
             $pending_total_after_discount = $request->attributes->get('pending_total_after_discount');
-            $walletAmount = $userDiscount->amount - $request->discount_applied_amount;
+            $walletAmount = $userWallet->usable_balance - $request->discount_applied_amount;
 
-            DB::table('user_discounts')
+            DB::table('user_wallet')
                 ->where('user_id', $user->id)
-                ->update(['amount' => $walletAmount]);
+                ->update(['usable_balance' => $walletAmount]);
 
             if (!$isCompletePayment) {
                 if ($request->payment_intent_id) {

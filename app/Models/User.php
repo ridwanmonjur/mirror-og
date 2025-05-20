@@ -137,9 +137,9 @@ class User extends Authenticatable implements FilamentUser
             ->withTimestamps();
     }
 
-    public function discounts(): HasOne
+    public function wallet(): HasOne
     {
-        return $this->hasOne(UserDiscount::class, 'user_id');
+        return $this->hasOne(Wallet::class, 'user_id');
     }
 
     public function blocks(): BelongsToMany

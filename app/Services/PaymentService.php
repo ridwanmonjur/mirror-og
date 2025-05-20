@@ -115,15 +115,15 @@ class PaymentService
                 foreach ($updatedDiscounts as $discount) {
                     $amount = $discount['amount'];
 
-                    $userDiscount = DB::table('user_discounts')->where('user_id', $discount['user_id'])->first();
+                    $userWallet = DB::table('user_wallet')->where('user_id', $discount['user_id'])->first();
 
-                    if ($userDiscount) {
-                        DB::table('user_discounts')
+                    if ($userWallet) {
+                        DB::table('user_wallet')
                             ->where('user_id', $discount['user_id'])
-                            ->update(['amount' => $userDiscount->amount + $amount]);
+                            ->update(['usable_balance' => $userWallet->usable_balance + $amount]);
                     } else {
-                        DB::table('user_discounts')->insert([
-                            'amount' => $amount,
+                        DB::table('user_wallet')->insert([
+                            'usable_balance' => $amount,
                             'user_id' => $discount['user_id']
                         ]);
                     }
