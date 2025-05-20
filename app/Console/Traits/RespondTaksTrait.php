@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 
 use App\Models\RecordStripe;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
@@ -35,7 +35,7 @@ trait RespondTaksTrait
             $otherPayments = $allPayments->where('payment_status', '!=', 'requires_capture');
             
             $releasedPayments = [];
-            $stripe = new StripePayment();
+            $stripe = new StripeConnection();
             
             // 2. Process payments to be released (batch where possible)
             foreach ($toBeCapturedPayments as $payment) {

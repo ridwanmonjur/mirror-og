@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
 use App\Models\PaymentIntent;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ class StripeController extends Controller
 {
     private $stripeClient;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripeConnection $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }

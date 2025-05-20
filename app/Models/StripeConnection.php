@@ -9,7 +9,7 @@ use Stripe\PaymentIntent;
 use Stripe\SearchResult;
 use Stripe\StripeClient;
 
-class StripePayment
+class StripeConnection
 {
     private $stripeClient;
 

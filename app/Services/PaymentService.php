@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\RecordStripe;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +12,7 @@ class PaymentService
 {
     protected $stripeClient;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripeConnection $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }

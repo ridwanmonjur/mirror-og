@@ -7,7 +7,7 @@ use App\Jobs\CreateUpdateEventTask;
 use App\Models\Discount;
 use App\Models\EventDetail;
 use App\Models\RecordStripe;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class OrganizerCheckoutController extends Controller
 {
     private $stripeClient;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripeConnection $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }

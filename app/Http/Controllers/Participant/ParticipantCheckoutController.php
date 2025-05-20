@@ -9,7 +9,7 @@ use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
 use App\Models\RosterMember;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +23,7 @@ class ParticipantCheckoutController extends Controller
 {
     private $stripeClient;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripeConnection $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }
