@@ -16,6 +16,15 @@ use Illuminate\Support\Facades\Mail;
 
 trait RespondTaksTrait
 {
+
+    protected $stripeService;
+    
+    protected function initializeTrait(StripeConnection $stripeService)
+    {
+        $this->stripeService = $stripeService;
+    }
+
+
     public function releaseToBeCapturedPaymentsAndDiscountCreate(array $startedTaskIds, $taskId) {
         DB::beginTransaction();
         try {
@@ -41,11 +50,11 @@ trait RespondTaksTrait
             foreach ($toBeCapturedPayments as $payment) {
                 try {
                     if (!empty($payment->payment_id)) {
-                        $paymentIntent = $stripe->retrieveStripePaymentByPaymentId($payment->payment_id);
+                        $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($payment->payment_id);
                         
                         if ($paymentIntent->status == 'requires_capture') {
                             // Cancel/release the payment
-                            $canceledPayment = $stripe->cancelPaymentIntent($payment->payment_id);
+                            $canceledPayment = $this->stripeService->cancelPaymentIntent($payment->payment_id);
                             
                             // Queue the update (will be executed in batch later)
                             $releasedPayments[] = [
@@ -123,9 +132,8 @@ trait RespondTaksTrait
         $updatedPayments = [];
         foreach ($resultList as $item) {
             try {
-                $stripe = new StripePayment();
                 if (isset($item['payment_id'])) {
-                    $paymentIntent = $stripe->retrieveStripePaymentByPaymentId($item['payment_id']);
+                    $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($item['payment_id']);
 
                     if ($paymentIntent->status == 'requires_capture') {
                         $capturedPayment = $paymentIntent->capture();

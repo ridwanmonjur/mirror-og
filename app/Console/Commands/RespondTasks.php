@@ -9,6 +9,7 @@ use App\Jobs\HandleEventJoinConfirm;
 use App\Models\BracketDeadline;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
+use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -16,6 +17,15 @@ use Illuminate\Console\Command;
 class RespondTasks extends Command
 {
     use PrinterLoggerTrait, RespondTaksTrait;
+
+    protected $stripeService;
+
+    public function __construct(StripeConnection $stripeService)
+    {
+        parent::__construct();
+
+        $this->initializeTrait($stripeService);
+    }
 
     /**
      * The name and signature of the console command.
