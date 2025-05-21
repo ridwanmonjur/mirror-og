@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Stripe\Account;
+use Stripe\AccountSession;
 use Stripe\Collection;
 use Stripe\Customer;
 use Stripe\Invoice;
 use Stripe\PaymentIntent;
+use Stripe\PaymentMethod;
 use Stripe\SearchResult;
 use Stripe\StripeClient;
 
@@ -45,12 +48,9 @@ class StripeConnection
         return null;
     }
 
-    public function createStripeCustomer(string $name, string $email): ?Customer
+    public function createStripeCustomer(array $options): ?Customer
     {
-        return $this->stripeClient->customers->create([
-            'email' => $email,
-            'name' => $name,
-        ]);
+        return $this->stripeClient->customers->create($options);
     }
 
     public function createPaymentIntent(array $array): PaymentIntent
@@ -130,5 +130,56 @@ class StripeConnection
         }
 
         return null;
+    }
+
+
+    /**
+     * Create a SetupIntent for adding payment methods
+     *
+     * @param string $customerId Stripe customer ID
+     * @return \Stripe\SetupIntent
+     */
+    public function createSetupIntent(array $options): \Stripe\SetupIntent
+    {
+        return $this->stripeClient->setupIntents->create($options);
+    }
+
+    /**
+     * Retrieve a payment method
+     *
+     * @param string $paymentMethodId
+     * @return \Stripe\PaymentMethod
+     */
+    public function retrievePaymentMethod(string $paymentMethodId): PaymentMethod
+    {
+        return $this->stripeClient->paymentMethods->retrieve($paymentMethodId);
+    }
+
+    /**
+     * Create a payout to a user's bank account
+     *
+     * @param string $customerId Stripe customer ID
+     * @param string $paymentMethodId Payment method to pay out to
+     * @param int $amount Amount in cents
+     * @return \Stripe\PaymentIntent
+     */
+    public function createPayout(string $customerId, string $paymentMethodId, int $amount): PaymentIntent
+    {
+        // For payouts to users, we create a PaymentIntent with negative amount
+        // and process as a refund to their payment method
+        // This is one approach - alternatively you could use external accounts
+        $paymentIntent = $this->stripeClient->paymentIntents->create([
+            'amount' => $amount,
+            'currency' => 'myr', // Adjust for your currency
+            'customer' => $customerId,
+            'payment_method' => $paymentMethodId,
+            'confirm' => true,
+            'off_session' => true,
+            'metadata' => [
+                'type' => 'prize_payout'
+            ]
+        ]);
+
+        return $paymentIntent;
     }
 }

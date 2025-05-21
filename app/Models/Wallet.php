@@ -15,15 +15,13 @@ class Wallet extends Model
         'usable_balance',
         'current_balance',
         'user_id',
-        'stripe_connect_id',
-        'payouts_enabled',
-        'details_submitted',
-        'charges_enabled',
         'has_bank_account',
         'bank_last4',
         'bank_name',
         'balance',
-        'last_payout_at'
+        'last_payout_at',
+        'stripe_customer_id',
+        'payment_method_id',
     ];
 
     public $timestamps = NULL;
@@ -34,7 +32,6 @@ class Wallet extends Model
     }
 
     protected $casts = [
-        'payouts_enabled' => 'boolean',
         'details_submitted' => 'boolean',
         'charges_enabled' => 'boolean',
         'has_bank_account' => 'boolean',
@@ -44,7 +41,7 @@ class Wallet extends Model
 
     public function isReadyForPayouts()
     {
-        return $this->payouts_enabled && $this->has_bank_account;
+        return $this->has_bank_account && $this->stripe_customer_id;
     }
 
 }
