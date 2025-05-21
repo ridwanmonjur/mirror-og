@@ -17,6 +17,7 @@ use App\Http\Controllers\Participant\ParticipantTeamController;
 use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
+use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,7 @@ Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.la
 // Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Public.About')->name('public.about.view');
 Route::view('/contact', 'Public.Contact')->name('public.contact.view');
+Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
 
 // Forget, reset password
 Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
@@ -42,6 +44,7 @@ Route::get('/account/verify-resend/{email}', [AuthResetAndVerifyController::clas
 Route::get('/account/verify/{token}/mail/{newEmail}', [UserController::class, 'changeEmail'])->name('user.changeEmail.action');
 Route::get('/account/verify/{token}', [AuthResetAndVerifyController::class, 'verifyAccount'])->name('user.verify.action');
 Route::view('/account/verify-success/', 'Auth.VerifySuccess')->name('user.verify.success');
+
 Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInterestedUser'])->name('interestedUser.verify.action');
 
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
@@ -76,8 +79,18 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 Route::feeds();
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'check-permission:participant'], function () {
+        Route::get('/wallet', [StripeController::class, 'showWalletDashboard'])->name('wallet.dashboard');
+        Route::get('/wallet/payment-method', [StripeController::class, 'showPaymentMethodForm'])->name('wallet.payment-method');
+        Route::post('/wallet/payment-method', [StripeController::class, 'savePaymentMethod'])->name('wallet.save-payment-method');
+        Route::post('/wallet/withdraw', [StripeController::class, 'processWithdrawal'])->name('wallet.withdraw');
+        Route::get('/wallet/topup', [StripeController::class, 'processTopup'])->name('wallet.topup');
+        Route::post('/wallet/checkout', [StripeController::class, 'checkoutTopup'])->name('wallet.checkout');
+        Route::post('/wallet/redeem-coupon', [StripeController::class, 'redeemCoupon'])->name('wallet.redeem-coupon');
+    });
     Route::group(['middleware' => 'check-permission:participant|organizer'], function () {
         // Notifications page
+   
         Route::view('/user/notifications', 'Users.Notifications')->name('user.notif.view');
         Route::post('/media', [ImageVideoController::class, 'upload']);
         Route::get('/user/message', [ChatController::class, 'message'])->name('user.message.view');
