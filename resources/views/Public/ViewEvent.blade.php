@@ -94,7 +94,7 @@
 <body>
     @include('googletagmanager::body')
     <input type="hidden" id="disputeLevelEnums" value="{{json_encode($DISPUTE_ACCESS)}}">
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">

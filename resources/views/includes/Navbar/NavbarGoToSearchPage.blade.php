@@ -86,7 +86,7 @@
             </div>
         @endguest
         @auth
-            @include('includes.__Navbar.NavbarAuth')
+            @include('includes.Navbar.NavbarAuth')
         @endauth
     </div>
 </nav>
@@ -124,7 +124,7 @@
             </a>
         @endguest
         @auth
-            @include('includes.__Navbar.MobileAuth')
+            @include('includes.Navbar.MobileAuth')
         @endauth
     </div>
     <div class="text-center cursor-pointer mb-2"

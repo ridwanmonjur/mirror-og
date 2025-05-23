@@ -4,7 +4,7 @@
 </head>
 
 @section('content')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <div class="row  " >
         
         <div class="mx-auto" style="max-width: 600px;">

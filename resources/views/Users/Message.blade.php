@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main>
     <div id="app" class="app-container row">

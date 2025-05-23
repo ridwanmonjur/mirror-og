@@ -91,10 +91,10 @@
 @section('content')
     <header>
         @auth
-            @include('includes.__Navbar.NavbarGoToSearchPage')
+            @include('includes.Navbar.NavbarGoToSearchPage')
         @endauth
         @guest
-            @include('includes.__Navbar.NavbarBeta')
+            @include('includes.Navbar.NavbarBeta')
         @endguest
     </header>
     <main style="padding: 5vh 10vw ;">

@@ -15,7 +15,7 @@
 <body
     class="bgTeamAdmin"
 >
-        @include('includes.__Navbar.NavbarGoToSearchPage')
+        @include('includes.Navbar.NavbarGoToSearchPage')
     @include('googletagmanager::body')
     <main 
         class="main2"

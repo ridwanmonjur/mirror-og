@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/fullpage.css') }}">
 </head>
 @section('content')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
 
     <div class="row mt-4">
        

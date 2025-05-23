@@ -6,7 +6,7 @@
 
 </head>
 @section('content')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <div class="d-none" id="payment-variables" data-payment-amount="{{ $amount }}" data-user-email="{{ $user->email }}"
         data-user-name="{{ $user->name }}" data-stripe-customer-id="{{ $user->stripe_customer_id }}"
         data-stripe-key="{{ config('services.stripe.key') }}"

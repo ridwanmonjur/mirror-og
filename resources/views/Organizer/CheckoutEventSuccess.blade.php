@@ -13,7 +13,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <main>
         <div>
             <div class="pt-5">
