@@ -124,37 +124,7 @@
             </a>
         @endguest
         @auth
-            <div class="text-center px-2 py-1">
-                <div class="d-flex align-items-center">
-                    @if($user->userBanner) 
-                        <img
-                            class="object-fit-cover rounded-circle me-2 border border-primary" 
-                            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
-                            src="{{'/storage' . '/' . $user->userBanner}}" width="45" height="45">
-                    @else 
-                        <div
-                            class="px-3 bg-dark text-light rounded-circle py-2">
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        </div>
-                    @endif
-                    <p style="text-overflow: ellipsis; overflow: hidden; font-size: larger;" class="text-start ms-3 my-0">
-                        <b>{{ $user->name }} </b>
-                    </p>
-                </div>
-            </div>
-            @if ($user->role == 'PARTICIPANT')
-                <a href="{{ url('/participant/team/create/' ) }}" class="py-1">Create a Team</a>
-                <a href="{{ url('/participant/team/list/' ) }}" class="py-1">Team List</a>
-                <a href="{{ route('user.notif.view' ) }}" class="py-1">Team Requests</a>
-            @endif
-            @if ($user->role == 'ORGANIZER')
-                <a class="py-1" href="{{ route('event.create') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Create an event</a>
-                <a class="py-1" href="{{ route('event.index') }}" style="text-decoration: none;" href="{{ route('logout.action') }}">Manage event</a>
-            @endif
-            @if ($user->role == 'ADMIN')
-                <a class="py-1" style="text-decoration: none;" href="/admin">Panel</a>
-            @endif
-                <a class="py-1" style="text-decoration: none;" href="{{ route('logout.action') }}">Logout</a>
+            @include('includes.__Navbar.MobileAuth')
         @endauth
     </div>
     <div class="text-center cursor-pointer mb-2"
