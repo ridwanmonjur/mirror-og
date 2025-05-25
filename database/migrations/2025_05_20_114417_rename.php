@@ -71,7 +71,6 @@ return new class extends Migration
             Schema::create('participant_coupons', function (Blueprint $table) {
                 $table->id();
                 $table->string('code')->unique();
-                $table->string('name');
                 $table->decimal('amount', 10, 2);
                 $table->text('description')->nullable();
                 $table->boolean('is_active')->default(true);
@@ -82,9 +81,8 @@ return new class extends Migration
             Schema::create('user_coupons', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-                $table->foreignId('coupon_id')->constrained('coupons')->onDelete('cascade');
+                $table->foreignId('coupon_id')->constrained('participant_coupons')->onDelete('cascade');
                 $table->timestamp('redeemed_at');
-                $table->timestamps();
                 
                 $table->unique(['user_id', 'coupon_id']);
             });
@@ -133,12 +131,14 @@ return new class extends Migration
             Schema::rename('user_wallet', 'user_discounts');
         }
 
+        if (Schema::hasTable('user_coupons')) {
+            Schema::drop('user_coupons');
+        }
+
         if (Schema::hasTable('participant_coupons')) {
             Schema::drop('participant_coupons');
         }
 
-        if (Schema::hasTable('user_coupons')) {
-            Schema::drop('user_coupons');
-        }
+      
     }
 };

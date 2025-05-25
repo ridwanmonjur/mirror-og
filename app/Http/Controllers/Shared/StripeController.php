@@ -4,8 +4,12 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\TransactionHistoryRequest;
+use App\Http\Resources\TransactionHistoryResource;
+use App\Models\ParticipantCoupon;
 use App\Models\PaymentIntent;
 use App\Models\StripeConnection;
+use App\Models\TransactionHistory;
 use App\Models\UserCoupon;
 use App\Models\Wallet;
 use Exception;
@@ -192,13 +196,38 @@ public function showPaymentMethodForm(Request $request)
     /**
      * Show the wallet dashboard
      */
-    public function showWalletDashboard(Request $request)
+    public function showWalletDashboard(TransactionHistoryRequest $request)
     {
         $user = $request->get('user');
+
+        if ($request->expectsJson()) {
+            $query = TransactionHistory::where('user_id', $user->id ?? $user);
+            $result = $query->getCursorPaginated(
+                perPage: $request->getPerPage(),
+                cursor: $request->getCursor(),
+            );
+            $result['data'] = TransactionHistoryResource::collection($result['data']);
+            return response()->json($result);
+
+         }
+
+
         $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
+        $couponsQ = ParticipantCoupon::where('is_public', true)
+            ->orWhereHas('userCoupons', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+        
+        $demoCoupons = $couponsQ->take(2)->toArray();
+
+        $coupons = $couponsQ->toArray();
+
 
         return view('Users.Dashboard', [
-            'wallet' => $wallet
+            'wallet' => $wallet,
+            'coupons' => $coupons,
+            'demoCoupons' => $demoCoupons
         ]);
     }
 

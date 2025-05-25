@@ -18,10 +18,12 @@ function setErrorCurrentPassword (errorMessage) {
 }
 
 
-let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
 function AccountComponent() {
+    let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
+
     return {
         isPasswordNull: userProfile.isPasswordNull,
         emailAddress: userProfile.email,
@@ -430,7 +432,7 @@ function AccountComponent() {
 document.addEventListener('DOMContentLoaded', () => {
     createApp({
         AccountComponent,
-    }).mount('#app');
+    }).mount('.settings');
 
 });
 

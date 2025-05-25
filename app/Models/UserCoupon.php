@@ -3,41 +3,35 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserCoupon extends Model
 {
     protected $fillable = [
-        'code',
-        'name',
-        'amount',
-        'description',
-        'is_active',
-        'expires_at'
+        'user_id',
+        'coupon_id',
+        'redeemed_at'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'expires_at' => 'datetime',
-        'amount' => 'decimal:2'
+        'redeemed_at' => 'datetime'
     ];
 
-    public $timestamps = null;
+    public $timestamps = NULL;
 
     /**
-     * Get the users who have redeemed this coupon.
+     * Get the user who redeemed the coupon.
      */
-    public function redeemedBy()
+    public function user(): BelongsTo
     {
-        return $this->belongsToMany(User::class, 'user_coupons')
-            ->withPivot('redeemed_at');
+        return $this->belongsTo(User::class);
     }
 
     /**
-     * Check if the coupon is valid (active and not expired).
+     * Get the coupon that was redeemed.
      */
-    public function isValid()
+    public function coupon(): BelongsTo
     {
-        return $this->is_active && 
-               ($this->expires_at === null || $this->expires_at > now());
+        return $this->belongsTo(ParticipantCoupon::class, 'coupon_id');
     }
 }

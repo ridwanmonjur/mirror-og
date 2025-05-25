@@ -19,7 +19,7 @@
 <body>
     @include('googletagmanager::body')
     @include('includes.Navbar.NavbarGoToSearchPage')
-    <main id="app">
+    <main id="app" class="settings">
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">
 

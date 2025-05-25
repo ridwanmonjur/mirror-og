@@ -34,7 +34,7 @@ Route::view('/contact', 'Public.Contact')->name('public.contact.view');
 Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
 
 // Forget, reset password
-Route::view('/forget-password', 'Auth.ForgetPassword')->name('user.forget.view');
+Route::view('/forget-password', view: 'Auth.ForgetPassword')->name('user.forget.view');
 Route::get('/reset-password/{token}', [AuthResetAndVerifyController::class, 'createReset'])->name('user.reset.view');
 Route::post('/reset-password', [AuthResetAndVerifyController::class, 'storeReset'])->name('user.reset.action');
 Route::post('/forget-password', [AuthResetAndVerifyController::class, 'storeForget'])->name('user.forget.action');

@@ -39,19 +39,51 @@ table.responsive thead {
     padding-right: 10px;
 }
 
-
-
-main {
+main.settings {
+    background-image: url("/assets/images/homepage new bg.png");
     min-height: 115vh;
+}
+
+.container-main {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.rounded-30px {
+    border-radius: 30px;
+}
+
+.center-container {
+    max-width: 800px;
+    display: flex;
+    padding-left: 5px;
+    padding-right: 5px;
+    align-items: center;
+    min-height: 90vh;
+    justify-content: center;
+}
+
+
+main.wallet {
+    background-image: url("/assets/images/event-creation-bg.png");
+    min-height: 100vh;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+main.settings {
     display: block !important;
     padding: 0px 0px;
     align-items: center;
     justify-content: center;
-    background-image: url("/assets/images/homepage new bg.png");
-
     background-size: auto 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
+}
+
+.rounded-30px {
+    border-radius: 30px 30px 30px 30px !important;
 }
 
 .accordion-item, .accordion-button {
@@ -83,6 +115,466 @@ main {
     /* border-radius: 40px 40px 0 0 !important; */
 }
 
+/* Block: transaction-history - Mobile First */
+.transaction-history {
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin: 10px;
+}
+
+/* Element: transaction-history__header - Mobile First */
+.transaction-history__header {
+    background: transparent;
+    padding: 16px 0;
+    border-bottom: none;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start !important;
+}
+
+/* Element: transaction-history__title - Mobile First */
+.transaction-history__title {
+    color: #37474f;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Element: transaction-history__view-link - Mobile First */
+.transaction-history__view-link {
+    color: #5c6bc0;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Modifier: transaction-history__view-link--hovered */
+.transaction-history__view-link:hover {
+    color: #3f51b5;
+    text-decoration: underline;
+}
+
+/* Element: transaction-history__table - Mobile First */
+.transaction-history__table {
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+/* Block: transaction-table - Mobile First */
+.transaction-table__header {
+    color: black;
+
+}
+
+/* Element: transaction-table__header-cell - Mobile First */
+.transaction-table__header-cell {
+    border: none;
+    padding: 12px 8px;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+}
+
+/* Block: transaction-row - Mobile First */
+.transaction-row {
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s ease;
+}
+
+/* Modifier: transaction-row--hovered */
+.transaction-row:hover {
+    background-color: #fafafa;
+}
+
+/* Modifier: transaction-row--last */
+.transaction-row:last-child {
+    border-bottom: none;
+}
+
+/* Element: transaction-row__cell - Mobile First */
+.transaction-row__cell {
+    padding: 12px 8px;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Modifier: transaction-row__cell--date - Mobile First */
+.transaction-row__cell--date {
+    color: #90a4ae;
+    font-size: 11px;
+    line-height: 1.3;
+    width: auto;
+}
+
+/* Modifier: transaction-row__cell--transaction - Mobile First */
+.transaction-row__cell--transaction {
+    width: auto;
+}
+
+/* Modifier: transaction-row__cell--type - Mobile First */
+.transaction-row__cell--type {
+    color: #616161;
+    font-size: 12px;
+    width: auto;
+}
+
+/* Modifier: transaction-row__cell--total - Mobile First */
+.transaction-row__cell--total {
+    color: #37474f;
+    font-weight: 600;
+    text-align: right;
+    width: auto;
+    font-size: 13px;
+}
+
+/* Block: transaction-details - Mobile First */
+.transaction-details__title {
+    color: #37474f;
+    font-weight: 500;
+    margin-bottom: 3px;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+/* Modifier: transaction-details__title--hovered */
+.transaction-details__title:hover {
+    color: #1976d2;
+}
+
+/* Element: transaction-details__subtitle - Mobile First */
+.transaction-details__subtitle {
+    color: #90a4ae;
+    font-size: 11px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Block: prize-badge - Mobile First */
+.prize-badge {
+    background: #e8f5e8;
+    color: #2e7d32;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 2px;
+}
+
+/* Modifier: prize-badge--first-place */
+.prize-badge--first-place {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+/* Tablet Styles - min-width: 576px (sm) */
+@media (min-width: 576px) {
+    .transaction-history {
+        margin: 15px;
+        border-radius: 14px;
+    }
+    
+    .transaction-history__header {
+        padding: 18px 0px;
+    }
+    
+    .transaction-history__title {
+        font-size: 19px;
+    }
+    
+    .transaction-history__view-link {
+        font-size: 14px;
+    }
+    
+    .transaction-history__table {
+        font-size: 14px;
+    }
+    
+    .transaction-table__header-cell {
+        padding: 14px 0px;
+        font-size: 13px;
+    }
+    
+    .transaction-row__cell {
+        padding: 16px 12px;
+    }
+    
+    .transaction-details__title {
+        font-size: 14px;
+    }
+    
+    .transaction-details__subtitle {
+        font-size: 12px;
+    }
+    
+    .prize-badge {
+        padding: 2px 7px;
+        font-size: 11px;
+        margin-top: 3px;
+    }
+}
+
+/* Desktop Styles - min-width: 768px (md) */
+@media (min-width: 768px) {
+    .transaction-history {
+        margin: 0 auto;
+        max-width: 900px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .transaction-history__header {
+        padding: 0px 24px 0px;
+        flex-direction: row;
+        align-items: center !important;
+        gap: 0;
+    }
+    
+    .transaction-history__title {
+        font-size: 20px;
+    }
+    
+    .transaction-history__view-link {
+        font-size: 14px;
+    }
+    
+    .transaction-history__table {
+        font-size: 15px;
+    }
+    
+    .transaction-table__header-cell {
+        padding: 16px 20px;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+    
+    .transaction-row__cell {
+        padding: 20px;
+    }
+
+    .transaction-table__header-cell:first-child,     .transaction-table__header-cell:last-child, 
+    .transaction-row__cell:first-child, .transaction-row__cell:last-child {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    
+    .transaction-row__cell--date {
+        font-size: 14px;
+        line-height: 1.4;
+        width: 140px;
+    }
+    
+    .transaction-row__cell--transaction {
+        width: 45%;
+    }
+    
+    .transaction-row__cell--type {
+        font-size: 14px;
+        width: 160px;
+    }
+    
+    .transaction-row__cell--total {
+        width: 120px;
+        font-size: 15px;
+    }
+    
+    .transaction-details__title {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+    
+    .transaction-details__subtitle {
+        font-size: 13px;
+    }
+    
+    .prize-badge {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+}
+
+/* Large Desktop Styles - min-width: 992px (lg) */
+@media (min-width: 992px) {
+    .transaction-history {
+        max-width: 1000px;
+    }
+    
+    .transaction-history__header {
+        padding: 22px 28px 18px;
+    }
+    
+    .transaction-history__title {
+        font-size: 22px;
+    }
+    
+    .transaction-table__header-cell {
+        padding: 18px 24px;
+        font-size: 15px;
+    }
+    
+    .transaction-row__cell {
+        padding: 22px 24px;
+    }
+    
+    .transaction-details__title {
+        font-size: 16px;
+    }
+    
+    .transaction-details__subtitle {
+        font-size: 14px;
+    }
+}
+
+
+/* .coupons__header {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coupons__title {
+    margin: 0;
+}
+
+.coupons__view-all {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.coupons__view-all:hover {
+    color: #0056b3;
+}
+
+.coupons__view-all-icon {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+} */
+
+.coupon {
+    margin: auto;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #7FB3D3, #9BC7E0);
+    mask: url("data:image/svg+xml,%3csvg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 256'%3e%3cpath d='M1008.48,85.024c-29.696-0.011-56.432-8-75.906-20.971c-19.456-12.981-31.44-30.816-31.44-50.613v-10.336H122.88 v10.336c-0.016,19.797-11.984,37.632-31.44,50.613c-19.488,12.971-46.224,20.96-75.92,20.971H0V170.64h15.52 c29.696,0,56.432,7.989,75.92,20.96c19.456,12.981,31.424,30.807,31.44,50.604v10.347h778.256v-10.347 c0-19.797,11.984-37.621,31.44-50.604c19.472-12.971,46.21-20.96,75.906-20.96H1024v-10.347V85.024H1008.48z'/%3e%3c/svg%3e") center/contain no-repeat;
+    mask-size: cover;
+    width: min(300px, 100%);
+    height: 150px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 20px;
+}
+
+
+.coupon--secondary {
+    background: linear-gradient(135deg, #85C1E9, #A9D3F0);
+}
+
+.coupon:last-child {
+    margin-bottom: 0;
+}
+
+
+
+.coupon__amount {
+    position: relative;
+    font-weight: bold;
+    color: white;
+    height: 100%;
+    border-right: 1px dashed white;
+}
+
+
+.coupon__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.coupon__subtitle {
+    font-size: 0.85rem;
+    color: black;
+    
+}
+
+.coupon__info {
+    color: white;
+}
+
+.coupon__info-icon {
+    width: 20px;
+    height: 20px;
+}
+
+
+@media (min-width: 992px) { 
+
+    .container-main {
+        padding-top: 10px;
+    }
+
+    .coupon {
+        width: 350px;
+        height: 105px;
+        border-radius: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
+
+    }
+}
+
+.coupon__subtitle {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4; /* Adjust as needed */
+    max-height: 2.8em; /* 2 lines × line-height */
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.coupon__details {
+    border-left: 3px dashed white;
+
+}
+
+
+/* Extra Large Desktop Styles - min-width: 1200px (xl) */
+@media (min-width: 1400px) {
+    .coupon {
+        width: 400px;
+        height: 120px;
+        border-radius: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
+
+    }
+
+    .transaction-history {
+        max-width: 1100px;
+    }
+}
+
+
+
 @media screen and (min-width: 992px) {
     .btn-size {
         width: 200px;
@@ -94,7 +586,7 @@ main {
         grid-auto-rows: 1fr; 
     }
 
-    main {
+    main.settings {
         padding: 20px 0px;
         background-size: 100vw 100vh;
     }

@@ -158,6 +158,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->blocks()->where('blocked_user_id', $user->id)->exists();
     }
 
+    public function userCoupons()
+    {
+        return $this->hasMany(UserCoupon::class);
+    }
+
     public static function getParticipants(Request $request): Builder
     {
         $teamId = $request->input('teamId');
