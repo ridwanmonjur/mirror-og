@@ -6,8 +6,6 @@ use App\Exceptions\SettingsException;
 use App\Http\Requests\User\UpdateSettingsRequest;
 use App\Mail\VerifyUserMail;
 use App\Mail\VerifyUserMailChange;
-use App\Models\PaymentTransaction;
-use App\Models\StripePayment;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;

@@ -9,7 +9,7 @@ use App\Listeners\JoinEventSignupListener;
 use App\Listeners\TeamMemberCreatedListener;
 use App\Listeners\TeamMemberUpdatedListener;
 use App\Services\BracketDataService;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use App\Models\User;
 use App\Services\EventMatchService;
 use App\Services\PaymentService;
@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentService::class, function ($app) {
-            return new PaymentService($app->make(StripePayment::class));
+            return new PaymentService($app->make(StripeConnection::class));
         });
 
         $this->app->bind(EventMatchService::class, function ($app) {

@@ -6,7 +6,7 @@ use App\Exceptions\SettingsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
 use App\Http\Requests\User\UpdateSettingsRequest;
-use App\Models\StripePayment;
+use App\Models\StripeConnection;
 use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
@@ -23,7 +23,7 @@ class UserController extends Controller
     private $stripeClient;
     private $settingsService;
 
-    public function __construct(StripePayment $stripeClient, SettingsService $settingsService)
+    public function __construct(StripeConnection $stripeClient, SettingsService $settingsService)
     {
         $this->stripeClient = $stripeClient;
         $this->settingsService = $settingsService;

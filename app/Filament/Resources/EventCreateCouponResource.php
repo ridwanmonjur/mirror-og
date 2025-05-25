@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DiscountResource\Pages;
-use App\Models\Discount;
+use App\Filament\Resources\EventCreateCouponResource\Pages;
+use App\Models\EventCreateCoupon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,9 +12,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DiscountResource extends Resource
+class EventCreateCouponResource extends Resource
 {
-    protected static ?string $model = Discount::class;
+    protected static ?string $model = EventCreateCoupon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
 
@@ -107,7 +107,7 @@ class DiscountResource extends Resource
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable()
-                    ->formatStateUsing(fn (string $state, Discount $record): string => 
+                    ->formatStateUsing(fn (string $state, EventCreateCoupon $record): string => 
                         $record->type === 'percentage' ? "{$state}%" : "\${$state}"),
                     
                 Tables\Columns\TextColumn::make('startDate')
@@ -158,7 +158,7 @@ class DiscountResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDiscounts::route('/'),
+            'index' => Pages\ListEventCreateCoupons::route('/'),
             // 'create' => Pages\CreateOrganizerCoupon::route('/create'),
             // 'edit' => Pages\EditOrganizerCoupon::route('/{record}/edit'),
         ];

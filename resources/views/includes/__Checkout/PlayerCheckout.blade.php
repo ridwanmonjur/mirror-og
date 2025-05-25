@@ -3,7 +3,7 @@
         aria-labelledby="#discountModal" aria-hidden="true">
         <div class="modal-dialog">
             <form 
-                action="{{route('participant.discountCheckout.action')}}"
+                action="{{route('participant.walletCheckout.action')}}"
                 method="POST"
                 onsubmit="handleSubmit(event);"
                 id="discountPaymentForm"
@@ -19,7 +19,7 @@
                                 <p class="text-center text-red">Ooops, no coupons </p> 
                             @else
                                 <p> 
-                                    You have <span class="text-success" id="wallet_amount">RM {{$discount_wallet->amount}}</span> in your wallet.
+                                    You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> in your wallet.
                                     @if ($discountStatusEnums['COMPLETE'] == $discountStatus )
                                         <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your discount wallet. </span>
                                         
@@ -91,11 +91,11 @@
                                 @if ($discountStatusEnums['ABSENT'] == $discountStatus) 
                                     You have no discount to apply.
                                 @elseif ($discountStatusEnums['INVALID'] == $discountStatus)
-                                        You have RM {{$discount_wallet->amount}} of discounts to apply towards this event.
+                                        You have RM {{$user_wallet->usable_balance}} of discounts to apply towards this event.
                                         But this is not enough for the next transaction.
                                 @else
                                     <span> 
-                                        You have RM {{$discount_wallet->amount}} of discounts to apply towards this event.
+                                        You have RM {{$user_wallet->usable_balance}} of discounts to apply towards this event.
                                     </span>
                                     <a 
                                          data-bs-toggle="modal"

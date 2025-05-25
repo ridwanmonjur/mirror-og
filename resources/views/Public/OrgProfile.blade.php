@@ -90,7 +90,7 @@
 <body>
     @include('googletagmanager::body')
     @include('includes.__Profile.BackgroundModal')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <main 
         id="app"
         v-scope="OrganizerData()"

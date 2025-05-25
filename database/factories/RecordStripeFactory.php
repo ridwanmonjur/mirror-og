@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\PaymentTransaction;
+use App\Models\RecordStripe;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\PaymentTransaction>
+ * @extends Factory<\App\Models\RecordStripe>
  */
-final class PaymentTransactionFactory extends Factory
+final class RecordStripeFactory extends Factory
 {
     /**
     * The name of the factory's corresponding model.
     *
     * @var string
     */
-    protected $model = PaymentTransaction::class;
+    protected $model = RecordStripe::class;
 
     /**
     * Define the model's default state.

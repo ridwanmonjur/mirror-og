@@ -72,10 +72,10 @@
 @section('content')
     <header>
         @auth
-            @include('includes.__Navbar.NavbarGoToSearchPage')
+            @include('includes.Navbar.NavbarGoToSearchPage')
         @endauth
         @guest
-            @include('includes.__Navbar.NavbarBeta')
+            @include('includes.Navbar.NavbarBeta')
         @endguest
     </header>
     <!-- Contact & About Us Boxes and Social Media Data-->

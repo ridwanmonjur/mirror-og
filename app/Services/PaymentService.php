@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\PaymentTransaction;
-use App\Models\StripePayment;
+use App\Models\RecordStripe;
+use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +12,7 @@ class PaymentService
 {
     protected $stripeClient;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripeConnection $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }
@@ -98,7 +98,7 @@ class PaymentService
             DB::beginTransaction();
             try {
                 foreach ($updatedPayments as $payment) {
-                    PaymentTransaction::where('payment_id', $payment['payment_id'])
+                    RecordStripe::where('payment_id', $payment['payment_id'])
                         ->update(['payment_status' => $payment['payment_status']]);
                 }
                 DB::commit();
@@ -115,15 +115,15 @@ class PaymentService
                 foreach ($updatedDiscounts as $discount) {
                     $amount = $discount['amount'];
 
-                    $userDiscount = DB::table('user_discounts')->where('user_id', $discount['user_id'])->first();
+                    $userWallet = DB::table('user_wallet')->where('user_id', $discount['user_id'])->first();
 
-                    if ($userDiscount) {
-                        DB::table('user_discounts')
+                    if ($userWallet) {
+                        DB::table('user_wallet')
                             ->where('user_id', $discount['user_id'])
-                            ->update(['amount' => $userDiscount->amount + $amount]);
+                            ->update(['usable_balance' => $userWallet->usable_balance + $amount]);
                     } else {
-                        DB::table('user_discounts')->insert([
-                            'amount' => $amount,
+                        DB::table('user_wallet')->insert([
+                            'usable_balance' => $amount,
                             'user_id' => $discount['user_id']
                         ]);
                     }

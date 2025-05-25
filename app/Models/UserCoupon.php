@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class UserCoupon extends Model
+{
+    protected $fillable = [
+        'user_id',
+        'coupon_id',
+        'redeemed_at'
+    ];
+
+    protected $casts = [
+        'redeemed_at' => 'datetime'
+    ];
+
+    public $timestamps = NULL;
+
+    /**
+     * Get the user who redeemed the coupon.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the coupon that was redeemed.
+     */
+    public function coupon(): BelongsTo
+    {
+        return $this->belongsTo(ParticipantCoupon::class, 'coupon_id');
+    }
+}

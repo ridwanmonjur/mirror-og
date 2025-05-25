@@ -43,7 +43,9 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...\App\Filament\Resources\UserResource::getNavigationItems(),
                             // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                           
+                            ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
+
+                           ...\App\Filament\Resources\ParticipantCouponsResource::getNavigationItems(),
                             ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
                             NavigationItem::make('Onboarding Email')
                                 ->icon('heroicon-o-envelope')
@@ -75,7 +77,7 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
                                 // ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
 
-                                ...\App\Filament\Resources\DiscountResource::getNavigationItems(),
+                                ...\App\Filament\Resources\EventCreateCouponResource::getNavigationItems(),
                             ]),
          
                    

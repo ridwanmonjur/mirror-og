@@ -222,6 +222,13 @@
                 </svg>
                 <span>My Teams</span>
             </a>
+            <a class="dropdown-item  py-navbar my-0  ps-4 align-middle " href="{{ url('/wallet') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#808080" class="bi bi-wallet me-3" viewBox="0 0 16 16">
+                <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1"/>
+                </svg>
+             
+                <span>My Wallet</span>
+            </a>
             <a class="dropdown-item  py-navbar my-0  ps-4 align-middle " href="{{ route('user.settings.view') }}">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#808080" class="bi bi-gear-fill me-3" viewBox="0 0 16 16">
                     <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
@@ -236,6 +243,17 @@
                 <span>Contact us</span>
             </a>
             
+        @endif
+        @if ($user->role == 'ADMIN' )
+            <a class="dropdown-item py-navbar my-0  ps-4 align-middle " href="/admin">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#808080"
+                    class="bi bi-person-circle me-3" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                    <path fill-rule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                </svg>
+                Admin
+            </a>
         @endif
         <a class="dropdown-item py-navbar my-0 ps-4 align-middle" href="{{ route('logout.action') }}">
 

@@ -30,7 +30,7 @@ final class ParticipantPaymentFactory extends Factory
             'team_members_id' => fake()->randomNumber(),
             'join_events_id' => fake()->randomNumber(),
             'user_id' => fake()->randomNumber(),
-            'payment_id' => \App\Models\PaymentTransaction::factory(),
+            'payment_id' => \App\Models\RecordStripe::factory(),
             'payment_amount' => fake()->optional()->word,
             'members_id' => \App\Models\TeamMember::factory(),
         ];

@@ -6,14 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Discount extends Model
+class EventCreateCoupon extends Model
 {
     use HasFactory;
     protected $fillable = [];
 
-    protected $table = 'organizer_create_event_discounts';
+    protected $table = 'event_create_coupon';
 
-    public static function createNoDiscountFeeObject(array $fee, string| null $eventPrizePool): array
+    public static function createNoEventCreateCouponFeeObject(array $fee, string| null $eventPrizePool): array
     {
         $fee['discountFee'] = 0;
         $fee['entryFee'] = $eventPrizePool !== null ? (float) $eventPrizePool : 0.0;
@@ -23,23 +23,23 @@ class Discount extends Model
         return $fee;
     }
 
-    public static function createDiscountFeeObject(string| null $couponName, string| null $eventPrizePool): array
+    public static function createEventCreateCouponFeeObject(string| null $couponName, string| null $eventPrizePool): array
     {
         $fee = [];
 
         if (is_null($couponName) || is_null($eventPrizePool)) {
-            $fee = self::createNoDiscountFeeObject($fee, $eventPrizePool);
+            $fee = self::createNoEventCreateCouponFeeObject($fee, $eventPrizePool);
 
-            return [$fee, 'isDiscountApplied' => false, 'error' => null];
+            return [$fee, 'isEventCreateCouponApplied' => false, 'error' => null];
         }
         $discount = self::whereRaw('coupon = ?', [$couponName])->first();
 
         if (is_null($discount)) {
-            $fee = self::createNoDiscountFeeObject($fee, $eventPrizePool);
+            $fee = self::createNoEventCreateCouponFeeObject($fee, $eventPrizePool);
 
             return [
                 $fee,
-                'isDiscountApplied' => false,
+                'isEventCreateCouponApplied' => false,
                 'error' => "Sorry, your coupon named {$couponName} can't be found!",
             ];
         }
@@ -61,15 +61,15 @@ class Discount extends Model
 
             return [
                 $fee,
-                'isDiscountApplied' => true,
+                'isEventCreateCouponApplied' => true,
                 'error' => null,
             ];
         }
-        $fee = self::createNoDiscountFeeObject($fee, $eventPrizePool);
+        $fee = self::createNoEventCreateCouponFeeObject($fee, $eventPrizePool);
 
         return [
             $fee,
-            'isDiscountApplied' => false,
+            'isEventCreateCouponApplied' => false,
             'error' => 'Your coupon has already expired or is not available right now!',
         ];
     }

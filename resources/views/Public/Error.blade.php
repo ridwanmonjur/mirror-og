@@ -12,7 +12,7 @@
 </head>
 
 <body style="margin-top: 0 !important;">
-@include('includes.__Navbar.NavbarGoToSearchPage')
+@include('includes.Navbar.NavbarGoToSearchPage')
     <main>
 
         <br><br><br><br>

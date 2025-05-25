@@ -84,7 +84,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <div data-user-profile-id="{{ $userProfile->id }}"
         data-user-profile-birthday="{{ $userProfile->participant->birthday }}"
         data-background-api-url="{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id]) }}"

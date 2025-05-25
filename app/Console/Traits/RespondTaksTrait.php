@@ -3,18 +3,116 @@
 namespace App\Console\Traits;
 
 use App\Models\ActivityLogs;
+use App\Models\Discount;
 use App\Models\EventJoinResults;
 use App\Models\NotifcationsUser;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-use App\Models\PaymentTransaction;
-use App\Models\StripePayment;
+use App\Models\RecordStripe;
+use App\Models\StripeConnection;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 trait RespondTaksTrait
 {
+
+    protected $stripeService;
+    
+    protected function initializeTrait(StripeConnection $stripeService)
+    {
+        $this->stripeService = $stripeService;
+    }
+
+
+    public function releaseToBeCapturedPaymentsAndDiscountCreate(array $startedTaskIds, $taskId) {
+        DB::beginTransaction();
+        try {
+            // 1. Get all relevant payments in a single query with necessary data
+            $allPayments = DB::table('event_details')
+                ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
+                ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
+                ->join('all_payment_transactions', 'all_payment_transactions.id', '=', 'participant_payments.payment_id')
+                ->select('all_payment_transactions.id', 'all_payment_transactions.payment_id', 
+                         'all_payment_transactions.payment_status', 'all_payment_transactions.amount',
+                         'participant_payments.user_id')
+                ->whereIn('event_details.id', $startedTaskIds)
+                ->get();
+                
+            // Group payments by status
+            $toBeCapturedPayments = $allPayments->where('payment_status', 'requires_capture');
+            $otherPayments = $allPayments->where('payment_status', '!=', 'requires_capture');
+            
+            $releasedPayments = [];
+            $stripe = new StripeConnection();
+            
+            // 2. Process payments to be released (batch where possible)
+            foreach ($toBeCapturedPayments as $payment) {
+                try {
+                    if (!empty($payment->payment_id)) {
+                        $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($payment->payment_id);
+                        
+                        if ($paymentIntent->status == 'requires_capture') {
+                            // Cancel/release the payment
+                            $canceledPayment = $this->stripeService->cancelPaymentIntent($payment->payment_id);
+                            
+                            // Queue the update (will be executed in batch later)
+                            $releasedPayments[] = [
+                                'id' => $payment->id,
+                                'payment_status' => $canceledPayment['status'] 
+                            ];
+                        }
+                    }
+                } catch (Exception $e) {
+                    $this->logError($taskId, $e, "Failed to release payment {$payment->payment_id}");
+                }
+            }
+            
+            // 3. Batch update released payment statuses
+            if (!empty($releasedPayments)) {
+                // Use updateMultiple or batch update method
+                foreach ($releasedPayments as $payment) {
+                    RecordStripe::where('id', $payment['id'])
+                        ->update(['payment_status' => $payment['payment_status']]);
+                }
+            }
+            
+            // 4. Create discounts in batch
+            $discountsToCreate = [];
+            foreach ($otherPayments as $payment) {
+                if (!empty($payment->user_id) && !empty($payment->amount)) {
+                    $discountsToCreate[] = [
+                        'user_id' => $payment->user_id,
+                        'amount' => $payment->amount,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+                }
+            }
+            
+            // Insert all discounts at once
+            if (!empty($discountsToCreate)) {
+                Discount::insert($discountsToCreate);
+            }
+            
+            DB::commit();
+            
+            return [
+                'released_payments' => count($releasedPayments),
+                'created_discounts' => count($discountsToCreate)
+            ];
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->logError($taskId, $e, "Transaction failed in releaseToBeCapturedPaymentsAndDiscountCreate");
+            return [
+                'released_payments' => 0,
+                'created_discounts' => 0,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
     public function capturePayments(array $startedTaskIds, $taskId) {
         $paymentData = DB::table('event_details')
             ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
@@ -34,9 +132,8 @@ trait RespondTaksTrait
         $updatedPayments = [];
         foreach ($resultList as $item) {
             try {
-                $stripe = new StripePayment();
                 if (isset($item['payment_id'])) {
-                    $paymentIntent = $stripe->retrieveStripePaymentByPaymentId($item['payment_id']);
+                    $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($item['payment_id']);
 
                     if ($paymentIntent->status == 'requires_capture') {
                         $capturedPayment = $paymentIntent->capture();
@@ -58,7 +155,7 @@ trait RespondTaksTrait
             DB::beginTransaction();
             try {
                 foreach ($updatedPayments as $payment) {
-                    PaymentTransaction::where('id', $payment['id'])
+                    RecordStripe::where('id', $payment['id'])
                         ->update(['payment_status' => $payment['payment_status']]);
                 }
                 DB::commit();
