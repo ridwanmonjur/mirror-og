@@ -26,15 +26,15 @@ function TransactionComponent() {
             this.transactions = [...initialTransactions.data]
             console.log(initialTransactions);
             console.log("Transaction History initiated!");
-            this.demoTransactions = this.transactions.slice(0, 5);
+            this.demoTransactions = [...this.transactions.slice(0, 3)];
             console.log(this.transactions);
         },
         
         // Data
         transactions: [],
         loading: false,
-        hasMore: true,
-        nextCursor: null,
+        hasMore: initialTransactions.has_more,
+        nextCursor: initialTransactions.next_cursor,
         demoTransactions: [],
 
         // Methods
@@ -45,20 +45,15 @@ function TransactionComponent() {
             
             try {
                 const params = new URLSearchParams({
-                    sort: this.filters.sort,
-                    direction: this.filters.direction,
-                    per_page: this.filters.per_page
+                    per_page: initialTransactions.per_page
                 });
 
-                if (this.filters.is_positive !== '') {
-                    params.append('is_positive', this.filters.is_positive);
-                }
 
                 if (!reset && this.nextCursor) {
                     params.append('cursor', this.nextCursor);
                 }
 
-                const response = await fetch(`/wallet/transactions?${params}`, {
+                const response = await fetch(`/wallet?${params}`, {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
@@ -505,15 +500,34 @@ function AccountComponent() {
    
 }
 
+function openTab (id) {
+    document.querySelectorAll('.container-main')?.forEach((element) => {
+        element.classList.add('d-none');
+    });
+
+    document.querySelector(`#${id}`)?.classList.remove('d-none');
+}
+
+window.openTab = openTab;
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    createApp({
-        AccountComponent,
-    }).mount('.settings');
-    createApp({
-        TransactionComponent,
-    }).mount('.wallet');
+
+    let settings = document.querySelector('.settings');
+    let wallet =  document.querySelector('.wallet');
+
+    if (settings) {
+        createApp({
+            AccountComponent,
+        }).mount(settings);
+    }
+  
+    if (wallet) {
+        createApp({
+            TransactionComponent,
+        }).mount(wallet);
+    }
+    
 });
 
 

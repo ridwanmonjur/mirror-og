@@ -301,7 +301,6 @@ public function showPaymentMethodForm(Request $request)
     }
 
     public function processTopup(Request $request){
-        dd("hit");
         $request->validate([
             'topup_amount' => 'required|numeric|min:5',
         ]);

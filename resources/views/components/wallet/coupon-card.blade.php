@@ -3,7 +3,7 @@
     'className' => $className,
 ])
 <div class="{{ $className }} d-flex justify-content-center  ">
-    <div class="coupon my-3 ">
+    <div class="coupon my-1 ">
         <div class="coupon__content w-100 row px-0 py-0 ">
             <div
                 class="col-lg-4  d-none d-lg-flex flex-column justify-content-center py-0 ps-1 pe-1">
