@@ -58,10 +58,19 @@ class DeadlineTasks extends Command
             $orgTaskIds = [];
 
             if ($type === 0) {
-                $tasks = Task::whereDate('action_time', $today)->where('action_time', '>=', $now)->where('action_time', '<=', $now->addMinutes(30))->get();
+                $tasks = Task
+                    ::whereDate('action_time', $today)
+                    ->where('taskable_type', BracketDeadline::class)
+                    ->where('action_time', '>=', $now)
+                    ->where('action_time', '<=', $now->addMinutes(30))
+                    ->get();
             } else {
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->get();
+                $deadlines = BracketDeadline::where('event_details_id', $eventIdInt)->get();
+                $deadlinesPast = $deadlines->pluck("id");
+                $tasks = Task::where('taskable_id', $deadlinesPast)
+                    ->where('taskable_type', BracketDeadline::class)
+                    ->get();
             }
 
             foreach ($tasks as $task) {

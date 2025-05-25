@@ -5,8 +5,11 @@ namespace App\Console\Commands;
 use App\Models\Task;
 use App\Console\Traits\PrinterLoggerTrait;
 use App\Console\Traits\RespondTaksTrait;
+use App\Jobs\HandleEventJoinConfirm;
+use App\Models\BracketDeadline;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
+use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
@@ -14,6 +17,15 @@ use Illuminate\Console\Command;
 class RespondTasks extends Command
 {
     use PrinterLoggerTrait, RespondTaksTrait;
+
+    protected $stripeService;
+
+    public function __construct(StripeConnection $stripeService)
+    {
+        parent::__construct();
+
+        $this->initializeTrait($stripeService);
+    }
 
     /**
      * The name and signature of the console command.
@@ -34,7 +46,8 @@ class RespondTasks extends Command
     /**
      * Execute the console command.
      */
-    public function handle() {
+    public function handle()
+    {
         $now = Carbon::now();
         $type = (int) $this->argument('type');
         $eventId = $this->option('event_id');
@@ -42,17 +55,23 @@ class RespondTasks extends Command
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
-            $endedTaskIds= []; $liveTaskIds = []; $startedTaskIds = []; $regOverTaskIds = [];
+            $endedTaskIds = [];
+            $liveTaskIds = [];
+            $startedTaskIds = [];
+            $regOverTaskIds = [];
 
             if ($type === 0) {
                 $tasks = Task
                     ::whereDate('action_time', $today)
+                    ->where('taskable_type', EventDetail::class)
                     ->where('action_time', '>=', $now)
                     ->where('action_time', '<=', $now->addMinutes(30))
                     ->get();
             } else {
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->get();   
+                $tasks = Task::where('taskable_id', $eventIdInt)
+                    ->where('taskable_type', EventDetail::class)
+                    ->get();
                 // dd("sss", $eventIdInt, $tasks);  
             }
 
@@ -83,6 +102,8 @@ class RespondTasks extends Command
             ];
 
             if ($type == 0 || $type == 1) {
+                $this->capturePayments($startedTaskIds, $taskId);
+
                 $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
                     ->where('join_status', 'confirmed')
                     ->with([
@@ -100,19 +121,15 @@ class RespondTasks extends Command
                 );
             }
 
-            if ($type == 0 || $type == 4) {
-                $this->capturePayments($regOverTaskIds, $taskId);
-            }
-
             if ($type == 0 || $type == 2) {
 
                 $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
-                ->where('join_status', 'confirmed')
-                ->with([
-                    'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
-                    ...$with,
-                ])
-                ->get();
+                    ->where('join_status', 'confirmed')
+                    ->with([
+                        'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
+                        ...$with,
+                    ])
+                    ->get();
 
                 EventDetail::whereIn('id', $liveTaskIds)->update(['status' => 'UPCOMING']);
                 $this->handleEventTypes(
@@ -137,7 +154,9 @@ class RespondTasks extends Command
                 EventDetail::whereIn('id', $endedTaskIds)->update(['status' => 'ENDED']);
 
                 [
-                    $processedEndedNotifications, $logs, $memberIdList
+                    $processedEndedNotifications,
+                    $logs,
+                    $memberIdList
                 ] = $this->getEndedNotifications($endedEvents);
 
                 $this->handleEventTypes(
@@ -154,12 +173,44 @@ class RespondTasks extends Command
                 );
             }
 
+            if ($type == 0 || $type == 4) {
+                foreach ($regOverTaskIds as $regOverTaskId) {
+
+                    $event = EventDetail::where('id', $taskId)
+                        ->with('tier')
+                        ->withCount(
+                            ['joinEvents' => function ($q) {
+                                $q->where('join_status', 'confirmed');
+                            }]
+                        )
+                        ->first();
+
+                    if ($event) {
+                        if ($event->join_events_count != $event->tier->tierTeamSlot) {
+                            $this->releaseToBeCapturedPaymentsAndDiscountCreate([$regOverTaskId], $taskId);
+
+                            EventDetail::whereIn('id', $regOverTaskId)->update(['status' => 'ENDED']);
+                            $deadlines = BracketDeadline::whereIn('event_details_id', $regOverTaskIds)->get();
+                            $deadlinesPast = $deadlines->pluck("id");
+
+                            Task::whereIn('taskable_id', $deadlinesPast)
+                                ->where('taskable_type', BracketDeadline::class)
+                                ->delete();
+
+                            Task::whereIn('taskable_id', $regOverTaskId)
+                                ->where('taskable_type', EventDetail::class)
+                                ->delete();
+
+                            BracketDeadline::whereIn('event_details_id', $regOverTaskIds)->delete();
+                        }
+                    }
+                }
+            }
+
             $now = Carbon::now();
             $this->logExit($taskId, $now);
         } catch (Exception $e) {
             $this->logError($taskId, $e);
         }
     }
-
-
 };

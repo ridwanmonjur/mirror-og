@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DiscountsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'discounts';
+    protected static string $relationship = 'wallet';
 
     protected static bool $hasAssociatedRecord = true;
 
@@ -26,13 +26,19 @@ class DiscountsRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Section::make()
                 ->schema([
-                    Forms\Components\TextInput::make('amount')
+                    Forms\Components\TextInput::make('usable_balance')
                         ->required()
                         ->numeric()
                         ->prefix('RM')                   
-                        ->label('Discount Amount'),
+                        ->label('Usable Balance'),
                 ])
-                ->description('Discounts can be given to users who are organizers, but organizers must make payments and cannot use discounts.')
+                ->schema([
+                    Forms\Components\TextInput::make('current_balance')
+                        ->required()
+                        ->numeric()
+                        ->prefix('RM')                   
+                        ->label('Current Balance'),
+                ])
                 ->columnSpan('full'),
             ]);
     }
@@ -41,7 +47,11 @@ class DiscountsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('amount')
+                Tables\Columns\TextColumn::make('usable_balance')
+                    ->prefix('RM ')     
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('current_balance')
                     ->prefix('RM ')     
                     ->sortable(),
               
@@ -49,7 +59,7 @@ class DiscountsRelationManager extends RelationManager
             
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => !$this->getOwnerRecord()->discounts()->exists())
+                ->visible(fn () => !$this->getOwnerRecord()->wallet()->exists())
                     // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
                     ->createAnother(false)
 

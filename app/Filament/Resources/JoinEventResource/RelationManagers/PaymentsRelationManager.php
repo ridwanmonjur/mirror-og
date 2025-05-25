@@ -69,7 +69,7 @@ class PaymentsRelationManager extends RelationManager
             Forms\Components\Select::make('payment_id')
                 ->label('Payment Transaction')
                 ->options(function () {
-                    $transactions = \App\Models\PaymentTransaction::all();
+                    $transactions = \App\Models\RecordStripe::all();
                     
                     if ($transactions->isEmpty()) {
                         return ['' => 'N/A - No transactions available'];
@@ -85,7 +85,7 @@ class PaymentsRelationManager extends RelationManager
                 ->searchable()
                 ->preload()
                 ->createOptionForm([
-                    // Fields matching your PaymentTransactionResource form
+                    // Fields matching your RecordStripeResource form
                     Forms\Components\TextInput::make('payment_id')
                         ->label('Payment Intent')
                         ->maxLength(255),

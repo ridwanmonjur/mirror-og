@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\UserDiscount;
+use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\UserDiscount>
+ * @extends Factory<\App\Models\Wallet>
  */
-final class UserDiscountFactory extends Factory
+final class WalletFactory extends Factory
 {
     /**
     * The name of the factory's corresponding model.
     *
     * @var string
     */
-    protected $model = UserDiscount::class;
+    protected $model = Wallet::class;
 
     /**
     * Define the model's default state.

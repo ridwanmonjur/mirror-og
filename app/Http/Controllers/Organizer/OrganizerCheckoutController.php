@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\CreateUpdateEventTask;
-use App\Models\Discount;
+use App\Models\EventCreateCoupon;
 use App\Models\EventDetail;
-use App\Models\PaymentTransaction;
-use App\Models\StripePayment;
+use App\Models\RecordStripe;
+use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class OrganizerCheckoutController extends Controller
 {
     private $stripeClient;
 
-    public function __construct(StripePayment $stripeClient)
+    public function __construct(StripeConnection $stripeClient)
     {
         $this->stripeClient = $stripeClient;
     }
@@ -52,11 +52,11 @@ class OrganizerCheckoutController extends Controller
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
                 'customer' => $user->stripe_customer_id,
             ]);
-            [$fee, $isDiscountApplied, $error] = array_values(
-                Discount::createDiscountFeeObject($request->coupon, $event->tier?->tierPrizePool)
+            [$fee, $isEventCreateCouponApplied, $error] = array_values(
+                EventCreateCoupon::createEventCreateCouponFeeObject($request->coupon, $event->tier?->tierPrizePool)
             );
 
-            if ($isDiscountApplied) {
+            if ($isEventCreateCouponApplied) {
                 session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon}!");
             } elseif (! is_null($error)) {
                 session()->flash('errorMessageCoupon', $error);
@@ -97,7 +97,7 @@ class OrganizerCheckoutController extends Controller
                     $paymentIntent['amount_received'] === $paymentIntent['amount'] &&
                     $paymentIntent['metadata']['eventId'] === $id
                 ) {
-                    $transaction = PaymentTransaction::createTransaction(
+                    $transaction = RecordStripe::createTransaction(
                         $intentId,
                         $paymentIntent['status'],
                         $paymentIntent['amount'] / 100

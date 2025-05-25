@@ -137,9 +137,9 @@ class User extends Authenticatable implements FilamentUser
             ->withTimestamps();
     }
 
-    public function discounts(): HasOne
+    public function wallet(): HasOne
     {
-        return $this->hasOne(UserDiscount::class, 'user_id');
+        return $this->hasOne(Wallet::class, 'user_id');
     }
 
     public function blocks(): BelongsToMany
@@ -156,6 +156,11 @@ class User extends Authenticatable implements FilamentUser
     public function hasBlocked(User $user): bool
     {
         return $this->blocks()->where('blocked_user_id', $user->id)->exists();
+    }
+
+    public function userCoupons()
+    {
+        return $this->hasMany(UserCoupon::class);
     }
 
     public static function getParticipants(Request $request): Builder

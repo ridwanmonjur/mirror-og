@@ -16,7 +16,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.__Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar.NavbarGoToSearchPage')
     <br>
     <main>
         <div class="d-flex justify-content-between mb-2">

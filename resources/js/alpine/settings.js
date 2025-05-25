@@ -17,11 +17,86 @@ function setErrorCurrentPassword (errorMessage) {
     error.textContent = errorMessage;
 }
 
+function TransactionComponent() {
+    const transactionsDataInput = document.getElementById('transactions-data');
+    const initialTransactions = JSON.parse(transactionsDataInput.value || '[]');
 
-let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    return {
+        init() {
+            this.transactions = [...initialTransactions.data]
+            console.log(initialTransactions);
+            console.log("Transaction History initiated!");
+            this.demoTransactions = [...this.transactions.slice(0, 3)];
+            console.log(this.transactions);
+        },
+        
+        // Data
+        transactions: [],
+        loading: false,
+        hasMore: initialTransactions.has_more,
+        nextCursor: initialTransactions.next_cursor,
+        demoTransactions: [],
 
-let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
+        // Methods
+        async loadTransactions(reset = false) {
+            if (this.loading) return;
+            
+            this.loading = true;
+            
+            try {
+                const params = new URLSearchParams({
+                    per_page: initialTransactions.per_page
+                });
+
+
+                if (!reset && this.nextCursor) {
+                    params.append('cursor', this.nextCursor);
+                }
+
+                const response = await fetch(`/wallet?${params}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const data = await response.json();
+
+                if (reset) {
+                    this.transactions = data.data;
+                } else {
+                    this.transactions.push(...data.data);
+                }
+
+                this.hasMore = data.has_more;
+                this.nextCursor = data.next_cursor;
+                
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        loadMore() {
+            this.loadTransactions(false);
+        },
+
+        resetAndLoad() {
+            this.transactions = [];
+            this.nextCursor = null;
+            this.hasMore = true;
+            this.loadTransactions(true);
+        }
+    };
+}
+
+
+
 function AccountComponent() {
+    let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
+
     return {
         isPasswordNull: userProfile.isPasswordNull,
         emailAddress: userProfile.email,
@@ -425,13 +500,34 @@ function AccountComponent() {
    
 }
 
+function openTab (id) {
+    document.querySelectorAll('.container-main')?.forEach((element) => {
+        element.classList.add('d-none');
+    });
+
+    document.querySelector(`#${id}`)?.classList.remove('d-none');
+}
+
+window.openTab = openTab;
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    createApp({
-        AccountComponent,
-    }).mount('#app');
 
+    let settings = document.querySelector('.settings');
+    let wallet =  document.querySelector('.wallet');
+
+    if (settings) {
+        createApp({
+            AccountComponent,
+        }).mount(settings);
+    }
+  
+    if (wallet) {
+        createApp({
+            TransactionComponent,
+        }).mount(wallet);
+    }
+    
 });
 
 
