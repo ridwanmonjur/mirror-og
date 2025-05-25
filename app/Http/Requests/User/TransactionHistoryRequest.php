@@ -15,20 +15,21 @@ class TransactionHistoryRequest extends FormRequest
     {
         return [
             'cursor' => 'nullable|string',
-            'type' => 'nullable|string',
+            'page' => 'nullable|string',
         ];
     }
 
     public function getCursor(): ?string
     {
-        return $this->get('cursor');
+        return $this->get('cursor', null);
     }
 
-
-    public function getType(): ?string
+    public function getPerPage(): ?string
     {
-        return $this->get('type');
+        return $this->get('page', 2);
     }
 
+
+   
 
 }

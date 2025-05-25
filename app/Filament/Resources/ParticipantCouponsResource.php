@@ -17,7 +17,7 @@ class ParticipantCouponsResource extends Resource
 {
     protected static ?string $model = ParticipantCoupon::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
     public static function form(Form $form): Form
     {
@@ -103,9 +103,9 @@ class ParticipantCouponsResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
+            // ->filters([
                 //
-            ])
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -14,7 +14,20 @@ class TransactionHistoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'type' => $this->type,
+            'link' => $this->link,
+            'amount' => $this->amount,
+            'summary' => $this->summary,
+            'isPositive' => $this->isPositive,
+            'date' => $this->date,
+            'formatted_amount' => $this->formatted_amount,
+            'formatted_date' => $this->formatted_date,
+            'formatted_time' => $this->formatted_time,
+            'formatted_date_time' => $this->formatted_date_time,
+        ];
     }
 
     

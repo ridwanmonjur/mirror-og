@@ -6,7 +6,10 @@
 </head>
 @section('content')
     @include('includes.Navbar.NavbarGoToSearchPage')
-    <main class="wallet">
+    
+    <main class="wallet" v-scope="TransactionComponent()" class="row" @vue:mounted="init">
+        <input type="hidden" id="transactions-data" value='@json($transactions)'>
+
         <div class="row container-main d-noneX mx-auto" id="wallet-main">
             <div class="col-12 col-lg-6 col-xl-5">
                 <div class="card mb-2  py-1 border border-3 border-primary rounded-30px ">
@@ -103,93 +106,9 @@
 
                                         <!-- Table Body -->
                                         <tbody>
-                                            <!-- Block: transaction-row -->
-                                            <tr class="transaction-row">
-                                                <!-- Element: transaction-row__cell with Modifier: --date -->
-                                                <td class="transaction-row__cell transaction-row__cell--date">
-                                                    21 May 2025,<br>
-                                                    8:02 PM
-                                                </td>
-                                                <!-- Element: transaction-row__cell with Modifier: --transaction -->
-                                                <td class="transaction-row__cell transaction-row__cell--transaction">
-                                                    <!-- Block: transaction-details -->
-                                                    <div class="transaction-details__title">Welcome to Driftwood: Into The
-                                                        Ocean</div>
-                                                    <p class="transaction-details__subtitle">Dota 2, Tournament, Starfish
-                                                    </p>
-                                                </td>
-                                                <!-- Element: transaction-row__cell with Modifier: --type -->
-                                                <td class="transaction-row__cell transaction-row__cell--type">Event Entry
-                                                    Fees</td>
-                                                <!-- Element: transaction-row__cell with Modifier: --total -->
-                                                <td class="transaction-row__cell transaction-row__cell--total">RM 25.00</td>
-                                            </tr>
+                                            <tr v-for="transaction in transactions" :key="transaction.id" class="transaction-row">
 
-                                            <tr class="transaction-row">
-                                                <td class="transaction-row__cell transaction-row__cell--date">
-                                                    15 May 2025,<br>
-                                                    3:45 PM
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--transaction">
-                                                    <div class="transaction-details__title">Wallet Funds Purchase RM 50.00
-                                                    </div>
-                                                    <p class="transaction-details__subtitle">Visa •••• 3865</p>
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--type">Funds Purchase
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--total">RM 50.00</td>
-                                            </tr>
-
-                                            <tr class="transaction-row">
-                                                <td class="transaction-row__cell transaction-row__cell--date">
-                                                    10 May 2025,<br>
-                                                    7:50 PM
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--transaction">
-                                                    <div class="transaction-details__title">Coastal Clash</div>
-                                                    <p class="transaction-details__subtitle">Valorant, Tournament, Starfish
-                                                    </p>
-                                                    <!-- Block: prize-badge with Modifier: --first-place -->
-                                                    <span class="prize-badge prize-badge--first-place">1st place</span>
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--type">Prize
-                                                    Winnings
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--total">RM 150.00
-                                                </td>
-                                            </tr>
-
-                                            <tr class="transaction-row">
-                                                <td class="transaction-row__cell transaction-row__cell--date">
-                                                    05 May 2025,<br>
-                                                    3:45 PM
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--transaction">
-                                                    <div class="transaction-details__title">Wallet Funds Withdrawal RM
-                                                        250.00</div>
-                                                    <p class="transaction-details__subtitle">Maybank •••• 5921</p>
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--type">Funds
-                                                    Withdrawal</td>
-                                                <td class="transaction-row__cell transaction-row__cell--total">RM 250.00
-                                                </td>
-                                            </tr>
-
-                                            <tr class="transaction-row">
-                                                <td class="transaction-row__cell transaction-row__cell--date">
-                                                    25 Apr 2025,<br>
-                                                    5:20 AM
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--transaction">
-                                                    <div class="transaction-details__title">Wallet Funds Purchase RM250.00
-                                                    </div>
-                                                    <p class="transaction-details__subtitle">Mastercard •••• 4570</p>
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--type">Funds
-                                                    Purchase
-                                                </td>
-                                                <td class="transaction-row__cell transaction-row__cell--total">RM 250.00
-                                                </td>
+                                                <x-wallet.transaction-item :coupon="$coupon" :className="'col-12'" />
                                             </tr>
                                         </tbody>
                                     </table>
@@ -328,6 +247,8 @@
                 </div>
             </div>
         </div>
-
+        
     </main>
+
+
 @endsection

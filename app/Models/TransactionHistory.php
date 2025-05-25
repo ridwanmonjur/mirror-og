@@ -30,7 +30,32 @@ class TransactionHistory extends Model
         'summary',
         'isPositive',
         'date',
+        'user_id'
     ];
+
+    protected $appends = [
+        'formatted_date',
+        'formatted_time'
+    ];
+
+
+     /**
+     * Get the formatted date in [21 May 2025] format.
+     */
+    public function getFormattedDateAttribute()
+    {
+        return $this->date->format('j M Y');
+    }
+
+    /**
+     * Get the formatted time in [8:05 PM] format.
+     */
+    public function getFormattedTimeAttribute()
+    {
+        return $this->date->format('g:i A');
+    }
+
+   
 
     /**
      * The attributes that should be cast.
@@ -54,47 +79,41 @@ class TransactionHistory extends Model
     }
 
     /**
-     * Cursor pagination scope for efficient pagination.
-     */
-    public function scopeCursorPaginate($query, $perPage = 15, $cursor = null, $sortField = 'date', $sortDirection = 'desc')
-    {
-        $allowedFields = ['date', 'amount', 'name', 'type', 'created_at', 'id'];
-        $sortField = in_array($sortField, $allowedFields) ? $sortField : 'date';
-        
-        // Always add id as secondary sort to ensure consistency
-        $query->orderBy($sortField, $sortDirection)->orderBy('id', $sortDirection);
-        
-        if ($cursor) {
-            $operator = $sortDirection === 'desc' ? '<' : '>';
-            $query->where($sortField, $operator, $cursor);
-        }
-        
-        return $query->limit($perPage + 1); // Get one extra to check if there's more
-    }
+ * Cursor pagination scope for efficient pagination.
+ */
+/**
+ * Get cursor paginated results with metadata.
+ */
+public function scopeCursorPaginated($query, $perPage = 15, $cursor = null)
+{
 
-    /**
-     * Get cursor paginated results with metadata.
-     */
-    public static function getCursorPaginated($perPage = 15, $cursor = null, $sortField = 'date', $sortDirection = 'desc')
-    {
-        $query = static::cursorPaginate($perPage, $cursor, $sortField, $sortDirection);
-        $results = $query->get();
-        
-        $hasMore = $results->count() > $perPage;
-        if ($hasMore) {
-            $results->pop(); // Remove the extra item
-        }
-        
-        $nextCursor = $hasMore && $results->isNotEmpty() 
-            ? $results->last()->{$sortField} 
-            : null;
-            
-        return [
-            'data' => $results,
-            'has_more' => $hasMore,
-            'next_cursor' => $nextCursor,
-            'per_page' => $perPage,
-        ];
+    $query->orderBy('id', 'desc')->limit($perPage + 1);
+    
+    if ($cursor) {
+        $operator = '<' ;
+        $query->where('id', $operator, $cursor);
     }
+    
+    $results = $query->get();
+
+    
+    $hasMore = $results->count() > $perPage;
+    if ($hasMore) {
+        $results->pop();
+    }
+    
+    $nextCursor = $hasMore && $results->isNotEmpty() 
+        ? $results->last()->{'id'} 
+        : null;
+        
+    return [
+        'data' => $results,
+        'has_more' => $hasMore,
+        'next_cursor' => $nextCursor,
+        'per_page' => $perPage,
+    ];
+}
+
+    public $timestamps = NULL;
 
 }

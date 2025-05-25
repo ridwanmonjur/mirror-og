@@ -23,7 +23,55 @@ class TransactionHistoryResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make('Transaction Details')
+                    ->schema([
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->placeholder('Transaction name'),
+
+                                Forms\Components\TextInput::make('type')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->placeholder('Write transaction type'),
+                            ]),
+
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('amount')
+                                    ->required()
+                                    ->numeric()
+                                    ->inputMode('decimal')
+                                    ->step(0.01)
+                                    ->minValue(0)
+                                    ->prefix('RM')
+                                    ->placeholder('0.00'),
+
+                                Forms\Components\Toggle::make('isPositive')
+                                    ->label('Positive Amount')
+                                    ->helperText('Toggle on for income/credits, off for expenses/debits')
+                                    ->default(true),
+                            ]),
+
+                        Forms\Components\DateTimePicker::make('date')
+                            ->required()
+                            ->default(now())
+                            ->displayFormat('M j, Y g:i A')
+                            ->placeholder('Select date and time'),
+
+                        Forms\Components\TextInput::make('link')
+                            ->url()
+                            ->maxLength(500)
+                            ->placeholder('https://example.com')
+                            ->helperText('Optional link related to this transaction'),
+
+                        Forms\Components\Textarea::make('summary')
+                            ->maxLength(1000)
+                            ->rows(3)
+                            ->placeholder('Additional details about this transaction...'),
+                    ]),
             ]);
     }
 
@@ -31,14 +79,65 @@ class TransactionHistoryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('medium')
+                    ->tooltip(fn (TransactionHistory $record): string => $record->summary ?? 'No summary'),
+
+                Tables\Columns\BadgeColumn::make('type')
+                    ->colors([
+                        'success' => 'income',
+                        'danger' => 'expense',
+                        'warning' => 'transfer',
+                        'info' => 'investment',
+                        'gray' => ['fee', 'other'],
+                        'primary' => 'refund',
+                    ])
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('formatted_amount')
+                    ->label('Amount')
+                    ->money('USD')
+                    ->color(fn (TransactionHistory $record): string => $record->isPositive ? 'success' : 'danger')
+                    ->weight('bold')
+                    ->sortable(['amount'])
+                    ->alignEnd(),
+
+                Tables\Columns\IconColumn::make('isPositive')
+                    ->label('Type')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-arrow-trending-up')
+                    ->falseIcon('heroicon-o-arrow-trending-down')
+                    ->trueColor('success')
+                    ->falseColor('danger')
+                    ->tooltip(fn (TransactionHistory $record): string => $record->isPositive ? 'Credit' : 'Debit'),
+
+                Tables\Columns\TextColumn::make('date')
+                    ->dateTime('M j, Y g:i A')
+                    ->sortable()
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('link')
+                    ->label('Link')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'View' : '')
+                    ->url(fn (TransactionHistory $record): ?string => $record->link)
+                    ->openUrlInNewTab()
+                    ->color('primary')
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('M j, Y g:i A')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime('M j, Y g:i A')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ]);
+           
+            ;
             
     }
 

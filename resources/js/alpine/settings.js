@@ -17,6 +17,84 @@ function setErrorCurrentPassword (errorMessage) {
     error.textContent = errorMessage;
 }
 
+function TransactionComponent() {
+    const transactionsDataInput = document.getElementById('transactions-data');
+    const initialTransactions = JSON.parse(transactionsDataInput.value || '[]');
+
+    return {
+        init() {
+            this.transactions = [...initialTransactions.data]
+            console.log(initialTransactions);
+            console.log("Transaction History initiated!");
+            this.demoTransactions = this.transactions.slice(0, 5);
+            console.log(this.transactions);
+        },
+        
+        // Data
+        transactions: [],
+        loading: false,
+        hasMore: true,
+        nextCursor: null,
+        demoTransactions: [],
+
+        // Methods
+        async loadTransactions(reset = false) {
+            if (this.loading) return;
+            
+            this.loading = true;
+            
+            try {
+                const params = new URLSearchParams({
+                    sort: this.filters.sort,
+                    direction: this.filters.direction,
+                    per_page: this.filters.per_page
+                });
+
+                if (this.filters.is_positive !== '') {
+                    params.append('is_positive', this.filters.is_positive);
+                }
+
+                if (!reset && this.nextCursor) {
+                    params.append('cursor', this.nextCursor);
+                }
+
+                const response = await fetch(`/wallet/transactions?${params}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const data = await response.json();
+
+                if (reset) {
+                    this.transactions = data.data;
+                } else {
+                    this.transactions.push(...data.data);
+                }
+
+                this.hasMore = data.has_more;
+                this.nextCursor = data.next_cursor;
+                
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        loadMore() {
+            this.loadTransactions(false);
+        },
+
+        resetAndLoad() {
+            this.transactions = [];
+            this.nextCursor = null;
+            this.hasMore = true;
+            this.loadTransactions(true);
+        }
+    };
+}
+
 
 
 function AccountComponent() {
@@ -433,7 +511,9 @@ document.addEventListener('DOMContentLoaded', () => {
     createApp({
         AccountComponent,
     }).mount('.settings');
-
+    createApp({
+        TransactionComponent,
+    }).mount('.wallet');
 });
 
 

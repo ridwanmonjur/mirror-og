@@ -193,6 +193,32 @@ public function showPaymentMethodForm(Request $request)
         return redirect()->route('wallet.dashboard')->with('success', 'Payment method added successfully!');
     }
 
+    private function getTransactionHistory(TransactionHistoryRequest $request, $user) {
+        $fields = [
+            'name',
+            'type',
+            'link',
+            'amount',
+            'summary',
+            'isPositive',
+            'date',
+            'user_id',
+            'id'
+        ];
+
+        $query = TransactionHistory::where('user_id', $user->id)
+            ->select($fields);
+
+        $result = $query->cursorPaginated(
+            $request->getPerPage(),
+            $request->getCursor(),
+        );
+
+        $result['data'] = TransactionHistoryResource::collection($result['data'])->toArray(request());
+
+        return $result;
+    }
+
     /**
      * Show the wallet dashboard
      */
@@ -201,15 +227,10 @@ public function showPaymentMethodForm(Request $request)
         $user = $request->get('user');
 
         if ($request->expectsJson()) {
-            $query = TransactionHistory::where('user_id', $user->id ?? $user);
-            $result = $query->getCursorPaginated(
-                perPage: $request->getPerPage(),
-                cursor: $request->getCursor(),
-            );
-            $result['data'] = TransactionHistoryResource::collection($result['data']);
-            return response()->json($result);
-
+            return response()->json($this->getTransactionHistory($request, $user));
          }
+
+        $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
 
 
         $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
@@ -220,14 +241,14 @@ public function showPaymentMethodForm(Request $request)
             ->get();
         
         $demoCoupons = $couponsQ->take(2)->toArray();
-
         $coupons = $couponsQ->toArray();
-
+        // dd($transactions);
 
         return view('Users.Dashboard', [
             'wallet' => $wallet,
             'coupons' => $coupons,
-            'demoCoupons' => $demoCoupons
+            'demoCoupons' => $demoCoupons,
+            'transactions' => $transactions
         ]);
     }
 
