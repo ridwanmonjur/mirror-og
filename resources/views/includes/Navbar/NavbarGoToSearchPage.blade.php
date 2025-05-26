@@ -25,6 +25,10 @@
         if ($notificationsCount) {
             $notificationsCountArray = $notificationsCount->toArray();
         }
+
+        $wallet = \App\Models\Wallet::retrieveOrCreateCache($user->id);
+
+
     } else {
         $routeLogo = route('public.landing.view');
     }

@@ -134,7 +134,7 @@ class StripeController extends Controller
 public function showPaymentMethodForm(Request $request)
 {
     $user = $request->get('user');
-    $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
+    $wallet = Wallet::retrieveOrCreateCache($user->id);
 
         $customer = $this->stripeClient->createStripeCustomer([
             'email' => $user->email,
@@ -162,7 +162,7 @@ public function showPaymentMethodForm(Request $request)
     public function savePaymentMethod(Request $request)
     {
         $user = $request->get('user');
-        $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
     
         $paymentMethodId = $request->input('payment_method_id');
         $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
@@ -233,7 +233,7 @@ public function showPaymentMethodForm(Request $request)
         $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
 
 
-        $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
         $couponsQ = ParticipantCoupon::where('is_public', true)
             ->orWhereHas('userCoupons', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -255,7 +255,7 @@ public function showPaymentMethodForm(Request $request)
     public function processWithdrawal(Request $request)
     {
         $user = $request->get('user');
-        $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
         // dd($wallet);
 
         if (!$wallet->isReadyForPayouts()) {
@@ -308,7 +308,8 @@ public function showPaymentMethodForm(Request $request)
         $user = $request->get('user');
         $amount = $request->topup_amount;
         try {
-            $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
+            $wallet = Wallet::retrieveOrCreateCache($user->id);
+
             $wallet->update([
                 'usable_balance' => $wallet->usable_balance + $amount,
                 'current_balance' => $wallet->current_balance + $amount,
@@ -347,7 +348,7 @@ public function showPaymentMethodForm(Request $request)
             return redirect()->back()->with('error', 'You have already used this coupon.');
         }
 
-        $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
         $wallet->update([
             'usable_balance' => $wallet->usable_balance + $coupon->amount,
             'current_balance' => $wallet->usable_balance + $coupon->amount,

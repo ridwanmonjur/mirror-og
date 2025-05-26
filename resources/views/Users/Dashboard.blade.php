@@ -75,7 +75,7 @@
                     <div class="card-body px-0 py-0">
                         <div class="container-fluid px-0 py-0">
                             <div class="transaction-history">
-                                <div class="transaction-history__header d-flex justify-content-between "
+                                <div class="transaction-history__header d-flex justify-content-between my-3"
 
                                 >
                                     <h3 class="transaction-history__title text-secondary">Most recent transactions</h3>
@@ -92,7 +92,7 @@
                                 </div>
 
                                 <div class="table-responsive mb-4">
-                                    <table class="transaction-history__table table responsive">
+                                    <table class="transaction-history__table table ">
                                         <thead class="transaction-table__header">
                                             <tr>
                                                 <th scope="col" class="transaction-table__header-cell">Date</th>
@@ -127,8 +127,17 @@
                                 @include('includes.Flash')
 
                                 <!-- Topup Form -->
-                                <div class="mt-4">
-                                    <h4>Add Funds</h4>
+                                <div class="my-2">
+                                    <div class="row text-secondary">
+                                        <h5 class="col-6 text-start">Add Money</h5>
+                                        <p class="col-6 text-end cursor-pointer" onclick="openTab('wallet-main')">
+                                            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                                                </svg>
+                                            </span>
+                                            <i class="d-inline">Go back </i>
+                                        </p>
+                                    </div>
                                     <form action="{{ route('wallet.checkout') }}" method="POST">
                                         @csrf
                                         <div class="form-group mb-3">
@@ -141,7 +150,7 @@
                                     </form>
                                 </div>
 
-                                <div class="mt-3">
+                                <div class="my-3">
                                     <a href="{{ route('wallet.payment-method') }}"
                                         class="btn rounded-pill btn-primary text-light ">
                                         Change Payment Method
@@ -149,20 +158,20 @@
                                 </div>
                             </div>
                         @else
-                            <div class="mt-2 text-center">
+                            <div class="my-2 text-center">
                                 <p class="text-red">
                                     <span></span>
                                     You need to add a payment method to withdraw your funds.
                                 </p>
                                 <a href="{{ route('wallet.payment-method') }}"
-                                    class="btn rounded-pill btn-primary text-light text-light mt-2">
+                                    class="btn rounded-pill btn-primary text-light text-light my-2">
                                     Add Payment Method
                                 </a>
                             </div>
                         @endif
 
                         @if ($wallet->last_payout_at)
-                            <div class="mt-3">
+                            <div class="my-3">
                                 <p>Last withdrawal: {{ $wallet->last_payout_at->format('F j, Y, g:i a') }}</p>
                             </div>
                         @endif
@@ -172,11 +181,21 @@
         </div>
 
         <div class="d-none mx-auto px-0 container-main " id="wallet-withdraw-fund">
-            <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-75 rounded-30px">
+            <div class="card px-0 py-0 border border-2 mx-auto border-secondary my-2 w-75 rounded-30px">
                 <div class="card-body px-2 py-2">
                     <div class=" px-2 py-2">
+                        <div class="row text-secondary">
+                            <h5 class="col-6 text-start">Withdraw Money</h5>
+                            <p class="col-6 text-end cursor-pointer" onclick="openTab('wallet-main')">
+                                 <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                                    </svg>
+                                </span>
+                                <i class="d-inline">Go back </i>
+                            </p>
+                        </div>
                         @if ($wallet->has_bank_account)
-                            <div class="mt-3">
+                            <div class="my-1">
                                 @include('includes.Flash')
 
                                 <p>Withdrawal Method: {{ $wallet->bank_name }} (****{{ $wallet->bank_last4 }})</p>
@@ -203,7 +222,7 @@
 
                                 <!-- Coupon Redemption Form (if coupons exist) -->
                                 @if (isset($has_coupons) && $has_coupons)
-                                    <div class="mt-4">
+                                    <div class="my-4">
                                         <h4>Redeem Coupon</h4>
                                         <form action="{{ route('wallet.redeem-coupon') }}" method="POST">
                                             @csrf
@@ -217,7 +236,7 @@
                                     </div>
                                 @endif
 
-                                <div class="mt-3">
+                                <div class="my-3">
                                     <a href="{{ route('wallet.payment-method') }}"
                                         class="btn rounded-pill btn-primary text-light ">
                                         Change Payment Method
@@ -225,20 +244,20 @@
                                 </div>
                             </div>
                         @else
-                            <div class="mt-2 text-center">
+                            <div class="my-2 text-center">
                                 <p class="text-red">
                                     <span></span>
                                     You need to add a payment method to withdraw your funds.
                                 </p>
                                 <a href="{{ route('wallet.payment-method') }}"
-                                    class="btn rounded-pill btn-primary text-light text-light mt-2">
+                                    class="btn rounded-pill btn-primary text-light text-light my-2">
                                     Add Payment Method
                                 </a>
                             </div>
                         @endif
 
                         @if ($wallet->last_payout_at)
-                            <div class="mt-3">
+                            <div class="my-3">
                                 <p>Last withdrawal: {{ $wallet->last_payout_at->format('F j, Y, g:i a') }}</p>
                             </div>
                         @endif
@@ -266,7 +285,7 @@
                         <div class="mt-3">
 
                             <div class="table-responsive mb-4">
-                                <table class="transaction-history__table table responsive">
+                                <table class="transaction-history__table table ">
                                     <thead class="transaction-table__header">
                                         <tr>
                                             <th scope="col" class="transaction-table__header-cell">Date</th>
@@ -286,7 +305,7 @@
                                 </table>
                             </div>
 
-                            <div v-if="hasMore" class="text-center mt-4">
+                            <div v-if="hasMore" class="text-center my-4">
                                 <button v-on:click="loadMore" :disabled="loading"
                                     class="btn text-light rounded-pill btn-primary">
                                     <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
