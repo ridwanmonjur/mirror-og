@@ -4,18 +4,18 @@
 ])
 <div class="{{ $className }} d-flex justify-content-center  ">
     <div class="coupon my-1 ">
-        <div class="coupon__content w-100 row px-0 py-0 ">
+        <div class=" w-100 row px-0 py-0 ">
             <div
                 class="col-lg-4  d-none d-lg-flex flex-column justify-content-center py-0 ps-1 pe-1">
                 <h5 class="text-white my-2 py-0">RM {{ $coupon['amount'] }} </h5>
-                <small class="text-light">{{ $coupon['expires_at_human'] }}</small>
+                <small class="text-light fst-italic">{{ $coupon['expires_at_human'] }}</small>
             </div>
-            <div class="coupon__details py-2 h-100  col-lg-8  ">
-                <small class="py-0 my-0 d-lg-none text-light">
+            <div class="coupon__details py-2 h-100  col-lg-8 pe-0 ">
+                <div class="py-0 my-0 fs-5 d-lg-none text-light mb-2">
                     <u>RM
-                        {{ $coupon['amount'] }} {{ $coupon['expires_at_human'] }}
-                    </u>
-                </small>
+                        {{ $coupon['amount'] }} ({{ $coupon['expires_at_human'] }}) <br>
+                    </u> 
+                </div>
                 <div class="coupon__subtitle w-100  "    >
                     {{ $coupon['description'] ?? 'No description. No description. No description. No description. No description.' }}
                 </div>

@@ -62,9 +62,13 @@
                                 </span>
                             </p>
                             <div class="row  p-0">
-                                @foreach ($demoCoupons as $coupon)
-                                    <x-wallet.coupon-card :coupon="$coupon" :className="'col-12'" />
-                                @endforeach
+                                @if (isset($demoCoupons[0]))
+                                    @foreach ($demoCoupons as $coupon)
+                                        <x-wallet.coupon-card :coupon="$coupon" :className="'col-12'" />
+                                    @endforeach
+                                @else
+                                    <x-wallet.no-list :text="'No coupons available yet!'" />
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -75,11 +79,11 @@
                     <div class="card-body px-0 py-0">
                         <div class="container-fluid px-0 py-0">
                             <div class="transaction-history">
-                                <div class="transaction-history__header d-flex justify-content-between my-3"
+                                <div class="row py-0 px-3 my-0"
 
                                 >
-                                    <h3 class="transaction-history__title text-secondary">Most recent transactions</h3>
-                                    <div onclick="openTab('wallet-view-transactions')" class="transaction-history__view-link text-secondary cursor-pointer">
+                                    <h3 class="transaction-history__title  col-6 text-secondary">Most recent transactions</h3>
+                                    <div onclick="openTab('wallet-view-transactions')" class="col-6 text-end text-secondary cursor-pointer">
                                         View full transaction history
                                         <span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
@@ -91,8 +95,8 @@
                                     </div>
                                 </div>
 
-                                <div class="table-responsive mb-4">
-                                    <table class="transaction-history__table table ">
+                                <div class="table-responsive my-2">
+                                    <table class="transaction-history__table table " v-if="demoTransactions && demoTransactions[0]">
                                         <thead class="transaction-table__header">
                                             <tr>
                                                 <th scope="col" class="transaction-table__header-cell">Date</th>
@@ -110,6 +114,9 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div v-else>
+                                        <x-wallet.no-list :text="'No transactions yet!'" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -122,22 +129,23 @@
             <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-75 rounded-30px">
                 <div class="card-body px-2 py-2">
                     <div class=" px-2 py-2">
+                         <div class=" px-1 py-0 row my-0"
+                        >
+                            <h3 class="transaction-history__title text-secondary col-6">Add funds</h3>
+                            <div onclick="openTab('wallet-main')" class="text-end text-secondary col-6 cursor-pointer">
+                                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                                    </svg>
+                                </span>
+                                Go back
+                            </div>
+                        </div>
                         @if ($wallet->has_bank_account)
                             <div class="mt-3">
                                 @include('includes.Flash')
 
                                 <!-- Topup Form -->
                                 <div class="my-2">
-                                    <div class="row text-secondary">
-                                        <h5 class="col-6 text-start">Add Money</h5>
-                                        <p class="col-6 text-end cursor-pointer" onclick="openTab('wallet-main')">
-                                            <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-                                                </svg>
-                                            </span>
-                                            <i class="d-inline">Go back </i>
-                                        </p>
-                                    </div>
                                     <form action="{{ route('wallet.checkout') }}" method="POST">
                                         @csrf
                                         <div class="form-group mb-3">
@@ -216,32 +224,14 @@
                                     </form>
                                 @else
                                     <div class="alert alert-info">
-                                        No funds available for withdrawal.
+                                        <x-wallet.no-list :text="'No funds available for withdrawal!'" />
                                     </div>
                                 @endif
 
-                                <!-- Coupon Redemption Form (if coupons exist) -->
-                                @if (isset($has_coupons) && $has_coupons)
-                                    <div class="my-4">
-                                        <h4>Redeem Coupon</h4>
-                                        <form action="{{ route('wallet.redeem-coupon') }}" method="POST">
-                                            @csrf
-                                            <div class="form-group mb-3">
-                                                <label for="coupon_code">Coupon Code</label>
-                                                <input type="text" id="coupon_code" name="coupon_code"
-                                                    class="form-control" required>
-                                            </div>
-                                            <button type="submit" class="btn btn-info">Redeem Coupon</button>
-                                        </form>
-                                    </div>
-                                @endif
+                                
+                                    
 
-                                <div class="my-3">
-                                    <a href="{{ route('wallet.payment-method') }}"
-                                        class="btn rounded-pill btn-primary text-light ">
-                                        Change Payment Method
-                                    </a>
-                                </div>
+                                
                             </div>
                         @else
                             <div class="my-2 text-center">
@@ -273,7 +263,7 @@
                     style="min-width: 95vw;">
                     <div class="card-body px-2 py-2">
                         <div class="d-flex justify-content-between cursor-pointer" >
-                            <h3 class="transaction-history__title ">My Coupons</h3>
+                            <h3 class="transaction-history__title ">My Transactions</h3>
                             <span onclick="openTab('wallet-main')" class="cursor-pointer">
                                 <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
@@ -284,7 +274,7 @@
                         </div>
                         <div class="mt-3">
 
-                            <div class="table-responsive mb-4">
+                            <div class="table-responsive mb-4" v-if="transactions && transactions[0]">
                                 <table class="transaction-history__table table ">
                                     <thead class="transaction-table__header">
                                         <tr>
@@ -303,6 +293,9 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div v-else>
+                                <x-wallet.no-list :text="'No transactions available!'" />
                             </div>
 
                             <div v-if="hasMore" class="text-center my-4">
@@ -349,6 +342,18 @@
             <div class="card px-0 py-0 border border-2 mx-auto border-secondary center-container rounded-30px">
                 <div class="card-body px-0 py-0">
                     <div class="container-fluid px-0 py-0">
+                        <div class="my-4">
+                            <h4>Redeem Coupon</h4>
+                            <form action="{{ route('wallet.redeem-coupon') }}" method="POST">
+                                @csrf
+                                <div class="form-group mb-3">
+                                    <label for="coupon_code">Coupon Code</label>
+                                    <input type="text" id="coupon_code" name="coupon_code"
+                                        class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-info">Redeem Coupon</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
