@@ -334,7 +334,7 @@
                                     <x-wallet.coupon-card :coupon="$coupon" :className="' col-lg-6 col-xl-4 '" />
                                 @endforeach
                             @else
-                                <x-wallet.no-list :text="'No coupons available!'">
+                                <x-wallet.no-list :text="'No coupons available!'"/>
                             @endif
                         </div>
                     </div>
