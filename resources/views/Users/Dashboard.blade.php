@@ -329,9 +329,13 @@
                             </span>
                         </div>
                         <div class="px-0 pt-4 pb-4 row">
-                            @foreach ($coupons as $coupon)
-                                <x-wallet.coupon-card :coupon="$coupon" :className="' col-lg-6 col-xl-4 '" />
-                            @endforeach
+                            @if (isset($coupons[0]))
+                                @foreach ($coupons as $coupon)
+                                    <x-wallet.coupon-card :coupon="$coupon" :className="' col-lg-6 col-xl-4 '" />
+                                @endforeach
+                            @else
+                                <x-wallet.no-list>
+                            @endif
                         </div>
                     </div>
                 </div>
