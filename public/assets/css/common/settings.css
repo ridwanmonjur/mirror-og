@@ -48,6 +48,7 @@ main.settings {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .rounded-30px {
@@ -120,6 +121,8 @@ main.settings {
     border-radius: 12px;
     overflow: hidden;
     margin: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 /* Element: transaction-history__header - Mobile First */
