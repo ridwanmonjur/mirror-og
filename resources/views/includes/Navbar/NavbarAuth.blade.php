@@ -222,26 +222,36 @@
                 </svg>
                 <span>My Teams</span>
             </a>
-            <a class="dropdown-item  py-navbar my-0  ps-4 align-middle " href="{{ url('/wallet') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#808080" class="bi bi-wallet me-3" viewBox="0 0 16 16">
-                <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1"/>
-                </svg>
-             
-                <span>My Wallet</span>
-            </a>
             <a class="dropdown-item  py-navbar my-0  ps-4 align-middle " href="{{ route('user.settings.view') }}">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#808080" class="bi bi-gear-fill me-3" viewBox="0 0 16 16">
                     <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"></path>
                 </svg>
                 <span>Settings</span>
             </a>
-             <a class=" dropdown-item border-secondary border-1 border-bottom py-navbar my-0  ps-4 align-middle  " href="{{ route('public.contact.view') }}">
+             <a class=" dropdown-item py-navbar my-0  ps-4 align-middle  " href="{{ route('public.contact.view') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#808080" class="bi bi-person-rolodex me-3" viewBox="0 0 16 16">
                     <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
                     <path d="M1 1a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h.5a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h.5a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6.707L6 1.293A1 1 0 0 0 5.293 1zm0 1h4.293L6 2.707A1 1 0 0 0 6.707 3H15v10h-.085a1.5 1.5 0 0 0-2.4-.63C11.885 11.223 10.554 10 8 10c-2.555 0-3.886 1.224-4.514 2.37a1.5 1.5 0 0 0-2.4.63H1z"/>
                 </svg>
                 <span>Contact us</span>
             </a>
+            <a class="dropdown-item  py-2 my-0  d-flex justify-content-start align-items-center  border-top border-bottom border-secondary ps-4 align-middle " href="{{ url('/wallet') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#43A4D7" class="bi bi-wallet me-3" viewBox="0 0 16 16">
+                <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1"/>
+                </svg>
+                <div>
+                    <span>
+                        My Wallet  
+                    </span><br>
+                    @if ($wallet->usable_balance)
+                        <span class="text-primary"> RM {{$wallet->usable_balance}} </span>
+                    @else
+                        <span class="text-primary"> RM 0 </span>
+                    @endif
+                </div>
+            </a>
+            
+            
             
         @endif
         @if ($user->role == 'ADMIN' )
