@@ -509,8 +509,30 @@ function openTab (id) {
     document.querySelector(`#${id}`)?.classList.remove('d-none');
 }
 
-window.openTab = openTab;
+function populateCoupons (event) {
+    openTab('wallet-redeem-coupons');
+    let target = event.currentTarget;
+    let { couponCode } = target.dataset;
+    console.log({ couponCode });
+    let couponElement = document.querySelector("input#coupon_code");
+    console.log({ couponElement });
 
+    if (couponElement) {
+        couponElement.value = couponCode;
+    }
+}
+
+function fillInput (inputId, value) {
+   
+    let couponElement = document.querySelector(`input#${inputId}`);
+    if (couponElement) {
+        couponElement.value = value;
+    }
+}
+
+window.openTab = openTab;
+window.fillInput = fillInput;
+window.populateCoupons = populateCoupons;
 
 document.addEventListener('DOMContentLoaded', () => {
 
