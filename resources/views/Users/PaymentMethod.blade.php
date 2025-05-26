@@ -6,7 +6,7 @@
 </head>
 
 @section('content')
-    <main class="wallet"  @vue:mounted="init">
+    <main class="wallet2"  @vue:mounted="init">
         @include('includes.Navbar.NavbarGoToSearchPage')
         <div class="row  mx-auto px-0 container-main">
             <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-75 rounded-30px">

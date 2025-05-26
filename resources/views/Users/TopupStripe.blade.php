@@ -1,11 +1,12 @@
 @extends('layout.app')
 
 <head>
-    <link rel="stylesheet" href="{{ asset('/assets/css/common/fullpage.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
 @section('content')
+    <main class="wallet2">
     @include('includes.Navbar.NavbarGoToSearchPage')
     <div class="d-none" id="payment-variables" data-payment-amount="{{ $amount }}" data-user-email="{{ $user->email }}"
         data-user-name="{{ $user->name }}" data-stripe-customer-id="{{ $user->stripe_customer_id }}"
@@ -17,15 +18,15 @@
     <div class="row mt-4">
         <div class="mx-auto" style="max-width: 900px;">
 
-            <div class="card">
-                <div class="card-header">Topup your wallet</div>
+            <div class="card mb-2  py-1 border border-3  rounded-30px">
+                {{-- <div class="card-header">Topup your wallet</div> --}}
 
-                <div class="card-body">
+                <div class="card-body ">
+                <h5 class="my-3 text-secondary text-center">Current Balance </h5>
                     @include('includes.Flash')
 
                     <div id="cardLogoId" class="payment-element-children-view">
                         <form method="POST" id="stripe-form">
-                            <br>
                             <div id="spinner-element" class="d-flex justify-content-center mt-5">
                                 <div class="spinner-border text-primary" role="status">
                                     <br><br>
@@ -55,6 +56,7 @@
         </div>
 
     </div>
+    </main>
 @endsection
 <script src="https://js.stripe.com/v3/"></script>
 <script>
