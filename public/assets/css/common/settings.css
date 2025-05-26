@@ -60,8 +60,6 @@ main.settings {
     display: flex;
     padding-left: 5px;
     padding-right: 5px;
-    align-items: center;
-    min-height: 90vh;
     justify-content: center;
 }
 
@@ -125,15 +123,6 @@ main.settings {
     padding-bottom: 20px;
 }
 
-/* Element: transaction-history__header - Mobile First */
-.transaction-history__header {
-    background: transparent;
-    padding: 16px 0;
-    border-bottom: none;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start !important;
-}
 
 /* Element: transaction-history__title - Mobile First */
 .transaction-history__title {
@@ -143,19 +132,7 @@ main.settings {
     margin: 0;
 }
 
-/* Element: transaction-history__view-link - Mobile First */
-.transaction-history__view-link {
-    color: #5c6bc0;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-}
 
-/* Modifier: transaction-history__view-link--hovered */
-.transaction-history__view-link:hover {
-    color: #3f51b5;
-    text-decoration: underline;
-}
 
 /* Element: transaction-history__table - Mobile First */
 .transaction-history__table {
@@ -276,18 +253,12 @@ main.settings {
         border-radius: 14px;
     }
     
-    .transaction-history__header {
-        padding: 18px 0px;
-    }
+ 
     
     .transaction-history__title {
         font-size: 19px;
     }
-    
-    .transaction-history__view-link {
-        font-size: 14px;
-    }
-    
+
     .transaction-history__table {
         font-size: 14px;
     }
@@ -323,22 +294,13 @@ main.settings {
         max-width: 900px;
         border-radius: 16px;
     }
-    
-    .transaction-history__header {
-        padding: 0px 24px 0px;
-        flex-direction: row;
-        align-items: center !important;
-        gap: 0;
-    }
+
     
     .transaction-history__title {
         font-size: 20px;
     }
     
-    .transaction-history__view-link {
-        font-size: 14px;
-    }
-    
+   
     .transaction-history__table {
         font-size: 15px;
     }
@@ -402,9 +364,7 @@ main.settings {
         max-width: 1000px;
     }
     
-    .transaction-history__header {
-        padding: 22px 28px 18px;
-    }
+   
     
     .transaction-history__title {
         font-size: 22px;
@@ -469,7 +429,7 @@ main.settings {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #90abc4;
+    background: #b1ccdd;
     mask: url("data:image/svg+xml,%3csvg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 256'%3e%3cpath d='M1008.48,85.024c-29.696-0.011-56.432-8-75.906-20.971c-19.456-12.981-31.44-30.816-31.44-50.613v-10.336H122.88 v10.336c-0.016,19.797-11.984,37.632-31.44,50.613c-19.488,12.971-46.224,20.96-75.92,20.971H0V170.64h15.52 c29.696,0,56.432,7.989,75.92,20.96c19.456,12.981,31.424,30.807,31.44,50.604v10.347h778.256v-10.347 c0-19.797,11.984-37.621,31.44-50.604c19.472-12.971,46.21-20.96,75.906-20.96H1024v-10.347V85.024H1008.48z'/%3e%3c/svg%3e") center/contain no-repeat;
     mask-size: cover;
     width: min(300px, 100%);

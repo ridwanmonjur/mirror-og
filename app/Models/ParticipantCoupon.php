@@ -31,7 +31,7 @@ class ParticipantCoupon extends Model
 
     public function getExpiresAtHumanAttribute()
     {
-        return $this->expires_at ? 'Exp: ' . $this->expires_at->format('d M Y') : 'Exp: NO EXPIRY';
+        return $this->expires_at ? 'Exp: ' . $this->expires_at->format('d M Y') : 'NO EXPIRY';
     }
 
     /**
