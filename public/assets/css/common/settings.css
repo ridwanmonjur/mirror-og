@@ -64,12 +64,13 @@ main.settings {
 }
 
 
-main.wallet {
+main.wallet, main.wallet2 {
     background-image: url("/assets/images/event-creation-bg.png");
     min-height: 100vh;
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
+
 
 main.settings {
     display: block !important;
@@ -202,7 +203,7 @@ main.settings {
 .transaction-row__cell--total {
     color: #37474f;
     font-weight: 600;
-    text-align: right;
+    text-align: left;
     width: auto;
     font-size: 13px;
 }
@@ -432,11 +433,39 @@ main.settings {
     background: #b1ccdd;
     mask: url("data:image/svg+xml,%3csvg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 256'%3e%3cpath d='M1008.48,85.024c-29.696-0.011-56.432-8-75.906-20.971c-19.456-12.981-31.44-30.816-31.44-50.613v-10.336H122.88 v10.336c-0.016,19.797-11.984,37.632-31.44,50.613c-19.488,12.971-46.224,20.96-75.92,20.971H0V170.64h15.52 c29.696,0,56.432,7.989,75.92,20.96c19.456,12.981,31.424,30.807,31.44,50.604v10.347h778.256v-10.347 c0-19.797,11.984-37.621,31.44-50.604c19.472-12.971,46.21-20.96,75.906-20.96H1024v-10.347V85.024H1008.48z'/%3e%3c/svg%3e") center/contain no-repeat;
     mask-size: cover;
-    width: min(300px, 100%);
+    width: 320px;
     height: 150px;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 20px;
+}
+
+.coupon-active {
+    background: #59b3e2 !important;
+    position: relative;
+}
+
+.coupon-active::before {
+    content: 'NEW';
+    position: absolute;
+    top: 10px;
+    left: -30px;
+    background: #ff4757;
+    color: white;
+    padding: 4px 40px;
+    font-size: 8px;
+    font-weight: bold;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1; 
+}
+
+
+.coupon__details {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 
@@ -497,12 +526,31 @@ main.settings {
     width: 100%;
 }
 
+.min-w-95vw{
+    min-width: 95vw !important;
+}
+
+.w-95-lg-50 {
+    width: 95vw;
+}
+
+.min-h-85vh {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 
 @media (min-width: 992px) { 
    
- 
+    .w-95-lg-50 {
+        width: 50vw;
+    }
+
     .coupon__details {
         border-left: 3px dashed white;
+        height: 95px;
     }
 
 
@@ -511,25 +559,30 @@ main.settings {
     }
 
     .coupon {
-        width: 350px;
-        height: 105px;
+        width: 320px;
+        height: 95px;
         border-radius: 0px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
 
     }
 }
 
 
+
 /* Extra Large Desktop Styles - min-width: 1200px (xl) */
 @media (min-width: 1400px) {
     .coupon {
-        width: 400px;
-        height: 120px;
+        width: 360px;
+        height: 110px;
         border-radius: 0px;
         padding-left: 10px;
         padding-right: 10px;
 
+    }
+
+    .coupon__details {
+        height: 110px;
     }
 
     .transaction-history {

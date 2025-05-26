@@ -244,9 +244,9 @@
                         My Wallet  
                     </span><br>
                     @if ($wallet->usable_balance)
-                        <span class="text-primary"> RM {{$wallet->usable_balance}} </span>
+                        <span class="text-primary"> RM {{ number_format($wallet->usable_balance, 2) }} </span>
                     @else
-                        <span class="text-primary"> RM 0 </span>
+                        <span class="text-primary"> RM 0.00 </span>
                     @endif
                 </div>
             </a>

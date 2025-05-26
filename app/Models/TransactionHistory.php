@@ -74,8 +74,7 @@ class TransactionHistory extends Model
      */
     public function getFormattedAmountAttribute()
     {
-        $sign = $this->isPositive ? '+' : '-';
-        return $sign . '$' . number_format($this->amount, 2);
+        return 'RM ' . number_format($this->amount, 2);
     }
 
     /**

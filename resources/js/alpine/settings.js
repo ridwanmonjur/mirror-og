@@ -465,6 +465,7 @@ function AccountComponent() {
             }
         },
         init () {
+            
             const urlParams = new URLSearchParams(window.location.search);
             function scrollToElement(elementId) {
                 console.log(`Attempting to scroll to ${elementId}`);
@@ -508,8 +509,30 @@ function openTab (id) {
     document.querySelector(`#${id}`)?.classList.remove('d-none');
 }
 
-window.openTab = openTab;
+function populateCoupons (event) {
+    openTab('wallet-redeem-coupons');
+    let target = event.currentTarget;
+    let { couponCode } = target.dataset;
+    console.log({ couponCode });
+    let couponElement = document.querySelector("input#coupon_code");
+    console.log({ couponElement });
 
+    if (couponElement) {
+        couponElement.value = couponCode;
+    }
+}
+
+function fillInput (inputId, value) {
+   
+    let couponElement = document.querySelector(`input#${inputId}`);
+    if (couponElement) {
+        couponElement.value = value;
+    }
+}
+
+window.openTab = openTab;
+window.fillInput = fillInput;
+window.populateCoupons = populateCoupons;
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -523,6 +546,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     if (wallet) {
+        let firstElement = null;
+            let list = document.querySelectorAll('#wallet-view-coupons .coupon')
+            if (list && '0' in list) firstElement = list[0];
+
+            if (firstElement) {
+                firstElement.classList.add('coupon-active');
+            }
+
+            
         createApp({
             TransactionComponent,
         }).mount(wallet);
