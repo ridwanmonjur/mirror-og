@@ -154,14 +154,14 @@
                                                 class="form-control" min="5" step="0.01" required>
                                             <small class="text-muted">Minimum topup: RM 5.00</small>
                                         </div>
-                                        <button type="submit" class="btn btn-success">Add Funds</button>
+                                        <button type="submit" class="btn btn-primary text-light rounded-pill">Add Funds</button>
                                     </form>
                                 </div>
 
                                 <div class="my-3">
                                     <a href="{{ route('wallet.payment-method') }}"
-                                        class="btn rounded-pill btn-primary text-light ">
-                                        Change Payment Method
+                                        class="fw-bold text-primary  ">
+                                        <small> Change Payment Method </small>
                                     </a>
                                 </div>
                             </div>
@@ -201,6 +201,7 @@
                                 </span>
                                 <i class="d-inline">Go back </i>
                             </p>
+                            
                         </div>
                         @if ($wallet->has_bank_account)
                             <div class="my-1">
@@ -221,6 +222,12 @@
                                             <small class="text-muted">Minimum withdrawal: RM 5.00</small>
                                         </div>
                                         <button type="submit" class="btn btn-primary text-light ">Withdraw Funds</button>
+                                        <div class="my-3">
+                                            <a href="{{ route('wallet.payment-method') }}"
+                                                class="fw-bold text-primary  ">
+                                                <small> Change Payment Method </small>
+                                            </a>
+                                        </div>
                                     </form>
                                 @else
                                     <div class="alert alert-info">
@@ -331,7 +338,7 @@
                         <div class="px-0 pt-4 pb-4 row">
                             @if (isset($coupons[0]))
                                 @foreach ($coupons as $coupon)
-                                    <x-wallet.coupon-card :coupon="$coupon" :className="' col-lg-6 col-xl-4 '" />
+                                    <x-wallet.coupon-card :coupon="$coupon" :className="' col-lg-6 parent-coupon col-xl-4 '" />
                                 @endforeach
                             @else
                                 <x-wallet.no-list :text="'No coupons available!'"/>

@@ -439,6 +439,34 @@ main.settings {
     border-radius: 20px;
 }
 
+.coupon-active {
+    background: #59b3e2 !important;
+    position: relative;
+}
+
+.coupon-active::before {
+    content: 'NEW';
+    position: absolute;
+    top: 10px;
+    left: -30px;
+    background: #ff4757;
+    color: white;
+    padding: 4px 40px;
+    font-size: 8px;
+    font-weight: bold;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1; 
+}
+
+
+.coupon__details {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 
 .coupon--secondary {
     background: linear-gradient(135deg, #85C1E9, #A9D3F0);
@@ -503,6 +531,7 @@ main.settings {
  
     .coupon__details {
         border-left: 3px dashed white;
+        height: 95px;
     }
 
 
@@ -511,11 +540,11 @@ main.settings {
     }
 
     .coupon {
-        width: 350px;
-        height: 105px;
+        width: 320px;
+        height: 95px;
         border-radius: 0px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
 
     }
 }
@@ -524,12 +553,16 @@ main.settings {
 /* Extra Large Desktop Styles - min-width: 1200px (xl) */
 @media (min-width: 1400px) {
     .coupon {
-        width: 400px;
-        height: 120px;
+        width: 360px;
+        height: 110px;
         border-radius: 0px;
         padding-left: 10px;
         padding-right: 10px;
 
+    }
+
+    .coupon__details {
+        height: 110px;
     }
 
     .transaction-history {

@@ -10,7 +10,7 @@
                 <h5 class="text-white my-2 py-0">RM {{ $coupon['amount'] }} </h5>
                 <small class="text-light fst-italic">{{ $coupon['expires_at_human'] }}</small>
             </div>
-            <div class="coupon__details py-2 h-100  col-lg-8 pe-0 ">
+            <div class="coupon__details py-2  col-lg-8 pe-0 ">
                 <div class="py-0 my-0 fs-5 d-lg-none text-light mb-2">
                     <u>RM
                         {{ $coupon['amount'] }} ({{ $coupon['expires_at_human'] }}) <br>

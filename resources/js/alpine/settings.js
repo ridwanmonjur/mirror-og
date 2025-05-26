@@ -465,6 +465,7 @@ function AccountComponent() {
             }
         },
         init () {
+            
             const urlParams = new URLSearchParams(window.location.search);
             function scrollToElement(elementId) {
                 console.log(`Attempting to scroll to ${elementId}`);
@@ -523,6 +524,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     if (wallet) {
+        let firstElement = null;
+            let list = document.querySelectorAll('#wallet-view-coupons .coupon')
+            if (list && '0' in list) firstElement = list[0];
+
+            if (firstElement) {
+                firstElement.classList.add('coupon-active');
+            }
+
+            
         createApp({
             TransactionComponent,
         }).mount(wallet);
