@@ -35,5 +35,6 @@ class FlushFileSessions extends Command
           File::delete(...$files);
   
           $this->info('Session cleared successfully.');
+          
     }
 }
