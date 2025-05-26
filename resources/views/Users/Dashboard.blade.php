@@ -17,7 +17,7 @@
                         <h5 class="mt-1 mb-3 text-secondary">Current Balance </h5>
                         <h2 class="text-primary my-3"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
                         <div class="mb-2">
-                            <button type="button"
+                            {{-- <button type="button"
                                 class="btn d-inline-block me-2 mb-1 rounded-pill btn-primary  text-light "
                                 onclick="openTab('wallet-add-fund')">
                                 <small>
@@ -41,7 +41,7 @@
                                     </svg>
                                 </small>
                                 <small>Request a withdrawal </small>
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
                 </div>
