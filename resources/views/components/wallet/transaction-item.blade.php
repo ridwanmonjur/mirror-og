@@ -14,6 +14,6 @@
         Winner</span>
 </td>
 <!-- Element: transaction-row__cell with Modifier: --type -->
-<td class="transaction-row__cell transaction-row__cell--type">@{{ transaction.type }}</td>
+<td class="transaction-row__cell transaction-row__cell--type" v-text="transaction.type"></td>
 <!-- Element: transaction-row__cell with Modifier: --total -->
-<td class="transaction-row__cell transaction-row__cell--total">@{{ transaction.formatted_amount }}</td>
+<td class="transaction-row__cell transaction-row__cell--total" v-text="transaction.formatted_amount"></td>
