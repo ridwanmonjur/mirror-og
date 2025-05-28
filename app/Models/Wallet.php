@@ -19,10 +19,11 @@ class Wallet extends Model
         'has_bank_account',
         'bank_last4',
         'bank_name',
+        'account_number',
+        'account_holder_name',
         'balance',
         'last_payout_at',
-        'stripe_customer_id',
-        'payment_method_id',
+        'bank_details_updated_at',
     ];
 
     public $timestamps = NULL;
@@ -38,6 +39,9 @@ class Wallet extends Model
         'has_bank_account' => 'boolean',
         'balance' => 'decimal:2',
         'last_payout_at' => 'datetime',
+        'usable_balance' => 'decimal:2',
+        'current_balance' => 'decimal:2',
+        'bank_details_updated_at' => 'datetime',
     ];
 
     public function isReadyForPayouts()

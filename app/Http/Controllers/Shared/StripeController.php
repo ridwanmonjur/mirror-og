@@ -13,8 +13,10 @@ use App\Models\TransactionHistory;
 use App\Models\UserCoupon;
 use App\Models\Wallet;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\UnauthorizedException;
 
 class StripeController extends Controller
 {
@@ -136,25 +138,26 @@ public function showPaymentMethodForm(Request $request)
     $user = $request->get('user');
     $wallet = Wallet::retrieveOrCreateCache($user->id);
 
-        $customer = $this->stripeClient->createStripeCustomer([
-            'email' => $user->email,
-            'name' => $user->name,
-            'metadata' => [
-                'user_id' => $user->id,
-            ],
-        ]);
-        $wallet->update(['stripe_customer_id' => $customer->id]);
+    $customer = $this->stripeClient->createStripeCustomer([
+        'email' => $user->email,
+        'name' => $user->name,
+        'metadata' => [
+            'user_id' => $user->id,
+        ],
+    ]);
+    
+    $wallet->update(['stripe_customer_id' => $customer->id]);
 
-        $setupIntent = $this->stripeClient->createSetupIntent([
-            'customer' => $wallet->stripe_customer_id,
-            'usage' => 'off_session', // Allow future off-session usage
-        ]);
+    $setupIntent = $this->stripeClient->createSetupIntent([
+        'customer' => $wallet->stripe_customer_id,
+        'usage' => 'off_session', 
+    ]);
 
-        return view('Users.PaymentMethod', [
-            'clientSecret' => $setupIntent->client_secret,
-            'wallet' => $wallet,
-        ]);
-    }
+    return view('Users.PaymentMethod', [
+        'clientSecret' => $setupIntent->client_secret,
+        'wallet' => $wallet,
+    ]);
+}
 
     /**
      * Save the payment method after successful setup
@@ -162,35 +165,43 @@ public function showPaymentMethodForm(Request $request)
     public function savePaymentMethod(Request $request)
     {
         $user = $request->get('user');
-        $wallet = Wallet::retrieveOrCreateCache($user->id);
     
-        $paymentMethodId = $request->input('payment_method_id');
-        $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
-    
-        if (!$wallet->stripe_customer_id) {
-            $customer = $this->stripeClient->createStripeCustomer([
-                'email' => $user->email,
-                'name' => $user->name,
-                'metadata' => [
-                    'user_id' => $user->id,
-                ],
-            ]);
-            
-            $customerStripeId = $customer->id;
-        } else {
-            $customerStripeId = $wallet->stripe_customer_id;
-        }
-
-        $wallet->update([
-            'stripe_customer_id' => $customerStripeId,
-            'payment_method_id' => $paymentMethodId,
-            'has_bank_account' => true,
-            'bank_last4' => $paymentMethod->card->last4 ?? $paymentMethod->us_bank_account->last4 ?? null,
-            'bank_name' => $paymentMethod->card->brand ?? $paymentMethod->us_bank_account->bank_name ?? null,
+        $validatedData = $request->validate([
+            'bank_name' => 'required|string|max:100',
+            'account_number' => 'required|string|min:8|max:20|regex:/^[0-9\-]+$/',
+            'account_holder_name' => 'required|string|max:100',
+        ], [
+            'bank_name.required' => 'Please select a bank',
+            'account_number.required' => 'Account number is required',
+            'account_number.min' => 'Account number must be at least 8 characters',
+            'account_number.max' => 'Account number cannot exceed 20 characters',
+            'account_number.regex' => 'Account number can only contain numbers and hyphens',
+            'account_holder_name.required' => 'Account holder name is required',
+            'account_holder_name.max' => 'Account holder name cannot exceed 100 characters',
         ]);
-        // dd($wallet);
-    
-        return redirect()->route('wallet.dashboard')->with('success', 'Payment method added successfully!');
+
+        try {
+            $wallet = Wallet::retrieveOrCreateCache($user->id);
+            
+            $wallet->update([
+                'bank_name' => $validatedData['bank_name'],
+                'account_number' => $validatedData['account_number'],
+                'account_holder_name' => $validatedData['account_holder_name'],
+                'bank_last4' => substr($validatedData['account_number'], -4),
+                'has_bank_account' => true,
+                'bank_details_updated_at' => now(),
+            ]);
+
+        
+            return redirect()->route('wallet.dashboard')
+                ->with('success', 'Bank account details saved successfully! You can now make withdrawals.');
+                
+        } catch (Exception $e) {
+        
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to save bank details. Please try again.');
+        }
     }
 
     private function getTransactionHistory(TransactionHistoryRequest $request, $user) {
@@ -231,7 +242,6 @@ public function showPaymentMethodForm(Request $request)
          }
 
         $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
-
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
         $couponsQ = ParticipantCoupon::where('is_public', true)
@@ -300,27 +310,51 @@ public function showPaymentMethodForm(Request $request)
         ]);
     }
 
-    public function processTopup(Request $request){
-        $request->validate([
-            'topup_amount' => 'required|numeric|min:5',
-        ]);
 
-        $user = $request->get('user');
-        $amount = $request->topup_amount;
+    public function topupCallback(Request $request){
         try {
-            $wallet = Wallet::retrieveOrCreateCache($user->id);
+            DB::beginTransaction();
+            $user = $request->get('user');
+            $userId = $user->id;
+            $status = $request->get('redirect_status');
 
-            $wallet->update([
-                'usable_balance' => $wallet->usable_balance + $amount,
-                'current_balance' => $wallet->current_balance + $amount,
-            ]);
+            if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
+                $intentId = $request->get('payment_intent');
+                $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                
+                if ($paymentIntent['amount'] > 0) {
+                    $wallet = Wallet::retrieveOrCreateCache($user->id);
+                    $amount = $paymentIntent['amount'] / 100;
+                    $wallet->update([
+                        'usable_balance' => $wallet->usable_balance + $amount,
+                        'current_balance' => $wallet->current_balance + $amount,
+                    ]);
+                   
+                    $wallet = Wallet::retrieveOrCreateCache($user->id);
 
-            return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM ' . number_format($amount, 2) . ' to your wallet.');
+                    $wallet->update([
+                        'usable_balance' => $wallet->usable_balance + $amount,
+                        'current_balance' => $wallet->current_balance + $amount,
+                    ]);
 
+                    DB::commit();
+                    return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM ' . number_format($amount, 2) . ' to your wallet.');
+
+                }
+            }
+            DB::rollback();
+            return $this->showErrorGeneral("Could not find payment information!");
+
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
+            DB::rollback();
+            return $this->showErrorGeneral($e->getMessage());
         } catch (Exception $e) {
-            return redirect()->route('wallet.dashboard')->with('error', 'Topup failed: ' . $e->getMessage());
+            DB::rollback();
+            return $this->showErrorGeneral($e->getMessage());
+
         }
     }
+
 
     public function redeemCoupon(Request $request)
     {
