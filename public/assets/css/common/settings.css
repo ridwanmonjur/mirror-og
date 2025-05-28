@@ -390,37 +390,6 @@ main.settings {
 }
 
 
-/* .coupons__header {
-    color: #6c757d;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.coupons__title {
-    margin: 0;
-}
-
-.coupons__view-all {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.coupons__view-all:hover {
-    color: #0056b3;
-}
-
-.coupons__view-all-icon {
-    width: 12px;
-    height: 12px;
-    fill: currentColor;
-} */
 
 .coupon {
     margin: auto;

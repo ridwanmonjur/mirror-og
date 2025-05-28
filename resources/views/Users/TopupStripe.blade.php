@@ -12,7 +12,7 @@
         data-user-name="{{ $user->name }}" data-stripe-customer-id="{{ $user->stripe_customer_id }}"
         data-stripe-key="{{ config('services.stripe.key') }}"
         data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
-        data-checkout-transition-url="{{ route('wallet.topup') }}">
+        data-checkout-transition-url="{{ route('wallet.topupCallback') }}">
 
     </div>
     <div class="row mt-4">
@@ -26,7 +26,6 @@
                     @include('includes.Flash')
 
                     <div id="cardLogoId" class="payment-element-children-view">
-                        <form method="POST" id="stripe-form">
                             <div id="spinner-element" class="d-flex justify-content-center mt-5">
                                 <div class="spinner-border text-primary" role="status">
                                     <br><br>
@@ -41,15 +40,13 @@
                                 <div class="col-12 col-lg-6">
                                     <div id="card-element" class="my-2"> </div>
                                     <div class="d-none d-lg-block">
-
-                                        <br><br><br><br>
+                                        <br>
                                     </div>
                                     <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
-                                        <button class="oceans-gaming-default-button" type="submit"> Submit </button>
+                                        <button class="oceans-gaming-default-button" id="stripe-button"> Submit </button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -178,8 +175,9 @@
 
         async function finalizeStripeCardPayment(event) {
             event.preventDefault();
-            const submitButton = event.target;
+            event.stopPropagation();
 
+            const submitButton = event.currentTarget;
             submitButton.disabled = true;
             try {
                 window.showLoading();
@@ -193,7 +191,7 @@
                     window.closeLoading();
                     toastError("Please fill the complete address");
                     submitButton.disabled = false;
-                    return;
+                    return false;
                 }
 
                 const billingDetails = {
@@ -222,16 +220,18 @@
                     }
                 });
 
+                console.log({url: paymentVars['checkoutTransitionUrl']});
+
                 if (error) {
                     window.closeLoading();
                     console.log('Payment confirmation error:', error);
                     window.toastError(error.message || 'Payment failed. Please try again.');
                     submitButton.disabled = false;
-                    return;
+                    return false;
                 }
 
                 window.closeLoading();
-                return;
+                return false;
             } catch (error) {
                 console.log('Exception caught:', error);
 
@@ -242,14 +242,18 @@
                 window.closeLoading();
                 window.toastError(errorMessage);
                 submitButton.disabled = false;
-                return;
+                return false;
             }
+
+            return false;
         }
 
         initializeStripeCardPayment();
 
-        let form = document.getElementById('stripe-form');
-        form.addEventListener('submit', finalizeStripeCardPayment);
+        let button = document.getElementById('stripe-button');
+        button.addEventListener('click', (event) => {
+            return finalizeStripeCardPayment(event);
+        });
 
     });
 </script>

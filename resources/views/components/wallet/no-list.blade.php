@@ -22,5 +22,5 @@
             </g>
         </svg>
     </div>
-    <div class="my-2 text-secodnary">{{$text}}</div>
+    <div class="my-2 text-secondary">{{$text}}</div>
 </div>

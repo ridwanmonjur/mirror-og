@@ -17,7 +17,7 @@
                         <h5 class="mt-1 mb-3 text-secondary">Current Balance </h5>
                         <h2 class="text-primary my-3"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
                         <div class="mb-2">
-                            {{-- <button type="button"
+                            <button type="button"
                                 class="btn d-inline-block me-2 mb-1 rounded-pill btn-primary  text-light "
                                 onclick="openTab('wallet-add-fund')">
                                 <small>
@@ -41,7 +41,7 @@
                                     </svg>
                                 </small>
                                 <small>Request a withdrawal </small>
-                            </button> --}}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -183,12 +183,12 @@
                                     </div>
                                     <div class="d-flex justify-content-around w-75 mb-4 mx-auto">
                                         <button onclick="openTab('wallet-main')" type="button"
-                                            class="btn border-secondary text-dark rounded-pill">
+                                            class="btn border-secondary text-dark rounded-pill px-4 py-2">
                                             Cancel
                                         </button>
 
                                         <button type="submit"
-                                            class="btn btn-primary text-light rounded-pill">Confirm</button>
+                                            class="btn btn-primary text-light rounded-pill px-4 py-2">Confirm</button>
 
                                     </div>
 
@@ -217,12 +217,21 @@
 
                         </div>
                         <div class="mt-3">
-                            <div class="text-center mx-auto my-3 py-3 text-light bg-primary rounded-30px"
+                            <div class="text-center mx-auto my-2 py-2 text-light bg-secondary rounded-30px"
                                 style="width: min(300px, 80%);">
-                                <h5 class="mt-1 mb-3 fw-normal">Current Wallet Balance </h5>
-                                <h2 class=" my-3 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
+                                <h5 class="my-1  fw-normal">Current Wallet Balance </h5>
+                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h4>
                             </div>
-                            @include('includes.Flash')
+                            <div class="text-center mx-auto">
+                                <svg width="50px" height="50px" fill="#000000" viewBox="0 0 24 24" id="down-direction" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path id="primary" d="M20.76,13.81l-2.6-3a1,1,0,0,0-1.41-.11L15,12.16V4a2,2,0,0,0-2-2H11A2,2,0,0,0,9,4v8.16l-1.75-1.5a1,1,0,0,0-1.41.11l-2.6,3a1,1,0,0,0,.11,1.41l7.35,6.3a2,2,0,0,0,2.6,0l7.35-6.3A1,1,0,0,0,20.76,13.81Z" style="fill: #a6a6a6;"></path></g></svg>
+                            </div>
+                            <div class="text-center mx-auto my-2 py-2 text-light bg-primary rounded-30px"
+                                style="width: min(300px, 80%);">
+                                <h5 class="my-1  fw-normal">Net Wallet Balance </h5>
+                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h4>
+                            </div>
+                            <div id="withdraw-status" class="text-center  d-none mx-auto">
+                            </div>
 
                             <!-- Topup Form -->
                             <div class="my-2">
@@ -238,20 +247,29 @@
                                                 min="5" step="0.01" required
                                                 style="width: min-content; max-width: 200px;">
                                         </div>
-                                        {{-- <small class="text-muted fst-italic ">Minimum amount is RM 5.00</small> --}}
+                                        <small class="text-muted fst-italic ">Minimum amount is RM 5.00</small>
+                                        @if ($wallet->has_bank_account) 
+                                            <div class="text-center text-primary fst-italic mt-1 mb-3">Linked bank account: {{$wallet->bank_name}} **** {{$wallet->bank_last4}}</div>
+                                        @else
+                                            <div class="text-center mt-1 mb-3">No linked bank account</div>
+                                        @endif
                                     </div>
-                                    <div class="d-flex justify-content-around w-75 mb-4 mx-auto">
+                                    <small class="fst-italic text-primary w-75 d-block text-center mx-auto">
+                                        Please note that our withdrawal request will take seven (7) business days 
+                                        to process. If you do not receive your funds after that period, you can ping 
+                                        our support mains at supportmain@driftwood to check your request.
+                                    </small>
+                                    <div class="d-flex justify-content-around w-75 mt-2 mb-4 mx-auto">
                                         <button onclick="openTab('wallet-main')" type="button"
-                                            class="btn border-secondary text-dark rounded-pill">
+                                            class="btn border-secondary text-dark rounded-pill px-4 py-2">
                                             Cancel
                                         </button>
-
                                         <button type="submit"
-                                            class="btn btn-primary text-light rounded-pill">Confirm</button>
-
+                                            class="btn btn-primary text-light rounded-pill px-4 py-2">Confirm</button>
                                     </div>
                                 </form>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -330,7 +348,13 @@
                         <div class="row ">
                             <h3 class="col-6 text-start transaction-history__title ">My Coupons</h3>
                             <div class="col-6 text-end">
-                                <button type="button" onclick="openTab('wallet-redeem-coupons')" class="btn rounded-pill border-secondary text-dark">
+                                <button type="button" onclick="openTab('wallet-redeem-coupons')" class="btn rounded-pill border-dark text-dark">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket-perforated" viewBox="0 0 16 16">
+                                        <path d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z"/>
+                                        <path d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z"/>
+                                        </svg>
+                                    </span>
                                     Redeem coupons
                                 </button>
                             </div>
@@ -402,40 +426,7 @@
 
         
 
-        {{-- <div class="d-none mx-auto px-0 container-main " id="wallet-redeem-coupons">
-            <div class="center-container mx-auto ">
-                <div class="card px-2 py-0 border border-2 mx-auto border-secondary rounded-30px min-w-95vw">
-                    <div class="card-body px-2 py-0">
-                        <div class="container-fluid px-0 py-0">
-                            <div class="my-4">
-                                <div class="d-flex justify-content-between ">
-                                    <h3 class="transaction-history__title ">Redeem Coupon</h3>
-                                    <span onclick="openTab('wallet-main')" class="cursor-pointer">
-                                        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                    d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                                            </svg>
-                                        </span>
-                                        <span>Go back</span>
-                                    </span>
-                                </div>
-                                <form action="{{ route('wallet.redeem-coupon') }}" method="POST">
-                                    @csrf
-                                    <div class=" my-3">
-                                        <label for="coupon_code">Coupon Code</label>
-                                        <input type="text" id="coupon_code" name="coupon_code"
-                                            class="form-control w-100" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary rounded-pill text-light">Redeem
-                                        Coupon</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+        
 
     </main>
 
