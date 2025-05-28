@@ -265,7 +265,7 @@
                                             Cancel
                                         </button>
                                         <button type="submit"
-                                            class="btn btn-primary withdraw-button text-light rounded-pill px-4 py-2">Yes, request withdrawal.</button>
+                                            class="btn btn-primary withdraw-button text-light rounded-pill px-4 py-2">Yes, request withdrawal</button>
                                     </div>
                                 </form>
                             </div>
@@ -349,7 +349,7 @@
                         <div class="row ">
                             <h3 class="col-6 text-start transaction-history__title ">My Coupons</h3>
                             <div class="col-6 text-end">
-                                <button type="button" onclick="openTab('wallet-redeem-coupons')" class="btn rounded-pill border-dark text-dark">
+                                <button type="button" onclick="emptyCoupons(); " class="btn rounded-pill border-dark text-dark">
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket-perforated" viewBox="0 0 16 16">
                                         <path d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z"/>
@@ -394,32 +394,56 @@
                         <div class="mt-3">
                             <!-- Topup Form -->
                             <div class="my-2">
-                                <form action="{{ route('wallet.redeem-coupon') }}" method="POST">
-                                    @csrf
-                                    <div class="w-50 mx-auto text-center my-3">
-                                        <label for="coupon_code">Coupon Code</label>
-                                        <input type="text" id="coupon_code" name="coupon_code"
-                                            class="form-control border-secondary text-center rounded-pill w-100" required>
-                                    </div>
+                                <div id="coupon-form" v-scope="CouponStatusComponent()">
                                     
-                                    <div class="d-flex justify-content-around w-75 mb-4 mx-auto">
-                                        <button onclick="openTab('wallet-main')" type="button"
-                                            class="btn border-secondary text-dark rounded-pill">
-                                            Cancel
-                                        </button>
+                                    <form v-on:submit="submitCoupon">
+                                        <div class="w-50 mx-auto text-center my-3">
 
-                                        <button type="submit"
-                                            class="btn btn-primary text-light rounded-pill">Confirm</button>
+                                            <label :class="statusClass" v-if="statusLabel" class="mb-0" >@{{ statusLabel }}</label>
+                                            <label :class="statusClass" v-if="message" class="my-2" >@{{ message }}</label>
 
-                                    </div>
+                                            <!-- Status Icon and Label -->
+                                            <div class="mb-2 input-group">
+                                                <label v-html="statusIcon" class="input-group-text"></label>
+                                                <input 
+                                                id="coupon_code"
+                                                type="text" 
+                                                name="coupon_code"
+                                                class="form-control border-secondary text-center " 
+                                                :class="{ 'border-success': status === 'success', 'border-red': status === 'error' }"
+                                                placeholder="XXXXXXX"
+                                                :disabled="isSubmitting"
+                                                required
+                                            >
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-around w-75 mb-4 mx-auto">
+                                            <button 
+                                                onclick="openTab('wallet-main')" 
+                                                type="button"
+                                                class="btn border-secondary text-dark rounded-pill"
+                                                :disabled="isSubmitting">
+                                                Cancel
+                                            </button>
 
-                                </form>
+                                            <button 
+                                                type="submit"
+                                                class="btn btn-primary text-light rounded-pill"
+                                                :disabled="isSubmitting ">
+                                                <span v-if="isSubmitting">
+                                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                                    Processing...
+                                                </span>
+                                                <span v-else>Confirm</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-
-
                         </div>
-
-                       
                     </div>
                 </div>
             </div>

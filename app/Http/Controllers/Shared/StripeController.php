@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shared;
 
 use App\Exceptions\BankAccountNeededException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\RedeemCouponRequest;
 use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
 use App\Http\Requests\WithdrawalRequest;
@@ -359,44 +360,40 @@ public function showPaymentMethodForm(Request $request)
     }
 
 
-    public function redeemCoupon(Request $request)
+    public function redeemCoupon(RedeemCouponRequest $request)
     {
-        $request->validate([
-            'coupon_code' => 'required|string',
-        ]);
-
-        $user = $request->get('user');
-        $code = $request->coupon_code;
-
-        $coupon = UserCoupon::where('code', $code)
-            ->where('is_active', true)
-            ->where('expires_at', '>', now())
-            ->first();
-
-        if (!$coupon) {
-            return redirect()->back()->with('error', 'Invalid or expired coupon code.');
+        try {
+            $user = $request->get('user');
+            $code = $request->coupon_code;
+            $coupon = $request->getCoupon();
+            $wallet = Wallet::retrieveOrCreateCache($user->id);
+            $newBalance = $wallet->usable_balance + $coupon->amount;
+            
+            $wallet->update([
+                'usable_balance' => $newBalance,
+                'current_balance' => $newBalance,
+            ]);
+    
+            UserCoupon::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'coupon_id' => $coupon->id,
+                ],
+                [
+                    'redeemed_at' => now()
+                ]
+            );
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Coupon redeemed successfully!',
+            ], 200);
+    
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while redeeming the coupon. Please try again later.'
+            ], 500);
         }
-
-        $usedCoupon = UserCoupon::where('user_id', $user->id)
-            ->where('coupon_id', $coupon->id)
-            ->first();
-
-        if ($usedCoupon) {
-            return redirect()->back()->with('error', 'You have already used this coupon.');
-        }
-
-        $wallet = Wallet::retrieveOrCreateCache($user->id);
-        $wallet->update([
-            'usable_balance' => $wallet->usable_balance + $coupon->amount,
-            'current_balance' => $wallet->usable_balance + $coupon->amount,
-        ]);
-
-        UserCoupon::create([
-            'user_id' => $user->id,
-            'coupon_id' => $coupon->id,
-            'redeemed_at' => now()
-        ]);
-
-        return redirect()->back()->with('success', 'Successfully redeemed coupon for RM ' . number_format($coupon->amount, 2));
     }
 }
