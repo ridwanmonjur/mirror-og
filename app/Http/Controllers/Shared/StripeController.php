@@ -3,8 +3,12 @@
 
 namespace App\Http\Controllers\Shared;
 
+use App\Exceptions\BankAccountNeededException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\TransactionHistoryRequest;
+use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
+use App\Http\Requests\WithdrawalRequest;
+use App\Http\Requests\WithdrawalRequest\WithdrawalRequest as WithdrawalRequestWithdrawalRequest;
 use App\Http\Resources\TransactionHistoryResource;
 use App\Models\ParticipantCoupon;
 use App\Models\PaymentIntent;
@@ -12,6 +16,7 @@ use App\Models\StripeConnection;
 use App\Models\TransactionHistory;
 use App\Models\UserCoupon;
 use App\Models\Wallet;
+use App\Models\Withdrawal;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -262,38 +267,42 @@ public function showPaymentMethodForm(Request $request)
         ]);
     }
 
-    public function processWithdrawal(Request $request)
+    public function processWithdrawal(UserWithdrawalRequest $request)
     {
-        $user = $request->get('user');
-        $wallet = Wallet::retrieveOrCreateCache($user->id);
-        // dd($wallet);
-
-        if (!$wallet->isReadyForPayouts()) {
-            return redirect()->route('wallet.save-payment-method')->with('error', 'Please add a payment method first.');
-        }
-
-        $request->validate([
-            'withdrawal_amount' => 'required|numeric|min:5|max:' . $wallet->usable_balance,
-        ]);
-
-        $amount = $request->withdrawal_amount * 100; 
-
         try {
-            $this->stripeClient->createPayout(
-                $wallet->stripe_customer_id,
-                $wallet->payment_method_id,
-                $amount
-            );
+            DB::beginTransaction();
 
-            $wallet->update([
-                'usable_balance' => $wallet->usable_balance - ($amount / 100),
-                'current_balance' => $wallet->current_balance - ($amount / 100),
-                'last_payout_at' => now(),
+            $user = $request->get('user');
+            $wallet = $request->getWallet();
+            $withdrawalAmount = $request->getWithdrawalAmount();
+
+            Withdrawal::create([
+                'user_id' => $user->id,
+                'withdrawal' => $withdrawalAmount,
+                'status' => Withdrawal::STATUS_PENDING,
+                'requested_at' => now(),
             ]);
 
-            return redirect()->back()->with('success', 'Withdrawal of RM ' . number_format($request->withdrawal_amount, 2) . ' processed successfully!');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Withdrawal failed: ' . $e->getMessage());
+            $wallet->update([
+                'usable_balance' => $wallet->usable_balance - $withdrawalAmount,
+                'current_balance' => $wallet->current_balance - $withdrawalAmount,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Withdrawal request submitted successfully. Your funds will be credited to your bank account within 7 business days.',
+            ], 201);
+
+        }   catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to process withdrawal request. Please try again or contact support.',
+                'error' => $e->getMessage() 
+            ], 500);
         }
     }
 
@@ -330,12 +339,6 @@ public function showPaymentMethodForm(Request $request)
                         'current_balance' => $wallet->current_balance + $amount,
                     ]);
                    
-                    $wallet = Wallet::retrieveOrCreateCache($user->id);
-
-                    $wallet->update([
-                        'usable_balance' => $wallet->usable_balance + $amount,
-                        'current_balance' => $wallet->current_balance + $amount,
-                    ]);
 
                     DB::commit();
                     return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM ' . number_format($amount, 2) . ' to your wallet.');

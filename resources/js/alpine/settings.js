@@ -534,32 +534,118 @@ window.openTab = openTab;
 window.fillInput = fillInput;
 window.populateCoupons = populateCoupons;
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    let settings = document.querySelector('.settings');
-    let wallet =  document.querySelector('.wallet');
+let originalBtnText = null;        
+async function withdrawMoney(e) {
+    e.preventDefault();
+    let withdrawalForm = e.currentTarget;
+    const submitBtn = withdrawalForm.querySelector('button.withdraw-button');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+    
+    
+    try {
+        const formData = new FormData(withdrawalForm);
+        
+        const response = await fetch(withdrawalForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data && data.success) {
+            Swal.fire({
+                icon: 'success',
+                'title': 'Successfully made your request!',
+                text: data.message || 'Withdrawal request submitted successfully!',
+                confirmButtonColor: '#43A4D7',
+                willClose: () => {
+                    window.location.reload();
+                }
+            });
+            
+        } else {
+            console.log({data});
+            console.log({data});
+            console.log({data});
+            if (data.action_required) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Bank Account Required',
+                    text: 'You must link a bank account before making a withdrawal.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Link Bank Account',
+                    confirmButtonColor: '#43A4D7',
+                    reverseButtons: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = data.link;
+                    }
+                });
 
-    if (settings) {
+                return;
+            }
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Your request has failed!',
+                text: data?.message || 'Withdrawal request failed!',
+                confirmButtonColor: '#43A4D7'
+            });
+            
+        }
+        
+    } catch (error) {
+        console.error('Withdrawal submission error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Your request has failed!',
+            text: 'Withdrawal request failed!',
+            confirmButtonColor: '#43A4D7'
+        });
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+    }
+}
+
+let settings = document.querySelector('.settings');
+let wallet =  document.querySelector('.wallet');
+
+if (settings) {
+    document.addEventListener('DOMContentLoaded', () => {
         createApp({
             AccountComponent,
         }).mount(settings);
+    });
+}
+
+if (wallet) {
+    let firstElement = null;
+    let list = document.querySelectorAll('#wallet-view-coupons .coupon')
+    if (list && '0' in list) firstElement = list[0];
+
+    if (firstElement) {
+        firstElement.classList.add('coupon-active');
     }
-  
-    if (wallet) {
-        let firstElement = null;
-            let list = document.querySelectorAll('#wallet-view-coupons .coupon')
-            if (list && '0' in list) firstElement = list[0];
 
-            if (firstElement) {
-                firstElement.classList.add('coupon-active');
-            }
+    let withdrawalForm2 = document.getElementById('withdrawal-form')
+    const submitBtn = withdrawalForm2.querySelector('button.withdraw-button');
+    originalBtnText = submitBtn.textContent;
 
-            
+    withdrawalForm2.addEventListener('submit', withdrawMoney);
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
         createApp({
             TransactionComponent,
         }).mount(wallet);
-    }
-    
-});
+    });
+}
 
 

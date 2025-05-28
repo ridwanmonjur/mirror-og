@@ -188,7 +188,7 @@
                                         </button>
 
                                         <button type="submit"
-                                            class="btn btn-primary text-light rounded-pill px-4 py-2">Confirm</button>
+                                            class="btn btn-primary  text-light rounded-pill px-4 py-2">Next</button>
 
                                     </div>
 
@@ -235,7 +235,7 @@
 
                             <!-- Topup Form -->
                             <div class="my-2">
-                                <form action="{{ route('wallet.withdraw') }}" method="POST">
+                                <form id="withdrawal-form" action="{{ route('wallet.withdraw') }}" method="POST">
                                     @csrf
                                     <div class="text-center mb-4">
                                         <label for="topup_amount">Please enter your amount to withdraw </label>
@@ -265,7 +265,7 @@
                                             Cancel
                                         </button>
                                         <button type="submit"
-                                            class="btn btn-primary text-light rounded-pill px-4 py-2">Confirm</button>
+                                            class="btn btn-primary withdraw-button text-light rounded-pill px-4 py-2">Yes, request withdrawal.</button>
                                     </div>
                                 </form>
                             </div>
@@ -329,7 +329,8 @@
                                 <button v-on:click="loadMore" :disabled="loading"
                                     class="btn text-light rounded-pill btn-primary">
                                     <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-                                    <span>@{{ loading ? 'Loading...' : 'Load More' }}</span>
+                                    <span v-if="loading">Loading...</span>
+                                    <span v-else>Load More</span>
                                 </button>
                             </div>
 
