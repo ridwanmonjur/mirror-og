@@ -115,3 +115,6 @@ in this case, we're the organiser so it doesnt have to be pretty since only we w
 
 default winner
 winner random 
+
+
+cd domains/oceansgaming.gg/public_html

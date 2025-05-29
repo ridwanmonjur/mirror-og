@@ -54,8 +54,6 @@ class AppServiceProvider extends ServiceProvider
         ];
 
         Gate::define('viewPulse', function (?User $user) use ($allowedEmails) {
-           
-            
             return $user && in_array($user->email, $allowedEmails);
         });
 
