@@ -44,7 +44,7 @@ class WithdrawalRequest extends FormRequest
                     $userWallet = Wallet::retrieveOrCreateCache($user->id);      
                     $this->wallet = $userWallet;              
                     
-                    if ($userWallet && $userWallet->has_bank_account) {
+                    if (!$userWallet || !$userWallet?->has_bank_account) {
                         $this->bankAccountMissing = true;
                         $fail('BANK_ACCOUNT_REQUIRED'); // This will be handled in failedValidation
                         return;
