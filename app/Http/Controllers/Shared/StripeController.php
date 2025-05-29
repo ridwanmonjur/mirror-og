@@ -144,23 +144,7 @@ public function showPaymentMethodForm(Request $request)
     $user = $request->get('user');
     $wallet = Wallet::retrieveOrCreateCache($user->id);
 
-    $customer = $this->stripeClient->createStripeCustomer([
-        'email' => $user->email,
-        'name' => $user->name,
-        'metadata' => [
-            'user_id' => $user->id,
-        ],
-    ]);
-    
-    $wallet->update(['stripe_customer_id' => $customer->id]);
-
-    $setupIntent = $this->stripeClient->createSetupIntent([
-        'customer' => $wallet->stripe_customer_id,
-        'usage' => 'off_session', 
-    ]);
-
     return view('Users.PaymentMethod', [
-        'clientSecret' => $setupIntent->client_secret,
         'wallet' => $wallet,
     ]);
 }
