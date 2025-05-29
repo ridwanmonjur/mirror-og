@@ -276,7 +276,7 @@
             </div>
         </div>
 
-        <div class="d-none container-main mx-auto px-0 min-h-85vh" id="wallet-view-transactions">
+        <div class="d-none container-main mx-auto px-0" id="wallet-view-transactions">
             <div class="center-container mx-auto">
                 <div class="card px-3 py-3 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
                     <div class="card-body px-2 py-2">
