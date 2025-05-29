@@ -2,7 +2,7 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
-    @vite(['resources/js/alpine/settings.js'])
+    @vite([ 'resources/js/alpine/teamSelect.js'])    
 </head>
 
 @section('content')
@@ -35,38 +35,60 @@
                                 
                                 <div class="mb-3">
                                     <label for="bank_name" class="form-label">Bank Name</label>
-                                    <select class="form-select" id="bank_name" name="bank_name" required>
+                                    <select  id="bank-select" name="bank_name" required>
                                         <option value="">Select your bank</option>
                                         @php
-                                            $malaysianBanks = [
-                                                ['code' => 'maybank', 'name' => 'Maybank', 'logo' => 'may-bank-logo.png'],
-                                                ['code' => 'cimb', 'name' => 'CIMB Bank', 'logo' => 'cimb-bank-logo.png'],
-                                                ['code' => 'public_bank', 'name' => 'Public Bank', 'logo' => 'public-bank-logo.png'],
-                                                ['code' => 'rhb', 'name' => 'RHB Bank', 'logo' => 'rhb-bank-logo.png'],
-                                                ['code' => 'hong_leong', 'name' => 'Hong Leong Bank', 'logo' => 'hong-leong-bank-logo.png'],
-                                                ['code' => 'ambank', 'name' => 'AmBank', 'logo' => 'am-bank-logo.jpg'],
-                                                ['code' => 'uob', 'name' => 'UOB Malaysia', 'logo' => 'uob-bank-logo.png'],
-                                                ['code' => 'ocbc', 'name' => 'OCBC Bank', 'logo' => 'ocbc-bank-logo.png'],
-                                                ['code' => 'standard_chartered', 'name' => 'Standard Chartered', 'logo' => 'standard-chartered-bank-logo.jpg'],
-                                                ['code' => 'hsbc', 'name' => 'HSBC Bank Malaysia', 'logo' => 'hsbc-bank-logo.png'],
-                                                ['code' => 'affin', 'name' => 'Affin Bank', 'logo' => 'affin-bank-logo.jpeg'],
-                                                ['code' => 'alliance', 'name' => 'Alliance Bank', 'logo' => 'alliance-bank-logo.png'],
-                                                ['code' => 'bank_islam', 'name' => 'Bank Islam', 'logo' => 'islam-bank-logo.png'],
-                                                ['code' => 'bank_rakyat', 'name' => 'Bank Rakyat', 'logo' => 'rakyat-bank-logo.png'],
-                                                ['code' => 'bsn', 'name' => 'Bank Simpanan Nasional (BSN)', 'logo' => 'bsn-bank-logo.png'],
-                                                ['code' => 'citibank', 'name' => 'Citibank', 'logo' => 'citi-bank-logo.avif'],
-                                                ['code' => 'agro_bank', 'name' => 'Agro Bank', 'logo' => null],
-                                                ['code' => 'bank_muamalat', 'name' => 'Bank Muamalat', 'logo' => null],
-                                                ['code' => 'kuwait_finance_house', 'name' => 'Kuwait Finance House', 'logo' => null],
-                                                ['code' => 'al_rajhi_bank', 'name' => 'Al Rajhi Bank', 'logo' => null]
-                                            ];
+                                           $malaysianBanks = [
+                                            // Top Commercial Banks (Domestic)
+                                            ['code' => 'maybank', 'name' => 'Maybank', 'logo' => 'may-bank-logo.png'],
+                                            ['code' => 'cimb', 'name' => 'CIMB Bank', 'logo' => 'cimb-bank-logo.png'],
+                                            ['code' => 'public_bank', 'name' => 'Public Bank', 'logo' => 'public-bank-logo.png'],
+                                            ['code' => 'rhb', 'name' => 'RHB Bank', 'logo' => 'rhb-bank-logo.png'],
+                                            ['code' => 'hong_leong', 'name' => 'Hong Leong Bank', 'logo' => 'hong-leong-bank-logo.png'],
+                                            ['code' => 'ambank', 'name' => 'AmBank', 'logo' => 'am-bank-logo.jpg'],
+                                            ['code' => 'affin', 'name' => 'Affin Bank', 'logo' => 'affin-bank-logo.jpeg'],
+                                            ['code' => 'alliance', 'name' => 'Alliance Bank', 'logo' => 'alliance-bank-logo.png'],
+
+                                            // Foreign Commercial Banks
+                                            ['code' => 'uob', 'name' => 'UOB Malaysia', 'logo' => 'uob-bank-logo.png'],
+                                            ['code' => 'ocbc', 'name' => 'OCBC Bank Malaysia', 'logo' => 'ocbc-bank-logo.png'],
+                                            ['code' => 'hsbc', 'name' => 'HSBC Bank Malaysia', 'logo' => 'hsbc-bank-logo.png'],
+                                            ['code' => 'standard_chartered', 'name' => 'Standard Chartered Malaysia', 'logo' => 'standard-chartered-bank-logo.jpg'],
+                                            ['code' => 'citibank', 'name' => 'Citibank Malaysia', 'logo' => 'citi-bank-logo.avif'],
+
+                                            // Islamic Banks
+                                            ['code' => 'bank_islam', 'name' => 'Bank Islam Malaysia', 'logo' => 'islam-bank-logo.png'],
+                                            ['code' => 'bank_muamalat', 'name' => 'Bank Muamalat Malaysia', 'logo' => 'muamalat-logo.png'],
+                                            ['code' => 'al_rajhi_bank', 'name' => 'Al Rajhi Bank Malaysia', 'logo' => 'rajhi-logo.png'],
+                                            ['code' => 'kuwait_finance_house', 'name' => 'Kuwait Finance House (Malaysia)', 'logo' => 'kuwait-logo.png'],
+
+                                            // Development Financial Institutions
+                                            ['code' => 'bank_rakyat', 'name' => 'Bank Rakyat', 'logo' => 'rakyat-bank-logo.png'],
+                                            ['code' => 'bsn', 'name' => 'Bank Simpanan Nasional (BSN)', 'logo' => 'bsn-bank-logo.png'],
+                                            ['code' => 'agro_bank', 'name' => 'Agrobank', 'logo' => 'agro-bank-logo.png'],
+                                            ['code' => 'mbsb_bank', 'name' => 'MBSB Bank', 'logo' => 'mbsb.jpg'],
+
+                                            // Cooperative Bank
+                                            ['code' => 'coop_bank', 'name' => 'Co-operative Bank Pertama', 'logo' => 'coop.png'],
+                                            // Additional Foreign Banks (Licensed Banking Institutions)
+                                            ['code' => 'american_express', 'name' => 'American Express Bank Malaysia', 'logo' => null],
+                                            ['code' => 'bnp_paribas', 'name' => 'BNP Paribas Malaysia', 'logo' => 'bnp-paribas-logo.png'],
+                                            ['code' => 'bangkok_bank', 'name' => 'Bangkok Bank Malaysia', 'logo' => 'bangkok-bank.jpg'],
+                                            ['code' => 'bank_of_america', 'name' => 'Bank of America Malaysia', 'logo' => 'bank_of_america.png'],
+                                            ['code' => 'bank_of_china', 'name' => 'Bank of China Malaysia', 'logo' => 'bank_of_china.png'],
+                                            ['code' => 'mufg', 'name' => 'MUFG Bank Malaysia', 'logo' => 'mufg.png'],
+                                            ['code' => 'ccb', 'name' => 'China Construction Bank Malaysia', 'logo' => null],
+                                            ['code' => 'deutsche_bank', 'name' => 'Deutsche Bank Malaysia', 'logo' => 'deutsche.png'],
+                                            ['code' => 'india_international', 'name' => 'India International Bank Malaysia', 'logo' => 'iibm.jpg'],
+                                            ['code' => 'icbc', 'name' => 'ICBC Malaysia', 'logo' => 'ICBC.png'],
+                                            ['code' => 'jpmorgan', 'name' => 'J.P. Morgan Chase Bank Malaysia', 'logo' => 'jp-morgan.png'],
+                                            ['code' => 'mizuho', 'name' => 'Mizuho Bank Malaysia', 'logo' => 'mizuho.jpg'],
+                                            ['code' => 'sumitomo', 'name' => 'Sumitomo Mitsui Banking Corporation Malaysia', 'logo' => 'smbc.webp'],
+                                            ['code' => 'scotiabank', 'name' => 'Bank of Nova Scotia Malaysia', 'logo' => 'scotia-bank.jpg']
+                                        ];                                        
                                         @endphp
-                                        @foreach($malaysianBanks as $bank)
-                                            <option value="{{ $bank['name'] }}" data-logo="{{ $bank['logo'] }}">
-                                                {{ $bank['name'] }}
-                                            </option>
-                                        @endforeach
                                     </select>
+                                    <input value="{{json_encode($malaysianBanks)}}" type="hidden" id="malay-banks">
                                     <div id="bank-logo-container" class="mt-2" style="display: none;">
                                         <img id="bank-logo" src="" alt="Bank Logo" style="height: 40px; object-fit: contain;">
                                     </div>

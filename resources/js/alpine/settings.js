@@ -1,6 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import Swal from "sweetalert2";
-
+import { Tooltip } from "bootstrap";
 
 document.querySelectorAll('.search-bar').forEach((element)=> {
     element.remove();
@@ -507,6 +507,17 @@ function openTab (id) {
     });
 
     document.querySelector(`#${id}`)?.classList.remove('d-none');
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+
+    let mainNav = document.getElementById('main-nav');
+    if (id === 'wallet-main') {
+        mainNav.classList.add('d-none');
+    } else {
+        mainNav.classList.remove('d-none');
+    }
 }
 
 function populateCoupons (event) {
@@ -523,7 +534,6 @@ function populateCoupons (event) {
 
 function emptyCoupons () {
     openTab('wallet-redeem-coupons');
-    let target = event.currentTarget;
     let couponElement = document.querySelector("input#coupon_code");
 
     if (couponElement) {
@@ -725,6 +735,7 @@ async function withdrawMoney(e) {
 
 let settings = document.querySelector('.settings');
 let wallet =  document.querySelector('.wallet');
+let banks =  document.querySelector('.banks-tom');
 
 if (settings) {
     document.addEventListener('DOMContentLoaded', () => {
@@ -734,7 +745,9 @@ if (settings) {
     });
 }
 
-if (wallet) {
+else if (wallet) {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList]?.map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
     let firstElement = null;
     let list = document.querySelectorAll('#wallet-view-coupons .coupon')
     if (list && '0' in list) firstElement = list[0];
@@ -751,7 +764,7 @@ if (wallet) {
     window.openTab = openTab;
     window.fillInput = fillInput;
     window.populateCoupons = populateCoupons;
-    Window.emptyCoupons = emptyCoupons;
+    window.emptyCoupons = emptyCoupons;
 
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -760,6 +773,8 @@ if (wallet) {
             CouponStatusComponent
         }).mount(wallet);
     });
+} else if (banks) {
+    
 }
 
 
