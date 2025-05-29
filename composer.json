@@ -144,18 +144,6 @@
             "php artisan optimize",
             "composer dump-autoload -o --classmap-authoritative",
 
-
-            "# Remove documentation and development files",
-            "find vendor -type f -name '*.md' -delete",
-            "find vendor -type f -name '*.txt' -delete",
-            "find vendor -type f -name 'LICENSE' -delete",
-            "find vendor -type f -name '*.dist' -delete",
-            "find vendor -type d -name 'doc' -exec rm -rf {} +",
-            "find vendor -type d -name 'docs' -exec rm -rf {} +",
-            "find vendor -type d -name 'tests' -exec rm -rf {} +",
-            "find vendor -type d -name 'examples' -exec rm -rf {} +"
-
-
         ],
         "staging": [
             "rm -rf node_modules",
