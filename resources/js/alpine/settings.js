@@ -725,6 +725,7 @@ async function withdrawMoney(e) {
 
 let settings = document.querySelector('.settings');
 let wallet =  document.querySelector('.wallet');
+let banks =  document.querySelector('.banks-tom');
 
 if (settings) {
     document.addEventListener('DOMContentLoaded', () => {
@@ -734,7 +735,7 @@ if (settings) {
     });
 }
 
-if (wallet) {
+else if (wallet) {
     let firstElement = null;
     let list = document.querySelectorAll('#wallet-view-coupons .coupon')
     if (list && '0' in list) firstElement = list[0];
@@ -760,6 +761,8 @@ if (wallet) {
             CouponStatusComponent
         }).mount(wallet);
     });
+} else if (banks) {
+    
 }
 
 
