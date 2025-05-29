@@ -14,11 +14,13 @@ class ParticipantCoupon extends Model
         'amount',
         'description',
         'is_active',
+        'is_public',
         'expires_at'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_public' => 'boolean',
         'expires_at' => 'datetime',
         'amount' => 'integer'
     ];

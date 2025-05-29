@@ -50,12 +50,12 @@ Route::group(['middleware' => 'auth'], function () {
             return $request->user();
         });
         Route::get('/teams/search', [ParticipantTeamController::class, 'search']);
-
         Route::post('/event/{id}/brackets', [ParticipantEventController::class, 'validateBracket'])->name('event.matches.validate');
 
         Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);
         Route::get('/user/{id}/reports', [SocialController::class, 'getReports'])->name('users.report.view');
         Route::get('/user/notifications', [UserController::class, 'viewNotifications'])->name('notifications.index');
+        Route::post('/user/withdraw', [StripeController::class, 'processWithdrawal'])->name('wallet.withdraw');
 
         Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');

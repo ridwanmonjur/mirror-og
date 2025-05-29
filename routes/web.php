@@ -83,7 +83,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/wallet', [StripeController::class, 'showWalletDashboard'])->name('wallet.dashboard');
         Route::get('/wallet/payment-method', [StripeController::class, 'showPaymentMethodForm'])->name('wallet.payment-method');
         Route::post('/wallet/payment-method', [StripeController::class, 'savePaymentMethod'])->name('wallet.save-payment-method');
-        Route::post('/wallet/withdraw', [StripeController::class, 'processWithdrawal'])->name('wallet.withdraw');
         Route::get('/wallet/topupCallback', [StripeController::class, 'topupCallback'])->name('wallet.topupCallback');
 
         Route::post('/wallet/checkout', [StripeController::class, 'checkoutTopup'])->name('wallet.checkout');
