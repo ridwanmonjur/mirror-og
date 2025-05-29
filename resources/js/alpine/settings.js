@@ -513,12 +513,22 @@ function populateCoupons (event) {
     openTab('wallet-redeem-coupons');
     let target = event.currentTarget;
     let { couponCode } = target.dataset;
-    console.log({ couponCode });
     let couponElement = document.querySelector("input#coupon_code");
-    console.log({ couponElement });
 
     if (couponElement) {
         couponElement.value = couponCode;
+        couponElement.focus();
+    }
+}
+
+function emptyCoupons () {
+    openTab('wallet-redeem-coupons');
+    let target = event.currentTarget;
+    let couponElement = document.querySelector("input#coupon_code");
+
+    if (couponElement) {
+        couponElement.value = '';
+        couponElement.focus();
     }
 }
 
@@ -528,38 +538,228 @@ function fillInput (inputId, value) {
     if (couponElement) {
         couponElement.value = value;
     }
+    
 }
 
-window.openTab = openTab;
-window.fillInput = fillInput;
-window.populateCoupons = populateCoupons;
+function CouponStatusComponent() {
+    return {
+        status: 'default', // 'success', 'error', 'default'
+        isSubmitting: false,
+        message: null,
+        
+        get statusIcon() {
+            switch(this.status) {
+                case 'success':
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill text-success" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>`;
+                case 'error':
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill text-red" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                    </svg>`;
+                default:
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket-perforated" viewBox="0 0 16 16">
+                        <path d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z"/>
+                        <path d="M1.5 3A1.5 1.5 0 0 0 0 4.5V6a.5.5 0 0 0 .5.5 1.5 1.5 0 1 1 0 3 .5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 1.5 13h13a1.5 1.5 0 0 0 1.5-1.5V10a.5.5 0 0 0-.5-.5 1.5 1.5 0 0 1 0-3A.5.5 0 0 0 16 6V4.5A1.5 1.5 0 0 0 14.5 3zM1 4.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v1.05a2.5 2.5 0 0 0 0 4.9v1.05a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-1.05a2.5 2.5 0 0 0 0-4.9z"/>
+                    </svg>`;
+            }
+        },
+        
+        get statusLabel() {
+            switch(this.status) {
+                case 'success':
+                    return 'Coupon Applied Successfully';
+                case 'error':
+                    return 'Invalid Coupon Code';
+                default:
+                    return 'Enter Coupon Code';
+            }
+        },
+        
+        get statusClass() {
+            switch(this.status) {
+                case 'success':
+                    return 'text-success';
+                case 'error':
+                    return 'text-red';
+                default:
+                    return 'text-muted';
+            }
+        },
+        
+        async submitCoupon(event) {
+            event.preventDefault();
+
+            let couponElement = document.querySelector("input#coupon_code");
+            let couponCode = couponElement.value;
+            if (!couponCode.trim()) {
+                this.status = 'error';
+                this.message = "You have not entered any code yet."
+                return;
+            }
+            
+            this.isSubmitting = true;
+            this.status = 'default';
+            this.message = null;
+            
+            try {
+                const formData = new FormData();
+                formData.append('coupon_code', couponCode);
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'));
+                
+                const response = await fetch('/wallet/redeem-coupon', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    this.status = 'success';
+                    this.message = data.message;
+
+                } else {
+                    this.status = 'error';
+                    this.message = data.message;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                this.status = 'error';
+                this.message = 'An unknown error has occured!';
+            } finally {
+                this.isSubmitting = false;
+            }
+        }
+    };
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    createApp({
+        CouponStatusComponent,
+    }).mount('#coupon-form'); // Mount to your coupon form container
+});
 
-    let settings = document.querySelector('.settings');
-    let wallet =  document.querySelector('.wallet');
 
-    if (settings) {
+
+let originalBtnText = null;        
+async function withdrawMoney(e) {
+    e.preventDefault();
+    let withdrawalForm = e.currentTarget;
+    const submitBtn = withdrawalForm.querySelector('button.withdraw-button');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+    
+    
+    try {
+        const formData = new FormData(withdrawalForm);
+        
+        const response = await fetch(withdrawalForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data && data.success) {
+            Swal.fire({
+                icon: 'success',
+                'title': 'Successfully made your request!',
+                text: data.message || 'Withdrawal request submitted successfully!',
+                confirmButtonColor: '#43A4D7',
+                willClose: () => {
+                    window.location.reload();
+                }
+            });
+            
+        } else {
+            console.log({data});
+            console.log({data});
+            console.log({data});
+            if (data.action_required) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Bank Account Required',
+                    text: 'You must link a bank account before making a withdrawal.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Link Bank Account',
+                    confirmButtonColor: '#43A4D7',
+                    reverseButtons: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = data.link;
+                    }
+                });
+
+                return;
+            }
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Your request has failed!',
+                text: data?.message || 'Withdrawal request failed!',
+                confirmButtonColor: '#43A4D7'
+            });
+            
+        }
+        
+    } catch (error) {
+        console.error('Withdrawal submission error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Your request has failed!',
+            text: 'Withdrawal request failed!',
+            confirmButtonColor: '#43A4D7'
+        });
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+    }
+}
+
+let settings = document.querySelector('.settings');
+let wallet =  document.querySelector('.wallet');
+
+if (settings) {
+    document.addEventListener('DOMContentLoaded', () => {
         createApp({
             AccountComponent,
         }).mount(settings);
+    });
+}
+
+if (wallet) {
+    let firstElement = null;
+    let list = document.querySelectorAll('#wallet-view-coupons .coupon')
+    if (list && '0' in list) firstElement = list[0];
+
+    if (firstElement) {
+        firstElement.classList.add('coupon-active');
     }
-  
-    if (wallet) {
-        let firstElement = null;
-            let list = document.querySelectorAll('#wallet-view-coupons .coupon')
-            if (list && '0' in list) firstElement = list[0];
 
-            if (firstElement) {
-                firstElement.classList.add('coupon-active');
-            }
+    let withdrawalForm2 = document.getElementById('withdrawal-form')
+    const submitBtn = withdrawalForm2.querySelector('button.withdraw-button');
+    originalBtnText = submitBtn.textContent;
 
-            
+    withdrawalForm2.addEventListener('submit', withdrawMoney);
+    window.openTab = openTab;
+    window.fillInput = fillInput;
+    window.populateCoupons = populateCoupons;
+    Window.emptyCoupons = emptyCoupons;
+
+
+    document.addEventListener('DOMContentLoaded', () => {
         createApp({
             TransactionComponent,
+            CouponStatusComponent
         }).mount(wallet);
-    }
-    
-});
+    });
+}
 
 
