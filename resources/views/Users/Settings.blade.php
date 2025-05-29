@@ -12,14 +12,12 @@
     $isShowFirstInnerAccordion = $limit_methods != 10;
     $isShowSecondInnerAccordion = $limit_history != 10;
     $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
-
-  
 @endphp
 
-<body>
+<body class="settings">
     @include('googletagmanager::body')
     @include('includes.Navbar.NavbarGoToSearchPage')
-    <main id="app" class="settings">
+    <main id="app" >
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">
 

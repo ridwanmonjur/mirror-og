@@ -4,21 +4,36 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
     @vite(['resources/js/alpine/settings.js'])
 </head>
+@section('body-class', 'wallet')
+
 @section('content')
     @include('includes.Navbar.NavbarGoToSearchPage')
 
-    <main class="wallet" v-scope="TransactionComponent()" class="row" @vue:mounted="init">
-        <input type="hidden" id="transactions-data" value='@json($transactions)'>
-
-        <div class="row container-main mx-auto" id="wallet-main">
-            <div class="col-12 col-xl-5">
-                <div class="card mb-2  py-1 border border-3 border-primary  rounded-30px ">
+    <main class=" " v-scope="TransactionComponent()" class="row" @vue:mounted="init">
+        <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
+        <div class="row my-2 px-5 py-2"> 
+            <h3 class="col-12 col-md-6 my-2 py-0 text-start">My Wallet</h3>
+            <h5 
+                style="z-index: 99;"
+                id="main-nav" onclick="openTab('wallet-main');" class="cursor-pointer my-2 d-none py-0 position-relative col-12 col-md-6 text-start text-md-end">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                    </svg>
+                </span>
+                <span>Go back</span>
+            </h5>
+        </div>
+        <div class="row container-main " id="wallet-main">
+            <div class="col-12 px-0 col-xl-5">
+                <div class="card my-2 mx-2 py-0 border border-3 border-primary  rounded-30px ">
                     <div class="card-body">
-                        <h5 class="mt-1 mb-3 text-secondary">Current Balance </h5>
+                        <h5 class="my-3 text-secondary">Current Balance </h5>
                         <h2 class="text-primary my-3"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
-                        <div class="mb-2">
+                        <div class="my-2">
                             <button type="button"
-                                class="btn d-inline-block me-2 mb-1 rounded-pill btn-primary  text-light "
+                                class="btn d-inline-block me-2 my-1 rounded-pill btn-primary  text-light "
                                 onclick="openTab('wallet-add-fund')">
                                 <small>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
@@ -30,7 +45,7 @@
                                 </small>
                                 <small> Add funds </small>
                             </button>
-                            <button type="button" class="btn rounded-pill mb-1 btn-secondary text-light "
+                            <button type="button" class="btn rounded-pill my-1 btn-secondary text-light "
                                 onclick="openTab('wallet-withdraw-fund')">
                                 <small>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
@@ -45,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mb-2  px-1 py-1 border border-2 border-secondary rounded-30px">
+                <div class="card my-2  mx-2 py-1 border border-2 border-secondary rounded-30px">
                     <div class="card-body">
                         <div class="row text-secondary">
                             <p class="col-6 text-start">Coupons expiring soon</p>
@@ -72,8 +87,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 mb-2 col-xl-7">
-                <div class="card px-0 py-0 border border-2 border-secondary rounded-30px">
+            <div class="col-12 my-2 col-xl-7 px-0">
+                <div class="card mx-2 py-0 border border-2 border-secondary rounded-30px">
                     <div class="card-body px-0 py-0">
                         <div class="container-fluid px-0 py-0">
                             <div class="transaction-history">
@@ -95,6 +110,7 @@
 
                                 <div class="table-responsive my-2">
                                     <table class="transaction-history__table table "
+                                        v-cloak 
                                         v-if="demoTransactions && demoTransactions[0]">
                                         <thead class="transaction-table__header">
                                             <tr>
@@ -132,7 +148,7 @@
             </div>
         </div>
 
-        <div class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-add-fund">
+        <div class="d-none mx-auto px-0 container-main " id="wallet-add-fund">
             <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-50  rounded-30px">
                 <div class="card-body px-2 py-2">
                     <div class=" px-2 py-2">
@@ -208,10 +224,10 @@
             </div>
         </div>
 
-        <div class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-withdraw-fund">
-            <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-50 rounded-30px">
+        <div class="d-none mx-auto px-0 container-main " id="wallet-withdraw-fund">
+            <div class="card px-0 py-0 border border-2 mx-auto border-secondary my-0 w-95-lg-50 rounded-30px">
                 <div class="card-body px-2 py-2">
-                    <div class=" px-2 py-2">
+                    <div class=" px-2 py-1">
                         <div class=" px-1 py-0 my-0">
                             <h5 class="text-center mt-2 mb-3 text-secondary">Withdraw funds from your wallet</h5>
 
@@ -249,16 +265,11 @@
                                         </div>
                                         <small class="text-muted fst-italic ">Minimum amount is RM 5.00</small>
                                         @if ($wallet->has_bank_account) 
-                                            <div class="text-center text-primary fst-italic mt-1 mb-3">Linked bank account: {{$wallet->bank_name}} **** {{$wallet->bank_last4}}</div>
+                                            <div class="text-center text-primary fst-italic mt-1 mb-2">Linked bank account: {{$wallet->bank_name}} **** {{$wallet->bank_last4}}</div>
                                         @else
-                                            <div class="text-center mt-1 mb-3">No linked bank account</div>
+                                            <div class="text-center mt-1 mb-2">No linked bank account</div>
                                         @endif
                                     </div>
-                                    <small class="fst-italic text-primary w-75 d-block text-center mx-auto">
-                                        Please note that our withdrawal request will take seven (7) business days 
-                                        to process. If you do not receive your funds after that period, you can ping 
-                                        our support mains at supportmain@driftwood to check your request.
-                                    </small>
                                     <div class="d-flex justify-content-around w-75 mt-2 mb-4 mx-auto">
                                         <button onclick="openTab('wallet-main')" type="button"
                                             class="btn border-secondary text-dark rounded-pill px-4 py-2">
@@ -267,6 +278,12 @@
                                         <button type="submit"
                                             class="btn btn-primary withdraw-button text-light rounded-pill px-4 py-2">Yes, request withdrawal</button>
                                     </div>
+                                    <small class="fst-italic text-primary w-75 d-block text-center mx-auto">
+                                        Please note that our withdrawal request will take seven (7) business days 
+                                        to process. If you do not receive your funds after that period, you can ping 
+                                        our support mains at supportmain@driftwood to check your request.
+                                    </small>
+                                    
                                 </form>
                             </div>
                             
@@ -274,27 +291,20 @@
                     </div>
                 </div>
             </div>
+            <br>
         </div>
 
-        <div class="d-none container-main mx-auto px-0" id="wallet-view-transactions">
+        <div class="d-none container-main mx-auto px-5" id="wallet-view-transactions">
             <div class="center-container mx-auto">
                 <div class="card px-3 py-3 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
                     <div class="card-body px-2 py-2">
                         <div class="d-flex justify-content-between cursor-pointer">
                             <h3 class="transaction-history__title ">My Transactions</h3>
-                            <span onclick="openTab('wallet-main')" class="cursor-pointer">
-                                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                                    </svg>
-                                </span>
-                                <span>Go back</span>
-                            </span>
+                          
                         </div>
                         <div class="mt-3">
 
-                            <div class="table-responsive mb-4" v-if="transactions && transactions[0]">
+                            <div class="table-responsive mb-4 " v-cloak v-if="transactions && transactions[0]">
                                 <table class="transaction-history__table table ">
                                     <thead class="transaction-table__header">
                                         <tr>
@@ -325,11 +335,11 @@
                                 <x-wallet.no-list :text="'No transactions available!'" />
                             </div>
 
-                            <div v-if="hasMore" class="text-center my-4">
+                            <div v-if="hasMore" class="text-center  my-4" v-cloak>
                                 <button v-on:click="loadMore" :disabled="loading"
                                     class="btn text-light rounded-pill btn-primary">
-                                    <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-                                    <span v-if="loading">Loading...</span>
+                                    <span v-if="loading" v-cloak  class="spinner-border spinner-border-sm me-2"></span>
+                                    <span v-if="loading" v-cloak >Loading...</span>
                                     <span v-else>Load More</span>
                                 </button>
                             </div>
@@ -344,7 +354,7 @@
 
         <div class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-view-coupons">
             <div class="center-container mx-auto">
-                <div class="card px-3 py-3 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
+                <div class="card px-3 py-2 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
                     <div class="card-body px-2 py-2">
                         <div class="row ">
                             <h3 class="col-6 text-start transaction-history__title ">My Coupons</h3>
@@ -359,15 +369,7 @@
                                     Redeem coupons
                                 </button>
                             </div>
-                            <span onclick="openTab('wallet-main')" class="col-6 text-start cursor-pointer">
-                                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
-                                    </svg>
-                                </span>
-                                <span>Go back</span>
-                            </span>
+                           
                         </div>
                         <div class="px-0 pt-4 pb-4 row">
                             @if (isset($coupons[0]))
@@ -404,13 +406,17 @@
 
                                             <!-- Status Icon and Label -->
                                             <div class="mb-2 input-group">
-                                                <label v-html="statusIcon" class="input-group-text"></label>
+                                                <label 
+                                                    :class="{ ' text-success border-success ': status === 'success', ' border-red text-red ': status === 'error' }"
+                                                    v-html="statusIcon" class="input-group-text">
+                                                </label>
                                                 <input 
                                                 id="coupon_code"
                                                 type="text" 
+                                                spellcheck="false"
                                                 name="coupon_code"
-                                                class="form-control border-secondary text-center " 
-                                                :class="{ 'border-success': status === 'success', 'border-red': status === 'error' }"
+                                                class="px-4 form-control border-secondary text-start " 
+                                                :class="{ ' border-success text-success ': status === 'success', ' border-red text-red ': status === 'error' }"
                                                 placeholder="XXXXXXX"
                                                 :disabled="isSubmitting"
                                                 required

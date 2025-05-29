@@ -8,8 +8,8 @@
     <title>Event Invitation</title>
      @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
-    <meta name="page-component" content="teamSelect">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    {{-- <meta name="page-component" content="teamSelect"> --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/teamSelect.js'])    
 </head>
 
 @php
@@ -42,8 +42,8 @@
                     <br>
                     <div>
                         <div class="w-75 mx-auto">
-                            <select id="team-select"  class="d-block w-100" placeholder="Select a person..." >
-                                <option value="">Select a person...</option>
+                            <select id="team-select"  class="d-block w-100" placeholder="Select a team..." >
+                                <option value="">Select a team...</option>
                             </select>
                         </div>
                     </div>
