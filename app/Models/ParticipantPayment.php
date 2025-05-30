@@ -19,6 +19,7 @@ class ParticipantPayment extends Model
         'join_events_id',
         'payment_amount',
         'payment_id',
+        'register_time'
     ];
 
     public function members(): BelongsTo

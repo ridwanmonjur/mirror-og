@@ -2,14 +2,14 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
-    @vite(['resources/js/alpine/settings.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/settings.js'])
 </head>
 @section('body-class', 'wallet')
 
 @section('content')
     @include('includes.Navbar.NavbarGoToSearchPage')
 
-    <main class=" " v-scope="TransactionComponent()" class="row" @vue:mounted="init">
+    <main class=" "  v-scope="TransactionComponent()" class="row" @vue:mounted="init">
         <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
         <div class="row my-2 px-5 py-2"> 
             <h3 class="col-12 col-md-6 my-2 py-0 text-start">My Wallet</h3>
@@ -30,7 +30,7 @@
                 <div class="card my-2 mx-2 py-0 border border-3 border-primary  rounded-30px ">
                     <div class="card-body">
                         <h5 class="my-3 text-secondary">Current Balance </h5>
-                        <h2 class="text-primary my-3"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
+                        <h2 class="text-primary my-3"> MYR {{ number_format($wallet->current_balance, 2) }} </h2>
                         <div class="my-2">
                             <button type="button"
                                 class="btn d-inline-block me-2 my-1 rounded-pill btn-primary  text-light "
@@ -95,8 +95,7 @@
                                 <div class="row py-0 px-3 my-0">
                                     <h3 class="transaction-history__title  col-6 text-secondary">Most recent transactions
                                     </h3>
-                                    <div onclick="openTab('wallet-view-transactions')"
-                                        class="col-6 text-end text-secondary cursor-pointer">
+                                    <a href="{{route('wallet.transactions')}}" class="col-6 text-secondary text-start text-lg-end">
                                         View full <span class="d-none d-lg-inline">transaction</span> history
                                         <span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
@@ -105,13 +104,13 @@
                                                     d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
                                             </svg>
                                         </span>
-                                    </div>
+                                    </a>
                                 </div>
 
                                 <div class="table-responsive my-2">
                                     <table class="transaction-history__table table "
                                         v-cloak 
-                                        v-if="demoTransactions && demoTransactions[0]">
+                                        v-if="transactions && transactions[0]">
                                         <thead class="transaction-table__header">
                                             <tr>
                                                 <th scope="col"
@@ -131,7 +130,7 @@
                                         </thead>
 
                                         <tbody>
-                                            <tr v-for="transaction in demoTransactions" :key="transaction.id"
+                                            <tr v-for="transaction in transactions" :key="transaction.id"
                                                 class="transaction-row">
                                                 <x-wallet.transaction-item />
                                             </tr>
@@ -160,7 +159,7 @@
                             <div class="text-center mx-auto my-3 py-3 text-light bg-primary rounded-30px"
                                 style="width: min(300px, 80%);">
                                 <h5 class="mt-1 mb-3 fw-normal">Current Wallet Balance </h5>
-                                <h2 class=" my-3 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
+                                <h2 class=" my-3 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h2>
                             </div>
                             @include('includes.Flash')
 
@@ -236,7 +235,7 @@
                             <div class="text-center mx-auto my-2 py-2 text-light bg-secondary rounded-30px"
                                 style="width: min(300px, 80%);">
                                 <h5 class="my-1  fw-normal">Current Wallet Balance </h5>
-                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h4>
+                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h4>
                             </div>
                             <div class="text-center mx-auto">
                                 <svg width="50px" height="50px" fill="#000000" viewBox="0 0 24 24" id="down-direction" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path id="primary" d="M20.76,13.81l-2.6-3a1,1,0,0,0-1.41-.11L15,12.16V4a2,2,0,0,0-2-2H11A2,2,0,0,0,9,4v8.16l-1.75-1.5a1,1,0,0,0-1.41.11l-2.6,3a1,1,0,0,0,.11,1.41l7.35,6.3a2,2,0,0,0,2.6,0l7.35-6.3A1,1,0,0,0,20.76,13.81Z" style="fill: #a6a6a6;"></path></g></svg>
@@ -244,7 +243,7 @@
                             <div class="text-center mx-auto my-2 py-2 text-light bg-primary rounded-30px"
                                 style="width: min(300px, 80%);">
                                 <h5 class="my-1  fw-normal">Net Wallet Balance </h5>
-                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h4>
+                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h4>
                             </div>
                             <div id="withdraw-status" class="text-center  d-none mx-auto">
                             </div>
@@ -294,63 +293,6 @@
             <br>
         </div>
 
-        <div class="d-none container-main mx-auto px-5" id="wallet-view-transactions">
-            <div class="center-container mx-auto">
-                <div class="card px-3 py-3 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
-                    <div class="card-body px-2 py-2">
-                        <div class="d-flex justify-content-between cursor-pointer">
-                            <h3 class="transaction-history__title ">My Transactions</h3>
-                          
-                        </div>
-                        <div class="mt-3">
-
-                            <div class="table-responsive mb-4 " v-cloak v-if="transactions && transactions[0]">
-                                <table class="transaction-history__table table ">
-                                    <thead class="transaction-table__header">
-                                        <tr>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">Date
-                                            </th>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">
-                                                Transaction</th>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">Type
-                                            </th>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">Total
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr v-for="transaction in transactions" :key="transaction.id"
-                                            class="transaction-row">
-                                            <x-wallet.transaction-item />
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div v-else>
-                                <x-wallet.no-list :text="'No transactions available!'" />
-                            </div>
-
-                            <div v-if="hasMore" class="text-center  my-4" v-cloak>
-                                <button v-on:click="loadMore" :disabled="loading"
-                                    class="btn text-light rounded-pill btn-primary">
-                                    <span v-if="loading" v-cloak  class="spinner-border spinner-border-sm me-2"></span>
-                                    <span v-if="loading" v-cloak >Loading...</span>
-                                    <span v-else>Load More</span>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
 
         <div class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-view-coupons">
             <div class="center-container mx-auto">

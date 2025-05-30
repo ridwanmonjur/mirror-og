@@ -72,10 +72,8 @@ class BracketDeadlineSetupSeeder extends Seeder
             ]
         ];
         
-        // Get all EventTier models with tierTeamSlot values matching our configuration keys
         $eventTiers = EventTier::whereIn('tierTeamSlot', array_keys($configurations))->get();
         
-        // Create entries for event tiers
         foreach ($eventTiers as $eventTier) {
             $slotSize = $eventTier->tierTeamSlot;
             if (isset($configurations[$slotSize])) {

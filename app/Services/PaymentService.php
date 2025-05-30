@@ -22,9 +22,9 @@ class PaymentService
         $paymentData = DB::table('join_events')
             ->where('join_events.id',  $joinEventId )
             ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
-            ->join('all_payment_transactions', 'all_payment_transactions.id', '=', 'participant_payments.payment_id')
-            ->select('all_payment_transactions.payment_id', 'all_payment_transactions.id', 'all_payment_transactions.payment_amount',  
-                'all_payment_transactions.payment_status', 'participant_payments.user_id')
+            ->join('stripe_transactions', 'stripe_transactions.id', '=', 'participant_payments.payment_id')
+            ->select('stripe_transactions.payment_id', 'stripe_transactions.id', 'stripe_transactions.payment_amount',  
+                'stripe_transactions.payment_status', 'participant_payments.user_id')
             ->get()
             ->toArray();
         
@@ -64,7 +64,6 @@ class PaymentService
                 } else {
                     $updatedPayments[$index]['payment_status'] = 'couponed';
                     $updatedPayments[$index]['couponed_amount'] = $refundedAmount;
-                    
                     
                     $discountKey = 'couponed_amount';
 

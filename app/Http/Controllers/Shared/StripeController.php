@@ -223,15 +223,18 @@ public function showPaymentMethodForm(Request $request)
     /**
      * Show the wallet dashboard
      */
-    public function showWalletDashboard(TransactionHistoryRequest $request)
+    public function showWalletDashboard(Request $request)
     {
         $user = $request->get('user');
 
-        if ($request->expectsJson()) {
-            return response()->json($this->getTransactionHistory($request, $user));
-         }
+        $transactionsDemo = TransactionHistory::where('user_id', $user->id)
+            ->limit(5)->get()->toArray();
 
-        $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
+        $transactions = [
+            'data' => $transactionsDemo,
+            'has_more' => false,
+            'next_cursor' => null
+        ];
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
         $couponsQ = ParticipantCoupon::where('is_public', true)
@@ -242,12 +245,32 @@ public function showPaymentMethodForm(Request $request)
         
         $demoCoupons = $couponsQ->take(2)->toArray();
         $coupons = $couponsQ->toArray();
-        // dd($transactions);
 
         return view('Users.Dashboard', [
             'wallet' => $wallet,
             'coupons' => $coupons,
             'demoCoupons' => $demoCoupons,
+            'transactions' => $transactions
+        ]);
+    }
+
+     /**
+     * Show the wallet dashboard
+     */
+    public function showTransactions(TransactionHistoryRequest $request)
+    {
+        $user = $request->get('user');
+
+        if ($request->expectsJson()) {
+            return response()->json($this->getTransactionHistory($request, $user));
+         }
+
+        $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
+
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
+        
+        return view('Users.Transaction', [
+            'wallet' => $wallet,
             'transactions' => $transactions
         ]);
     }
@@ -271,6 +294,17 @@ public function showPaymentMethodForm(Request $request)
             $wallet->update([
                 'usable_balance' => $wallet->usable_balance - $withdrawalAmount,
                 'current_balance' => $wallet->current_balance - $withdrawalAmount,
+            ]);
+
+            TransactionHistory::create([
+                'name' => "Withdrawal request: RM {$withdrawalAmount}",
+                'type' => "Withdrawal request",
+                'link' => null,
+                'amount' => $withdrawalAmount,
+                'summary' => "{$wallet->bank_name} **** {$wallet->bank_last4}",
+                'isPositive' => false,
+                'date' => now(),
+                'user_id' => $user->id
             ]);
 
             DB::commit();
@@ -315,13 +349,28 @@ public function showPaymentMethodForm(Request $request)
             if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
-                
+                $paymentMethodId = $paymentIntent['payment_method'];
+                $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
+
                 if ($paymentIntent['amount'] > 0) {
                     $wallet = Wallet::retrieveOrCreateCache($user->id);
                     $amount = $paymentIntent['amount'] / 100;
+                    $cardBrand = ucfirst($paymentMethod->card->brand); 
+                    $cardLast4 = $paymentMethod->card->last4;
                     $wallet->update([
                         'usable_balance' => $wallet->usable_balance + $amount,
                         'current_balance' => $wallet->current_balance + $amount,
+                    ]);
+
+                    TransactionHistory::create([
+                        'name' => "Topup balance: RM {$amount}",
+                        'type' => "Topup wallet",
+                        'link' => null,
+                        'amount' => $amount,
+                        'summary' => "{$cardBrand} **** {$cardLast4}",
+                        'isPositive' => false,
+                        'date' => now(),
+                        'user_id' => $user->id
                     ]);
                    
 

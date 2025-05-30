@@ -19,7 +19,7 @@
                                 <p class="text-center text-red">Ooops, no coupons </p> 
                             @else
                                 <p> 
-                                    You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> in your wallet.
+                                    You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> usable balance in your wallet.
                                     @if ($discountStatusEnums['COMPLETE'] == $discountStatus )
                                         <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your discount wallet. </span>
                                         
@@ -77,8 +77,7 @@
                     <br>
                     <div id="spinner-element" class="d-flex justify-content-center mt-5">
                         <div class="spinner-border text-primary" role="status">
-                            <br><br>
-                            <br><br>
+                            <br>
                             <span class="visually-hidden text-center ">Loading...</span>
                         </div>
                     </div>
@@ -109,7 +108,7 @@
                             <div id="card-element" class="my-2"> </div>
                             <div class="d-none d-lg-block">
 
-                                <br><br><br><br>
+                                <br>
                             </div>
                             <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
                                 <button class="oceans-gaming-default-button" type="submit"> Submit </button>
