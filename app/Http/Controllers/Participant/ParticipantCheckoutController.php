@@ -112,7 +112,7 @@ class ParticipantCheckoutController extends Controller
                 ]);
 
                 $transaction = TransactionHistory::create([
-                    'name' => "Entry Fee Hold: {$event->eventName}",
+                    'name' => "Entry Fee Hold: RM {$event->eventName}",
                     'type' => "Event Entry Fee Hold",
                     'link' => route('public.event.view', ['id' => $event->id]),
                     'amount' => $request->discount_applied_amount,
@@ -129,7 +129,7 @@ class ParticipantCheckoutController extends Controller
                     ]);
 
                 $transaction = TransactionHistory::create([
-                    'name' => "Entry Fee: {$event->eventName}",
+                    'name' => "Entry Fee: RM {$event->eventName}",
                     'type' => "Event Entry Fee",
                     'link' => route('public.event.view', ['id' => $event->id]),
                     'amount' => $request->discount_applied_amount,
@@ -244,7 +244,7 @@ class ParticipantCheckoutController extends Controller
 
                     if ($isNormalReg) {
                         $history = TransactionHistory::create([
-                            'name' => "Top up for event: {$event->eventName}",
+                            'name' => "Top up for event: RM {$event->eventName}",
                             'type' => "Top up: RM {$paymentDone}",
                             'link' => null,
                             'amount' => $paymentDone,

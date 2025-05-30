@@ -47,7 +47,7 @@ function TransactionComponent() {
                     params.append('cursor', this.nextCursor);
                 }
 
-                const response = await fetch(`/wallet?${params}`, {
+                const response = await fetch(`/wallet/transactions?${params}`, {
                     headers: {
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'

@@ -297,7 +297,7 @@ public function showPaymentMethodForm(Request $request)
             ]);
 
             TransactionHistory::create([
-                'name' => "Withdrawal request: {$withdrawalAmount}",
+                'name' => "Withdrawal request: RM {$withdrawalAmount}",
                 'type' => "Withdrawal request",
                 'link' => null,
                 'amount' => $withdrawalAmount,
@@ -349,13 +349,28 @@ public function showPaymentMethodForm(Request $request)
             if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
-                
+                $paymentMethodId = $paymentIntent['payment_method'];
+                $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
+
                 if ($paymentIntent['amount'] > 0) {
                     $wallet = Wallet::retrieveOrCreateCache($user->id);
                     $amount = $paymentIntent['amount'] / 100;
+                    $cardBrand = ucfirst($paymentMethod->card->brand); 
+                    $cardLast4 = $paymentMethod->card->last4;
                     $wallet->update([
                         'usable_balance' => $wallet->usable_balance + $amount,
                         'current_balance' => $wallet->current_balance + $amount,
+                    ]);
+
+                    TransactionHistory::create([
+                        'name' => "Topup balance: RM {$amount}",
+                        'type' => "Topup wallet",
+                        'link' => null,
+                        'amount' => $amount,
+                        'summary' => "{$cardBrand} **** {$cardLast4}",
+                        'isPositive' => false,
+                        'date' => now(),
+                        'user_id' => $user->id
                     ]);
                    
 
