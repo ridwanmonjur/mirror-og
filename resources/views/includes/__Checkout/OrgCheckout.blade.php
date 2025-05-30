@@ -18,7 +18,6 @@
                     <div id="spinner-element" class="d-flex justify-content-center mt-5">
                         <div class="spinner-border text-primary" role="status">
                             <br><br>
-                            <br><br>
                             <span class="visually-hidden text-center ">Loading...</span>
                         </div>
                     </div>

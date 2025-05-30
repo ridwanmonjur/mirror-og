@@ -28,10 +28,8 @@ final class RecordStripeFactory extends Factory
     {
         return [
             'payment_id' => fake()->optional()->word,
-            'payment_status' => fake()->word,
-            'coupon_amount' => fake()->optional()->word,
+            'payment_status' => 'SUCCEEDED',
             'payment_amount' => fake()->word,
-            'released_amount' => fake()->optional()->word,
             // 'user_id' => \App\Models\User::factory()
         ];
     }

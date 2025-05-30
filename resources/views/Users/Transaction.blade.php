@@ -4,11 +4,13 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/settings.js'])
 </head>
+@section('body-class', 'wallet')
 
 @section('content')
     @include('includes.Navbar.NavbarGoToSearchPage')
-    
-    <main class="wallet2" v-scope="TransactionComponent()">
+    <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
+
+    <main  v-scope="TransactionComponent()" @vue:mounted="init">
         <div class="row my-2 px-5 py-2"> 
         <h3 class="col-12 col-md-6 my-2 py-0 text-start">My Transactions</h3>
         <a 
@@ -25,7 +27,7 @@
         </a>
     </div>
         <div class=" mx-auto px-0 container-main ">
-            <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-50 rounded-30px">
+            <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-75 rounded-30px">
                 <div class="card-body px-4 py-3">
                     <div class="my-3">
                         <div class="table-responsive mb-4 " v-cloak v-if="transactions && transactions[0]">

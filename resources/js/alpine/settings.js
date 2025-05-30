@@ -23,10 +23,9 @@ function TransactionComponent() {
 
     return {
         init() {
-            this.transactions = [...initialTransactions.data]
+            this.transactions = [...initialTransactions.data];
         },
         
-        // Data
         transactions: [],
         loading: false,
         hasMore: initialTransactions.has_more,
@@ -653,10 +652,13 @@ let originalBtnText = null;
 async function withdrawMoney(e) {
     e.preventDefault();
     let withdrawalForm = e.currentTarget;
-    const submitBtn = withdrawalForm.querySelector('button.withdraw-button');
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
-    
+    const submitBtn = withdrawalForm?.querySelector('button.withdraw-button');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
+        
+    }
+  
     
     try {
         const formData = new FormData(withdrawalForm);
@@ -730,7 +732,6 @@ async function withdrawMoney(e) {
 
 let settings = document.querySelector('.settings');
 let wallet =  document.querySelector('.wallet');
-let banks =  document.querySelector('.banks-tom');
 
 if (settings) {
     document.addEventListener('DOMContentLoaded', () => {
@@ -751,11 +752,15 @@ else if (wallet) {
         firstElement.classList.add('coupon-active');
     }
 
-    let withdrawalForm2 = document.getElementById('withdrawal-form')
-    const submitBtn = withdrawalForm2.querySelector('button.withdraw-button');
-    originalBtnText = submitBtn.textContent;
+    let withdrawalForm2 = document.getElementById('withdrawal-form');
 
-    withdrawalForm2.addEventListener('submit', withdrawMoney);
+    if (withdrawalForm2) {
+        const submitBtn = withdrawalForm2.querySelector('button.withdraw-button');
+        originalBtnText = submitBtn.textContent;
+    
+        withdrawalForm2.addEventListener('submit', withdrawMoney);
+    }
+   
     window.openTab = openTab;
     window.fillInput = fillInput;
     window.populateCoupons = populateCoupons;
