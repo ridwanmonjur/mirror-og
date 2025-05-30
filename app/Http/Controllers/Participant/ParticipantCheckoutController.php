@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 use App\Http\Requests\Match\DiscountCheckoutRequest;
+use App\Models\TransactionHistory;
 
 class ParticipantCheckoutController extends Controller
 {
@@ -94,12 +95,50 @@ class ParticipantCheckoutController extends Controller
             $userWallet = $request->attributes->get('user_wallet');
             $newAmount = $request->attributes->get('new_amount_after_discount');
             $isCompletePayment = $request->attributes->get('complete_payment');
+            $regStatus = $request->getStatus();
+            $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');
+            $event = $request->event;
+            
             $pending_total_after_discount = $request->attributes->get('pending_total_after_discount');
             $walletAmount = $userWallet->usable_balance - $request->discount_applied_amount;
+            $currentAmount = $userWallet->current_balance - $request->discount_applied_amount;
+            $transaction = null;
+            if ($isNormalReg) {
+                DB::table('user_wallet')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'usable_balance' => $walletAmount,
+                        'current_balance' => $currentAmount
+                ]);
 
-            DB::table('user_wallet')
-                ->where('user_id', $user->id)
-                ->update(['usable_balance' => $walletAmount]);
+                $transaction = TransactionHistory::create([
+                    'name' => "Entry Fee Hold: RM {$event->eventName}",
+                    'type' => "Event Entry Fee Hold",
+                    'link' => route('public.event.view', ['id' => $event->id]),
+                    'amount' => $request->discount_applied_amount,
+                    'summary' => "User Wallet RM {$request->discount_applied_amount}",
+                    'isPositive' => false,
+                    'date' => now(),
+                    'user_id' => $user->id
+                ]);
+            } else {
+                DB::table('user_wallet')
+                    ->where('user_id', $user->id)
+                    ->update([
+                        'usable_balance' => $walletAmount,
+                    ]);
+
+                $transaction = TransactionHistory::create([
+                    'name' => "Entry Fee: RM {$event->eventName}",
+                    'type' => "Event Entry Fee",
+                    'link' => route('public.event.view', ['id' => $event->id]),
+                    'amount' => $request->discount_applied_amount,
+                    'summary' => "{$event->game->gameTitle}, {$event->tier->eventTier}, {$event->type->eventType}",
+                    'isPositive' => false,
+                    'date' => now(),
+                    'user_id' => $user->id
+                ]);
+            }
 
             if (!$isCompletePayment) {
                 if ($request->payment_intent_id) {
@@ -110,26 +149,23 @@ class ParticipantCheckoutController extends Controller
                 }
             }
 
-            $transaction = new RecordStripe([
-                'payment_id' => null,
-                'payment_status' => 'succeeded_applied_discount',
-                'payment_amount' => $request->discount_applied_amount
-            ]);
-            $transaction->save();
 
             ParticipantPayment::create([
                 'team_members_id' => $request->member_id,
                 'user_id' => $user->id,
                 'join_events_id' => $request->joinEventId,
                 'payment_amount' => $request->discount_applied_amount,
-                'payment_id' => $transaction->id,
+                'register_time' => $regStatus,
+                'wallet_id' => $transaction?->id
             ]);
 
             if ($isCompletePayment) {
                 if ($pending_total_after_discount < 0.1) {
                     $joinEvent = $request->joinEvent;
                     $joinEvent->payment_status = 'completed';
+                    $joinEvent->register_time = $regStatus;
                     $joinEvent->save();
+                    // add column for registration
                 }
             }
 
@@ -169,7 +205,6 @@ class ParticipantCheckoutController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
             $status = $request->get('redirect_status');
-            
             if (
                 ($status === 'succeeded' || $status === "requires_capture") 
                 && $request->has('payment_intent_client_secret')
@@ -197,22 +232,53 @@ class ParticipantCheckoutController extends Controller
                         $paymentDone
                     );
 
+                    $event = EventDetail
+                    ::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
+                    ->where('id', $joinEvent->event_details_id)
+                        ->with(['tier', 'type', 'game'])->first();
+                    $total = (float) $event->tier?->tierEntryFee ;
+
+                    $regStatus = $event->getRegistrationStatus();
+                    $history = null;
+                    $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');
+
+                    if ($isNormalReg) {
+                        $history = TransactionHistory::create([
+                            'name' => "Top up for event: RM {$event->eventName}",
+                            'type' => "Top up: RM {$paymentDone}",
+                            'link' => null,
+                            'amount' => $paymentDone,
+                            'summary' => "Wallet RM $paymentDone",
+                            'isPositive' => false,
+                            'date' => now(),
+                            'user_id' => $user->id
+                        ]);
+                    } else {
+                        $history = TransactionHistory::create([
+                            'name' => "Payment {$event->eventName}",
+                            'type' => "Top up for Event: RM $paymentDone",
+                            'link' => route('public.event.view', ['id' => $event->id]),
+                            'amount' => $paymentDone,
+                            'summary' => "{$event->game->gameTitle}, {$event->tier->eventTier}, {$event->type->eventType}",
+                            'isPositive' => false,
+                            'date' => now(),
+                            'user_id' => $user->id
+                        ]);
+                    }
+
                     ParticipantPayment::create([
                         'team_members_id' => $paymentIntent['metadata']['memberId'],
                         'user_id' => $userId,
                         'join_events_id' => $paymentIntent['metadata']['joinEventId'],
                         'payment_amount' => $paymentDone,
                         'payment_id' => $transaction->id,
+                        'register_time' => $regStatus,
+                        'wallet_id' => $history?->id
                     ]);
 
-
-                    $event = EventDetail::select(['id', 'event_tier_id'])
-                        ->where('id', $joinEvent->event_details_id)
-                        ->with('tier')->first();
-                    $total = (float) $event->tier?->tierEntryFee ;
-                 
                     if (($total - ($participantPaymentSum + $paymentDone)) < 0.1) {
                         $joinEvent->payment_status = 'completed';
+                        $joinEvent->register_time = $regStatus;
                         $joinEvent->save();
                     }
                     
@@ -224,6 +290,8 @@ class ParticipantCheckoutController extends Controller
                         ->with('scroll', $paymentIntent['metadata']['joinEventId']) ;
                 }
             }
+            DB::rollBack();
+
             return $this->showErrorParticipant('Your payment has failed unfortunately!');
 
         } catch (ModelNotFoundException|UnauthorizedException $e) {

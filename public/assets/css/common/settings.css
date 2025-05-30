@@ -512,6 +512,10 @@ table.responsive thead {
     width: 95vw;
 }
 
+.w-95-lg-75 {
+    width: 95vw;
+}
+
 .min-h-85vh {
     min-height: 100vh;
     position: absolute;
@@ -529,6 +533,10 @@ table.responsive thead {
    
     .w-95-lg-50 {
         width: 50vw;
+    }
+
+    .w-95-lg-75 {
+        width: 75vw;
     }
 
     .coupon__details {

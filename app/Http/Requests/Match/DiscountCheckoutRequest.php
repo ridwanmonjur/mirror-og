@@ -20,6 +20,11 @@ class DiscountCheckoutRequest extends FormRequest
     public float $discount_applied_amount;
     public float $participantPaymentSum;
     public ?JoinEvent $joinEvent;
+    public string $status;
+
+    public function getStatus () {
+        return $this->status;
+    }
 
     public function rules(): array
     {
@@ -39,9 +44,19 @@ class DiscountCheckoutRequest extends FormRequest
             $joinEvent = JoinEvent::select('id', 'event_details_id', 'payment_status')
                 ->findOrFail($this->joinEventId);
 
-            $event = EventDetail::select(['id', 'event_tier_id'])
+            $event = EventDetail
+                ::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
                 ->where('id', $joinEvent->event_details_id)
-                ->with('tier')->first();
+                ->with(['tier', 'type', 'game'])->first();
+            
+            $status = $event->getRegistrationStatus();
+            // if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
+            //     $validator->errors()->add('time', "Regisration time is now over!");
+            //     return;
+            // }
+            $this->status = $status;
+            $this->event = $event;
+
 
             $total = (float) $event->tier->tierEntryFee;
             $this->total = $total;
