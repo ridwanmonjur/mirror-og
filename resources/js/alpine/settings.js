@@ -24,10 +24,6 @@ function TransactionComponent() {
     return {
         init() {
             this.transactions = [...initialTransactions.data]
-            console.log(initialTransactions);
-            console.log("Transaction History initiated!");
-            this.demoTransactions = [...this.transactions.slice(0, 3)];
-            console.log(this.transactions);
         },
         
         // Data
@@ -35,7 +31,6 @@ function TransactionComponent() {
         loading: false,
         hasMore: initialTransactions.has_more,
         nextCursor: initialTransactions.next_cursor,
-        demoTransactions: [],
 
         // Methods
         async loadTransactions(reset = false) {
@@ -747,7 +742,7 @@ if (settings) {
 
 else if (wallet) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList]?.map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl))
+    const tooltipList = [...tooltipTriggerList]?.map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
     let firstElement = null;
     let list = document.querySelectorAll('#wallet-view-coupons .coupon')
     if (list && '0' in list) firstElement = list[0];
@@ -773,8 +768,6 @@ const tooltipList = [...tooltipTriggerList]?.map(tooltipTriggerEl => new Tooltip
             CouponStatusComponent
         }).mount(wallet);
     });
-} else if (banks) {
-    
-}
+} 
 
 

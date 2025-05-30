@@ -2,14 +2,14 @@
 
 <head>
     <link rel="stylesheet" href="{{ asset('/assets/css/common/settings.css') }}">
-    @vite(['resources/js/alpine/settings.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/settings.js'])
 </head>
 @section('body-class', 'wallet')
 
 @section('content')
     @include('includes.Navbar.NavbarGoToSearchPage')
 
-    <main class=" " v-scope="TransactionComponent()" class="row" @vue:mounted="init">
+    <main class=" "  v-scope="TransactionComponent()" class="row" @vue:mounted="init">
         <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
         <div class="row my-2 px-5 py-2"> 
             <h3 class="col-12 col-md-6 my-2 py-0 text-start">My Wallet</h3>
@@ -95,8 +95,7 @@
                                 <div class="row py-0 px-3 my-0">
                                     <h3 class="transaction-history__title  col-6 text-secondary">Most recent transactions
                                     </h3>
-                                    <div onclick="openTab('wallet-view-transactions')"
-                                        class="col-6 text-end text-secondary cursor-pointer">
+                                    <a href="{{route('wallet.transactions')}}" class="col-6 text-secondary text-start text-lg-end">
                                         View full <span class="d-none d-lg-inline">transaction</span> history
                                         <span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
@@ -105,13 +104,13 @@
                                                     d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
                                             </svg>
                                         </span>
-                                    </div>
+                                    </a>
                                 </div>
 
                                 <div class="table-responsive my-2">
                                     <table class="transaction-history__table table "
                                         v-cloak 
-                                        v-if="demoTransactions && demoTransactions[0]">
+                                        v-if="transactions && transactions[0]">
                                         <thead class="transaction-table__header">
                                             <tr>
                                                 <th scope="col"
@@ -131,7 +130,7 @@
                                         </thead>
 
                                         <tbody>
-                                            <tr v-for="transaction in demoTransactions" :key="transaction.id"
+                                            <tr v-for="transaction in transactions" :key="transaction.id"
                                                 class="transaction-row">
                                                 <x-wallet.transaction-item />
                                             </tr>
@@ -294,63 +293,6 @@
             <br>
         </div>
 
-        <div class="d-none container-main mx-auto px-5" id="wallet-view-transactions">
-            <div class="center-container mx-auto">
-                <div class="card px-3 py-3 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
-                    <div class="card-body px-2 py-2">
-                        <div class="d-flex justify-content-between cursor-pointer">
-                            <h3 class="transaction-history__title ">My Transactions</h3>
-                          
-                        </div>
-                        <div class="mt-3">
-
-                            <div class="table-responsive mb-4 " v-cloak v-if="transactions && transactions[0]">
-                                <table class="transaction-history__table table ">
-                                    <thead class="transaction-table__header">
-                                        <tr>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">Date
-                                            </th>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">
-                                                Transaction</th>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">Type
-                                            </th>
-                                            <th scope="col"
-                                                class="transaction-table__header-cell bg-secondary text-white py-3">Total
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr v-for="transaction in transactions" :key="transaction.id"
-                                            class="transaction-row">
-                                            <x-wallet.transaction-item />
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div v-else>
-                                <x-wallet.no-list :text="'No transactions available!'" />
-                            </div>
-
-                            <div v-if="hasMore" class="text-center  my-4" v-cloak>
-                                <button v-on:click="loadMore" :disabled="loading"
-                                    class="btn text-light rounded-pill btn-primary">
-                                    <span v-if="loading" v-cloak  class="spinner-border spinner-border-sm me-2"></span>
-                                    <span v-if="loading" v-cloak >Loading...</span>
-                                    <span v-else>Load More</span>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
 
         <div class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-view-coupons">
             <div class="center-container mx-auto">

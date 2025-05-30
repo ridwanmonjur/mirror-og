@@ -223,15 +223,18 @@ public function showPaymentMethodForm(Request $request)
     /**
      * Show the wallet dashboard
      */
-    public function showWalletDashboard(TransactionHistoryRequest $request)
+    public function showWalletDashboard(Request $request)
     {
         $user = $request->get('user');
 
-        if ($request->expectsJson()) {
-            return response()->json($this->getTransactionHistory($request, $user));
-         }
+        $transactionsDemo = TransactionHistory::where('user_id', $user->id)
+            ->limit(5)->get()->toArray();
 
-        $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
+        $transactions = [
+            'data' => $transactionsDemo,
+            'has_more' => false,
+            'next_cursor' => null
+        ];
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
         $couponsQ = ParticipantCoupon::where('is_public', true)
@@ -242,12 +245,32 @@ public function showPaymentMethodForm(Request $request)
         
         $demoCoupons = $couponsQ->take(2)->toArray();
         $coupons = $couponsQ->toArray();
-        // dd($transactions);
 
         return view('Users.Dashboard', [
             'wallet' => $wallet,
             'coupons' => $coupons,
             'demoCoupons' => $demoCoupons,
+            'transactions' => $transactions
+        ]);
+    }
+
+     /**
+     * Show the wallet dashboard
+     */
+    public function showTransactions(TransactionHistoryRequest $request)
+    {
+        $user = $request->get('user');
+
+        if ($request->expectsJson()) {
+            return response()->json($this->getTransactionHistory($request, $user));
+         }
+
+        $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
+
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
+        
+        return view('Users.Transaction', [
+            'wallet' => $wallet,
             'transactions' => $transactions
         ]);
     }
