@@ -30,7 +30,7 @@
                 <div class="card my-2 mx-2 py-0 border border-3 border-primary  rounded-30px ">
                     <div class="card-body">
                         <h5 class="my-3 text-secondary">Current Balance </h5>
-                        <h2 class="text-primary my-3"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
+                        <h2 class="text-primary my-3"> MYR {{ number_format($wallet->current_balance, 2) }} </h2>
                         <div class="my-2">
                             <button type="button"
                                 class="btn d-inline-block me-2 my-1 rounded-pill btn-primary  text-light "
@@ -159,7 +159,7 @@
                             <div class="text-center mx-auto my-3 py-3 text-light bg-primary rounded-30px"
                                 style="width: min(300px, 80%);">
                                 <h5 class="mt-1 mb-3 fw-normal">Current Wallet Balance </h5>
-                                <h2 class=" my-3 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h2>
+                                <h2 class=" my-3 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h2>
                             </div>
                             @include('includes.Flash')
 
@@ -235,7 +235,7 @@
                             <div class="text-center mx-auto my-2 py-2 text-light bg-secondary rounded-30px"
                                 style="width: min(300px, 80%);">
                                 <h5 class="my-1  fw-normal">Current Wallet Balance </h5>
-                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h4>
+                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h4>
                             </div>
                             <div class="text-center mx-auto">
                                 <svg width="50px" height="50px" fill="#000000" viewBox="0 0 24 24" id="down-direction" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path id="primary" d="M20.76,13.81l-2.6-3a1,1,0,0,0-1.41-.11L15,12.16V4a2,2,0,0,0-2-2H11A2,2,0,0,0,9,4v8.16l-1.75-1.5a1,1,0,0,0-1.41.11l-2.6,3a1,1,0,0,0,.11,1.41l7.35,6.3a2,2,0,0,0,2.6,0l7.35-6.3A1,1,0,0,0,20.76,13.81Z" style="fill: #a6a6a6;"></path></g></svg>
@@ -243,7 +243,7 @@
                             <div class="text-center mx-auto my-2 py-2 text-light bg-primary rounded-30px"
                                 style="width: min(300px, 80%);">
                                 <h5 class="my-1  fw-normal">Net Wallet Balance </h5>
-                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->usable_balance, 2) }} </h4>
+                                <h4 class=" my-1 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h4>
                             </div>
                             <div id="withdraw-status" class="text-center  d-none mx-auto">
                             </div>
