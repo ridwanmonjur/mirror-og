@@ -35,7 +35,8 @@ class TransactionHistory extends Model
 
     protected $appends = [
         'formatted_date',
-        'formatted_time'
+        'formatted_time',
+        'formatted_amount',
     ];
 
 

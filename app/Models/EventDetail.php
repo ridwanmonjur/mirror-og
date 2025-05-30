@@ -95,10 +95,6 @@ class EventDetail extends Model implements Feedable
         return $this->belongsTo(EventTier::class, 'event_tier_id');
     }
 
-    public function eventTier(): BelongsTo
-    {
-        return $this->belongsTo(EventTier::class, 'event_tier_id');
-    }
 
     public function type(): BelongsTo
     {
@@ -889,7 +885,7 @@ class EventDetail extends Model implements Feedable
 
     public function scopeWithEventTierAndFilteredMatches($query, $bracketDeadlines)
     {
-        return $query->with(['eventTier', 'matches' => function($query) use ($bracketDeadlines) {
+        return $query->with(['tier', 'matches' => function($query) use ($bracketDeadlines) {
             $query->filterByDeadlines($bracketDeadlines);
         }]);
     }

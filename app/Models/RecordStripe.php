@@ -10,11 +10,9 @@ class RecordStripe extends Model
     use HasFactory;
     public const UPDATED_AT = null;
 
-    protected $fillable = ['payment_id', 'payment_status', 'payment_amount', 
-        'coupon_amount', 'released_amount', 'system_discount_id'
-    ];
+    protected $fillable = ['payment_id', 'payment_status', 'payment_amount', 'created_at'];
 
-    protected $table = 'all_payment_transactions';
+    protected $table = 'stripe_transactions';
 
     public static function createTransaction(
         string| int| null $paymentId,
@@ -25,6 +23,7 @@ class RecordStripe extends Model
             'payment_id' => $paymentId,
             'payment_status' => $paymentStatus,
             'payment_amount' => $paymentAmount,
+            'created_at' => now()
         ]);
     }
 

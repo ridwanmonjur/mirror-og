@@ -296,6 +296,17 @@ public function showPaymentMethodForm(Request $request)
                 'current_balance' => $wallet->current_balance - $withdrawalAmount,
             ]);
 
+            TransactionHistory::create([
+                'name' => "Withdrawal request: {$withdrawalAmount}",
+                'type' => "Withdrawal request",
+                'link' => null,
+                'amount' => $withdrawalAmount,
+                'summary' => "{$wallet->bank_name} **** {$wallet->bank_last4}",
+                'isPositive' => false,
+                'date' => now(),
+                'user_id' => $user->id
+            ]);
+
             DB::commit();
 
             return response()->json([

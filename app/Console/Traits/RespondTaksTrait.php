@@ -32,9 +32,9 @@ trait RespondTaksTrait
             $allPayments = DB::table('event_details')
                 ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
                 ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
-                ->join('all_payment_transactions', 'all_payment_transactions.id', '=', 'participant_payments.payment_id')
-                ->select('all_payment_transactions.id', 'all_payment_transactions.payment_id', 
-                         'all_payment_transactions.payment_status', 'all_payment_transactions.amount',
+                ->join('stripe_transactions', 'stripe_transactions.id', '=', 'participant_payments.payment_id')
+                ->select('stripe_transactions.id', 'stripe_transactions.payment_id', 
+                         'stripe_transactions.payment_status', 'stripe_transactions.amount',
                          'participant_payments.user_id')
                 ->whereIn('event_details.id', $startedTaskIds)
                 ->get();
@@ -117,9 +117,9 @@ trait RespondTaksTrait
         $paymentData = DB::table('event_details')
             ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
             ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
-            ->join('all_payment_transactions',  'all_payment_transactions.id', '=', 'participant_payments.payment_id')
+            ->join('stripe_transactions',  'stripe_transactions.id', '=', 'participant_payments.payment_id')
             ->whereIn('event_details.id', $startedTaskIds)
-            ->where('all_payment_transactions.payment_status', 'requires_capture')
+            ->where('stripe_transactions.payment_status', 'requires_capture')
             ->get();
 
         $resultList = $paymentData->map(function ($item) {

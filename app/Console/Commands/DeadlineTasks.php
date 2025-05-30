@@ -103,8 +103,8 @@ class DeadlineTasks extends Command
                     ->withEventTierAndFilteredMatches($endBracketDeadlines)
                     ->get();
                 foreach ($endDetails as $detail) {
-                    $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
-                    $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->eventTier->id);
+                    $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
+                    $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id);
                 }
             }
 
@@ -114,8 +114,8 @@ class DeadlineTasks extends Command
                     ->withEventTierAndFilteredMatches($orgBracketDeadlines)
                     ->get();
                 foreach ($orgDetails as $detail) {
-                    $bracketInfo = $this->bracketDataService->produceBrackets($detail->eventTier->tierTeamSlot, false, null, null);
-                    $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->eventTier->id);
+                    $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
+                    $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id);
                 }
             }
 
