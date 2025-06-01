@@ -3,7 +3,7 @@
     $status = $isEventNotNull ? $event->statusResolved() : null;
     $dateStartArray = null;
     if ($isEventNotNull) {
-        $dateStartArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
+        $dateStartArray = $event->startDatesStr($event->startDate, $event->startTime);
         extract($dateStartArray);
     }
 @endphp

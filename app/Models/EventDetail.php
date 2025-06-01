@@ -425,37 +425,63 @@ class EventDetail extends Model implements Feedable
         return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))->utc();
     }
 
-    function startDatesReadableForLanding(bool $willShowCountDown): array
+    function startDatesStr($startDate, $startTime)
+{
+    $startTime = $this->fixTimeToRemoveSeconds($startTime);
+    if ($startDate !== null && $startTime !== null) {
+        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC') ?? null;
+        $datePart = $carbonDateTimeUtc->format('d M y');
+        $timePart = $carbonDateTimeUtc->format('g:i A');
+        $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
+        $dateStr = $datePart.' '.$timePart;
+        $combinedStr = $datePart.' ('.$dayStr.')';
+    } else {
+        $datePart = 'Date is not set';
+        $timePart = 'Time is not set';
+        $dayStr = '';
+        $dateStr = 'Please enter date and time';
+        $combinedStr = 'Date/time is not set';
+    }
+
+    return [
+        'datePart' => $datePart,
+        'dateStr' => $dateStr,
+        'timePart' => $timePart,
+        'dayStr' => $dayStr,
+        'combinedStr' => $combinedStr,
+    ];
+}
+
+
+    function startDatesReadable(bool $willShowCountDown = false): array
     {
         $now = new DateTime('now', new DateTimeZone('UTC'));
         $startsIn = null;
+        $formattedDate = 'No date';
+        $formattedTime = 'No time';
+        $startsIn = 'Not available';
         if ($this->startDate !== null && $this->startTime !== null) {
+
             $startTime = $this->fixTimeToRemoveSeconds($this->startTime);
             $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $this->startDate.' '.$startTime, 'UTC') ?? null;
-            
             if ($carbonDateTimeUtc) {
-                // $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
                 $formattedDate = $carbonDateTimeUtc->format('d M y');
                 $formattedTime = $carbonDateTimeUtc->format('g:i A');
                 
                 if ($willShowCountDown) {
                     $diff = $now->diff($carbonDateTimeUtc);
                     if ($diff->days > 0 ) {
-                        $startsIn .= $diff->days . 'd ';
+                        $startsIn = $diff->days . 'd ';
                     }
                     $startsIn .= $diff->h . 'h';
                 } 
             } 
-        } else {
-            $formattedDate = 'No date';
-            $formattedTime = 'No time';
-            $startsIn = 'Not available';
-        }
+        } 
 
         return [
-            'formattedStartDate' => $formattedDate,
-            'formattedStartTime' => $formattedTime,
-            'formmattedStartsIn' => $startsIn,
+            'fmtStartDt' => $formattedDate,
+            'fmtStartT' => $formattedTime,
+            'fmtStartIn' => $startsIn,
         ];
     }
 

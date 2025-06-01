@@ -1,7 +1,7 @@
 @php
 
     $status = $event->statusResolved();
-    $dateArray = bladeGenerateEventStartEndDateStr($event->sub_action_public_date, $event->sub_action_public_time);
+    $dateArray = $event->startDatesStr($event->sub_action_public_date, $event->sub_action_public_time);
     extract($dateArray);
 
 @endphp
