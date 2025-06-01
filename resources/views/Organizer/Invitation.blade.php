@@ -13,7 +13,7 @@
 </head>
 
 @php
-    $dateArray = bladeGenerateEventStartEndDateStr($event->startDate, $event->startTime);
+    $dateArray = $event->startDatesStr($event->startDate, $event->startTime);
     extract($dateArray);
 @endphp
 
@@ -33,7 +33,7 @@
 
             @include('includes.__CreateEditEvent.CreateEventSuccessTimelineBox')
             <br>
-            <div class="text-center" style="margin:auto; border-color: black; background: white; max-width: 60vw; min-height: 60vh;display:flex;flex-direction:column; justify-content:space-between;">
+            <div class="text-center bg-white border rounded rounded-5 border-light d-flex justify-content-center flex-column mx-auto" style="width: min(800px, 95%);">
                 <div>
                     <br>
                     <u>
@@ -53,22 +53,34 @@
                     </div>
                 </div>
                 <div class="added-participant">
-                    @forelse ($event->invitationList as $invitation)
-                        <div id="invite-{{$invitation->id}}" class="d-flex text-center my-2 mx-auto align-items-center justify-content-center">
-                                <img src="/storage/{{ $invitation->team?->teamName }}" 
-                                class="team-banner border border-dark  object-fit-cover rounded-circle "  
-                                onerror="this.src='/assets/images/404q.png';"
-                                width="30" height="30"
-                            >
-                            <p class="ms-1 me-1 d-inline my-0 py-0">{{ $invitation->team?->teamName }}</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                                data-invitation-id = {{$invitation->id}}
-                                onclick="removeParticant(event)"
-                                class="text-red border border-danger cursor-pointer rounded-circle p-0 ms-2"
-                            >
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
+                    @forelse ($event->invitationList as $key => $invitation)
+                        <div class="card my-2 mx-auto" style="width: min(95%, 600px);">
+                            <div id="invite-{{$invitation->id}}" class="card-body d-flex text-center my-2 mx-3 align-items-center justify-content-between">
+                                  
+                                <p class="ms-3 me-4 d-inline my-0 py-0"> 
+                                      <img src="/storage/{{ $invitation->team?->teamBanner }}" 
+                                    class="team-banner border border-dark  me-2 object-fit-cover rounded-circle "  
+                                    onerror="this.src='/assets/images/404q.png';"
+                                    width="30" height="30"
+                                >
+                                    <span class="me-2 ">Team #{{$key+1}}</span> 
+                                    <span class="text-primary">{{ $invitation->team?->teamName }}</span>
+                                </p>
+                                <button  data-invitation-id = {{$invitation->id}}
+                                    onclick="removeParticant(event)"
+                                    class="btn border-red text-red  rounded-pill btn-sm "    
+                                >
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                    
+                                        class="text-red border border-danger cursor-pointer rounded-circle p-0 me-1"
+                                    >
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                    <small> Remove </small>
+                                </button>
+                            </div>
                         </div>
                     @empty
                     <p class="hide-if-participant mt-3">No teams invited yet</p>
