@@ -127,7 +127,7 @@
                         'd-flex justify-content-center ' => !isset($joinEvents[1]),
                     ])>
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('includes.__Team.RosterView')
+                            @include('includes.Team.RosterView')
                         @endforeach
                     </div>
                 @endif
@@ -192,7 +192,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('includes.__Team.RosterView')
+                        @include('includes.Team.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -208,7 +208,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('includes.__Team.RosterView')
+                        @include('includes.Team.RosterView')
                         <br><br>
                     @endforeach
                 </div>

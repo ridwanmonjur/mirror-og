@@ -52,7 +52,7 @@
 <body class="bgTeamAdmin">
     @include('googletagmanager::body')
     @include('includes.Navbar.NavbarGoToSearchPage')
-    @include('includes.__Team.TeamHead') 
+    @include('includes.Team.TeamHead') 
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
         <input type="hidden" id="profile_route" value="{{ route('public.participant.view', ['id' => ':id', 'title' => ':title']) }}">
@@ -94,7 +94,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('includes.__Team.RosterView')
+                            @include('includes.Team.RosterView')
                         @endforeach
                     </div>
                  
@@ -133,7 +133,7 @@
         </div>
 
         <div class="tab-content pb-4 outer-tab d-none" id="Members">
-            @include('includes.__Team.TeamMemberView')
+            @include('includes.Team.TeamMemberView')
         </div>
 
         @php
@@ -153,7 +153,7 @@
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('includes.__Team.RosterView')
+                            @include('includes.Team.RosterView')
                         </div>
                         <br><br>
                     @endforeach
@@ -171,7 +171,7 @@
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
-                            @include('includes.__Team.RosterView')
+                            @include('includes.Team.RosterView')
                         </div>
                         <br><br>
                     @endforeach

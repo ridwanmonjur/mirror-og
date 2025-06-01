@@ -461,7 +461,7 @@
     ])
 </main>
 
-@include('includes.__Team.TeamBackgroundModal')
+@include('includes.Team.TeamBackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
 @include('includes.Profile.Cropper')

@@ -54,7 +54,7 @@
     </div>
 
    
-    @include('includes.__Team.TeamHead') 
+    @include('includes.Team.TeamHead') 
     <div id="Overview">
         <div @class(['my-2 py-2 ' => session('successMessage') || session('successMessage')])>
             @if (session('successMessage'))
@@ -71,8 +71,8 @@
         @else
             <div class="row reg-container">
                 @foreach ($joinEvents as $joinEvent) 
-                    @include('includes.__Team.RosterViewRegister')
-                    @include('includes.__Team.PieChart', ['isInvited' => false])
+                    @include('includes.Team.RosterViewRegister')
+                    @include('includes.Team.PieChart', ['isInvited' => false])
                 @endforeach
             </div>
         @endif
@@ -87,8 +87,8 @@
                 @else
                     <div class="event-carousel-styles px-5">
                         @foreach ($invitedEvents as $key => $joinEvent)
-                            @include('includes.__Team.RosterViewRegister')
-                            @include('includes.__Team.PieChart', ['isInvited' => true])
+                            @include('includes.Team.RosterViewRegister')
+                            @include('includes.Team.PieChart', ['isInvited' => true])
                         @endforeach
                     </div>
                 @endif
