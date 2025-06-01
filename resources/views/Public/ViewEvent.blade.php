@@ -432,15 +432,15 @@
 
                 <div id="Bracket" v-scope="BracketData()"
                      class="tabcontent " >
-                    @include('includes.__Public.BracketReport')
+                    @include('includes.Public.BracketReport')
                 </div>
 
                 <div id="Teams" class="tabcontent" >
-                    @include('includes.__Public.TeamJoined')
+                    @include('includes.Public.TeamJoined')
                 </div>
                 
                 <div id="Result" class="tabcontent" >
-                    @include('includes.__Public.TeamResults')
+                    @include('includes.Public.TeamResults')
                 </div>
             </div>
             <div></div>

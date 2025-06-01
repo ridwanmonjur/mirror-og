@@ -127,7 +127,7 @@
 
                 <div class="achievements col-12 col-lg-6" id="Positions">
                     <div class="ms-2 text-center"><b>Positions</b></div><br>
-                    @include('includes.__Public.PositionBadge')
+                    @include('includes.Public.PositionBadge')
                 </div>
             </div>
         </div>
