@@ -44,7 +44,6 @@ trait RespondTaksTrait
             $otherPayments = $allPayments->where('payment_status', '!=', 'requires_capture');
             
             $releasedPayments = [];
-            $stripe = new StripeConnection();
             
             // 2. Process payments to be released (batch where possible)
             foreach ($toBeCapturedPayments as $payment) {
@@ -143,6 +142,8 @@ trait RespondTaksTrait
                             'payment_id' => $item['payment_id'],
                             'payment_status' => $capturedPayment['status']
                         ];
+
+                        // create coupon
                     }
                 }
             } catch (Exception $e) {
