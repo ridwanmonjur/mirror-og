@@ -94,9 +94,9 @@
         data-is-user-same="{{ $isUserSame }}" data-logged-user-id="{{ $loggedUserId }}"
         data-logged-user-role="{{ $loggedUserRole }}" class="d-none laravel-data-storage"></div>
     <main id="app">
-        @include('includes.__Profile.BackgroundModal')
-        @include('includes.__Profile.FriendFollowForms')
-        @include('includes.__Profile.PlayerHead')
+        @include('includes.Profile.BackgroundModal')
+        @include('includes.Profile.FriendFollowForms')
+        @include('includes.Profile.PlayerHead')
 
         <div class="tabs ">
             <button class="tab-button  outer-tab tab-button-active"
@@ -171,13 +171,13 @@
         <div class="tab-content pb-4 d-none outer-tab " id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
-            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[0]])
+            @include('includes.Profile.ActivityLogs', ['duration' => $activityNames[0]])
 
             <div class="tab-size"><b>Recent</b></div>
-            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[1]])
+            @include('includes.Profile.ActivityLogs', ['duration' => $activityNames[1]])
 
             <div class="tab-size"><b>Older</b></div>
-            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[2]])
+            @include('includes.Profile.ActivityLogs', ['duration' => $activityNames[2]])
         </div>
 
         <div class="tab-content pb-4  outer-tab d-none" id="Events">
@@ -321,6 +321,6 @@
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
     </main>
 </body>
-@include('includes.__Profile.Cropper')
+@include('includes.Profile.Cropper')
 
 </html>

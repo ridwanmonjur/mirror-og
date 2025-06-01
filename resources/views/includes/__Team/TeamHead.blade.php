@@ -452,7 +452,7 @@
 
        
     </div>
-    @include('includes.__Profile.ProfileStatsModal', [
+    @include('includes.Profile.ProfileStatsModal', [
         'propsTeamOrUserId' => $selectTeam->id,
         'propsUserId' => $userId ?? 0,
         'propsIsUserSame' => 0, 
@@ -464,4 +464,4 @@
 @include('includes.__Team.TeamBackgroundModal')
 <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
 <script src="{{ asset('/assets/js/participant/TeamHead.js') }}"></script>
-@include('includes.__Profile.Cropper')
+@include('includes.Profile.Cropper')
