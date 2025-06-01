@@ -69,7 +69,7 @@ if (teamSelectElement) {
         searchField: 'name',
         maxItems: null,
         maxItems:1,
-        valueField: 'logo',
+        valueField: 'name',
         options: banksInputValue,
         create: false,
         render: {
