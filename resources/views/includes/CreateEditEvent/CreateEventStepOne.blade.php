@@ -7,7 +7,7 @@
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
         <p >First, select an esport title</p>
-        <div class="mx-auto custom-scrollbar2 box-width3 my-0 py-0" style="overflow-x: auto;">
+        <div class="mx-auto custom-scrollbar2 box-width3  py-0" style="overflow-x: auto;">
             <div class="d-flex justify-content-center  justify-content-lg-start py-1 px-0 mx-0 flex-wrap my-0 flex-lg-nowrap" style="gap: 0;">
                 @foreach ($eventCategory as $category)
                     @if ($category->gameIcon)
@@ -28,7 +28,7 @@
                                     alt="{{ $category->gameTitle }}" 
                                 >
                             </a>
-                            <small class="py-0">{{ $category->gameTitle }}</small>
+                            <small class="py-0 d-inline-block text-truncate scroll-images-text">{{ $category->gameTitle }}</small>
                         </div>
                     @endif
                 @endforeach
@@ -41,7 +41,7 @@
                             alt="More titles to come" 
                                                   >
                     </a>
-                    <small sclass="py-0">and more...</small>
+                    <small  class="py-0 d-inline-block text-truncate scroll-images-text">and more...</small>
                 </div>
             </div>
 
