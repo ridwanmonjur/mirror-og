@@ -117,4 +117,4 @@ default winner
 winner random 
 
 
-cd domains/oceansgaming.gg/public_html
+cd ../../domains/oceansgaming.gg/public_html

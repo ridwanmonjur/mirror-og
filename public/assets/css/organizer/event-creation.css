@@ -327,7 +327,7 @@ button:after {
 }
 
 .box-width3 {
-    margin: 10px auto !important;
+    margin: 30px auto 0 !important;
     max-width: 70vw
 }
 
@@ -518,6 +518,10 @@ input[type="time"] {
     text-align: center;
     height: 280px;
     margin: 0 10px ;
+}
+
+.scroll-images-text {
+    width: 160px;
 }
 
 .scroll-images.focused {
