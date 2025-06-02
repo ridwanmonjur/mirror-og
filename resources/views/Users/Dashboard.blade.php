@@ -173,7 +173,7 @@
                                                 type="button" id="button-addon1">RM </button>
                                             <input type="number" id="topup_amount" name="topup_amount"
                                                 class="d-inline mx-auto my-2 border-secondary ms-0 form-control"
-                                                min="5" step="0.01" required
+                                                min="5" step="0.01" required value="5.00"
                                                 style="width: min-content; max-width: 200px;">
                                         </div>
                                         <small class="text-muted fst-italic ">Minimum amount is RM 5.00</small>
@@ -258,7 +258,7 @@
                                                 type="button" id="button-addon1">RM </button>
                                             <input type="number" id="topup_amount" name="topup_amount"
                                                 class="d-inline mx-auto my-2 border-secondary ms-0 form-control"
-                                                min="5" step="0.01" required
+                                                min="5" step="0.01" required value="5.00"
                                                 style="width: min-content; max-width: 200px;">
                                         </div>
                                         <small class="text-muted fst-italic ">Minimum amount is RM 5.00</small>
