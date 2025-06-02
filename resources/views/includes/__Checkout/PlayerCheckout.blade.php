@@ -3,7 +3,7 @@
         aria-labelledby="#discountModal" aria-hidden="true">
         <div class="modal-dialog">
             <form 
-                action="{{route('participant.walletCheckout.action')}}"
+                action="{{route('participant.discountCheckout.action')}}"
                 method="POST"
                 onsubmit="handleSubmit(event);"
                 id="discountPaymentForm"

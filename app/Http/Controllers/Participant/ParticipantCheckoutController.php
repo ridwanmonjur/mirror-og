@@ -87,7 +87,7 @@ class ParticipantCheckoutController extends Controller
         }
     }
 
-    public function walletCheckout(DiscountCheckoutRequest $request)
+    public function discountCheckout(DiscountCheckoutRequest $request)
     {
         $user = $request->attributes->get('user');
         DB::beginTransaction();

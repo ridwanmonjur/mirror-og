@@ -237,6 +237,11 @@ class ParticipantEventController extends Controller
                     'user:id,name,userBanner'
                 ])
                 ->find($id);
+
+            $status = $event->getRegistrationStatus();
+            if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
+                return $this->showErrorParticipant("Signup is closed right now!");
+            }
             
             if ($selectTeam && $isAlreadyMember) {
                 $join_id = $selectTeam->processTeamRegistration( $user->id, $event->id);
@@ -310,6 +315,12 @@ class ParticipantEventController extends Controller
                     'user:id,name,userBanner'
                 ])->find($id);
 
+                $status = $event->getRegistrationStatus();
+
+                if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
+                    return $this->showErrorParticipant("Signup is closed right now!");
+                }
+
             if ($count < 5) {
                 $selectTeam = new Team();
                 $selectTeam = Team::validateAndSaveTeam($request, $selectTeam, $user_id);
@@ -377,6 +388,12 @@ class ParticipantEventController extends Controller
                 ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
                 ->with('tier:id,eventTier')
                 ->firstOrFail();
+
+            $status = $event->getRegistrationStatus();
+
+            if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
+                return $this->showErrorParticipant("Signup is closed right now!");
+            }
 
             if ($isToBeConfirmed) {
                 $isPermitted = $joinEvent->payment_status === 'completed';
