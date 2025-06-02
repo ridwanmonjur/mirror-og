@@ -20,10 +20,11 @@
     <main id="app" >
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">
+        <input type="hidden" id="wallet" value="{{ json_encode($wallet) }}">
 
-        <div class="accordion-container mx-auto">
+        <div class="accordion-container mx-auto" v-scope="AccountComponent()">
             <div class="accordion accordion-flush " id="accordionExample">
-                <div v-scope="AccountComponent()" class="accordion-item border-0 pb-0 mb-0" @vue:mounted="init">
+                <div  class="accordion-item border-0 pb-0 mb-0" @vue:mounted="init">
                     <h1 class="accordion-header " id="headingOne">
                         <div class="accordion-button pb-4 rounded-pill border 
                             border-0 bg-white"
@@ -61,6 +62,31 @@
                                     data-event-type="{{ $settingsAction['CHANGE_RECOVERY_EMAIL']['key'] }}">
                                     Change Recovery Email
                                 </button>
+                            </div>
+                            <div
+                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
+                                <div>
+                                    <p class="py-0 my-0"> Linked Bank Account </p>
+                                    <small v-if="wallet.has_bank_account" class="text-primary text-capitalize">
+                                        <span v-text="wallet.bank_name"  ></span>
+                                        ****
+                                        <span v-text="wallet.bank_last4"  ></span>
+                                    </small>
+                                    <small v-else>
+                                        No linked account
+                                    </small>
+                                </div>
+                                <button v-if="wallet.has_bank_account" v-on:click="unlinkBankAccount(event)"
+                                    data-route="{{ route('wallet.unlink') }}"
+                                    class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill">
+                                    Unlink
+                                </button>
+                                <a href="{{route('wallet.payment-method')}}" v-else>
+                                    <button 
+                                    class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill">
+                                    Link Bank Account
+                                </button>
+                                </a>
                             </div>
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
@@ -117,6 +143,7 @@
                     <div id="collapseTwo" class="accordion-collapse collapse {{ $isShowNextAccordion ? 'show' : '' }}"
                         aria-labelledby="headingTwo">
                         <div class="accordion-body border-0 py-0 pt-n2">
+                            
                             <!-- First nested accordion -->
                             <div class="accordion" id="nestedAccordion1">
                                 {{-- <div class="accordion-item border-0">
@@ -249,6 +276,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                
 
                                 <!-- Third nested accordion -->
                                 <div class="accordion pb-5 " id="nestedAccordion3">

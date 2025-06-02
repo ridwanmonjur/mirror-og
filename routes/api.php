@@ -56,7 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/user/{id}/reports', [SocialController::class, 'getReports'])->name('users.report.view');
         Route::get('/user/notifications', [UserController::class, 'viewNotifications'])->name('notifications.index');
         Route::post('/user/withdraw', [StripeController::class, 'processWithdrawal'])->name('wallet.withdraw');
-
+        Route::post('/user/unlink', [UserController::class, 'unlinkBankAccount'])->name('wallet.unlink');
         Route::post('/user/likes', [ParticipantEventController::class, 'likeEvent'])->name('participant.events.like');
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
