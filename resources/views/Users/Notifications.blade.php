@@ -19,7 +19,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <br><br>
     <div     
         id="notif-container" 

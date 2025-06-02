@@ -90,10 +90,12 @@ function AccountComponent() {
     let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
     let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
+    let wallet = JSON.parse(document.getElementById('wallet').value);
 
     return {
         isPasswordNull: userProfile.isPasswordNull,
         emailAddress: userProfile.email,
+        wallet: wallet,
         recoveryAddress: userProfile.recovery_email,
         async changeEmailAddress(event) {
             try {
@@ -189,6 +191,68 @@ function AccountComponent() {
            
             } catch (error) {
                 toastError('Failed to update email');
+            }
+        },
+        async unlinkBankAccount(event) {
+            try {
+                let button = event.currentTarget;
+                let {eventType, route} = button.dataset;
+                
+                const { isConfirmed } = await Swal.fire({
+                    title: 'Unlink Bank Account',
+                    text: 'Are you sure you want to unlink your bank account? This action cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#43A4D7',
+                    confirmButtonText: 'Yes, unlink it!',
+                    cancelButtonText: 'Cancel',
+                    focusCancel: true
+                });
+                
+                if (isConfirmed) {
+                    let data = await fetch(route, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": csrfToken
+                        },
+                        body: JSON.stringify({
+                            eventType
+                        })
+                    });
+        
+                    data = await data.json();
+        
+                    if (data.success) {
+                        Toast.fire({
+                            icon: 'success',
+                            text: 'Bank account unlinked successfully!'
+                        });
+
+                        let newWallet = { ...this.wallet };
+        
+                        newWallet.has_bank_account = false;
+                        newWallet.bank_last4 = null;
+                        newWallet.bank_name = null;
+                        newWallet.account_number = null;
+                        newWallet.account_holder_name = null;
+                        newWallet.bank_details_updated_at = null;
+
+                        this.wallet = newWallet;
+                        
+                    } else {
+                        if (data.message != null) {
+                            toastError(data.message);
+                        } else {
+                            toastError('Failed to unlink bank account');
+                        }
+                    }
+                }
+           
+            } catch (error) {
+                console.error('Error unlinking bank account:', error);
+                toastError('Failed to unlink bank account');
             }
         },
         async changeRecoveryEmailAddress(event) {

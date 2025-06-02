@@ -20,9 +20,11 @@
  <div  
     style="opacity: 1; z-index: 999 !important; "
      @class([" popover-middle-content text-center d-none py-0 px-0 " . $position1 . ' ' . $position2, 
-        ' warning ' => $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2)
+        ' warning ' => $deadline &&  $deadline['has_started'] && !$deadline['has_ended'] && ($isTeam1 || $isTeam2)
      ]); 
       data-position="{{$position1}}"
+          data-diff-date="{{$deadline ? $deadline['diff_date'] : null}}"
+
     style="width: 35px; height: 28px;"
 >
    
@@ -72,7 +74,7 @@
             </div>
         </div>
         <div class="col-12 text-light"> 
-            @if($isTeam1 || $isTeam2 || $isOrg)
+            @if(($isTeam1 || $isTeam2 || $isOrg) && $deadline)
                 @if (!$deadline['has_started'])
                     <div class="text-center">Reporting available in: </div>
                     <div class="text-center diffDate1" data-diff-date="{{$deadline['diff_date']}}"></div>

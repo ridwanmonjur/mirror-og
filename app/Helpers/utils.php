@@ -6,7 +6,13 @@ use Illuminate\Support\Str;
 
 function generateCarbonDateTime($startDate, $startTime)
 {
-    $startTime = fixTimeToRemoveSeconds($startTime);
+    if ($startTime != null) {
+        if (substr_count($startTime, ':') === 2) {
+            $startTime = explode(':', $startTime);
+            $startTime = $startTime[0].':'.$startTime[1];
+        }
+    }
+
 
     if ($startDate !== null && $startTime !== null) {
         return Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC') ?? null;

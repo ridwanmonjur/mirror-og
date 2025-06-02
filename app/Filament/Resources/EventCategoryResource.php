@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class EventCategoryResource extends Resource
 {
@@ -25,8 +26,62 @@ class EventCategoryResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('gameTitle')
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('gameIcon')
-                    ->image(),
+               
+                Forms\Components\Section::make('Event Category')
+                    ->description('Image upload is only available when editing an existing item')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        Forms\Components\Placeholder::make('create_notice')
+                        ->content('Please create the object first, then edit to upload an image.')
+                        ->visible(fn (string $context): bool => $context === 'create'),
+                        Forms\Components\FileUpload::make('gameIcon')
+                            ->image()
+                            ->directory('images/event_details') 
+                            ->maxSize(5120)
+                            ->visible(fn (string $context): bool => $context === 'edit')
+                            ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
+                                // Generate new filename
+                                $newFilename = 'event_details-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                $directory = 'images/event_details';
+                                $path = $file->storeAs($directory, $newFilename, 'public');
+                                
+                                // Access record from table modal
+                                $recordId = $livewire->mountedTableActionRecord;
+                                if ($recordId) {
+                                    // Replace 'EventCategory' with your actual model class
+                                    $record = \App\Models\EventCategory::find($recordId);
+                                    
+                                    if ($record) {
+                                        $oldBanner = $record->gameIcon;
+                                        $record->gameIcon = $path;
+                                        $record->save();
+                                        
+                                        if ($oldBanner && $oldBanner !== $state) {
+                                            Storage::disk('public')->delete($oldBanner);
+                                        }
+                                    }
+                                }
+                                
+                                return $path;
+                            })
+                            ->deleteUploadedFileUsing(function ($file, callable $set, $livewire) {
+                                if ($file && Storage::disk('public')->exists($file)) {
+                                    Storage::disk('public')->delete($file);
+                                }
+                                
+                                $recordId = $livewire->mountedTableActionRecord;
+                                if ($recordId) {
+                                    $record = \App\Models\EventCategory::find($recordId);
+                                    
+                                    if ($record) { // Add null check for safety
+                                        $record->gameIcon = null;
+                                        $record->save();
+                                    }
+                                }
+                                
+                                return null;
+                            })
+                ]),
                 Forms\Components\TextInput::make('eventDefinitions')
                     ->maxLength(255),
                 Forms\Components\Select::make('user_id')

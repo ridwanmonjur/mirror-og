@@ -13,12 +13,12 @@
 
 <body>
     @include('googletagmanager::body')
-        @include('includes.Navbar.NavbarGoToSearchPage')
+        @include('includes.Navbar')
         <main>
             <div>
                 <div>
-                    @include('includes.__CreateEditEvent.CreateEventSuccessTimelineBox')
-                    @include('includes.__CreateEditEvent.CreateEventSuccess', ['event' => $event])
+                    @include('includes.CreateEditEvent.CreateEventSuccessTimelineBox')
+                    @include('includes.CreateEditEvent.CreateEventSuccess', ['event' => $event])
                 </div>
             </div>
             <br><br>

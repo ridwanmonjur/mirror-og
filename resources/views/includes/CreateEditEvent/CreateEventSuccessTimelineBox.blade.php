@@ -21,4 +21,17 @@
            
         </div>
     </div>
+    <div class="breadcrumb-top mb-5">
+    <br>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a >Categories</a></li>
+                <li class="breadcrumb-item"><a >Details</a></li>
+                <li class="breadcrumb-item"><a >Payment</a></li>
+                <li class="breadcrumb-item"><a >Visibility</a></li>
+            </ol>
+        </nav>
+        
+    </div>
+
 </div>

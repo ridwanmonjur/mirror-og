@@ -18,7 +18,7 @@
 
 <body>
     @include('googletagmanager::body')
-        @include('includes.Navbar.NavbarGoToSearchPage')
+        @include('includes.Navbar')
  
     <main id="Bracket"  v-scope="BracketData()" class="position-relative">
         <input type="hidden" id="eventId" value="{{$event->id}}">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            @include('includes.__ManageEvent.BracketUpdateList')
+            @include('includes.ManageEvent.BracketUpdateList')
         </div>
         
         <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>

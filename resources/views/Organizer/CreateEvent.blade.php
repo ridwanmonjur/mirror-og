@@ -13,27 +13,27 @@
 
     <body>
     @include('googletagmanager::body')
-        @include('includes.Navbar.NavbarGoToSearchPage')
+        @include('includes.Navbar')
         <main>
             <div>
                 <div>
                     <form enctype="multipart/form-data" 
                         action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
                         @csrf
-                        @include('includes.__CreateEditEvent.CreateEventHiddenForm')
-                        @include('includes.__CreateEditEvent.CreateEventTimelineBox')
+                        @include('includes.CreateEditEvent.CreateEventHiddenForm')
+                        @include('includes.CreateEditEvent.CreateEventTimelineBox')
                         @if (session()->has('error'))
-                            @include('includes.__CreateEditEvent.CreateEventTimelineWelcome', [
+                            @include('includes.CreateEditEvent.CreateEventTimelineWelcome', [
                                 'error' => session()->get('error'),
                             ])
                         @else
-                            @include('includes.__CreateEditEvent.CreateEventTimelineWelcome')
+                            @include('includes.CreateEditEvent.CreateEventTimelineWelcome')
                         @endif
-                        @include('includes.__CreateEditEvent.CreateEventStepOne')
+                        @include('includes.CreateEditEvent.CreateEventStepOne')
                         
-                        @include('includes.__CreateEditEvent.CreateEventForm')
+                        @include('includes.CreateEditEvent.CreateEventForm')
                         @if (session()->has('success'))
-                            @include('includes.__CreateEditEvent.CreateEventSuccess')
+                            @include('includes.CreateEditEvent.CreateEventSuccess')
                         @endif
                     </form>
                 </div>

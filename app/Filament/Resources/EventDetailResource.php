@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class EventDetailResource extends Resource
 {
@@ -30,8 +31,46 @@ class EventDetailResource extends Resource
                 Forms\Components\TextInput::make('startTime'),
                 Forms\Components\TextInput::make('endTime'),
                 Forms\Components\Textarea::make('eventDescription'),
-                Forms\Components\FileUpload::make('eventBanner')
-                    ->image(),
+                Forms\Components\Section::make('Event Banner')
+                    ->description('Image upload is only available when editing an existing item')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        Forms\Components\Placeholder::make('create_notice')
+                        ->content('Please create the object first, then edit to upload an image.')
+                        ->visible(fn (string $context): bool => $context === 'create'),
+                        Forms\Components\FileUpload::make('eventBanner')
+                            ->image()
+                            ->directory('images/events') 
+                            ->maxSize(5120)
+                            ->deleteUploadedFileUsing(function ($file, $livewire) {
+                                if ($file && Storage::disk('public')->exists($file)) {
+                                    Storage::disk('public')->delete($file);
+                                }
+                                
+                                if ($livewire->record) {
+                                    $livewire->record->eventBanner = null;
+                                    $livewire->record->save();
+                                }
+                                
+                                return null;
+                            })
+                            ->visible(fn (string $context): bool => $context === 'edit')
+                            ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
+                                // Custom file naming logic here
+                                $oldBanner = $livewire->record->userBanner;
+
+                                $newFilename = 'eventBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                $directory = 'images/events';
+                                
+                                $path = $file->storeAs($directory, $newFilename, 'public');
+                                $livewire->record->eventBanner = $path;
+                                $livewire->record->save();
+                                if ($oldBanner && $oldBanner !== $state) {
+                                    $livewire->record->destroyTeanBanner($oldBanner);
+                                }
+                                return $path;
+                    }),
+                ]),
                 Forms\Components\TextInput::make('eventTags')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('status')
@@ -55,7 +94,7 @@ class EventDetailResource extends Resource
                 Forms\Components\Select::make('event_type_id')
                     ->relationship('type', 'eventType'),
                 Forms\Components\Select::make('event_tier_id')
-                    ->relationship('eventTier', 'eventTier'),
+                    ->relationship('tier', 'eventTier'),
                 Forms\Components\Select::make('event_category_id')
                     ->relationship('game', 'gameTitle'),
                 Forms\Components\Toggle::make('willNotify')

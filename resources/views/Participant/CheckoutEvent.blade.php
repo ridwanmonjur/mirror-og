@@ -22,10 +22,10 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <main class="main-background-2 pt-3">
         <br>
-        @include('includes.__Checkout.PlayerCheckout')
+        @include('includes.Checkout.PlayerCheckout')
         <br><br>
     </main>
     

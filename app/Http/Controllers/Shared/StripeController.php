@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Shared;
 use App\Exceptions\BankAccountNeededException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RedeemCouponRequest;
+use App\Http\Requests\User\SavePaymentMethodRequest;
 use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
 use App\Http\Requests\WithdrawalRequest;
@@ -152,23 +153,10 @@ public function showPaymentMethodForm(Request $request)
     /**
      * Save the payment method after successful setup
      */
-    public function savePaymentMethod(Request $request)
+    public function savePaymentMethod(SavePaymentMethodRequest $request)
     {
         $user = $request->get('user');
-    
-        $validatedData = $request->validate([
-            'bank_name' => 'required|string|max:100',
-            'account_number' => 'required|string|min:8|max:20|regex:/^[0-9\-]+$/',
-            'account_holder_name' => 'required|string|max:100',
-        ], [
-            'bank_name.required' => 'Please select a bank',
-            'account_number.required' => 'Account number is required',
-            'account_number.min' => 'Account number must be at least 8 characters',
-            'account_number.max' => 'Account number cannot exceed 20 characters',
-            'account_number.regex' => 'Account number can only contain numbers and hyphens',
-            'account_holder_name.required' => 'Account holder name is required',
-            'account_holder_name.max' => 'Account holder name cannot exceed 100 characters',
-        ]);
+        $validatedData = $request->validated();
 
         try {
             $wallet = Wallet::retrieveOrCreateCache($user->id);
@@ -228,7 +216,7 @@ public function showPaymentMethodForm(Request $request)
         $user = $request->get('user');
 
         $transactionsDemo = TransactionHistory::where('user_id', $user->id)
-            ->limit(5)->get()->toArray();
+            ->limit(5)->orderBy('id', 'desc')->get()->toArray();
 
         $transactions = [
             'data' => $transactionsDemo,
@@ -327,11 +315,19 @@ public function showPaymentMethodForm(Request $request)
 
     public function checkoutTopup(Request $request)
     {
-        $request->validate([
-            'topup_amount' => 'required|numeric|min:5',
-        ]);
 
         $user = $request->get('user');
+        $today = now();
+        $dailyTotal = DB::table('wallet_topups')
+            ->where('user_id', $user->id)
+            ->whereDate('created_at', $today)
+            ->sum('amount');
+
+
+        if ($dailyTotal + $request->topup_amount > 1000) {
+            return $this->showErrorParticipant('Transaction exceeds RM1000 limit.');
+        }
+
         $amount = $request->topup_amount;
         return view('Users.TopupStripe', [
             'amount' => $amount
@@ -343,7 +339,6 @@ public function showPaymentMethodForm(Request $request)
         try {
             DB::beginTransaction();
             $user = $request->get('user');
-            $userId = $user->id;
             $status = $request->get('redirect_status');
 
             if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
@@ -360,6 +355,12 @@ public function showPaymentMethodForm(Request $request)
                     $wallet->update([
                         'usable_balance' => $wallet->usable_balance + $amount,
                         'current_balance' => $wallet->current_balance + $amount,
+                    ]);
+
+                    DB::table('wallet_topups')->insert([
+                        'user_id' => $user->id,
+                        'amount' => $amount,
+                        'created_at' => now(),
                     ]);
 
                     TransactionHistory::create([

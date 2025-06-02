@@ -13,7 +13,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
    
     <main class="main-background-2">
         <div id="hidden-variables" class="d-none"
@@ -26,7 +26,7 @@
             data-stripe-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
             data-stripe-return-url="{{ route('organizer.checkout.transition', ['id' => $event->id]) }}">
         </div>
-        @include('includes.__Checkout.OrgCheckout', ['event' => $event])
+        @include('includes.Checkout.OrgCheckout', ['event' => $event])
     </main>
 
     <script src="https://js.stripe.com/v3/"></script>

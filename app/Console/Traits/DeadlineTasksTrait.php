@@ -27,7 +27,6 @@ trait DeadlineTasksTrait
     protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService, $firebaseConfig, $disputeEnums)
     {
         $this->bracketDataService = $bracketDataService;
-        Log::info(">>>>" . $firebaseConfig);
         $factory = new \Kreait\Firebase\Factory();
         $this->disputeEnums = $disputeEnums;
         $this->firestore = $factory->withServiceAccount(base_path($firebaseConfig))->createFirestore();
@@ -371,7 +370,6 @@ trait DeadlineTasksTrait
                     $updateDisputeValues, 
                     $updateValues 
                 ] = $this->interpretDeadlines( $matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, true );
-                Log::info(">>>>UPDATE " . $matchStatusPath);
                 Log::info( $updateValues);
                 Log::info( $updateDisputeValues);
                 if (!empty($updateValues)) {

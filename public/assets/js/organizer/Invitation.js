@@ -46,22 +46,33 @@ function addParticant() {
             const teamElement = document.createElement('div');
             let { team, invitation } = responseData.data;
             teamElement.innerHTML = `
-            <div id="invite-${invitation.id}" class="d-flex justify-content-center  my-2 align-items-center">
+            <div class="card my-2 mx-auto" style="width: min(95%, 600px);">
+            <div id="invite-${invitation.id}" class="card-body d-flex text-center my-2 mx-3 align-items-center justify-content-between">
+                       
+                    <p class="ms-3 me-4 d-inline my-0 py-0">
                         <img src="/storage/${team.teamBanner}" 
                         class="team-banner border border-dark object-fit-cover rounded-circle "  
                         onerror="this.src='/assets/images/404q.png';"
                         width="30" height="30"
                     >
-                    <p class="ms-1 me-1  d-inline my-0 py-0">${team.teamName}</p>
-                    <span class="me-1">${team.country_flag}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                        data-invitation-id = "${invitation.id}"
+                    <span class="me-2 ms-2">New Team</span> 
+                        <span class="text-primary">${team.teamName}</span>
+                    </p>
+                    <button  data-invitation-id = "${invitation.id}"
                         onclick="removeParticant(event)"
+                        class="btn border-red text-red  rounded-pill btn-sm "    
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                        
+                        
                         class="text-red border border-danger cursor-pointer rounded-circle p-0 ms-2"
                     >
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
+                    <small> Remove </small>
+                    </button>
+            </div>
             </div>
             `;
             addedTeam.appendChild(teamElement);
@@ -106,7 +117,7 @@ function removeParticant(event) {
             } 
 
             let div = document.getElementById(`invite-${inviteId}`);
-            div.remove();
+            div.parentElement.remove();
             Toast.fire({
                 icon: 'success',
                 text: "Successfully removed the invitation"

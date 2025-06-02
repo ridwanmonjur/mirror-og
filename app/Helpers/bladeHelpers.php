@@ -1,7 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 // function bladeGetPaymentLogos($logoType)
 // {
@@ -16,19 +14,6 @@ use Illuminate\Support\Str;
 
 //     return config("constants.{$logo}");
 // }
-
-function fixTimeToRemoveSeconds($time)
-{
-    if ($time === null) {
-        return null;
-    }
-    if (substr_count($time, ':') === 2) {
-        $time = explode(':', $time);
-        $time = $time[0].':'.$time[1];
-    }
-
-    return $time;
-}
 
 
 
@@ -55,33 +40,6 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
     return $stylesEventRatio;
 }
 
-function bladeGenerateEventStartEndDateStr($startDate, $startTime)
-{
-    $startTime = fixTimeToRemoveSeconds($startTime);
-    if ($startDate !== null && $startTime !== null) {
-        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC') ?? null;
-        // $carbonDateTimeUtc = $carbonDateTimeUtc->setTimezone('Asia/Singapore');
-        $datePart = $carbonDateTimeUtc->format('Y-m-d');
-        $timePart = $carbonDateTimeUtc->isoFormat('h:mm a');
-        $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
-        $dateStr = $datePart.' '.$timePart;
-        $combinedStr = $datePart.' ('.$dayStr.')';
-    } else {
-        $datePart = 'Date is not set';
-        $timePart = 'Time is not set';
-        $dayStr = '';
-        $dateStr = 'Please enter date and time';
-        $combinedStr = 'Date/time is not set';
-    }
-
-    return [
-        'datePart' => $datePart,
-        'dateStr' => $dateStr,
-        'timePart' => $timePart,
-        'dayStr' => $dayStr,
-        'combinedStr' => $combinedStr,
-    ];
-}
 
 
 

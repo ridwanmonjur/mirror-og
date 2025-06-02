@@ -64,7 +64,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage', ['search' => true ])
+    @include('includes.Navbar', ['search' => true ])
 
     <main 
     >

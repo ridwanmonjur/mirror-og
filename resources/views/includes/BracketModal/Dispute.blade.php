@@ -84,9 +84,9 @@
 
                 <template v-if="dispute[reportUI.matchNumber]">
                     <div>
-                         @include('includes.__BracketModal.__Dispute.Claim')
+                         @include('includes.BracketModal.__Dispute.Claim')
                         <template v-if="dispute[reportUI.matchNumber]?.response_teamId">
-                            @include('includes.__BracketModal.__Dispute.Response')
+                            @include('includes.BracketModal.__Dispute.Response')
                         </template>
                         <template v-if="!dispute[reportUI.matchNumber]?.response_teamId && userLevelEnums['IS_ORGANIZER'] != report.userLevel">
                             <div class="row">
@@ -184,10 +184,10 @@
                         </template> 
                         
                         <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
-                            @include('includes.__BracketModal.__Dispute.Winner')
+                            @include('includes.BracketModal.__Dispute.Winner')
                         </template> 
                          <template v-else> 
-                            @include('includes.__BracketModal.__Dispute.MissingWinner')
+                            @include('includes.BracketModal.__Dispute.MissingWinner')
                         </template>
                         <br>
                         <div class="text-center">
@@ -216,7 +216,7 @@
                     </div>
                 </template>
                  <template v-else>
-                    @include('includes.__BracketModal.__Dispute.Create')
+                    @include('includes.BracketModal.__Dispute.Create')
                 </template>
             </div> 
         </div>

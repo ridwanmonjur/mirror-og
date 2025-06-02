@@ -1,7 +1,7 @@
 <div id="bracket-list"  style="overflow-x: auto; overflow-y: visible;">
-    @include('includes.__BracketModal.Report')
-    @include('includes.__BracketModal.Update')
-    @include('includes.__BracketModal.Dispute')
+    @include('includes.BracketModal.Report')
+    @include('includes.BracketModal.Update')
+    @include('includes.BracketModal.Dispute')
     @if (isset($bracketList['U']))
  
         <h5 class="mt-4 mb-2 text-start"><u>Upper bracket</u></h5>

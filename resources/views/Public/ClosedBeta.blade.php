@@ -39,10 +39,10 @@
 @section('content')
     <header>
           @auth
-            @include('includes.Navbar.NavbarGoToSearchPage')
+            @include('includes.Navbar')
         @endauth
         @guest
-            @include('includes.Navbar.NavbarBeta')
+            @include('includes.NavbarBeta')
         @endguest
     </header>
 

@@ -139,17 +139,11 @@
 <div class="dropdown me-2"  data-bs-auto-close="true" >
     <a href="#" role="button" class="btn m-0 p-0" id="dropUser" data-bs-toggle="dropdown"
         aria-haspopup="true" aria-expanded="true">
-        @if($user->userBanner)
             <img
                 class="object-fit-cover rounded-circle border border-primary" 
-                onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
+                onerror="this.onerror=null;"
                 src="{{ bladeImageNull($user->userBanner)}}" width="42" height="42">
-        @else 
-            <span style="display: inline-block; height: 42px; width: 42px;"
-                class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle me-2">
-                {{ strtoupper(substr($user->name, 0, 1)) }}
-            </span>
-        @endif
+       
     </a>
    
     <div class="dropdown-menu border shadow-lg px-2 py-0 dropdown-menu-end" style=" border-radius: 10px; top: 120%; font-size: 14px; width: 250px;"
@@ -157,16 +151,10 @@
         <div class="border-secondary border-1 border-bottom text-center mb-0 px-2">
             <a class="py-0" href="{{ route(strtolower($user->role) . '.profile.view') }}">
                 <div class="py-navbar d-flex justify-content-start align-items-center py-2 ps-2">
-                    @if ($user->userBanner)
                         <img class="object-fit-cover rounded-circle me-2 border border-primary"
-                            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
+                            onerror="this.onerror=null;"
                             src="{{bladeImageNull($user->userBanner)}}" width="45" height="45">
-                    @else
-                        <span style="display: inline-block; height: 45px; min-width: 45px; max-width: 45px;"
-                            class="bg-dark d-flex justify-content-center align-items-center text-light rounded-circle me-2">
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        </span>
-                    @endif
+                   
                         <p class="py-0 my-0 text-start "
                         > {{ $user->name }}</p> 
                 </div>

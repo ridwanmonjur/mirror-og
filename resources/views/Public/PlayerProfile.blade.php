@@ -84,7 +84,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <div data-user-profile-id="{{ $userProfile->id }}"
         data-user-profile-birthday="{{ $userProfile->participant->birthday }}"
         data-background-api-url="{{ route('user.userBackgroundApi.action', ['id' => $userProfile->id]) }}"
@@ -94,9 +94,9 @@
         data-is-user-same="{{ $isUserSame }}" data-logged-user-id="{{ $loggedUserId }}"
         data-logged-user-role="{{ $loggedUserRole }}" class="d-none laravel-data-storage"></div>
     <main id="app">
-        @include('includes.__Profile.BackgroundModal')
-        @include('includes.__Profile.FriendFollowForms')
-        @include('includes.__Profile.PlayerHead')
+        @include('includes.Profile.BackgroundModal')
+        @include('includes.Profile.FriendFollowForms')
+        @include('includes.Profile.PlayerHead')
 
         <div class="tabs ">
             <button class="tab-button  outer-tab tab-button-active"
@@ -127,7 +127,7 @@
                         'd-flex justify-content-center ' => !isset($joinEvents[1]),
                     ])>
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('includes.__Team.RosterView')
+                            @include('includes.Team.RosterView')
                         @endforeach
                     </div>
                 @endif
@@ -162,7 +162,7 @@
 
                     <div class="achievements col-12 col-lg-6">
                         <div class="ms-2 text-center"><b>Positions</b></div><br>
-                        @include('includes.__Public.PositionBadge')
+                        @include('includes.Public.PositionBadge')
                     </div>
                 </div>
             </div>
@@ -171,13 +171,13 @@
         <div class="tab-content pb-4 d-none outer-tab " id="Activity">
             <br>
             <div class="tab-size"><b>New</b></div>
-            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[0]])
+            @include('includes.Profile.ActivityLogs', ['duration' => $activityNames[0]])
 
             <div class="tab-size"><b>Recent</b></div>
-            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[1]])
+            @include('includes.Profile.ActivityLogs', ['duration' => $activityNames[1]])
 
             <div class="tab-size"><b>Older</b></div>
-            @include('includes.__Profile.ActivityLogs', ['duration' => $activityNames[2]])
+            @include('includes.Profile.ActivityLogs', ['duration' => $activityNames[2]])
         </div>
 
         <div class="tab-content pb-4  outer-tab d-none" id="Events">
@@ -192,7 +192,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('includes.__Team.RosterView')
+                        @include('includes.Team.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -208,7 +208,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
-                        @include('includes.__Team.RosterView')
+                        @include('includes.Team.RosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -321,6 +321,6 @@
         <script src="{{ asset('/assets/js/participant/Profile.js') }}"></script>
     </main>
 </body>
-@include('includes.__Profile.Cropper')
+@include('includes.Profile.Cropper')
 
 </html>

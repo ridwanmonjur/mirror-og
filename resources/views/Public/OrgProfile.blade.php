@@ -89,8 +89,8 @@
 @endauth
 <body>
     @include('googletagmanager::body')
-    @include('includes.__Profile.BackgroundModal')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Profile.BackgroundModal')
+    @include('includes.Navbar')
     <main 
         id="app"
         v-scope="OrganizerData()"
@@ -118,7 +118,7 @@
         <input type="hidden" id="initialAddress" value="{{json_encode($userProfile->address)}}">
         {{-- <form action="{{route('organizer.profile.update')}}" method="POST">  --}}
         <div >
-            @include('includes.__Profile.OrgHead')
+            @include('includes.Profile.OrgHead')
         </div>
         <div class="tabs px-5"  v-show="!isEditMode">
             <button class="tab-button  outer-tab py-2 tab-button-active"
@@ -170,7 +170,7 @@
                     ])
                     >
                         @foreach ($joinEvents as $key => $joinEvent)
-                            @include('includes.__Profile.OrgRosterView')
+                            @include('includes.Profile.OrgRosterView')
                         @endforeach
                     </div>
                  
@@ -190,7 +190,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
-                        @include('includes.__Profile.OrgRosterView')
+                        @include('includes.Profile.OrgRosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -206,7 +206,7 @@
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)                        
-                        @include('includes.__Profile.OrgRosterView')
+                        @include('includes.Profile.OrgRosterView')
                         <br><br>
                     @endforeach
                 </div>
@@ -480,7 +480,7 @@
         <br> <br>
         {{-- </form> --}}
     </main>
-    @include('includes.__Profile.Cropper')
+    @include('includes.Profile.Cropper')
 
 </body>
 <script src="{{ asset('/assets/js/organizer/PlayerProfile.js') }}"></script>

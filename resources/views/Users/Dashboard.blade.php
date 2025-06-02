@@ -7,7 +7,7 @@
 @section('body-class', 'wallet')
 
 @section('content')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
 
     <main class=" "  v-scope="TransactionComponent()" class="row" @vue:mounted="init">
         <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
@@ -161,8 +161,7 @@
                                 <h5 class="mt-1 mb-3 fw-normal">Current Wallet Balance </h5>
                                 <h2 class=" my-3 fw-normal"> MYR {{ number_format($wallet->current_balance, 2) }} </h2>
                             </div>
-                            @include('includes.Flash')
-
+                            
                             <!-- Topup Form -->
                             <div class="my-2">
                                 <form action="{{ route('wallet.checkout') }}" method="POST">

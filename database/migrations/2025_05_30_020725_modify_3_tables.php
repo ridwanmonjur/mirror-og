@@ -10,21 +10,25 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('participant_payments', 'wallet_id')) {
+        if (!Schema::hasColumn('participant_payments', 'history_id')) {
             Schema::table('participant_payments', function (Blueprint $table) {
-                $table->unsignedBigInteger('wallet_id')->nullable()->after('id');
+                $table->unsignedBigInteger('history_id')->nullable()->after('id');
 
                 if (Schema::hasTable('user_wallet')) {
-                    $table->foreign('wallet_id')->references('id')->on('user_wallet')->onDelete('set null');
+                    $table->foreign('history_id')->references('id')->on('transaction_history')->onDelete('cascade');
                 }
-
-                
             });
         }
 
         Schema::table('participant_payments', function (Blueprint $table) {
             if (!Schema::hasColumn('participant_payments', 'register_time')) {
                 $table->string('register_time')->nullable();
+            }
+        });
+
+        Schema::table('participant_payments', function (Blueprint $table) {
+            if (!Schema::hasColumn('participant_payments', 'type')) {
+                $table->string('type');
             }
         });
 
@@ -69,13 +73,17 @@ return new class extends Migration {
         if (Schema::hasColumn('participant_payments', 'wallet_id')) {
             Schema::table('participant_payments', function (Blueprint $table) {
                 if (Schema::hasTable('user_wallet')) {
-                    $table->dropForeign(['wallet_id']);
+                    $table->dropForeign(['history_id']);
                 }
 
-                $table->dropColumn('wallet_id');
+                $table->dropColumn('history_id');
 
                 if (Schema::hasColumn('participant_payments', 'register_time')) {
                     $table->dropColumn('register_time');
+                }
+
+                if (Schema::hasColumn('participant_payments',  'type')) {
+                    $table->dropColumn('type');
                 }
             });
         }

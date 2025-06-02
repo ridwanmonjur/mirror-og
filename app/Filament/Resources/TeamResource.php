@@ -47,38 +47,46 @@ class TeamResource extends Resource
                 ),
                 Forms\Components\TextInput::make('teamDescription')
                     ->maxLength(255),
-                Forms\Components\FileUpload::make('teamBanner')
-                    ->image()
-                    ->directory('images/team') 
-                    ->maxSize(5120)
-                    ->deleteUploadedFileUsing(function ($file, $livewire) {
-                        if ($file && Storage::disk('public')->exists($file)) {
-                            Storage::disk('public')->delete($file);
-                        }
-                        
-                        if ($livewire->record) {
-                            $livewire->record->teamBanner = null;
-                            $livewire->record->save();
-                        }
-                        
-                        return null;
-                    })
-                    ->visible(fn (string $context): bool => $context === 'edit')
-                    ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
-                        // Custom file naming logic here
-                        $oldBanner = $livewire->record->userBanner;
+                Forms\Components\Section::make('Event Category')
+                    ->description('Image upload is only available when editing an existing item')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        Forms\Components\Placeholder::make('create_notice')
+                        ->content('Please create the object first, then edit to upload an image.')
+                        ->visible(fn (string $context): bool => $context === 'create'),
+                        Forms\Components\FileUpload::make('teamBanner')
+                            ->image()
+                            ->directory('images/team') 
+                            ->maxSize(5120)
+                            ->deleteUploadedFileUsing(function ($file, $livewire) {
+                                if ($file && Storage::disk('public')->exists($file)) {
+                                    Storage::disk('public')->delete($file);
+                                }
+                                
+                                if ($livewire->record) {
+                                    $livewire->record->teamBanner = null;
+                                    $livewire->record->save();
+                                }
+                                
+                                return null;
+                            })
+                            ->visible(fn (string $context): bool => $context === 'edit')
+                            ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
+                                // Custom file naming logic here
+                                $oldBanner = $livewire->record->userBanner;
 
-                        $newFilename = 'teamBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
-                        $directory = 'images/team';
-                        
-                        $path = $file->storeAs($directory, $newFilename, 'public');
-                        $livewire->record->teamBanner = $path;
-                        $livewire->record->save();
-                        if ($oldBanner && $oldBanner !== $state) {
-                            $livewire->record->destroyTeanBanner($oldBanner);
-                        }
-                        return $path;
-                    }),
+                                $newFilename = 'teamBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                $directory = 'images/team';
+                                
+                                $path = $file->storeAs($directory, $newFilename, 'public');
+                                $livewire->record->teamBanner = $path;
+                                $livewire->record->save();
+                                if ($oldBanner && $oldBanner !== $state) {
+                                    $livewire->record->destroyTeanBanner($oldBanner);
+                                }
+                                return $path;
+                            }),
+                        ]),
                 Forms\Components\Select::make('country')
                     ->label('Country')
                     ->options($countries)
