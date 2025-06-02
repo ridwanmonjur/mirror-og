@@ -129,11 +129,11 @@
                 href="#card-accordion" aria-expanded="false" aria-controls="card-accordion">
                 <div> Credit / Debit Card </div>
                 <div class="accordion-arrows"> 
-                {{-- @include('includes.__Checkout.AccordionArrows')  --}}
+                {{-- @include('includes.Checkout.AccordionArrows')  --}}
                 </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="card-accordion">
-                @include('includes.__Checkout.CheckoutCardOption')
+                @include('includes.Checkout.CheckoutCardOption')
             </div>
         </div>
         <div class="me-5 pb-2 mb-2 d-none">
@@ -142,7 +142,7 @@
                 href="#eWallet-accordion" aria-expanded="false" aria-controls="eWallet-accordion">
                 <div> eWallet </div>
                 <div class="accordion-arrows"> 
-                {{-- @include('includes.__Checkout.AccordionArrows')  --}}
+                {{-- @include('includes.Checkout.AccordionArrows')  --}}
                 </div>
             </div>
             {{-- <div class="collapse px-3 py-2 multi-collapse" id="eWallet-accordion">
@@ -170,7 +170,7 @@
                 href="#online-banking-accordion" aria-expanded="false" aria-controls="online-banking-accordion">
                 <div> Online Banking (FPX) </div>
                 <div class="accordion-arrows"> 
-                @include('includes.__Checkout.AccordionArrows') 
+                @include('includes.Checkout.AccordionArrows') 
                 </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="online-banking-accordion">
@@ -198,7 +198,7 @@
                 href="#other-methods-accordion" aria-expanded="false" aria-controls="other-methods-accordion">
                 <div> Other Methods </div>
                 <div class="accordion-arrows"> 
-                @include('includes.__Checkout.AccordionArrows') 
+                @include('includes.Checkout.AccordionArrows') 
                 </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
