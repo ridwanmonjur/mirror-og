@@ -11,6 +11,7 @@ use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Services\SettingsService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -148,10 +149,10 @@ class UserController extends Controller
     public function settings(Request $request)
     {
         $user = $request->attributes->get('user');
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
         $user->is_null_password = empty($user->password);
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = $request->input('history_limit', 10); // 100
-
 
         $paramsMethods = [
             'customer' => $user->stripe_customer_id,
@@ -181,13 +182,57 @@ class UserController extends Controller
             $paymentHistory = new Collection();
             $hasMorePayments = $hasMoreHistory = false;
         }
+
     
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
         return view('Users.Settings', 
             compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction',
-            'limit_methods', 'limit_history', 'hasMorePayments',  'hasMoreHistory', 
+            'limit_methods', 'limit_history', 'hasMorePayments',  'hasMoreHistory', 'wallet'
             
     ));
+    }
+
+    /**
+     * Unlink user's bank account
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function unlinkBankAccount(Request $request): JsonResponse
+    {
+        try {
+            $user = $request->get('user');
+            $wallet = Wallet::retrieveOrCreateCache($user->id);
+
+            if (!$wallet->has_bank_account) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No bank account is currently linked to your account'
+                ], 400);
+            }
+
+            $wallet->update([
+                'has_bank_account' => false,
+                'bank_last4' => null,
+                'bank_name' => null,
+                'account_number' => null,
+                'account_holder_name' => null,
+                'bank_details_updated_at' => null,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Bank account unlinked successfully',
+                
+            ], 200);
+
+        } catch (Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while unlinking bank account'
+            ], 500);
+        }
     }
 
     public function changeSettings(UpdateSettingsRequest $request): JsonResponse
