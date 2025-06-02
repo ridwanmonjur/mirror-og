@@ -33,6 +33,7 @@ final class ParticipantPaymentFactory extends Factory
             'payment_id' => \App\Models\RecordStripe::factory(),
             'payment_amount' => fake()->optional()->word,
             'members_id' => \App\Models\TeamMember::factory(),
+            'type' => 'discount'
         ];
     }
 }

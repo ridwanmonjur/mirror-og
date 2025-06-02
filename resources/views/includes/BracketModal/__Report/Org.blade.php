@@ -1,8 +1,8 @@
 <div>
-    @include('includes.__BracketModal.__Report.ExistingChoices')
+    @include('includes.BracketModal.__Report.ExistingChoices')
     <template v-if="report.disqualified">
         <div>
-            @include('includes.__BracketModal.__Report.Disqualified')
+            @include('includes.BracketModal.__Report.Disqualified')
         </div>
     </template>
     <template v-else>
@@ -30,7 +30,7 @@
                             </div>
                         </template>
                     </div>
-                    @include('includes.__BracketModal.__Report.PickWinners')
+                    @include('includes.BracketModal.__Report.PickWinners')
                 </div>
             </template>
             <template v-if="dispute[reportUI.matchNumber]">
@@ -53,7 +53,7 @@
                             </div>
                             <template v-if="report.realWinners[reportUI.matchNumber]">
                                 <div>
-                                    @include('includes.__BracketModal.__Report.RealWinners')
+                                    @include('includes.BracketModal.__Report.RealWinners')
                                 </div>
                             </template>
                         </div>
@@ -70,14 +70,14 @@
                                         dispute </button>
                                 </div>
                             </div>
-                            @include('includes.__BracketModal.__Report.PendingWinners')
+                            @include('includes.BracketModal.__Report.PendingWinners')
                         </div>
                     </template>
                 </div>
             </template>
             <template v-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
                 <div>
-                    @include('includes.__BracketModal.__Report.RealWinners')
+                    @include('includes.BracketModal.__Report.RealWinners')
                     <div class="d-flex justify-content-center">
                         <button class="btn btn-sm border rounded-pill text-primary border-primary "
                             v-on:click="onChangeTeamToWin"> Change Declaration </button>

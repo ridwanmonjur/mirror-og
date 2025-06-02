@@ -41,6 +41,12 @@ class OrganizerInvitationController extends Controller
     public function store(Request $request)
     {
         $team = Team::where('id', $request->team_id)->first();
+        if (!$team) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have not chosen a teams!',
+            ]);
+        }
         $isExistsBefore = EventInvitation::where('team_id', $request->team_id)
             ->where('event_id', $request->event_id)
             ->exists();

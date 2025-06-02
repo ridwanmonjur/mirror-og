@@ -7,7 +7,7 @@
         $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
         $willShowStartsInCountDown = $status === 'ONGOING';
         $isEnded = $status === 'ENDED';
-        extract($event->startDatesReadableForLanding($willShowStartsInCountDown));
+        extract($event->startDatesReadable($willShowStartsInCountDown));
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
         style="background-color: rgba(255, 255, 255, 0.7);"
@@ -129,15 +129,15 @@
                         'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier,
                         ' text-secondary' => $isEnded
                     ])>
-                        <span> {{$formattedStartDate}} </span>
+                        <span> {{$fmtStartDt}} </span>
                         <span> <span class="ms-3 me-2"><svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                         <circle cx="2" cy="2" r="2" fill="currentColor"/>
-                        </svg> </span>{{$formattedStartTime}} </span>
+                        </svg> </span>{{$fmtStartT}} </span>
                     </h5>
                     @if ($willShowStartsInCountDown) 
                         <div class="text-center">
                             <p class="my-0 py-0"> Starts in 
-                                <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$formmattedStartsIn}}</span>
+                                <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$fmtStartIn}}</span>
                             </p>
                         </div>
                     @else

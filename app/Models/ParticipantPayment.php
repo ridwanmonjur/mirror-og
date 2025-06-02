@@ -19,7 +19,9 @@ class ParticipantPayment extends Model
         'join_events_id',
         'payment_amount',
         'payment_id',
-        'register_time'
+        'register_time',
+        'history_id',
+        'type'
     ];
 
     public function members(): BelongsTo
@@ -30,5 +32,10 @@ class ParticipantPayment extends Model
     public function transaction(): BelongsTo
     {
         return $this->belongsTo(RecordStripe::class, 'payment_id', 'id');
+    }
+
+    public function history(): BelongsTo
+    {
+        return $this->belongsTo(TransactionHistory::class, 'history_id', 'id');
     }
 }

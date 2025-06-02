@@ -13,6 +13,7 @@ use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class RespondTasks extends Command
 {
@@ -102,7 +103,11 @@ class RespondTasks extends Command
             ];
 
             if ($type == 0 || $type == 1) {
-                $this->capturePayments($startedTaskIds, $taskId);
+                $with = [
+                  ...$with,
+                  'payments',
+                  'history'
+                ];
 
                 $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
                     ->where('join_status', 'confirmed')
@@ -111,6 +116,10 @@ class RespondTasks extends Command
                         ...$with,
                     ])
                     ->get();
+                Log::info(">>>started events: " .$startedEvents);
+
+                $this->capturePayments($startedEvents, $startedEvents, $taskId);
+
 
 
                 EventDetail::whereIn('id', $startedTaskIds)->update(['status' => 'ONGOING']);
@@ -173,6 +182,7 @@ class RespondTasks extends Command
                 );
             }
 
+            
             if ($type == 0 || $type == 4) {
                 foreach ($regOverTaskIds as $regOverTaskId) {
 
@@ -186,23 +196,7 @@ class RespondTasks extends Command
                         ->first();
 
                     if ($event) {
-                        if ($event->join_events_count != $event->tier->tierTeamSlot) {
-                            $this->releaseToBeCapturedPaymentsAndDiscountCreate([$regOverTaskId], $taskId);
-
-                            EventDetail::whereIn('id', $regOverTaskId)->update(['status' => 'ENDED']);
-                            $deadlines = BracketDeadline::whereIn('event_details_id', $regOverTaskIds)->get();
-                            $deadlinesPast = $deadlines->pluck("id");
-
-                            Task::whereIn('taskable_id', $deadlinesPast)
-                                ->where('taskable_type', BracketDeadline::class)
-                                ->delete();
-
-                            Task::whereIn('taskable_id', $regOverTaskId)
-                                ->where('taskable_type', EventDetail::class)
-                                ->delete();
-
-                            BracketDeadline::whereIn('event_details_id', $regOverTaskIds)->delete();
-                        }
+                        $this->checkAndCancelEvent($event, $regOverTaskId, $regOverTaskIds, $taskId);
                     }
                 }
             }

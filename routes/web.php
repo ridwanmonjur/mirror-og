@@ -54,10 +54,7 @@ Route::get('/seed/{id}/brackets', [FirebaseController::class, 'seedMatches']);
 Route::get('/seed/{id}/start', [MiscController::class, 'seedStart']);
 Route::get('/seed/{id}/end', [MiscController::class, 'seedEnd']);
 Route::get('/seed/{id}/org', [MiscController::class, 'seedOrg']);
-Route::get('/seed/{id}/startEvent', [MiscController::class, 'seedStartEvent']);
-Route::get('/seed/{id}/liveEvent', [MiscController::class, 'seedLiveEvent']);
-Route::get('/seed/{id}/endEvent', [MiscController::class, 'seedEndEvent']);
-Route::get('/seed/{id}/allEvent', [MiscController::class, 'seedAllEvent']);
+Route::get('/seed/{id}/event/{type?}', [MiscController::class, 'seedEvent']);
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
@@ -170,7 +167,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
             Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action')
                 ->middleware('prevent-back-history');
-            Route::post('/event/walletCheckout', action: [ParticipantCheckoutController::class, 'walletCheckout'])->name('participant.walletCheckout.action');
+            Route::post('/event/discountCheckout', action: [ParticipantCheckoutController::class, 'discountCheckout'])->name('participant.discountCheckout.action');
 
             Route::post('/event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 

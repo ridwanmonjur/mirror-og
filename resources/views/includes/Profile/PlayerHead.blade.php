@@ -36,7 +36,7 @@
             </svg>
         @endif
         @if (!$isOwnProfile && !$isUserSame)
-            @include('includes.__Profile.FriendFriendUI')
+            @include('includes.Profile.FriendFriendUI')
         @endif
     </div>
     <div class="d-flex justify-content-center align-items-center flex-wrap">
@@ -299,7 +299,7 @@
                             </div>
                         </div>
                     </div>
-                    @include('includes.__Profile.ProfileStatsModal', [
+                    @include('includes.Profile.ProfileStatsModal', [
                         'propsTeamOrUserId' => $userProfile->id,
                         'propsUserId' => $loggedUserId ?? '0',
                         'propsIsUserSame' => $isUserSame ? 1 : 0,

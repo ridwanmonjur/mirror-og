@@ -17,7 +17,7 @@
     use Carbon\Carbon;
 @endphp
 <body>
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <main>
         <br><br><br>
 

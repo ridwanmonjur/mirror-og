@@ -84,7 +84,7 @@ class TransactionHistory extends Model
 /**
  * Get cursor paginated results with metadata.
  */
-public function scopeCursorPaginated($query, $perPage = 15, $cursor = null)
+public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): array
 {
 
     $query->orderBy('id', 'desc')->limit($perPage + 1);

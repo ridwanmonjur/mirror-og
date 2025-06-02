@@ -246,15 +246,14 @@ return [
     'QUEUE_TRIES' => 3,
     'STRIPE' => [
         'ZER0' => 0.05,
-        'MINIMUM_RM' => 2.5
+        'MINIMUM_RM' => 5.0
     ],
     'ROSTER_SIZE' => 5,
     'SIGNUP_STATUS' => [
-        'OVER' => 1,
-        'EARLY' => 2,
-        'NORMAL' => 3,
-        'TOO_EARLY' => 4,
-        'CLOSED' => 5
+        'EARLY' => 1,
+        'NORMAL' => 2,
+        'TOO_EARLY' => 3,
+        'CLOSED' => 4,
     ],
 
     'SETTINGS_ROUTE_ACTION' => [

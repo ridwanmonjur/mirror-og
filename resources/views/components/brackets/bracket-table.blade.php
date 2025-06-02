@@ -9,7 +9,7 @@
          </tr>
      </thead>
      <tbody class="tournament-bracket__content">
-         <tr class="tournament-bracket__team  px-2 py-3 bg-translucent  tournament-bracket__team--winner ">
+         <tr class="tournament-bracketTeam  px-2 py-3 bg-translucent  tournament-bracketTeam--winner ">
              <td class="tournament-bracket__pos ">
                  <abbr class="tournament-bracket__code me-2"
                      title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}
@@ -33,7 +33,7 @@
                  <span class="tournament-bracket__number">0</span>
              </td>
          </tr>
-         <tr class="tournament-bracket__team  bg-translucent px-2 py-3 ">
+         <tr class="tournament-bracketTeam  bg-translucent px-2 py-3 ">
           
              <td class="tournament-bracket__pos ">
                 @if (!$isFirst)

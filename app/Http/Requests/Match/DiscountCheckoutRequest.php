@@ -50,10 +50,15 @@ class DiscountCheckoutRequest extends FormRequest
                 ->with(['tier', 'type', 'game'])->first();
             
             $status = $event->getRegistrationStatus();
-            // if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
-            //     $validator->errors()->add('time', "Regisration time is now over!");
-            //     return;
-            // }
+            if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
+                $validator->errors()->add('time', "Regisration time is now over!");
+                return;
+            }
+            
+            if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
+                $validator->errors()->add('time', "Regisration time has not yet started!");
+                return;
+            }
             $this->status = $status;
             $this->event = $event;
 

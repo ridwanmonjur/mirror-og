@@ -11,7 +11,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
 </head>
 <body style="margin-top: 0 !important;">
-@include('includes.Navbar.NavbarGoToSearchPage')
+@include('includes.Navbar')
 
     <main>
         <br><br><br><br>

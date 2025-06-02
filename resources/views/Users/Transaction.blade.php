@@ -7,7 +7,7 @@
 @section('body-class', 'wallet')
 
 @section('content')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
 
     <main  v-scope="TransactionComponent()" @vue:mounted="init">

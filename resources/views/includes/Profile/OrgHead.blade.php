@@ -96,7 +96,7 @@
                         </span>
                     </span>
                 </span>
-                @include('includes.__Profile.ProfileStatsModal', [
+                @include('includes.Profile.ProfileStatsModal', [
                     'propsTeamOrUserId' => $userProfile->id,
                     'propsUserId' => $loggedUserId ?? '0',
                     'propsIsUserSame' => $isUserSame ? 1 : 0,

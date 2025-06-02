@@ -14,7 +14,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
 
     <main>
         <br class="d-none-at-desktop">
@@ -50,7 +50,7 @@
                     <a href="{{ route('event.index', ['status' => 'ENDED', 'page' => 1]) }}">Ended</a>
                 </p>
             </div>
-            @include('includes.__ManageEvent.ManageEventFilterSort', [
+            @include('includes.ManageEvent.ManageEventFilterSort', [
                 'eventCategoryList' => $eventCategoryList, 
                 'eventTierList' => $eventTierList, 
                 'eventTypeList' => $eventTypeList 
@@ -97,7 +97,7 @@
             </div>
 
             <div class="scrolling-pagination featured-events">
-                @include('includes.__ManageEvent.ManageEventScroll')
+                @include('includes.ManageEvent.ManageEventScroll')
             </div>
 
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>

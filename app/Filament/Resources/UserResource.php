@@ -71,44 +71,52 @@ class UserResource extends Resource
                                     ->email()
                                     ->maxLength(255),
                                 DateTimePicker::make('email_verified_at'),
-                                FileUpload::make('userBanner')
-                                    ->image()
-                                    ->directory('images/user') 
-                                    ->maxSize(5120)
-                                    ->visible(fn (string $context): bool => $context === 'edit')
-                                    ->deleteUploadedFileUsing(function ($file, $livewire) {
-                                        if ($file && Storage::disk('public')->exists($file)) {
-                                            Storage::disk('public')->delete($file);
-                                        }
-                                        
-                                        if ($livewire->record) {
-                                            $livewire->record->userBanner = null;
-                                            $livewire->record->save();
-                                        }
-                                        
-                                        return null;
-                                    })
-                                    ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
-                                        // Generate new filename regardless of creation or edit
-                                            $newFilename = 'userBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
-                                            $directory = 'images/user';
-                                            $path = $file->storeAs($directory, $newFilename, 'public');
-                                            
-                                            // For edit mode, handle the existing record
-                                            if ($livewire->record) {
-                                                $oldBanner = $livewire->record->userBanner;
-                                                $livewire->record->userBanner = $path;
-                                                $livewire->record->save();
-                                                
-                                                if ($oldBanner && $oldBanner !== $state) {
-                                                    $livewire->record->destroyUserBanner($oldBanner);
+                                Forms\Components\Section::make('User Banner')
+                                    ->description('Banner upload is only available when editing an existing item')
+                                    ->icon('heroicon-o-photo')
+                                    ->schema([
+                                        Forms\Components\Placeholder::make('create_notice')
+                                        ->content('Please save the user first, then edit to upload a banner image.')
+                                        ->visible(fn (string $context): bool => $context === 'create'),
+                                        FileUpload::make('userBanner')
+                                            ->image()
+                                            ->directory('images/user') 
+                                            ->maxSize(5120)
+                                            ->visible(fn (string $context): bool => $context === 'edit')
+                                            ->deleteUploadedFileUsing(function ($file, $livewire) {
+                                                if ($file && Storage::disk('public')->exists($file)) {
+                                                    Storage::disk('public')->delete($file);
                                                 }
-                                            }
-                                            
-                                            // Always return the path so it can be stored in the form data
-                                            return $path;
+                                                
+                                                if ($livewire->record) {
+                                                    $livewire->record->userBanner = null;
+                                                    $livewire->record->save();
+                                                }
+                                                
+                                                return null;
+                                            })
+                                            ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
+                                                // Generate new filename regardless of creation or edit
+                                                    $newFilename = 'userBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                                    $directory = 'images/user';
+                                                    $path = $file->storeAs($directory, $newFilename, 'public');
+                                                    
+                                                    // For edit mode, handle the existing record
+                                                    if ($livewire->record) {
+                                                        $oldBanner = $livewire->record->userBanner;
+                                                        $livewire->record->userBanner = $path;
+                                                        $livewire->record->save();
+                                                        
+                                                        if ($oldBanner && $oldBanner !== $state) {
+                                                            $livewire->record->destroyUserBanner($oldBanner);
+                                                        }
+                                                    }
+                                                    
+                                                    // Always return the path so it can be stored in the form data
+                                                    return $path;
 
-                                    }),
+                                            }),
+                                ]),
                                 
                                 Select::make('role')
                                     ->options([

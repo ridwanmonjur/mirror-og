@@ -7,7 +7,7 @@
 </head>
 @section('content')
     <main class="wallet2">
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <div class="d-none" id="payment-variables" data-payment-amount="{{ $amount }}" data-user-email="{{ $user->email }}"
         data-user-name="{{ $user->name }}" data-stripe-customer-id="{{ $user->stripe_customer_id }}"
         data-stripe-key="{{ config('services.stripe.key') }}"

@@ -54,7 +54,6 @@ if (teamSelectElement) {
                         width="35" height="35"
                     >
                     <p class="mx-3 d-inline my-0 py-0">${escape(item.teamName)}</p>
-                    <span class="mx-2">${item.country_flag}</span>
             </div>`;
             },
 
@@ -70,7 +69,7 @@ if (teamSelectElement) {
         searchField: 'name',
         maxItems: null,
         maxItems:1,
-        valueField: 'logo',
+        valueField: 'name',
         options: banksInputValue,
         create: false,
         render: {
