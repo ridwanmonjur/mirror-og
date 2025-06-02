@@ -7,54 +7,44 @@
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
         <p >First, select an esport title</p>
- 
-        <div class="image-scroll-container d-flex justify-content-center flex-wrap">
-            @foreach ($eventCategory as $category)
-                @if ($category->gameIcon)
-                    <div 
-                        @class([
-                            'scroll-images cursor-pointer game-events',
-                            'color-border-success' =>
-                                $event && $category->id == $event->event_category_id,
-                        ])
-                        data-category-id="{{ $category->id }}"
-                        data-game-title="{{ $category->gameTitle }}"
-                        data-game-icon="{{ asset("storage/$category->gameIcon") }}"
-                    >
-                        <a href="javascript:void(0)">
-                            <img 
-                                class="border border-dark selectable-image" 
-                                src="{{ asset("storage/$category->gameIcon") }}" 
-                                alt="{{ $category->gameTitle }}" 
-                                style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px;"
-                            >
-                        </a>
-                        <h5 style="padding-top: 10px;">{{ $category->gameTitle }}</h5>
-                    </div>
-                @endif
-            @endforeach
-            <div class='scroll-images cursor-pointer'>
-                <a href="javascript:void(0)" >
-                    <img 
-                        class="border border-dark selectable-image" 
-                        src="{{ asset("/storage/images/event_details/valorant.png") }}" 
-                        alt="Valorant" 
-                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px; "
-                    >
-                </a>
-                <h5 style="padding-top: 10px;">Valorant</h5>
+        <div class="mx-auto custom-scrollbar2 box-width3 my-0 py-0" style="overflow-x: auto;">
+            <div class="d-flex justify-content-center  justify-content-lg-start py-1 px-0 mx-0 flex-wrap my-0 flex-lg-nowrap" style="gap: 0;">
+                @foreach ($eventCategory as $category)
+                    @if ($category->gameIcon)
+                        <div 
+                            @class([
+                                'scroll-images cursor-pointer game-events',
+                                'color-border-success' =>
+                                    $event && $category->id == $event->event_category_id,
+                            ])
+                            data-category-id="{{ $category->id }}"
+                            data-game-title="{{ $category->gameTitle }}"
+                            data-game-icon="{{ asset("storage/$category->gameIcon") }}"
+                        >
+                            <a href="javascript:void(0)">
+                                <img 
+                                    class="border border-dark selectable-image" 
+                                    src="{{ asset("storage/$category->gameIcon") }}" 
+                                    alt="{{ $category->gameTitle }}" 
+                                >
+                            </a>
+                            <small class="py-0">{{ $category->gameTitle }}</small>
+                        </div>
+                    @endif
+                @endforeach
+            
+                <div class=" scroll-images game-events" style=" cursor: not-allowed;">
+                    <a href="javascript:void(0)"  > 
+                        <img 
+                            class="border border-dark selectable-image" 
+                            src="{{ asset("/storage/images/event_details/more.png") }}" 
+                            alt="More titles to come" 
+                                                  >
+                    </a>
+                    <small sclass="py-0">and more...</small>
+                </div>
             </div>
-            <div class=" scroll-images " style=" cursor: not-allowed;">
-                <a href="javascript:void(0)"  > 
-                    <img 
-                        class="border border-dark selectable-image" 
-                        src="{{ asset("/storage/images/event_details/more.png") }}" 
-                        alt="More titles to come" 
-                        style="object-fit: cover; border-radius: 20px; height: 325px; width: 220px; "
-                    >
-                </a>
-                <h5 style="padding-top: 10px;">and more...</h5>
-            </div>
+
         </div>
         <div class=" d-flex justify-content-between box-width back-next">
             <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>

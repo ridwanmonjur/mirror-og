@@ -807,6 +807,11 @@ class EventDetail extends Model implements Feedable
             }
         }
 
+        if (!isset($request->eventName)){
+            throw new TimeGreaterException('An event name is required, but you have entered no name.');
+
+        }
+
         $eventDetail->eventName = $request->eventName;
         $eventDetail->eventDescription = $request->eventDescription;
         $eventDetail->eventTags = $request->eventTags;

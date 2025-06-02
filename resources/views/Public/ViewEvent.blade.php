@@ -268,7 +268,7 @@
                             <br>
                             <div>
                                 <h5> <u> {{ $combinedStr }} </u> </h5>
-                                <h5> <u> {{ strtoupper($timePart) }} </u> </h5>
+                                <h5> <u> {{ $timePart }} </u> </h5>
                             </div>
 
                             <br class="d-none d-lg-block"> 

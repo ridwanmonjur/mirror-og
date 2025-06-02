@@ -140,3 +140,31 @@ function fillStepPaymentValues() {
         }
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollElements = document.querySelectorAll('.custom-scrollbar2');
+    
+    function updateScrollState(element) {
+        const isAtStart = element.scrollLeft === 0;
+        const isAtEnd = element.scrollLeft >= (element.scrollWidth - element.clientWidth - 9);
+        
+        element.classList.toggle('scroll-at-start', isAtStart);
+        element.classList.toggle('scroll-at-end', isAtEnd);
+    }
+    
+    scrollElements.forEach(element => {
+        // Set initial state
+        updateScrollState(element);
+        
+        // Listen for scroll events
+        element.addEventListener('scroll', function() {
+            updateScrollState(this);
+        });
+        
+        // Also listen for resize events in case content changes
+        const resizeObserver = new ResizeObserver(() => {
+            updateScrollState(element);
+        });
+        resizeObserver.observe(element);
+    });
+});
