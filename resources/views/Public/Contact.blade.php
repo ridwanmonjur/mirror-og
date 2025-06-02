@@ -75,7 +75,7 @@
             @include('includes.Navbar')
         @endauth
         @guest
-            @include('includes.Navbar.NavbarBeta')
+            @include('includes.NavbarBeta')
         @endguest
     </header>
     <!-- Contact & About Us Boxes and Social Media Data-->

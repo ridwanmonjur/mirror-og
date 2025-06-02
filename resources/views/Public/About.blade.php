@@ -94,7 +94,7 @@
             @include('includes.Navbar')
         @endauth
         @guest
-            @include('includes.Navbar.NavbarBeta')
+            @include('includes.NavbarBeta')
         @endguest
     </header>
     <main style="padding: 5vh 10vw ;">
