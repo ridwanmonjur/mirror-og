@@ -103,15 +103,17 @@ class ParticipantCheckoutController extends Controller
             $walletAmount = $userWallet->usable_balance - $request->discount_applied_amount;
             $currentAmount = $userWallet->current_balance - $request->discount_applied_amount;
             $transaction = null;
-            if ($isNormalReg) {
-                DB::table('user_wallet')
+            DB::table('user_wallet')
                     ->where('user_id', $user->id)
                     ->update([
                         'usable_balance' => $walletAmount,
                         'current_balance' => $currentAmount
                 ]);
 
-                $transaction = TransactionHistory::create([
+            if ($isNormalReg) {
+                
+
+                $transaction = new TransactionHistory([
                     'name' => "Entry Fee Hold: RM {$event->eventName}",
                     'type' => "Event Entry Fee Hold",
                     'link' => route('public.event.view', ['id' => $event->id]),
@@ -121,14 +123,10 @@ class ParticipantCheckoutController extends Controller
                     'date' => now(),
                     'user_id' => $user->id
                 ]);
-            } else {
-                DB::table('user_wallet')
-                    ->where('user_id', $user->id)
-                    ->update([
-                        'usable_balance' => $walletAmount,
-                    ]);
 
-                $transaction = TransactionHistory::create([
+                $transaction->save();
+            } else {
+                $transaction = new TransactionHistory([
                     'name' => "Entry Fee: RM {$event->eventName}",
                     'type' => "Event Entry Fee",
                     'link' => route('public.event.view', ['id' => $event->id]),
@@ -138,6 +136,8 @@ class ParticipantCheckoutController extends Controller
                     'date' => now(),
                     'user_id' => $user->id
                 ]);
+
+                $transaction->save();
             }
 
             if (!$isCompletePayment) {
@@ -156,7 +156,8 @@ class ParticipantCheckoutController extends Controller
                 'join_events_id' => $request->joinEventId,
                 'payment_amount' => $request->discount_applied_amount,
                 'register_time' => $regStatus,
-                'wallet_id' => $transaction?->id
+                'history_id' => $transaction?->id,
+                'type' => 'discount'
             ]);
 
             if ($isCompletePayment) {
@@ -243,7 +244,7 @@ class ParticipantCheckoutController extends Controller
                     $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');
 
                     if ($isNormalReg) {
-                        $history = TransactionHistory::create([
+                        $history = new TransactionHistory([
                             'name' => "Top up for event: RM {$event->eventName}",
                             'type' => "Top up: RM {$paymentDone}",
                             'link' => null,
@@ -254,8 +255,8 @@ class ParticipantCheckoutController extends Controller
                             'user_id' => $user->id
                         ]);
                     } else {
-                        $history = TransactionHistory::create([
-                            'name' => "Payment {$event->eventName}",
+                        $history = new TransactionHistory([
+                            'name' => "Payment for {$event->eventName}",
                             'type' => "Top up for Event: RM $paymentDone",
                             'link' => route('public.event.view', ['id' => $event->id]),
                             'amount' => $paymentDone,
@@ -266,6 +267,9 @@ class ParticipantCheckoutController extends Controller
                         ]);
                     }
 
+                    $history?->save();
+
+
                     ParticipantPayment::create([
                         'team_members_id' => $paymentIntent['metadata']['memberId'],
                         'user_id' => $userId,
@@ -273,7 +277,8 @@ class ParticipantCheckoutController extends Controller
                         'payment_amount' => $paymentDone,
                         'payment_id' => $transaction->id,
                         'register_time' => $regStatus,
-                        'wallet_id' => $history?->id
+                        'history_id' => $history?->id,
+                        'type' => 'stripe'
                     ]);
 
                     if (($total - ($participantPaymentSum + $paymentDone)) < 0.1) {
