@@ -51,7 +51,7 @@
 @endauth
 <body class="bgTeamAdmin">
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     @include('includes.Team.TeamHead') 
     <main class="main2">
         <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">

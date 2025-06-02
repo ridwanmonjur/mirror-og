@@ -12,7 +12,7 @@
 </head>
 
 <body style="margin-top: 0 !important;">
-@include('includes.Navbar.NavbarGoToSearchPage')
+@include('includes.Navbar')
     <main>
         <input type="hidden" id="manage_event_route" value="{{ route('event.index') }}">
         <input type="hidden" id="edit_event_route" value="{{ route('event.edit', ['event' => isset($id) ? $id : -1]) }}">

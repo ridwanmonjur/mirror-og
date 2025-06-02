@@ -13,7 +13,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <input type="hidden" id="eventUrl" value="{{ route('participant.event.view', $id) }}">
     <main class="d-flex justify-content-center flex-row">
         <div class="wrapper-height ">

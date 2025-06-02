@@ -14,7 +14,7 @@
 
 <body>
     @include('googletagmanager::body')
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
 
     <main>
         <br class="d-none-at-desktop">

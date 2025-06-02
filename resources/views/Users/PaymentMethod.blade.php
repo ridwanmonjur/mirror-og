@@ -6,7 +6,7 @@
 </head>
 
 @section('content')
-        @include('includes.Navbar.NavbarGoToSearchPage')
+        @include('includes.Navbar')
 
     <main class="wallet2" >
         <div class=" mx-auto px-0 container-main d min-h-85vh">

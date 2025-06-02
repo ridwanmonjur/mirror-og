@@ -19,7 +19,7 @@
 
 <body>
     @include('googletagmanager::body')
-        @include('includes.Navbar.NavbarGoToSearchPage')
+        @include('includes.Navbar')
     <main>
         <div>
             <div id="eventData"

@@ -21,7 +21,7 @@
 
     <input type="hidden" id="publicParticipantViewUrl" value="{{ route('public.participant.view', ['id' => ':id', 'title' => ':title']) }}">
 
-    @include('includes.Navbar.NavbarGoToSearchPage')
+    @include('includes.Navbar')
     <main 
         class="main2"
     >
