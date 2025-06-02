@@ -73,58 +73,46 @@ class MiscController extends Controller
         ]);
     }
 
-    public function seedStartEvent(Request $request, $id): JsonResponse {
+    public function seedEvent(Request $request, $id, $type = null): JsonResponse 
+    {
         Cache::flush();
-    
-        $exitCode = Artisan::call('tasks:respond', [
-            'type' => 1,
-            '--event_id' => (string) $id
-        ]);
-        
-        return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Start tasks executed',
-        ]);
-    }
-    
-    public function seedEndEvent(Request $request, $id): JsonResponse {
-        Cache::flush();
-    
-        $exitCode = Artisan::call('tasks:respond', [
-            'type' => 3,
-            '--event_id' => (string) $id
-        ]);
-        
-        return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'End tasks executed',
-        ]);
-    }
-    
-    public function seedLiveEvent(Request $request, $id): JsonResponse {
-        Cache::flush();
-    
-        $exitCode = Artisan::call('tasks:respond', [
-            'type' => 2,
-            '--event_id' => (string) $id
-        ]);
-        
-        return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Live tasks executed',
-        ]);
-    }
 
-    public function seedAllEvent(Request $request, $id): JsonResponse {
+        $typeMap = [
+            'start' => 1,
+            'live' => 2,
+            'end' => 3,
+            'reg' => 4,
+            'all' => 0,
+        ];
+
+        $messageMap = [
+            'start' => 'Start tasks executed',
+            'live' => 'Live tasks executed',
+            'end' => 'End tasks executed',
+            'reg' => 'Registration over tasks executed',
+            'all' => 'All tasks executed',
+        ];
+
+        if (!isset($typeMap[$type])) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid event type',
+                'help' => $messageMap
+            ], 400);
+        }
+
+        $artisanParams = ['type' => $typeMap[$type]];
+        
+        if (in_array($type, ['start', 'live', 'end', 'all', 'reg'])) {
+            $artisanParams['--event_id'] = (string) $id;
+        }
+
+        $exitCode = Artisan::call('tasks:respond', $artisanParams);
         Cache::flush();
-    
-        $exitCode = Artisan::call('tasks:respond', [
-            'type' => 0,
-        ]);
         
         return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'All tasks executed',
+            'status' => $exitCode === 0 ? 'success' : 'failed',
+            'message' => $messageMap[$type],
         ]);
     }
 

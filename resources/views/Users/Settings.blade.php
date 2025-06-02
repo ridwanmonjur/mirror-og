@@ -132,7 +132,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item accordion-flush border-0">
+                <div class="accordion-item accordion-flush mb-4 border-0">
                     <h2 class="accordion-header pb-2 border-0" id="headingTwo">
                         <div class="accordion-button  pt-4 pb-4 rounded-pill {{ $isShowNextAccordion ? '' : 'collapsed' }} border-0 bg-white"
                             type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
