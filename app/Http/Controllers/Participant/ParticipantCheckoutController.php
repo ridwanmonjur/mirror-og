@@ -238,9 +238,10 @@ class ParticipantCheckoutController extends Controller
                     ::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
                     ->where('id', $joinEvent->event_details_id)
                         ->with(['tier', 'type', 'game'])->first();
-                    $total = (float) $event->tier?->tierEntryFee ;
 
                     $regStatus = $event->getRegistrationStatus();
+                    $total = $regStatus == config('constants.SIGNUP_STATUS.EARLY')? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
+
                     $history = null;
                     $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');
 

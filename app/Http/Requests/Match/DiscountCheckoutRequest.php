@@ -55,15 +55,15 @@ class DiscountCheckoutRequest extends FormRequest
                 return;
             }
             
-            if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
-                $validator->errors()->add('time', "Regisration time has not yet started!");
-                return;
-            }
+            // if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
+            //     $validator->errors()->add('time', "Regisration time has not yet started!");
+            //     return;
+            // }
             $this->status = $status;
             $this->event = $event;
 
 
-            $total = (float) $event->tier->tierEntryFee;
+            $total = $status == config('constants.SIGNUP_STATUS.EARLY')? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
             $this->total = $total;
             $participantPaymentSum = DB::table('participant_payments')
                 ->where('join_events_id', $this->joinEventId)

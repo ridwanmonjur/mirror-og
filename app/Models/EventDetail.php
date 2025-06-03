@@ -390,9 +390,11 @@ class EventDetail extends Model implements Feedable
             return config('constants.SIGNUP_STATUS.EARLY');
         } elseif ($now->between($signupDates->normal_signup_start_advanced_close, $signupDates->signup_close)) {
             return config('constants.SIGNUP_STATUS.NORMAL');
-        } elseif ($now->lt($signupDates->signup_open)) { 
-            return config('constants.SIGNUP_STATUS.TOO_EARLY');
-        } else {
+        } 
+        // elseif ($now->lt($signupDates->signup_open)) { 
+        //     return config('constants.SIGNUP_STATUS.TOO_EARLY');
+        // } 
+        else {
             return config('constants.SIGNUP_STATUS.NORMAL');
         }
     }
@@ -703,7 +705,7 @@ class EventDetail extends Model implements Feedable
                 DB::table('event_tier_type_signup_dates')->insert([
                     'tier_id' => $this->event_tier_id,
                     'type_id' => $this->event_type_id,
-                    'signup_open' => 28, // Default: 28 days before event
+                    'signup_open' => 800, // Default: 28 days before event
                     'signup_close' => 3,  // Default: 3 days before event
                     'normal_signup_start_advanced_close' => 7 // Default: 7 days before event
                 ]);

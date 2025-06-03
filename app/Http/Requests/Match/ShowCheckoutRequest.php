@@ -92,7 +92,7 @@ class ShowCheckoutRequest extends FormRequest
             return;
         }
 
-        $total = (float) $event->tier->tierEntryFee;
+        $total = $status == config('constants.SIGNUP_STATUS.EARLY')? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
         $this->total = $total;
         $paymentOptionLower = config("constants.STRIPE.MINIMUM_RM");
         $paymentOptionHigher = $total - $paymentOptionLower;
