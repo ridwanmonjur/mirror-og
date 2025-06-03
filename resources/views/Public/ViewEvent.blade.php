@@ -18,6 +18,7 @@
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
     $userId = isset($user) ? $user->id : null;         
+    $entryFee = $event->regStatus == config('constants.SIGNUP_STATUS.NORMAL') ? $event->tier?->tierEntryFee : $event->tier?->earlyEntryFee;
 
 @endphp
 
@@ -363,7 +364,7 @@
                                 
                                 @if ($event->tier)
                                     <span >RM
-                                        {{ $event->tier?->tierEntryFee ?? 'Free' }} Team Entry Fee
+                                        {{ $entryFee ?? 'Free' }} Team Entry Fee
                                     </span>
                                 @else
                                     <span>Not available</span>

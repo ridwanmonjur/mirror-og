@@ -234,7 +234,8 @@ class ParticipantEventController extends Controller
                 ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
                 ->with([
                     'tier:id,eventTier',
-                    'user:id,name,userBanner'
+                    'user:id,name,userBanner',
+                    'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
                 ])
                 ->find($id);
 
@@ -312,7 +313,8 @@ class ParticipantEventController extends Controller
             $event = EventDetail::select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
                 ->with([
                     'tier:id,eventTier',
-                    'user:id,name,userBanner'
+                    'user:id,name,userBanner',
+                    'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
                 ])->find($id);
 
                 $status = $event->getRegistrationStatus();
@@ -386,7 +388,10 @@ class ParticipantEventController extends Controller
 
             $event = EventDetail::where('id', $joinEvent->event_details_id)
                 ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
-                ->with('tier:id,eventTier')
+                ->with([
+                    'tier:id,eventTier',
+                    'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
+                ])
                 ->firstOrFail();
 
             $status = $event->getRegistrationStatus();

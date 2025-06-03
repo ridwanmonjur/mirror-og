@@ -1,6 +1,6 @@
 @php
     $random_int = rand(0, 999);
-    $total = $joinEvent->tier?->tierEntryFee;
+    $total = $joinEvent->regStatus == config('constants.SIGNUP_STATUS.NORMAL') ? $joinEvent->tier?->tierEntryFee : $joinEvent->tier?->earlyEntryFee;
     $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
     $individualContributionTotal = 0;
     $pedning = $total - $exisitngSum;
