@@ -36,15 +36,17 @@ trait PrinterLoggerTrait
             ]);
     }
 
-    private function logError(int $id, Exception $e): void
+    private function logError(?int $id, Exception $e): void
     {
         Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        DB::table('monitored_scheduled_task_log_items')->insert([
-            'monitored_scheduled_task_id' => $id, 
-            'type' => "Error", 
-            'logs' => $e->getMessage(), 
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        if  ($id) {
+            DB::table('monitored_scheduled_task_log_items')->insert([
+                'monitored_scheduled_task_id' => $id, 
+                'type' => "Error", 
+                'logs' => $e->getMessage(), 
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

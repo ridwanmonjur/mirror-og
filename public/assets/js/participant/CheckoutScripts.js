@@ -192,6 +192,7 @@ class PaymentProcessor {
                     paymentAmount: paymentProcessor.getPaymentAmount(),
                     email: paymentVars['userEmail'],
                     name: paymentVars['userName'],
+                    capture_method: 'manual',
                     stripe_customer_id: paymentVars['stripeCustomerId'],
                     role: "PARTICIPANT",
                     metadata : {

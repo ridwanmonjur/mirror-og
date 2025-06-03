@@ -42,8 +42,7 @@ class WeeklyTasks extends Command
             DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $weekAgo)->delete();
             DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $weekAgo)->delete();
             NotifcationsUser::where('created_at', '<', $weekAgo)->delete(); 
-            Task::where('action_time', '<=', $monthAgo)
-                ->delete();
+            Task::where('action_time', '<=', $monthAgo)->delete();
             NotificationCounter::resetNegativeCounts();
             Task::where('created_at', '<', $weekAgo)->delete();
             $now = Carbon::now();

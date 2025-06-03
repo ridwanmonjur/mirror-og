@@ -62,8 +62,7 @@ class RespondTasks extends Command
             $regOverTaskIds = [];
 
             if ($type === 0) {
-                $tasks = Task
-                    ::whereDate('action_time', $today)
+                $tasks = Task::whereDate('action_time', $today)
                     ->where('taskable_type', EventDetail::class)
                     ->where('action_time', '>=', $now)
                     ->where('action_time', '<=', $now->addMinutes(30))
@@ -73,7 +72,6 @@ class RespondTasks extends Command
                 $tasks = Task::where('taskable_id', $eventIdInt)
                     ->where('taskable_type', EventDetail::class)
                     ->get();
-                // dd("sss", $eventIdInt, $tasks);  
             }
 
             foreach ($tasks as $task) {
@@ -103,90 +101,16 @@ class RespondTasks extends Command
             ];
 
             if ($type == 0 || $type == 1) {
-                $with = [
+                $withNew = [
                   ...$with,
-                  'payments',
-                  'history'
+                  'payments.history',
+                  'payments.transaction'
                 ];
 
-                $startedEvents = JoinEvent::whereIn('event_details_id', $startedTaskIds)
-                    ->where('join_status', 'confirmed')
-                    ->with([
-                        'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
-                        ...$with,
-                    ])
-                    ->get();
-                Log::info(">>>started events: " .$startedEvents);
+                $shouldCancel = false;
 
-                $this->capturePayments($startedEvents, $startedEvents, $taskId);
-
-
-
-                EventDetail::whereIn('id', $startedTaskIds)->update(['status' => 'ONGOING']);
-                $this->handleEventTypes(
-                    $this->getStartedNotifications($startedEvents),
-                    $startedEvents,
-                    $taskId
-                );
-            }
-
-            if ($type == 0 || $type == 2) {
-
-                $liveEvents = JoinEvent::whereIn('event_details_id', $liveTaskIds)
-                    ->where('join_status', 'confirmed')
-                    ->with([
-                        'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
-                        ...$with,
-                    ])
-                    ->get();
-
-                EventDetail::whereIn('id', $liveTaskIds)->update(['status' => 'UPCOMING']);
-                $this->handleEventTypes(
-                    $this->getLiveNotifications($liveEvents),
-                    $liveEvents,
-                    $taskId
-                );
-            }
-
-            if ($type == 0 || $type == 3) {
-                $endedEvents = JoinEvent::whereIn('event_details_id', $endedTaskIds)
-                    ->where('join_status', 'confirmed')
-                    ->with([
-                        'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
-                        'position',
-                        'team:id,teamName,teamBanner',
-                        ...$with,
-                    ])
-                    ->get();
-
-
-                EventDetail::whereIn('id', $endedTaskIds)->update(['status' => 'ENDED']);
-
-                [
-                    $processedEndedNotifications,
-                    $logs,
-                    $memberIdList
-                ] = $this->getEndedNotifications($endedEvents);
-
-                $this->handleEventTypes(
-                    $processedEndedNotifications,
-                    $endedEvents,
-                    $taskId
-                );
-
-                $this->handleEndedActivityLogs(
-                    $logs,
-                    $endedEvents,
-                    $memberIdList,
-                    $taskId
-                );
-            }
-
-            
-            if ($type == 0 || $type == 4) {
-                foreach ($regOverTaskIds as $regOverTaskId) {
-
-                    $event = EventDetail::where('id', $taskId)
+                foreach ($startedTaskIds as $eventId) {
+                    $event = EventDetail::where('id', $eventId)
                         ->with('tier')
                         ->withCount(
                             ['joinEvents' => function ($q) {
@@ -196,7 +120,110 @@ class RespondTasks extends Command
                         ->first();
 
                     if ($event) {
-                        $this->checkAndCancelEvent($event, $regOverTaskId, $regOverTaskIds, $taskId);
+                        $shouldCancel = $this->checkAndCancelEvent($event);
+                        $joinEvents = JoinEvent::where('event_details_id', $event->id)
+                            ->whereNot('join_status', 'confirmed')
+                            ->where('payment_status', 'completed')
+                            ->with([
+                                'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                                'payments.history', 'payments.tranaction'
+                            ])
+                            ->get();
+                        $this->releaseFunds($event, $joinEvents);
+                        if (!$shouldCancel) {
+                            $joinEvents = JoinEvent::where('event_details_id', $eventId)
+                                ->where('join_status', 'confirmed')
+                                ->with([
+                                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                                    ...$withNew,
+                                ])
+                                ->get();
+    
+                            $this->capturePayments($event, $joinEvents);
+                            $event->update(['status' => 'ONGOING']);
+                            $this->handleEventTypes(
+                                $this->getStartedNotifications($joinEvents),
+                                $joinEvents,
+                            );
+                        }
+                    }
+                }
+
+            }
+
+            if ($type == 0 || $type == 2) {
+                
+                foreach ($liveTaskIds as $eventId) {
+                    $joinEvents = JoinEvent::where('event_details_id', $eventId)
+                        ->where('join_status', 'confirmed')
+                        ->with([
+                            'eventDetails:id,eventName,sub_action_public_date,sub_action_public_time,event_tier_id,user_id',
+                            ...$with,
+                        ])
+                        ->get();
+                    EventDetail::where('id', $eventId)->update(['status' => 'UPCOMING']);
+                    $this->handleEventTypes(
+                        $this->getLiveNotifications($joinEvents),
+                        $joinEvents,
+                    );
+                }
+               
+
+              
+            }
+
+            if ($type == 0 || $type == 3) {
+                foreach ($endedTaskIds as $eventId) {
+                $endedEvents = JoinEvent::where('event_details_id', $eventId)
+                    ->where('join_status', 'confirmed')
+                    ->with([
+                        'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
+                        'position',
+                        'team:id,teamName,teamBanner',
+                        'tier',
+                        ...$with,
+                    ])
+                    ->get();
+
+                EventDetail::where('id', $eventId)->update(['status' => 'ENDED']);
+                
+                [
+                    $playerNotif,
+                    $orgNotif,
+                    $logs,
+                    $memberIdList,
+                    $prizeDetails
+                ] = $this->getEndedNotifications($endedEvents, $event->tier);
+
+                $this->handleEventTypes(
+                    [ $playerNotif, $orgNotif ],
+                    $endedEvents,
+                );
+
+                $this->handlePrizeAndActivityLogs(
+                    $logs,
+                    $endedEvents,
+                    $memberIdList,
+                    $prizeDetails                
+                );
+            }
+            }
+
+            
+            if ($type == 0 || $type == 4) {
+                foreach ($regOverTaskIds as $regOverTaskId) {
+
+                    $event = EventDetail::where('id', $regOverTaskId)
+                        ->with('tier')
+                        ->withCount(
+                            ['joinEvents' => function ($q) {
+                                $q->where('join_status', 'confirmed');
+                            }]
+                        )
+                        ->first();
+
+                    if ($event) {
+                        $this->checkAndCancelEvent($event);
                     }
                 }
             }
@@ -204,7 +231,7 @@ class RespondTasks extends Command
             $now = Carbon::now();
             $this->logExit($taskId, $now);
         } catch (Exception $e) {
-            $this->logError($taskId, $e);
+            $this->logError(null, $e);
         }
     }
 };
