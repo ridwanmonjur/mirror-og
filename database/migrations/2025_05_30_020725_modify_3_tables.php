@@ -70,7 +70,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        if (Schema::hasColumn('participant_payments', 'wallet_id')) {
+        if (Schema::hasColumn('participant_payments', 'history_id')) {
             Schema::table('participant_payments', function (Blueprint $table) {
                 if (Schema::hasTable('user_wallet')) {
                     $table->dropColumn('history_id');
