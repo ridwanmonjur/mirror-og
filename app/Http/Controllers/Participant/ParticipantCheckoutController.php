@@ -157,7 +157,7 @@ class ParticipantCheckoutController extends Controller
                 'payment_amount' => $request->discount_applied_amount,
                 'register_time' => $regStatus,
                 'history_id' => $transaction?->id,
-                'type' => 'discount'
+                'type' => 'wallet'
             ]);
 
             if ($isCompletePayment) {
@@ -210,6 +210,7 @@ class ParticipantCheckoutController extends Controller
                 ($status === 'succeeded' || $status === "requires_capture") 
                 && $request->has('payment_intent_client_secret')
             ) {
+
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
                 $paymentDone = (float) $paymentIntent['amount'] / 100;

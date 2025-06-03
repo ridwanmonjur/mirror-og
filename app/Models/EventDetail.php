@@ -393,7 +393,7 @@ class EventDetail extends Model implements Feedable
         } elseif ($now->lt($signupDates->signup_open)) { 
             return config('constants.SIGNUP_STATUS.TOO_EARLY');
         } else {
-            return config('constants.SIGNUP_STATUS.CLOSED');
+            return config('constants.SIGNUP_STATUS.NORMAL');
         }
     }
 
