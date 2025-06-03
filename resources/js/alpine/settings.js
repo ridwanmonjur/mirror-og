@@ -20,16 +20,34 @@ function setErrorCurrentPassword (errorMessage) {
 function TransactionComponent() {
     const transactionsDataInput = document.getElementById('transactions-data');
     const initialTransactions = JSON.parse(transactionsDataInput.value || '[]');
+    let wallet = JSON.parse(document.getElementById('wallet').value);
 
     return {
-        init() {
-            this.transactions = [...initialTransactions.data];
-        },
+        
         
         transactions: [],
         loading: false,
         hasMore: initialTransactions.has_more,
         nextCursor: initialTransactions.next_cursor,
+
+        calculateRunningBalances(transactions) {
+            if (transactions.length === 0) return;
+            
+            const sortedTransactions = [...transactions];
+            
+            let runningBalance = Number(wallet.current_balance);
+            
+            for (let i = 0; i <= sortedTransactions.length - 1; i++) {
+                const transaction = sortedTransactions[i];
+                const changeAmount = transaction.isPositive ? transaction.amount : -1 * transaction.amount;
+                
+                runningBalance += changeAmount;
+                transaction.runningBalance = parseFloat(runningBalance.toFixed(2));
+                transaction.changeAmount = changeAmount;
+            }
+            
+            this.transactions = sortedTransactions;
+        },
 
         // Methods
         async loadTransactions(reset = false) {
@@ -55,11 +73,14 @@ function TransactionComponent() {
                 });
                 const data = await response.json();
 
+                let allTransactions = [];
                 if (reset) {
-                    this.transactions = data.data;
+                    allTransactions = [...data.data];
                 } else {
-                    this.transactions.push(...data.data);
+                    allTransactions = [...this.transactions, ...data.data];
                 }
+
+                this.calculateRunningBalances(allTransactions);
 
                 this.hasMore = data.has_more;
                 this.nextCursor = data.next_cursor;
@@ -69,6 +90,10 @@ function TransactionComponent() {
             } finally {
                 this.loading = false;
             }
+        },
+
+        init() {
+            this.calculateRunningBalances(initialTransactions.data);
         },
 
         loadMore() {
@@ -90,6 +115,7 @@ function AccountComponent() {
     let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
     let userProfile = JSON.parse(document.getElementById('initialUserProfile').value);
+
     let wallet = JSON.parse(document.getElementById('wallet').value);
 
     return {

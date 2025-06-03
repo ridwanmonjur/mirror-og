@@ -132,7 +132,7 @@
                                         <tbody>
                                             <tr v-for="transaction in transactions" :key="transaction.id"
                                                 class="transaction-row">
-                                                <x-wallet.transaction-item />
+                                                <x-wallet.transaction-item :fullPage="false" />
                                             </tr>
                                         </tbody>
                                     </table>
@@ -399,6 +399,7 @@
         
 
         
+    <input type="hidden" id="wallet" value="{{ json_encode($wallet) }}">
 
     </main>
 
