@@ -62,7 +62,11 @@ class ShowCheckoutRequest extends FormRequest
 
     private function validatePaymentAmount($validator)
     {
-        $event = EventDetail::with(['tier', 'user', 'user.organizer', 'game'])
+        $event = EventDetail::with([
+                'tier', 'user', 'user.organizer', 'game',
+                'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
+
+            ])
             ->where('id', $this->id)->first();
         $this->event = $event;
         if (!$event) {
@@ -92,7 +96,7 @@ class ShowCheckoutRequest extends FormRequest
             return;
         }
 
-        $total = (float) $event->tier->tierEntryFee;
+        $total = $status == config('constants.SIGNUP_STATUS.EARLY')? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
         $this->total = $total;
         $paymentOptionLower = config("constants.STRIPE.MINIMUM_RM");
         $paymentOptionHigher = $total - $paymentOptionLower;

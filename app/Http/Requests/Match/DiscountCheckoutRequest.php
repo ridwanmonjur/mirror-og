@@ -47,7 +47,9 @@ class DiscountCheckoutRequest extends FormRequest
             $event = EventDetail
                 ::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
                 ->where('id', $joinEvent->event_details_id)
-                ->with(['tier', 'type', 'game'])->first();
+                ->with(['tier', 'type', 'game',
+                    'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
+                ])->first();
             
             $status = $event->getRegistrationStatus();
             if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
@@ -55,15 +57,15 @@ class DiscountCheckoutRequest extends FormRequest
                 return;
             }
             
-            if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
-                $validator->errors()->add('time', "Regisration time has not yet started!");
-                return;
-            }
+            // if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
+            //     $validator->errors()->add('time', "Regisration time has not yet started!");
+            //     return;
+            // }
             $this->status = $status;
             $this->event = $event;
 
 
-            $total = (float) $event->tier->tierEntryFee;
+            $total = $status == config('constants.SIGNUP_STATUS.EARLY')? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
             $this->total = $total;
             $participantPaymentSum = DB::table('participant_payments')
                 ->where('join_events_id', $this->joinEventId)
