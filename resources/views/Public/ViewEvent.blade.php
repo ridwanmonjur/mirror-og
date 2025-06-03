@@ -18,7 +18,7 @@
     $eventBannerImg = bladeImageNull($event->eventBanner);
     $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
     $userId = isset($user) ? $user->id : null;         
-    $entryFee = $event->regStatus == config('constants.SIGNUP_STATUS.NORMAL') ? $event->tier?->tierEntryFee : $event->tier?->earlyEntryFee;
+    $entryFee = $event->regStatus != config('constants.SIGNUP_STATUS.NORMAL') ? $event->tier?->earlyEntryFee : $event->tier?->tierEntryFee;
 
 @endphp
 
