@@ -7,21 +7,28 @@ use App\Models\BracketDeadline;
 use App\Models\Discount;
 use App\Models\EventDetail;
 use App\Models\EventJoinResults;
+use App\Models\EventTier;
+use App\Models\JoinEvent;
 use App\Models\NotifcationsUser;
+use App\Models\ParticipantCoupon;
 use App\Models\ParticipantPayment;
+use App\Models\UserCoupon;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
 use App\Models\Task;
+use App\Models\TransactionHistory;
 use App\Models\User;
+use App\Models\Wallet;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 trait RespondTaksTrait
 {
-
     protected $stripeService;
     
     protected function initializeTrait(StripeConnection $stripeService)
@@ -29,18 +36,23 @@ trait RespondTaksTrait
         $this->stripeService = $stripeService;
     }
 
-    public function checkAndCancelEvent($event, $regOverTaskId, $regOverTaskIds, $taskId)
+    public function checkAndCancelEvent(EventDetail $event)
     {
         if ($event->join_events_count != $event->tier->tierTeamSlot) {
-            $this->releaseFunds([$event], [$regOverTaskId], $taskId);
-
-            EventDetail::whereIn('id', $regOverTaskId)->update(['status' => 'ENDED']);
-            $deadlines = BracketDeadline::whereIn('event_details_id', $regOverTaskIds)->get();
+            $joinEvents = JoinEvent::where('event_details_id', $event->id)
+                ->where('join_status', 'confirmed')
+                ->with([
+                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                    'payments.history', 'payments.tranaction'
+                ])
+                ->get();
+            $this->releaseFunds($event, $joinEvents);
+            $event->update(['status' => 'ENDED']);
+            $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
             $deadlinesPast = $deadlines->pluck("id");
             Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
-            Task::whereIn('taskable_id', $regOverTaskId)->where('taskable_type', EventDetail::class)->delete();
-            BracketDeadline::whereIn('event_details_id', $regOverTaskIds)->delete();
-            
+            Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
+            BracketDeadline::where('event_details_id', $event->id)->delete();
             return true;
         }
     
@@ -48,83 +60,97 @@ trait RespondTaksTrait
     }
 
 
-    public function releaseFunds($events, $eventIds, $taskId) {
+    public function releaseFunds(EventDetail $event, Collection $joinEvents) {
         DB::beginTransaction();
         try {
-            // 1. Get all relevant payments in a single query with necessary data
-            $allPayments = DB::table('event_details')
-                ->join('join_events', 'event_details.id', '=', 'join_events.event_details_id')
-                ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
-                ->join('stripe_transactions', 'stripe_transactions.id', '=', 'participant_payments.payment_id')
-                ->select('stripe_transactions.id', 'stripe_transactions.payment_id', 
-                         'stripe_transactions.payment_status', 'stripe_transactions.amount',
-                         'participant_payments.user_id')
-                ->whereIn('event_details.id', $eventIds)
-                ->get();
-                
-            // Group payments by status
-            $toBeCapturedPayments = $allPayments->where('payment_status', 'requires_capture');
-            $otherPayments = $allPayments->where('payment_status', '!=', 'requires_capture');
             
-            $releasedPayments = [];
-            
-            // 2. Process payments to be released (batch where possible)
-            foreach ($toBeCapturedPayments as $payment) {
-                try {
-                    if (!empty($payment->payment_id)) {
-                        $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($payment->payment_id);
-                        
-                        if ($paymentIntent->status == 'requires_capture') {
-                            $canceledPayment = $this->stripeService->cancelPaymentIntent($payment->payment_id);
+            foreach ($joinEvents as $join) {
+                foreach ($join->payments as $participantPay) {  
+                    if ($join->register_time == config('constants.SIGNUP_STATUS.NORMAL'))   {
+                        if ($participantPay->transaction && $participantPay->type == 'stripe') {
+                            $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId(
+                                $participantPay->transaction->payment_id
+                            );
                             
-                            $releasedPayments[] = [
-                                'id' => $payment->id,
-                                'payment_status' => $canceledPayment['status'] 
-                            ];
+                            if ($paymentIntent->status == 'requires_capture') {
+                                $paymentIntent->cancel();
+                            }
+        
+                            RecordStripe::where([
+                                'id' => $participantPay->payment_id,
+                               ])->update(['payment_status' => 'canceled'
+                            ]);
+
+                            
+                        } elseif ($participantPay->type == 'wallet') {
+                            $wallet = Wallet::firstOrCreate(
+                                ['user_id' => $participantPay->id],
+                                [
+                                    'usable_balance' => 0,
+                                    'current_balance' => 0,
+                                ]
+                            );
+                            
+                            $wallet->update([
+                                'usable_balance' , $wallet->usable_balance + $participantPay->payment_amount,
+                                'current_balance' , $wallet->usable_balance +  $participantPay->current_balance,
+                            ]);
+
                         }
-                    }
-                } catch (Exception $e) {
-                    $this->logError($taskId, $e, "Failed to release payment {$payment->payment_id}");
+
+
+                        $participantPay->history?->delete();
+
+                    }  else {
+                        if ($participantPay->type == 'wallet') {
+                            $wallet = Wallet::firstOrCreate(
+                                ['user_id' => $participantPay->id],
+                                [
+                                    'usable_balance' => 0,
+                                    'current_balance' => 0,
+                                ]
+                            );
+                            
+                            $wallet->update([
+                                'usable_balance' , $wallet->usable_balance + $participantPay->payment_amount,
+                                'current_balance' , $wallet->usable_balance +  $participantPay->current_balance,
+                            ]);
+
+                            $participantPay->history?->delete();
+                        } else {
+                            $participantCoupon = new ParticipantCoupon([
+                                'code' => "Coupon{$event->eventName}{$participantPay->user_id}{$participantPay->id}",
+                                'amount' ,
+                                'description' => "Refund for {$event->eventName}",
+                                'is_active' => true,
+                                'is_public' => false,
+                                'expires_at' => Carbon::now()->add(1)
+                            ]);
+
+                            $participantCoupon->save();
+
+                            $newUserCoupon = new UserCoupon([
+                                'user_id' => $participantPay->user_id,
+                                'coupon_id' => $participantCoupon->id,
+                                'redeemed_at' => false
+                            ]);
+
+                            $newUserCoupon->save();
+                        }
+                        
+                    }        
+                  
+                      
                 }
             }
             
-            // 3. Batch update released payment statuses
-            if (!empty($releasedPayments)) {
-                // Use updateMultiple or batch update method
-                foreach ($releasedPayments as $payment) {
-                    RecordStripe::where('id', $payment['id'])
-                        ->update(['payment_status' => $payment['payment_status']]);
-                }
-            }
             
-            // 4. Create discounts in batch
-            $discountsToCreate = [];
-            foreach ($otherPayments as $payment) {
-                if (!empty($payment->user_id) && !empty($payment->amount)) {
-                    $discountsToCreate[] = [
-                        'user_id' => $payment->user_id,
-                        'amount' => $payment->amount,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ];
-                }
-            }
-            
-            // Insert all discounts at once
-            // if (!empty($discountsToCreate)) {
-            //     Discount::insert($discountsToCreate);
-            // }
             
             DB::commit();
             
-            return [
-                'released_payments' => count($releasedPayments),
-                'created_discounts' => count($discountsToCreate)
-            ];
-            
         } catch (Exception $e) {
             DB::rollBack();
-            $this->logError($taskId, $e, "Transaction failed in releaseFunds");
+            $this->logError(null, $e);
             return [
                 'released_payments' => 0,
                 'created_discounts' => 0,
@@ -133,61 +159,42 @@ trait RespondTaksTrait
         }
     }
 
-    public function capturePayments($startedEvents, $startedTaskIds, $taskId) {
-        $joins = $startedEvents;
-        // ->where('register_time', config(.NORMAL))
-        // ->where('payment_status', 'requires_capture');
+    public function capturePayments($event, $joinEvents) {
+        $joins = $joinEvents->where('register_time', config('constants.SIGNUP_STATUS.NORMAL'));
+        Log::info('<<< PaymentData : '. $joinEvents);
+        Log::info('<<< startedEvents : '. $event);
 
-        // Log::('<<< PaymentData : '. $joins);
-
-        $updatedStripe = [];
-        $updatedHistory = [];
         foreach ($joins as $join) {
             try {
                 foreach ($join->payments as $participantPay) {
-                    if (isset ($participantPay->payment) && $participantPay->type == 'stripe') {
+                    if ($participantPay->payment_id && $participantPay->type == 'stripe') {
                         // stripe capture hold
-                        $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($participantPay->transaction->id);
-                        $capturedPayment = $paymentIntent->capture();
+                        $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($participantPay->transaction->payment_id);
 
-                        $updatedStripe[] = [
-                            'payment_id' => $participantPay->payment_id,
-                            'payment_status' => $capturedPayment['status']
-                        ];
-
-                        $updatedHistory[] = [
-                            'id' => $participantPay->history->id,
-                            'name' => "Entry Fee: RM {$join->eventDetails->eventName}",
-                            'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
-                        ];
-                    }  else {
-                        // update wallet hiistory
-                        if (isset ($participantPay->history) && $participantPay->type == 'discount') {
-                            $updatedHistory[] = [
-                                'id' => $participantPay->history->id,
-                                'name' => "Entry Fee: RM {$join->eventDetails->eventName}",
-                                'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
-                            ];
+                        if ($paymentIntent->status === 'requires_capture') {
+                            $paymentIntent->capture();
                         }
+
+                        RecordStripe::where([
+                            'id' => $participantPay->payment_id,
+                           ])->update(['payment_status' => 'succeeded'
+                        ]);
+                    }  
+
+                    if (isset ($participantPay->history)) {
+                        TransactionHistory::where([
+                            'id' => $participantPay->history->id,
+                        ])->update([
+                            'name' => "{$join->eventDetails->eventName}: Entry Fee",
+                            'type' => 'Event Entry Fee',
+                            'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
+                        ]);
                     }
                 }
+                
+                
             } catch (Exception $e) {
-                $this->logError($taskId, $e);
-            }
-        }
-
-
-        if (!empty($updatedPayments)) {
-            DB::beginTransaction();
-            try {
-                foreach ($updatedPayments as $payment) {
-                    RecordStripe::where('id', $payment['id'])
-                        ->update(['payment_status' => $payment['payment_status']]);
-                }
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                $this->logError($taskId, $e);
+                $this->logError(null, $e);
             }
         }
     }
@@ -258,7 +265,6 @@ trait RespondTaksTrait
                 HTML;
             
             $playerNotif[$join->id] = [
-                'member' => [
                     'type' => 'event',
                     'link' =>  route('public.event.view', ['id' => $join->eventDetails->id]),
                     'icon_type' => 'started',
@@ -267,7 +273,6 @@ trait RespondTaksTrait
                     'mailClass' => 'EventStartMail',
                     'subject' => 'An event you joined has started.',
                     'created_at' => DB::raw('NOW()')
-                ]
             ];
 
             if (!isset($orgNotif[$join->eventDetails->user_id])) {
@@ -289,7 +294,7 @@ trait RespondTaksTrait
         return [$playerNotif, $orgNotif];
     }
 
-    public function handleEventTypes($notificationMap, $joinList, $taskId) {
+    public function handleEventTypes($notificationMap, $joinList) {
         [$playerNotif, $orgNotif] = $notificationMap;
 
         if (!empty($joinList)) {
@@ -377,7 +382,7 @@ trait RespondTaksTrait
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                $this->logError($taskId, $e);
+                $this->logError(null, $e);
             }
             
         } 
@@ -404,7 +409,7 @@ trait RespondTaksTrait
         }
     }
 
-    public function handleEndedActivityLogs($logMap, $joinList, $memberIdMap, $taskId) {
+    public function handlePrizeAndActivityLogs($logMap, $joinList, $memberIdMap, $prizeDetails) {
         if (!empty($joinList)) {
             DB::beginTransaction();
             try {
@@ -417,37 +422,106 @@ trait RespondTaksTrait
                         'action' => 'Position',
                     ])->delete();
 
-                    if (!isset($logMap[$join->id])) {
-                        continue;
+                    if (isset($logMap[$join->id])) {
+                        ActivityLogs::createActivityLogs([
+                            'subject_type' => User::class,
+                            'object_type' => EventJoinResults::class,
+                            'subject_id' => $memberIdMap[$join->id],
+                            'object_id' => $join->id,
+                            'action' => 'Position',
+                            'log' => $logMap[$join->id]
+                        ]);
                     }
 
-                    ActivityLogs::createActivityLogs([
-                        'subject_type' => User::class,
-                        'object_type' => EventJoinResults::class,
-                        'subject_id' => $memberIdMap[$join->id],
-                        'object_id' => $join->id,
-                        'action' => 'Position',
-                        'log' => $logMap[$join->id]
-                    ]);
+
+                    if (isset($prizeDetails[$join->id])) { 
+                        foreach ($join->roster as $member) {
+                            $transactionHistory[] = [
+                                'user_id' => $member->user->id,
+                                'name' => "Prize Money: RM {$prizeDetails[$join->id]}",
+                                'type' => "Prize Money",
+                                'link' => null,
+                                'amount' => $prizeDetails[$join->id],
+                                'summary' => "Prize Money for event",
+                                'isPositive' => false,
+                                'date' => DB::raw(NOW()),
+                            ];
+
+                            $walletData[] = [
+                                'user_id' => $member->user->id,
+                                'usable_balance' => DB::raw('COALESCE(usable_balance, 0) + ' . $prizeDetails[$join->id]),
+                                'current_balance' => DB::raw('COALESCE(current_balance, 0) + ' . $prizeDetails[$join->id]),
+                            ];
+                        
+                        }
+                         
+                    }
+
+                    TransactionHistory::insert($transactionHistory);
+                    Wallet::upsert(
+                        $walletData,
+                        ['user_id'], 
+                        ['usable_balance', 'current_balance'] 
+                    );
                 }
 
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                $this->logError($taskId, $e);
+                $this->logError(null, $e);
             }
             
         } 
         
     }
 
-    public function getEndedNotifications($joinList) {
+    private function getPrizeFromPositionTIer(string| int $position , EventTier $tier ) {
+        $positionTierMap  = [
+            'Dolphin' => [
+                '1' => 200,
+                '2' => 125,
+                '3' => 75,
+                '4' => 50,
+                '5' => 25,
+                '6' => 25,
+            ],
+            'Starfish' => [
+                '1' => 200,
+                '2' => 125,
+                '3' => 75,
+                '4' => 50,
+                '5' => 25,
+                '6' => 25
+            ],
+            'Turtle' => [
+                '1' => 200,
+                '2' => 125,
+                '3' => 75,
+                '4' => 50,
+                '5' => 25,
+                '6' => 25
+            ]
+        ];
+
+        $prize = (isset($positionTierMap[$tier->eventTier]) 
+            && isset($positionTierMap[$tier->eventTier][$position])) ? $positionTierMap[$tier->eventTier][$position] : null;
+        return $prize;
+    }
+
+    public function getEndedNotifications(Collection $joinList, EventTier $tier) {
         $playerNotif = []; $orgNotif = [];
         $memberIdList = [];
+        $prize = [];
         $logs = [];
         foreach ($joinList as $join) {
             if ($join->position?->position) {
-                $positionString = $this->ordinalPrefix($join->position->position);
+                $position = $join->position->position;
+                $currentPrize = $this->getPrizeFromPositionTier($position, $tier);
+                if ($currentPrize) {
+                    $prize[$join->id] = $currentPrize;
+                }
+
+                $positionString = $this->ordinalPrefix($position);
                 $memberHtml = <<<HTML
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
@@ -566,7 +640,7 @@ trait RespondTaksTrait
             }
         }    
 
-        return [$playerNotif, $orgNotif, $logs, $memberIdList];
+        return [$playerNotif, $orgNotif, $logs, $memberIdList, $prize];
     }
 
    

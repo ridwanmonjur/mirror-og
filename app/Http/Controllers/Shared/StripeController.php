@@ -46,9 +46,11 @@ class StripeController extends Controller
             if ($isParticipant) {
                 $eventType = $request['metadata']['eventType'];
                 $isManualCaptureMethod = isset($request['metadata'])
-                    && isset($request['metadata']['eventType'])
-                    && $eventType === "normal";
+                    && isset($eventType)
+                    && $eventType == config('constants.SIGNUP_STATUS.NORMAL');
             }
+
+            // dd($isManualCaptureMethod);
 
             $user = $request->get('user');
             $isEmptyStripeCustomerId = empty($user->stripe_customer_id);

@@ -96,7 +96,7 @@ class TransactionHistoryResource extends Resource
                     ])
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('formatted_amount')
+                Tables\Columns\TextColumn::make('amount')
                     ->label('Amount')
                     ->money('USD')
                     ->color(fn (TransactionHistory $record): string => $record->isPositive ? 'success' : 'danger')

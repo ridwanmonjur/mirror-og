@@ -36,7 +36,6 @@ class TransactionHistory extends Model
     protected $appends = [
         'formatted_date',
         'formatted_time',
-        'formatted_amount',
     ];
 
 
@@ -69,14 +68,6 @@ class TransactionHistory extends Model
         'date' => 'datetime',
     ];
 
-    /**
-
-     * Get the formatted amount with sign.
-     */
-    public function getFormattedAmountAttribute()
-    {
-        return 'RM ' . number_format($this->amount, 2);
-    }
 
     /**
  * Cursor pagination scope for efficient pagination.

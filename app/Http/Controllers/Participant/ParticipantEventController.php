@@ -106,12 +106,12 @@ class ParticipantEventController extends Controller
     {
         $logged_user_id = $request->attributes->get('user')->id;
         $selectTeam = Team::where('id', $id)->where(function ($q) use ($logged_user_id) {
-            $q->where(function ($query) use ($logged_user_id) {
-                $query->whereHas('members', function ($query) use ($logged_user_id) {
-                    $query->where('user_id', $logged_user_id)->where('status', 'accepted');
+                $q->where(function ($query) use ($logged_user_id) {
+                    $query->whereHas('members', function ($query) use ($logged_user_id) {
+                        $query->where('user_id', $logged_user_id)->where('status', 'accepted');
+                    });
                 });
-            });
-        })
+            })
             ->with(
                 [
                     'members' => function ($query) {

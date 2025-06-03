@@ -11,24 +11,24 @@
                 @csrf
                     <div class="modal-content">
                         <div class="modal-body py-4 px-5">
-                            <h5 class="mt-4 mb-3 text-success">Pay using your previous discount coupons!</h5>
-                            <small> Avoid paying for this event by using refunds and coupons from previous events.</small>
+                            <h5 class="mt-4 mb-3 text-success">Pay using your remaining wallet funds!</h5>
+                            <small> Avoid paying for this event by using funds from your wallet.</small>
                             <br><br>
                             @if ($discountStatusEnums['ABSENT'] == $discountStatus || $discountStatusEnums['INVALID'] == $discountStatus)
                                 <br> <br>
-                                <p class="text-center text-red">Ooops, no coupons </p> 
+                                <p class="text-center text-red">Ooops, no wallet fund </p> 
                             @else
                                 <p> 
                                     You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> usable balance in your wallet.
                                     @if ($discountStatusEnums['COMPLETE'] == $discountStatus )
-                                        <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your discount wallet. </span>
+                                        <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your wallet. </span>
                                         
                                     @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus )
                                         @if ( $paymentLowerMin < $payment_amount_min )
-                                            <span> You can apply a discount of <span>RM {{$payment_amount_min}}</span> towards reducing your fees. </span>
+                                            <span> You can apply <span>RM {{$payment_amount_min}}</span> towards your fees. </span>
                                         @endif
                                         <br>
-                                        <span class="text-red"> Note: the minimum payment for a transaction is about 2.5 RM, depending on currency rates.</span>
+                                        <span class="text-red"> Note: the minimum payment for a transaction is about 5 RM, depending on currency rates.</span>
                                     @endif
                                 </p>
                                 <div class="text-center mx-auto input-group mt-4 w-75">

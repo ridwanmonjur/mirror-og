@@ -14,6 +14,24 @@
         Winner</span>
 </td>
 <!-- Element: transaction-row__cell with Modifier: --type -->
-<td class="transaction-row__cell transaction-row__cell--type" v-text="transaction.type"></td>
-<!-- Element: transaction-row__cell with Modifier: --total -->
-<td class="transaction-row__cell transaction-row__cell--total " v-text="transaction.formatted_amount"></td>
+<td class="transaction-row__cell transaction-row__cell--type " v-text="transaction.type"></td>
+@if ($fullPage)
+    <td class="transaction-row__cell transaction-row__cell--change text-start" 
+        :class="{ 
+            'text-success': transaction.changeAmount > 0, 
+            'text-danger': transaction.changeAmount < 0 
+        }">
+        <span v-text="'RM '"></span>
+        <span v-if="transaction.changeAmount > 0">+</span>
+        <span v-text="transaction.changeAmount"></span>
+    </td>
+
+    <!-- Total column (running balance) -->
+    <td class="transaction-row__cell transaction-row__cell--type text-start" 
+        v-text="'RM ' + transaction.runningBalance"></td>
+
+    </td>
+@else
+    <td class="transaction-row__cell transaction-row__cell--total " v-text="'RM ' + transaction.amount"></td>
+
+@endif
