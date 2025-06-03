@@ -73,10 +73,9 @@ return new class extends Migration {
         if (Schema::hasColumn('participant_payments', 'wallet_id')) {
             Schema::table('participant_payments', function (Blueprint $table) {
                 if (Schema::hasTable('user_wallet')) {
-                    $table->dropForeign(['history_id']);
+                    $table->dropColumn('history_id');
                 }
 
-                $table->dropColumn('history_id');
 
                 if (Schema::hasColumn('participant_payments', 'register_time')) {
                     $table->dropColumn('register_time');
