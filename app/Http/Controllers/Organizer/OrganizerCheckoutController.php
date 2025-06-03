@@ -32,7 +32,10 @@ class OrganizerCheckoutController extends Controller
             $user = $request->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
             $userId = $user->id;
-            $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null,['tier']);
+            $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null,[
+                'tier',
+                'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
+            ]);
             $isUserSameAsAuth = true;
             $fee = null;
 

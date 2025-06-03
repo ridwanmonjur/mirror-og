@@ -47,7 +47,9 @@ class DiscountCheckoutRequest extends FormRequest
             $event = EventDetail
                 ::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
                 ->where('id', $joinEvent->event_details_id)
-                ->with(['tier', 'type', 'game'])->first();
+                ->with(['tier', 'type', 'game',
+                    'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
+                ])->first();
             
             $status = $event->getRegistrationStatus();
             if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {

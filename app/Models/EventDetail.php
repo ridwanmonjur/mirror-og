@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -121,9 +122,9 @@ class EventDetail extends Model implements Feedable
         return $this->hasMany(Brackets::class, 'event_details_id', 'id');
     }
 
-    public function signups()
+    public function signup(): HasOne
     {
-        return $this->hasMany(EventSignup::class, 'event_id');
+        return $this->hasOne(EventSignup::class, 'event_id');
     }
 
     public function deadlines()
@@ -377,9 +378,7 @@ class EventDetail extends Model implements Feedable
 
     public function getRegistrationStatus(): string
     {
-        $signupDates = DB::table('event_signup_dates')
-            ->where('event_id', $this->id)
-            ->first();
+        $signupDates = $this->signup;
 
         if (!$signupDates) {
             return config('constants.SIGNUP_STATUS.CLOSED');

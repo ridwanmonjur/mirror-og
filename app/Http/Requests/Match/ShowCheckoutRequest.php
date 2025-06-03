@@ -62,7 +62,11 @@ class ShowCheckoutRequest extends FormRequest
 
     private function validatePaymentAmount($validator)
     {
-        $event = EventDetail::with(['tier', 'user', 'user.organizer', 'game'])
+        $event = EventDetail::with([
+                'tier', 'user', 'user.organizer', 'game',
+                'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
+
+            ])
             ->where('id', $this->id)->first();
         $this->event = $event;
         if (!$event) {
