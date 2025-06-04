@@ -48,11 +48,11 @@ trait RespondTaksTrait
                 ->get();
             $this->releaseFunds($event, $joinEvents);
             $event->update(['status' => 'ENDED']);
-            $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
-            $deadlinesPast = $deadlines->pluck("id");
-            Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
-            Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
-            BracketDeadline::where('event_details_id', $event->id)->delete();
+            // $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
+            // $deadlinesPast = $deadlines->pluck("id");
+            // Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
+            // Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
+            // BracketDeadline::where('event_details_id', $event->id)->delete();
             return true;
         }
     
@@ -414,13 +414,16 @@ trait RespondTaksTrait
             DB::beginTransaction();
             try {
                 foreach ($joinList as $join) {
-                    ActivityLogs::findActivityLog([
-                        'subject_type' => User::class,
-                        'object_type' => EventJoinResults::class,
-                        'subject_id' => $memberIdMap[$join->id],
-                        'object_id' => $join->id,
-                        'action' => 'Position',
-                    ])->delete();
+                    if (isset($memberIdMap[$join->id])) {
+                        ActivityLogs::findActivityLog([
+                            'subject_type' => User::class,
+                            'object_type' => EventJoinResults::class,
+                            'subject_id' => $memberIdMap[$join->id],
+                            'object_id' => $join->id,
+                            'action' => 'Position',
+                        ])->delete();
+                    }
+                 
 
                     if (isset($logMap[$join->id])) {
                         ActivityLogs::createActivityLogs([
@@ -434,6 +437,8 @@ trait RespondTaksTrait
                     }
 
 
+                    $transactionHistory = [];
+                    $walletData = [];
                     if (isset($prizeDetails[$join->id])) { 
                         foreach ($join->roster as $member) {
                             $transactionHistory[] = [

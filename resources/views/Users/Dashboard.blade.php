@@ -93,9 +93,9 @@
                         <div class="container-fluid px-0 py-0">
                             <div class="transaction-history">
                                 <div class="row py-0 px-3 my-0">
-                                    <h3 class="transaction-history__title  col-6 text-secondary">Most recent transactions
+                                    <h3 class="transaction-history__title  col-12 col-lg-6 text-secondary">Most recent transactions
                                     </h3>
-                                    <a href="{{route('wallet.transactions')}}" class="col-6 text-secondary text-start text-lg-end">
+                                    <a href="{{route('wallet.transactions')}}" class="col-12 col-lg-6 text-secondary text-start text-lg-end">
                                         View full <span class="d-none d-lg-inline">transaction</span> history
                                         <span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"

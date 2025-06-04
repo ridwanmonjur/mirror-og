@@ -180,13 +180,15 @@ class RespondTasks extends Command
                         'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
                         'position',
                         'team:id,teamName,teamBanner',
-                        'tier',
+                        'eventDetails.tier',
                         ...$with,
                     ])
                     ->get();
 
                 EventDetail::where('id', $eventId)->update(['status' => 'ENDED']);
                 
+                $event = EventDetail::where('id', $eventId)->with('tier')->first();
+
                 [
                     $playerNotif,
                     $orgNotif,

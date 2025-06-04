@@ -77,6 +77,7 @@
                     </div>
                 </div>
             </div>
+            <br>
         </div>
                 <input type="hidden" id="wallet" value="{{ json_encode($wallet) }}">
 
