@@ -326,6 +326,18 @@ class EventDetail extends Model implements Feedable
 
     public function statusResolved(): string
     {
+        
+        if (in_array($this->status, ['DRAFT', 'ENDED', 'PENDING' ])) {
+            return $this->status;
+        }
+
+        if (in_array($this->status, [ 'PREVEW'])) {
+            return 'DRAFT';
+        }
+        if (is_null($this->payment_transaction_id) || $this->status === 'PENDING') {
+            return 'PENDING';
+        }
+
         // PROBABLY CAN REMOVE THIS FUNCTION NOW!!!
         $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
             $this->sub_action_public_date,
@@ -344,12 +356,6 @@ class EventDetail extends Model implements Feedable
 
         $carbonNow = Carbon::now()->utc();
 
-        if (in_array($this->status, ['DRAFT', 'PREVEW'])) {
-            return 'DRAFT';
-        }
-        if (is_null($this->payment_transaction_id) || $this->status === 'PENDING') {
-            return 'PENDING';
-        }
         if (! $carbonEndDateTime || ! $carbonStartDateTime) {
             Log::error('EventDetail.php: statusResolved: EventDetail with id= '.$this->id
                 .' and name= '.$this->eventName.' has null end or start date time');
@@ -359,7 +365,6 @@ class EventDetail extends Model implements Feedable
         if ($carbonEndDateTime < $carbonNow) {
             return 'ENDED';
         }
-        
 
         if ($carbonStartDateTime < $carbonNow) {
             return 'ONGOING';

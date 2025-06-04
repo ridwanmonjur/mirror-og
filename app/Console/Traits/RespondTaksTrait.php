@@ -410,35 +410,40 @@ trait RespondTaksTrait
     }
 
     public function handlePrizeAndActivityLogs($logMap, $joinList, $memberIdMap, $prizeDetails) {
+        $processedCount = 0;
+        $activityDeletedCount = 0;
+        $activityCreatedCount = 0;
+        $transactionWalletCount = 0;
+        $errorCount = 0;
+        
         if (!empty($joinList)) {
             DB::beginTransaction();
-            try {
-                foreach ($joinList as $join) {
-                    if (isset($memberIdMap[$join->id])) {
+            
+            foreach ($joinList as $join) {
+                try {
+                    if (isset($memberIdMap[$join->id]) 
+                        && isset($memberIdMap[$join->id])
+                        && isset($memberIdMap[$join->id][0])
+                        && isset($logMap[$join->id])
+                    ) {
                         ActivityLogs::findActivityLog([
-                            'subject_type' => User::class,
                             'object_type' => EventJoinResults::class,
                             'subject_id' => $memberIdMap[$join->id],
                             'object_id' => $join->id,
                             'action' => 'Position',
                         ])->delete();
-                    }
-                 
-
-                    if (isset($logMap[$join->id])) {
+                        $activityDeletedCount++;
+                    
                         ActivityLogs::createActivityLogs([
-                            'subject_type' => User::class,
-                            'object_type' => EventJoinResults::class,
+                            ...$logMap[$join->id],
                             'subject_id' => $memberIdMap[$join->id],
-                            'object_id' => $join->id,
-                            'action' => 'Position',
-                            'log' => $logMap[$join->id]
                         ]);
+                        $activityCreatedCount++;
                     }
-
-
+    
                     $transactionHistory = [];
                     $walletData = [];
+                    
                     if (isset($prizeDetails[$join->id])) { 
                         foreach ($join->roster as $member) {
                             $transactionHistory[] = [
@@ -449,37 +454,80 @@ trait RespondTaksTrait
                                 'amount' => $prizeDetails[$join->id],
                                 'summary' => "Prize Money for event",
                                 'isPositive' => false,
-                                'date' => DB::raw(NOW()),
+                                'date' => DB::raw('NOW()'),
                             ];
-
+    
                             $walletData[] = [
                                 'user_id' => $member->user->id,
                                 'usable_balance' => DB::raw('COALESCE(usable_balance, 0) + ' . $prizeDetails[$join->id]),
                                 'current_balance' => DB::raw('COALESCE(current_balance, 0) + ' . $prizeDetails[$join->id]),
                             ];
-                        
                         }
-                         
                     }
+    
+                    if (!empty($transactionHistory)) {
+                        TransactionHistory::insert($transactionHistory);
+                    }
+                    
+                    if (!empty($walletData)) {
+                        Wallet::upsert(
+                            $walletData,
+                            ['user_id'], 
+                            ['usable_balance', 'current_balance'] 
+                        );
+                    }
+                    
+                    $processedCount++;
+                    
+                    if (!empty($transactionHistory) || !empty($walletData)) {
+                        $transactionWalletCount++;
+                    }
+                    
+                } catch (Exception $e) {
+                    $errorCount++;
+                    
+                    Log::error('1 activity & prize execution failed', [
+                        'join_id' => $join->id ?? 'unknown',
+                        'error' => $e->getMessage(),
+                        'processed_before_failure' => $processedCount,
+                        
+                    ]);
 
-                    TransactionHistory::insert($transactionHistory);
-                    Wallet::upsert(
-                        $walletData,
-                        ['user_id'], 
-                        ['usable_balance', 'current_balance'] 
-                    );
+                    $this->logError(null, $e);
+                    
+                    continue;
                 }
-
+            }    
+            
+            try {
                 DB::commit();
+                
+                Log::info('All activity & prize executions completed', [
+                    'total_joins' => count($joinList),
+                    'processed_joins' => $processedCount,
+                    'activity_logs_deleted' => $activityDeletedCount,
+                    'activity_logs_created' => $activityCreatedCount,
+                    'transaction_wallet_updates' => $transactionWalletCount,
+                    'errors' => $errorCount
+                ]);
+                
             } catch (Exception $e) {
                 DB::rollBack();
-                $this->logError(null, $e);
+                
+                Log::error('All activity & prize execution completed', [
+                    'error' => $e->getMessage(),
+                    'total_joins' => count($joinList),
+                    'processed_joins' => $processedCount,
+                    'activity_logs_deleted' => $activityDeletedCount,
+                    'activity_logs_created' => $activityCreatedCount,
+                    'transaction_wallet_updates' => $transactionWalletCount,
+                    'errors' => $errorCount
+                ]);
             }
-            
-        } 
-        
+        } else {
+            Log::info('No joins to process for prize distribution');
+        }
     }
-
     private function getPrizeFromPositionTIer(string| int $position , EventTier $tier ) {
         $positionTierMap  = [
             'Dolphin' => [
@@ -514,7 +562,8 @@ trait RespondTaksTrait
     }
 
     public function getEndedNotifications(Collection $joinList, EventTier $tier) {
-        $playerNotif = []; $orgNotif = [];
+        $playerNotif = []; 
+        $orgNotif = [];
         $memberIdList = [];
         $prize = [];
         $logs = [];
@@ -636,13 +685,10 @@ trait RespondTaksTrait
                 ];
             }
 
-            foreach ($join->roster as $member) {
-                if (!isset($memberIdList[$join->id])) {
-                    $memberIdList[$join->id] = [];
-                }
+            $members = $join->roster?->pluck('user_id')->toArray() ?? [];
+            $memberIdList[$join->id] = $members;
 
-                $memberIdList[$join->id][] = $member->user_id;
-            }
+            
         }    
 
         return [$playerNotif, $orgNotif, $logs, $memberIdList, $prize];

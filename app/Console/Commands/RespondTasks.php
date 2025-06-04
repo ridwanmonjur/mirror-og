@@ -94,7 +94,7 @@ class RespondTasks extends Command
             // dd(vars: $tasks);
 
             $with = [
-                'roster:id,team_id,user_id',
+                'roster:id,team_id,user_id,join_events_id',
                 'members.user:id,name',
                 'eventDetails.user:id,name',
                 'eventDetails.tier:id,eventTier',
@@ -173,42 +173,104 @@ class RespondTasks extends Command
             }
 
             if ($type == 0 || $type == 3) {
-                foreach ($endedTaskIds as $eventId) {
-                $endedEvents = JoinEvent::where('event_details_id', $eventId)
-                    ->where('join_status', 'confirmed')
-                    ->with([
-                        'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
-                        'position',
-                        'team:id,teamName,teamBanner',
-                        'eventDetails.tier',
-                        ...$with,
-                    ])
-                    ->get();
-
-                EventDetail::where('id', $eventId)->update(['status' => 'ENDED']);
+                $totalEvents = count($endedTaskIds);
+                $processedEvents = 0;
+                $failedEvents = 0;
                 
-                $event = EventDetail::where('id', $eventId)->with('tier')->first();
-
-                [
-                    $playerNotif,
-                    $orgNotif,
-                    $logs,
-                    $memberIdList,
-                    $prizeDetails
-                ] = $this->getEndedNotifications($endedEvents, $event->tier);
-
-                $this->handleEventTypes(
-                    [ $playerNotif, $orgNotif ],
-                    $endedEvents,
-                );
-
-                $this->handlePrizeAndActivityLogs(
-                    $logs,
-                    $endedEvents,
-                    $memberIdList,
-                    $prizeDetails                
-                );
-            }
+                foreach ($endedTaskIds as $eventId) {
+                    try {
+                        $endedEvents = JoinEvent::where('event_details_id', $eventId)
+                            ->where('join_status', 'confirmed')
+                            ->with([
+                                'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
+                                'position',
+                                'team:id,teamName,teamBanner',
+                                'eventDetails.tier',
+                                ...$with,
+                            ])
+                            ->get();
+            
+                        $statusUpdated = EventDetail::where('id', $eventId)->update(['status' => 'ENDED']);
+                        
+                        if ($statusUpdated === 0) {
+                            throw new Exception("Failed to update event status - event not found or already updated");
+                        }
+                        
+                        $event = EventDetail::where('id', $eventId)->with('tier')->first();
+                        
+                        if (!$event) {
+                            throw new Exception("Event not found after status update");
+                        }
+            
+                        [
+                            $playerNotif,
+                            $orgNotif,
+                            $logs,
+                            $memberIdList,
+                            $prizeDetails
+                        ] = $this->getEndedNotifications($endedEvents, $event->tier);
+                        
+                        Log::info($playerNotif);
+                        Log::info($orgNotif);
+                        Log::info($logs);
+                        Log::info($memberIdList);
+                        Log::info($prizeDetails);
+                        $this->handleEventTypes(
+                            [$playerNotif, $orgNotif],
+                            $endedEvents,
+                        );
+            
+                        $this->handlePrizeAndActivityLogs(
+                            $logs,
+                            $endedEvents,
+                            $memberIdList,
+                            $prizeDetails                
+                        );
+            
+                        $processedEvents++;
+                        
+                        Log::info('Event processing completed', [
+                            'event_id' => $eventId,
+                            'event_name' => $event->eventName ?? 'Unknown',
+                            'participants_count' => $endedEvents->count(),
+                            'has_prizes' => !empty($prizeDetails)
+                        ]);
+            
+                    } catch (Exception $e) {
+                        $failedEvents++;
+                        
+                        Log::error('Event processing failed', [
+                            'event_id' => $eventId,
+                            'error' => $e->getMessage(),
+                            'line' => $e->getLine(),
+                            'file' => basename($e->getFile()),
+                            'processed_so_far' => $processedEvents,
+                            'failed_so_far' => $failedEvents
+                        ]);
+                        
+                        // Optionally try to revert event status if it was updated but processing failed
+                        try {
+                            EventDetail::where('id', $eventId)->update(['status' => 'ACTIVE']);
+                            Log::info('Reverted event status due to processing failure', ['event_id' => $eventId]);
+                        } catch (Exception $revertException) {
+                            Log::error('Failed to revert event status', [
+                                'event_id' => $eventId,
+                                'revert_error' => $revertException->getMessage()
+                            ]);
+                        }
+                        
+                        // Continue processing other events
+                        continue;
+                    }
+                }
+                
+                // Final summary log
+                Log::info('Event processing batch completed', [
+                    'total_events' => $totalEvents,
+                    'processed_successfully' => $processedEvents,
+                    'failed_events' => $failedEvents,
+                    'success_rate' => $totalEvents > 0 ? round(($processedEvents / $totalEvents) * 100, 2) . '%' : '0%'
+                ]);
             }
 
             
