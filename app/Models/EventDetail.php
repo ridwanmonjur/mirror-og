@@ -227,7 +227,6 @@ class EventDetail extends Model implements Feedable
 
             Task::insert($tasksData);
 
-            $this->createDeadlinesTask();
         }
     }
 
@@ -735,10 +734,11 @@ class EventDetail extends Model implements Feedable
                 $insertData
             );
 
-            Task::create([
+            Task::updateOrCreate([
                 'taskable_id' => $this->getKey(),
                 'taskable_type' => EventDetail::class,                    
                 'task_name' => 'reg_over',
+            ], [
                 'action_time' => $finalDate->format('Y-m-d H:i:s'),
             ]);
 

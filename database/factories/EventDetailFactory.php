@@ -210,9 +210,7 @@ final class EventDetailFactory extends Factory
             ]);
 
             $event->createRegistrationTask();
-
             $event->createStatusUpdateTask();
-    
             $event->createDeadlinesTask();
         }
 

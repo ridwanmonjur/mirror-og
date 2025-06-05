@@ -62,7 +62,6 @@ class BracketsFactory extends Factory
         $teams = $result['teams'];
 
         foreach ($events as $detail) {
-            $detail->createDeadlinesTask();
             $this->eventMatchService->createBrackets($detail);
             $this->updateBracketTeams(
                 $detail->id, 
