@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 
 class DatabaseRestore extends Command
@@ -11,6 +12,7 @@ class DatabaseRestore extends Command
 
     public function handle()
     {
+        try {
         $path = $this->option('path');
         
         if (!file_exists($path)) {
@@ -35,6 +37,9 @@ class DatabaseRestore extends Command
             $this->info("Database restored successfully from {$path}");
         } else {
             $this->error('Database restore failed');
+        }
+        } catch (Exception $e) {
+            $this->logError(null, $e);
         }
     }
 }
