@@ -14,6 +14,7 @@ use Io238\ISOCountries\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class MiscController extends Controller
 {
@@ -31,49 +32,39 @@ class MiscController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
-    public function seedStart(Request $request, $id): JsonResponse {
+    public function deadlineTaks(Request $request, $id, $type): JsonResponse {
         Cache::flush();
     
+        $typeMap = [
+            'start' => 1,
+            'end' => 2,
+            'org' => 3
+        ];
+    
+        if (!array_key_exists($type, $typeMap)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid type. Must be start, end, or org',
+            ], 400);
+        }
+    
         $exitCode = Artisan::call('tasks:deadline', [
-            'type' => 1,
+            'type' => $typeMap[$type],
             '--event_id' => (string) $id
         ]);
+    
+        Cache::flush();
         
         return response()->json([
             'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Start tasks executed',
+            'message' => ucfirst($type) . ' tasks executed',
         ]);
     }
     
-    public function seedEnd(Request $request, $id): JsonResponse {
-        Cache::flush();
-    
-        $exitCode = Artisan::call('tasks:deadline', [
-            'type' => 2,
-            '--event_id' => (string) $id
-        ]);
-        
-        return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'End tasks executed',
-        ]);
-    }
-    
-    public function seedOrg(Request $request, $id): JsonResponse {
-        Cache::flush();
-    
-        $exitCode = Artisan::call('tasks:deadline', [
-            'type' => 3,
-            '--event_id' => (string) $id
-        ]);
-        
-        return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
-            'message' => 'Org tasks executed',
-        ]);
-    }
+    // Updated route
+  
 
-    public function seedEvent(Request $request, $id, $type = null): JsonResponse 
+    public function respondTasks(Request $request, $eventId, $type = null): JsonResponse 
     {
         Cache::flush();
 
@@ -82,6 +73,7 @@ class MiscController extends Controller
             'live' => 2,
             'end' => 3,
             'reg' => 4,
+            'resetStart' => 5,
             'all' => 0,
         ];
 
@@ -91,6 +83,7 @@ class MiscController extends Controller
             'end' => 'End tasks executed',
             'reg' => 'Registration over tasks executed',
             'all' => 'All tasks executed',
+            'resetStart' => 'Reset task executed'
         ];
 
         if (!isset($typeMap[$type])) {
@@ -103,8 +96,8 @@ class MiscController extends Controller
 
         $artisanParams = ['type' => $typeMap[$type]];
         
-        if (in_array($type, ['start', 'live', 'end', 'all', 'reg'])) {
-            $artisanParams['--event_id'] = (string) $id;
+        if (in_array($type, ['start', 'live', 'end', 'all', 'reg', 'resetStart'])) {
+            $artisanParams['--event_id'] = (string) $eventId;
         }
 
         $exitCode = Artisan::call('tasks:respond', $artisanParams);

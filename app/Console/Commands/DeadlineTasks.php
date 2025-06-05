@@ -93,7 +93,11 @@ class DeadlineTasks extends Command
                     ->withEventTierAndFilteredMatches($startedBracketDeadlines)
                     ->get();
                 foreach ($startDetails as $detail) {
+                    try {
                     $this->handleStartedTasks($detail->matches);
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
             }
 
@@ -103,8 +107,12 @@ class DeadlineTasks extends Command
                     ->withEventTierAndFilteredMatches($endBracketDeadlines)
                     ->get();
                 foreach ($endDetails as $detail) {
+                    try {
                     $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
                     $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id);
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
             }
 
@@ -114,15 +122,19 @@ class DeadlineTasks extends Command
                     ->withEventTierAndFilteredMatches($orgBracketDeadlines)
                     ->get();
                 foreach ($orgDetails as $detail) {
+                    try {
                     $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
                     $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id);
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
             }
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
         } catch (Exception $e) {
-            $this->logError($taskId, $e);
+            $this->logError(null, $e);
         }
     }
 }

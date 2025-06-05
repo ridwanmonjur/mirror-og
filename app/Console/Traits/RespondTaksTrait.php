@@ -38,34 +38,41 @@ trait RespondTaksTrait
 
     public function checkAndCancelEvent(EventDetail $event)
     {
-        if ($event->join_events_count != $event->tier->tierTeamSlot) {
+        try {
+        if ($event->join_events_count < intval($event->tier->tierTeamSlot)) {
             $joinEvents = JoinEvent::where('event_details_id', $event->id)
                 ->where('join_status', 'confirmed')
                 ->with([
                     'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
-                    'payments.history', 'payments.tranaction'
+                    'payments.history', 'payments.transaction'
                 ])
                 ->get();
             $this->releaseFunds($event, $joinEvents);
             $event->update(['status' => 'ENDED']);
-            // $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
-            // $deadlinesPast = $deadlines->pluck("id");
-            // Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
-            // Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
-            // BracketDeadline::where('event_details_id', $event->id)->delete();
+            $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
+            $deadlinesPast = $deadlines->pluck("id");
+            Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
+            Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
+            BracketDeadline::where('event_details_id', $event->id)->delete();
+            Log::info("Event successfully cancelled and cleaned up. Event ID: {$event->id}");
             return true;
         }
-    
+        Log::info("Event does not need cancellation. Event ID: {$event->id}");
         return false;
+        } catch (Exception $e) {
+            Log::error("Error in checkAndCancelEvent for Event ID {$event->id}: " . $e->getMessage());
+            return false;
+        }
     }
 
 
     public function releaseFunds(EventDetail $event, Collection $joinEvents) {
         DB::beginTransaction();
         try {
-            
             foreach ($joinEvents as $join) {
+                try {
                 foreach ($join->payments as $participantPay) {  
+                    try {
                     if ($join->register_time == config('constants.SIGNUP_STATUS.NORMAL'))   {
                         if ($participantPay->transaction && $participantPay->type == 'stripe') {
                             $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId(
@@ -95,12 +102,8 @@ trait RespondTaksTrait
                                 'usable_balance' , $wallet->usable_balance + $participantPay->payment_amount,
                                 'current_balance' , $wallet->usable_balance +  $participantPay->current_balance,
                             ]);
-
                         }
-
-
                         $participantPay->history?->delete();
-
                     }  else {
                         if ($participantPay->type == 'wallet') {
                             $wallet = Wallet::firstOrCreate(
@@ -137,17 +140,18 @@ trait RespondTaksTrait
 
                             $newUserCoupon->save();
                         }
-                        
+                    }
+                    } catch (Exception $e) {
+                        Log::error("Error in releaseFunds for JOIN ID {$join->id}: && PAY ID {$participantPay->id}");
+                        $this->logError(null, $e);
                     }        
-                  
-                      
+                }
+                } catch (Exception $e) {
+                    Log::error("Error in releaseFunds for Join Event ID {$join->id}" );
+                    $this->logError(null, $e);
                 }
             }
-            
-            
-            
             DB::commit();
-            
         } catch (Exception $e) {
             DB::rollBack();
             $this->logError(null, $e);
@@ -159,51 +163,59 @@ trait RespondTaksTrait
         }
     }
 
-    public function capturePayments($event, $joinEvents) {
+    public function capturePayments($event, $joinEvents) 
+    {
         $joins = $joinEvents->where('register_time', config('constants.SIGNUP_STATUS.NORMAL'));
         Log::info('<<< PaymentData : '. $joinEvents);
         Log::info('<<< startedEvents : '. $event);
-
+        
         foreach ($joins as $join) {
             try {
                 foreach ($join->payments as $participantPay) {
-                    if ($participantPay->payment_id && $participantPay->type == 'stripe') {
-                        // stripe capture hold
-                        $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($participantPay->transaction->payment_id);
-
-                        if ($paymentIntent->status === 'requires_capture') {
-                            $paymentIntent->capture();
+                    try {
+                        if ($participantPay->payment_id && $participantPay->type == 'stripe') {
+                            // stripe capture hold
+                            $paymentIntent = $this->stripeService->retrieveStripePaymentByPaymentId($participantPay->transaction->payment_id);
+                            
+                            if ($paymentIntent->status === 'requires_capture') {
+                                $paymentIntent->capture();
+                            }
+                            
+                            RecordStripe::where([
+                                'id' => $participantPay->payment_id,
+                            ])->update(['payment_status' => 'succeeded']);
                         }
-
-                        RecordStripe::where([
-                            'id' => $participantPay->payment_id,
-                           ])->update(['payment_status' => 'succeeded'
-                        ]);
-                    }  
-
-                    if (isset ($participantPay->history)) {
-                        TransactionHistory::where([
-                            'id' => $participantPay->history->id,
-                        ])->update([
-                            'name' => "{$join->eventDetails->eventName}: Entry Fee",
-                            'type' => 'Event Entry Fee',
-                            'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
-                        ]);
+                        
+                        if (isset($participantPay->history)) {
+                            TransactionHistory::where([
+                                'id' => $participantPay->history->id,
+                            ])->update([
+                                'name' => "{$join->eventDetails->eventName}: Entry Fee",
+                                'type' => 'Event Entry Fee',
+                                'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
+                            ]);
+                        }
+                        
+                        Log::error("Payment processed successfully for participant payment ID: {$participantPay->id}");
+                    } catch (Exception $e) {
+                        Log::error("Error processing participant payment ID {$participantPay->id}");
+                        $this->logError(null, $e);
                     }
                 }
-                
-                
             } catch (Exception $e) {
+                Log::error("Error processing join ID {$join->id} " );
                 $this->logError(null, $e);
             }
         }
+        
+        Log::info('Payment capture process completed');
     }
-
     
 
     public function getLiveNotifications($joinList) {
         $playerNotif = []; $orgNotif = [];
         foreach ($joinList as $join) {
+            try {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0  Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
@@ -241,6 +253,10 @@ trait RespondTaksTrait
                     'created_at' => DB::raw('NOW()')
                 ];
             }
+            } catch (Exception $e) {
+                Log::error("Error processing function getLiveNotifications join ID {$join->id} ");
+                $this->logError(null, $e);
+            } 
         }
 
         return [$playerNotif, $orgNotif];
@@ -249,7 +265,7 @@ trait RespondTaksTrait
     public function getStartedNotifications($joinList) {
         $playerNotif = []; $orgNotif = [];
         foreach ($joinList as $join) {
-
+            try {
             $memberHtml = <<<HTML
                 <span class="notification-gray">
                     <button class="btn-transparent px-0 border-0 Color-{$join->eventDetails->tier->eventTier}" data-href="/event/{$join->eventDetails->id}">
@@ -289,6 +305,10 @@ trait RespondTaksTrait
                     'created_at' => DB::raw('NOW()')
                 ];
             }
+            } catch (Exception $e) {
+                Log::error("Error processing function getStartedNotifications join ID {$join->id}: " );
+                $this->logError(null, $e);
+            } 
         }
 
         return [$playerNotif, $orgNotif];
@@ -302,6 +322,7 @@ trait RespondTaksTrait
             try {
                 $memberNotification = $organizerNotification = [];
                 foreach ($joinList as $join) {
+                    try{
                     if (!isset($playerNotif[$join->id])) {
                         continue;
                     }
@@ -328,6 +349,7 @@ trait RespondTaksTrait
                         ->all();
 
                     foreach ($join->roster as $member) {
+                        try{
                         $memberNotification[] = [
                             'user_id' => $member->user->id,
                             'type' => $playerNotif[$join->id]['type'],
@@ -338,16 +360,22 @@ trait RespondTaksTrait
                         ];
 
                         if ($member->user->email) $memberEmails[] = $member->user->email;
+                        } catch (Exception $e) {
+                            $this->logError(null, $e);
+                        }
                     }
 
                     if (!empty($memberEmails)) {
                         Mail::to($memberEmails)->send($memberMailInvocation);
                     }
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
 
-                   
                 }
 
                 foreach ($orgNotif as $notification2) {
+                    try{
                     $organizerNotification[] = [
                         'user_id' => $notification2['user_id'],
                         'type' => $notification2['type'],
@@ -372,6 +400,9 @@ trait RespondTaksTrait
                     $user = $notification2['user'];
                     if ($user && $user->email) {
                         Mail::to($user->email)->send($orgMailInvocation);
+                    }
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
                     }
                 }
 
@@ -494,7 +525,6 @@ trait RespondTaksTrait
                     ]);
 
                     $this->logError(null, $e);
-                    
                     continue;
                 }
             }    
@@ -568,6 +598,7 @@ trait RespondTaksTrait
         $prize = [];
         $logs = [];
         foreach ($joinList as $join) {
+            try {
             if ($join->position?->position) {
                 $position = $join->position->position;
                 $currentPrize = $this->getPrizeFromPositionTier($position, $tier);
@@ -687,7 +718,9 @@ trait RespondTaksTrait
 
             $members = $join->roster?->pluck('user_id')->toArray() ?? [];
             $memberIdList[$join->id] = $members;
-
+            } catch (Exception $e) {
+                $this->logError(null, $e);
+            }
             
         }    
 

@@ -52,7 +52,7 @@ class RespondTasks extends Command
         $now = Carbon::now();
         $type = (int) $this->argument('type');
         $eventId = $this->option('event_id');
-
+        $eventIdInt = 0;
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
@@ -60,6 +60,7 @@ class RespondTasks extends Command
             $liveTaskIds = [];
             $startedTaskIds = [];
             $regOverTaskIds = [];
+
 
             if ($type === 0) {
                 $tasks = Task::whereDate('action_time', $today)
@@ -129,6 +130,7 @@ class RespondTasks extends Command
                 $shouldCancel = false;
 
                 foreach ($startedTaskIds as $eventId) {
+                    try {
                     $event = EventDetail::where('id', $eventId)
                         ->with('tier')
                         ->withCount(
@@ -145,7 +147,7 @@ class RespondTasks extends Command
                             ->where('payment_status', 'completed')
                             ->with([
                                 'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
-                                'payments.history', 'payments.tranaction'
+                                'payments.history', 'payments.transaction'
                             ])
                             ->get();
                         $this->releaseFunds($event, $joinEvents);
@@ -166,6 +168,9 @@ class RespondTasks extends Command
                             );
                         }
                     }
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
 
             }
@@ -173,6 +178,7 @@ class RespondTasks extends Command
             if ($type == 0 || $type == 2) {
                 
                 foreach ($liveTaskIds as $eventId) {
+                    try {
                     $joinEvents = JoinEvent::where('event_details_id', $eventId)
                         ->where('join_status', 'confirmed')
                         ->with([
@@ -185,6 +191,9 @@ class RespondTasks extends Command
                         $this->getLiveNotifications($joinEvents),
                         $joinEvents,
                     );
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
                
 
@@ -295,7 +304,7 @@ class RespondTasks extends Command
             
             if ($type == 0 || $type == 4) {
                 foreach ($regOverTaskIds as $regOverTaskId) {
-
+                    try {
                     $event = EventDetail::where('id', $regOverTaskId)
                         ->with('tier')
                         ->withCount(
@@ -307,6 +316,9 @@ class RespondTasks extends Command
 
                     if ($event) {
                         $this->checkAndCancelEvent($event);
+                    }
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
                     }
                 }
             }
