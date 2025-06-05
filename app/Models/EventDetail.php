@@ -229,7 +229,7 @@ class EventDetail extends Model implements Feedable
 
         }
     }
-    
+
     public function createRegistrationTask(): void {
         if ($this->event_tier_id && $this->event_type_id) {
             $signupValues = DB::table('event_tier_type_signup_dates')
@@ -242,7 +242,7 @@ class EventDetail extends Model implements Feedable
                     'tier_id' => $this->event_tier_id,
                     'type_id' => $this->event_type_id,
                     'signup_open' => 800, // Default: 28 days before event
-                    'signup_close' => 3,  // Default: 3 days before event
+                    'signup_close' => 1,  // Default: 3 days before event
                     'normal_signup_start_advanced_close' => 7 // Default: 7 days before event
                 ]);
                 
