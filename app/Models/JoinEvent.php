@@ -62,10 +62,10 @@ class JoinEvent extends Model
         return $this->hasMany(RosterMember::class, 'join_events_id', 'id');
     }
 
-    public function rosterHistory(): HasMany
-    {
-        return $this->hasMany(RosterHistory::class, 'join_events_id', 'id');
-    }
+    // public function rosterHistory(): HasMany
+    // {
+    //     return $this->hasMany(RosterHistory::class, 'join_events_id', 'id');
+    // }
 
     public function results(): HasMany
     {
@@ -280,6 +280,7 @@ class JoinEvent extends Model
         string| int $userId,
     ): bool {
         return self::where('event_details_id', $eventId)
+            ->whereNot('join_status', 'canceled')
             ->where(function ($query) use ($userId) {
                 $query->whereHas('roster', function ($query) use ($userId) {
                     $query->where('user_id', $userId);
