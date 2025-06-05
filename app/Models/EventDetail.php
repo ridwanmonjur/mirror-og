@@ -229,6 +229,55 @@ class EventDetail extends Model implements Feedable
 
         }
     }
+    
+    public function createRegistrationTask(): void {
+        if ($this->event_tier_id && $this->event_type_id) {
+            $signupValues = DB::table('event_tier_type_signup_dates')
+                ->where('tier_id', $this->event_tier_id)
+                ->where('type_id', $this->event_type_id)
+                ->first();
+
+            if (!$signupValues) {
+                DB::table('event_tier_type_signup_dates')->insert([
+                    'tier_id' => $this->event_tier_id,
+                    'type_id' => $this->event_type_id,
+                    'signup_open' => 800, // Default: 28 days before event
+                    'signup_close' => 3,  // Default: 3 days before event
+                    'normal_signup_start_advanced_close' => 7 // Default: 7 days before event
+                ]);
+                
+                $signupValues = DB::table('event_tier_type_signup_dates')
+                    ->where('tier_id', $this->event_tier_id)
+                    ->where('type_id', $this->event_type_id)
+                    ->first();
+            }
+                
+            $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
+            
+            $finalDate = $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close);
+            $insertData = [
+                'event_id' => $this->id,
+                'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
+                'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
+                'normal_signup_start_advanced_close' => $finalDate
+            ];
+            
+            DB::table('event_signup_dates')->updateOrInsert(
+                ['event_id' => $this->id],
+                $insertData
+            );
+
+            Task::updateOrCreate([
+                'taskable_id' => $this->getKey(),
+                'taskable_type' => EventDetail::class,                    
+                'task_name' => 'reg_over',
+            ], [
+                'action_time' => $finalDate->format('Y-m-d H:i:s'),
+            ]);
+
+            
+        }
+    }
 
     public function createDeadlinesTask(): void
     {
@@ -697,54 +746,7 @@ class EventDetail extends Model implements Feedable
         return $eventListQuery;
     }
 
-    public function createRegistrationTask(): void {
-        if ($this->event_tier_id && $this->event_type_id) {
-            $signupValues = DB::table('event_tier_type_signup_dates')
-                ->where('tier_id', $this->event_tier_id)
-                ->where('type_id', $this->event_type_id)
-                ->first();
-
-            if (!$signupValues) {
-                DB::table('event_tier_type_signup_dates')->insert([
-                    'tier_id' => $this->event_tier_id,
-                    'type_id' => $this->event_type_id,
-                    'signup_open' => 800, // Default: 28 days before event
-                    'signup_close' => 3,  // Default: 3 days before event
-                    'normal_signup_start_advanced_close' => 7 // Default: 7 days before event
-                ]);
-                
-                $signupValues = DB::table('event_tier_type_signup_dates')
-                    ->where('tier_id', $this->event_tier_id)
-                    ->where('type_id', $this->event_type_id)
-                    ->first();
-            }
-                
-            $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
-            
-            $finalDate = $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close);
-            $insertData = [
-                'event_id' => $this->id,
-                'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
-                'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
-                'normal_signup_start_advanced_close' => $finalDate
-            ];
-            
-            DB::table('event_signup_dates')->updateOrInsert(
-                ['event_id' => $this->id],
-                $insertData
-            );
-
-            Task::updateOrCreate([
-                'taskable_id' => $this->getKey(),
-                'taskable_type' => EventDetail::class,                    
-                'task_name' => 'reg_over',
-            ], [
-                'action_time' => $finalDate->format('Y-m-d H:i:s'),
-            ]);
-
-            
-        }
-    }
+   
 
     public static function storeLogic(EventDetail $eventDetail, Request $request): mixed
     {
