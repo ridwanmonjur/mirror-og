@@ -74,6 +74,25 @@ class RespondTasks extends Command
                     ->get();
             }
 
+            if ($type == 5) { 
+                try {
+                $event = EventDetail::where('id' ,$eventIdInt)->firstOrFail();
+
+                if ($event) {
+                $event->createRegistrationTask();
+                $event->createStatusUpdateTask();
+                $event->createDeadlinesTask();
+                Log::info("Reset event for ID: {$event->id}");
+
+                }
+                Log::info("Failed to reset event for ID: {$eventIdInt}");
+                } catch (Exception $e) {
+                    $this->logError(null, $e);
+                }
+            } else {
+                Log::info("No event to reset for ID: {$eventIdInt}");
+            }
+        
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
                     case 'ended':
