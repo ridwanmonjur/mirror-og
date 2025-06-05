@@ -51,10 +51,8 @@ Route::get('/countries', [MiscController::class, 'countryList'])->name('country.
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
 Route::get('/seed/{type}/type', [MiscController::class, 'seedBrackets']);
 Route::get('/seed/{id}/brackets', [FirebaseController::class, 'seedMatches']);
-Route::get('/seed/{id}/start', [MiscController::class, 'seedStart']);
-Route::get('/seed/{id}/end', [MiscController::class, 'seedEnd']);
-Route::get('/seed/{id}/org', [MiscController::class, 'seedOrg']);
-Route::get('/seed/{id}/event/{type?}', [MiscController::class, 'seedEvent']);
+Route::get('/deadlineTaks/{id}/{type}', [MiscController::class, 'deadlineTaks'])->where('type', 'start|end|org');
+Route::get('/respondTasks/{eventId}/{type?}', [MiscController::class, 'respondTasks']);
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
