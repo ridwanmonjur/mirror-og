@@ -32,39 +32,42 @@ class MiscController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
-    public function deadlineTaks(Request $request, $id, $type): JsonResponse {
+    public function deadlineTaks(Request $request, $id, $type): JsonResponse
+    {
         Cache::flush();
-    
+
         $typeMap = [
             'start' => 1,
             'end' => 2,
-            'org' => 3
+            'org' => 3,
         ];
-    
+
         if (!array_key_exists($type, $typeMap)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid type. Must be start, end, or org',
-            ], 400);
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Invalid type. Must be start, end, or org',
+                ],
+                400,
+            );
         }
-    
+
         $exitCode = Artisan::call('tasks:deadline', [
             'type' => $typeMap[$type],
-            '--event_id' => (string) $id
+            '--event_id' => (string) $id,
         ]);
-    
+
         Cache::flush();
-        
+
         return response()->json([
-            'status' => $exitCode === 0 ? 'success': 'failed',
+            'status' => $exitCode === 0 ? 'success' : 'failed',
             'message' => ucfirst($type) . ' tasks executed',
         ]);
     }
-    
-    // Updated route
-  
 
-    public function respondTasks(Request $request, $eventId, $type = null): JsonResponse 
+    // Updated route
+
+    public function respondTasks(Request $request, $eventId, $type = null): JsonResponse
     {
         Cache::flush();
 
@@ -83,26 +86,29 @@ class MiscController extends Controller
             'end' => 'End tasks executed',
             'reg' => 'Registration over tasks executed',
             'all' => 'All tasks executed',
-            'resetStart' => 'Reset task executed'
+            'resetStart' => 'Reset task executed',
         ];
 
         if (!isset($typeMap[$type])) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid event type',
-                'help' => $messageMap
-            ], 400);
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Invalid event type',
+                    'help' => $messageMap,
+                ],
+                400,
+            );
         }
 
         $artisanParams = ['type' => $typeMap[$type]];
-        
+
         if (in_array($type, ['start', 'live', 'end', 'all', 'reg', 'resetStart'])) {
             $artisanParams['--event_id'] = (string) $eventId;
         }
 
         $exitCode = Artisan::call('tasks:respond', $artisanParams);
         Cache::flush();
-        
+
         return response()->json([
             'status' => $exitCode === 0 ? 'success' : 'failed',
             'message' => $messageMap[$type],
@@ -115,32 +121,37 @@ class MiscController extends Controller
             $factory = new BracketsFactory();
             $seed = $factory->seed([
                 'event' => [
-                    'eventTier' => $type
-                ]
+                    'eventTier' => $type,
+                ],
             ]);
             [
                 'eventIds' => $eventIds,
                 'participants' => $participants,
-                'organizers' => $organizers
+                'organizers' => $organizers,
             ] = $seed;
-            return response()->json([
-                'success' => true,
-                'message' => 'Seeding completed successfully',
-                'data' => [
-                    'events' => $eventIds,
-                    'participants' => $participants,
-                    'organizers' => $organizers
-                ]
-            ], 200);
-            
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Seeding completed successfully',
+                    'data' => [
+                        'events' => $eventIds,
+                        'participants' => $participants,
+                        'organizers' => $organizers,
+                    ],
+                ],
+                200,
+            );
         } catch (\Exception $e) {
             // Return error response if something goes wrong
-            return response()->json([
-                'success' => false,
-                'message' => 'Seeding failed',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Seeding failed',
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ],
+                500,
+            );
         }
     }
 
@@ -149,9 +160,7 @@ class MiscController extends Controller
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
 
-        $events = EventDetail::landingPageQuery($request, $currentDateTime)
-            ->paginate($count);
-
+        $events = EventDetail::landingPageQuery($request, $currentDateTime)->paginate($count);
 
         $output = compact('events');
 

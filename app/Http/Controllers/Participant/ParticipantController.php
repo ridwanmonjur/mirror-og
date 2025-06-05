@@ -43,7 +43,6 @@ class ParticipantController extends Controller
         }
     }
 
-   
     public function viewOwnProfile(Request $request)
     {
         try {
@@ -69,7 +68,6 @@ class ParticipantController extends Controller
                 return $this->showErrorParticipant('This is an admin view!');
             }
 
-
             return $this->viewProfile($request, $loggedInUser ? $loggedInUser->id : null, $user, false);
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
@@ -83,39 +81,49 @@ class ParticipantController extends Controller
             $participant = Participant::findOrFail($validatedData['participant']['id']);
             $participant->update($validatedData['participant']);
             $user = User::findOrFail($validatedData['user']['id']);
-            if ($validatedData['user']['name']) $user->name = $validatedData['user']['name'];
+            if ($validatedData['user']['name']) {
+                $user->name = $validatedData['user']['name'];
+            }
             $user->slugify();
-            
+
             $user->update($validatedData['user']);
 
             $user->uploadUserBanner($request);
-        
+
             if (isset($participant->region)) {
-                $region = Country::select('emoji_flag', 'name', 'id')
-                    ->findOrFail($participant->region);
+                $region = Country::select('emoji_flag', 'name', 'id')->findOrFail($participant->region);
             } else {
                 $region = null;
             }
 
-            return response()->json([
-                'message' => 'Participant updated successfully',
-                'success' => true,
-                'age' => $participant->age,
-                'region' => $region,
-            ], 200);
+            return response()->json(
+                [
+                    'message' => 'Participant updated successfully',
+                    'success' => true,
+                    'age' => $participant->age,
+                    'region' => $region,
+                ],
+                200,
+            );
         } catch (\Illuminate\Database\QueryException $e) {
-            if($e->errorInfo[1] == 1062) {
-                return response()->json([
-                    'message' => 'This username was taken. Please change to another name.',
-                    'success' => false
-                ], 422);
+            if ($e->errorInfo[1] == 1062) {
+                return response()->json(
+                    [
+                        'message' => 'This username was taken. Please change to another name.',
+                        'success' => false,
+                    ],
+                    422,
+                );
             }
-    
-            return response()->json([
-                'message' => 'Error updating participant: ' . $e->getMessage(),
-                'success' => false,
-            ], 400);
-        } 
+
+            return response()->json(
+                [
+                    'message' => 'Error updating participant: ' . $e->getMessage(),
+                    'success' => false,
+                ],
+                400,
+            );
+        }
     }
 
     private function viewProfile(Request $request, $logged_user_id, $userProfile, $isOwnProfile = true)
@@ -126,11 +134,10 @@ class ParticipantController extends Controller
                 'teamIdList' => $teamIdList,
             ] = Team::getUserTeamList($userProfile->id);
             $pastTeam = Team::getUserPastTeamList($userProfile->id);
-            
+
             $joinEvents = JoinEvent::getJoinEventsByRoster($userProfile->id);
             $totalEventsCount = $joinEvents->count();
-            ['wins' => $wins, 'streak' => $streak] =
-                JoinEvent::getPlayerJoinEventsWinCountForTeamList($teamIdList,  $userProfile->id);
+            ['wins' => $wins, 'streak' => $streak] = JoinEvent::getPlayerJoinEventsWinCountForTeamList($teamIdList, $userProfile->id);
 
             $userIds = $joinEvents->pluck('eventDetails.user.id')->flatten()->toArray();
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
@@ -143,52 +150,30 @@ class ParticipantController extends Controller
                 $friend = null;
                 $isFollowingParticipant = null;
             }
-            
+
             $joinEventsHistory = $joinEventsActive = $values = [];
-            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory]
-                = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
+            ['joinEvents' => $joinEvents, 'activeEvents' => $joinEventsActive, 'historyEvents' => $joinEventsHistory] = JoinEvent::processEvents($joinEvents, $isFollowingOrganizerList);
 
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
-            return view(
-                'Public.PlayerProfile',
-                compact(
-                    'joinEvents', 
-                    'userProfile',
-                    'teamList',
-                    'isOwnProfile',
-                    'joinEventsHistory',
-                    'joinEventsActive',
-                    'followCounts',
-                    'totalEventsCount',
-                    'wins',
-                    'streak',
-                    'joinEventAndTeamList',
-                    'pastTeam',
-                    'friend',
-                    'isFollowingParticipant'
-                )
-            );
+            return view('Public.PlayerProfile', compact('joinEvents', 'userProfile', 'teamList', 'isOwnProfile', 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'totalEventsCount', 'wins', 'streak', 'joinEventAndTeamList', 'pastTeam', 'friend', 'isFollowingParticipant'));
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }
     }
 
-    public function getActivityLogs(Request $request, $userId) {
+    public function getActivityLogs(Request $request, $userId)
+    {
         $duration = $request->input('duration');
         $page = $request->input('page', 1);
         $perPage = 5;
 
-        $activityLogs = ActivityLogs::retrievePaginatedActivityLogs($userId,
-             $duration, 
-             $perPage, 
-             $page
-        );
-        
+        $activityLogs = ActivityLogs::retrievePaginatedActivityLogs($userId, $duration, $perPage, $page);
+
         return response()->json([
             'items' => $activityLogs->items(),
-            'hasMore' => $activityLogs->hasMorePages()
+            'hasMore' => $activityLogs->hasMorePages(),
         ]);
     }
 }

@@ -19,15 +19,21 @@ class ImageVideoController extends Controller
     public function upload(Request $request): JsonResponse
     {
         try {
-            return response()->json([
-                'message' => 'Files uploaded successfully',
-                'files' => ImageVideo::handleMediaUploads($request, 'media2')
-            ], 201);
+            return response()->json(
+                [
+                    'message' => 'Files uploaded successfully',
+                    'files' => ImageVideo::handleMediaUploads($request, 'media2'),
+                ],
+                201,
+            );
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Upload failed',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'message' => 'Upload failed',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -68,16 +74,16 @@ class ImageVideoController extends Controller
             $this->deleteFile();
 
             return response()->json([
-                'message' => 'File deleted successfully'
+                'message' => 'File deleted successfully',
             ]);
-
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Deletion failed',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'message' => 'Deletion failed',
+                    'error' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
-
-  
 }

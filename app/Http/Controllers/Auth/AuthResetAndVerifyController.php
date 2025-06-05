@@ -15,12 +15,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthResetAndVerifyController extends Controller
 {
-
     public function createReset(Request $request)
     {
         return view('Auth.ResetPassword', ['token' => $request->token]);
     }
-    
+
     public function storeReset(Request $request)
     {
         $request->validate([
@@ -33,11 +32,9 @@ class AuthResetAndVerifyController extends Controller
             return back()->with(['error' => 'Password confirmation does not match.']);
         }
 
-        $tokenData = DB::table('password_reset_tokens')
-            ->where('token', $request->token)
-            ->first();
+        $tokenData = DB::table('password_reset_tokens')->where('token', $request->token)->first();
 
-        if (! $tokenData) {
+        if (!$tokenData) {
             return back()->with(['error' => 'Invalid token or email address.']);
         }
 
@@ -50,9 +47,7 @@ class AuthResetAndVerifyController extends Controller
             $user->update([
                 'password' => Hash::make($request->password),
             ]);
-            DB::table('password_reset_tokens')
-                ->where('email', $tokenData->email)
-                ->delete();
+            DB::table('password_reset_tokens')->where('email', $tokenData->email)->delete();
 
             return view('Auth.ResetSuccess');
         }
@@ -74,14 +69,13 @@ class AuthResetAndVerifyController extends Controller
         $email = $request->email;
         $user = User::where('email', $request->email)->first();
 
-        if (! $user) {
+        if (!$user) {
             return back()->with(['error' => 'User not found with this email.']);
         }
 
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
         Mail::to($email)->queue(new ResetPasswordMail(public_path('assets/images/dw_logo.webp'), $token, $user->name));
-
 
         return back()->with('success', 'Password reset link sent. Please check your email.');
     }
@@ -90,42 +84,32 @@ class AuthResetAndVerifyController extends Controller
     {
         $user = User::where('email_verified_token', $token)->first();
         $role = $user->role;
-        $route = strtolower($role).'.signin.view';
-        if (! $user) {
-            return redirect()
-                ->route($route)
-                ->with('error', 'Invalid verification token.');
+        $route = strtolower($role) . '.signin.view';
+        if (!$user) {
+            return redirect()->route($route)->with('error', 'Invalid verification token.');
         }
 
         if ($user->email_verified_at !== null) {
-            return redirect()
-                ->route($route)
-                ->with('info', 'Your account is already verified.');
+            return redirect()->route($route)->with('info', 'Your account is already verified.');
         }
 
         $user->email_verified_at = now();
         $user->email_verified_token = null;
         $user->save();
 
-        return redirect()
-            ->route($route)
-            ->with('success', 'Your account has been successfully verified.');
+        return redirect()->route($route)->with('success', 'Your account has been successfully verified.');
     }
 
     public function verifyResend($email)
     {
         $user = User::where('email', $email)->first();
 
-        if (! $user) {
-            return redirect()
-                ->back()
-                ->with('error', 'User not found with this email address.');
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found with this email address.');
         }
 
         if ($user->email_verified_at !== null) {
-            return redirect()
-                ->back()
-                ->with('info', 'Your account is already verified.');
+            return redirect()->back()->with('info', 'Your account is already verified.');
         }
 
         $token = generateToken();
@@ -133,10 +117,6 @@ class AuthResetAndVerifyController extends Controller
         $user->save();
 
         Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
-        return redirect()
-            ->back()
-            ->with('success', 'Verification email has been sent. Please check your inbox.')
-            ->with('successEmail', $user->email);
+        return redirect()->back()->with('success', 'Verification email has been sent. Please check your inbox.')->with('successEmail', $user->email);
     }
-   
 }
