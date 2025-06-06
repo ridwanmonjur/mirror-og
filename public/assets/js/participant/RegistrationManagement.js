@@ -719,22 +719,28 @@ addOnLoad(()=> {
 });
 
 function scrollSwal(savedId) {
-    if (savedId) {
-        const memberDataContainer = document.getElementById('reg-member-id-' + savedId);
-        console.log(savedId, memberDataContainer);
-        console.log(savedId, memberDataContainer);
-        if (memberDataContainer) {
-            memberDataContainer.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'center'
-            });
-            
+        if (document.readyState !== 'complete') {
+            window.addEventListener('load', () => scrollToElement(savedId));
+        } else {
+            scrollToElement(savedId);
         }
-    }
 
     Object.keys(localStorage).forEach(key => {
         localStorage.removeItem(key);
     });
+}
+
+function scrollToElement(savedId) {
+    const memberDataContainer = document.getElementById('reg-member-id-' + savedId);
+    
+    if (memberDataContainer) {
+        setTimeout(() => {
+            memberDataContainer.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }, 100);
+    }
 }
 
 let headers = {
