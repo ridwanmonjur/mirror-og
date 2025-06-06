@@ -40,6 +40,7 @@ trait RespondTaksTrait
     {
         try {
         if ($event->join_events_count < intval($event->tier->tierTeamSlot)) {
+            if ($event->status!= 'ENDED') {
             $joinEvents = JoinEvent::where('event_details_id', $event->id)
                 ->where('join_status', 'confirmed')
                 ->with([
@@ -48,6 +49,17 @@ trait RespondTaksTrait
                 ])
                 ->get();
             $this->releaseFunds($event, $joinEvents);
+            
+            $paidEvents = JoinEvent::where('event_details_id', $event->id)
+                ->where('payment_status', 'completed')
+                ->whereNot('join_status', 'confirmed')
+                ->with([
+                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                    'payments.history', 'payments.transaction'
+                ])
+                ->get();
+            $this->releaseFunds($event, $paidEvents);
+
             $event->update(['status' => 'ENDED']);
             $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
             $deadlinesPast = $deadlines->pluck("id");
@@ -55,6 +67,7 @@ trait RespondTaksTrait
             Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
             BracketDeadline::where('event_details_id', $event->id)->delete();
             Log::info("Event successfully cancelled and cleaned up. Event ID: {$event->id}");
+            }
             return true;
         }
         Log::info("Event does not need cancellation. Event ID: {$event->id}");

@@ -145,16 +145,18 @@ class RespondTasks extends Command
 
                     if ($event) {
                         $shouldCancel = $this->checkAndCancelEvent($event);
-                        $joinEvents = JoinEvent::where('event_details_id', $event->id)
-                            ->whereNot('join_status', 'confirmed')
-                            ->where('payment_status', 'completed')
-                            ->with([
-                                'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
-                                'payments.history', 'payments.transaction'
-                            ])
-                            ->get();
-                        $this->releaseFunds($event, $joinEvents);
+                       
                         if (!$shouldCancel) {
+                            $paidEvents = JoinEvent::where('event_details_id', $event->id)
+                                ->where('payment_status', 'completed')
+                                ->whereNot('join_status', 'confirmed')
+                                ->with([
+                                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                                    'payments.history', 'payments.transaction'
+                                ])
+                                ->get();
+                            $this->releaseFunds($event, $paidEvents);
+                            
                             $joinEvents = JoinEvent::where('event_details_id', $eventId)
                                 ->where('join_status', 'confirmed')
                                 ->with([
