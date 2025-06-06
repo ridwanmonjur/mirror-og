@@ -22,14 +22,13 @@
                 {{-- <div class="card-header">Topup your wallet</div> --}}
 
                 <div class="card-body ">
-                <h5 class="my-3 text-secondary text-center">Current Balance </h5>
+                <h5 class="my-3  text-center">Current Balance </h5>
                     @include('includes.Flash')
 
                     <div id="cardLogoId" class="payment-element-children-view">
                             <div id="spinner-element" class="d-flex justify-content-center mt-5">
                                 <div class="spinner-border text-primary" role="status">
-                                    <br><br>
-                                    <br><br>
+                                    <br>
                                     <span class="visually-hidden text-center ">Loading...</span>
                                 </div>
                             </div>
@@ -37,7 +36,21 @@
                                 <div class="col-12 col-lg-6">
                                     <div id="address-element" class="my-2"> </div>
                                 </div>
-                                <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-6 my-2">
+                                    <div id="statistics" class="d-none">
+                                        <div class="row my-2">
+                                            <p class="my-0 col-6">Current Balance </p>
+                                            <span class="my-0 col-6"> MYR {{ number_format($wallet->current_balance, 2) }} </span>
+                                        </div>
+                                        <div class="row my-2">
+                                            <p class="my-0 col-6">Topup Amount </p>
+                                            <span class="my-0 col-6"> MYR {{ $amount  }} </span>
+                                        </div>
+                                        <div class="row my-2">
+                                            <p class="my-0  col-6">Final Balance </p>
+                                            <span class="text-primary my-0 col-6"> MYR {{ number_format($wallet->current_balance, 2) + $amount }} </span>
+                                        </div>
+                                    </div>
                                     <div id="card-element" class="my-2"> </div>
                                     <div class="d-none d-lg-block">
                                         <br>
@@ -101,6 +114,8 @@
                 if (json.success) {
                     let spinner = document.getElementById('spinner-element');
                     spinner?.remove();
+                    let statisticsElement = document.getElementById('statistics');
+                    statisticsElement?.classList.remove('d-none');
                     const clientSecret = json.data.client_secret;
                     let paymenntIntentId = json.data.payment_intent.id;
                     elements = stripe.elements({
@@ -150,7 +165,7 @@
                 '.Input, .Block': {
                     padding: '7px',
                     backgroundColor: 'transparent',
-                    border: '1.5px solid var(--colorPrimary)'
+                    border: '1.5px solid black'
                 }
             }
         };
