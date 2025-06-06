@@ -28,7 +28,7 @@ class OrganizerInvitationController extends Controller
 
         $isUserSameAsAuth = true;
 
-        if (! $event) {
+        if (!$event) {
             throw new ModelNotFoundException("Event not found with id: {$id}");
         }
 
@@ -47,9 +47,7 @@ class OrganizerInvitationController extends Controller
                 'message' => 'You have not chosen a teams!',
             ]);
         }
-        $isExistsBefore = EventInvitation::where('team_id', $request->team_id)
-            ->where('event_id', $request->event_id)
-            ->exists();
+        $isExistsBefore = EventInvitation::where('team_id', $request->team_id)->where('event_id', $request->event_id)->exists();
         if ($isExistsBefore) {
             return response()->json([
                 'success' => false,

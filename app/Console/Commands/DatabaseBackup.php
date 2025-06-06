@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -12,6 +13,7 @@ class DatabaseBackup extends Command
 
     public function handle()
     {
+        try {
         $path = $this->option('path');
         
         // Get connection details from config
@@ -31,6 +33,9 @@ class DatabaseBackup extends Command
             $this->info("Database backup created successfully at {$path}");
         } else {
             $this->error('Database backup failed');
+        }
+        } catch (Exception $e) {
+            $this->logError(null, $e);
         }
     }
 }

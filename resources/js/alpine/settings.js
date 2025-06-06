@@ -40,10 +40,11 @@ function TransactionComponent() {
             for (let i = 0; i <= sortedTransactions.length - 1; i++) {
                 const transaction = sortedTransactions[i];
                 const changeAmount = transaction.isPositive ? transaction.amount : -1 * transaction.amount;
-                
-                runningBalance += changeAmount;
-                transaction.runningBalance = parseFloat(runningBalance.toFixed(2));
+                transaction.runningBalance = runningBalance.toFixed(2);
                 transaction.changeAmount = changeAmount;
+
+                runningBalance -= parseFloat(changeAmount, 2);
+               
             }
             
             this.transactions = sortedTransactions;

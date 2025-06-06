@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\DB;
 
 class OrganizerEventResultsController extends Controller
 {
-
     private $eventMatchService;
 
     public function __construct(EventMatchService $eventMatchService)
@@ -37,20 +36,13 @@ class OrganizerEventResultsController extends Controller
             ->where('id', $id)
             ->firstOrFail();
 
-
         $awardList = Award::all();
-        
+
         $joinEventAndTeamList = EventJoinResults::getEventJoinResults($id);
         $awardAndTeamList = AwardResults::getTeamAwardResults($id);
         $achievementsAndTeamList = Achievements::getTeamAchievements($id);
 
-        return view('Organizer.EventResults', compact(
-            'event',
-            'awardList',
-            'joinEventAndTeamList',
-            'awardAndTeamList',
-            'achievementsAndTeamList'
-        ));
+        return view('Organizer.EventResults', compact('event', 'awardList', 'joinEventAndTeamList', 'awardAndTeamList', 'achievementsAndTeamList'));
     }
 
     /**
@@ -58,11 +50,8 @@ class OrganizerEventResultsController extends Controller
      */
     public function store(Request $request)
     {
-
         $joinEventsId = $request->join_events_id;
-        $existingRow = DB::table('event_join_results')
-            ->where('join_events_id', $joinEventsId)
-            ->first();
+        $existingRow = DB::table('event_join_results')->where('join_events_id', $joinEventsId)->first();
 
         if ($existingRow) {
             DB::table('event_join_results')
@@ -75,8 +64,6 @@ class OrganizerEventResultsController extends Controller
             ]);
         }
 
-
-
         return response()->json(['success' => true, 'message' => 'Position updated successfully'], 200);
     }
 
@@ -88,11 +75,7 @@ class OrganizerEventResultsController extends Controller
         try {
             [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
 
-            $joinEvent = DB::table('join_events')
-                ->where('team_id', $request->team_id)
-                ->where('event_details_id', $request->input('event_details_id'))
-                ->select('id', 'team_id', 'slug')
-                ->first();
+            $joinEvent = DB::table('join_events')->where('team_id', $request->team_id)->where('event_details_id', $request->input('event_details_id'))->select('id', 'team_id', 'slug')->first();
             $awardExists = DB::table('awards')->where('id', $request->input('award_id'))->exists();
             $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
             if ($joinEvent && $awardExists && $teamExists) {
@@ -102,18 +85,20 @@ class OrganizerEventResultsController extends Controller
                     'join_events_id' => $joinEvent->id,
                 ]);
 
-                dispatch(new HandleResults('AddAward', [
-                    'subject_type' => User::class,
-                    'object_type' => AwardResults::class,
-                    'subject_id' => $memberUserIds,
-                    'object_id' => $rowId,
-                    'action' => 'Award',
-                    'eventId' => $request->input('event_details_id'),
-                    'award' => $request->award,
-                    'teamName' => $team->teamName,
-                    'teamId' => $team->id,
-                    'image' => $team->teamBanner,
-                ]));
+                dispatch(
+                    new HandleResults('AddAward', [
+                        'subject_type' => User::class,
+                        'object_type' => AwardResults::class,
+                        'subject_id' => $memberUserIds,
+                        'object_id' => $rowId,
+                        'action' => 'Award',
+                        'eventId' => $request->input('event_details_id'),
+                        'award' => $request->award,
+                        'teamName' => $team->teamName,
+                        'teamId' => $team->id,
+                        'image' => $team->teamBanner,
+                    ]),
+                );
 
                 return response()->json(['success' => true, 'message' => 'Award given successfully'], 200);
             }
@@ -136,11 +121,7 @@ class OrganizerEventResultsController extends Controller
         try {
             [$team, $memberUserIds] = Team::getResultsTeamMemberIds($request->team_id);
 
-            $joinEvent = DB::table('join_events')
-                ->select('id', 'team_id', 'slug')
-                ->where('team_id', $request->team_id)
-                ->where('event_details_id', $request->input('event_details_id'))
-                ->first();
+            $joinEvent = DB::table('join_events')->select('id', 'team_id', 'slug')->where('team_id', $request->team_id)->where('event_details_id', $request->input('event_details_id'))->first();
 
             $teamExists = DB::table('teams')->where('id', $request->team_id)->exists();
             if ($joinEvent && $teamExists) {
@@ -150,18 +131,20 @@ class OrganizerEventResultsController extends Controller
                     'description' => $request->description,
                 ]);
 
-                dispatch(new HandleResults('AddAchievement', [
-                    'subject_type' => User::class,
-                    'object_type' => Achievements::class,
-                    'subject_id' => $memberUserIds,
-                    'object_id' => $rowId,
-                    'action' => 'Achievement',
-                    'achievement' => $request->title,
-                    'eventId' => $request->input('event_details_id'),
-                    'teamName' => $team->teamName,
-                    'teamId' => $team->id,
-                    'image' => $team->teamBanner,
-                ]));
+                dispatch(
+                    new HandleResults('AddAchievement', [
+                        'subject_type' => User::class,
+                        'object_type' => Achievements::class,
+                        'subject_id' => $memberUserIds,
+                        'object_id' => $rowId,
+                        'action' => 'Achievement',
+                        'achievement' => $request->title,
+                        'eventId' => $request->input('event_details_id'),
+                        'teamName' => $team->teamName,
+                        'teamId' => $team->id,
+                        'image' => $team->teamBanner,
+                    ]),
+                );
 
                 return response()->json(['success' => true, 'message' => 'Achievement given successfully'], 200);
             }
@@ -188,18 +171,18 @@ class OrganizerEventResultsController extends Controller
                 [, $memberUserIds] = Team::getResultsTeamMemberIds($row->team_id);
 
                 DB::table('awards_results')->where('id', $awardId)->delete();
-            
-                dispatch(new HandleResults('DeleteAward', [
-                    'subject_type' => User::class,
-                    'object_type' => AwardResults::class,
-                    'subject_id' => $memberUserIds,
-                    'object_id' => $row->id,
-                    'action' => 'Award',
-                    'teamName' => $request->teamName,
-                ]));
-            }
 
-          
+                dispatch(
+                    new HandleResults('DeleteAward', [
+                        'subject_type' => User::class,
+                        'object_type' => AwardResults::class,
+                        'subject_id' => $memberUserIds,
+                        'object_id' => $row->id,
+                        'action' => 'Award',
+                        'teamName' => $request->teamName,
+                    ]),
+                );
+            }
 
             return response()->json(['success' => true, 'message' => 'Award deleted successfully'], 200);
         } catch (Exception $e) {
@@ -211,21 +194,25 @@ class OrganizerEventResultsController extends Controller
     {
         try {
             $row = DB::table('achievements')->where('id', $achievementId)->first();
-            $join = JoinEvent::where('id', $row->join_event_id)->select(['id', 'team_id'])->first();
+            $join = JoinEvent::where('id', $row->join_event_id)
+                ->select(['id', 'team_id'])
+                ->first();
             [, $memberUserIds] = Team::getResultsTeamMemberIds($join->team_id);
 
             if ($row) {
                 DB::table('achievements')->where('id', $achievementId)->delete();
             }
 
-            dispatch(new HandleResults('DeleteAchievement', [
-                'subject_type' => User::class,
-                'object_type' => Achievements::class,
-                'subject_id' => $memberUserIds,
-                'object_id' => $row->id,
-                'action' => 'Achievement',
-                'teamName' => $request->teamName,
-            ]));
+            dispatch(
+                new HandleResults('DeleteAchievement', [
+                    'subject_type' => User::class,
+                    'object_type' => Achievements::class,
+                    'subject_id' => $memberUserIds,
+                    'object_id' => $row->id,
+                    'action' => 'Achievement',
+                    'teamName' => $request->teamName,
+                ]),
+            );
 
             return response()->json(['success' => true, 'message' => 'Achievement deleted successfully'], 200);
         } catch (Exception $e) {
@@ -233,7 +220,8 @@ class OrganizerEventResultsController extends Controller
         }
     }
 
-    public function viewBrackets(Request $request, $id) {
+    public function viewBrackets(Request $request, $id)
+    {
         $event = EventDetail::with(['type'])->findOrFail($id);
 
         if (!$event->type->eventType) {
@@ -247,13 +235,8 @@ class OrganizerEventResultsController extends Controller
                 $query->select('teams.id', 'teamName', 'teamBanner', 'slug');
             },
         ]);
-        
-        $bracket = $this->eventMatchService->generateBrackets(
-            $event,
-            true,
-            null,
-        );
 
+        $bracket = $this->eventMatchService->generateBrackets($event, true, null);
 
         return view('Organizer.Brackets', [
             'id' => $id,
@@ -263,30 +246,26 @@ class OrganizerEventResultsController extends Controller
         ]);
     }
 
-
     public function upsertBracket(MatchUpsertRequest $request, $id)
     {
         try {
             $validatedData = $request->validated();
-    
-            $match = isset($validatedData['id']) 
-                ? Brackets::findOrFail($validatedData['id']) 
-                : new Brackets;
-            
+
+            $match = isset($validatedData['id']) ? Brackets::findOrFail($validatedData['id']) : new Brackets();
+
             if (!$match->id) {
                 Brackets::where([
                     'team1_position' => $match->team1_position,
                     'team2_position' => $match->team2_position,
-                    'event_details_id' => $match->event_details_id
+                    'event_details_id' => $match->event_details_id,
                 ])->doesntExistOr(function () {
-                    throw new \ErrorException("There is already an event with this ID!");
+                    throw new \ErrorException('There is already an event with this ID!');
                 });
-
             }
 
             $team1 = $validatedData['team1_id'] ? Team::find($validatedData['team1_id']) : null;
             $team2 = $validatedData['team2_id'] ? Team::find($validatedData['team2_id']) : null;
-           
+
             $event = EventDetail::findOrFail($validatedData['event_details_id']);
             $match->fill($validatedData);
             $match->event_details_id = $event->id;
@@ -301,10 +280,10 @@ class OrganizerEventResultsController extends Controller
                 $joinEventId = null;
             }
 
-            // TODO 
+            // TODO
             // find order
             // $bracketSetup = DB::table('brackets_setup')
-            // ->where('event_tier_id', $tierId) 
+            // ->where('event_tier_id', $tierId)
             // ->where(function($query) use ($next_position) {
             //     $query->where('team1_position', $next_position)
             //         ->orWhere('team2_position', $next_position);
@@ -314,22 +293,24 @@ class OrganizerEventResultsController extends Controller
 
             if ($joinEventId && $team1) {
                 // TODO only for first brackets
-                $team1->load(['roster' => function($query) use ($joinEventId) {
-                    $query->whereIn('join_events_id', $joinEventId)->with('user');
-                }]);
-            }
-            
-            if ($joinEventId && $team2) {
-                // TODO only for first brackets
-                $team2?->load(['roster' => function($query) use ($joinEventId) {
-                    $query->whereIn('join_events_id', $joinEventId)->with('user');
-                }]);
+                $team1->load([
+                    'roster' => function ($query) use ($joinEventId) {
+                        $query->whereIn('join_events_id', $joinEventId)->with('user');
+                    },
+                ]);
             }
 
-            $message = isset($validatedData['id']) 
-                ? 'Match updated successfully' 
-                : 'Match created successfully';
-    
+            if ($joinEventId && $team2) {
+                // TODO only for first brackets
+                $team2?->load([
+                    'roster' => function ($query) use ($joinEventId) {
+                        $query->whereIn('join_events_id', $joinEventId)->with('user');
+                    },
+                ]);
+            }
+
+            $message = isset($validatedData['id']) ? 'Match updated successfully' : 'Match created successfully';
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -340,12 +321,14 @@ class OrganizerEventResultsController extends Controller
                 'message' => $message,
             ]);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'data' => null,
-                'message' => 'An error occurred: ' . $e->getMessage(),
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'data' => null,
+                    'message' => 'An error occurred: ' . $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
-
 }

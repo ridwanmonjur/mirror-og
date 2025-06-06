@@ -13,6 +13,7 @@ use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class RespondTasks extends Command
@@ -52,7 +53,7 @@ class RespondTasks extends Command
         $now = Carbon::now();
         $type = (int) $this->argument('type');
         $eventId = $this->option('event_id');
-
+        $eventIdInt = 0;
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
@@ -60,6 +61,7 @@ class RespondTasks extends Command
             $liveTaskIds = [];
             $startedTaskIds = [];
             $regOverTaskIds = [];
+
 
             if ($type === 0) {
                 $tasks = Task::whereDate('action_time', $today)
@@ -74,6 +76,27 @@ class RespondTasks extends Command
                     ->get();
             }
 
+            if ($type == 5) { 
+                try {
+                $event = EventDetail::where('id' ,$eventIdInt)->firstOrFail();
+
+                if ($event) {
+                $event->createRegistrationTask();
+                $event->createStatusUpdateTask();
+                $event->createDeadlinesTask();
+                Log::info("Reset event for ID: {$event->id}");
+
+                } else {
+                    Log::info("No event to reset for ID: {$eventIdInt}");
+                }
+
+                } catch (Exception $e) {
+                    Log::info(message: "Failed to reset event for ID: {$eventIdInt}");
+
+                    $this->logError(null, $e);
+                }
+            } 
+        
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
                     case 'ended':
@@ -94,7 +117,7 @@ class RespondTasks extends Command
             // dd(vars: $tasks);
 
             $with = [
-                'roster:id,team_id,user_id',
+                'roster:id,team_id,user_id,join_events_id',
                 'members.user:id,name',
                 'eventDetails.user:id,name',
                 'eventDetails.tier:id,eventTier',
@@ -110,6 +133,7 @@ class RespondTasks extends Command
                 $shouldCancel = false;
 
                 foreach ($startedTaskIds as $eventId) {
+                    try {
                     $event = EventDetail::where('id', $eventId)
                         ->with('tier')
                         ->withCount(
@@ -121,16 +145,18 @@ class RespondTasks extends Command
 
                     if ($event) {
                         $shouldCancel = $this->checkAndCancelEvent($event);
-                        $joinEvents = JoinEvent::where('event_details_id', $event->id)
-                            ->whereNot('join_status', 'confirmed')
-                            ->where('payment_status', 'completed')
-                            ->with([
-                                'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
-                                'payments.history', 'payments.tranaction'
-                            ])
-                            ->get();
-                        $this->releaseFunds($event, $joinEvents);
+                       
                         if (!$shouldCancel) {
+                            $paidEvents = JoinEvent::where('event_details_id', $event->id)
+                                ->where('payment_status', 'completed')
+                                ->whereNot('join_status', 'confirmed')
+                                ->with([
+                                    'eventDetails:id,eventName,startDate,startTime,event_tier_id,user_id',
+                                    'payments.history', 'payments.transaction'
+                                ])
+                                ->get();
+                            $this->releaseFunds($event, $paidEvents);
+                            
                             $joinEvents = JoinEvent::where('event_details_id', $eventId)
                                 ->where('join_status', 'confirmed')
                                 ->with([
@@ -147,6 +173,9 @@ class RespondTasks extends Command
                             );
                         }
                     }
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
 
             }
@@ -154,6 +183,7 @@ class RespondTasks extends Command
             if ($type == 0 || $type == 2) {
                 
                 foreach ($liveTaskIds as $eventId) {
+                    try {
                     $joinEvents = JoinEvent::where('event_details_id', $eventId)
                         ->where('join_status', 'confirmed')
                         ->with([
@@ -166,6 +196,9 @@ class RespondTasks extends Command
                         $this->getLiveNotifications($joinEvents),
                         $joinEvents,
                     );
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
                
 
@@ -173,46 +206,110 @@ class RespondTasks extends Command
             }
 
             if ($type == 0 || $type == 3) {
-                foreach ($endedTaskIds as $eventId) {
-                $endedEvents = JoinEvent::where('event_details_id', $eventId)
-                    ->where('join_status', 'confirmed')
-                    ->with([
-                        'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
-                        'position',
-                        'team:id,teamName,teamBanner',
-                        'tier',
-                        ...$with,
-                    ])
-                    ->get();
-
-                EventDetail::where('id', $eventId)->update(['status' => 'ENDED']);
+                $totalEvents = count($endedTaskIds);
+                $processedEvents = 0;
+                $failedEvents = 0;
                 
-                [
-                    $playerNotif,
-                    $orgNotif,
-                    $logs,
-                    $memberIdList,
-                    $prizeDetails
-                ] = $this->getEndedNotifications($endedEvents, $event->tier);
-
-                $this->handleEventTypes(
-                    [ $playerNotif, $orgNotif ],
-                    $endedEvents,
-                );
-
-                $this->handlePrizeAndActivityLogs(
-                    $logs,
-                    $endedEvents,
-                    $memberIdList,
-                    $prizeDetails                
-                );
-            }
+                foreach ($endedTaskIds as $eventId) {
+                    try {
+                        $endedEvents = JoinEvent::where('event_details_id', $eventId)
+                            ->where('join_status', 'confirmed')
+                            ->with([
+                                'eventDetails:id,eventName,endDate,endTime,event_tier_id,user_id',
+                                'position',
+                                'team:id,teamName,teamBanner',
+                                'eventDetails.tier',
+                                ...$with,
+                            ])
+                            ->get();
+            
+                        $statusUpdated = EventDetail::where('id', $eventId)->update(['status' => 'ENDED']);
+                        
+                        if ($statusUpdated === 0) {
+                            throw new Exception("Failed to update event status - event not found or already updated");
+                        }
+                        
+                        $event = EventDetail::where('id', $eventId)->with('tier')->first();
+                        
+                        if (!$event) {
+                            throw new Exception("Event not found after status update");
+                        }
+            
+                        [
+                            $playerNotif,
+                            $orgNotif,
+                            $logs,
+                            $memberIdList,
+                            $prizeDetails
+                        ] = $this->getEndedNotifications($endedEvents, $event->tier);
+                        
+                        Log::info($playerNotif);
+                        Log::info($orgNotif);
+                        Log::info($logs);
+                        Log::info($memberIdList);
+                        Log::info($prizeDetails);
+                        $this->handleEventTypes(
+                            [$playerNotif, $orgNotif],
+                            $endedEvents,
+                        );
+            
+                        $this->handlePrizeAndActivityLogs(
+                            $logs,
+                            $endedEvents,
+                            $memberIdList,
+                            $prizeDetails                
+                        );
+            
+                        $processedEvents++;
+                        
+                        Log::info('Event processing completed', [
+                            'event_id' => $eventId,
+                            'event_name' => $event->eventName ?? 'Unknown',
+                            'participants_count' => $endedEvents->count(),
+                            'has_prizes' => !empty($prizeDetails)
+                        ]);
+            
+                    } catch (Exception $e) {
+                        $failedEvents++;
+                        
+                        Log::error('Event processing failed', [
+                            'event_id' => $eventId,
+                            'error' => $e->getMessage(),
+                            'line' => $e->getLine(),
+                            'file' => basename($e->getFile()),
+                            'processed_so_far' => $processedEvents,
+                            'failed_so_far' => $failedEvents
+                        ]);
+                        
+                        // Optionally try to revert event status if it was updated but processing failed
+                        try {
+                            EventDetail::where('id', $eventId)->update(['status' => 'ACTIVE']);
+                            Log::info('Reverted event status due to processing failure', ['event_id' => $eventId]);
+                        } catch (Exception $revertException) {
+                            Log::error('Failed to revert event status', [
+                                'event_id' => $eventId,
+                                'revert_error' => $revertException->getMessage()
+                            ]);
+                        }
+                        
+                        // Continue processing other events
+                        continue;
+                    }
+                }
+                
+                // Final summary log
+                Log::info('Event processing batch completed', [
+                    'total_events' => $totalEvents,
+                    'processed_successfully' => $processedEvents,
+                    'failed_events' => $failedEvents,
+                    'success_rate' => $totalEvents > 0 ? round(($processedEvents / $totalEvents) * 100, 2) . '%' : '0%'
+                ]);
             }
 
             
             if ($type == 0 || $type == 4) {
                 foreach ($regOverTaskIds as $regOverTaskId) {
-
+                    try {
                     $event = EventDetail::where('id', $regOverTaskId)
                         ->with('tier')
                         ->withCount(
@@ -225,11 +322,15 @@ class RespondTasks extends Command
                     if ($event) {
                         $this->checkAndCancelEvent($event);
                     }
+                    } catch (Exception $e) {
+                        $this->logError(null, $e);
+                    }
                 }
             }
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
+            Cache::clear();
         } catch (Exception $e) {
             $this->logError(null, $e);
         }

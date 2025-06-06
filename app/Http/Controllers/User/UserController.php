@@ -32,25 +32,21 @@ class UserController extends Controller
 
     public function changeEmail(Request $request, $token, $newEmail)
     {
-        ['success' => $success, 'message' => $message, 'route' => $route] = $this->settingsService->changeMailAction(
-            $token, $newEmail
-        );
+        ['success' => $success, 'message' => $message, 'route' => $route] = $this->settingsService->changeMailAction($token, $newEmail);
 
-        if (! $success) {
+        if (!$success) {
             return $this->showErrorGeneral($message);
         }
 
-        return redirect()
-            ->route($route)
-            ->with('success', $message);
+        return redirect()->route($route)->with('success', $message);
     }
 
     public function viewNotifications(Request $request)
     {
         $user = $request->attributes->get('user');
-        $perPage = $request->input('per_page', 5); 
-        $pageNumber =  $request->input('page', 1); 
-        $type = $request->input('type', 'all'); 
+        $perPage = $request->input('per_page', 5);
+        $pageNumber = $request->input('page', 1);
+        $type = $request->input('type', 'all');
         $page = NotifcationsUser::where('user_id', $user->id)
             ->when($type, function ($query, $type) {
                 return $query->where('type', $type);
@@ -60,32 +56,33 @@ class UserController extends Controller
         return response()->json([
             'data' => [$type => $page->items()],
             'hasMore' => $page->hasMorePages(),
-            'success' => true
+            'success' => true,
         ]);
-
     }
 
     public function markAsRead(Request $request, $id)
     {
         $user = $request->attributes->get('user');
-        
-        $notification = NotifcationsUser::where('user_id', $user->id)
-            ->findOrFail($id);
-        if (!$notification->is_read) $notification->markAsRead();
+
+        $notification = NotifcationsUser::where('user_id', $user->id)->findOrFail($id);
+        if (!$notification->is_read) {
+            $notification->markAsRead();
+        }
 
         return response()->json([
             'message' => 'Notification marked as read',
-            'success' => true
+            'success' => true,
         ]);
     }
 
-    public function createNotification(Request $request) {
+    public function createNotification(Request $request)
+    {
         try {
             $user = $request->attributes->get('user');
             $notification = [
                 'user_id' => $request->texterId,
                 'img_src' => $user->userBanner,
-                'link' =>  route('user.message.view', [
+                'link' => route('user.message.view', [
                     'userId' => $user->id,
                 ]),
                 'type' => 'social',
@@ -96,7 +93,8 @@ class UserController extends Controller
                             {$user->name}</button>
                         has texted you.
                     </span>
-                HTML,
+                HTML
+            ,
             ];
 
             NotifcationsUser::insertWithCount([$notification]);
@@ -170,9 +168,8 @@ class UserController extends Controller
                 $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
                 $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
                 $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-                $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data); 
-            } 
-            catch (Exception $e) {
+                $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data);
+            } catch (Exception $e) {
                 $paymentMethods = new Collection();
                 $paymentHistory = new Collection();
                 $hasMorePayments = $hasMoreHistory = false;
@@ -183,13 +180,8 @@ class UserController extends Controller
             $hasMorePayments = $hasMoreHistory = false;
         }
 
-    
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
-        return view('Users.Settings', 
-            compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction',
-            'limit_methods', 'limit_history', 'hasMorePayments',  'hasMoreHistory', 'wallet'
-            
-    ));
+        return view('Users.Settings', compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction', 'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet'));
     }
 
     /**
@@ -205,10 +197,13 @@ class UserController extends Controller
             $wallet = Wallet::retrieveOrCreateCache($user->id);
 
             if (!$wallet->has_bank_account) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No bank account is currently linked to your account'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'No bank account is currently linked to your account',
+                    ],
+                    400,
+                );
             }
 
             $wallet->update([
@@ -220,18 +215,21 @@ class UserController extends Controller
                 'bank_details_updated_at' => null,
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Bank account unlinked successfully',
-                
-            ], 200);
-
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Bank account unlinked successfully',
+                ],
+                200,
+            );
         } catch (Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while unlinking bank account'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'An error occurred while unlinking bank account',
+                ],
+                500,
+            );
         }
     }
 
@@ -239,20 +237,24 @@ class UserController extends Controller
     {
         try {
             $result = $this->settingsService->changeSettings($request);
-            
+
             return response()->json($result);
         } catch (SettingsException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 400);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ],
+                400,
+            );
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An unexpected error occurred'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'An unexpected error occurred',
+                ],
+                500,
+            );
         }
     }
-
-  
 }

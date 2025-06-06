@@ -324,6 +324,7 @@ public function showPaymentMethodForm(Request $request)
             ->where('user_id', $user->id)
             ->whereDate('created_at', $today)
             ->sum('amount');
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
 
 
         if ($dailyTotal + $request->topup_amount > 1000) {
@@ -332,7 +333,8 @@ public function showPaymentMethodForm(Request $request)
 
         $amount = $request->topup_amount;
         return view('Users.TopupStripe', [
-            'amount' => $amount
+            'amount' => $amount,
+            'wallet' => $wallet
         ]);
     }
 
@@ -371,7 +373,6 @@ public function showPaymentMethodForm(Request $request)
                         'link' => null,
                         'amount' => $amount,
                         'summary' => "{$cardBrand} **** {$cardLast4}",
-                        'isPositive' => false,
                         'date' => now(),
                         'user_id' => $user->id
                     ]);

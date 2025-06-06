@@ -2,18 +2,10 @@
 
 namespace App\Console\Traits;
 
-use App\Models\EventDetail;
-use App\Models\Task;
-use App\Console\Commands\PrinterLoggerTrait;
-use App\Models\BracketDeadline;
-use App\Models\JoinEvent;
+
 use App\Services\BracketDataService;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Console\Command;
 use App\Models\Brackets;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

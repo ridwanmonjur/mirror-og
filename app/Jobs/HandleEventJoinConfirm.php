@@ -338,23 +338,23 @@ class VoteEndStrategy
 
             NotifcationsUser::insertWithCount($memberNotification);
 
-            $rosterHistoryData = $teamMembers->map(function ($member) {
-                return [
-                    'user_id' => $member->user_id,
-                    'join_events_id' => $member->join_events_id,
-                    'team_member_id' => $member->team_member_id,
-                    'team_id' => $member->team_id,
-                    'vote_to_quit' => $member->vote_to_quit,
-                    'created_at' => $member->created_at,
-                    'updated_at' => now(),
-                ];
-            })->toArray();
+            // $rosterHistoryData = $teamMembers->map(function ($member) {
+            //     return [
+            //         'user_id' => $member->user_id,
+            //         'join_events_id' => $member->join_events_id,
+            //         'team_member_id' => $member->team_member_id,
+            //         'team_id' => $member->team_id,
+            //         'vote_to_quit' => $member->vote_to_quit,
+            //         'created_at' => $member->created_at,
+            //         'updated_at' => now(),
+            //     ];
+            // })->toArray();
         
-            DB::table('roster_history')->insert($rosterHistoryData);
+            // DB::table('roster_history')->insert($rosterHistoryData);
         
-            $memberIds = $teamMembers->pluck('id')->toArray();
+            // $memberIds = $teamMembers->pluck('id')->toArray();
         
-            DB::table('roster_members')->whereIn('id', $memberIds)->delete();
+            // DB::table('roster_members')->whereIn('id', $memberIds)->delete();
         } else {
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
