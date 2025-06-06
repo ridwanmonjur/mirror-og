@@ -156,7 +156,7 @@ class FirebaseController extends Controller
      *
      * @return array Response with status and document references
      */
-    public function seedMatches(Request $request, $id)
+    public function seedResults(Request $request, $eventId)
     {
         // Define the document specifications with document IDs as keys
         $documentSpecs = [
@@ -210,7 +210,7 @@ class FirebaseController extends Controller
             $customValuesArray[] = $customValues;
         }
 
-        $reports = $this->firestoreService->createBatchReports($id, count($specificIds), $customValuesArray, $specificIds);
+        $reports = $this->firestoreService->createBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds);
 
         $disputeSpecs = [
             'W11.W12.0' => [
@@ -251,7 +251,7 @@ class FirebaseController extends Controller
             $customValuesArray[] = $customValues;
         }
 
-        $disputes = $this->firestoreService->createBatchDisputes($id, count($specificIds), $customValuesArray, $specificIds);
+        $disputes = $this->firestoreService->createBatchDisputes($eventId, count($specificIds), $customValuesArray, $specificIds);
 
         return [...$disputes, ...$reports];
     }

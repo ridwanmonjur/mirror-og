@@ -90,34 +90,40 @@ trait RespondTaksTrait
 
                             
                         } elseif ($participantPay->type == 'wallet') {
-                            $wallet = Wallet::firstOrCreate(
-                                ['user_id' => $participantPay->id],
-                                [
-                                    'usable_balance' => 0,
-                                    'current_balance' => 0,
-                                ]
-                            );
+                            $wallet = Wallet::firstOrNew(['user_id' => $participantPay->user_id]);
+
+                            if (!$wallet->exists) {
+                                $wallet->usable_balance = 0;
+                                $wallet->current_balance = 0;
+                                $wallet->save();
+                            }
                             
                             $wallet->update([
-                                'usable_balance' , $wallet->usable_balance + $participantPay->payment_amount,
-                                'current_balance' , $wallet->usable_balance +  $participantPay->current_balance,
+                                'usable_balance' => $wallet->usable_balance + $participantPay->payment_amount,
+                                'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
                             ]);
                         }
                         $participantPay->history?->delete();
                     }  else {
                         if ($participantPay->type == 'wallet') {
-                            $wallet = Wallet::firstOrCreate(
-                                ['user_id' => $participantPay->id],
-                                [
-                                    'usable_balance' => 0,
-                                    'current_balance' => 0,
-                                ]
-                            );
+                            $wallet = Wallet::firstOrNew(['user_id' => $participantPay->user_id]);
+                            Log::info($wallet);
+
+                            if (!$wallet->exists) {
+                                $wallet->usable_balance = 0;
+                                $wallet->current_balance = 0;
+                                $wallet->save();
+                            }
+
+                            Log::info($wallet);
+
                             
                             $wallet->update([
-                                'usable_balance' , $wallet->usable_balance + $participantPay->payment_amount,
-                                'current_balance' , $wallet->usable_balance +  $participantPay->current_balance,
+                                'usable_balance' => $wallet->usable_balance + $participantPay->payment_amount,
+                                'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
                             ]);
+
+                            Log::info($participantPay);
 
                             $participantPay->history?->delete();
                         } else {
@@ -192,6 +198,7 @@ trait RespondTaksTrait
                             ])->update([
                                 'name' => "{$join->eventDetails->eventName}: Entry Fee",
                                 'type' => 'Event Entry Fee',
+                                'isPositive' => false,
                                 'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
                             ]);
                         }
@@ -484,7 +491,6 @@ trait RespondTaksTrait
                                 'link' => null,
                                 'amount' => $prizeDetails[$join->id],
                                 'summary' => "Prize Money for event",
-                                'isPositive' => false,
                                 'date' => DB::raw('NOW()'),
                             ];
     
