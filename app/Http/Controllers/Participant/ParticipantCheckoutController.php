@@ -221,7 +221,7 @@ class ParticipantCheckoutController extends Controller
 
                     if ($isNormalReg) {
                         $history = new TransactionHistory([
-                            'name' => "Top up for event: RM {$event->eventName}",
+                            'name' => "Top up for event: {$event->eventName}",
                             'type' => "Top up: RM {$paymentDone}",
                             'link' => null,
                             'amount' => $paymentDone,
