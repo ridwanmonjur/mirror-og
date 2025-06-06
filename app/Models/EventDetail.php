@@ -274,8 +274,6 @@ class EventDetail extends Model implements Feedable
             ], [
                 'action_time' => $finalDate->format('Y-m-d H:i:s'),
             ]);
-
-            
         }
     }
 

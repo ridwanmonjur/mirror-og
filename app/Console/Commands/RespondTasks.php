@@ -13,6 +13,7 @@ use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class RespondTasks extends Command
@@ -85,14 +86,16 @@ class RespondTasks extends Command
                 $event->createDeadlinesTask();
                 Log::info("Reset event for ID: {$event->id}");
 
+                } else {
+                    Log::info("No event to reset for ID: {$eventIdInt}");
                 }
-                Log::info("Failed to reset event for ID: {$eventIdInt}");
+
                 } catch (Exception $e) {
+                    Log::info(message: "Failed to reset event for ID: {$eventIdInt}");
+
                     $this->logError(null, $e);
                 }
-            } else {
-                Log::info("No event to reset for ID: {$eventIdInt}");
-            }
+            } 
         
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
@@ -325,6 +328,7 @@ class RespondTasks extends Command
 
             $now = Carbon::now();
             $this->logExit($taskId, $now);
+            Cache::clear();
         } catch (Exception $e) {
             $this->logError(null, $e);
         }

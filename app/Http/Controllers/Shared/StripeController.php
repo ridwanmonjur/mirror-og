@@ -371,7 +371,6 @@ public function showPaymentMethodForm(Request $request)
                         'link' => null,
                         'amount' => $amount,
                         'summary' => "{$cardBrand} **** {$cardLast4}",
-                        'isPositive' => false,
                         'date' => now(),
                         'user_id' => $user->id
                     ]);

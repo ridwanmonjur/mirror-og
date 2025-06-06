@@ -75,10 +75,12 @@ final class EventDetailFactory extends Factory
     /**
      * Run the database seeds.
      */
-    public function seed($eventIndex, $options)
+    public function seed($eventIndex, $options = [
+        'eventTier' => 'Dolphin',
+        'eventName' => 'Test Brackets'
+    ])
     {
        
-
         $user = User::updateOrCreate([
             'email' => "org1@driftwood.gg",
         ],[
@@ -166,10 +168,11 @@ final class EventDetailFactory extends Factory
 
         Log::info($eventTypes);
 
-        return $this->createSampleEvents($user, $options['eventTier'], 'Tournament', $eventIndex);
+        return $this->createSampleEvents($user, $options['eventTier'], 'Tournament', $eventIndex, 
+            $options['eventName']);
     }
 
-    private function createSampleEvents($user, $eventTier, $eventType, $eventIndex)
+    private function createSampleEvents($user, $eventTier, $eventType, $eventIndex, $eventName)
     {
         $category = EventCategory::where('gameTitle', 'Dota 2')->first();
         $tier = EventTier::where('eventTier', $eventTier)->first();
@@ -181,7 +184,6 @@ final class EventDetailFactory extends Factory
 
 
         for ($i = 0; $i < 2; $i++) {
-            $eventName = $category->gameTitle . ' Match ' . $eventIndex + 1;
             
             $startDate = fake()->dateTimeBetween('now', '+2 days')->format('Y-m-d');
             $endDate = date('Y-m-d', strtotime($startDate . ' +2 days'));
@@ -199,7 +201,7 @@ final class EventDetailFactory extends Factory
                 'eventBanner' => 'images/event_details/banner1.png',
                 'eventTags' => $category->gameTitle . ',esports,gaming,competition',
                 'status' => 'SCHEDULED',
-                'sub_action_private' => 'private',
+                'sub_action_private' => 'public',
                 'venue' => 'MY',
                 'user_id' => $user->id,
                 'event_type_id' => $type->id,

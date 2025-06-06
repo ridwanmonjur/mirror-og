@@ -46,7 +46,16 @@ class BracketsFactory extends Factory
 
     public function seed($options = [
         'event' => [
-            'eventTier' => 'Dolphin'
+            'eventTier' => 'Dolphin',
+            'eventName' => 'Test Brackets',
+            'joinEvent' => [
+                'join_status' => 'confirmed',
+                'payment_status' => 'confirmed',
+                'participantPayment' => [
+                    'register_time' => null,
+                    'type' => 'wallet',
+                ]
+            ]
         ]
     ]) {
 

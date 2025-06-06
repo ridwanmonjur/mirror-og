@@ -732,7 +732,9 @@ function scrollSwal(savedId) {
         }
     }
 
-    localStorage.clear();
+    Object.keys(localStorage).forEach(key => {
+        localStorage.removeItem(key);
+    });
 }
 
 let headers = {

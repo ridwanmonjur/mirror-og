@@ -19,6 +19,7 @@ use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 use App\Http\Requests\Match\DiscountCheckoutRequest;
 use App\Models\TransactionHistory;
+use Illuminate\Support\Facades\Log;
 
 class ParticipantCheckoutController extends Controller
 {
@@ -261,6 +262,20 @@ class ParticipantCheckoutController extends Controller
                         $joinEvent->save();
                     }
 
+                    // try {
+                    //     $customerId = $paymentIntent['customer'] ?? null;
+                        
+                    //     if ($customerId) {
+                    //         $$this->stripeClient->createStripeInvoice($customerId);
+                    //     }
+                        
+                    // } catch (Exception $invoiceException) {
+                    //     Log::error("Failed to create invoice after payment", [
+                    //         'error' => $invoiceException->getMessage(),
+                    //         'payment_intent_id' => $intentId
+                    //     ]);
+                    // }
+
                     DB::commit();
 
                     return redirect()
@@ -268,7 +283,28 @@ class ParticipantCheckoutController extends Controller
                         ->with('successMessage', 'Your payment has succeeded!')
                         ->with('scroll', $paymentIntent['metadata']['joinEventId']);
                 }
+            } 
+
+            if ($request->has('payment_intent')) {
+                try {
+                    $intentId = $request->get('payment_intent');
+                    $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                    $cancelableStatuses = [
+                        'requires_payment_method',
+                        'requires_confirmation',
+                        'requires_action',
+                        'processing'
+                    ];
+
+                    if (in_array($paymentIntent['status'], $cancelableStatuses)) {
+                        $this->stripeClient->cancelPaymentIntent($intentId, [
+                            'cancellation_reason' => 'abandoned'
+                        ]);
+                    }
+                } catch (Exception $e) {
+                }
             }
+            
             DB::rollBack();
 
             return $this->showErrorParticipant('Your payment has failed unfortunately!');

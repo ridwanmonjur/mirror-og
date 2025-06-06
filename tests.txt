@@ -118,3 +118,41 @@ winner random
 
 
 cd ../../domains/oceansgaming.gg/public_html
+
+helpUrls": {
+"start": "http://localhost:8000/respondTasks/79/start",
+"live": "http://localhost:8000/respondTasks/79/live",
+"end": "http://localhost:8000/respondTasks/79/end",
+"reg": "http://localhost:8000/respondTasks/79/reg",
+"resetStart": "http://localhost:8000/respondTasks/79/resetStart",
+"all": "http://localhost:8000/respondTasks/79/all"
+}
+
+CONFIRMED, WALLET
+http://localhost:8000/seed/joins?join_status=confirmed&payment_status=completed&register_time=early&type=wallet
+http://localhost:8000/respondTasks/81/start
+http://localhost:8000/respondTasks/81/live
+http://localhost:8000/respondTasks/81/end
+http://localhost:8000/respondTasks/81/reg
+http://localhost:8000/respondTasks/81/resetStart
+
+http://localhost:8000/seed/joins?join_status=confirmed&payment_status=completed&register_time=normal&type=wallet
+
+
+CONFIRMED, STRIPE
+http://localhost:8000/seed/joins?join_status=confirmed&payment_status=completed&register_time=early&type=stripe
+http://localhost:8000/seed/joins?join_status=confirmed&payment_status=completed&register_time=normal&type=stripe
+
+COMPLETED, STRIPE
+http://localhost:8000/seed/joins?join_status=pending&payment_status=completed&register_time=early&type=stripe
+http://localhost:8000/seed/joins?join_status=pending&payment_status=completed&register_time=normal&type=stripe
+
+
+COMPLETED, WALLET
+http://localhost:8000/seed/joins?join_status=pending&payment_status=completed&register_time=early&type=wallet
+http://localhost:8000/seed/joins?join_status=pending&payment_status=completed&register_time=normal&type=wallet
+
+
+
+
+http://localhost:8000/seed/joins?join_status=confirmed&payment_status=completed&register_time=early&type=wallet
