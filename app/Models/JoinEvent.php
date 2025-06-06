@@ -62,10 +62,10 @@ class JoinEvent extends Model
         return $this->hasMany(RosterMember::class, 'join_events_id', 'id');
     }
 
-    public function rosterHistory(): HasMany
-    {
-        return $this->hasMany(RosterHistory::class, 'join_events_id', 'id');
-    }
+    // public function rosterHistory(): HasMany
+    // {
+    //     return $this->hasMany(RosterHistory::class, 'join_events_id', 'id');
+    // }
 
     public function results(): HasMany
     {
@@ -205,14 +205,13 @@ class JoinEvent extends Model
         $joinEvents = collect();
         $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
-            'eventDetails', 'eventDetails.tier', 'eventDetails.user', 
+            'eventDetails', 'eventDetails.tier', 'eventDetails.signup', 'eventDetails.user', 
             'eventDetails.game', 
             'members' => function($q) {
                 $q->where('status', 'accepted')
                     ->with('payments', 'user');
             },
             'roster', 'roster.user', 'voteStarter', 'captain',
-            'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
         ];
 
         if (! is_null($eventId)) {
@@ -281,6 +280,7 @@ class JoinEvent extends Model
         string| int $userId,
     ): bool {
         return self::where('event_details_id', $eventId)
+            ->whereNot('join_status', 'canceled')
             ->where(function ($query) use ($userId) {
                 $query->whereHas('roster', function ($query) use ($userId) {
                     $query->where('user_id', $userId);

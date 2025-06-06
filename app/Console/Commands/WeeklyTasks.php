@@ -48,7 +48,7 @@ class WeeklyTasks extends Command
             $now = Carbon::now();
             $this->logExit($id, $now);
         } catch (Exception $e) {
-            $this->logError($id, $e);
+            $this->logError(null, $e);
         }
 
     }

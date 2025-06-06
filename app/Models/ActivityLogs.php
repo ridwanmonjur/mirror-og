@@ -32,7 +32,6 @@ class ActivityLogs extends Model
     {
         $query = ActivityLogs::query();
         $query->where([
-            'subject_type' => $parameters['subject_type'],
             'object_type' => $parameters['object_type'],
             'object_id' => $parameters['object_id'],
             'action' => $parameters['action'],

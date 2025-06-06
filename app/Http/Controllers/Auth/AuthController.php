@@ -24,7 +24,8 @@ class AuthController extends Controller
 {
     private AuthService $authService;
 
-    public function __construct(AuthService $authService) {
+    public function __construct(AuthService $authService)
+    {
         $this->authService = $authService;
     }
 
@@ -34,10 +35,9 @@ class AuthController extends Controller
         $role = $state['role'];
         $user = Socialite::driver('google')->stateless()->user();
 
-        ['finduser' => $finduser, 'error' => $error]
-            = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
+        ['finduser' => $finduser, 'error' => $error] = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
         Session::forget('role');
-        
+
         return $this->authService->handleUserRedirection($finduser, $error, $role);
     }
 
@@ -45,8 +45,7 @@ class AuthController extends Controller
     {
         $user = Socialite::driver('steam')->user();
         $role = Session::get('role');
-        ['finduser' => $finduser, 'error' => $error]
-            = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role); 
+        ['finduser' => $finduser, 'error' => $error] = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role);
         Session::forget('role');
 
         return $this->authService->handleUserRedirection($finduser, $error, $role);
@@ -55,7 +54,6 @@ class AuthController extends Controller
     // Steam login
     public function redirectToSteam(Request $request)
     {
-
         Session::put('role', $this->authService->putRoleInSessionBasedOnRoute($request->url()));
         Session::save();
         return Socialite::driver('steam')->redirect();
@@ -67,10 +65,10 @@ class AuthController extends Controller
         Session::put('role', $role);
         Session::save();
         return Socialite::driver('google')
-            ->with(['state' => encrypt(['role' => $role]) ])
+            ->with(['state' => encrypt(['role' => $role])])
             ->redirect();
-    }    
-   
+    }
+
     public function storeUser(Request $request)
     {
         $validatedData = [];
@@ -80,16 +78,15 @@ class AuthController extends Controller
             'password' => 'bail|required|min:6|max:24',
             'confirmPassword' => 'bail|required|min:6|max:24|same:password',
         ];
-        
+
         extract($this->authService->determineUserRole($request));
 
-        $redirectErrorRoute = $role.'.signup.view';
-        $redirectSuccessRoute = $role.'.signin.view';
-        
+        $redirectErrorRoute = $role . '.signup.view';
+        $redirectSuccessRoute = $role . '.signin.view';
+
         DB::beginTransaction();
         $validatedData = $request->validate($validationRules);
         try {
-
             if ($role === 'organizer') {
                 $user = $this->authService->createUser($validatedData, strtoupper($role));
                 $organizer = new Organizer([
@@ -100,7 +97,6 @@ class AuthController extends Controller
 
                 $organizer->save();
             } elseif ($role === 'participant') {
-
                 $user = $this->authService->createUser($validatedData, strtoupper($role));
                 $participant = new Participant([
                     'user_id' => $user->id,
@@ -115,33 +111,25 @@ class AuthController extends Controller
 
             return redirect()
                 ->route($redirectSuccessRoute)
-                ->with(
-                    [
-                        'success' => $roleFirstCapital.' account created and verification email sent. Please verify email now!',
-                        'email' => $user->email,
-                        'verify' => true,
-                        'successEmail' => $user->email
-                    ]
-                );
+                ->with([
+                    'success' => $roleFirstCapital . ' account created and verification email sent. Please verify email now!',
+                    'email' => $user->email,
+                    'verify' => true,
+                    'successEmail' => $user->email,
+                ]);
         } catch (QueryException $e) {
             DB::rollBack();
 
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {
-                return redirect()
-                    ->route($redirectErrorRoute)
-                    ->with('error', 'The email already exists. Please sign in!');
+                return redirect()->route($redirectErrorRoute)->with('error', 'The email already exists. Please sign in!');
             }
 
-            return redirect()
-                ->route($redirectErrorRoute)
-                ->with('error', 'An error occurred while processing your request.');
-        }   catch (\Throwable $th) {
+            return redirect()->route($redirectErrorRoute)->with('error', 'An error occurred while processing your request.');
+        } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage() . PHP_EOL . $th->getTraceAsString());
 
-            return redirect()
-                ->route($redirectErrorRoute)
-                ->with('error', $th->getMessage());
+            return redirect()->route($redirectErrorRoute)->with('error', $th->getMessage());
         }
     }
 
@@ -158,13 +146,13 @@ class AuthController extends Controller
 
             if (Auth::attempt($validatedData, $request->has('remember-me'))) {
                 $user = User::where('email', $request->email)->first();
-                if (! $user->email_verified_at) {
+                if (!$user->email_verified_at) {
                     Auth::logout();
                     return response()->json([
                         'success' => false,
                         'message' => 'Email not verified. Please verify email first!',
                         'verify' => true,
-                        'validityLink' => route('user.verify.resend', ['email' => $request->email])
+                        'validityLink' => route('user.verify.resend', ['email' => $request->email]),
                     ]);
                 }
 
@@ -174,12 +162,15 @@ class AuthController extends Controller
 
                 $request->session()->regenerate();
 
-                return response()->json([
-                    'message' => "Account signed in successfully as {$role}!",
-                    'route' => route($role.'.home.view'),
-                    'token' => null,
-                    'success' => true,
-                ], 201);
+                return response()->json(
+                    [
+                        'message' => "Account signed in successfully as {$role}!",
+                        'route' => route($role . '.home.view'),
+                        'token' => null,
+                        'success' => true,
+                    ],
+                    201,
+                );
             }
 
             throw new ErrorException('The email or password you entered is incorrect!');
@@ -187,18 +178,21 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'message' => 'An error occurred while processing your request.'], 422);
         } catch (ValidationException $e) {
             $errors = $e->validator->errors();
-            
+
             $errorArray = [];
             foreach ($errors->messages() as $field => $messages) {
                 $errorArray['validation'][$field] = $messages[0];
             }
-            
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'errors' => $errorArray
-            ], 422);
-        }   catch (Exception $e) {
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'errors' => $errorArray,
+                ],
+                422,
+            );
+        } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
         }
     }
@@ -206,9 +200,9 @@ class AuthController extends Controller
     public function logoutAction(Request $request)
     {
         Auth::logout();
-        
+
         $request->session()->invalidate();
-        
+
         $request->session()->regenerateToken();
 
         return redirect('/home');
@@ -233,6 +227,4 @@ class AuthController extends Controller
 
         return view('Auth.OrganizerSignIn');
     }
-
-   
 }

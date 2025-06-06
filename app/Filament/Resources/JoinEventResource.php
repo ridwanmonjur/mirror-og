@@ -162,7 +162,7 @@ class JoinEventResource extends Resource
             JoinEventResource\RelationManagers\RosterRelationManager::class,
             JoinEventResource\RelationManagers\ResultsRelationManager::class,
             JoinEventResource\RelationManagers\PaymentsRelationManager::class,
-            JoinEventResource\RelationManagers\RosterHistoryRelationManager::class
+            // JoinEventResource\RelationManagers\RosterHistoryRelationManager::class
 
         ];
     }

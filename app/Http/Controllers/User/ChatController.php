@@ -21,23 +21,16 @@ class ChatController extends Controller
             }
 
             $userProfile = User::find($request->userId);
-            if (! $userProfile) {
+            if (!$userProfile) {
                 return $this->showErrorParticipant('We have no user by this id!');
             }
         }
 
-        $user = User::select(['id', 'name', 'role', 'userBanner'])->findOrFail(
-            $loggedUser->id
-        );
+        $user = User::select(['id', 'name', 'role', 'userBanner'])->findOrFail($loggedUser->id);
 
-        DB::table('firebase_user_active_at')->updateOrInsert(
-            ['user_id' => $loggedUser->id],
-            ['updated_at' => now()]
-        );
+        DB::table('firebase_user_active_at')->updateOrInsert(['user_id' => $loggedUser->id], ['updated_at' => now()]);
 
-        return view('Users.Message', ['userProfile' => $userProfile,
-            'user' => $user,
-        ]);
+        return view('Users.Message', ['userProfile' => $userProfile, 'user' => $user]);
     }
 
     public function getFirebaseUsers(Request $request)
@@ -45,27 +38,19 @@ class ChatController extends Controller
         $users = null;
         $loggedUserId = $request->attributes->get('user')->id;
 
-        $select = [
-            'users.id', 'users.name', 'users.role', 'users.userBanner', 
-        ];
+        $select = ['users.id', 'users.name', 'users.role', 'users.userBanner'];
 
         if ($request->has('userIdList')) {
             $userIdList = $request->userIdList;
 
             $users = $users = DB::table('users')
                 ->leftJoin('firebase_user_active_at', 'users.id', '=', 'firebase_user_active_at.user_id')
-                ->leftJoin('blocks', function($join) use ($loggedUserId) {
-                    $join->on('users.id', '=', 'blocks.blocked_user_id')
-                         ->where('blocks.user_id', $loggedUserId)
-                    ->orOn('users.id', '=', 'blocks.user_id')
-                         ->where('blocks.blocked_user_id', $loggedUserId);
+                ->leftJoin('blocks', function ($join) use ($loggedUserId) {
+                    $join->on('users.id', '=', 'blocks.blocked_user_id')->where('blocks.user_id', $loggedUserId)->orOn('users.id', '=', 'blocks.user_id')->where('blocks.blocked_user_id', $loggedUserId);
                 })
                 ->whereIn('users.id', $userIdList)
                 ->select($select)
-                ->addSelect([
-                    'firebase_user_active_at.updated_at',
-                   
-                ])
+                ->addSelect(['firebase_user_active_at.updated_at'])
                 ->get();
         } elseif ($request->has('searchQ')) {
             $searchQ = $request->searchQ;

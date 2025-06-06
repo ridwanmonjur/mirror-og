@@ -35,15 +35,11 @@ class OrganizerEventController extends Controller
     private $paymentService;
     private $eventMatchService;
 
-    public function __construct(
-        PaymentService $paymentService,
-        EventMatchService $eventMatchService
-    )
+    public function __construct(PaymentService $paymentService, EventMatchService $eventMatchService)
     {
         $this->paymentService = $paymentService;
         $this->eventMatchService = $eventMatchService;
     }
-
 
     public function home()
     {
@@ -71,33 +67,22 @@ class OrganizerEventController extends Controller
         $eventList = $eventListQuery
             ->with(['tier', 'type', 'game', 'user'])
             ->where('user_id', $user->id)
-            ->withCount(['joinEvents' => function ($q) {
-                $q->where('join_status', 'confirmed');
-            }])
+            ->withCount([
+                'joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                },
+            ])
             ->paginate($count);
 
         $joinTeamIds = [];
 
-        $results = DB::table('join_events')
-            ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
-            ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
-            ->where('team_members.status', '=', 'accepted')
-            ->groupBy('join_events.event_details_id')
-            ->get();
-        
+        $results = DB::table('join_events')->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')->where('team_members.status', '=', 'accepted')->groupBy('join_events.event_details_id')->get();
+
         $followersCount = OrganizerFollow::where('organizer_user_id', $user->id)->count();
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
-       
-        $outputArray = compact(
-            'eventList',
-            'count',
-            'user',
-            'eventCategoryList',
-            'eventTierList',
-            'eventTypeList',
-            'followersCount'
-        );
+
+        $outputArray = compact('eventList', 'count', 'user', 'eventCategoryList', 'eventTierList', 'eventTypeList', 'followersCount');
 
         return view('Organizer.ManageEvent', $outputArray);
     }
@@ -114,20 +99,16 @@ class OrganizerEventController extends Controller
         $eventList = $eventListQuery
             ->where('event_details.user_id', $userId)
             ->with(['tier', 'type', 'game'])
-            ->withCount(['joinEvents' => function ($q) {
-                $q->where('join_status', 'confirmed');
-            }])
+            ->withCount([
+                'joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                },
+            ])
             ->paginate($count);
 
-        $results = DB::table('join_events')
-            ->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))
-            ->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')
-            ->where('team_members.status', '=', 'accepted')
-            ->groupBy('join_events.event_details_id')
-            ->get();
+        $results = DB::table('join_events')->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')->where('team_members.status', '=', 'accepted')->groupBy('join_events.event_details_id')->get();
 
         $joinEventDetailsMap = $results->pluck('accepted_members_count', 'event_details_id');
-        
 
         $outputArray = compact('eventList', 'count', 'followersCount', 'user', 'organizer');
         $view = view('includes.ManageEvent.ManageEventScroll', $outputArray)->render();
@@ -154,20 +135,15 @@ class OrganizerEventController extends Controller
         ]);
     }
 
-
     public function showSuccess(Request $request, $id): View
     {
-
         try {
             $user = $request->get('user');
             $userId = $user->id;
-            $event = EventDetail::findEventWithRelationsAndThrowError(
-                $userId,
-                $id,
-            );
-        
+            $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id);
+
             $isUserSameAsAuth = true;
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
+        } catch (ModelNotFoundException | UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event can't be retieved with id: {$id}");
@@ -186,23 +162,12 @@ class OrganizerEventController extends Controller
             $event = $request->getEvent();
             $user = $request->getStoredUser();
             $existingJoint = $request->getJoinEvent();
-            
-            $viewData = $this->eventMatchService->getEventViewData(
-                $event, $user, $existingJoint
-            );
-    
-            $bracketData = $this->eventMatchService->generateBrackets(
-                $event,
-                false, 
-                $existingJoint,
-            );
 
-            return view('Public.ViewEvent', [
-                    ...$viewData,
-                    'livePreview' => $request->query('live') === 'true' ? 1 : 0,
-                    ...$bracketData,
-                ]
-            );
+            $viewData = $this->eventMatchService->getEventViewData($event, $user, $existingJoint);
+
+            $bracketData = $this->eventMatchService->generateBrackets($event, false, $existingJoint);
+
+            return view('Public.ViewEvent', [...$viewData, 'livePreview' => $request->query('live') === 'true' ? 1 : 0, ...$bracketData]);
         } catch (Exception $e) {
             Log::error($e);
             return $this->showErrorParticipant($e->getMessage());
@@ -218,29 +183,27 @@ class OrganizerEventController extends Controller
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
             try {
-               
             } catch (Exception $e) {
                 throw new Exception('Failed to create signup tables: ' . $e->getMessage());
             }
-            
+
             try {
                 CreateUpdateEventTask::dispatch($eventDetail);
             } catch (Exception $e) {
                 throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
             }
 
-
             DB::commit();
             if ($request->livePreview === 'true') {
-                return redirect('organizer/event/'.$eventDetail->id.'?live=true');
+                return redirect('organizer/event/' . $eventDetail->id . '?live=true');
             }
 
             if ($request->goToCheckoutPage === 'yes') {
-                return redirect('organizer/event/'.$eventDetail->id.'/checkout');
+                return redirect('organizer/event/' . $eventDetail->id . '/checkout');
             }
-            
-            return redirect('organizer/event/'.$eventDetail->id.'/success');
-        } catch (TimeGreaterException|EventChangeException $e) {
+
+            return redirect('organizer/event/' . $eventDetail->id . '/success');
+        } catch (TimeGreaterException | EventChangeException $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
@@ -254,7 +217,7 @@ class OrganizerEventController extends Controller
         try {
             $user = $request->get('user');
             $userId = $user->id;
-            $event = EventDetail::findEventWithRelationsAndThrowError($userId,$id);
+            $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id);
 
             $status = $event->statusResolved();
 
@@ -276,7 +239,7 @@ class OrganizerEventController extends Controller
                 'eventTypeList' => $eventTypeList,
                 'editMode' => 1,
             ]);
-        } catch (ModelNotFoundException|UnauthorizedException $e) {
+        } catch (ModelNotFoundException | UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event not found for id: {$id}");
@@ -290,43 +253,39 @@ class OrganizerEventController extends Controller
             $user = $request->get('user');
             $userId = $user->id;
 
-            $eventDetail = EventDetail::findEventWithRelationsAndThrowError(
-                $userId,
-                $id,
-                null,
-                ['type', 'tier', 'game', 'matches', 'deadlines']
-            );            
-            
+            $eventDetail = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null, ['type', 'tier', 'game', 'matches', 'deadlines']);
+
             DB::beginTransaction();
 
             if ($eventId) {
                 [$eventDetail, $isTimeSame] = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
-                if (!$isTimeSame) dispatch(new HandleEventUpdate($eventDetail));
+                if (!$isTimeSame) {
+                    dispatch(new HandleEventUpdate($eventDetail));
+                }
                 try {
                     CreateUpdateEventTask::dispatch($eventDetail);
                 } catch (Exception $e) {
                     throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
                 }
 
-                
                 DB::commit();
                 if ($request->livePreview === 'true') {
-                    return redirect('organizer/event/'.$eventId.'/live');
+                    return redirect('organizer/event/' . $eventId . '/live');
                 }
                 if ($request->goToCheckoutPage === 'yes') {
-                    return redirect('organizer/event/'.$eventId.'/checkout');
+                    return redirect('organizer/event/' . $eventId . '/checkout');
                 }
-                return redirect('organizer/event/'.$eventId.'/success');
+                return redirect('organizer/event/' . $eventId . '/success');
             }
             return $this->showErrorOrganizer("Event not found for id: {$id}");
-        } catch (TimeGreaterException|EventChangeException $e) {
+        } catch (TimeGreaterException | EventChangeException $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', $e->getMessage(). ' ' . $e->getTraceAsString() );
+            return back()->with('error', $e->getMessage() . ' ' . $e->getTraceAsString());
         }
     }
 
@@ -342,30 +301,25 @@ class OrganizerEventController extends Controller
         try {
             $user = $request->attributes->get('user');
 
-            $event = EventDetail::where('id', $id)
-                ->with('user')
-                ->firstOrFail(); 
+            $event = EventDetail::where('id', $id)->with('user')->firstOrFail();
 
             $joinList = JoinEvent::where('event_details_id', $id)
                 ->whereNot('join_status', 'canceled')
-                ->with(['roster', 'roster.user',
-                    'eventDetails.user:id,name,userBanner',
-                    'eventDetails.tier:id,eventTier',
-                    'team:id,teamName,teamBanner'
-                ])
+                ->with(['roster', 'roster.user', 'eventDetails.user:id,name,userBanner', 'eventDetails.tier:id,eventTier', 'team:id,teamName,teamBanner'])
                 ->get();
-
 
             $joinList->each(function (JoinEvent $join) use ($event, $user) {
                 $discountsByUserAndType = $this->paymentService->refundPaymentsForEvents($join->id, 0);
-                dispatch(new HandleEventJoinConfirm('OrgCancel', [
-                    'selectTeam' => $join->team,
-                    'user' => $user,
-                    'event' => $event,
-                    'discount' => $discountsByUserAndType,
-                    'join_id' => $join->id,
-                    'joinEvent' => $join
-                ]));
+                dispatch(
+                    new HandleEventJoinConfirm('OrgCancel', [
+                        'selectTeam' => $join->team,
+                        'user' => $user,
+                        'event' => $event,
+                        'discount' => $discountsByUserAndType,
+                        'join_id' => $join->id,
+                        'joinEvent' => $join,
+                    ]),
+                );
             });
 
             return response()->json([
@@ -387,6 +341,5 @@ class OrganizerEventController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
-
     }
-};
+}

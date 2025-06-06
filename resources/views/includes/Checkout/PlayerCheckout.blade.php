@@ -3,7 +3,7 @@
         aria-labelledby="#discountModal" aria-hidden="true">
         <div class="modal-dialog">
             <form 
-                action="{{route('participant.discountCheckout.action')}}"
+                action="{{route('participant.walletCheckout.action')}}"
                 method="POST"
                 onsubmit="handleSubmit(event);"
                 id="discountPaymentForm"
@@ -90,11 +90,12 @@
                                 @if ($discountStatusEnums['ABSENT'] == $discountStatus) 
                                     You have no discount to apply.
                                 @elseif ($discountStatusEnums['INVALID'] == $discountStatus)
-                                        You have RM {{$user_wallet->usable_balance}} of discounts to apply towards this event.
+                                        You have RM {{$user_wallet->current_balance}} net balance and RM {{$user_wallet->usable_balance}} usable balance in your wallet to apply towards this event.
                                         But this is not enough for the next transaction.
                                 @else
                                     <span> 
-                                        You have RM {{$user_wallet->usable_balance}} of discounts to apply towards this event.
+                                        
+                                        You can apply RM {{$user_wallet->usable_balance}} from your wallet to pay towards this event
                                     </span>
                                     <a 
                                          data-bs-toggle="modal"

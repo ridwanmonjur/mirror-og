@@ -21,16 +21,13 @@ use Illuminate\Support\Facades\Validator;
 
 class BetaController extends Controller
 {
-
     public function interestedAction(EmailValidationRequest $request): JsonResponse
     {
         try {
             $email = $request->validated()['email'];
             $isResend = $request->boolean('isResend');
 
-            $user = DB::table(table: 'interested_user')
-                ->where('email', $email)
-                ->first();
+            $user = DB::table(table: 'interested_user')->where('email', $email)->first();
 
             if (!$user) {
                 $token = generateToken();
@@ -46,7 +43,7 @@ class BetaController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => "A new verification email has been sent to your inbox",
+                    'message' => 'A new verification email has been sent to your inbox',
                 ]);
             } else {
                 $isVerifiedUser = $user?->email_verified_at !== null;
@@ -55,7 +52,7 @@ class BetaController extends Controller
                     return response()->json(
                         [
                             'success' => false,
-                            'error' => 'duplicate_verified', 
+                            'error' => 'duplicate_verified',
                             'message' => 'This email is already in use',
                         ],
                         422,
@@ -76,7 +73,7 @@ class BetaController extends Controller
 
                         return response()->json([
                             'success' => true,
-                            'message' => "A new verification email has been resent to your inbox",
+                            'message' => 'A new verification email has been resent to your inbox',
                         ]);
                     } catch (Exception $e) {
                         return response()->json(
@@ -99,11 +96,14 @@ class BetaController extends Controller
                 }
             }
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => 'server_error',
-                'message' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'error' => 'server_error',
+                    'message' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -120,9 +120,7 @@ class BetaController extends Controller
         }
 
         if ($user->email_verified_at !== null) {
-            return view('Public.Verify')
-                ->with('success', 'verified_already')
-                ->with('email', $user->email);
+            return view('Public.Verify')->with('success', 'verified_already')->with('email', $user->email);
         }
 
         DB::query()
@@ -132,34 +130,29 @@ class BetaController extends Controller
                 'email_verified_at' => now(),
             ]);
 
-        return view('Public.Verify')
-            ->with('success', 'verified_now')
-            ->with('email', $user->email);
+        return view('Public.Verify')->with('success', 'verified_now')->with('email', $user->email);
     }
 
-    public function viewOnboardBeta (Request $request) {
-        $users = DB::table('interested_user')
-            ->orderBy('id', 'desc')
-            ->simplePaginate(50); 
+    public function viewOnboardBeta(Request $request)
+    {
+        $users = DB::table('interested_user')->orderBy('id', 'desc')->simplePaginate(50);
 
         return view('admin.SendBetaUser', compact('users'));
     }
 
-    public function postOnboardBeta (Request $request) {
+    public function postOnboardBeta(Request $request)
+    {
         try {
-            $interestedUsers = DB::table('interested_user')
-                ->whereIn('id', $request->idList)
-                ->get();
-            
+            $interestedUsers = DB::table('interested_user')->whereIn('id', $request->idList)->get();
+
             $interestedUserEmail = [];
 
             foreach ($interestedUsers as $interestedUser) {
                 $interestedUserEmail[] = $interestedUser->email;
             }
 
-            $existingUsers = User::whereIn('email', $interestedUserEmail)
-                ->get();
-            
+            $existingUsers = User::whereIn('email', $interestedUserEmail)->get();
+
             foreach ($existingUsers as $user) {
                 $password = generateToken(8);
 
@@ -167,18 +160,17 @@ class BetaController extends Controller
                     ->where('email', $interestedUser->email)
                     ->update([
                         'pass_text' => $password,
-                        'email_verified_at' => now()
+                        'email_verified_at' => now(),
                     ]);
-                
+
                 $user->password = Hash::make($password);
                 $user->save();
 
                 Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
             }
-            
+
             $existingUsersEmail = $existingUsers->pluck('email')->toArray();
             $newEmail = array_diff($interestedUserEmail, $existingUsersEmail);
-
 
             foreach ($newEmail as $email) {
                 $username = explode('@', $email)[0];
@@ -187,10 +179,9 @@ class BetaController extends Controller
                 DB::table('interested_user')
                     ->where('email', $email)
                     ->update([
-                            'pass_text' => $password,
-                            'email_verified_at' => now()
-                        ]
-                    );
+                        'pass_text' => $password,
+                        'email_verified_at' => now(),
+                    ]);
 
                 $user = new User([
                     'email' => $email,
@@ -198,26 +189,23 @@ class BetaController extends Controller
                     'name' => generateToken(2) . $username . generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
-                    'email_verified_at' => now()
+                    'email_verified_at' => now(),
                 ]);
 
                 $user->save();
                 $participant = new Participant([
                     'user_id' => $user->id,
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
 
                 $participant->save();
                 Mail::to($user)->queue(new SendBetaWelcomeMail($user, $password));
             }
 
-
-            return back()->with('success', "Created or updated users");
-          
+            return back()->with('success', 'Created or updated users');
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
-
         }
     }
 }

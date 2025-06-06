@@ -49,12 +49,11 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
-Route::get('/seed/{type}/type', [MiscController::class, 'seedBrackets']);
-Route::get('/seed/{id}/brackets', [FirebaseController::class, 'seedMatches']);
-Route::get('/seed/{id}/start', [MiscController::class, 'seedStart']);
-Route::get('/seed/{id}/end', [MiscController::class, 'seedEnd']);
-Route::get('/seed/{id}/org', [MiscController::class, 'seedOrg']);
-Route::get('/seed/{id}/event/{type?}', [MiscController::class, 'seedEvent']);
+Route::get('/seed/event/{tier}', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
+Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
+Route::get('/deadlineTasks/{id}/{taskType}', [MiscController::class, 'deadlineTasks']);
+Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respondTasks']);
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
@@ -167,7 +166,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
             Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action')
                 ->middleware('prevent-back-history');
-            Route::post('/event/discountCheckout', action: [ParticipantCheckoutController::class, 'discountCheckout'])->name('participant.discountCheckout.action');
+            Route::post('/event/walletCheckout', action: [ParticipantCheckoutController::class, 'walletCheckout'])->name('participant.walletCheckout.action');
 
             Route::post('/event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 
