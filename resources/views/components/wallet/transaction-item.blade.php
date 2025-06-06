@@ -22,7 +22,6 @@
             'text-danger': transaction.changeAmount < 0 
         }">
         <span v-text="'RM '"></span>
-        <span v-if="transaction.changeAmount > 0">+</span>
         <span v-text="transaction.changeAmount"></span>
     </td>
 

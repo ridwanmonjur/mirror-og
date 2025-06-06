@@ -35,13 +35,13 @@ function TransactionComponent() {
             
             const sortedTransactions = [...transactions];
             
-            let runningBalance = Number(wallet.current_balance);
+            let runningBalance = parseFloat(wallet.current_balance);
             
             for (let i = 0; i <= sortedTransactions.length - 1; i++) {
                 const transaction = sortedTransactions[i];
-                const changeAmount = !transaction.isPositive ? transaction.amount : -1 * transaction.amount;
+                const changeAmount = transaction.isPositive ? transaction.amount : -1 * transaction.amount;
                 
-                runningBalance += changeAmount;
+                runningBalance += parseFloat(changeAmount);
                 transaction.runningBalance = runningBalance;
                 transaction.changeAmount = changeAmount;
             }
