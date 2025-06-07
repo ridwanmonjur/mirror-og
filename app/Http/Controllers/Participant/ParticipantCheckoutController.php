@@ -214,7 +214,7 @@ class ParticipantCheckoutController extends Controller
                         ->first();
 
                     $regStatus = $event->getRegistrationStatus();
-                    $total = $regStatus == config('constants.SIGNUP_STATUS.EARLY') ? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
+                    $total = $regStatus == config('constants.SIGNUP_STATUS.EARLY') ? (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
 
                     $history = null;
                     $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');

@@ -8,6 +8,8 @@
         $willShowStartsInCountDown = $status === 'UPCOMING';
         $isEnded = $status === 'ENDED';
         extract($event->startDatesReadable($willShowStartsInCountDown));
+        $regStatus = $event->getRegistrationStatus();
+        $entryFee = $regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $event->tier?->earlyEntryFee : $event->tier?->tierEntryFee;
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
         style="background-color: rgba(255, 255, 255, 0.7);"
@@ -119,7 +121,7 @@
                     </svg>
                     &nbsp;
                     @if ($event->tier)
-                        <span>RM {{ $event->tier?->tierEntryFee ?? 'Free' }} </span>
+                        <span>RM {{ $entryFee ?? 'Free' }} </span>
                     @else
                         <span>Entry fee not available</span>
                     @endif

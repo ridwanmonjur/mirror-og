@@ -65,7 +65,7 @@ class OrganizerEventController extends Controller
         $organizer = Organizer::where('user_id', $userId)->first();
         $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
         $eventList = $eventListQuery
-            ->with(['tier', 'type', 'game', 'user'])
+            ->with(['tier', 'type', 'game', 'user', 'signup'])
             ->where('user_id', $user->id)
             ->withCount([
                 'joinEvents' => function ($q) {

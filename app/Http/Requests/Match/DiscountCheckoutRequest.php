@@ -65,7 +65,7 @@ class DiscountCheckoutRequest extends FormRequest
             $this->event = $event;
 
 
-            $total = $status == config('constants.SIGNUP_STATUS.EARLY')? (float) (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
+            $total = $status == config('constants.SIGNUP_STATUS.EARLY')? (float)  $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
             $this->total = $total;
             $participantPaymentSum = DB::table('participant_payments')
                 ->where('join_events_id', $this->joinEventId)
