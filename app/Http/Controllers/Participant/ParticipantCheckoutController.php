@@ -106,7 +106,7 @@ class ParticipantCheckoutController extends Controller
 
             if ($isNormalReg) {
                 $transaction = new TransactionHistory([
-                    'name' => "Entry Fee Hold: RM {$event->eventName}",
+                    'name' => "{$event->eventName}",
                     'type' => 'Event Entry Fee Hold',
                     'link' => route('public.event.view', ['id' => $event->id]),
                     'amount' => $request->discount_applied_amount,
@@ -119,7 +119,7 @@ class ParticipantCheckoutController extends Controller
                 $transaction->save();
             } else {
                 $transaction = new TransactionHistory([
-                    'name' => "Entry Fee: RM {$event->eventName}",
+                    'name' => "{$event->eventName}",
                     'type' => 'Event Entry Fee',
                     'link' => route('public.event.view', ['id' => $event->id]),
                     'amount' => $request->discount_applied_amount,
@@ -221,7 +221,7 @@ class ParticipantCheckoutController extends Controller
 
                     if ($isNormalReg) {
                         $history = new TransactionHistory([
-                            'name' => "Top up for event: {$event->eventName}",
+                            'name' => "{$event->eventName}",
                             'type' => "Top up: RM {$paymentDone}",
                             'link' => null,
                             'amount' => $paymentDone,
@@ -232,7 +232,7 @@ class ParticipantCheckoutController extends Controller
                         ]);
                     } else {
                         $history = new TransactionHistory([
-                            'name' => "Payment for {$event->eventName}",
+                            'name' => "{$event->eventName}",
                             'type' => "Top up for Event: RM $paymentDone",
                             'link' => route('public.event.view', ['id' => $event->id]),
                             'amount' => $paymentDone,

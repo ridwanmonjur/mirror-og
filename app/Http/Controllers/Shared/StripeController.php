@@ -9,8 +9,6 @@ use App\Http\Requests\User\RedeemCouponRequest;
 use App\Http\Requests\User\SavePaymentMethodRequest;
 use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
-use App\Http\Requests\WithdrawalRequest;
-use App\Http\Requests\WithdrawalRequest\WithdrawalRequest as WithdrawalRequestWithdrawalRequest;
 use App\Http\Resources\TransactionHistoryResource;
 use App\Models\ParticipantCoupon;
 use App\Models\PaymentIntent;
@@ -287,7 +285,7 @@ public function showPaymentMethodForm(Request $request)
             ]);
 
             TransactionHistory::create([
-                'name' => "Withdrawal request: RM {$withdrawalAmount}",
+                'name' => "Wallet Funds Withdrawal: RM {$withdrawalAmount}",
                 'type' => "Withdrawal request",
                 'link' => null,
                 'amount' => $withdrawalAmount,
@@ -399,9 +397,9 @@ public function showPaymentMethodForm(Request $request)
 
     public function redeemCoupon(RedeemCouponRequest $request)
     {
+        DB::beginTransaction();
         try {
             $user = $request->get('user');
-            $code = $request->coupon_code;
             $coupon = $request->getCoupon();
             $wallet = Wallet::retrieveOrCreateCache($user->id);
             $newBalance = $wallet->usable_balance + $coupon->amount;
@@ -420,6 +418,17 @@ public function showPaymentMethodForm(Request $request)
                     'redeemed_at' => now()
                 ]
             );
+
+            TransactionHistory::create([
+                'name' => "Wallet Coupon Registration: RM {$coupon->amount}",
+                'type' => "Coupon Registration",
+                'link' => null,
+                'amount' => $coupon->amount,
+                'summary' => "Coupon  {$coupon->code}",
+                'date' => now(),
+                'user_id' => $user->id
+            ]);
+            DB::commit();
     
             return response()->json([
                 'success' => true,
@@ -427,6 +436,7 @@ public function showPaymentMethodForm(Request $request)
             ], 200);
     
         } catch (Exception $e) {
+            DB::rollback();
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while redeeming the coupon. Please try again later.'
