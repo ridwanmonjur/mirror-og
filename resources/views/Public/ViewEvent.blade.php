@@ -83,7 +83,7 @@
             "offers": {
                 "@type": "Offer",
                 "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
-                "priceCurrency": "MYR",
+                "priceCurrency": "RM",
                 "availability": "https://schema.org/InStock",
                 "validFrom": "{{ now()->toIso8601String() }}"
             },
@@ -472,7 +472,7 @@
             "offers": {
                 "@type": "Offer",
                 "price": "{{ $event->tier?->tierEntryFee ?? '0' }}",
-                "priceCurrency": "MYR",
+                "priceCurrency": "RM",
                 "availability": "https://schema.org/InStock",
                 "validFrom": "{{ now()->toIso8601String() }}"
             },

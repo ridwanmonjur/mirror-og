@@ -368,8 +368,8 @@ public function showPaymentMethodForm(Request $request)
                     ]);
 
                     TransactionHistory::create([
-                        'name' => "Topup balance: RM {$amount}",
-                        'type' => "Topup wallet",
+                        'name' => "Wallet Fund Purchase: RM {$amount}",
+                        'type' => "Funds Purchase",
                         'link' => null,
                         'amount' => $amount,
                         'summary' => "{$cardBrand} **** {$cardLast4}",
