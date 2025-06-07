@@ -49,6 +49,7 @@ class OrganizerCheckoutController extends Controller
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
                 'customer' => $user->stripe_customer_id,
             ]);
+            
             [$fee, $isEventCreateCouponApplied, $error] = array_values(EventCreateCoupon::createEventCreateCouponFeeObject($request->coupon, $event->tier?->tierPrizePool));
 
             if ($isEventCreateCouponApplied) {

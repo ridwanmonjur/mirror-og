@@ -58,7 +58,7 @@ class StripeConnection
         return $this->stripeClient->paymentIntents->create([
             ...$array,
             'currency' => 'myr',
-            'setup_future_usage' => 'off_session',
+            // 'setup_future_usage' => 'off_session',
         ]);
     }
 
