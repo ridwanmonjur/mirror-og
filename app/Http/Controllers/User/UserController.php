@@ -149,6 +149,9 @@ class UserController extends Controller
         $user = $request->attributes->get('user');
         $wallet = Wallet::retrieveOrCreateCache($user->id);
         $user->is_null_password = empty($user->password);
+        $isShowFirstInnerAccordion = $request->has('methods_limit');
+        $isShowSecondInnerAccordion = $request->has('history_limit');
+        $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = $request->input('history_limit', 10); // 100
 
@@ -181,7 +184,11 @@ class UserController extends Controller
         }
 
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
-        return view('Users.Settings', compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction', 'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet'));
+        return view('Users.Settings', compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction', 
+                'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet',
+                'isShowFirstInnerAccordion', 'isShowSecondInnerAccordion', 'isShowNextAccordion'
+            )
+        );
     }
 
     /**
