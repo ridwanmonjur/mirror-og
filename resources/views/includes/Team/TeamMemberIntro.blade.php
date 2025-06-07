@@ -18,7 +18,7 @@
                 class="cursor-pointer"
             >{{ $member->user->name }}</u></h6>
              <span class="fs-5 ms-2 ">
-                {{ $member?->user?->participant?->region_flag  }}
+                {{ $member?->user?->participant?->region_flag ?? ''  }}
             </span>
         </div>
         <div>

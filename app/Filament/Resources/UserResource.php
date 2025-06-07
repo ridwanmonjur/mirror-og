@@ -182,7 +182,7 @@ class UserResource extends Resource
                                             ->afterStateUpdated(function ($state, callable $set) {
                                                 if ($state) {
                                                     $country = Country::find($state);
-                                                    if ($country) {
+                                                    if ($country && $country->flag) {
                                                         $set('region_name', $country->name);
                                                         $set('region_flag', $country->flag);
                                                     } else {

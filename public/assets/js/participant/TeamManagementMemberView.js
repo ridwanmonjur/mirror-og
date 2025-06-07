@@ -332,7 +332,7 @@ async function fetchMembers(event = null) {
                                     >
                                 </span>
                                 ${member?.user?.name}
-                                <span class="fs-4 ms-3">${member?.user?.participant?.region_flag }</span>
+                                <span class="fs-4 ms-3">${member?.user?.participant?.region_flag ?? '' }</span>
                             </h6>
                             <td class="text-secondary">${window.formatDateLuxon(member.created_at)}</td>
                             </div>

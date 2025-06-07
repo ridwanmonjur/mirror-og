@@ -483,12 +483,14 @@ class EventDetail extends Model implements Feedable
 {
     $startTime = $this->fixTimeToRemoveSeconds($startTime);
     if ($startDate !== null && $startTime !== null) {
-        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC') ?? null;
-        $datePart = $carbonDateTimeUtc->format('d M y');
-        $timePart = $carbonDateTimeUtc->format('g:i A');
-        $dayStr = $carbonDateTimeUtc->englishDayOfWeek;
+        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC');
+        $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
+        $datePart = $carbonDateTimeMalaysia->format('d M y');
+        $timePart = $carbonDateTimeMalaysia->format('g:i A');
+        $dayStr = $carbonDateTimeMalaysia->englishDayOfWeek;
         $dateStr = $datePart.' '.$timePart;
         $combinedStr = $datePart.' ('.$dayStr.')';
+        
     } else {
         $datePart = 'Date is not set';
         $timePart = 'Time is not set';
@@ -509,7 +511,8 @@ class EventDetail extends Model implements Feedable
 
     function startDatesReadable(bool $willShowCountDown = false): array
     {
-        $now = new DateTime('now', new DateTimeZone('UTC'));
+        // Use Malaysia timezone for current time
+        $now = new DateTime('now', new DateTimeZone('Asia/Kuala_Lumpur'));
         $startsIn = null;
         $formattedDate = 'No date';
         $formattedTime = 'No time';
@@ -519,19 +522,21 @@ class EventDetail extends Model implements Feedable
             $startTime = $this->fixTimeToRemoveSeconds($this->startTime);
             $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $this->startDate.' '.$startTime, 'UTC') ?? null;
             if ($carbonDateTimeUtc) {
-                $formattedDate = $carbonDateTimeUtc->format('d M y');
-                $formattedTime = $carbonDateTimeUtc->format('g:i A');
+                $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
+                $formattedDate = $carbonDateTimeMalaysia->format('d M y');
+                $formattedTime = $carbonDateTimeMalaysia->format('g:i A');
                 
                 if ($willShowCountDown) {
-                    $diff = $now->diff($carbonDateTimeUtc);
-                    if ($diff->days > 0 ) {
+                    $nowCarbon = Carbon::now('Asia/Kuala_Lumpur');
+                    $diff = $nowCarbon->diff($carbonDateTimeMalaysia);
+                    if ($diff->days > 0) {
                         $startsIn = $diff->days . 'd ';
                     }
                     $startsIn .= $diff->h . 'h';
                 } 
             } 
-        } 
-
+        }
+        
         return [
             'fmtStartDt' => $formattedDate,
             'fmtStartT' => $formattedTime,
@@ -539,16 +544,7 @@ class EventDetail extends Model implements Feedable
         ];
     }
 
-    public function getRegistrationState(string| null $date, string| null $time): ?string
-    {
-        if ($date === null || $time === null) {
-            return null;
-        }
-
-        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))
-            ->utc();
-    }
-
+ 
     public static function generateOrganizerPartialQueryForFilter(Request $request)
     {
         $eventListQuery = self::query();
