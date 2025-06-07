@@ -31,7 +31,13 @@
 }
 
 .custom-scrollbar2::-webkit-scrollbar-button:hover {
-    background-color: transparent; /* Hover effect for arrows */
+    border-radius: 50%;
+    background-color: #43A4D7;
+}
+
+.custom-scrollbar2::-webkit-scrollbar-button:active {
+    border-radius: 50%;
+    background-color: white;
 }
 
 /* Horizontal scrollbar buttons */
@@ -516,7 +522,7 @@ input[type="time"] {
     display: inline-block;
     transition: opacity 0.3s, transform 0.3s;
     text-align: center;
-    height: 280px;
+    height: 275px;
     margin: 0 10px ;
 }
 

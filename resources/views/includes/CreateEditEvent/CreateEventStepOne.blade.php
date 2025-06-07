@@ -8,7 +8,10 @@
         </h3>
         <p >First, select an esport title</p>
         <div class="mx-auto custom-scrollbar2 box-width3  py-0" style="overflow-x: auto;">
-            <div class="d-flex justify-content-center  justify-content-lg-start py-1 px-0 mx-0 flex-wrap my-0 flex-lg-nowrap" style="gap: 0;">
+            <div @class(["d-flex justify-content-center   py-1 px-0 mx-0 flex-wrap my-0 flex-lg-nowrap", 
+                isset($eventCategory[5]) ? " justify-content-lg-start" : ''
+            
+            ]) style="gap: 0;">
                 @foreach ($eventCategory as $category)
                     @if ($category->gameIcon)
                         <div 
@@ -28,12 +31,11 @@
                                     alt="{{ $category->gameTitle }}" 
                                 >
                             </a>
-                            <small class="py-0 d-inline-block text-truncate scroll-images-text">{{ $category->gameTitle }}</small>
                         </div>
                     @endif
                 @endforeach
             
-                <div class=" scroll-images game-events" style=" cursor: not-allowed;">
+                <div class=" scroll-images game-events" style=" pointer-events: none !important;">
                     <a href="javascript:void(0)"  > 
                         <img 
                             class="border border-dark selectable-image" 
@@ -41,7 +43,6 @@
                             alt="More titles to come" 
                                                   >
                     </a>
-                    <small  class="py-0 d-inline-block text-truncate scroll-images-text">and more...</small>
                 </div>
             </div>
 
