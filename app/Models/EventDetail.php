@@ -632,7 +632,7 @@ class EventDetail extends Model implements Feedable
 
             return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventTags', 'LIKE', "%{$search}%");
         })
-        ->with(['tier', 'type', 'game'])
+        ->with(['tier', 'type', 'game', 'signup'])
         ->with(['user' => function($q) {
             $q->select('id', 'name')
               ->with(['organizer' => function ($innerQ) {
