@@ -21,7 +21,7 @@ class AuthService {
             'email' => $validatedData['email'],
             'password' => $validatedData['password'],
             'role' => $roleCapital,
-            'created_at' => now(),
+            'created_at' => DB::raw('NOW()'),
         ]);
 
         $token = generateToken();
@@ -112,7 +112,7 @@ class AuthService {
                 $finduser->steam_id = $user->id;
             }
 
-            $finduser->email_verified_at = now();
+            $finduser->email_verified_at = now()->utc();
             Auth::login($finduser);
             $finduser->save();
 
@@ -127,7 +127,7 @@ class AuthService {
                 'email' => $user->email,
                 'password' => Str::random(13),
                 'role' => strtoupper($role),
-                'created_at' => now(),
+                'created_at' => DB::raw('NOW()'),
             ]);
 
             NotificationCounter::create(['user_id' => $newUser->id]);
@@ -146,7 +146,7 @@ class AuthService {
                 $participant->save();
             }
 
-            $newUser->email_verified_at = now();
+            $newUser->email_verified_at = now()->utc();
 
             if ($type === 'google') {
                 $newUser->google_id = $user->id;

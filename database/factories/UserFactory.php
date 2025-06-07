@@ -45,13 +45,13 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'email_verified_at' => DB::raw('NOW()'),
             'password' => bcrypt('123456'), // password
             'remember_token' => Str::random(60),
             'role' => 'PARTICIPANT', // Default role
             'status' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => DB::raw('NOW()'),
+            'updated_at' => DB::raw('NOW()'),
         ];
     }
 
@@ -71,7 +71,7 @@ class UserFactory extends Factory
                     'age' => $this->faker->numberBetween(13, 60),
                     'isAgeVisible' => 1,
                     'created_at' => $user->created_at,
-                    'updated_at' => now(),
+                    'updated_at' => DB::raw('NOW()'),
                 ]);
             } elseif ($user->role === 'ORGANIZER') {
                 Organizer::create([
@@ -79,7 +79,7 @@ class UserFactory extends Factory
                     'companyName' => $this->faker->company(),
                     'companyDescription' => $this->faker->paragraph(),
                     'created_at' => $user->created_at,
-                    'updated_at' => now(),
+                    'updated_at' => DB::raw('NOW()'),
                 ]);
             }
 
@@ -89,8 +89,8 @@ class UserFactory extends Factory
                 'social_count' => 0,
                 'teams_count' => 0,
                 'event_count' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => DB::raw('NOW()'),
+                'updated_at' => DB::raw('NOW()'),
             ]);
         });
     }
@@ -151,7 +151,7 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'google_id' => $this->faker->numerify('####################'),
-                'email_verified_at' => now(),
+                'email_verified_at' => DB::raw('NOW()'),
             ];
         });
     }
@@ -197,7 +197,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'userBanner' => 'images/user/userBanner-' . now()->timestamp . '.jpg',
+                'userBanner' => 'images/user/userBanner-' . now()->utc()->timestamp . '.jpg',
             ];
         });
     }
@@ -213,7 +213,7 @@ class UserFactory extends Factory
             return [
                 'email_verified_at' => null,
                 'email_verified_token' => Str::random(60),
-                'email_verified_expires_at' => now()->addDays(1),
+                'email_verified_expires_at' => now()->utc()->addDays(1),
             ];
         });
     }

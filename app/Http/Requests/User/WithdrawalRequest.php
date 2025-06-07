@@ -76,7 +76,7 @@ class WithdrawalRequest extends FormRequest
                 response()->json([
                     'success' => false,
                     'error' => 'BANK_ACCOUNT_REQUIRED',
-                    'message' => 'You must link a bank account before making a withdrawal.',
+                    'message' => 'You must have a linked bank account to request a withdrawal of your funds.',
                     'link' => route('wallet.payment-method'),
                     'action_required' => true
                 ], 422)

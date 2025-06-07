@@ -142,6 +142,7 @@
             "php artisan view:cache",
             "php artisan event:cache",
             "php artisan optimize",
+            "rm -rf node_modules",
             "composer dump-autoload -o --classmap-authoritative"
 
         ],

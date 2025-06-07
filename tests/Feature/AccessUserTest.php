@@ -24,7 +24,7 @@ class AccessUserTest extends TestCase
             'email' => 'organizer@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'ORGANIZER',
-            'email_verified_at' => now(),
+            'email_verified_at' => DB::raw('NOW()'),
         ]);
 
         $response = $this->postJson('/organizer/signin', [
@@ -77,7 +77,7 @@ class AccessUserTest extends TestCase
             'email' => 'participant@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'PARTICIPANT',
-            'email_verified_at' => now(),
+            'email_verified_at' => DB::raw('NOW()'),
         ]);
 
         $response = $this->postJson('/participant/signin', [
@@ -120,7 +120,7 @@ class AccessUserTest extends TestCase
             'email' => 'test@driftwood.gg',
             'password' => bcrypt('correctpassword'),
             'role' => 'ORGANIZER',
-            'email_verified_at' => now(),
+            'email_verified_at' => DB::raw('NOW()'),
         ]);
 
         $response = $this->postJson('/organizer/signin', [
@@ -141,7 +141,7 @@ class AccessUserTest extends TestCase
             'email' => 'participant2@driftwood.gg',
             'password' => bcrypt('password123'),
             'role' => 'PARTICIPANT',
-            'email_verified_at' => now(),
+            'email_verified_at' => DB::raw('NOW()'),
         ]);
 
         $response = $this->postJson('/organizer/signin', [

@@ -125,7 +125,7 @@
         <p>
             Server: {{ config('app.name', 'Laravel Application') }}<br>
             Environment: {{ config('app.env', 'production') }}<br>
-            Generated: {{ now()->format('Y-m-d H:i:s T') }}
+            Generated: {{ now()->utc()->format('Y-m-d H:i:s T') }}
         </p>
         
         <p style="margin-top: 15px;">

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class RecordStripe extends Model
 {
@@ -23,7 +24,7 @@ class RecordStripe extends Model
             'payment_id' => $paymentId,
             'payment_status' => $paymentStatus,
             'payment_amount' => $paymentAmount,
-            'created_at' => now()
+            'created_at' => DB::raw('NOW()')
         ]);
     }
 

@@ -53,7 +53,7 @@ class RedeemCouponRequest extends FormRequest
             return;
         }
 
-        if ($coupon->expires_at && $coupon->expires_at < now()) {
+        if ($coupon->expires_at && $coupon->expires_at < now()->utc()) {
             $fail('This coupon has expired.');
             return;
         }
