@@ -73,7 +73,7 @@ Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respo
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
 
 // Search bar
-Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
+Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view')->middleware('prevent-back-history');
 Route::get('/event/{id}/{title?}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view')
     ->middleware('prevent-back-history');
 Route::get('/view/team/{id}/{title?}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view')
@@ -90,10 +90,10 @@ Route::feeds();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant'], function () {
-        Route::get('/wallet', [StripeController::class, 'showWalletDashboard'])->name('wallet.dashboard');
-        Route::get('/wallet/payment-method', [StripeController::class, 'showPaymentMethodForm'])->name('wallet.payment-method');
+        Route::get('/wallet', [StripeController::class, 'showWalletDashboard'])->name('wallet.dashboard')->middleware('prevent-back-history');
+        Route::get('/wallet/payment-method', [StripeController::class, 'showPaymentMethodForm'])->name('wallet.payment-method')->middleware('prevent-back-history');
         Route::post('/wallet/payment-method', [StripeController::class, 'savePaymentMethod'])->name('wallet.save-payment-method');
-        Route::get('/wallet/topupCallback', [StripeController::class, 'topupCallback'])->name('wallet.topupCallback');
+        Route::get('/wallet/topupCallback', [StripeController::class, 'topupCallback'])->name('wallet.topupCallback')->middleware('prevent-back-history');
         Route::get('/wallet/transactions', [StripeController::class, 'showTransactions'])->name('wallet.transactions');
 
         Route::post('/wallet/checkout', [StripeController::class, 'checkoutTopup'])->name('wallet.checkout');
@@ -102,10 +102,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'check-permission:participant|organizer'], function () {
         // Notifications page
    
-        Route::view('/user/notifications', 'Users.Notifications')->name('user.notif.view');
+        Route::view('/user/notifications', 'Users.Notifications')->name('user.notif.view')->middleware('prevent-back-history');
         Route::post('/media', [ImageVideoController::class, 'upload']);
-        Route::get('/user/message', [ChatController::class, 'message'])->name('user.message.view');
-        Route::get('/user/settings', [UserController::class, 'settings'])->name('user.settings.view');
+        Route::get('/user/message', [ChatController::class, 'message'])->name('user.message.view')->middleware('prevent-back-history');
+        Route::get('/user/settings', [UserController::class, 'settings'])->name('user.settings.view')->middleware('prevent-back-history');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
 
     });
