@@ -46,10 +46,10 @@ class DeadlineTasks extends Command
 
     public function handle()
     {
-        $now = Carbon::now()->utc();
+        $now = Carbon::now();
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
-            $today = Carbon::today('UTC');
+            $today = Carbon::today();
             $type = (int) $this->argument('type');
             $eventId = $this->option('event_id');
             $tasks = null;
@@ -131,6 +131,7 @@ class DeadlineTasks extends Command
                 }
             }
 
+            $now = Carbon::now();
             $this->logExit($taskId, $now);
         } catch (Exception $e) {
             $this->logError(null, $e);

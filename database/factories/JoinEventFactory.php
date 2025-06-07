@@ -11,7 +11,6 @@ use App\Models\RosterMember;
 use App\Models\StripeConnection;
 use App\Models\TransactionHistory;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @extends Factory<\App\Models\JoinEvent>
@@ -98,8 +97,8 @@ final class JoinEventFactory extends Factory
                     'payment_status' => 'completed', 
                     'join_status' => 'confirmed',    
                     'vote_ongoing' => 0,
-                    'created_at' => DB::raw('NOW()'),
-                    'updated_at' => DB::raw('NOW()'),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
                 
                 $joinEvents[] = $joinEvent;
@@ -132,7 +131,7 @@ final class JoinEventFactory extends Factory
                     $transactionData = [
                         'amount' => $amount,
                         'isPositive' => false,
-                        'date' => DB::raw('NOW()'),
+                        'date' => now(),
                         'user_id' => $teamMember->user_id,
                     ];
 
@@ -216,14 +215,14 @@ final class JoinEventFactory extends Factory
                                 'payment_id' => $stripeIntent['id'],
                                 'payment_status' => $stripeIntent['status'],
                                 'payment_amount' => $amount,
-                                'updated_at' => DB::raw('NOW()')
+                                'updated_at' => now()
                             ]);
                         } else {
                             $recordStripe = RecordStripe::create([
                                 'payment_id' => $stripeIntent['id'],
                                 'payment_status' => $stripeIntent['status'],
                                 'payment_amount' => $amount,
-                                'created_at' => DB::raw('NOW()')
+                                'created_at' => now()
                             ]);
                         }
                         

@@ -146,7 +146,7 @@ trait RespondTaksTrait
                                 'description' => "Refund for {$event->eventName}",
                                 'is_active' => true,
                                 'is_public' => false,
-                                'expires_at' => Carbon::now()->utc()->add(1)
+                                'expires_at' => Carbon::now()->add(1)
                             ]);
 
                             $participantCoupon->save();

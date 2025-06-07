@@ -187,7 +187,7 @@ class EventDetail extends Model implements Feedable
 
     public function createStatusUpdateTask()
     {
-        $now = now()->utc();
+        $now = now();
 
         $status = $this->statusResolved();
         Task::where('taskable_id', $this->getKey())
@@ -297,7 +297,7 @@ class EventDetail extends Model implements Feedable
         $deadlineConfig = $deadlineSetup->deadline_config;
         
         $baseDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
-        $now = now()->utc();
+        $now = now();
         
         $deadlinesToCreate = [];
         $tasksToCreate = [];
@@ -435,7 +435,7 @@ class EventDetail extends Model implements Feedable
             return config('constants.SIGNUP_STATUS.CLOSED');
         }
 
-        $now = Carbon::now()->utc();
+        $now = Carbon::now();
         if ($now->between($signupDates->signup_open, $signupDates->normal_signup_start_advanced_close)) {
             return config('constants.SIGNUP_STATUS.EARLY');
         } elseif ($now->between($signupDates->normal_signup_start_advanced_close, $signupDates->signup_close)) {

@@ -133,11 +133,11 @@ class OrganizerController extends Controller
                 ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->with(['tier', 'game', 'user'])
                 ->get();
-            $lastYearEventsCount = EventDetail::whereYear('created_at', now()->utc()->year)
+            $lastYearEventsCount = EventDetail::whereYear('created_at', now()->year)
                 ->where('user_id', $userProfile->id)
                 ->whereNotIn('status', ['DRAFT', 'PENDING'])
                 ->count();
-            $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->utc()->year - 1)
+            $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
                 ->where('user_id', $userProfile->id)
                 ->whereNotIn('status', ['DRAFT' . 'PENDING'])
                 ->count();

@@ -19,7 +19,6 @@ use App\Models\TransactionHistory;
 use App\Models\UserCoupon;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -170,7 +169,7 @@ public function showPaymentMethodForm(Request $request)
                 'account_holder_name' => $validatedData['account_holder_name'],
                 'bank_last4' => substr($validatedData['account_number'], -4),
                 'has_bank_account' => true,
-                'bank_details_updated_at' => DB::raw('NOW()'),
+                'bank_details_updated_at' => now(),
             ]);
 
         
@@ -279,7 +278,7 @@ public function showPaymentMethodForm(Request $request)
                 'user_id' => $user->id,
                 'withdrawal' => $withdrawalAmount,
                 'status' => Withdrawal::STATUS_PENDING,
-                'requested_at' => DB::raw('NOW()'),
+                'requested_at' => now(),
             ]);
 
             $wallet->update([
@@ -294,7 +293,7 @@ public function showPaymentMethodForm(Request $request)
                 'amount' => $withdrawalAmount,
                 'summary' => "{$wallet->bank_name} **** {$wallet->bank_last4}",
                 'isPositive' => false,
-                'date' => DB::raw('NOW()'),
+                'date' => now(),
                 'user_id' => $user->id
             ]);
 
@@ -320,7 +319,7 @@ public function showPaymentMethodForm(Request $request)
     {
 
         $user = $request->get('user');
-        $today = now()->utc();
+        $today = now();
         $dailyTotal = DB::table('wallet_topups')
             ->where('user_id', $user->id)
             ->whereDate('created_at', $today)
@@ -365,7 +364,7 @@ public function showPaymentMethodForm(Request $request)
                     DB::table('wallet_topups')->insert([
                         'user_id' => $user->id,
                         'amount' => $amount,
-                        'created_at' => DB::raw('NOW()'),
+                        'created_at' => now(),
                     ]);
 
                     TransactionHistory::create([
@@ -374,7 +373,7 @@ public function showPaymentMethodForm(Request $request)
                         'link' => null,
                         'amount' => $amount,
                         'summary' => "{$cardBrand} **** {$cardLast4}",
-                        'date' => DB::raw('NOW()'),
+                        'date' => now(),
                         'user_id' => $user->id
                     ]);
                    
@@ -418,7 +417,7 @@ public function showPaymentMethodForm(Request $request)
                     'coupon_id' => $coupon->id,
                 ],
                 [
-                    'redeemed_at' => DB::raw('NOW()')
+                    'redeemed_at' => now()
                 ]
             );
     

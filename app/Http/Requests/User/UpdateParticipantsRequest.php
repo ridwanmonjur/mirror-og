@@ -27,7 +27,7 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.id' => 'required',
             'participant.bio' => 'nullable|string',
             'participant.age' => 'nullable|numeric',
-            'participant.birthday' => 'nullable|date|before_or_equal:'.now()->utc()->format('Y-m-d'),
+            'participant.birthday' => 'nullable|date|before_or_equal:'.now()->format('Y-m-d'),
             'participant.nickname' => 'required|string|max:255',
             'participant.region' => 'nullable',
             'participant.region_name' => 'nullable',

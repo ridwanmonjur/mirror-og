@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Facades\DB;
 
 class ActivityLogs extends Model
 {
@@ -59,8 +58,8 @@ class ActivityLogs extends Model
                 'object_id' => $parameters['object_id'],
                 'action' => $parameters['action'],
                 'log' => $isLogArray? $parameters['log'][$index] : $parameters['log'],
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
         }
 
@@ -73,11 +72,11 @@ class ActivityLogs extends Model
                 ->where('subject_type', User::class);
     
             if ($duration == 'new') {
-                $activityLogsQuery->whereDate('created_at', operator: Carbon::today()->utc());
+                $activityLogsQuery->whereDate('created_at', operator: Carbon::today());
             } elseif ($duration == 'recent') {
-                $activityLogsQuery->whereBetween('created_at', [Carbon::today()->utc()->subWeek()->startOfWeek(), Carbon::today()->utc()]);
+                $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
             } else {
-                $activityLogsQuery->whereDate('created_at', '<', Carbon::today()->utc()->subWeek()->startOfWeek());
+                $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
             }
     
             $activityLogs = $activityLogsQuery
