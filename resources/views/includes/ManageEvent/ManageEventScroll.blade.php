@@ -17,7 +17,7 @@
         $bladeEventGameImage = bladeImageNullq($event->game ? $event->game?->gameIcon : null);
         
 
-        $willShowStartsInCountDown = $status === 'ONGOING';
+        $willShowStartsInCountDown = $status === 'UPCOMING';
         $isEnded = $status === 'ENDED';
         extract($event->startDatesReadable($willShowStartsInCountDown));
        
