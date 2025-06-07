@@ -20,7 +20,7 @@ class ValidateBracketUpdateRequest extends FormRequest
     public function authorize(): bool
     {
         $user = $this->user();
-        $now = now()->utc();
+        $now = now();
 
         $match = Brackets::where([
             'team1_id' => $this->team1_id,

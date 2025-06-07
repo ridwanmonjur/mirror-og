@@ -92,8 +92,8 @@ class ConfirmStrategy
 
             $allEventLogs[] = [
                 'action' => 'confirm',
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => now(),
+                'updated_at' => now(),
                 'subject_id' => $member->user->id,
                 'subject_type' => User::class,
                 'log' => <<<HTML
@@ -346,7 +346,7 @@ class VoteEndStrategy
             //         'team_id' => $member->team_id,
             //         'vote_to_quit' => $member->vote_to_quit,
             //         'created_at' => $member->created_at,
-            //         'updated_at' => DB::raw('NOW()'),
+            //         'updated_at' => now(),
             //     ];
             // })->toArray();
         

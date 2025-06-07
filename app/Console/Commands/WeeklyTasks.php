@@ -34,18 +34,18 @@ class WeeklyTasks extends Command
      */
     public function handle()
     {
-        $today = Carbon::now()->utc();
+        $today = Carbon::now();
         $id = $this->logEntry($this->description, $this->signature, '0 0 * *', $today);
         try{
-            $weekAgo = Carbon::now()->utc()->subDays(7);
-            $monthAgo = Carbon::now()->utc()->subDays(30);
+            $weekAgo = Carbon::now()->subDays(7);
+            $monthAgo = Carbon::now()->subDays(30);
             DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $weekAgo)->delete();
             DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $weekAgo)->delete();
             NotifcationsUser::where('created_at', '<', $weekAgo)->delete(); 
             Task::where('action_time', '<=', $monthAgo)->delete();
             NotificationCounter::resetNegativeCounts();
             Task::where('created_at', '<', $weekAgo)->delete();
-            $now = Carbon::now()->utc();
+            $now = Carbon::now();
             $this->logExit($id, $now);
         } catch (Exception $e) {
             $this->logError(null, $e);

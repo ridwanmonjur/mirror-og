@@ -112,7 +112,7 @@ class ParticipantCheckoutController extends Controller
                     'amount' => $request->discount_applied_amount,
                     'summary' => "User Wallet RM {$request->discount_applied_amount}",
                     'isPositive' => false,
-                    'date' => DB::raw('NOW()'),
+                    'date' => now(),
                     'user_id' => $user->id,
                 ]);
 
@@ -125,7 +125,7 @@ class ParticipantCheckoutController extends Controller
                     'amount' => $request->discount_applied_amount,
                     'summary' => "{$event->game->gameTitle}, {$event->tier->eventTier}, {$event->type->eventType}",
                     'isPositive' => false,
-                    'date' => DB::raw('NOW()'),
+                    'date' => now(),
                     'user_id' => $user->id,
                 ]);
 
@@ -227,7 +227,7 @@ class ParticipantCheckoutController extends Controller
                             'amount' => $paymentDone,
                             'summary' => "Wallet RM $paymentDone",
                             'isPositive' => false,
-                            'date' => DB::raw('NOW()'),
+                            'date' => now(),
                             'user_id' => $user->id,
                         ]);
                     } else {
@@ -238,7 +238,7 @@ class ParticipantCheckoutController extends Controller
                             'amount' => $paymentDone,
                             'summary' => "{$event->game->gameTitle}, {$event->tier->eventTier}, {$event->type->eventType}",
                             'isPositive' => false,
-                            'date' => DB::raw('NOW()'),
+                            'date' => now(),
                             'user_id' => $user->id,
                         ]);
                     }

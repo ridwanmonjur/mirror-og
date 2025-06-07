@@ -50,13 +50,13 @@ final class TeamMemberFactory extends Factory
                 'email' => "tester$i@driftwood.gg",
             ],[
                 'name' => "TestPlayer$i",
-                'email_verified_at' => DB::raw('NOW()'),
+                'email_verified_at' => now(),
                 'password' => bcrypt('123456'),
                 'remember_token' => \Illuminate\Support\Str::random(10),
                 'role' => 'PARTICIPANT',
                 'status' => null,
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
             
             $participant = Participant::updateOrCreate([
@@ -66,8 +66,8 @@ final class TeamMemberFactory extends Factory
                 'nickname' => "TestPlayer$i",
                 'age' => fake()->numberBetween(13, 60),
                 'isAgeVisible' => 1,
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
             
             NotificationCounter::updateOrCreate([
@@ -77,8 +77,8 @@ final class TeamMemberFactory extends Factory
                 'social_count' => 0,
                 'teams_count' => 0,
                 'event_count' => 0,
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
             
             $participants[] = $user;
@@ -127,8 +127,8 @@ final class TeamMemberFactory extends Factory
                     [
                         'status' => "accepted",
                         'actor' => 'team',
-                        'created_at' => DB::raw('NOW()'),
-                        'updated_at' => DB::raw('NOW()'),
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]
                 );
                 

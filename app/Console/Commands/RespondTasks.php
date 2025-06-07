@@ -50,7 +50,7 @@ class RespondTasks extends Command
      */
     public function handle()
     {
-        $now = Carbon::now()->utc();
+        $now = Carbon::now();
         $type = (int) $this->argument('type');
         $eventId = $this->option('event_id');
         $eventIdInt = 0;
@@ -328,6 +328,7 @@ class RespondTasks extends Command
                 }
             }
 
+            $now = Carbon::now();
             $this->logExit($taskId, $now);
             Cache::clear();
         } catch (Exception $e) {

@@ -85,13 +85,13 @@ final class EventDetailFactory extends Factory
             'email' => "org1@driftwood.gg",
         ],[
             'name' => "Org1",
-            'email_verified_at' => DB::raw('NOW()'),
+            'email_verified_at' => now(),
             'password' => bcrypt('123456'),
             'remember_token' => \Illuminate\Support\Str::random(10),
             'status' => null,
             'role' => 'ORGANIZER',
-            'created_at' => DB::raw('NOW()'),
-            'updated_at' => DB::raw('NOW()'),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
         
         Organizer::updateOrCreate([
@@ -100,8 +100,8 @@ final class EventDetailFactory extends Factory
         [
             'companyName' => 'Company X',
             'companyDescription' => 'Company X Desc',
-            'created_at' => DB::raw('NOW()'),
-            'updated_at' => DB::raw('NOW()'),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $eventCategory = EventCategory::where('gameTitle', 'Dota 2')->first();

@@ -134,9 +134,8 @@ class EventCreateCouponResource extends Resource
                 Tables\Filters\Filter::make('active')
                     ->label('Active Coupons')
                     ->query(fn (Builder $query): Builder => $query
-                        ->whereDate('startDate', '<=', now()->utc())
-                        ->whereDate('endDate', '>=', now()->utc())
-                    ),
+                        ->whereDate('startDate', '<=', now())
+                        ->whereDate('endDate', '>=', now())),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

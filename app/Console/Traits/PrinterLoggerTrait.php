@@ -46,8 +46,8 @@ trait PrinterLoggerTrait
                 'monitored_scheduled_task_id' => $id, 
                 'type' => "Error", 
                 'logs' => $e->getMessage(), 
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
 
@@ -57,7 +57,7 @@ trait PrinterLoggerTrait
          Log::error("[$className] " . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
          
          try {
-             $today = Carbon::now()->utc()->toDateString();
+             $today = now()->toDateString();
              
              $this->trackDailyErrorAndNotify($className, $today, $e);
              
@@ -87,8 +87,8 @@ trait PrinterLoggerTrait
                     'error_date' => $today,
                     'error_count' => 1,
                     'email_sent' => false,
-                    'created_at' => DB::raw('NOW()'),
-                    'updated_at' => DB::raw('NOW()'),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
 
                 $this->sendFirstErrorNotification($className, $e, $today);
@@ -112,7 +112,7 @@ trait PrinterLoggerTrait
                 className: $className,
                 errorMessage: $e->getMessage(),
                 errorDate: $date,
-                errorTime: now()->utc()->format('H:i:s'),
+                errorTime: now()->format('H:i:s'),
                 stackTrace: $e->getTraceAsString()
             );
 
@@ -129,7 +129,7 @@ trait PrinterLoggerTrait
      */
     private function getDailyErrorStats(string $date = null): array
     {
-        $date = $date ?? now()->utc()->toDateString();
+        $date = $date ?? now()->toDateString();
         
         return DB::table('daily_command_errors')
             ->select('class_name', 'error_count', 'email_sent')
@@ -146,7 +146,7 @@ trait PrinterLoggerTrait
         return DB::table('daily_command_errors')
             ->select('error_date', 'error_count', 'email_sent')
             ->where('class_name', $className)
-            ->where('error_date', '>=', now()->utc()->subDays($days)->toDateString())
+            ->where('error_date', '>=', now()->subDays($days)->toDateString())
             ->orderBy('error_date', 'desc')
             ->get()
             ->toArray();

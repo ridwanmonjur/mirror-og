@@ -57,7 +57,7 @@ class TransactionHistoryResource extends Resource
 
                         Forms\Components\DateTimePicker::make('date')
                             ->required()
-                            ->default(now()->utc())
+                            ->default(now())
                             ->displayFormat('M j, Y g:i A')
                             ->placeholder('Select date and time'),
 
