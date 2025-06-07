@@ -37,7 +37,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function createdIsoFormat() {
-        return Carbon::parse($this->created_at)->isoFormat('Do MMMM YYYY');
+        return Carbon::parse($this->created_at)->tz('Asia/Kuala_Lumpur')->isoFormat('Do MMMM YYYY');
     }
     
 

@@ -55,6 +55,11 @@ class TransactionHistory extends Model
         return $this->date->format('g:i A');
     }
 
+    public function getDateAttribute($value)
+    {
+        return $this->asDateTime($value)->tz('Asia/Kuala_Lumpur');
+    }
+
    
 
     /**

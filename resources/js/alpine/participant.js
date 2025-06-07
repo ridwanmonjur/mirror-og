@@ -41,7 +41,7 @@ function ParticipantData ()  {
         changeFlagEmoji(event) {
             this.participant.region = event.target.value;
             let countryX = this.countries?.find(elem => elem.id == this.participant.region);
-            if (countryX) {
+            if (countryX && countryX.emoji_flag) {
                 this.participant.region_name = countryX.name.en;
                 this.participant.region_flag = countryX.emoji_flag;
             } else {
