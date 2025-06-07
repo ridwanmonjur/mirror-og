@@ -809,11 +809,6 @@ class EventDetail extends Model implements Feedable
             }
         }
 
-        if (!isset($request->eventName)){
-            throw new TimeGreaterException('An event name is required, but you have entered no name.');
-
-        }
-
         $eventDetail->eventName = $request->eventName;
         $eventDetail->eventDescription = $request->eventDescription;
         $eventDetail->eventTags = $request->eventTags;
@@ -856,7 +851,16 @@ class EventDetail extends Model implements Feedable
 
         $eventDetail->status = $eventDetail->statusResolved();
         $eventDetail->willNotify = true;
-        $eventDetail->slug = Str::slug($eventDetail->eventName);
+
+        if (!isset($request->eventName)){
+            do {
+                $eventDetail->slug = 'event-' .str_pad(random_int(1000, 99999), 9, '0', STR_PAD_LEFT);
+                $exists = self::where('slug', $eventDetail->slug)->exists();
+            } while ($exists);
+        } else {
+            $eventDetail->slug = Str::slug($eventDetail->eventName);
+        }
+
 
         return [$eventDetail, $isTimeSame];
     }
