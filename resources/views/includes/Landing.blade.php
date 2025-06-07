@@ -5,7 +5,7 @@
         $eventBannerImg = bladeImageNull($event->eventBanner);
         $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
         $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
-        $willShowStartsInCountDown = $status === 'ONGOING';
+        $willShowStartsInCountDown = $status === 'UPCOMING';
         $isEnded = $status === 'ENDED';
         extract($event->startDatesReadable($willShowStartsInCountDown));
     @endphp
