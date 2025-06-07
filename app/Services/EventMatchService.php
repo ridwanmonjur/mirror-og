@@ -31,7 +31,7 @@ class EventMatchService {
                 null
             );
 
-            $now = now();
+            $now = now()->utc();
             $matches = [];
             foreach ($bracketList as $stage_name => $stage_element) {
                 foreach ($stage_element as $inner_stage_name => $inner_stage_element) {

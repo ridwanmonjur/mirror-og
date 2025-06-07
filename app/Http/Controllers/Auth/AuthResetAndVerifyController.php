@@ -38,7 +38,7 @@ class AuthResetAndVerifyController extends Controller
             return back()->with(['error' => 'Invalid token or email address.']);
         }
 
-        if (now() > $tokenData->expires_at) {
+        if (now()->utc() > $tokenData->expires_at) {
             return back()->with(['error' => 'Token has expired. Please request a new password reset.']);
         }
 
@@ -73,7 +73,7 @@ class AuthResetAndVerifyController extends Controller
             return back()->with(['error' => 'User not found with this email.']);
         }
 
-        DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
+        DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->utc()->addDay()]);
 
         Mail::to($email)->queue(new ResetPasswordMail(public_path('assets/images/dw_logo.webp'), $token, $user->name));
 
@@ -93,7 +93,7 @@ class AuthResetAndVerifyController extends Controller
             return redirect()->route($route)->with('info', 'Your account is already verified.');
         }
 
-        $user->email_verified_at = now();
+        $user->email_verified_at = now()->utc();
         $user->email_verified_token = null;
         $user->save();
 

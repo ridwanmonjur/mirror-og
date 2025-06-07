@@ -22,7 +22,7 @@
                 {{-- <div class="card-header">Topup your wallet</div> --}}
 
                 <div class="card-body ">
-                <h5 class="my-3  text-center">Current Balance </h5>
+                <h5 class="my-3  text-center">Wallet Checkout </h5>
                     @include('includes.Flash')
 
                     <div id="cardLogoId" class="payment-element-children-view">
@@ -40,15 +40,15 @@
                                     <div id="statistics" class="d-none">
                                         <div class="row my-2">
                                             <p class="my-0 col-6">Current Balance </p>
-                                            <span class="my-0 col-6"> MYR {{ number_format($wallet->current_balance, 2) }} </span>
+                                            <span class="my-0 col-6"> RM {{ number_format($wallet->current_balance, 2) }} </span>
                                         </div>
                                         <div class="row my-2">
                                             <p class="my-0 col-6">Topup Amount </p>
-                                            <span class="my-0 col-6"> MYR {{ $amount  }} </span>
+                                            <span class="my-0 col-6"> RM {{ number_format($amount, 2)  }} </span>
                                         </div>
                                         <div class="row my-2">
                                             <p class="my-0  col-6">Final Balance </p>
-                                            <span class="text-primary my-0 col-6"> MYR {{ number_format($wallet->current_balance, 2) + $amount }} </span>
+                                            <span class="text-primary my-0 col-6"> RM {{ number_format($wallet->current_balance + $amount, 2) }} </span>
                                         </div>
                                     </div>
                                     <div id="card-element" class="my-2"> </div>

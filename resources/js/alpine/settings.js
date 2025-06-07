@@ -784,7 +784,7 @@ async function withdrawMoney(e) {
                 Swal.fire({
                     icon: 'info',
                     title: 'Bank Account Required',
-                    text: 'You must link a bank account before making a withdrawal.',
+                    text: 'You must have a linked bank account to request a withdrawal of your funds.',
                     showCancelButton: true,
                     confirmButtonText: 'Link Bank Account',
                     confirmButtonColor: '#43A4D7',

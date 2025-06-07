@@ -35,7 +35,7 @@ class UserCouponRelationManager extends RelationManager
                 Forms\Components\DateTimePicker::make('redeemed_at')
                     ->label('Redeemed At')
                     ->required()
-                    ->default(now()),
+                    ->default(now()->utc()),
                 ]
         );
     }

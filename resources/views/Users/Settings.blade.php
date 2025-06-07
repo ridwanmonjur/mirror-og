@@ -9,9 +9,7 @@
 </head>
 @php
     use Carbon\Carbon;
-    $isShowFirstInnerAccordion = $limit_methods != 10;
-    $isShowSecondInnerAccordion = $limit_history != 10;
-    $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
+ 
 @endphp
 
 <body class="settings">
@@ -63,31 +61,7 @@
                                     Change Recovery Email
                                 </button>
                             </div>
-                            <div
-                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
-                                <div>
-                                    <p class="py-0 my-0"> Linked Bank Account </p>
-                                    <small v-if="wallet.has_bank_account" class="text-primary text-capitalize">
-                                        <span v-text="wallet.bank_name"  ></span>
-                                        ****
-                                        <span v-text="wallet.bank_last4"  ></span>
-                                    </small>
-                                    <small v-else>
-                                        No linked account
-                                    </small>
-                                </div>
-                                <button v-if="wallet.has_bank_account" v-on:click="unlinkBankAccount(event)"
-                                    data-route="{{ route('wallet.unlink') }}"
-                                    class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill">
-                                    Unlink
-                                </button>
-                                <a href="{{route('wallet.payment-method')}}" v-else>
-                                    <button 
-                                    class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill">
-                                    Link Bank Account
-                                </button>
-                                </a>
-                            </div>
+                            
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
@@ -143,6 +117,32 @@
                     <div id="collapseTwo" class="accordion-collapse collapse {{ $isShowNextAccordion ? 'show' : '' }}"
                         aria-labelledby="headingTwo">
                         <div class="accordion-body border-0 py-0 pt-n2">
+
+                            <div
+                                class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
+                                <div>
+                                    <p class="py-0 my-0"> Linked Bank Account </p>
+                                    <small v-if="wallet.has_bank_account" class="text-primary text-capitalize">
+                                        <span v-text="wallet.bank_name"  ></span>
+                                        ****
+                                        <span v-text="wallet.bank_last4"  ></span>
+                                    </small>
+                                    <small v-else>
+                                        No linked account
+                                    </small>
+                                </div>
+                                <button v-if="wallet.has_bank_account" v-on:click="unlinkBankAccount(event)"
+                                    data-route="{{ route('wallet.unlink') }}"
+                                    class="btn btn-sm btn-size text-light bg-red py-2 px-3 rounded-pill">
+                                    Unlink
+                                </button>
+                                <a href="{{route('wallet.payment-method')}}" v-else>
+                                    <button 
+                                    class="btn btn-sm btn-size text-dark bg-success py-2 px-3 rounded-pill">
+                                    Link Bank Account
+                                </button>
+                                </a>
+                            </div>
                             
                             <!-- First nested accordion -->
                             <div class="accordion" id="nestedAccordion1">
