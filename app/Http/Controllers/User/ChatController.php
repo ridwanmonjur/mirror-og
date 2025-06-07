@@ -28,7 +28,7 @@ class ChatController extends Controller
 
         $user = User::select(['id', 'name', 'role', 'userBanner'])->findOrFail($loggedUser->id);
 
-        DB::table('firebase_user_active_at')->updateOrInsert(['user_id' => $loggedUser->id], ['updated_at' => now()]);
+        DB::table('firebase_user_active_at')->updateOrInsert(['user_id' => $loggedUser->id], ['updated_at' => DB::raw('NOW()')]);
 
         return view('Users.Message', ['userProfile' => $userProfile, 'user' => $user]);
     }

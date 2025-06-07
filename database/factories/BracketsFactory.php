@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Services\EventMatchService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 
 class BracketsFactory extends Factory
 {
@@ -39,8 +40,8 @@ class BracketsFactory extends Factory
             'team2_position' => $this->faker->regexify('[A-Z][0-9]?'),
             'stage_name' => $this->faker->randomElement(['F', 'W', 'U', 'L']),
             'inner_stage_name' => $this->faker->randomElement(['e1', 'e2', 'p1', 'p2']),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => DB::raw('NOW()'),
+            'updated_at' => DB::raw('NOW()'),
         ];
     }
 

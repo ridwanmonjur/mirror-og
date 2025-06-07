@@ -68,7 +68,7 @@ class SettingsService
 
             $user->update([
                 'email' => $newEmail,
-                'email_verified_at' => now(),
+                'email_verified_at' => DB::raw('NOW()'),
                 'email_verified_token' => null
             ]);
 

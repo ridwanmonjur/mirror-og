@@ -51,7 +51,7 @@ class ParticipantCoupon extends Model
     public function isValid()
     {
         return $this->is_active && 
-               ($this->expires_at === null || $this->expires_at > now());
+               ($this->expires_at === null || $this->expires_at > now()->utc());
     }
 
 

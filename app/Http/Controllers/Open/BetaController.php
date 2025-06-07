@@ -34,8 +34,8 @@ class BetaController extends Controller
 
                 DB::table('interested_user')->insert([
                     'email' => $email,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => DB::raw('NOW()'),
+                    'updated_at' => DB::raw('NOW()'),
                     'email_verified_token' => $token,
                 ]);
 
@@ -66,7 +66,7 @@ class BetaController extends Controller
                             ->where('email', $email)
                             ->update([
                                 'email_verified_token' => $token,
-                                'updated_at' => now(),
+                                'updated_at' => DB::raw('NOW()'),
                             ]);
 
                         $this->sendVerificationEmail($email, $token);
@@ -127,7 +127,7 @@ class BetaController extends Controller
             ->from('interested_user')
             ->where('id', $user->id)
             ->update([
-                'email_verified_at' => now(),
+                'email_verified_at' => DB::raw('NOW()'),
             ]);
 
         return view('Public.Verify')->with('success', 'verified_now')->with('email', $user->email);
@@ -160,7 +160,7 @@ class BetaController extends Controller
                     ->where('email', $interestedUser->email)
                     ->update([
                         'pass_text' => $password,
-                        'email_verified_at' => now(),
+                        'email_verified_at' => DB::raw('NOW()'),
                     ]);
 
                 $user->password = Hash::make($password);
@@ -180,7 +180,7 @@ class BetaController extends Controller
                     ->where('email', $email)
                     ->update([
                         'pass_text' => $password,
-                        'email_verified_at' => now(),
+                        'email_verified_at' => DB::raw('NOW()'),
                     ]);
 
                 $user = new User([
@@ -188,15 +188,15 @@ class BetaController extends Controller
                     'password' => Hash::make($password),
                     'name' => generateToken(2) . $username . generateToken(2),
                     'role' => 'PARTICIPANT',
-                    'created_at' => now(),
-                    'email_verified_at' => now(),
+                    'created_at' => DB::raw('NOW()'),
+                    'email_verified_at' => DB::raw('NOW()'),
                 ]);
 
                 $user->save();
                 $participant = new Participant([
                     'user_id' => $user->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => DB::raw('NOW()'),
+                    'updated_at' => DB::raw('NOW()'),
                 ]);
 
                 $participant->save();
