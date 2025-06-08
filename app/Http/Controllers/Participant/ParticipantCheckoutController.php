@@ -210,7 +210,7 @@ class ParticipantCheckoutController extends Controller
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
 
-                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, true);
+                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
 
                     $event = EventDetail::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
                         ->where('id', $joinEvent->event_details_id)

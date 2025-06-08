@@ -31,22 +31,49 @@ class RecordStripe extends Model
         \Stripe\PaymentIntent $paymentIntent,
         \Stripe\PaymentMethod $paymentMethod,
         int $userId,
-        bool $setAsDefault = false
+        ?string $setAsDefault = "false",
+        ?string $saveHistory = "false"
     ) {
-     
-            $savedCardId = DB::table('saved_cards')->insertGetId([
-                'user_id' => $userId,
-                'stripe_payment_method_id' => $paymentMethod->id,
-                'brand' => $paymentMethod->card->brand,
-                'last4' => $paymentMethod->card->last4,
-                'exp_month' => $paymentMethod->card->exp_month,
-                'exp_year' => $paymentMethod->card->exp_year,
-                'is_default' => $setAsDefault,
-                'created_at' => DB::raw('NOW()'),
-                'updated_at' => DB::raw('NOW()'),
-            ]);
+
+            if ($saveHistory == "true") {
+            $existingCard = DB::table('saved_cards')
+                ->where('user_id', $userId)
+                ->where('fingerprint', $paymentMethod->card->fingerprint)
+                ->first();
+
+            if ($setAsDefault == "true") {
+                DB::table('saved_cards')
+                    ->where('user_id', $userId)
+                    ->update(['is_default' => false]);
+                
+                if ($existingCard) {
+                    DB::table('saved_cards')
+                    ->where('user_id', $userId)
+                    ->where('fingerprint', $paymentMethod->card->fingerprint)
+                    ->update(['is_default' => true]);
+                }
+            }
+
+            $savedCardId = null;
+            if ($existingCard) {
+                $savedCardId = $existingCard->id;
+            } else {
+                $savedCardId = DB::table('saved_cards')->insertGetId([
+                    'user_id' => $userId,
+                    'stripe_payment_method_id' => $paymentMethod->id,
+                    'brand' => $paymentMethod->card->brand,
+                    'last4' => $paymentMethod->card->last4,
+                    'exp_month' => $paymentMethod->card->exp_month,
+                    'fingerprint' => $paymentMethod->card->fingerprint,
+                    'exp_year' => $paymentMethod->card->exp_year,
+                    'is_default' => $setAsDefault == "true" ? true : false,
+                    'created_at' => DB::raw('NOW()'),
+                    'updated_at' => DB::raw('NOW()'),
+                ]);
+            }
             
-            $savedPaymentId = DB::table('saved_payments')->insertGetId([
+            
+            DB::table('saved_payments')->insertGetId([
                 'payment_intent_id' => $paymentIntent->id,
                 'user_id' => $userId,
                 'saved_card_id' => $savedCardId,
@@ -56,7 +83,7 @@ class RecordStripe extends Model
                 'created_at' => DB::raw('NOW()'),
                 'updated_at' => DB::raw('NOW()'),
             ]);
-
+            }
             
             // 3. Create the main transaction record
             $transactionData = [

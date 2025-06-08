@@ -352,7 +352,7 @@ public function showPaymentMethodForm(Request $request)
                         'user_id' => $user->id
                     ]);
 
-                    RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, false);
+                    RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
                    
                     DB::commit();
                     return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM ' . number_format($amount, 2) . ' to your wallet.');

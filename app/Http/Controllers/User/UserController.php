@@ -154,8 +154,8 @@ class UserController extends Controller
         $isShowFirstInnerAccordion = $request->has('methods_limit');
         $isShowSecondInnerAccordion = $request->has('history_limit');
         $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
-        $limit_methods = $request->input('methods_limit', 1); // 10
-        $limit_history = $request->input('history_limit', 1); // 100
+        $limit_methods = $request->input('methods_limit', 10); // 10
+        $limit_history = $request->input('history_limit', 10); // 100
         $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
 
 

@@ -231,6 +231,8 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         const submitButton = event.target;
         submitButton.disabled = true;
         try {
+            let savePaymentCheck = document.getElementById('save-payment');
+            let saveDefaultCheck = document.getElementById('save-default');
             window.showLoading();
             let addressElement = elements.getElement('address');
 
@@ -263,7 +265,9 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
             } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: hiddenVars['stripeReturnUrl'],
+                    return_url: hiddenVars['stripeReturnUrl']
+                        + `?savePayment=${savePaymentCheck.checked}` 
+                        + `&saveDefault=${saveDefaultCheck.checked}`,
                     payment_method_data: {
                         billing_details: billingDetails
                     }

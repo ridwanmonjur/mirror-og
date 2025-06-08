@@ -92,7 +92,7 @@ class OrganizerCheckoutController extends Controller
                 }
 
                 if ($paymentIntent['amount'] > 0 && $paymentIntent['amount_received'] === $paymentIntent['amount'] && $paymentIntent['metadata']['eventId'] === $id) {
-                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, true);
+                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
 
                     $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null, 'joinEvents');
 

@@ -17,9 +17,12 @@ return new class extends Migration
             $table->string('brand'); // visa, mastercard, etc.
             $table->string('last4', 4);
             $table->integer('exp_month');
+            $table->string('fingerprint');
+
             $table->integer('exp_year');
             $table->boolean('is_default')->default(false);
             $table->timestamps();
+            $table->unique(['user_id', 'fingerprint']); // Ensure one card per user
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index(['user_id', 'is_default']);

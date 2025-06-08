@@ -276,6 +276,8 @@ class PaymentProcessor {
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         const submitButton = event.target;
+        let savePaymentCheck = document.getElementById('save-payment');
+        let saveDefaultCheck = document.getElementById('save-default');
 
         submitButton.disabled = true;
         try {
@@ -309,7 +311,9 @@ class PaymentProcessor {
             } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: paymentVars['checkoutTransitionUrl'],
+                    return_url: paymentVars['checkoutTransitionUrl'] 
+                        + `?savePayment=${savePaymentCheck.checked}` 
+                        + `&saveDefault=${saveDefaultCheck.checked}`,
                     payment_method_data: {
                         billing_details: billingDetails
                     }

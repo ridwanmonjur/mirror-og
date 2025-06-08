@@ -212,6 +212,20 @@
                         </a>
                 </div> 
             </div>
+            <div class="my-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="save-payment">
+                    <label class="form-check-label" for="save-payment">
+                        Save Payment Information
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="save-default">
+                    <label class="form-check-label" for="save-default">
+                        Choose as default payment
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
     <div class="d-block d-lg-block px-3 col-12 col-lg-2">

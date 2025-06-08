@@ -219,7 +219,10 @@
                                                                                         {{ ucfirst($method->brand) }}
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>**** {{ $method->last4 }}
+                                                                                <td>**** {{ $method->last4 }} 
+                                                                                    @if ($method->is_default) 
+                                                                                        <small class="bg-primary text-white ms-2 px-1 py-0 rounded rounded-5"> Default </small>
+                                                                                    @endif
                                                                                 </td>
                                                                                 <td>{{ $method->exp_month }}/{{ $method->exp_year }}
                                                                                 </td>
