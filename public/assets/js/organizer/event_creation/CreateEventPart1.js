@@ -7,6 +7,10 @@ function goToLaunch2ndPage() {
     goToNextScreen('step-launch-2', 'timeline-launch');
 }
 
+function goToGamesScreen() {
+    goToNextScreen('step-1', 'timeline-1');
+}
+
 
 
 function setFormValuesAndNavigate(element) {

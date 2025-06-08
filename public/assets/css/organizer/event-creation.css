@@ -374,6 +374,12 @@ input[type="time"] {
     margin-bottom: 15px;
 }
 
+.back-next--create button {
+    width: 200px;
+    padding: 10px 20px;
+
+}
+
 .back-next button:nth-child(1) {
     left: 5vw;
 }
@@ -522,8 +528,8 @@ input[type="time"] {
     display: inline-block;
     transition: opacity 0.3s, transform 0.3s;
     text-align: center;
-    height: 275px;
-    margin: 0 10px ;
+    /* height: 275px; */
+    margin: 0 0px ;
 }
 
 .scroll-images-text {
@@ -735,7 +741,7 @@ input[type="time"] {
 }
 
 .selectable-image:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
     /* Scale the image to 120% on hover */
 }
 
@@ -1513,7 +1519,7 @@ body{
     .StripeElement .FormGrid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+     
     }
   }
 
@@ -1521,3 +1527,45 @@ body{
     display: flex;
     align-items: center;
 }
+
+.grid-5 {
+    display: grid;
+    gap: 3rem 0.5rem;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 1fr; /* Mobile: 1 column */
+  }
+  
+  /* Small screens and up (sm) - 2 columns */
+  @media (min-width: 576px) {
+    .grid-5 {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 1200px;
+    }
+  }
+  
+  /* Medium screens and up (md) - 3 columns */
+  @media (min-width: 768px) {
+    .grid-5 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  /* Large screens and up (lg) - 4 columns */
+  @media (min-width: 992px) {
+    .grid-5 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Extra large screens and up (xl) - 5 columns */
+  @media (min-width: 1200px) {
+    .grid-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  .game-events {
+    width: 200px;
+    margin: auto;
+  } 
