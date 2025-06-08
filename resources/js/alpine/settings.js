@@ -828,6 +828,7 @@ if (settings) {
     document.addEventListener('DOMContentLoaded', () => {
         createApp({
             AccountComponent,
+            TransactionComponent
         }).mount(settings);
     });
 }

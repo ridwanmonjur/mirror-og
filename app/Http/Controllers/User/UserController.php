@@ -5,11 +5,13 @@ namespace App\Http\Controllers\User;
 use App\Exceptions\SettingsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
+use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\UpdateSettingsRequest;
 use App\Models\StripeConnection;
 use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
+use App\Models\TransactionHistory;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Services\SettingsService;
@@ -154,24 +156,26 @@ class UserController extends Controller
         $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = $request->input('history_limit', 10); // 100
+        $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
 
-        $paramsMethods = [
-            'customer' => $user->stripe_customer_id,
-            'limit' => $limit_methods + 1,
-            'type' => 'card',
-        ];
-
-        $paramsHisotry = [
-            'query' => "customer:'{$user->stripe_customer_id}' AND status:'succeeded'",
-            'limit' => $limit_history + 1,
-        ];
 
         if ($user->stripe_customer_id) {
             try {
-                $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer($paramsMethods);
-                $paymentHistory = $this->stripeClient->searchStripePaymenst($paramsHisotry);
-                $hasMorePayments = array_key_exists($limit_methods, $paymentMethods->data);
-                $hasMoreHistory = array_key_exists($limit_history, $paymentHistory->data);
+                $paymentMethodsQuery = DB::table('saved_cards')
+                    ->where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->limit($limit_methods + 1);
+            
+                $paymentMethods = $paymentMethodsQuery->get();
+                $hasMorePayments = isset($paymentMethods[$limit_methods]);
+
+                $paymentHistoryQuery = DB::table('saved_payments')
+                    ->where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->limit($limit_history + 1);
+                
+                $paymentHistory = $paymentHistoryQuery->get();
+                $hasMoreHistory = isset($paymentHistory[$limit_history]);
             } catch (Exception $e) {
                 $paymentMethods = new Collection();
                 $paymentHistory = new Collection();
@@ -185,7 +189,7 @@ class UserController extends Controller
 
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
         return view('Users.Settings', compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction', 
-                'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet',
+                'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet', 'transactions',
                 'isShowFirstInnerAccordion', 'isShowSecondInnerAccordion', 'isShowNextAccordion'
             )
         );

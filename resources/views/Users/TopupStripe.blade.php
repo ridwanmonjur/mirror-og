@@ -52,6 +52,20 @@
                                         </div>
                                     </div>
                                     <div id="card-element" class="my-2"> </div>
+                                    <div class="my-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="save-payment">
+                                            <label class="form-check-label" for="save-payment">
+                                                Save Payment Information
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="save-default">
+                                            <label class="form-check-label" for="save-default">
+                                                Choose as default payment
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="d-none d-lg-block">
                                         <br>
                                     </div>
@@ -191,6 +205,8 @@
         async function finalizeStripeCardPayment(event) {
             event.preventDefault();
             event.stopPropagation();
+            let savePaymentCheck = document.getElementById('save-payment');
+            let saveDefaultCheck = document.getElementById('save-default');
 
             const submitButton = event.currentTarget;
             submitButton.disabled = true;
@@ -228,7 +244,9 @@
                 } = await stripe.confirmPayment({
                     elements,
                     confirmParams: {
-                        return_url: paymentVars['checkoutTransitionUrl'],
+                        return_url: paymentVars['checkoutTransitionUrl'] 
+                            + `?savePayment=${savePaymentCheck.checked}` 
+                            + `&saveDefault=${saveDefaultCheck.checked}`,
                         payment_method_data: {
                             billing_details: billingDetails
                         }

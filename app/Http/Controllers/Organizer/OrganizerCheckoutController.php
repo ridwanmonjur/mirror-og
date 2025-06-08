@@ -83,12 +83,16 @@ class OrganizerCheckoutController extends Controller
             if ($status === 'succeeded' && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                $paymentMethodId = $paymentIntent['payment_method'];
+                $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
+
+
                 if ($paymentIntent->status === 'requires_capture') {
                     $paymentIntent->capture();
                 }
 
                 if ($paymentIntent['amount'] > 0 && $paymentIntent['amount_received'] === $paymentIntent['amount'] && $paymentIntent['metadata']['eventId'] === $id) {
-                    $transaction = RecordStripe::createTransaction($intentId, $paymentIntent['status'], $paymentIntent['amount'] / 100);
+                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
 
                     $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null, 'joinEvents');
 

@@ -7,17 +7,18 @@
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
         <p >First, select an esport title</p>
-        <div class="mx-auto custom-scrollbar2 box-width3  py-0" style="overflow-x: auto;">
-            <div @class(["d-flex justify-content-center   py-1 px-0 mx-0 flex-wrap my-0 flex-lg-nowrap", 
-                isset($eventCategory[5]) ? " justify-content-lg-start" : ''
-            
-            ]) style="gap: 0;">
+        <div 
+            @class(["mx-auto  custom-scrollbar2 w-100  py-0", 
+                isset($eventCategory[3]) ? "grid-5 " : 'justify-content-center'
+            ])
+        
+            style="overflow-x: auto;">
                 @foreach ($eventCategory as $category)
                     @if ($category->gameIcon)
                         <div 
                             @class([
-                                'scroll-images cursor-pointer game-events',
-                                'color-border-success' =>
+                                ' cursor-pointer game-events my-3',
+                                'color-border-success mx-auto px-0 d-inline-block' =>
                                     $event && $category->id == $event->event_category_id,
                             ])
                             data-category-id="{{ $category->id }}"
@@ -44,10 +45,9 @@
                                                   >
                     </a>
                 </div>
-            </div>
 
         </div>
-        <div class=" d-flex justify-content-between box-width back-next">
+        <div class=" d-flex justify-content-between box-width back-next--create">
             <button onclick="goToNextScreen('step-0', 'none')" type="button" class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button" class="oceans-gaming-default-button"> Next&nbsp;&nbsp;  &gt; </button>
         </div>

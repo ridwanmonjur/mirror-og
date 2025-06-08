@@ -214,17 +214,12 @@ class JoinEvent extends Model
             'roster', 'roster.user', 'voteStarter', 'captain',
         ];
 
-        if (! is_null($eventId)) {
-            $joinEvents = $query->where('event_details_id', $eventId)->get();
-            $invitedEvents = null;
-        } else {
+       
             // dd("bye");
             $joinEvents = $query->whereNotIn('event_details_id', $invitationListIds)->with($withClause)->get();
-            // dd($joinEvents);
             $invitedEvents = static::where('team_id', $teamId)
                 ->whereIn('event_details_id', $invitationListIds)->with($withClause)
                 ->get();
-        }
         [$joinIds, $joinEventOrganizerIds] = $fixJoinEvents($joinEvents);
         [$invitedIds, $invitedEventOrganizerIds] = $fixJoinEvents($invitedEvents);
         $eventIds = [...$joinIds, ...$invitedIds];
@@ -273,6 +268,23 @@ class JoinEvent extends Model
             'activeEvents' => $activeEvents,
             'historyEvents' => $historyEvents,
         ];
+    }
+
+    public static function processJoins(Collection $events, array $isFollowing)
+    {
+        $activeEvents = collect();
+
+        $events->each(function ($joinEvent) use ($isFollowing, $activeEvents) {
+            $joinEvent->status = $joinEvent->eventDetails->statusResolved();
+            $joinEvent->tier = $joinEvent->eventDetails->tier;
+            $joinEvent->game = $joinEvent->eventDetails->game;
+            $joinEvent->isFollowing = array_key_exists($joinEvent->eventDetails->user_id, $isFollowing);
+
+            $activeEvents->push($joinEvent);
+           
+        });
+
+        return $activeEvents;
     }
 
     public static function isPartOfRoster(

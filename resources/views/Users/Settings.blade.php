@@ -19,6 +19,7 @@
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">
         <input type="hidden" id="wallet" value="{{ json_encode($wallet) }}">
+        <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
 
         <div class="accordion-container mx-auto" v-scope="AccountComponent()">
             <div class="accordion accordion-flush " id="accordionExample">
@@ -215,16 +216,19 @@
                                                                                     
                                                                                         class="d-flex align-items-center">
                                                                                         <svg width="32" height='25' version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="me-2" viewBox="0 0 24 24" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Guides"> <g id="_x32_0_px_2_"> </g> <g id="_x32_0px"> </g> <g id="_x34_0px"> </g> <g id="_x34_4_px"> </g> <g id="_x34_8px"> <g id="_x31_6px"> </g> <g id="square_4px"> <g id="_x32_8_px"> <g id="square_4px_2_"> </g> <g id="square_4px_3_"> </g> <g id="square_4px_1_"> </g> <g id="_x32_4_px_2_"> </g> <g id="_x31_2_px"> </g> </g> </g> </g> <g id="Icons"> </g> <g id="_x32_0_px"> </g> <g id="square_6px"> <g id="_x31_2_PX"> </g> </g> <g id="_x33_6_px"> <g id="_x33_2_px"> <g id="_x32_8_px_1_"> <g id="square_6px_1_"> </g> <g id="_x32_0_px_1_"> <g id="_x31_2_PX_2_"> </g> <g id="_x34_8_px"> <g id="_x32_4_px"> </g> <g id="_x32_4_px_1_"> </g> </g> </g> </g> </g> </g> <g id="_x32_0_px_3_"> </g> <g id="_x32_0_px_4_"> </g> <g id="New_Symbol_8"> <g id="_x32_4_px_3_"> </g> </g> </g> <g id="Artboard"> </g> <g id="Free_Icons"> <g> <polygon style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" points="22.5,19.5 0.5,19.5 1.5,4.5 23.5,4.5 "></polygon> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="4" y1="15.5" x2="6" y2="15.5"></line> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="8" y1="15.5" x2="13" y2="15.5"></line> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="1.3" y1="7.5" x2="23.285" y2="7.5"></line> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="1.1" y1="10.5" x2="23.1" y2="10.5"></line> </g> </g> </g></svg>
-                                                                                        {{ ucfirst($method->card->brand) }}
+                                                                                        {{ ucfirst($method->brand) }}
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>**** {{ $method->card->last4 }}
+                                                                                <td>**** {{ $method->last4 }} 
+                                                                                    @if ($method->is_default) 
+                                                                                        <small class="bg-primary text-white ms-2 px-1 py-0 rounded rounded-5"> Default </small>
+                                                                                    @endif
                                                                                 </td>
-                                                                                <td>{{ $method->card->exp_month }}/{{ $method->card->exp_year }}
+                                                                                <td>{{ $method->exp_month }}/{{ $method->exp_year }}
                                                                                 </td>
                                                                                 <td>
 
-                                                                                    {{ Carbon::createFromTimestamp($method->created)->format('Y-m-d') }}
+                                                                                    {{ Carbon::createFromTimestamp($method->created_at)->format('Y-m-d') }}
                                                                                     <span
                                                                                         class="badge ms-2 bg-secondary badge-size">
                                                                                         <span>
@@ -240,7 +244,7 @@
                                                                                                     d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
                                                                                             </svg>
                                                                                         </span>
-                                                                                        {{ Carbon::createFromTimestamp($method->created)->format('g:i A') }}
+                                                                                        {{ Carbon::createFromTimestamp($method->created_at)->format('g:i A') }}
                                                                                     </span>
                                                                                 </td>
                                                                             </tr>
@@ -278,7 +282,7 @@
                                 
 
                                 <!-- Third nested accordion -->
-                                <div class="accordion pb-5 " id="nestedAccordion3">
+                                <div class="accordion  " id="nestedAccordion3">
                                     <div class="accordion-item  ">
                                         <h3 class="accordion-header" id="nestedHeading3">
                                             <div class="px-0 accordion-button border-top  border-1  py-4 {{ $isShowSecondInnerAccordion ? '' : 'collapsed' }} bg-white"
@@ -316,13 +320,13 @@
                                                                                 </td>
 
                                                                                 <td>
-                                                                                    {{ $history->amount / 100 }}
+                                                                                    {{ $history->amount }}
                                                                                 </td>
                                                                                 <td>{{ strtoupper($history->currency) }}
                                                                                 </td>
                                                                                 <td>{{ $history->status }}</td>
                                                                                 <td>
-                                                                                    {{ Carbon::createFromTimestamp($history->created)->format('Y-m-d') }}
+                                                                                    {{ Carbon::createFromTimestamp($history->created_at)->format('Y-m-d') }}
                                                                                     <span
                                                                                         class="badge ms-2 bg-secondary badge-size">
                                                                                         <span>
@@ -338,7 +342,7 @@
                                                                                                     d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
                                                                                             </svg>
                                                                                         </span>
-                                                                                        {{ Carbon::createFromTimestamp($history->created)->format('g:i A') }}
+                                                                                        {{ Carbon::createFromTimestamp($history->created_at)->format('g:i A') }}
                                                                                     </span>
                                                                                 </td>
                                                                             </tr>
@@ -372,6 +376,46 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="accordion pb-5 " v-scope="TransactionComponent()" @vue:mounted="init" id="nestedAccordion4">
+                                    <div class="accordion-item  ">
+                                        <h3 class="accordion-header" id="nestedHeading4">
+                                            <div class="px-0 accordion-button border-top collapsed border-1  py-4  bg-white"
+                                                type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#nestedCollapse4" aria-expanded="false"
+                                                aria-controls="nestedCollapse4">
+                                                Transaction History
+                                            </div>
+                                        </h3>
+                                        <div id="nestedCollapse4"
+                                            class="accordion-collapse collapse  border-bottom border-1 "
+                                            aria-labelledby="nestedHeading4" data-bs-parent="#nestedAccordion4">
+                                            <div class="accordion-body border-0 py-0 px-0">
+                                                <div class="my-3">
+                                                    <x-wallet.transanction-list  />
+
+                                                    <div v-else>
+                                                        <p class="my-2 pt-2 pb-5"> <i> You have no transactions up till
+                                                                now... </i> </p>
+                                                    </div>
+
+                                                    <div v-if="hasMore" class="text-center  my-4" v-cloak>
+                                                        <button v-on:click="loadMore" :disabled="loading"
+                                                            class="btn text-light rounded-pill btn-primary">
+                                                            <span v-if="loading" v-cloak class="spinner-border spinner-border-sm me-2"></span>
+                                                            <span v-if="loading" v-cloak>Loading...</span>
+                                                            <span v-else>Load More</span>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
 
