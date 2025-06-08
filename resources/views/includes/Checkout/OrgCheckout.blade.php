@@ -204,15 +204,7 @@
                 </button>
             </div> --}}
             <div id="card-element" class="mb-2 w-100 "> </div>
-                <div class="d-flex justify-content-center w-100  my-3 d-none" id="submit-button-element" style="width: 100px;">
-                    <button form="stripe-payment-form" class="oceans-gaming-default-button" type="submit"> Submit </button>
-                   
-                        <a style="width: 100px;" href="{{ route('event.show', $event->id) }}" class=" submit-texts d-block ms-3 oceans-gaming-default-button oceans-gaming-transparent-button px-2 py-2 "> 
-                            Cancel 
-                        </a>
-                </div> 
-            </div>
-            <div class="my-4">
+                <div class="my-4">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="save-payment">
                     <label class="form-check-label" for="save-payment">
@@ -226,6 +218,15 @@
                     </label>
                 </div>
             </div>
+                <div class="d-flex justify-content-center w-100  my-3 d-none" id="submit-button-element" style="width: 100px;">
+                    <button form="stripe-payment-form" class="oceans-gaming-default-button" type="submit"> Submit </button>
+                   
+                        <a style="width: 100px;" href="{{ route('event.show', $event->id) }}" class=" submit-texts d-block ms-3 oceans-gaming-default-button oceans-gaming-transparent-button px-2 py-2 "> 
+                            Cancel 
+                        </a>
+                </div> 
+            </div>
+            
         </div>
     </div>
     <div class="d-block d-lg-block px-3 col-12 col-lg-2">
