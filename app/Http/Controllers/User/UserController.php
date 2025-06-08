@@ -5,11 +5,13 @@ namespace App\Http\Controllers\User;
 use App\Exceptions\SettingsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\BannerUpdateRequest;
+use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\UpdateSettingsRequest;
 use App\Models\StripeConnection;
 use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
+use App\Models\TransactionHistory;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Services\SettingsService;
@@ -154,6 +156,7 @@ class UserController extends Controller
         $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = $request->input('history_limit', 10); // 100
+        $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
 
         $paramsMethods = [
             'customer' => $user->stripe_customer_id,
@@ -185,7 +188,7 @@ class UserController extends Controller
 
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
         return view('Users.Settings', compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction', 
-                'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet',
+                'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet', 'transactions',
                 'isShowFirstInnerAccordion', 'isShowSecondInnerAccordion', 'isShowNextAccordion'
             )
         );

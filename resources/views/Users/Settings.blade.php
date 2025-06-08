@@ -19,6 +19,7 @@
         <br>
         <input type="hidden" id="initialUserProfile" value="{{ json_encode($user) }}">
         <input type="hidden" id="wallet" value="{{ json_encode($wallet) }}">
+        <input type="hidden" id="transactions-data" value="{{json_encode($transactions)}}">
 
         <div class="accordion-container mx-auto" v-scope="AccountComponent()">
             <div class="accordion accordion-flush " id="accordionExample">
@@ -278,7 +279,7 @@
                                 
 
                                 <!-- Third nested accordion -->
-                                <div class="accordion pb-5 " id="nestedAccordion3">
+                                <div class="accordion  " id="nestedAccordion3">
                                     <div class="accordion-item  ">
                                         <h3 class="accordion-header" id="nestedHeading3">
                                             <div class="px-0 accordion-button border-top  border-1  py-4 {{ $isShowSecondInnerAccordion ? '' : 'collapsed' }} bg-white"
@@ -372,6 +373,46 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div class="accordion pb-5 " v-scope="TransactionComponent()" @vue:mounted="init" id="nestedAccordion4">
+                                    <div class="accordion-item  ">
+                                        <h3 class="accordion-header" id="nestedHeading4">
+                                            <div class="px-0 accordion-button border-top collapsed border-1  py-4  bg-white"
+                                                type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#nestedCollapse4" aria-expanded="false"
+                                                aria-controls="nestedCollapse4">
+                                                Transaction History
+                                            </div>
+                                        </h3>
+                                        <div id="nestedCollapse4"
+                                            class="accordion-collapse collapse  border-bottom border-1 "
+                                            aria-labelledby="nestedHeading4" data-bs-parent="#nestedAccordion4">
+                                            <div class="accordion-body border-0 py-0 px-0">
+                                                <div class="my-3">
+                                                    <x-wallet.transanction-list  />
+
+                                                    <div v-else>
+                                                        <p class="my-2 pt-2 pb-5"> <i> You have no transactions up till
+                                                                now... </i> </p>
+                                                    </div>
+
+                                                    <div v-if="hasMore" class="text-center  my-4" v-cloak>
+                                                        <button v-on:click="loadMore" :disabled="loading"
+                                                            class="btn text-light rounded-pill btn-primary">
+                                                            <span v-if="loading" v-cloak class="spinner-border spinner-border-sm me-2"></span>
+                                                            <span v-if="loading" v-cloak>Loading...</span>
+                                                            <span v-else>Load More</span>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
 

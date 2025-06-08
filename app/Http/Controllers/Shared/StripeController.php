@@ -182,31 +182,7 @@ public function showPaymentMethodForm(Request $request)
         }
     }
 
-    private function getTransactionHistory(TransactionHistoryRequest $request, $user) {
-        $fields = [
-            'name',
-            'type',
-            'link',
-            'amount',
-            'summary',
-            'isPositive',
-            'date',
-            'user_id',
-            'id'
-        ];
-
-        $query = TransactionHistory::where('user_id', $user->id)
-            ->select($fields);
-
-        $result = $query->cursorPaginated(
-            $request->getPerPage(),
-            $request->getCursor(),
-        );
-
-        $result['data'] = TransactionHistoryResource::collection($result['data'])->toArray(request());
-
-        return $result;
-    }
+    
 
     /**
      * Show the wallet dashboard
@@ -250,10 +226,10 @@ public function showPaymentMethodForm(Request $request)
         $user = $request->get('user');
 
         if ($request->expectsJson()) {
-            return response()->json($this->getTransactionHistory($request, $user));
+            return response()->json(TransactionHistory::getTransactionHistory($request, $user));
          }
 
-        $transactions = $this->getTransactionHistory( new TransactionHistoryRequest(), $user);
+        $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
         
