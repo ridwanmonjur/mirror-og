@@ -12,6 +12,7 @@ use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
 use App\Http\Resources\TransactionHistoryResource;
 use App\Models\ParticipantCoupon;
 use App\Models\PaymentIntent;
+use App\Models\RecordStripe;
 use App\Models\StripeConnection;
 use App\Models\TransactionHistory;
 use App\Models\UserCoupon;
@@ -350,13 +351,15 @@ public function showPaymentMethodForm(Request $request)
                         'date' => now(),
                         'user_id' => $user->id
                     ]);
-                   
 
+                    RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, false);
+                   
                     DB::commit();
                     return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM ' . number_format($amount, 2) . ' to your wallet.');
 
                 }
             }
+
             DB::rollback();
             return $this->showErrorGeneral("Could not find payment information!");
 

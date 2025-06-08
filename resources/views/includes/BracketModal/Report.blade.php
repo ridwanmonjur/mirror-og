@@ -5,10 +5,10 @@
                 <div class="{{ ' popover-report text-center  p-0 ' . 'Team1' . ' ' . 'Team2' }}"
                 >
 
-                    <div class="user-select-none popover-box bg-white row justify-content-start border border-dark border px-0 py-0"
+                    <div class=" popover-box bg-white border-2 border  row justify-content-start border border-dark border px-0 py-0"
                     >
                         <div class="text-center  mt-4">
-                            <h5 class="text-uppercase"> Match Results: <span  v-text="report.position"></span> </h5>
+                            <h5 class="text-uppercase text-primary"> Match Results: <span  v-text="report.position"></span> </h5>
                             <p class="my-0 p-0 text-uppercase" v-text="report.completeMatchStatus"> </p>
                             <template v-if="report.deadline && userLevelEnums['IS_PUBLIC'] != report.userLevel">
                                 <div class="my-0 py-0 ">
@@ -70,8 +70,8 @@
                             </div>
                         </div>
                         
-                        <hr class="d-none d-lg-block">
-                        <div class=" user-select-none row px-0 mx-auto">
+                        <hr class="d-none d-lg-block border border-dark">
+                        <div class="  row px-0 mx-auto">
                             <div class="col-2 col-lg-1 px-0 h-100 d-flex justify-content-center align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" 
                                     v-bind:class="{ 'd-none': reportUI.matchNumber === 0 }"

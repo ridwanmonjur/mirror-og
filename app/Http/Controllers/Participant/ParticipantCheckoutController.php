@@ -197,6 +197,10 @@ class ParticipantCheckoutController extends Controller
             if (($status === 'succeeded' || $status === 'requires_capture') && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                $paymentMethodId = $paymentIntent['payment_method'];
+                $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
+
+               
                 $paymentDone = (float) $paymentIntent['amount'] / 100;
 
                 if ($paymentIntent['amount'] > 0 && ($paymentIntent['amount_capturable'] === $paymentIntent['amount'] || $paymentIntent['amount_received'] === $paymentIntent['amount'])) {
@@ -206,7 +210,7 @@ class ParticipantCheckoutController extends Controller
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
 
-                    $transaction = RecordStripe::createTransaction($intentId, $paymentIntent['status'], $paymentDone);
+                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, true);
 
                     $event = EventDetail::select(['id', 'eventName', 'event_tier_id', 'event_type_id', 'event_category_id'])
                         ->where('id', $joinEvent->event_details_id)
@@ -266,7 +270,7 @@ class ParticipantCheckoutController extends Controller
                     //     $customerId = $paymentIntent['customer'] ?? null;
                         
                     //     if ($customerId) {
-                    //         $$this->stripeClient->createStripeInvoice($customerId);
+                    //         $this->stripeClient->createStripeInvoice($customerId);
                     //     }
                         
                     // } catch (Exception $invoiceException) {

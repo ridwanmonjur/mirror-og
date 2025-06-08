@@ -216,16 +216,16 @@
                                                                                     
                                                                                         class="d-flex align-items-center">
                                                                                         <svg width="32" height='25' version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="me-2" viewBox="0 0 24 24" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Guides"> <g id="_x32_0_px_2_"> </g> <g id="_x32_0px"> </g> <g id="_x34_0px"> </g> <g id="_x34_4_px"> </g> <g id="_x34_8px"> <g id="_x31_6px"> </g> <g id="square_4px"> <g id="_x32_8_px"> <g id="square_4px_2_"> </g> <g id="square_4px_3_"> </g> <g id="square_4px_1_"> </g> <g id="_x32_4_px_2_"> </g> <g id="_x31_2_px"> </g> </g> </g> </g> <g id="Icons"> </g> <g id="_x32_0_px"> </g> <g id="square_6px"> <g id="_x31_2_PX"> </g> </g> <g id="_x33_6_px"> <g id="_x33_2_px"> <g id="_x32_8_px_1_"> <g id="square_6px_1_"> </g> <g id="_x32_0_px_1_"> <g id="_x31_2_PX_2_"> </g> <g id="_x34_8_px"> <g id="_x32_4_px"> </g> <g id="_x32_4_px_1_"> </g> </g> </g> </g> </g> </g> <g id="_x32_0_px_3_"> </g> <g id="_x32_0_px_4_"> </g> <g id="New_Symbol_8"> <g id="_x32_4_px_3_"> </g> </g> </g> <g id="Artboard"> </g> <g id="Free_Icons"> <g> <polygon style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" points="22.5,19.5 0.5,19.5 1.5,4.5 23.5,4.5 "></polygon> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="4" y1="15.5" x2="6" y2="15.5"></line> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="8" y1="15.5" x2="13" y2="15.5"></line> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="1.3" y1="7.5" x2="23.285" y2="7.5"></line> <line style="fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;" x1="1.1" y1="10.5" x2="23.1" y2="10.5"></line> </g> </g> </g></svg>
-                                                                                        {{ ucfirst($method->card->brand) }}
+                                                                                        {{ ucfirst($method->brand) }}
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>**** {{ $method->card->last4 }}
+                                                                                <td>**** {{ $method->last4 }}
                                                                                 </td>
-                                                                                <td>{{ $method->card->exp_month }}/{{ $method->card->exp_year }}
+                                                                                <td>{{ $method->exp_month }}/{{ $method->exp_year }}
                                                                                 </td>
                                                                                 <td>
 
-                                                                                    {{ Carbon::createFromTimestamp($method->created)->format('Y-m-d') }}
+                                                                                    {{ Carbon::createFromTimestamp($method->created_at)->format('Y-m-d') }}
                                                                                     <span
                                                                                         class="badge ms-2 bg-secondary badge-size">
                                                                                         <span>
@@ -241,7 +241,7 @@
                                                                                                     d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
                                                                                             </svg>
                                                                                         </span>
-                                                                                        {{ Carbon::createFromTimestamp($method->created)->format('g:i A') }}
+                                                                                        {{ Carbon::createFromTimestamp($method->created_at)->format('g:i A') }}
                                                                                     </span>
                                                                                 </td>
                                                                             </tr>
@@ -317,13 +317,13 @@
                                                                                 </td>
 
                                                                                 <td>
-                                                                                    {{ $history->amount / 100 }}
+                                                                                    {{ $history->amount }}
                                                                                 </td>
                                                                                 <td>{{ strtoupper($history->currency) }}
                                                                                 </td>
                                                                                 <td>{{ $history->status }}</td>
                                                                                 <td>
-                                                                                    {{ Carbon::createFromTimestamp($history->created)->format('Y-m-d') }}
+                                                                                    {{ Carbon::createFromTimestamp($history->created_at)->format('Y-m-d') }}
                                                                                     <span
                                                                                         class="badge ms-2 bg-secondary badge-size">
                                                                                         <span>
@@ -339,7 +339,7 @@
                                                                                                     d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
                                                                                             </svg>
                                                                                         </span>
-                                                                                        {{ Carbon::createFromTimestamp($history->created)->format('g:i A') }}
+                                                                                        {{ Carbon::createFromTimestamp($history->created_at)->format('g:i A') }}
                                                                                     </span>
                                                                                 </td>
                                                                             </tr>

@@ -1,24 +1,27 @@
 @php
-    $random_int = rand(0, 999);
-    $total = $joinEvent->regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $joinEvent->tier?->earlyEntryFee : $joinEvent->tier?->tierEntryFee;
-    $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
-    $individualContributionTotal = 0;
-    $pedning = $total - $exisitngSum;
-    $percentReal = round(($exisitngSum * 100) / $total, 2);
-    $percent = floor($percentReal);
-    $myMemberId = null;
-    if (!$percent) {
-        $styles = '--p:' . 100 . '; --c:' . 'lightgray';
-    } else {
-        $styles = '--p:' . $percent . ';';
-        $color = 'red';
-        if ($percent > 50 && $percent < 100 ) {
-            $color = 'orange';
-        } else if ($percent >= 100 ) {
-            $color = '#179317';
-        }
+    if ($joinEvent->tier) {
+        $random_int = rand(0, 999);
+        $total = $joinEvent->regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $joinEvent->tier->earlyEntryFee : $joinEvent->tier->tierEntryFee;
+        $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
+        $individualContributionTotal = 0;
+    
+        $pedning = $total - $exisitngSum;
+        $percentReal = round(($exisitngSum * 100) / $total, 2);
+        $percent = floor($percentReal);
+        $myMemberId = null;
+        if (!$percent) {
+            $styles = '--p:' . 100 . '; --c:' . 'lightgray';
+        } else {
+            $styles = '--p:' . $percent . ';';
+            $color = 'red';
+            if ($percent > 50 && $percent < 100 ) {
+                $color = 'orange';
+            } else if ($percent >= 100 ) {
+                $color = '#179317';
+            }
 
-        $styles.= '--c:' . $color;
+            $styles.= '--c:' . $color;
+        }
     }
 @endphp
 

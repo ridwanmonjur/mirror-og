@@ -98,13 +98,13 @@
                                     <span class="me-3" v-html="getIconSvg(notification.icon_type)"></span>
                                 </template>
                                 <template v-else-if="notification.img_src">
-                                    <img v-bind:src="'/storage/' + notification.img_src" class="rounded-circle object-fit-cover me-3" width="30"
+                                    <img v-bind:src="'/storage/' + notification.img_src" class="rounded-circle border object-fit-cover me-3" width="30"
                                         height="30" alt="Profile"
                                         onerror="this.src='{{ asset('assets/images/404q.png') }}';"
                                     >
                                 </template>
                                 <template v-else>
-                                    <img src="{{ asset('assets/images/404q.png') }}" class="rounded-circle object-fit-cover me-3" width="30"
+                                    <img src="{{ asset('assets/images/404q.png') }}" class="rounded-circle object-fit-cover me-3 border border-secondary" width="30"
                                         height="30" alt="Profile"
                                     >
                                 </template>

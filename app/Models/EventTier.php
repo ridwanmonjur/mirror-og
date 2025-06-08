@@ -12,7 +12,7 @@ class EventTier extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['eventTier', 'tierIcon', 'tierTeamSlot', 'tierPrizePool', 'tierEntryFee'];
+    protected $fillable = ['eventTier', 'tierIcon', 'tierTeamSlot', 'tierPrizePool', 'tierEntryFee', 'earlyEntryFee'];
 
     protected $table = 'event_tier';
     public $timestamps = false;  // Add this line
