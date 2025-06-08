@@ -107,6 +107,20 @@
                                 @endif
                             </div>
                             <div id="card-element" class="my-2"> </div>
+                            <div class="my-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="save-payment">
+                                        <label class="form-check-label" for="save-payment">
+                                            Save Payment Information
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="save-default">
+                                        <label class="form-check-label" for="save-default">
+                                            Choose as default payment
+                                        </label>
+                                    </div>
+                                </div>
                             <div class="d-none d-lg-block">
 
                                 <br>
@@ -199,7 +213,7 @@
                 href="#other-methods-accordion" aria-expanded="false" aria-controls="other-methods-accordion">
                 <div> Other Methods </div>
                 <div class="accordion-arrows"> 
-                @include('includes.Checkout.AccordionArrows') 
+                {{-- @include('includes.Checkout.AccordionArrows')  --}}
                 </div>
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">

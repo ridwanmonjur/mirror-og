@@ -212,9 +212,11 @@ table.responsive thead {
 .transaction-row__cell--total {
     color: #37474f;
     font-weight: 600;
+    padding: 12px 3px;
+    min-width: 150px;
     text-align: left;
     width: auto;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 /* Block: transaction-details - Mobile First */

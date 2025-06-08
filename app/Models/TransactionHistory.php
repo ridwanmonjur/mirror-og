@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Requests\User\TransactionHistoryRequest;
+use App\Http\Resources\TransactionHistoryResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -111,5 +113,31 @@ public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): arr
 }
 
     public $timestamps = NULL;
+
+    public static function getTransactionHistory(TransactionHistoryRequest $request, $user) {
+        $fields = [
+            'name',
+            'type',
+            'link',
+            'amount',
+            'summary',
+            'isPositive',
+            'date',
+            'user_id',
+            'id'
+        ];
+
+        $query = TransactionHistory::where('user_id', $user->id)
+            ->select($fields);
+
+        $result = $query->cursorPaginated(
+            $request->getPerPage(),
+            $request->getCursor(),
+        );
+
+        $result['data'] = TransactionHistoryResource::collection($result['data'])->toArray(request());
+
+        return $result;
+    }
 
 }

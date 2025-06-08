@@ -81,17 +81,16 @@
             <br><br>
             <div class="tab-size"><b>Event Invitations</b></div>
             <br> <br>
-            <div class="position-relative d-none d-lg-flex justify-content-center">
-                @if (!isset($invitedEvents[0]))
-                    <p class="tab-size text-start mx-auto">No events available</p>
-                @else
-                    <div class="event-carousel-styles px-5">
-                        @foreach ($invitedEvents as $key => $joinEvent)
-                            @include('includes.Team.RosterViewRegister')
-                            @include('includes.Team.PieChart', ['isInvited' => true])
-                        @endforeach
-                    </div>
-                @endif
+            @if (!isset($invitedEvents[0]))
+                <p class="tab-size text-start mx-auto">No events available</p>
+            @else
+                <div class="row reg-container">
+                    @foreach ($invitedEvents as $key => $joinEvent)
+                        @include('includes.Team.RosterViewRegister')
+                        @include('includes.Team.PieChart', ['isInvited' => true])
+                    @endforeach
+                </div>
+            @endif
             <br> <br>
         </div>
         <br><br><br><br><br><br>

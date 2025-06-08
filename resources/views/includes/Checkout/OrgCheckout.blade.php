@@ -204,6 +204,20 @@
                 </button>
             </div> --}}
             <div id="card-element" class="mb-2 w-100 "> </div>
+                <div class="my-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="save-payment">
+                    <label class="form-check-label" for="save-payment">
+                        Save Payment Information
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="save-default">
+                    <label class="form-check-label" for="save-default">
+                        Choose as default payment
+                    </label>
+                </div>
+            </div>
                 <div class="d-flex justify-content-center w-100  my-3 d-none" id="submit-button-element" style="width: 100px;">
                     <button form="stripe-payment-form" class="oceans-gaming-default-button" type="submit"> Submit </button>
                    
@@ -212,6 +226,7 @@
                         </a>
                 </div> 
             </div>
+            
         </div>
     </div>
     <div class="d-block d-lg-block px-3 col-12 col-lg-2">

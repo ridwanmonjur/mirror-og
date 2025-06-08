@@ -30,36 +30,8 @@
             <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-75 rounded-30px">
                 <div class="card-body px-4 py-3">
                     <div class="my-3">
-                        <div class="table-responsive mb-4 " v-cloak v-if="transactions && transactions[0]">
-                            <table class="transaction-history__table table ">
-                                <thead class="transaction-table__header">
-                                    <tr>
-                                        <th scope="col"
-                                            class="transaction-table__header-cell bg-secondary text-white py-3">Date
-                                        </th>
-                                        <th scope="col"
-                                            class="transaction-table__header-cell bg-secondary text-white py-3">
-                                            Transaction</th>
-                                        <th scope="col"
-                                            class="transaction-table__header-cell bg-secondary text-white py-3">Type
-                                        </th>
-                                        
-                                            <th scope="col"
-                                            class="transaction-table__header-cell bg-secondary text-white py-3">
-                                            Change</th>
-                                        <th scope="col"
-                                            class="transaction-table__header-cell bg-secondary text-white py-3">Total
-                                        </th>
-                                    </tr>
-                                </thead>
+                        <x-wallet.transanction-list  />
 
-                                <tbody>
-                                    <tr v-for="transaction in transactions" :key="transaction.id" class="transaction-row">
-                                        <x-wallet.transaction-item :fullPage="true" />
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                         <div v-else class="my-3">
                             <br>
                             <x-wallet.no-list :text="'No transactions available!'" />

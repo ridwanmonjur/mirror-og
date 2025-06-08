@@ -26,7 +26,7 @@ class TransactionHistoryRequest extends FormRequest
 
     public function getPerPage(): ?string
     {
-        return $this->get('page', 15);
+        return $this->get('page', 10);
     }
 
 

@@ -115,12 +115,13 @@ class ParticipantEventController extends Controller
                 $isRedirect = false;
                 $eventId = null;
             }
-            [$joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds, $invitedEvents, $groupedPaymentsByEvent, $groupedPaymentsByEventAndTeamMember] = JoinEvent::fetchJoinEvents($id, $invitationListIds, $request->eventId);
-
+            [$joinEventOrganizerIds, $joinEvents, $invitedEventOrganizerIds, $invitedEvents, $groupedPaymentsByEvent, $groupedPaymentsByEventAndTeamMember] = JoinEvent::fetchJoinEvents($id, $invitationListIds);
+            // dd($joinEvents, $invitedEvents);
             $userIds = array_unique(array_merge($joinEventOrganizerIds, $invitedEventOrganizerIds));
             $followCounts = OrganizerFollow::getFollowCounts($userIds);
             $isFollowing = OrganizerFollow::getIsFollowing($logged_user_id, $userIds);
-            ['joinEvents' => $joinEvents, 'activeEvents' => $activeEvents, 'historyEvents' => $historyEvents] = JoinEvent::processEvents($joinEvents, $isFollowing);
+            $joinEvents = JoinEvent::processJoins($joinEvents, $isFollowing);
+            $invitedEvents = JoinEvent::processJoins($invitedEvents, $isFollowing);
 
             $maxRosterSize = config('constants.ROSTER_SIZE');
             $signupStatusEnum = config('constants.SIGNUP_STATUS');

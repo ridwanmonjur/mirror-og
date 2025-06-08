@@ -73,7 +73,7 @@
             STEP 1: Choose your <span class="text-primary">event categories</span>
         </h3>
         <p >Finally, choose a tier for your event.</p>
-        <div class="mx-auto custom-scrollbar2  box-width2 py-0" style="overflow-x: auto;">
+        <div class="mx-auto custom-scrollbar2  box-width3 py-0" style="overflow-x: auto;">
             <div class="d-flex py-0 flex-wrap flex-lg-nowrap">
                 @foreach ($eventTierList as $tierCategory)
                     <section
