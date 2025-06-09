@@ -23,15 +23,16 @@ function TransactionComponent() {
     let wallet = JSON.parse(document.getElementById('wallet').value);
 
     return {
-        
-        
         transactions: [],
         loading: false,
         hasMore: initialTransactions.has_more,
         nextCursor: initialTransactions.next_cursor,
 
         calculateRunningBalances(transactions) {
-            if (transactions.length === 0) return;
+            if (transactions.length === 0) {
+                this.transactions = [];
+                return;
+            }
             
             const sortedTransactions = [...transactions];
             

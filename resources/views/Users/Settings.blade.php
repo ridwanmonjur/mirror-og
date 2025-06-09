@@ -193,25 +193,24 @@
                                                 @if ($paymentMethods->first() != null)
                                                     <div class=" ">
                                                         <div class=" ms-2">
-                                                            <table class="table table-sm responsive table-borderless"
+                                                            <table class="table transaction-table table-sm responsive table-borderless"
                                                                 id="payment-methods-table">
                                                                 <thead class="border-bottom border-secondary">
                                                                     <tr>
-                                                                        <th>#</th>
-                                                                        <th>Card Type</th>
-                                                                        <th>Last 4</th>
-                                                                        <th>Expiry</th>
-                                                                        <th>Date</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">#</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">Card Type</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">Last 4</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">Expiry</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     @foreach ($paymentMethods as $method)
                                                                         @if ($loop->index <= $limit_methods - 1)
                                                                             <tr>
-                                                                                <td>
+                                                                                <td style="width: 50px !important;" class="transaction-row__cell transaction-row__cell--type py-3">
                                                                                     {{ $loop->index + 1 }}
                                                                                 </td>
-                                                                                <td>
+                                                                                <td class="transaction-row__cell transaction-row__cell-- py-3">
                                                                                     <div
                                                                                     
                                                                                         class="d-flex align-items-center">
@@ -219,34 +218,14 @@
                                                                                         {{ ucfirst($method->brand) }}
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>**** {{ $method->last4 }} 
+                                                                                <td class="transaction-row__cell transaction-row__cell--type py-3">**** {{ $method->last4 }} 
                                                                                     @if ($method->is_default) 
                                                                                         <small class="bg-primary text-white ms-2 px-1 py-0 rounded rounded-5"> Default </small>
                                                                                     @endif
                                                                                 </td>
-                                                                                <td>{{ $method->exp_month }}/{{ $method->exp_year }}
+                                                                                <td class="transaction-row__cell transaction-row__cell--type py-3">{{ $method->exp_month }}/{{ $method->exp_year }}
                                                                                 </td>
-                                                                                <td>
-
-                                                                                    {{ Carbon::createFromTimestamp($method->created_at)->format('Y-m-d') }}
-                                                                                    <span
-                                                                                        class="badge ms-2 bg-secondary badge-size">
-                                                                                        <span>
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                                width="16"
-                                                                                                height="16"
-                                                                                                fill="currentColor"
-                                                                                                class="bi bi-clock"
-                                                                                                viewBox="0 0 16 16">
-                                                                                                <path
-                                                                                                    d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z" />
-                                                                                                <path
-                                                                                                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0" />
-                                                                                            </svg>
-                                                                                        </span>
-                                                                                        {{ Carbon::createFromTimestamp($method->created_at)->format('g:i A') }}
-                                                                                    </span>
-                                                                                </td>
+                                                                               
                                                                             </tr>
                                                                         @endif
                                                                     @endforeach
@@ -282,7 +261,7 @@
                                 
 
                                 <!-- Third nested accordion -->
-                                <div class="accordion  " id="nestedAccordion3">
+                                {{-- <div class="accordion  " id="nestedAccordion3">
                                     <div class="accordion-item  ">
                                         <h3 class="accordion-header" id="nestedHeading3">
                                             <div class="px-0 accordion-button border-top  border-1  py-4 {{ $isShowSecondInnerAccordion ? '' : 'collapsed' }} bg-white"
@@ -375,7 +354,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
 
                                 <div class="accordion pb-5 " v-scope="TransactionComponent()" @vue:mounted="init" id="nestedAccordion4">
