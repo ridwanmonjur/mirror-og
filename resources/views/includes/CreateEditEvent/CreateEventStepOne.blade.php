@@ -18,7 +18,7 @@
                         <div 
                             @class([
                                 ' cursor-pointer game-events my-3',
-                                'color-border-success mx-auto px-0 d-inline-block' =>
+                                'color-border-success--thick  mx-auto px-0 d-inline-block' =>
                                     $event && $category->id == $event->event_category_id,
                             ])
                             data-category-id="{{ $category->id }}"
@@ -36,13 +36,13 @@
                     @endif
                 @endforeach
             
-                <div class=" scroll-images game-events" style=" pointer-events: none !important;">
+                <div class=" scroll-images game-events game-events--ignore" style=" pointer-events: none !important;">
                     <a href="javascript:void(0)"  > 
                         <img 
                             class="border border-dark selectable-image" 
                             src="{{ asset("/storage/images/event_details/more.png") }}" 
                             alt="More titles to come" 
-                                                  >
+                        >
                     </a>
                 </div>
 

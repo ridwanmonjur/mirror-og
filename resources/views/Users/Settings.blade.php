@@ -81,7 +81,7 @@
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
                                     <p class="py-0 my-0"> Account Type</p>
-                                    <small class="text-primary text-capitalize">{{strtolower($user->role)}}</small>
+                                    <small class="text-secondary fw-bold text-capitalize"><u>{{strtolower($user->role)}}</u></small>
                                 </div>
                               
                             </div>
@@ -89,7 +89,7 @@
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
                                     <p class="py-0 my-0"> Account Creation </p>
-                                    <small class="text-primary text-capitalize">{{$user->createdIsoFormat()}}</small>
+                                    <small class="text-secondary fw-bold text-capitalize">{{$user->createdIsoFormat()}}</small>
                                 </div>
                                 <div></div>
                             </div>
