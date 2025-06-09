@@ -11,7 +11,7 @@
                             <div>
                                 <img v-bind:src="'/storage/' + report.teams[report.realWinners[reportUI.matchNumber]]?.banner"
                                     alt="Team Banner" width="60" height="60"
-                                    onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                                    onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                                     class="ms-0 border border-1 border-dark popover-content-img rounded-circle object-fit-cover">
                             </div>
                             <div class="mt-2 mb-2 d-block">

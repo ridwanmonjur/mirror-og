@@ -33,10 +33,10 @@
         </div>
         <div class="col-12 col-lg-4">
             <div>
-                <img src="{{ bladeImageNullq($teamBanner1) }}" alt="Team Banner" width="100"
-                    height="100" onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                <img src="{{ asset('storage/'.$teamBanner1)}}" alt="Team Banner" width="100"
+                    height="100" onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                     data-position="{{$position1.'middle'}}"
-                    class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
+                    class="border border-2 popover-img popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
              <p class="mt-2 mb-0 py-0 text-center popover-title" data-position="{{$position1. 'middle'}}">{{$teamName1 ?? '-'}}</p>
@@ -55,9 +55,9 @@
         </div>
         <div class="col-12 col-lg-4">
             <div >
-                <img src="{{ bladeImageNullq($teamBanner2) }}" alt="Team Banner" width="100"
-                    height="100" onerror="this.src='{{ asset('assets/images/404q.png') }}';"
-                    data-position="{{$position2. 'middle'}}" class="border border-4 popover-img popover-content-img rounded-circle object-fit-cover"
+                <img src="{{ asset('storage/'.$teamBanner2) }}" alt="Team Banner" width="100"
+                    height="100" onerror="this.src='{{ asset('assets/images/404.svg') }}';"
+                    data-position="{{$position2. 'middle'}}" class="border border-2 popover-img popover-content-img rounded-circle object-fit-cover"
                 >
             </div>
             <p class="mt-2 mb-2 py-0 text-center popover-title" data-position="{{$position2. 'middle'}}">{{$teamName2 ?? '-'}}</p>

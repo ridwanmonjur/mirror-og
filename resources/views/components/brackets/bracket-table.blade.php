@@ -15,8 +15,8 @@
                      title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }}
                  </abbr>
                  @if ($bracket['team1_id'])
-                    <img src="{{ bladeImageNullq($bracket['team1_teamBanner']) }}" width="40" height= "40"
-                         onerror="this.src='/assets/images/404q.png';" class="object-fit-cover team border border-primary rounded-circle" alt="Team View">
+                    <img src="{{ asset('storage/'.$bracket['team1_teamBanner'])  }}" width="40" height= "40"
+                         onerror="this.src='/assets/images/404.svg';" class="object-fit-cover team border border-primary rounded-circle" alt="Team View">
                 @else
                     <small class="rounded-circle border filler border-secondary" ></small>
                  @endif
@@ -47,8 +47,8 @@
                  <abbr class="tournament-bracket__code"
                      title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
                  @if ($bracket['team2_id'])
-                     <img src="{{ bladeImageNullq($bracket['team2_teamBanner']) }}" width="40" height= "40"
-                         onerror="this.src='/assets/images/404q.png';" 
+                     <img src="{{ asset('storage/'.$bracket['team2_teamBanner']) }}" width="40" height= "40"
+                         onerror="this.src='/assets/images/404.svg';" 
                          class="object-fit-cover border border-primary team rounded-circle me-2" alt="Team View">
                  @else
                     <small class="rounded-circle filler border border-secondary me-2" ></small>

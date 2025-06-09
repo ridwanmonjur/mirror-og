@@ -12,9 +12,9 @@
             $eventTierLower = $icon = null;
         }
         
-        $eventTierLowerImg = bladeImageNullq($icon);
+        $eventTierLowerImg = asset('storage/'.$icon);
         $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = bladeImageNullq($event->game ? $event->game?->gameIcon : null);
+        $bladeEventGameImage = asset('storage/'. $event->game ? $event->game?->gameIcon : null);
         
 
         $willShowStartsInCountDown = $status === 'UPCOMING';

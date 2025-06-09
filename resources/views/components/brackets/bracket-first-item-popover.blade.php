@@ -15,9 +15,9 @@
         <div class="popover-box row justify-content-start px-2 py-4" style="min-width: 400px; background: white !important;">
             <div class="col-12 col-lg-5 text-center border-dark" style="border-right: 2px solid black;">
                 <div >
-                    <img src="{{ bladeImageNullq($teamBanner) }}" alt="Team Banner" width="100"
+                    <img src="{{ asset('storage/'.$teamBanner) }}" alt="Team Banner" width="100"
                         data-position="{{$position . 'hi'}}"
-                        height="100" onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                        height="100" onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                         class="popover-team-img popover-img object-fit-cover rounded-circle border border-dark border-2"
                     >
                     
@@ -29,8 +29,8 @@
                     <ul class="d-block ms-0 ps-0">
                         @foreach ($roster as $rosterItem)
                             <li class="d-inline">
-                                <img width="30" height="30" onerror="this.src='{{ asset('assets/images/404q.png') }}';"
-                                    src="{{ bladeImageNullq( $rosterItem?->user?->userBanner) }}" alt="User Banner"
+                                <img width="30" height="30" onerror="this.src='{{ asset('assets/images/404.svg') }}';"
+                                    src="{{ asset( 'storage/'.$rosterItem?->user?->userBanner) }}" alt="User Banner"
                                     class="mb-2 rounded-circle border border-dark border-2 object-fit-cover me-3"
                                 >
                                 {{ $rosterItem->user->name }}
@@ -45,8 +45,8 @@
         </div>
     </div>
     @if ($teamId)
-        <img src="{{ bladeImageNullq($teamBanner) }}" width="100%" height="100%"
-            onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+        <img src="{{ asset('storage/'.$teamBanner) }}" width="100%" height="100%"
+            onerror="this.src='{{ asset('assets/images/404.svg') }}';"
             class="{{ 'popover-button position-absolute z-99 d-none-when-hover object-fit-cover me-2 ' 
                     . 'data-position-'. $position }}" 
             alt="Team View"

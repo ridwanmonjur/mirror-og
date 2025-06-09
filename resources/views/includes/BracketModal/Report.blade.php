@@ -35,8 +35,8 @@
                             <div>
                                 <img 
                                     v-bind:src="'/storage/' + report.teams[0].banner"  
-                                    alt="Team Banner"  onerror="this.src='{{ asset('assets/images/404q.png') }}';"
-                                    class="border border-4 popover-team-img rounded-circle object-fit-cover"
+                                    alt="Team Banner"  onerror="this.src='{{ asset('assets/images/404.svg') }}';"
+                                    class="border border-2 popover-team-img rounded-circle object-fit-cover"
                                 >
                             </div>
                             <p class="mt-1 mb-0 py-0" v-text="report.teams[0]?.name"></p>
@@ -57,8 +57,8 @@
                             <div>
                                 <img 
                                     v-bind:src="'/storage/' + report.teams[1].banner" 
-                                    alt="Team Banner"  onerror="this.src='{{ asset('assets/images/404q.png') }}';"
-                                    class="border border-4 popover-team-img rounded-circle object-fit-cover"
+                                    alt="Team Banner"  onerror="this.src='{{ asset('assets/images/404.svg') }}';"
+                                    class="border border-2 popover-team-img rounded-circle object-fit-cover"
                                 >
                             </div>
                             <p class="my-0 py-0" v-text="report.teams[1]?.name"></p>
