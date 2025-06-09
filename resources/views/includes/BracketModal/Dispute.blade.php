@@ -53,7 +53,7 @@
                                         <div>
                                             <img v-bind:src="report.teams[0] && report.teams[0].banner? '/storage/' + report.teams[0].banner : '/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
-                                                onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                                                onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
                                         <p class="mt-1 mb-2 py-0" v-text="report.teams[0]?.name"></p>
@@ -69,7 +69,7 @@
                                         <div>
                                             <img v-bind:src="report.teams[1] && report.teams[1].banner? '/storage/' + report.teams[1].banner :'/assets/images/.png'" alt="Team Banner"
                                                 width="50" height="50"
-                                                onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                                                onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                                                 class="border border-2 popover-content-img rounded-circle object-fit-cover">
                                         </div>
                                         <p class="mt-1 mb-2 py-0" v-text="report.teams[1]?.name"></p>

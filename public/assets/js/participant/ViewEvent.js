@@ -443,7 +443,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                             newImg.height = '25';
                             newImg.dataset.position = position;
                             newImg.onerror = function() {
-                                this.src='/assets/images/404q.png';
+                                this.src='/assets/images/404.svg';
                             };
 
                             newImg.className = 'popover-button position-absolute w-100 h-100 d-none-when-hover object-fit-cover me-2';
@@ -460,7 +460,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                             newImgMobile.height = '40';
                             newImgMobile.dataset.position = position;
                             newImgMobile.onerror = function() {
-                                this.src='/assets/images/404q.png';
+                                this.src='/assets/images/404.svg';
                             };
 
                             newImgMobile.className = 'object-fit-cover team border border-primary rounded-circle';
@@ -510,7 +510,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                             roster.forEach(rosterItem => {
                                 rosterHtml += `
                                     <li class="d-inline">
-                                        <img width="25" height="25" onerror="this.src='/assets/images/404q.png';"
+                                        <img width="25" height="25" onerror="this.src='/assets/images/404.svg';"
                                             src="/storage/${rosterItem.user.userBanner}" alt="User Banner"
                                             class="mb-2 rounded-circle object-fit-cover me-3">
                                         ${rosterItem.user.name}

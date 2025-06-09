@@ -19,7 +19,7 @@
 >
     @if ($teamId1)
         <img src="{{ asset('storage/'.$teamBanner1) }}" width="40" height="33"
-            onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+            onerror="this.src='{{ asset('assets/images/404.svg') }}';"
             class="cursor-pointer position-absolute w-100 h-100 object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
             data-position="{{$position1}}" 

@@ -19,7 +19,7 @@
 >
     @if ($teamId1)
         <img src="{{ asset('storage/'.$teamBanner1) }}" width="40" height="33"
-            onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+            onerror="this.src='{{ asset('assets/images/404.svg') }}';"
             class="cursor-pointer position-absolute w-100 h-100 z-99 object-fit-cover me-2" alt="Team View"
             data-position="{{$position1}}" 
             onclick="reportModalShow(event);" 
@@ -46,7 +46,7 @@
 >
     @if ($teamId2)
         <img src="{{ asset('storage/'.$teamBanner2) }}" width="40" height="33"
-            onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+            onerror="this.src='{{ asset('assets/images/404.svg') }}';"
             class="cursor-pointer position-absolute z-99 w-100 h-100 d-none-when-hover object-fit-cover me-2" alt="Team View"
             data-position="{{$position2}}" 
             onclick="reportModalShow(event);" 
