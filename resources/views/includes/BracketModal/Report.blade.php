@@ -8,7 +8,60 @@
                     <div class=" popover-box bg-white border-2 border  row justify-content-start border border-dark border px-0 py-0"
                     >
                         <div class="text-center  mt-4">
-                            <h5 class="text-uppercase text-primary"> Match Results: <span  v-text="report.position"></span> </h5>
+                            <div class="border border-primary px-3 w-75 rounded-3 border d-inline-block my-1 py-1 mb-3 text-center mx-auto px-2">
+                                <div class="mx-0 w-100" >
+                                    <div class="d-flex justify-content-start mb-1 px-0">
+                                        <a class="d-flex w-100 justify-content-start align-items-center"
+                                            href="{{ route('public.event.view', ['id' => $event->id, 'title' => $event->slug ]) }}">
+
+                                            <img 
+                                                {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
+                                                src="{{ bladeImageNull($event->game->gameIcon) }}"
+                                                class="object-fit-cover me-1 rounded-2" width="30px" height="30px"
+                                                style="object-position: center;"    
+                                            >
+                                            <div class="text-truncate w-75 text-start pe-2"> 
+                                                <b>
+                                                <span class="ms-2"> {{ $event->eventName }}</span> 
+                                                <span>@if ($event->tier->eventTier) 
+                                                    <span>▪️ {{$event->tier->eventTier}}
+                                                    @endif
+                                                </span> 
+                                                </span> 
+                                                <span>@if ($event->game->gameTitle) 
+                                                    <span>▪️ {{$event->game->gameTitle}}</span> 
+                                                    @endif
+                                                </span> 
+                                                </b>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div onclick="goToUrl(event, this)"
+                                        data-url="{{ route('public.organizer.view', ['id' => $event->user->id, 'title' => $event->user->slug ]) }}"
+                                        class=" d-flex justify-content-start align-items-center px-0 mx-0 ">
+                                        <img 
+                                            {!! trustedBladeHandleImageFailureBanner() !!}
+                                            src="{{ $event->user->userBanner ? asset('storage/' . $event->user->userBanner) : '/assets/images/404.png' }}" 
+                                            class="object-fit-cover me-2 rounded-circle rounded-circle2" >
+                                        <div class="text-start d-inline-flex flex-column justify-content-center ">
+                                            <small class="d-inline-block my-0 text-wrap ">{{ $event->user->name }} </small>
+                                            <small class="small-text m-0" id="followCount" data-count="{{ $followersCount }}">
+                                                {{ $followersCount }}
+                                                    {{ $followersCount == 1 ? 'follower' : 'followers' }} 
+                                            </small>
+                                            {{-- <small
+                                                data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
+                                                class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
+                                                {{ $followCounts[$joinEvent->eventDetails->user_id] }}
+                                                follower{{ bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id]) }}
+                                            </small> --}}
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            <br>
+                            <h5 class="text-uppercase py-0 mt-1 mb-1 text-primary"><b> Match Results: <span  v-text="report.position"></span></b> </h5>
                             <p class="my-0 p-0 text-uppercase" v-text="report.completeMatchStatus"> </p>
                             <template v-if="report.deadline && userLevelEnums['IS_PUBLIC'] != report.userLevel">
                                 <div class="my-0 py-0 ">
