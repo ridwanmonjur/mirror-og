@@ -6,7 +6,7 @@
                 <p class="my-0"> Disputing Team </p>
                 <img v-bind:src="'/storage/' + report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber]?.banner"
                     alt="Team Banner" width="50" height="50"
-                    onerror="this.src='{{ asset('assets/images/404q.png') }}';"
+                    onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                     class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
                 <p class="text-primary">
                     <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber]?.name">

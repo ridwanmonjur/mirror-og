@@ -78,7 +78,7 @@ if (teamSelectElement) {
                 let logoHtml = '';
                 
                 if (logo && logo !== 'null') {
-                    logoHtml = `<img width="50" height="30" class="me-2 object-fit-cover rounded rounded-5 border border-secondary" src="${logoBasePath}${escape(logo)}" alt="${escape(data.name)} logo" class="bank-logo" onerror="this.style.display='none'">`;
+                    logoHtml = `<img width="50" height="30" class="me-2 object-fit-cover rounded rounded-3  border border-secondary" src="${logoBasePath}${escape(logo)}" alt="${escape(data.name)} logo" class="bank-logo" onerror="this.style.display='none'">`;
                 } else {
                     logoHtml = `<img width="50" height="30" class="me-2 border border-primary" src="/assets/404q./png" alt="${escape(data.name)} logo" class="bank-logo" onerror="this.style.display='none'">`;
 
@@ -94,7 +94,7 @@ if (teamSelectElement) {
                 let logoHtml = '';
                 
                 if (logo && logo !== 'null') {
-                    logoHtml = `<img width="50"  class="me-2 border object-fit-cover rounded rounded-5 border border-secondary" height="30" src="${logoBasePath}${escape(logo)}" alt="${escape(data.name)} logo" class="bank-logo" onerror="this.style.display='none'">`;
+                    logoHtml = `<img width="50"  class="me-2 border object-fit-cover rounded rounded-3  border border-secondary" height="30" src="${logoBasePath}${escape(logo)}" alt="${escape(data.name)} logo" class="bank-logo" onerror="this.style.display='none'">`;
                 }
                 
                 return `<div class="bank-option">

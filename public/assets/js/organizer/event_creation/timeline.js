@@ -436,12 +436,17 @@ function goToNextScreen(nextId, nextTimeline) {
 const gameCategories = document.querySelectorAll('.game-events');
     
 gameCategories.forEach(category => {
-    category.addEventListener('click', function() {
+    if (!category.classList.contains('game-events--ignore')) {
+        category.addEventListener('click', function() {
         gameCategories.forEach(element => {
-            element.classList.remove('color-border-success');
+            if (!element.classList.contains('game-events--ignore')) {
+                element.classList.remove('color-border-success--thick');
+                element.style.pointerEvents = 'auto';
+            }
         });
         
-        this.classList.add('color-border-success');
+        this.classList.add('color-border-success--thick');
+        this.style.pointerEvents = 'none';
         
         const categoryId = this.dataset.categoryId;
         const gameTitle = this.dataset.gameTitle;
@@ -454,6 +459,7 @@ gameCategories.forEach(category => {
         
         localStorage.setItem('gameTitleImg', gameIconSrc);
         
-        goToNextScreen('step-2', 'timeline-1');
+        // goToNextScreen('step-2', 'timeline-1');
     });
+    }
 });

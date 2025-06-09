@@ -33,7 +33,7 @@
 
             @include('includes.CreateEditEvent.CreateEventSuccessTimelineBox')
             <br>
-            <div class="text-center bg-white border rounded rounded-5 border-light d-flex justify-content-center flex-column mx-auto" style="width: min(800px, 95%);">
+            <div class="text-center bg-white border rounded rounded-3  border-light d-flex justify-content-center flex-column mx-auto" style="width: min(800px, 95%);">
                 <div>
                     <br>
                     <u>
