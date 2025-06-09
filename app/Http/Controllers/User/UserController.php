@@ -157,7 +157,7 @@ class UserController extends Controller
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = $request->input('history_limit', 10); // 100
         $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
-
+        // dd($transactions);
 
         if ($user->stripe_customer_id) {
             try {
@@ -169,27 +169,33 @@ class UserController extends Controller
                 $paymentMethods = $paymentMethodsQuery->get();
                 $hasMorePayments = isset($paymentMethods[$limit_methods]);
 
-                $paymentHistoryQuery = DB::table('saved_payments')
-                    ->where('user_id', $user->id)
-                    ->orderBy('created_at', 'desc')
-                    ->limit($limit_history + 1);
+                // $paymentHistoryQuery = DB::table('saved_payments')
+                //     ->where('user_id', $user->id)
+                //     ->orderBy('created_at', 'desc')
+                //     ->limit($limit_history + 1);
                 
-                $paymentHistory = $paymentHistoryQuery->get();
+                // $paymentHistory = $paymentHistoryQuery->get();
                 $hasMoreHistory = isset($paymentHistory[$limit_history]);
             } catch (Exception $e) {
                 $paymentMethods = new Collection();
-                $paymentHistory = new Collection();
-                $hasMorePayments = $hasMoreHistory = false;
+                // $paymentHistory = new Collection();
+                $hasMorePayments
+                    // = $hasMoreHistory 
+                    = false;
             }
         } else {
             $paymentMethods = new Collection();
-            $paymentHistory = new Collection();
-            $hasMorePayments = $hasMoreHistory = false;
+            // $paymentHistory = new Collection();
+            $hasMorePayments 
+                // = $hasMoreHistory 
+                = false;
         }
 
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
-        return view('Users.Settings', compact('user', 'paymentMethods', 'paymentHistory', 'settingsAction', 
-                'limit_methods', 'limit_history', 'hasMorePayments', 'hasMoreHistory', 'wallet', 'transactions',
+        return view('Users.Settings', compact('user', 'paymentMethods',  'settingsAction', 
+                'limit_methods', 'limit_history', 'hasMorePayments', 
+                // 'hasMoreHistory', 'paymentHistory',
+                'wallet', 'transactions',
                 'isShowFirstInnerAccordion', 'isShowSecondInnerAccordion', 'isShowNextAccordion'
             )
         );
