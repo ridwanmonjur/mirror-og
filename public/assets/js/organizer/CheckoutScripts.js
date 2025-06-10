@@ -267,7 +267,8 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                 confirmParams: {
                     return_url: hiddenVars['stripeReturnUrl']
                         + `?savePayment=${savePaymentCheck.checked}` 
-                        + `&saveDefault=${saveDefaultCheck.checked}`,
+                        // + `&saveDefault=${saveDefaultCheck.checked}`
+                        ,
                     payment_method_data: {
                         billing_details: billingDetails
                     }

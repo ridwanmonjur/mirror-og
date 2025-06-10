@@ -219,9 +219,9 @@
                                                                                     </div>
                                                                                 </td>
                                                                                 <td class="transaction-row__cell transaction-row__cell--type py-3">**** {{ $method->last4 }} 
-                                                                                    @if ($method->is_default) 
+                                                                                    {{-- @if ($method->is_default) 
                                                                                         <small class="bg-primary text-white ms-2 px-1 py-0 rounded rounded-3 "> Default </small>
-                                                                                    @endif
+                                                                                    @endif --}}
                                                                                 </td>
                                                                                 <td class="transaction-row__cell transaction-row__cell--type py-3">{{ $method->exp_month }}/{{ $method->exp_year }}
                                                                                 </td>

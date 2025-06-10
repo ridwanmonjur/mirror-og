@@ -313,7 +313,8 @@ class PaymentProcessor {
                 confirmParams: {
                     return_url: paymentVars['checkoutTransitionUrl'] 
                         + `?savePayment=${savePaymentCheck.checked}` 
-                        + `&saveDefault=${saveDefaultCheck.checked}`,
+                        // + `&saveDefault=${saveDefaultCheck.checked}`
+                        ,
                     payment_method_data: {
                         billing_details: billingDetails
                     }
