@@ -114,12 +114,12 @@
                                             Save Payment Information
                                         </label>
                                     </div>
-                                    <div class="form-check">
+                                    {{-- <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="save-default">
                                         <label class="form-check-label" for="save-default">
                                             Choose as default payment
                                         </label>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             <div class="d-none d-lg-block">
 
