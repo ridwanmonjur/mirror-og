@@ -144,12 +144,12 @@
                                 style="padding-top: 30px;padding-bottom: 30px;width: 90%;">
                                 <div class="col-12 col-xl-4">
                                     <h3 class="py-0 my-0"> {{ $totalEventsCount }} </h3>
-                                    <p class="mx-2 py-2 my-0"> Event{{ bladePluralPrefix($totalEventsCount) }} Joined
+                                    <p class="mx-2 py-2 my-0"> Event{{ bldPlural($totalEventsCount) }} Joined
                                         By Player </p>
                                 </div>
                                 <div class="col-12 col-xl-4">
                                     <h3 class="py-0 my-0"> {{ $wins }} </h3>
-                                    <p class="mx-2 py-2 my-0"> Tournament Win{{ bladePluralPrefix($wins) }} By Player
+                                    <p class="mx-2 py-2 my-0"> Tournament Win{{ bldPlural($wins) }} By Player
                                     </p>
                                 </div>
                                 <div class="col-12 col-xl-4">
@@ -231,7 +231,7 @@
                                             <div class="d-flex align-items-center flex-grow-1">
                                                 <img src="{{ '/storage' . '/' . $team->teamBanner }}"
                                                     loading="lazy"
-                                                    {!! trustedBladeHandleImageFailure() !!}
+                                                    {!! bldImgF() !!}
                                                     class="border border-secondary rounded-circle me-3"
                                                     style="object-fit: cover;" width="50" height="50"
                                                     alt="{{ $team->teamName }}">
@@ -282,7 +282,7 @@
                                             <div class="d-flex align-items-center flex-grow-1">
                                                 <img src="{{ '/storage' . '/' . $team->teamBanner }}"
                                                     loading="lazy"
-                                                    {!! trustedBladeHandleImageFailure() !!}
+                                                    {!! bldImgF() !!}
                                                     class="border border-secondary rounded-circle me-3"
                                                     style="object-fit: cover;" width="50" height="50"
                                                     alt="{{ $team->teamName }}">

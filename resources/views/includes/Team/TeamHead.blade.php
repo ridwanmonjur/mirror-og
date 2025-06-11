@@ -425,7 +425,7 @@
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
                     </span>
-                    <span data-follower-stats="{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam->profile->follower_count}}" >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bladePluralPrefix($selectTeam->profile->follower_count) }} </span>
+                    <span data-follower-stats="{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam->profile->follower_count}}" >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bldPlural($selectTeam->profile->follower_count) }} </span>
                 </div>
                 <div class="col-12 col-lg-4 text-center mx-auto"> 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-2 bi-calendar-date" viewBox="0 0 16 16">

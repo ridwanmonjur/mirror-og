@@ -3,20 +3,20 @@
 
 @php
     $status = $event->statusResolved();
-    $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
+    $stylesEventRatio = bldRtMap($event->registeredParticipants, $event->totalParticipants);
      if ($event?->tier) {
         $tier = $event->tier->eventTier;
         $icon = $event->tier->tierIcon;
     } else {
         $tier = $icon = null;
     }
-    $type = $event->type ? $event->type?->eventType : null;
-    $eventTierLower = bladeEventTowerLowerClass($tier);
+    $type = $event->type ? $event->type->eventType : null;
+    $eventTierLower = bldLowerTIer($tier);
     $dateArray = $event->startDatesStr($event->startDate, $event->startTime);
     extract($dateArray);
-    $eventTierLowerImg = bladeImageNull($icon);
-    $eventBannerImg = bladeImageNull($event->eventBanner);
-    $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
+    $eventTierLowerImg = bldImg($icon);
+    $eventBannerImg = bldImg($event->eventBanner);
+    $bladeEventGameImage = bldImg($event->game ? $event->game?->gameIcon : null);
     $userId = isset($user) ? $user->id : null;       
     $regStatus = $event->getRegistrationStatus();
     $entryFee = $regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $event->tier?->earlyEntryFee : $event->tier?->tierEntryFee;
@@ -134,12 +134,13 @@
                 <div>
                     <div class="mx-2  position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
+                            <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}" 
+                                onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
                                 width="120" height="90">
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
                             <img loading="lazy"  alt="{{ $event->eventName }}" width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
-                                @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) {!! trustedBladeHandleImageFailureBanner() !!} src="{{ $eventBannerImg }}"
+                                @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';" src="{{ $eventBannerImg }}"
                                 alt="" 
                             >
                         </a>

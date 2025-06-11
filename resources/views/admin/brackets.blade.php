@@ -22,7 +22,7 @@
         <div  class="text-start">
             <div  class=" d-inline-block  text-start  py-3">
                 
-                    <img {!! trustedBladeHandleImageFailureBanner() !!}
+                    <img onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';"
                         src="{{ '/storage' . '/'.  $event['eventBanner'] }}"
                         class="object-fit-cover float-left border border-primary rounded-circle me-1" width="30" height="30"
                     >

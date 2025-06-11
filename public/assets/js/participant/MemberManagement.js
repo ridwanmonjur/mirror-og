@@ -659,7 +659,31 @@ async function fetchMembers(event = null) {
     
     if (data.success && 'data' in data) {
         users = data?.data?.data;
-        links = data?.data?.links;
+        let {next_page_url, prev_page_url} = data?.data;
+        let newPagination = [];
+        if (prev_page_url) {
+            newPagination.push(
+                {'url' : prev_page_url, 'label': 'Previous Page'},
+            );
+        }
+
+        if (next_page_url) {
+            newPagination.push(
+                {'url' : next_page_url, 'label': 'Next Page'},
+            );
+        }
+          
+        links = [...newPagination];
+
+        if (!users[0]) {
+            Swal.fire({
+                position: "center",
+                icon: 'info',
+                confirmButtonColor: '#43a4d7',
+                text: 'No users found by this search. Please change your search.',
+            })
+        }
+
         for (user of users) {
             bodyHtml+=`
                 <tr class="st py-2">
@@ -710,11 +734,11 @@ async function fetchMembers(event = null) {
                 <li
                     data-url='${link.url}'
                     onclick="{ fetchMembers(event); }"  
-                    class="page-item ${link.active && 'active'} ${link.url && 'disabled'}" 
+                    class="page-item " 
                 > 
                     <a 
                         onclick="event.preventDefault()"
-                        class="page-link ${link.active && 'text-light'}"
+                        class="page-link"
                     > 
                         ${link.label}
                     </a>

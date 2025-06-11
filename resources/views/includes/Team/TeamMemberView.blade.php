@@ -4,7 +4,7 @@
 <br>
 <div id="CurrentMembers">
     <p class="text-center mx-auto ">Team {{ $selectTeam->teamName }} has
-        {{ $counTeamMembers }} present team member{{bladePluralPrefix($counTeamMembers)}}. 
+        {{ $counTeamMembers }} present team member{{bldPlural($counTeamMembers)}}. 
         @if (isset($user) && $selectTeam->creator_id == $user->id)
             
                 <a 

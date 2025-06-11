@@ -1,10 +1,10 @@
 @foreach ($events as $event)
     @php
         $status = $event->statusResolved();
-        $eventTierLowerImg = bladeImageNull($event->tier ? $event->tier?->tierIcon: null);
-        $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
-        $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
+        $eventTierLowerImg = bldImg($event->tier ? $event->tier?->tierIcon: null);
+        $eventBannerImg = bldImg($event->eventBanner);
+        $bladeEventGameImage = $event->game ? asset('/storage'. '/' . $event->game?->gameIcon) : null;
+        $stylesEventRatio = bldRtMap($event->join_events_count, $event->tierTeamSlot);
         $willShowStartsInCountDown = $status === 'UPCOMING';
         $isEnded = $status === 'ENDED';
         extract($event->startDatesReadable($willShowStartsInCountDown));
@@ -46,7 +46,7 @@
                     <span>{{ $status }}</span>
                 </button>
             </div>
-            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! trustedBladeHandleImageFailure() !!} class="cover " style="min-height: 150px !important; ">
+            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! bldImgF() !!} class="cover " style="min-height: 150px !important; ">
             <div class="frame1 d-flex justify-content-between flex-wrap px-3">
                 <div>
                     <img 
@@ -82,7 +82,7 @@
                             <circle cx="2" cy="2" r="2" fill="currentColor"/>
                             </svg>
                         </span>
-                        <span>{{ $event->user->follows_count }} follower{{ bladePluralPrefix($event->user->follows_count) }}</span>
+                        <span>{{ $event->user->follows_count }} follower{{ bldPlural($event->user->follows_count) }}</span>
                     </div>
                 </div>
             </div>

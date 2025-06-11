@@ -35,7 +35,7 @@
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug ]) }}">
             <img 
                 id="eventBanner"
-                {!! trustedBladeHandleImageFailureBanner() !!}
+                onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';"
                 @class([
                 'opacity-until-hover w-100 h-100 object-fit-cover me-1 border-0',
             ])
@@ -50,8 +50,8 @@
                         href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug]) }}">
 
                         <img 
-                            {!! trustedBladeHandleImageFailureBanner() !!} style="max-width: 50px; "
-                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
+                            onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" style="max-width: 50px; "
+                            src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                             class="object-fit-cover me-1 rounded-2 " width="30px" height="30px"
                             style="object-position: center;"    
                         >
@@ -62,8 +62,8 @@
                     data-url="{{ route('public.organizer.view', ['id' => $joinEvent->user->id, 'title' => $joinEvent->user->slug ]) }}"
                     class="col-6 col-xl-5 d-flex justify-content-start align-items-center px-0 mx-0 mt-1">
                     <img 
-                        {!! trustedBladeHandleImageFailureBanner() !!}
-                        src="{{ bladeImageNull($joinEvent->user->userBanner) }}" width="35" height="35"
+                        onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
+                        src="{{ bldImg($joinEvent->user->userBanner) }}" width="35" height="35"
                         class="me-2 object-fit-cover rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center ">
                         <small class="d-inline-block my-0 text-wrap ">{{ $joinEvent->user->name }}</small>
@@ -71,7 +71,7 @@
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">
                             {{ $followCounts[$joinEvent->user_id] }}
-                            follower{{ bladePluralPrefix($followCounts[$joinEvent->user_id]) }}
+                            follower{{ bldPlural($followCounts[$joinEvent->user_id]) }}
                         </small>
                     </div>
                 </div>

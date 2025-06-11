@@ -143,7 +143,7 @@
         <p>Here are the categories you've chosen for your event.</p>
     </div>
     <section class="container-border-2 grid-2 justify-content-center py-0">
-        <img id="outputGameTitleImg" {!! trustedBladeHandleImageFailure() !!} width=225 height="100%"
+        <img id="outputGameTitleImg" {!! bldImgF() !!} width=225 height="100%"
             src="{{ asset('assets/images/createEvent/exclamation.png') }}" alt=""
             style="margin: auto; border-radius: 20px; width: 180px; border: 1px dotted black; object-fit: cover; ">
         <div class="box_3rd box_3rd_max_width event_extra mx-auto">
@@ -407,8 +407,8 @@
                         <img @class([
                             'd-none' => is_null($event->eventBanner),
                             'banner-preview-img z-index-4',
-                        ]) src="{{ bladeImageNull($event->eventBanner) }}"
-                            {!! trustedBladeHandleImageFailure() !!} id="previewImage" alt="Preview" 
+                        ]) src="{{ bldImg($event->eventBanner) }}"
+                            {!! bldImgF() !!} id="previewImage" alt="Preview" 
                         >
                     @else
                         <img class="d-none banner-preview-img z-index-4" id="previewImage" alt="Preview" 
