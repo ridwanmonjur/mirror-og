@@ -21,6 +21,9 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasFactory;
 
+    protected $perPage = 5;
+
+
     public function canAccessPanel($panel): bool
     {
         return $this->role == 'ADMIN';

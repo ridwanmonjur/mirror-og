@@ -322,7 +322,7 @@ class MiscController extends Controller
         $count = 6;
         $currentDateTime = Carbon::now()->utc();
 
-        $events = EventDetail::landingPageQuery($request, $currentDateTime)->paginate($count);
+        $events = EventDetail::landingPageQuery($request, $currentDateTime)->simplePaginate();
 
         $output = compact('events');
 

@@ -234,16 +234,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <ul class="pagination cursor-pointer pt-2">
-                                <li v-for="link in pagination ?? []" :key="link.label"
+                            <ul class="pagination cursor-pointer d-flex justify-content-center mx-auto pt-2">
+                                <li class="btn border-primary text-primary rounded-pill  mx-2 " v-for="link in pagination ?? []" :key="link.label"
                                     v-on:click="if (link.url) { fetchProspectiveChatters(event); }"
                                     v-bind:data-url="link.url"
-                                    :class="{ 'page-item': true, 'active': link.active, 'disabled': link.url }">
+                                >
                                     <a onclick="event.preventDefault()"
-                                        :class="{
-                                            'page-link': true,
-                                            'text-light': link.active,
-                                        }"
+                                        class="text-primary"
                                         v-html="link.label">
                                     </a>
                                 </li>

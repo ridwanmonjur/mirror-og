@@ -72,7 +72,7 @@ class OrganizerEventController extends Controller
                     $q->where('join_status', 'confirmed');
                 },
             ])
-            ->paginate($count);
+            ->simplePaginate();
 
         $joinTeamIds = [];
 
@@ -104,7 +104,7 @@ class OrganizerEventController extends Controller
                     $q->where('join_status', 'confirmed');
                 },
             ])
-            ->paginate($count);
+            ->simplePaginate();
 
         $results = DB::table('join_events')->select('join_events.event_details_id', DB::raw('COUNT(team_members.id) as accepted_members_count'))->join('team_members', 'join_events.team_id', '=', 'team_members.team_id')->where('team_members.status', '=', 'accepted')->groupBy('join_events.event_details_id')->get();
 
