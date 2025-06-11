@@ -12,6 +12,7 @@ return new class extends Migration
             // Drop foreign keys first with try-catch
             try {
                 if (Schema::hasColumn('participant_payments', 'history_id')) {
+                    $table->dropForeign(['history_id']);
                     $table->dropColumn('history_id');
                 }
             } catch (\Exception $e) {
@@ -20,6 +21,7 @@ return new class extends Migration
             
             try {
                 if (Schema::hasColumn('participant_payments', 'team_members_id')) {
+                    $table->dropForeign(['team_members_id']);
                     $table->dropColumn('team_members_id');
                 }
             } catch (\Exception $e) {
@@ -28,46 +30,39 @@ return new class extends Migration
             
             try {
                 if (Schema::hasColumn('participant_payments', 'user_id')) {
+                    $table->dropForeign(['user_id']);
                     $table->dropColumn('user_id');
                 }
             } catch (\Exception $e) {
                 // Foreign key doesn't exist, continue
             }
-            
+        });
+
+        Schema::table('participant_payments', function (Blueprint $table) {
             // Modify columns to be nullable (using correct column type)
-            if (Schema::hasColumn('participant_payments', 'team_members_id')) {
-                $table->unsignedBigInteger('team_members_id')->nullable()->change();
-            }
+                $table->unsignedBigInteger('team_members_id')->nullable();
             
-            if (Schema::hasColumn('participant_payments', 'user_id')) {
-                $table->unsignedBigInteger('user_id')->nullable()->change();
-            }
+                $table->unsignedBigInteger('user_id')->nullable();
+
+                $table->unsignedBigInteger('history_id')->nullable();
             
-            // Add foreign keys back with SET NULL
-            if (Schema::hasColumn('participant_payments', 'history_id')) {
                 $table->foreign('history_id')
                       ->references('id')
                       ->on('transaction_history')
                       ->onDelete('set null')
                       ->onUpdate('restrict');
-            }
                       
-            if (Schema::hasColumn('participant_payments', 'team_members_id')) {
                 $table->foreign('team_members_id')
                       ->references('id')
                       ->on('team_members')
                       ->onDelete('set null')
                       ->onUpdate('restrict');
-            }
                       
-            if (Schema::hasColumn('participant_payments', 'user_id')) {
                 $table->foreign('user_id')
                       ->references('id')
                       ->on('users')
                       ->onDelete('set null')
                       ->onUpdate('restrict');
-            }
-
             
         });
 
