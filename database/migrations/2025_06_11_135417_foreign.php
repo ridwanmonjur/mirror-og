@@ -11,19 +11,19 @@ return new class extends Migration
         Schema::table('participant_payments', function (Blueprint $table) {
             // Drop foreign keys first with try-catch
             try {
-                $table->dropForeign('participant_payments_history_id_foreign');
+                $table->dropColumn('history_id');
             } catch (\Exception $e) {
                 // Foreign key doesn't exist, continue
             }
             
             try {
-                $table->dropForeign('participant_payments_team_members_id_foreign');
+                $table->dropColumn('team_members_id');
             } catch (\Exception $e) {
                 // Foreign key doesn't exist, continue
             }
             
             try {
-                $table->dropForeign('participant_payments_user_id_foreign');
+                $table->dropColumn('user_id');
             } catch (\Exception $e) {
                 // Foreign key doesn't exist, continue
             }
