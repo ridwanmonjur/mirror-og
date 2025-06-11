@@ -163,6 +163,7 @@ class MiscController extends Controller
             ]
         );
 
+
         if ($validator->fails()) {
             $baseUrl = $request->getSchemeAndHttpHost();
             $basePath = '/seed/joins';
@@ -191,12 +192,17 @@ class MiscController extends Controller
 
         }
 
+
+
         $validated = $validator->validated();
         $factory = new JoinEventFactory();
         $key = strToUpper($validated['register_time']);
         $register_time = config("constants.SIGNUP_STATUS.{$key}");
+        
+        // dd($register_time);
+        
         // dd($key, $register_time);
-        $seed = $factory->seed([
+        $options = [
             'event' => [
                 'eventTier' => 'Dolphin',
                 'eventName' => $this->generateEventName($validated),
@@ -209,7 +215,9 @@ class MiscController extends Controller
                     'type' => $validated['type'],
                 ]
             ]
-        ]);
+        ];
+
+        $seed = $factory->seed($options);
 
         [
             'events' => $events,

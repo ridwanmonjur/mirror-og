@@ -376,7 +376,7 @@ class EventDetail extends Model implements Feedable
     public function statusResolved(): string
     {
         
-        if (in_array($this->status, ['DRAFT', 'ENDED', 'PENDING' ])) {
+        if (in_array($this->status, ['DRAFT', 'ENDED', 'FAILED', 'PENDING' ])) {
             return $this->status;
         }
 
