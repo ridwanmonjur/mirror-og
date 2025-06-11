@@ -22,9 +22,9 @@
     }
     $tier = $event->tier ? $event->tier?->eventTier : null;
     
-    $eventTierLower = bladeEventTowerLowerClass($tier);
-    $eventTierLowerImg = bladeImageNull($icon);
-    $eventBannerImg = bladeImageNull($event->eventBanner);
+    $eventTierLower = bldLowerTIer($tier);
+    $eventTierLowerImg = bldImg($icon);
+    $eventBannerImg = bldImg($event->eventBanner);
 
     if (!function_exists('getMedalSvg')) {
 
@@ -176,7 +176,7 @@
                                                             <!-- Team Image and Name -->
                                                             <div class="position-relative">
                                                                 <img src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
-                                                                    {!! trustedBladeHandleImageFailure() !!}
+                                                                    {!! bldImgF() !!}
                                                                     class="rounded-circle object-fit-cover border border-primary"
                                                                     style="width: 48px; height: 48px;"
                                                                     alt="Team banner">
@@ -197,7 +197,7 @@
                                                             @if ($joinEventAndTeam->position)
                                                                 <div class="d-flex align-items-center text-body-secondary small">
                                                                     <span class="me-2">{!! getMedalSvg($joinEventAndTeam->position) !!} </span>
-                                                                    <span class="me-2">{{ bladeOrdinalPrefix($joinEventAndTeam->position) }}</span>
+                                                                    <span class="me-2">{{ bldOrdinal($joinEventAndTeam->position) }}</span>
                                                                 </div>
                                                             @else
                                                                 <span class="text-body-secondary small">-</span>
@@ -338,7 +338,7 @@
                                                         <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
-                                                        {!! trustedBladeHandleImageFailure() !!} 
+                                                        {!! bldImgF() !!} 
                                                         height="40"
                                                         width="40"
                                                         > 
@@ -513,7 +513,7 @@
                                                         <img
                                                         class="rounded-circle d-inline-block object-fit-cover me-3"
                                                         src="{{ '/storage' . '/'. $joinEventAndTeam->teamBanner }}"
-                                                        {!! trustedBladeHandleImageFailure() !!} 
+                                                        {!! bldImgF() !!} 
                                                         height="40"
                                                         width="40"
                                                         > 

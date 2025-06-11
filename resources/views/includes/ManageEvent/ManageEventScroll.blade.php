@@ -2,18 +2,18 @@
     
     @php
         $status = $event->statusResolved();
-        $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
+        $stylesEventRatio = bldRtMap($event->join_events_count, $event->tierTeamSlot);
         $tier = $event->tier ? $event->tier?->eventTier : null;
 
          if ($event?->tier) {
-            $eventTierLower = bladeEventTowerLowerClass($tier);
+            $eventTierLower = bldLowerTIer($tier);
             $icon = $event->tier->tierIcon;
         } else {
             $eventTierLower = $icon = null;
         }
         
         $eventTierLowerImg = $icon ? asset('storage/'.$icon) : asset('assets/images/404q.png');
-        $eventBannerImg = bladeImageNull($event->eventBanner);
+        $eventBannerImg = bldImg($event->eventBanner);
         $bladeEventGameImage = $event->game && $event->game->gameIcon ? asset('/' . 'storage/'. $event->game->gameIcon) : asset('assets/images/404q.png');
         
 

@@ -67,7 +67,7 @@
                                 <!-- Left side with image and event details -->
                                 <div class="col-12 col-lg-9 d-flex align-items-center gap-3">
                                     <div class="position-relative">
-                                        <img src="{{ '/storage' . '/' . $event->eventBanner }}" {!! trustedBladeHandleImageFailure() !!}
+                                        <img src="{{ '/storage' . '/' . $event->eventBanner }}" {!! bldImgF() !!}
                                             class="rounded-circle object-fit-cover border border-secondary"
                                             style="width: 48px; height: 48px;" alt="Event banner">
 
@@ -97,7 +97,7 @@
                                     @if ($event->position)
                                         <div class="d-flex align-items-center text-body-secondary small">
                                             <span class="me-2">{!! getMedalSvg($event->position) !!} </span>
-                                            {{ bladeOrdinalPrefix($event->position) }}
+                                            {{ bldOrdinal($event->position) }}
                                         </div>
                                     @else
                                         <span class="text-body-secondary small">-</span>

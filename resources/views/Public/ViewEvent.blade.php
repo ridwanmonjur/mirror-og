@@ -3,20 +3,20 @@
 
 @php
     $status = $event->statusResolved();
-    $stylesEventRatio = bladeEventRatioStyleMapping($event->registeredParticipants, $event->totalParticipants);
+    $stylesEventRatio = bldRtMap($event->registeredParticipants, $event->totalParticipants);
      if ($event?->tier) {
         $tier = $event->tier->eventTier;
         $icon = $event->tier->tierIcon;
     } else {
         $tier = $icon = null;
     }
-    $type = $event->type ? $event->type?->eventType : null;
-    $eventTierLower = bladeEventTowerLowerClass($tier);
+    $type = $event->type ? $event->type->eventType : null;
+    $eventTierLower = bldLowerTIer($tier);
     $dateArray = $event->startDatesStr($event->startDate, $event->startTime);
     extract($dateArray);
-    $eventTierLowerImg = bladeImageNull($icon);
-    $eventBannerImg = bladeImageNull($event->eventBanner);
-    $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
+    $eventTierLowerImg = bldImg($icon);
+    $eventBannerImg = bldImg($event->eventBanner);
+    $bladeEventGameImage = bldImg($event->game ? $event->game?->gameIcon : null);
     $userId = isset($user) ? $user->id : null;       
     $regStatus = $event->getRegistrationStatus();
     $entryFee = $regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $event->tier?->earlyEntryFee : $event->tier?->tierEntryFee;

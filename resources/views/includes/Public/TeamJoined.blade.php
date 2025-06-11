@@ -10,7 +10,7 @@
                         <div class="card-body border border-2">
                             <div class="row">
                                 <div class="col-10 d-flex justify-content-start">
-                                    <img src="{{ '/storage' . '/' . $team->teamBanner }}" {!! trustedBladeHandleImageFailure() !!}
+                                    <img src="{{ '/storage' . '/' . $team->teamBanner }}" {!! bldImgF() !!}
                                         class="border object-fit-cover my-2 border-secondary  rounded-circle me-3"
                                         width="50" height="50" alt="{{ $team->teamName }}">
                                     <div>

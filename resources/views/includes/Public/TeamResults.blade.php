@@ -67,7 +67,7 @@
                                 <div class="col-12 col-lg-10 my-1 d-flex align-items-center gap-3">
                                     <div class="position-relative">
                                         <img src="{{ '/storage' . '/' . $joinEventAndTeam->teamBanner }}"
-                                            {!! trustedBladeHandleImageFailure() !!}
+                                            {!! bldImgF() !!}
                                             class="rounded-circle object-fit-cover border border-primary"
                                             style="width: 48px; height: 48px;" alt="Team banner">
                                     </div>
@@ -90,7 +90,7 @@
                                     @if ($joinEventAndTeam->position)
                                         <div class="d-flex align-items-center text-body-secondary small">
                                             <span class="me-1">{!! getMedalSvg($joinEventAndTeam->position) !!}</span>
-                                            {{ bladeOrdinalPrefix($joinEventAndTeam->position) }}
+                                            {{ bldOrdinal($joinEventAndTeam->position) }}
                                         </div>
                                     @else
                                         <div class="d-flex align-items-center text-body-secondary small">

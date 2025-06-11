@@ -275,14 +275,14 @@
                                 <div class="py-2 px-2 border border-2 border-success">
                                     <div>
                                         <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
-                                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
+                                            src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                                             class="object-fit-cover rounded-2 me-1" width="30" height="30"
                                         >
                                         <p class=" d-inline my-0 ms-2"> {{ $joinEvent->eventDetails->eventName }} </p>
                                     </div>
                                     <div class="d-flex pt-2 justify-content-start">
                                         <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" 
-                                            src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="30"
+                                            src="{{ bldImg($joinEvent->eventDetails->user->userBanner) }}" width="30"
                                             height="30" class="me-1 object-fit-cover random-color-circle"
                                         >
                                         <div class="ms-2">
@@ -293,7 +293,7 @@
                                                 data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                                                 class="p-0 my-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
                                                 {{ $followCounts[$joinEvent->eventDetails->user_id] }}
-                                                follower{{ bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id]) }}
+                                                follower{{ bldPlural($followCounts[$joinEvent->eventDetails->user_id]) }}
                                             </small>
                                         </div>
                                     </div>

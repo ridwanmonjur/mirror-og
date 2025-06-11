@@ -81,7 +81,7 @@
 
                         <img 
                             onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" style="max-width: 50px; "
-                            src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
+                            src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                             class="object-fit-cover me-1 rounded-2" width="30px" height="30px"
                             style="object-position: center;"    
                         >
@@ -101,7 +101,7 @@
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">
                             {{ $followCounts[$joinEvent->eventDetails->user_id] }}
-                            follower{{ bladePluralPrefix($followCounts[$joinEvent->eventDetails->user_id]) }}
+                            follower{{ bldPlural($followCounts[$joinEvent->eventDetails->user_id]) }}
                         </small>
                     </div>
                 </div>
