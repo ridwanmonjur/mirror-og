@@ -3,7 +3,7 @@
         $status = $event->statusResolved();
         $eventTierLowerImg = bladeImageNull($event->tier ? $event->tier?->tierIcon: null);
         $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = bladeImageNull($event->game ? $event->game?->gameIcon : null);
+        $bladeEventGameImage = $event->game ? asset('/storage'. '/' . $event->game?->gameIcon) : null;
         $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
         $willShowStartsInCountDown = $status === 'UPCOMING';
         $isEnded = $status === 'ENDED';
