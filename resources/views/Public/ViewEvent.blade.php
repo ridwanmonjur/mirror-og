@@ -134,7 +134,8 @@
                 <div>
                     <div class="mx-2  position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}" {!! trustedBladeHandleImageFailureResize() !!}
+                            <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}" 
+                                onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
                                 width="120" height="90">
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">

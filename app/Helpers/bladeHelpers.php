@@ -74,12 +74,7 @@ function trustedBladeHandleImageFailure()
     return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
 }
 
-function trustedBladeHandleImageFailureResize()
-{
-    $imgFailure = asset('assets/images/404.png');
 
-    return "onerror=\"this.onerror=null;this.width='500px';this.height='50px';this.src='{$imgFailure}';\"";
-}
 
 function trustedBladeHandleImageFailureBanner()
 {
