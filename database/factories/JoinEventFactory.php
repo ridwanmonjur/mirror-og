@@ -94,8 +94,9 @@ final class JoinEventFactory extends Factory
                     'team_id' => $team->id,
                     'joiner_id' => $team->creator_id,
                     'joiner_participant_id' => $team->user->participant->id,
-                    'payment_status' => 'completed', 
-                    'join_status' => 'confirmed',    
+                    'payment_status' => $options['joinEvent']['payment_status'], 
+                    'register_time' => $participantPaymentOption['register_time'], 
+                    'join_status' => $options['joinEvent']['join_status'],    
                     'vote_ongoing' => 0,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -258,7 +259,7 @@ final class JoinEventFactory extends Factory
                     ], [
                         'payment_amount' => $amount,
                         'payment_id' => isset($recordStripe) ? $recordStripe->id : null,
-                        'register_time' => null,
+                        'register_time' => $participantPaymentOption['register_time'],
                         'history_id' => $transaction->id,
                         'type' => $participantPaymentOption['type']
                     ]);

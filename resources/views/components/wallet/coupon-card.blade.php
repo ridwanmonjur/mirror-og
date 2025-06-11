@@ -2,12 +2,29 @@
     'coupon' => $coupon,
     'className' => $className,
 ])
+
+@php
+    if ($coupon['is_public']) {
+        $userCoupon = isset($coupon['user_coupons'][0]) ? $coupon['user_coupons'][0] : null;
+        $redeemCount = $userCoupon ? $userCoupon['redeemable_count'] : 1;
+    } else {
+        $userCoupon = isset($coupon['user_coupons'][0]) ? $coupon['user_coupons'][0] : null;
+        $redeemCount = $userCoupon ? $userCoupon['redeemable_count'] : 0;
+    }
+   
+@endphp
+
 <div class="{{ $className }} d-flex justify-content-center  " data-coupon-code = "{{$coupon['code']}}" onclick="populateCoupons(event)">
     <div class="me-2">
-        <div class="coupon   my-1 ">
+        <div class="coupon  position-relative my-1 ">
             <div class=" w-100 row px-0 py-0 ">
                 <div class="col-lg-4  d-none d-lg-flex flex-column justify-content-center py-0 ps-1 pe-1">
-                    <h5 class="text-white my-2 py-0">RM {{ $coupon['amount'] }} </h5>
+                    <h5 class="text-white my-2 py-0">
+                        RM {{ $coupon['amount'] }} 
+                        @if ($redeemCount)
+                            <small class="bg-secondary px-1">x{{ $redeemCount }}</small>
+                        @endif 
+                    </h5>
                     <small class="text-light fst-italic">{{ $coupon['expires_at_human'] }}</small>
                 </div>
                 <div class="coupon__details py-2  col-lg-8 pe-0 ">
@@ -31,7 +48,6 @@
 
                 </div>
             </div>
-
         </div>
     </div>
     <span  data-bs-toggle="tooltip" data-bs-placement="top"

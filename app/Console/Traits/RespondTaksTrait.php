@@ -11,7 +11,6 @@ use App\Models\EventTier;
 use App\Models\JoinEvent;
 use App\Models\NotifcationsUser;
 use App\Models\ParticipantCoupon;
-use App\Models\ParticipantPayment;
 use App\Models\UserCoupon;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -40,7 +39,7 @@ trait RespondTaksTrait
     {
         try {
         if ($event->join_events_count < intval($event->tier->tierTeamSlot)) {
-            if ($event->status!= 'ENDED') {
+            if ($event->status!= 'FAILED') {
             $joinEvents = JoinEvent::where('event_details_id', $event->id)
                 ->where('join_status', 'confirmed')
                 ->with([
@@ -60,7 +59,7 @@ trait RespondTaksTrait
                 ->get();
             $this->releaseFunds($event, $paidEvents);
 
-            $event->update(['status' => 'ENDED']);
+            $event->update(['status' => 'FAILED']);
             $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
             $deadlinesPast = $deadlines->pluck("id");
             Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
@@ -116,7 +115,12 @@ trait RespondTaksTrait
                                 'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
                             ]);
                         }
-                        $participantPay->history?->delete();
+
+                        if ($participantPay->history) {
+                            TransactionHistory::where('id', $participantPay->history->id)->delete();
+                            $participantPay->history_id = null;
+                            $participantPay->save();
+                        }
                     }  else {
                         if ($participantPay->type == 'wallet') {
                             $wallet = Wallet::firstOrNew(['user_id' => $participantPay->user_id]);
@@ -138,26 +142,48 @@ trait RespondTaksTrait
 
                             Log::info($participantPay);
 
-                            $participantPay->history?->delete();
+                            if ($participantPay->history) {
+                                TransactionHistory::where('id', $participantPay->history->id)->delete();
+                                $participantPay->history_id = null;
+                                $participantPay->save();
+                            }
                         } else {
-                            $participantCoupon = new ParticipantCoupon([
-                                'code' => "Coupon{$event->eventName}{$participantPay->user_id}{$participantPay->id}",
-                                'amount' ,
-                                'description' => "Refund for {$event->eventName}",
-                                'is_active' => true,
-                                'is_public' => false,
-                                'expires_at' => Carbon::now()->addYears(1)
-                            ]);
+                            Log::info("entered here");
+                            // Check if a coupon with the same code already exists
+                            $existingCoupon = ParticipantCoupon::where('code', "Refund RM {$participantPay->payment_amount}")->first();
 
-                            $participantCoupon->save();
+                            if (!$existingCoupon) {
+                                $participantCoupon = new ParticipantCoupon([
+                                    'code' => "Refund RM {$participantPay->payment_amount}",
+                                    'amount' => $participantPay->payment_amount, // You were missing the value here
+                                    'description' => "Refund from organizers",
+                                    'is_active' => true,
+                                    'is_public' => false,
+                                    'expires_at' => Carbon::now()->addYears(1)
+                                ]);
 
-                            $newUserCoupon = new UserCoupon([
-                                'user_id' => $participantPay->user_id,
-                                'coupon_id' => $participantCoupon->id,
-                                'redeemed_at' => false
-                            ]);
+                                $participantCoupon->save();
+                            } else {
+                                $participantCoupon = $existingCoupon;
+                            }
 
-                            $newUserCoupon->save();
+                            $existingUserCoupon = UserCoupon::where('user_id', $participantPay->user_id)
+                                ->where('coupon_id', $participantCoupon->id)
+                                ->first();
+
+                            if (!$existingUserCoupon) {
+                                $newUserCoupon = new UserCoupon([
+                                    'user_id' => $participantPay->user_id,
+                                    'coupon_id' => $participantCoupon->id,
+                                    'redeemed_at' => null // Should be null, not false for datetime field
+                                ]);
+
+                                $newUserCoupon->save();
+
+                                $newUserCoupon->increment('redeemable_count');
+                            } else {
+                                $existingUserCoupon->increment('redeemable_count');
+                            }
                         }
                     }
                     } catch (Exception $e) {

@@ -10,8 +10,11 @@ class UserCoupon extends Model
     protected $fillable = [
         'user_id',
         'coupon_id',
-        'redeemed_at'
+        'redeemed_at',
+        'redeemable_count'
     ];
+
+    protected $table = "user_coupons";
 
     protected $casts = [
         'redeemed_at' => 'datetime'
