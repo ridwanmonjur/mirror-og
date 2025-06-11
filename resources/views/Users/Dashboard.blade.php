@@ -343,7 +343,7 @@
                                         <div class="w-50 mx-auto text-center my-3">
 
                                             <label :class="statusClass" v-if="statusLabel" class="mb-0" >@{{ statusLabel }}</label>
-                                            <label :class="statusClass" v-if="message" class="my-2" >@{{ message }}</label>
+                                            <label :class="statusClass" v-if="message" class="mb-2" >@{{ message }}</label>
 
                                             <!-- Status Icon and Label -->
                                             <div class="mb-2 input-group">

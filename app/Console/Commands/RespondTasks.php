@@ -54,6 +54,7 @@ class RespondTasks extends Command
         $type = (int) $this->argument('type');
         $eventId = $this->option('event_id');
         $eventIdInt = 0;
+        Log::info("Event of type {$type} ran");
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
             $today = Carbon::today();
@@ -81,6 +82,9 @@ class RespondTasks extends Command
                 $event = EventDetail::where('id' ,$eventIdInt)->firstOrFail();
 
                 if ($event) {
+                $event->status = null;
+                $event->status = $event->statusResolved();
+                $event->save();
                 $event->createRegistrationTask();
                 $event->createStatusUpdateTask();
                 $event->createDeadlinesTask();
@@ -142,6 +146,7 @@ class RespondTasks extends Command
                             }]
                         )
                         ->first();
+                    Log::info("Found {$event->eventName}");
 
                     if ($event) {
                         $shouldCancel = $this->checkAndCancelEvent($event);

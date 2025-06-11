@@ -664,9 +664,9 @@ function CouponStatusComponent() {
         get statusLabel() {
             switch(this.status) {
                 case 'success':
-                    return 'Coupon Applied Successfully';
+                    return 'Operation Successful!';
                 case 'error':
-                    return 'Invalid Coupon Code';
+                    return 'Operation Failed!';
                 default:
                     return 'Enter Coupon Code';
             }

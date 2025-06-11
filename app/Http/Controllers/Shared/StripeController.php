@@ -206,10 +206,15 @@ public function showPaymentMethodForm(Request $request)
             ->orWhereHas('userCoupons', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
+            ->with(['userCoupons' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }])
             ->get();
+
         
         $demoCoupons = $couponsQ->take(2)->toArray();
         $coupons = $couponsQ->toArray();
+        // dd($coupons);
 
         return view('Users.Dashboard', [
             'wallet' => $wallet,
@@ -388,15 +393,21 @@ public function showPaymentMethodForm(Request $request)
                 'current_balance' => $newBalance,
             ]);
     
-            UserCoupon::updateOrCreate(
+            $userCoupon = UserCoupon::firstOrCreate(
                 [
                     'user_id' => $user->id,
                     'coupon_id' => $coupon->id,
                 ],
                 [
-                    'redeemed_at' => now()
+                    'redeemable_count' => 1,
                 ]
             );
+            
+            $userCoupon->update([
+                'redeemed_at' => now(),
+            ]);
+            
+            $userCoupon->decrement('redeemable_count');
 
             TransactionHistory::create([
                 'name' => "Wallet Coupon Registration: RM {$coupon->amount}",
@@ -408,10 +419,14 @@ public function showPaymentMethodForm(Request $request)
                 'user_id' => $user->id
             ]);
             DB::commit();
-    
+            
+            $extraMessage = '';
+            if ($userCoupon->redeemable_amount-1 > 0) {
+                $extraMessage = "You can still redeem it {$userCoupon->redeemable_amount} more times";
+            }
             return response()->json([
                 'success' => true,
-                'message' => 'Coupon redeemed successfully!',
+                'message' => "Coupon redeemed successfully!{$extraMessage}",
             ], 200);
     
         } catch (Exception $e) {
