@@ -209,7 +209,7 @@ function infinteLoadMoreByPost(ENDPOINT_URL, body) {
 }
 
 
-function loadByPost(ENDPOINT_URL, body) {
+function loadByPost(ENDPOINT_URL, body, successCb = null) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
@@ -235,6 +235,9 @@ function loadByPost(ENDPOINT_URL, body) {
                 noMoreDataElement.textContent = "Data not found by your query...";
             } else {
                 scrollingPaginationElement.innerHTML = response.html;
+                if (successCb) {
+                    successCb();
+                }
             }
 
             addTippy();
@@ -337,7 +340,10 @@ function fetchSearchSortFiter() {
         status: params.get('status')
     }
 
-    loadByPost(ENDPOINT_URL, body);     
+    window.initSocialShareModals();
+    loadByPost(ENDPOINT_URL, body, () => {
+        window.initSocialShareModals();
+    });     
 }
 
 function setFilterForFetch(event, title) {
@@ -481,7 +487,10 @@ function handleSearch() {
         search: inputValue
     }
 
-    loadByPost(ENDPOINT_URL, body);
+    
+    loadByPost(ENDPOINT_URL, body, () => {
+        window.initSocialShareModals();
+    });
 }
 
 function resetUrl() {
@@ -547,7 +556,10 @@ window.addEventListener(
                 page: fetchVariables.getCurrentPage()
             }
             try{
-                infinteLoadMoreByPost(ENDPOINT_URL, body)
+                infinteLoadMoreByPost(ENDPOINT_URL, body, () => {
+                    window.initSocialShareModals();
+                });
+
             } catch {
                 fetchVariables.setFetchedPage(fetchVariables.getCurrentPage()-1);
             };

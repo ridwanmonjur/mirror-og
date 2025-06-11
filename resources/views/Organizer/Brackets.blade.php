@@ -39,7 +39,7 @@
             <div  class="d-flex justify-content-center">
                 <div style="width:min(600px, 80vw);" class="border bg-white d-inline-block border-primary shadow-xl px-5 mx-auto text-start  py-3">
                     <div class="d-flex justify-content-start align-items-center">
-                        <img {!! trustedBladeHandleImageFailureBanner() !!}
+                        <img onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';"
                             src="{{ '/storage' . '/'.  $event->eventBanner }}"
                             class="object-fit-cover float-left border border-primary rounded-circle me-1" width="30" height="30"
                         >
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="d-flex mt-3 mb-2 align-items-center justify-content-start">
-                        <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                        <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" 
                             src="{{ '/storage' . '/'. $event?->user?->userBanner }}" width="30"
                             height="30" class="me-1 border border-warning rounded-circle object-fit-cover "
                         >

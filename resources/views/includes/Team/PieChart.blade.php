@@ -65,7 +65,7 @@
                                 <img
                                     class="object-fit-cover rounded-circle me-2 border border-primary random-color-circle" 
                                     src="{{'/storage' . '/' . $member2->user->userBanner}}" width="25" height="25"
-                                    {!! trustedBladeHandleImageFailureBanner() !!}
+                                    onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';"
                                 >
                                 <span>{{$member2->user->name}}</span>
                             </td>
@@ -274,14 +274,14 @@
                                 <h5 class="my-2"> Contribute to the entry fee </h5>
                                 <div class="py-2 px-2 border border-2 border-success">
                                     <div>
-                                        <img {!! trustedBladeHandleImageFailureBanner() !!}
+                                        <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                                             src="{{ bladeImageNull($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
                                             class="object-fit-cover rounded-2 me-1" width="30" height="30"
                                         >
                                         <p class=" d-inline my-0 ms-2"> {{ $joinEvent->eventDetails->eventName }} </p>
                                     </div>
                                     <div class="d-flex pt-2 justify-content-start">
-                                        <img {!! trustedBladeHandleImageFailureBanner() !!} 
+                                        <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" 
                                             src="{{ bladeImageNull($joinEvent->eventDetails->user->userBanner) }}" width="30"
                                             height="30" class="me-1 object-fit-cover random-color-circle"
                                         >

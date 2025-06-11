@@ -76,13 +76,6 @@ function trustedBladeHandleImageFailure()
 
 
 
-function trustedBladeHandleImageFailureBanner()
-{
-    $imgFailure = asset('assets/images/404.png');
-
-    return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
-}
-
 function bladeEventGameImage($eventBanner)
 {
     if ($eventBanner) {
