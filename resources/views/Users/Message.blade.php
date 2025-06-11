@@ -35,7 +35,7 @@
                 <div v-for="(room, key) in oldRooms" v-bind:key="room.id" v-bind:data-identity-for-read="room.id"
                     v-on:click="setCurrentRoom(key)"
                     v-bind:class="{'chat-item': true, 'bg-primary' : currentRoomObj?.id == room?.id }">
-                    <img v-if="room?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!}
+                    <img v-if="room?.otherRoomMember?.userBanner != null" {!! bldImgF() !!}
                         v-bind:src="'/storage/' + room?.otherRoomMember?.userBanner" width="50" height="50"
                         class="object-fit-cover rounded-circle me-3">
                     <div v-else class="avatar me-3"
@@ -77,7 +77,7 @@
             <div class="chat-header 75">
                 <h2 class="chat-user-name py-0 my-0">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
-                        <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! trustedBladeHandleImageFailure() !!}
+                        <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! bldImgF() !!}
                             v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="40"
                             height="40" class="object-fit-cover rounded-circle me-3">
                         <span v-else
@@ -214,7 +214,7 @@
                                                         <img class="rounded-circle border border-secondary"
                                                         onerror="this.src='/assets/images/404q.png';"
                                                             height="40" width="40"
-                                                            {!! trustedBladeHandleImageFailure() !!}
+                                                            {!! bldImgF() !!}
                                                             v-bind:src="'/storage/' + chat?.userBanner">
                                                     </div>
                                                     <div class="col-9 col-xl-10 col-xl-">
@@ -234,16 +234,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <ul class="pagination cursor-pointer pt-2">
-                                <li v-for="link in pagination ?? []" :key="link.label"
+                            <ul class="pagination cursor-pointer d-flex justify-content-center mx-auto pt-2">
+                                <li class="btn border-primary text-primary rounded-pill  mx-2 " v-for="link in pagination ?? []" :key="link.label"
                                     v-on:click="if (link.url) { fetchProspectiveChatters(event); }"
                                     v-bind:data-url="link.url"
-                                    :class="{ 'page-item': true, 'active': link.active, 'disabled': link.url }">
+                                >
                                     <a onclick="event.preventDefault()"
-                                        :class="{
-                                            'page-link': true,
-                                            'text-light': link.active,
-                                        }"
+                                        class="text-primary"
                                         v-html="link.label">
                                     </a>
                                 </li>

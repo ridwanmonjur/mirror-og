@@ -51,9 +51,8 @@ class ParticipantEventController extends Controller
         }
 
         $userId = Auth::id();
-        $count = 6;
         $currentDateTime = Carbon::now()->utc();
-        $events = EventDetail::landingPageQuery($request, $currentDateTime)->paginate($count);
+        $events = EventDetail::landingPageQuery($request, $currentDateTime)->simplePaginate();
 
         $output = [
             'events' => $events,

@@ -142,7 +142,7 @@
             <img
                 class="object-fit-cover rounded-circle border border-primary" 
                 onerror="this.onerror=null;"
-                src="{{ bladeImageNull($user->userBanner)}}" width="42" height="42">
+                src="{{ bldImg($user->userBanner)}}" width="42" height="42">
        
     </a>
    
@@ -153,7 +153,7 @@
                 <div class="py-navbar d-flex justify-content-start align-items-center py-2 ps-2">
                         <img class="object-fit-cover rounded-circle me-2 border border-primary"
                             onerror="this.onerror=null;"
-                            src="{{bladeImageNull($user->userBanner)}}" width="45" height="45">
+                            src="{{bldImg($user->userBanner)}}" width="45" height="45">
                    
                         <p class="py-0 my-0 text-start "
                         > {{ $user->name }}</p> 

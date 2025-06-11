@@ -92,7 +92,7 @@
                     <span data-follower-stats="{{ $followersCount }}" class="cursor-pointer d-inline ps-0"
                         onclick="openModal('followers')">
                         <span data-count="{{ $followersCount }}" @class(['followCounts' . $userProfile->id])> {{ $followersCount }}
-                            follower{{ bladePluralPrefix($followersCount) }}
+                            follower{{ bldPlural($followersCount) }}
                         </span>
                     </span>
                 </span>

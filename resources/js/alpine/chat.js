@@ -62,8 +62,9 @@ const userStore = reactive({
         }
 
         let route;
-        if (event?.target?.dataset?.url) {
-            route = event.target.dataset.url;
+        let button = event? event.currentTarget: null;
+        if (button?.dataset?.url) {
+            route = button.dataset.url;
         } else {
             route = fetchFirebaseUsersInputRoute.value;
         }
@@ -80,9 +81,23 @@ const userStore = reactive({
         });
 
         users = await users.json();
-        let { data: usersData, links: pagination } = users?.data;
+        let { data: usersData, next_page_url, prev_page_url } = users?.data;
+
         this.users = usersData;
-        this.pagination = pagination;
+        let newPagination = [];
+        if (prev_page_url) {
+            newPagination.push(
+                {'url' : prev_page_url, 'label': 'Previous Page'},
+            );
+        }
+
+        if (next_page_url) {
+            newPagination.push(
+                {'url' : next_page_url, 'label': 'Next Page'},
+            );
+        }
+          
+        this.pagination = [...newPagination];
     },
 });
 

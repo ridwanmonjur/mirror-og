@@ -98,10 +98,22 @@
         >
             @include('includes.Landing')
         </section>
-        @if (isset($events[0]))
-            <div class="no-more-data d-none"></div>
-        @else
-            <div class="no-more-data text-center mx-auto"> We don't have any events to display </div>
+      @if (isset($events[0]))
+        <div class="no-more-data d-none"></div>
+    @else
+            <div class="container d-flex justify-content-center align-items-center">
+                <div class="no-more-data text-center mx-auto">
+                    <div class=" d-flex flex-column justify-content-center align-items-center rounded-box-dolphin event shadow-sm" style="max-width: 400px; background-color: rgba(255, 255, 255, 0.7);">
+                            <div >
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto d-block text-muted">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <h5 class="card-title text-muted mb-2">No Events Available</h5>
+                            <p class="card-text text-muted small mb-0">We don't have any events to display</p>
+                        </div>
+                </div>
+            </div>
         @endif
         <br><br>
         

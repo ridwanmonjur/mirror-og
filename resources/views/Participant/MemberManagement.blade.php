@@ -73,9 +73,9 @@
         <div class="tab-content pb-4 d-none inner-tab" id="CurrentMembers">
             <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
                 {{ $teamMembersProcessed['accepted']['count'] }} present
-                member{{ bladePluralPrefix($teamMembersProcessed['accepted']['count']) }}
+                member{{ bldPlural($teamMembersProcessed['accepted']['count']) }}
                 and {{ $teamMembersProcessed['left']['count'] }} past
-                member{{ bladePluralPrefix($teamMembersProcessed['left']['count']) }}
+                member{{ bldPlural($teamMembersProcessed['left']['count']) }}
             </p>
             <div class="mt-3 pt-3 tab-size">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
@@ -160,7 +160,7 @@
             <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
                 {{ $teamMembersProcessed['pending']['count'] }} invited and
                 and {{ $teamMembersProcessed['rejected']['count'] }} rejected
-                member{{ bladePluralPrefix($teamMembersProcessed['rejected']['count']) }}
+                member{{ bldPlural($teamMembersProcessed['rejected']['count']) }}
             </p>
             <div class="  pt-3 tab-size">
                 @if ($teamMembersProcessed['pending']['count'] != 0)

@@ -111,11 +111,11 @@
                         >
                             <div class="col-12 col-xl-4"> 
                                 <h3 class="py-0 my-0"> {{ $totalEventsCount }} </h3>
-                                <p class="mx-2 py-2 my-0"> Event{{ bladePluralPrefix($totalEventsCount) }} Joined By Team </p>
+                                <p class="mx-2 py-2 my-0"> Event{{ bldPlural($totalEventsCount) }} Joined By Team </p>
                             </div>
                             <div class="col-12 col-xl-4"> 
                                 <h3 class="py-0 my-0"> {{$wins}} </h3>
-                                <p class="mx-2 py-2 my-0"> Tournament Win{{ bladePluralPrefix($wins) }} By Team </p>
+                                <p class="mx-2 py-2 my-0"> Tournament Win{{ bldPlural($wins) }} By Team </p>
                             </div>
                             <div class="col-12 col-xl-4"> 
                                 <h3 class="py-0 my-0"> {{$streak}} </h3>
@@ -149,7 +149,7 @@
                 </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster member{{ bladePluralPrefix($joinCount) }}.</p>
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster member{{ bldPlural($joinCount) }}.</p>
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
@@ -167,7 +167,7 @@
                 <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bladePluralPrefix($historyCount) }} member{{ bladePluralPrefix($joinCount) }}.</p>
+                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bldPlural($historyCount) }} member{{ bldPlural($joinCount) }}.</p>
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">

@@ -29,6 +29,9 @@ class EventDetail extends Model implements Feedable
 {
     use HasFactory;
 
+    protected $perPage = 6;
+
+
     public function toFeedItem(): FeedItem
     {
         return FeedItem::create()

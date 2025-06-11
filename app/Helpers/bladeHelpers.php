@@ -17,7 +17,7 @@
 
 
 
-function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants)
+function bldRtMap($registeredParticipants, $totalParticipants)
 {
     $stylesEventRatio = '';
 
@@ -43,7 +43,7 @@ function bladeEventRatioStyleMapping($registeredParticipants, $totalParticipants
 
 
 
-function bladeImageNull($eventBanner)
+function bldImg($eventBanner)
 {
     $imgFailure = asset('assets/images/404.png');
     if ($eventBanner) {
@@ -55,38 +55,16 @@ function bladeImageNull($eventBanner)
     return $eventBannerImg;
 }
 
-function bladeImageNullq($eventBanner)
-{
-    $imgFailure = asset('assets/images/404q.png');
-    if ($eventBanner) {
-        $eventBannerImg = asset('storage/'.$eventBanner);
-    } else {
-        $eventBannerImg = $imgFailure;
-    }
 
-    return $eventBannerImg;
-}
 
-function trustedBladeHandleImageFailure()
+function bldImgF()
 {
     $imgFailure = asset('assets/images/404.png');
 
     return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
 }
 
-function trustedBladeHandleImageFailureResize()
-{
-    $imgFailure = asset('assets/images/404.png');
 
-    return "onerror=\"this.onerror=null;this.width='500px';this.height='50px';this.src='{$imgFailure}';\"";
-}
-
-function trustedBladeHandleImageFailureBanner()
-{
-    $imgFailure = asset('assets/images/404.png');
-
-    return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
-}
 
 function bladeEventGameImage($eventBanner)
 {
@@ -99,12 +77,12 @@ function bladeEventGameImage($eventBanner)
     return $eventBannerImg;
 }
 
-function bladeEventTowerLowerClass($eventTier)
+function bldLowerTIer($eventTier)
 {
     return $eventTier ? strtolower($eventTier) : 'no-tier';
 }
 
-function bladeOrdinalPrefix($number)
+function bldOrdinal($number)
 {
     $number = intval($number);
 
@@ -124,7 +102,7 @@ function bladeOrdinalPrefix($number)
     }
 }
 
-function bladePluralPrefix($amount, $singular = '', $plural = 's')
+function bldPlural($amount, $singular = '', $plural = 's')
 {
     if ($amount === 1) {
         return $singular;

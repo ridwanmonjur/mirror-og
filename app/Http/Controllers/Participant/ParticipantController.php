@@ -30,8 +30,7 @@ class ParticipantController extends Controller
     public function searchParticipant(Request $request)
     {
         try {
-            $page = 5;
-            $userList = User::getParticipants($request)->paginate($page);
+            $userList = User::getParticipants($request)->simplePaginate();
             foreach ($userList as $user) {
                 // @phpstan-ignore-next-line
                 $user->is_in_team = $user->members->isNotEmpty();

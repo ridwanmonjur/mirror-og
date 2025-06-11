@@ -1,7 +1,7 @@
 <div class="col-12 col-lg-10 d-flex justify-content-start align-items-center">
     <img onclick="redirectToProfilePage({{ $member->user_id }}, '{{ $member->user->slug }}');" width="45" height="45"
-        src="{{ bladeImageNull($member->user->userBanner) }}"
-        {!! trustedBladeHandleImageFailure() !!}
+        src="{{ bldImg($member->user->userBanner) }}"
+        {!! bldImgF() !!}
         class="me-3 random-color-circle cursor-pointer rounded-circle object-fit-cover">
 
     <div >

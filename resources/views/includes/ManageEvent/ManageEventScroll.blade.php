@@ -2,19 +2,19 @@
     
     @php
         $status = $event->statusResolved();
-        $stylesEventRatio = bladeEventRatioStyleMapping($event->join_events_count, $event->tierTeamSlot);
+        $stylesEventRatio = bldRtMap($event->join_events_count, $event->tierTeamSlot);
         $tier = $event->tier ? $event->tier?->eventTier : null;
 
          if ($event?->tier) {
-            $eventTierLower = bladeEventTowerLowerClass($tier);
+            $eventTierLower = bldLowerTIer($tier);
             $icon = $event->tier->tierIcon;
         } else {
             $eventTierLower = $icon = null;
         }
         
-        $eventTierLowerImg = asset('storage/'.$icon);
-        $eventBannerImg = bladeImageNull($event->eventBanner);
-        $bladeEventGameImage = asset('storage/'. $event->game ? $event->game?->gameIcon : null);
+        $eventTierLowerImg = $icon ? asset('storage/'.$icon) : asset('assets/images/404q.png');
+        $eventBannerImg = bldImg($event->eventBanner);
+        $bladeEventGameImage = $event->game && $event->game->gameIcon ? asset('/' . 'storage/'. $event->game->gameIcon) : asset('assets/images/404q.png');
         
 
         $willShowStartsInCountDown = $status === 'UPCOMING';
@@ -55,7 +55,7 @@
                 </button>
             </div>
         <div class="{{ 'card-image card-image-' . $eventTierLower }}">
-            <img width="100%" height="auto" {!! trustedBladeHandleImageFailure() !!} src="{{ $eventBannerImg }}" alt="">
+            <img width="100%" height="auto" onerror="this.src='/assets/images/404.png';" src="{{ $eventBannerImg }}" alt="">
         </div>
         <div class="card-text">
             <div>
@@ -63,13 +63,18 @@
                     <div>
                     <img 
                         src="{{ $eventTierLowerImg }}" 
-                        class="pe-3 tierIcon mt-2"
-                        alt=""
+
+                        class="me-3 mt-2  rounded rounded-3  "
+                        width="50"
+                        height="40"
+                        alt="{{$event?->tier?->eventTier}}"
+                        onerror="this.src='/assets/images/404q.png';"
                     >
                     <img 
                         src="{{ $bladeEventGameImage }}" 
-                        class="logo2 mt-2 object-fit-cover gameIcon" 
-                        alt=""
+                        class="logo2 mt-2 rounded rounded-3  object-fit-cover gameIcon" 
+                        alt="{{$event?->tier?->eventTier}}"
+                        onerror="this.src='/assets/images/404q.png';"
              
                     >
                 </div>

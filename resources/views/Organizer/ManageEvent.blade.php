@@ -96,9 +96,25 @@
                 </div>
             </div>
 
+            @if (isset($eventList[0]))
             <div class="scrolling-pagination featured-events">
                 @include('includes.ManageEvent.ManageEventScroll')
             </div>
+            @else 
+            <div class="container d-flex justify-content-center align-items-center">
+                <div class="no-more-data text-center mx-auto">
+                    <div class=" d-flex flex-column justify-content-center align-items-center py-5 px-5 rounded-3 event shadow-sm" style="max-width: 400px; background-color: rgba(255, 255, 255, 0.7);">
+                            <div >
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto d-block text-muted">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <h5 class="card-title text-muted mb-2">No Events Available</h5>
+                            <p class="card-text text-muted small mb-0">You haven't built any events yet</p>
+                        </div>
+                </div>
+            </div>
+            @endif
 
             <div class="no-more-data d-none mb-3" style="margin-top: 50px;" ></div>
             
