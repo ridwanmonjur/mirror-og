@@ -103,3 +103,6 @@ users (done)
 user_address (done)
 user_wallet (done)
 user_profile (done)
+
+cd domains/driftwood.gg/public_html
+cd domains/oceansgaming.gg/public_html
