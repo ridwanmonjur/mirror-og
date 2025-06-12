@@ -23,6 +23,22 @@ class EventCreateCoupon extends Model
         return $fee;
     }
 
+    private function generateCarbonDateTime($startDate, $startTime, $timeZone = 'UTC')
+    {
+        if ($startTime != null) {
+            if (substr_count($startTime, ':') === 2) {
+                $startTime = explode(':', $startTime);
+                $startTime = $startTime[0].':'.$startTime[1];
+            }
+        }
+
+
+        if ($startDate !== null && $startTime !== null) {
+            return Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, $timeZone) ?? null;
+        }
+        return null;
+    }
+
     public static function createEventCreateCouponFeeObject(string| null $couponName, string| null $eventPrizePool): array
     {
         $fee = [];
@@ -45,8 +61,8 @@ class EventCreateCoupon extends Model
         }
 
         $currentDateTime = Carbon::now()->utc();
-        $startTime = generateCarbonDateTime($discount->startDate, $discount->startTime);
-        $endTime = generateCarbonDateTime($discount->endDate, $discount->endTime);
+        $startTime = $this->generateCarbonDateTime($discount->startDate, $discount->startTime);
+        $endTime = $this->generateCarbonDateTime($discount->endDate, $discount->endTime);
         $fee['discountId'] = $discount->id;
         $fee['discountName'] = $discount->name;
         $fee['discountType'] = $discount->type;
