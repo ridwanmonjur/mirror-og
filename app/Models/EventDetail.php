@@ -388,17 +388,17 @@ class EventDetail extends Model implements Feedable
         }
 
         // PROBABLY CAN REMOVE THIS FUNCTION NOW!!!
-        $carbonPublishedDateTime = $this->createCarbonDateTimeFromDB(
+        $carbonPublishedDateTime = $this->getDateTz(
             $this->sub_action_public_date,
             $this->sub_action_public_time
         );
 
-        $carbonEndDateTime = $this->createCarbonDateTimeFromDB(
+        $carbonEndDateTime = $this->getDateTz(
             $this->endDate,
             $this->endTime
         );
         
-        $carbonStartDateTime = $this->createCarbonDateTimeFromDB(
+        $carbonStartDateTime = $this->getDateTz(
             $this->startDate,
             $this->startTime
         );
@@ -452,7 +452,7 @@ class EventDetail extends Model implements Feedable
         }
     }
 
-    public function fixTimeToRemoveSeconds(string| null $time): string| null
+    public function stripSec(string| null $time): string| null
     {
         if ($time === null) {
             return null;
@@ -464,27 +464,46 @@ class EventDetail extends Model implements Feedable
         return $time;
     }
 
-    public function createCarbonDateTimeFromDB(string| null $date, string| null $time): ?string
+    public function storeTimeMy(string|null $date, string|null $time): ?Carbon
     {
         if ($date === null || $time === null) {
             return null;
         }
 
-        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))
-            ->utc();
+        try {
+            $dateTime = Carbon::createFromFormat(
+                'Y-m-d H:i', 
+                $date . ' ' . $this->stripSec($time),
+                'Asia/Kuala_Lumpur'  
+            );
+            
+            return $dateTime->utc();
+            
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
-    public function createCarbonDateTime(string| null $date, string| null $time): ?Carbon
+    public function getDateTz(string|null $date, string|null $time, string $timezone = 'UTC'): ?Carbon
     {
         if ($date === null || $time === null) {
             return null;
         }
-        return Carbon::createFromFormat('Y-m-d H:i', $date.' '.$this->fixTimeToRemoveSeconds($time))->utc();
+        
+        try {
+            return Carbon::createFromFormat(
+                'Y-m-d H:i', 
+                $date . ' ' . $this->stripSec($time),
+                $timezone
+            )->utc();
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
     function startDatesStr($startDate, $startTime)
-{
-    $startTime = $this->fixTimeToRemoveSeconds($startTime);
+    {
+    $startTime = $this->stripSec($startTime);
     if ($startDate !== null && $startTime !== null) {
         $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC');
         $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
@@ -522,7 +541,7 @@ class EventDetail extends Model implements Feedable
         $startsIn = 'Not available';
         if ($this->startDate !== null && $this->startTime !== null) {
 
-            $startTime = $this->fixTimeToRemoveSeconds($this->startTime);
+            $startTime = $this->stripSec($this->startTime);
             $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $this->startDate.' '.$startTime, 'UTC') ?? null;
             if ($carbonDateTimeUtc) {
                 $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
@@ -696,8 +715,8 @@ class EventDetail extends Model implements Feedable
                 $dates = $filter['date[]'];
 
                 if (isset($dates[0]) && isset($dates[1]) && $dates[0] !== '' && $dates[1] !== '') {
-                    $dates[0] = Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
-                    $dates[1] = Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
+                    $dates[0] = Carbon::createFromFormat('d/m/Y', $dates[0], 'Asia/Kuala_Lumpur')->format('Y-m-d');
+                    $dates[1] = Carbon::createFromFormat('d/m/Y', $dates[1], 'Asia/Kuala_Lumpur')->format('Y-m-d');
                     
                     $query->whereBetween('created_at', [$dates[0], $dates[1]]);
                 }
@@ -769,14 +788,14 @@ class EventDetail extends Model implements Feedable
         $eventDetail->event_category_id = $request->gameTitleId;
 
         $startDate = $request->startDate;
-        $startTime = $eventDetail->fixTimeToRemoveSeconds($request->startTime);
+        $startTime = $eventDetail->stripSec($request->startTime);
         $endDate = $request->endDate;
-        $endTime = $eventDetail->fixTimeToRemoveSeconds($request->endTime);
+        $endTime = $eventDetail->stripSec($request->endTime);
 
         if ($startDate && $startTime) {
-            $carbonStartDateTime = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime)->utc();
+            $carbonStartDateTime = $eventDetail->storeTimeMy($startDate, $startTime);
             if ($isEditMode) {
-                $eventDetailStartDateTime = $eventDetail->createCarbonDateTime($eventDetail->startDate, $eventDetail->startTime);
+                $eventDetailStartDateTime = $eventDetail->getDateTz($eventDetail->startDate, $eventDetail->startTime);
                 $isTimeSame = $carbonStartDateTime->eq($eventDetailStartDateTime);
             }
 
@@ -793,9 +812,9 @@ class EventDetail extends Model implements Feedable
         }
 
         if ($endDate && $endTime) {
-            $carbonEndDateTime = Carbon::createFromFormat('Y-m-d H:i', $endDate.' '.$endTime)->utc();
+            $carbonEndDateTime = $eventDetail->storeTimeMy( $endDate, $endTime);
             if ($isEditMode) {
-                $eventEndDateTime = $eventDetail->createCarbonDateTime( $eventDetail->endDate, $eventDetail->endTime);
+                $eventEndDateTime = $eventDetail->getDateTz( $eventDetail->endDate, $eventDetail->endTime);
                 $isTimeSame = $isTimeSame && $carbonEndDateTime->eq($eventEndDateTime);
             }
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
@@ -805,7 +824,12 @@ class EventDetail extends Model implements Feedable
                 $eventDetail->endDate = null;
                 $eventDetail->endTime = null;
             } elseif (! $isDraftMode) {
-                throw new TimeGreaterException('End date and time must be greater than start date and time.');
+                $startTimeFormatted = $carbonStartDateTime->format('Y-m-d H:i');
+                $endTimeFormatted = $carbonEndDateTime->format('Y-m-d H:i');
+                
+                throw new TimeGreaterException(
+                    "End date and time ({$endTimeFormatted}) must be greater than start date and time ({$startTimeFormatted})."
+                );
             } elseif ($isDraftMode) {
                 $eventDetail->endDate = $request->endDate;
                 $eventDetail->endTime = $request->endTime;
@@ -827,14 +851,14 @@ class EventDetail extends Model implements Feedable
             $eventDetail->sub_action_private = $request->launch_visible;
             if ($request->launch_visible === 'public') {
                 $launch_date = $request->launch_date_public;
-                $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_public);
+                $launch_time = $eventDetail->stripSec($request->launch_time_public);
             } else {
                 $launch_date = $request->launch_date_private;
-                $launch_time = $eventDetail->fixTimeToRemoveSeconds($request->launch_time_private);
+                $launch_time = $eventDetail->stripSec($request->launch_time_private);
             }
 
             if ($request->launch_schedule === 'schedule' && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = Carbon::createFromFormat('Y-m-d H:i', $launch_date.' '.$launch_time)->utc();
+                $carbonPublishedDateTime = $eventDetail->storeTimeMy( $launch_date, $launch_time);;
                 // @phpstan-ignore-next-line
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                     $eventDetail->status = 'SCHEDULED';
