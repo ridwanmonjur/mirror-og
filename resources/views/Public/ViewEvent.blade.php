@@ -4,11 +4,20 @@
 @php
     $status = $event->statusResolved();
     $stylesEventRatio = bldRtMap($event->registeredParticipants, $event->totalParticipants);
-     if ($event?->tier) {
+    $isEarly = false;
+    $entryFee = 0;
+    $regStatus = $event->getRegistrationStatus();
+    if ($event->tier) {
         $tier = $event->tier->eventTier;
         $icon = $event->tier->tierIcon;
+        $entryFee = $event->tier->tierEntryFee;
+        if ($regStatus == config('constants.SIGNUP_STATUS.EARLY')) {
+            $entryFee = $event->tier->earlyEntryFee ;
+            $isEarly = true;
+        }
     } else {
         $tier = $icon = null;
+        $entryFee = 0;
     }
     $type = $event->type ? $event->type->eventType : null;
     $eventTierLower = bldLowerTIer($tier);
@@ -98,6 +107,9 @@
     @include('googletagmanager::body')
     <input type="hidden" id="disputeLevelEnums" value="{{json_encode($DISPUTE_ACCESS)}}">
     @include('includes.Navbar')
+    <div class="text-center discount-announceMent bg-primary mx-auto text-white fw-bold  ">
+        <small>Save with our early bird pricing! Discount ends {{ date('F j, Y', strtotime($event->signup->normal_signup_start_advanced_close)) }}</small>
+    </div>
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
@@ -365,12 +377,18 @@
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                                 
-                                @if ($event->tier)
-                                    <span >RM
-                                        {{ $entryFee ?? 'Free' }} Team Entry Fee
-                                    </span>
+                                @if ($event->tier) 
+                                    @if ($isEarly )
+                                        <div class="d-inline">
+                                        <span class="text-decoration-line-through me-1"> RM {{ $event->tier->tierEntryFee }}</span>
+                                        <span class="text-primary has-discount">RM {{ $entryFee }}</span>
+                                        </div>                        
+                                    @else 
+                                        <span class="fw-bold">RM {{ $entryFee }} </span>
+                                    @endif
                                 @else
-                                    <span>Not available</span>
+                                    <span>RM 0</span>
+                                    
                                 @endif
                             </div>
                             <div class="pb-1">

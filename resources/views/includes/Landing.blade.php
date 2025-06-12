@@ -1,6 +1,18 @@
 @foreach ($events as $event)
     @php
         $status = $event->statusResolved();
+        $isEarly = false;
+        $entryFee = 0;
+        $regStatus = $event->getRegistrationStatus();
+        if ($event->tier) {
+            $entryFee = $event->tier->tierEntryFee;
+            if ($regStatus == config('constants.SIGNUP_STATUS.EARLY')) {
+                $entryFee = $event->tier->earlyEntryFee ;
+                $isEarly = true;
+            }
+        } else {
+            $entryFee = 0;
+        }
         $eventTierLowerImg = bldImg($event->tier ? $event->tier?->tierIcon: null);
         $eventBannerImg = bldImg($event->eventBanner);
         $bladeEventGameImage = $event->game ? asset('/storage'. '/' . $event->game?->gameIcon) : null;
@@ -8,8 +20,6 @@
         $willShowStartsInCountDown = $status === 'UPCOMING';
         $isEnded = $status === 'ENDED';
         extract($event->startDatesReadable($willShowStartsInCountDown));
-        $regStatus = $event->getRegistrationStatus();
-        $entryFee = $regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $event->tier?->earlyEntryFee : $event->tier?->tierEntryFee;
     @endphp
     <div class="{{'rounded-box-' . strtoLower($event->tier?->eventTier) . ' event' }}" 
         style="background-color: rgba(255, 255, 255, 0.7);"
@@ -114,10 +124,18 @@
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    @if ($event->tier)
-                        <span>RM {{ $entryFee ?? 'Free' }} </span>
+                    @if ($event->tier) 
+                        @if ($isEarly )
+                            <div class="d-inline">
+                            <span class="text-decoration-line-through me-1"> RM {{ $event->tier->tierEntryFee }}</span>
+                            <span class="text-primary has-discount fw-bold">RM {{ $entryFee }}</span>
+                            </div>                        
+                        @else 
+                            <span>RM {{ $entryFee }} </span>
+                        @endif
                     @else
-                        <span>Entry fee not available</span>
+                        <span>RM 0</span>
+                        
                     @endif
                 </div>
                 <div>

@@ -22,7 +22,17 @@ window.addEventListener(
             ENDPOINT_URL += "?search=" + search + "&page=" + page;
         }
 
-        infinteLoadMore(null, ENDPOINT_URL);
+        infinteLoadMore(null, ENDPOINT_URL, ()=> {
+            let hasElement = document.querySelector("has-discount");
+            let discountAnnounce = document.querySelector('discount-announceMent');
+            if (discountAnnounce) {
+                if (hasElement) {
+                    discountAnnounce.classList.remove('d-none');
+                } else {
+                    discountAnnounce.classList.add('d-none');
+                }
+            }
+        });
     }, 100));
 
 
