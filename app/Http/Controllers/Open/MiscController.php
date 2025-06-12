@@ -204,7 +204,7 @@ class MiscController extends Controller
         // dd($key, $register_time);
         $options = [
             'event' => [
-                'eventTier' => 'Dolphin',
+                'eventTier' => 'Starfish',
                 'eventName' => $this->generateEventName($validated),
             ],
             'joinEvent' => [
