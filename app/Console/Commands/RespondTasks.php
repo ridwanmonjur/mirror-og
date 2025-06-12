@@ -71,7 +71,7 @@ class RespondTasks extends Command
 
             if ($type == 5) {
                 try {
-                    $event = EventDetail::where('id', $eventIdInt)->firstOrFail();
+                    $event = EventDetail::where('id', $eventIdInt)->first();
 
                     if ($event) {
                         $event->status = null;
@@ -82,7 +82,7 @@ class RespondTasks extends Command
                         $event->createDeadlinesTask();
                         Log::info("Reset event for ID: {$event->id}");
                     } else {
-                        Log::info("No event to reset for ID: {$eventIdInt}");
+                        Log::error("No event to reset for ID: {$eventIdInt}");
                     }
                 } catch (Exception $e) {
                     Log::info(message: "Failed to reset event for ID: {$eventIdInt}");
