@@ -23,7 +23,7 @@ class EventCreateCoupon extends Model
         return $fee;
     }
 
-    private function generateCarbonDateTime($startDate, $startTime, $timeZone = 'UTC')
+    private static function generateCarbonDateTime($startDate, $startTime, $timeZone = 'UTC')
     {
         if ($startTime != null) {
             if (substr_count($startTime, ':') === 2) {
@@ -61,8 +61,8 @@ class EventCreateCoupon extends Model
         }
 
         $currentDateTime = Carbon::now()->utc();
-        $startTime = $this->generateCarbonDateTime($discount->startDate, $discount->startTime);
-        $endTime = $this->generateCarbonDateTime($discount->endDate, $discount->endTime);
+        $startTime = self::generateCarbonDateTime($discount->startDate, $discount->startTime);
+        $endTime = self::generateCarbonDateTime($discount->endDate, $discount->endTime);
         $fee['discountId'] = $discount->id;
         $fee['discountName'] = $discount->name;
         $fee['discountType'] = $discount->type;
