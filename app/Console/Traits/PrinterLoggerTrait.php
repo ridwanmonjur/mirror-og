@@ -11,12 +11,7 @@ use Illuminate\Support\Facades\Mail;
 
 trait PrinterLoggerTrait
 {
-    private function logEntry(
-        string $commandName, 
-        string $commandType,
-        string $cronExpression = "0 0 * * *",
-        Carbon $today, 
-    ): int
+    private function logEntry(string $commandName, string $commandType, string $cronExpression = '0 0 * * *', Carbon $today): int
     {
         return DB::table('monitored_scheduled_tasks')->insertGetId([
             'name' => $commandName,
@@ -41,11 +36,11 @@ trait PrinterLoggerTrait
     private function logError(?int $id, Exception $e): void
     {
         Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
-        if  ($id) {
+        if ($id) {
             DB::table('monitored_scheduled_task_log_items')->insert([
-                'monitored_scheduled_task_id' => $id, 
-                'type' => "Error", 
-                'logs' => $e->getMessage(), 
+                'monitored_scheduled_task_id' => $id,
+                'type' => 'Error',
+                'logs' => $e->getMessage(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -53,33 +48,27 @@ trait PrinterLoggerTrait
 
         $fullClassName = get_class($this);
         $className = class_basename($fullClassName);
-        
-         Log::error("[$className] " . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
-         
-         try {
-             $today = now()->toDateString();
-             
-             $this->trackDailyErrorAndNotify($className, $today, $e);
-             
-         } catch (Exception $dbException) {
-             Log::error('Failed to log error to database: ' . $dbException->getMessage());
-         }
+
+        Log::error("[$className] " . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+        try {
+            $today = now()->toDateString();
+
+            $this->trackDailyErrorAndNotify($className, $today, $e);
+        } catch (Exception $dbException) {
+            Log::error('Failed to log error to database: ' . $dbException->getMessage());
+        }
     }
 
     private function trackDailyErrorAndNotify(string $className, string $today, Exception $e): void
     {
         try {
             // Check if we already have an error count record for today
-            $errorRecord = DB::table('daily_command_errors')
-                ->where('class_name', $className)
-                ->where('error_date', $today)
-                ->first();
+            $errorRecord = DB::table('daily_command_errors')->where('class_name', $className)->where('error_date', $today)->first();
 
             if ($errorRecord) {
-                DB::table('daily_command_errors')
-                    ->where('id', $errorRecord->id)
-                    ->increment('error_count');
-                    
+                DB::table('daily_command_errors')->where('id', $errorRecord->id)->increment('error_count');
+
                 Log::info("Error count incremented for $className on $today. Total: " . ($errorRecord->error_count + 1));
             } else {
                 DB::table('daily_command_errors')->insert([
@@ -92,7 +81,7 @@ trait PrinterLoggerTrait
                 ]);
 
                 $this->sendFirstErrorNotification($className, $e, $today);
-                
+
                 DB::table('daily_command_errors')
                     ->where('class_name', $className)
                     ->where('error_date', $today)
@@ -106,19 +95,11 @@ trait PrinterLoggerTrait
     private function sendFirstErrorNotification(string $className, Exception $e, string $date): void
     {
         try {
-            $adminEmail = "mjrrdn@gmail.com";
-            
-            $errorMail = new ErrorCommandMail(
-                className: $className,
-                errorMessage: $e->getMessage(),
-                errorDate: $date,
-                errorTime: now()->format('H:i:s'),
-                stackTrace: $e->getTraceAsString()
-            );
+            $adminEmail = 'mjrrdn@gmail.com';
+
+            $errorMail = new ErrorCommandMail(className: $className, errorMessage: $e->getMessage(), errorDate: $date, errorTime: now()->format('H:i:s'), stackTrace: $e->getTraceAsString());
 
             Mail::to($adminEmail)->send($errorMail);
-          
-            
         } catch (Exception $mailException) {
             Log::error('Failed to send error notification email: ' . $mailException->getMessage());
         }
@@ -130,12 +111,8 @@ trait PrinterLoggerTrait
     private function getDailyErrorStats(string $date = null): array
     {
         $date = $date ?? now()->toDateString();
-        
-        return DB::table('daily_command_errors')
-            ->select('class_name', 'error_count', 'email_sent')
-            ->where('error_date', $date)
-            ->get()
-            ->toArray();
+
+        return DB::table('daily_command_errors')->select('class_name', 'error_count', 'email_sent')->where('error_date', $date)->get()->toArray();
     }
 
     /**
@@ -151,6 +128,4 @@ trait PrinterLoggerTrait
             ->get()
             ->toArray();
     }
-
-    
 }

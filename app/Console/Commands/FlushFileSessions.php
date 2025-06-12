@@ -41,6 +41,6 @@ class FlushFileSessions extends Command
             $this->info('Session cleared successfully.');
         } catch (Exception $e) {
             Log::error('Error processing Session Clear');
-        }  
+        }
     }
 }
