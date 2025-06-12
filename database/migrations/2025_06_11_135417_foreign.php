@@ -82,6 +82,12 @@ return new class extends Migration
                 $table->date('redeemed_at')->nullable(true);
             }
         });
+
+        Schema::table('participant_payments', function (Blueprint $table) {
+            if (!Schema::hasColumn('participant_payments', 'type')) {
+                $table->string('type');
+            }
+        });
     }
 
     public function down()
@@ -148,6 +154,12 @@ return new class extends Migration
         Schema::table('user_coupons', function (Blueprint $table) {
             if (!Schema::hasColumn('user_coupons', 'redeemed_at')) {
                 $table->date('redeemed_at')->nullable(true);
+            }
+        });
+
+        Schema::table('participant_payments', function (Blueprint $table) {
+            if (!Schema::hasColumn('participant_payments', 'type')) {
+                $table->string('type');
             }
         });
     }
