@@ -166,7 +166,7 @@ function addTippy() {
 }
 
 
-function infinteLoadMoreByPost(ENDPOINT_URL, body) {
+function infinteLoadMoreByPost(ENDPOINT_URL, body, successCb = null) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
@@ -191,9 +191,9 @@ function infinteLoadMoreByPost(ENDPOINT_URL, body) {
                     noMoreDataElement.textContent = "We don't have more data to display";
                 } else {
                     scrollingPaginationElement.innerHTML += response.html ;
-                    // window.motion.animateCard('event-box', [
-                    //     'card-text'
-                    // ]);
+                    if (successCb) {
+                        successCb();
+                    }
                 }
 
                 addTippy();
