@@ -107,6 +107,7 @@ class ParticipantCheckoutController extends Controller
             if ($isNormalReg) {
                 $transaction = new TransactionHistory([
                     'name' => "{$event->eventName}",
+                    
                     'type' => 'Event Entry Fee Hold',
                     'link' => route('public.event.view', ['id' => $event->id]),
                     'amount' => $request->discount_applied_amount,

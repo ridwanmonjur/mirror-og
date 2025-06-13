@@ -149,19 +149,19 @@ final class JoinEventFactory extends Factory
                     }
 
                     if ($participantPaymentOption['type'] == 'wallet') {
-                        if ($participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NOTMAL')) {
+                        if ($participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NORMAL')) {
                             $transactionDetails = [
-                                'name' => "Top up for event: RM {$event->eventName}",
+                                'name' => "{$event->eventName}",
                                 'type' => "Top up: RM {$amount}",
                                 'link' => null,
-                                'summary' => "Wallet RM $amount",
+                                'summary' => "Wallet Normal Test Payment",
                             ];
                         } else {
                             $transactionDetails = [
-                                'name' => "Payment for {$event->eventName}",
+                                'name' => "{$event->eventName}",
                                 'type' => "Top up for Event: RM $amount",
                                 'link' => route('public.event.view', ['id' => $event->id]),
-                                'summary' => "FAKE, FAKE, FAKE",
+                                'summary' => "Wallet Early Test Payment",
                             ];
                         }
                         
@@ -190,7 +190,7 @@ final class JoinEventFactory extends Factory
                                 $stripeIntent = $stripeConnection->createPaymentIntent([
                                     'amount' => $amount * 100,
                                     'currency' => 'myr',
-                                    'capture_method' => $participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NOTMAL') ?
+                                    'capture_method' => $participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NORMAL') ?
                                         'manual' : 'automatic',
                                     'metadata' => [
                                         'joinEventId' => $joinEvent->id,
@@ -203,7 +203,7 @@ final class JoinEventFactory extends Factory
                             $stripeIntent = $stripeConnection->createPaymentIntent([
                                 'amount' => $amount * 100,
                                 'currency' => 'myr',
-                                'capture_method' => $participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NOTMAL') ?
+                                'capture_method' => $participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NORMAL') ?
                                     'manual' : 'automatic',
                                 'metadata' => [
                                     'joinEventId' => $joinEvent->id,
@@ -230,19 +230,19 @@ final class JoinEventFactory extends Factory
                         }
                         
                         // Set transaction details based on register_time
-                        if ($participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NOTMAL')) {
+                        if ($participantPaymentOption['register_time'] == config('constants.SIGNUP_STATUS.NORMAL')) {
                             $transactionDetails = [
-                                'name' => "Entry Fee Hold: RM {$event->eventName}",
+                                'name' => "{$event->eventName}",
                                 'type' => 'Event Entry Fee Hold',
                                 'link' => route('public.event.view', ['id' => $event->id]),
-                                'summary' => "User Wallet RM {$amount}",
+                                'summary' => "Stripe Normal Test Payment",
                             ];
                         } else {
                             $transactionDetails = [
                                 'name' => "Entry Fee: RM {$event->eventName}",
                                 'type' => 'Event Entry Fee',
                                 'link' => route('public.event.view', ['id' => $event->id]),
-                                'summary' => "Fake, Fake, Fake",
+                                'summary' => "Stripe Early Test Payment",
                             ];
                         }
                         
