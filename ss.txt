@@ -106,3 +106,6 @@ user_profile (done)
 
 cd domains/driftwood.gg/public_html
 cd domains/oceansgaming.gg/public_html
+
+cd ../domains/driftwood.gg/public_html
+cd ../domains/oceansgaming.gg/public_html

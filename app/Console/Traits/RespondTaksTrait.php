@@ -73,11 +73,13 @@ trait RespondTaksTrait
 
     public function releaseFunds(EventDetail $event, Collection $joinEvents)
     {
-        DB::beginTransaction();
         try {
             foreach ($joinEvents as $join) {
+                
+                DB::beginTransaction();
                 try {
                     foreach ($join->payments as $participantPay) {
+                        
                         try {
                             if ($join->register_time == config('constants.SIGNUP_STATUS.NORMAL')) {
                                 if ($participantPay->transaction && $participantPay->type == 'stripe') {
@@ -173,18 +175,22 @@ trait RespondTaksTrait
                                 }
                             }
                         } catch (Exception $e) {
+                            
                             Log::error("Error in releaseFunds for JOIN ID {$join->id}: && PAY ID {$participantPay->id}");
                             $this->logError(null, $e);
+                            throw $e;
                         }
                     }
+                    DB::commit();
                 } catch (Exception $e) {
+                    
+                    DB::rollback();
                     Log::error("Error in releaseFunds for Join Event ID {$join->id}");
                     $this->logError(null, $e);
+                    throw $e;
                 }
             }
-            DB::commit();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->logError(null, $e);
             return [
                 'released_payments' => 0,
@@ -201,8 +207,11 @@ trait RespondTaksTrait
         Log::info('<<< startedEvents : ' . $event);
 
         foreach ($joins as $join) {
+            
+            DB::beginTransaction();
             try {
                 foreach ($join->payments as $participantPay) {
+                    
                     try {
                         if ($participantPay->payment_id && $participantPay->type == 'stripe') {
                             // stripe capture hold
@@ -232,11 +241,15 @@ trait RespondTaksTrait
                     } catch (Exception $e) {
                         Log::error("Error processing participant payment ID {$participantPay->id}");
                         $this->logError(null, $e);
+                        throw $e;
                     }
                 }
+                DB::commit();
             } catch (Exception $e) {
                 Log::error("Error processing join ID {$join->id} ");
                 $this->logError(null, $e);
+                DB::rollBack();
+                throw $e;
             }
         }
 
@@ -248,6 +261,7 @@ trait RespondTaksTrait
         $playerNotif = [];
         $orgNotif = [];
         foreach ($joinList as $join) {
+            
             try {
                 $memberHtml = <<<HTML
                 <span class="notification-gray">
@@ -300,6 +314,7 @@ trait RespondTaksTrait
         $playerNotif = [];
         $orgNotif = [];
         foreach ($joinList as $join) {
+            
             try {
                 $memberHtml = <<<HTML
                 <span class="notification-gray">
@@ -351,13 +366,15 @@ trait RespondTaksTrait
 
     public function handleEventTypes($notificationMap, $joinList)
     {
+        try {
         [$playerNotif, $orgNotif] = $notificationMap;
 
         if (!empty($joinList)) {
-            DB::beginTransaction();
+            DB::beginTransaction(); //
             try {
                 $memberNotification = $organizerNotification = [];
                 foreach ($joinList as $join) {
+                    
                     try {
                         if (!isset($playerNotif[$join->id])) {
                             continue;
@@ -383,6 +400,7 @@ trait RespondTaksTrait
                             ->all();
 
                         foreach ($join->roster as $member) {
+                            
                             try {
                                 $memberNotification[] = [
                                     'user_id' => $member->user->id,
@@ -398,6 +416,7 @@ trait RespondTaksTrait
                                 }
                             } catch (Exception $e) {
                                 $this->logError(null, $e);
+                                throw $e;
                             }
                         }
 
@@ -410,6 +429,7 @@ trait RespondTaksTrait
                 }
 
                 foreach ($orgNotif as $notification2) {
+                    
                     try {
                         $organizerNotification[] = [
                             'user_id' => $notification2['user_id'],
@@ -438,15 +458,20 @@ trait RespondTaksTrait
                         }
                     } catch (Exception $e) {
                         $this->logError(null, $e);
+                        throw $e;
                     }
                 }
 
                 NotifcationsUser::insertWithCount([...$memberNotification, ...$organizerNotification]);
                 DB::commit();
             } catch (Exception $e) {
-                DB::rollBack();
+                DB::rollBack(); 
                 $this->logError(null, $e);
+                throw $e;
             }
+        }
+        } catch (Exception $e) {
+            $this->logError(null, $e);
         }
     }
 
@@ -479,9 +504,9 @@ trait RespondTaksTrait
         $errorCount = 0;
 
         if (!empty($joinList)) {
-            DB::beginTransaction();
-
             foreach ($joinList as $join) {
+                
+                DB::beginTransaction();
                 try {
                     if (isset($memberIdMap[$join->id]) && isset($memberIdMap[$join->id]) && isset($memberIdMap[$join->id][0]) && isset($logMap[$join->id])) {
                         ActivityLogs::findActivityLog([
@@ -501,6 +526,7 @@ trait RespondTaksTrait
 
                     if (isset($prizeDetails[$join->id])) {
                         foreach ($join->roster as $member) {
+                            
                             $transactionHistory[] = [
                                 'user_id' => $member->user->id,
                                 'name' => "Prize Money: RM {$prizeDetails[$join->id]}",
@@ -532,9 +558,10 @@ trait RespondTaksTrait
                     if (!empty($transactionHistory) || !empty($walletData)) {
                         $transactionWalletCount++;
                     }
+                    DB::commit();
                 } catch (Exception $e) {
                     $errorCount++;
-
+                    DB::rollBack();
                     Log::error('1 activity & prize execution failed', [
                         'join_id' => $join->id ?? 'unknown',
                         'error' => $e->getMessage(),
@@ -542,33 +569,8 @@ trait RespondTaksTrait
                     ]);
 
                     $this->logError(null, $e);
-                    continue;
+                    throw $e;
                 }
-            }
-
-            try {
-                DB::commit();
-
-                Log::info('All activity & prize executions completed', [
-                    'total_joins' => count($joinList),
-                    'processed_joins' => $processedCount,
-                    'activity_logs_deleted' => $activityDeletedCount,
-                    'activity_logs_created' => $activityCreatedCount,
-                    'transaction_wallet_updates' => $transactionWalletCount,
-                    'errors' => $errorCount,
-                ]);
-            } catch (Exception $e) {
-                DB::rollBack();
-
-                Log::error('All activity & prize execution completed', [
-                    'error' => $e->getMessage(),
-                    'total_joins' => count($joinList),
-                    'processed_joins' => $processedCount,
-                    'activity_logs_deleted' => $activityDeletedCount,
-                    'activity_logs_created' => $activityCreatedCount,
-                    'transaction_wallet_updates' => $transactionWalletCount,
-                    'errors' => $errorCount,
-                ]);
             }
         } else {
             Log::info('No joins to process for prize distribution');
@@ -615,6 +617,7 @@ trait RespondTaksTrait
         $prize = [];
         $logs = [];
         foreach ($joinList as $join) {
+            
             try {
                 if ($join->position?->position) {
                     $position = $join->position->position;
