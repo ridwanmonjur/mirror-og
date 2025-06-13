@@ -130,12 +130,14 @@
                         <circle cx="2" cy="2" r="2" fill="currentColor"/>
                         </svg> </span>{{$fmtStartT}} </span>
                     </h5>
-                    @if ($willShowStartsInCountDown) 
-                        <div class="text-center">
-                            <p class="my-0 py-0"> Starts in 
-                                <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$fmtStartIn}}</span>
-                            </p>
-                        </div>
+                    @if ($willShowStartsInCountDown && ) 
+                        @if ($$fmtStartIn)
+                            <div class="text-center">
+                                <p class="my-0 py-0"> Starts in 
+                                    <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$fmtStartIn}}</span>
+                                </p>
+                            </div>
+                        @endif
                     @else
                         <div class="text-center mt-1">
                             <button class="btn btn-small py-1 px-2 border-primary text-primary"> See bracket</button>

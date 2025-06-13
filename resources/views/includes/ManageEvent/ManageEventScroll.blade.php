@@ -152,11 +152,13 @@
                         </svg> </span>{{$fmtStartT}} </span>
                     </h5>
                     @if ($willShowStartsInCountDown) 
-                        <div class="text-center">
-                            <p class="my-0 py-0"> Starts in 
-                                <span class="{{ ' Color-' . $event->tier?->eventTier }}">{{$fmtStartIn}}</span>
-                            </p>
-                        </div>
+                        @if ($$fmtStartIn)
+                            <div class="text-center">
+                                <p class="my-0 py-0"> Starts in 
+                                    <span class="{{ ' Color-' . $event->tier?->eventTier }}">{{$fmtStartIn}}</span>
+                                </p>
+                            </div>
+                        @endif
                     @else
                         <div class="text-center">
                             <p class="my-0 py-0"> 
