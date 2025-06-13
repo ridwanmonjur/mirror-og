@@ -11,6 +11,7 @@ use App\Models\RosterMember;
 use App\Models\StripeConnection;
 use App\Models\TransactionHistory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends Factory<\App\Models\JoinEvent>
@@ -106,7 +107,8 @@ final class JoinEventFactory extends Factory
             }
         }
 
-        foreach ($joinEvents as $joinEvent) {
+        foreach ($joinEvents as $joinIndex => $joinEvent) {
+            
             foreach ($members as $teamMember) {
                 if ($teamMember->team_id == $joinEvent->team_id) {
                     RosterMember::updateOrCreate([
@@ -265,6 +267,11 @@ final class JoinEventFactory extends Factory
                     ]);
                 }
             }
+
+            DB::table('event_join_results')->updateOrInsert(
+                ['join_events_id' => $joinEvent->id],
+                ['position' => $joinIndex]
+            );
         }
         
         return [
