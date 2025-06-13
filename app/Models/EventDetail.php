@@ -538,7 +538,7 @@ class EventDetail extends Model implements Feedable
         $startsIn = null;
         $formattedDate = 'No date';
         $formattedTime = 'No time';
-        $startsIn = 'Not available';
+        $startsIn = null;
         if ($this->startDate !== null && $this->startTime !== null) {
 
             $startTime = $this->stripSec($this->startTime);
@@ -554,7 +554,12 @@ class EventDetail extends Model implements Feedable
                     if ($diff->days > 0) {
                         $startsIn = $diff->days . 'd ';
                     }
-                    $startsIn .= $diff->h . 'h';
+                    if ($startsIn) {
+                        $startsIn .= $diff->h . 'h';
+                    } else {
+                        $startsIn = $diff->h . 'h';
+                    }
+                    
                 } 
             } 
         }

@@ -166,7 +166,7 @@ function addTippy() {
 }
 
 
-function infinteLoadMoreByPost(ENDPOINT_URL, body) {
+function infinteLoadMoreByPost(ENDPOINT_URL, body, successCb = null) {
     let noMoreDataElement = document.querySelector('.no-more-data');
     let scrollingPaginationElement = document.querySelector('.scrolling-pagination');
     let hasClass = noMoreDataElement.classList.contains('d-none');
@@ -191,9 +191,9 @@ function infinteLoadMoreByPost(ENDPOINT_URL, body) {
                     noMoreDataElement.textContent = "We don't have more data to display";
                 } else {
                     scrollingPaginationElement.innerHTML += response.html ;
-                    // window.motion.animateCard('event-box', [
-                    //     'card-text'
-                    // ]);
+                    if (successCb) {
+                        successCb();
+                    }
                 }
 
                 addTippy();
@@ -340,9 +340,9 @@ function fetchSearchSortFiter() {
         status: params.get('status')
     }
 
-    window.initSocialShareModals();
     loadByPost(ENDPOINT_URL, body, () => {
         window.initSocialShareModals();
+        reloadToolTips();
     });     
 }
 
@@ -490,6 +490,7 @@ function handleSearch() {
     
     loadByPost(ENDPOINT_URL, body, () => {
         window.initSocialShareModals();
+        reloadToolTips();
     });
 }
 
@@ -558,6 +559,7 @@ window.addEventListener(
             try{
                 infinteLoadMoreByPost(ENDPOINT_URL, body, () => {
                     window.initSocialShareModals();
+                    reloadToolTips();
                 });
 
             } catch {
@@ -566,3 +568,20 @@ window.addEventListener(
         }
     }, 300)
 );
+
+function reloadToolTips () {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
+        // Remove existing tooltip if it exists
+        const existingTooltip = Tooltip.getInstance(tooltipTriggerEl);
+        if (existingTooltip) {
+            existingTooltip.dispose();
+        }
+        // Create new tooltip
+        return new Tooltip(tooltipTriggerEl);
+    });
+
+}
+window.addOnLoad(()=> {
+    reloadToolTips();
+})

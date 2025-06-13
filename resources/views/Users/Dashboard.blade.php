@@ -214,7 +214,7 @@
 
                         @if ($wallet->last_payout_at)
                             <div class="my-3">
-                                <p>Last withdrawal: {{ $wallet->last_payout_at->format('F j, Y, g:i a') }}</p>
+                                <p>Last withdrawal: {{ $wallet->last_payout_at->format('d M y, g:i a') }}</p>
                             </div>
                         @endif
                     </div>
