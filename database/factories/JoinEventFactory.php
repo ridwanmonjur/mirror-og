@@ -270,7 +270,7 @@ final class JoinEventFactory extends Factory
 
             DB::table('event_join_results')->updateOrInsert(
                 ['join_events_id' => $joinEvent->id],
-                ['position' => $joinIndex]
+                ['position' => $joinIndex + 1]
             );
         }
         

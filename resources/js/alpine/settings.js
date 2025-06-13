@@ -835,8 +835,16 @@ if (settings) {
 }
 
 else if (wallet) {
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList]?.map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
+        // Remove existing tooltip if it exists
+        const existingTooltip = Tooltip.getInstance(tooltipTriggerEl);
+        if (existingTooltip) {
+            existingTooltip.dispose();
+        }
+        // Create new tooltip
+        return new Tooltip(tooltipTriggerEl);
+    });
     let firstElement = null;
     let list = document.querySelectorAll('#wallet-view-coupons .coupon')
     if (list && '0' in list) firstElement = list[0];
