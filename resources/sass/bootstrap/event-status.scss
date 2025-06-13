@@ -12,11 +12,17 @@
     border: 1px solid transparent;
 }
 
+
+
 /* UPCOMING State */
 .EventStatus-UPCOMING, .EventStatus-UPCOMING-HOME {
     background-color: #43A4D7;
     color: white;
     border: 1px solid transparent;
+}
+
+.Color-UPCOMING {
+    color: #43A4D7;
 }
 
 .EventStatus-UPCOMING-HOME {
@@ -43,6 +49,10 @@
     border: 1px solid transparent;
 }
 
+.Color-SCHEDULED {
+    color: #43A4D7;
+}
+ 
 /* ONGOING State */
 .EventStatus-ONGOING, .EventStatus-ONGOING-HOME {
     background-color: #FFFBFB;
@@ -55,6 +65,25 @@
     border: 2px solid #cafa8b;
     color: white;
 }
+
+.Color-ONGOING {
+    color: #8CCD39;
+}
+
+/* PENDING State */
+.EventStatus-FAILED, .EventStatus-FAILED-HOME {
+    background-color: #ee5959;
+    color: white;
+    border: 1px solid transparent;
+}
+
+/* PENDING State */
+.EventStatus-DRAFT, .EventStatus-DRAFT-HOME {
+    background-color: #898787;
+    color: white;
+    border: 1px solid transparent;
+}
+
 
 
 
@@ -80,6 +109,10 @@
     background-color: #A6A6A6;
     color: white;
     border: 1px solid transparent;
+}
+
+.Color-ENDED {
+    color: #A6A6A6;
 }
 
 .EventStatus-ENDED-HOME {

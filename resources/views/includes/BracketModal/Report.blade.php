@@ -8,10 +8,24 @@
                     <div class=" popover-box bg-white border-2 border  row justify-content-start border border-dark border px-0 py-0"
                     >
                         <div class="text-center  mt-4">
-                            <h5 class="text-uppercase py-0 mt-0 mb-1 text-primary">
+                             <h5 class="text-uppercase py-0 mt-0 mb-0 text-primary">
                                 <svg width="20" height="20" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#43a4d7;} </style> <g> <rect x="119.256" y="222.607" class="st0" width="50.881" height="50.885"></rect> <rect x="341.863" y="222.607" class="st0" width="50.881" height="50.885"></rect> <rect x="267.662" y="222.607" class="st0" width="50.881" height="50.885"></rect> <rect x="119.256" y="302.11" class="st0" width="50.881" height="50.885"></rect> <rect x="267.662" y="302.11" class="st0" width="50.881" height="50.885"></rect> <rect x="193.46" y="302.11" class="st0" width="50.881" height="50.885"></rect> <rect x="341.863" y="381.612" class="st0" width="50.881" height="50.885"></rect> <rect x="267.662" y="381.612" class="st0" width="50.881" height="50.885"></rect> <rect x="193.46" y="381.612" class="st0" width="50.881" height="50.885"></rect> <path class="st0" d="M439.277,55.046h-41.376v39.67c0,14.802-12.195,26.84-27.183,26.84h-54.025 c-14.988,0-27.182-12.038-27.182-26.84v-39.67h-67.094v39.297c0,15.008-12.329,27.213-27.484,27.213h-53.424 c-15.155,0-27.484-12.205-27.484-27.213V55.046H72.649c-26.906,0-48.796,21.692-48.796,48.354v360.246 c0,26.661,21.89,48.354,48.796,48.354h366.628c26.947,0,48.87-21.692,48.87-48.354V103.4 C488.147,76.739,466.224,55.046,439.277,55.046z M453.167,462.707c0,8.56-5.751,14.309-14.311,14.309H73.144 c-8.56,0-14.311-5.749-14.311-14.309V178.089h394.334V462.707z"></path> <path class="st0" d="M141.525,102.507h53.392c4.521,0,8.199-3.653,8.199-8.144v-73.87c0-11.3-9.27-20.493-20.666-20.493h-28.459 c-11.395,0-20.668,9.192-20.668,20.493v73.87C133.324,98.854,137.002,102.507,141.525,102.507z"></path> <path class="st0" d="M316.693,102.507h54.025c4.348,0,7.884-3.513,7.884-7.826V20.178C378.602,9.053,369.474,0,358.251,0H329.16 c-11.221,0-20.349,9.053-20.349,20.178v74.503C308.81,98.994,312.347,102.507,316.693,102.507z"></path> </g> </g></svg>                                <b> Match Results: <span  v-text="report.position"></span></b>     
                             </h5>
-                            <p class="my-0 p-0  text-uppercase" v-text="report.completeMatchStatus"> </p>
+                            <p class="my-0 py-0">
+                                <span v-bind:class="'my-0 p-0  text-uppercase Color-'+ report.completeMatchStatus + ' '" v-text="report.completeMatchStatus"> </span>
+                            </p>
+                            
+                            <small style="color: #757577;" class="mt-0 mb-2 py-0 w-75 mx-auto d-block text-center text-truncate ">
+                                @if ($event->eventName)
+                                    <span>{{$event->eventName}} <small>•</small> </span>
+                                @endif
+                                @if ($event->tier?->eventTier)
+                                    <span>{{$event->tier?->eventTier}} <small>•</small>  </span>
+                                @endif
+                                @if ($event->game)
+                                    <span>{{$event->game?->gameTitle}}  </span>
+                                @endif
+                            </small> 
                             <template v-if="report.deadline && userLevelEnums['IS_PUBLIC'] != report.userLevel">
                                 <div class="my-0 py-0 ">
                                     <template v-if="!report.deadline.has_started">
@@ -86,7 +100,7 @@
                             <div class="col-8 col-lg-10 px-0">
                                 <p>
                                     Game <span v-text="reportUI.matchNumber+1"> </span>
-                                    <span class="fw-bold" v-text="report.matchStatus[reportUI.matchNumber]"></span> 
+                                    <span v-bind:class="'fw-bold Color-'+ report.completeMatchStatus + ' '"  v-text="report.matchStatus[reportUI.matchNumber]"></span> 
                                 </p>
                                 <template v-if="userLevelEnums['IS_TEAM1'] === report.userLevel 
                                     || userLevelEnums['IS_TEAM2'] === report.userLevel"

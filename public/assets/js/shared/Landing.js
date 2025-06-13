@@ -32,6 +32,17 @@ window.addEventListener(
                     discountAnnounce.classList.add('d-none');
                 }
             }
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
+                // Remove existing tooltip if it exists
+                const existingTooltip = Tooltip.getInstance(tooltipTriggerEl);
+                if (existingTooltip) {
+                    existingTooltip.dispose();
+                }
+                // Create new tooltip
+                return new Tooltip(tooltipTriggerEl);
+            });
         });
     }, 100));
 
