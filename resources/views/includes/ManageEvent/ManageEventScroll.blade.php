@@ -143,7 +143,7 @@
                     &nbsp;
                     @if ($event->tier) 
                         @if ($isEarly )
-                            <div class="d-inline" data-bs-toggle="tooltip" title="Early Bird Discount! Ends {{ 
+                            <div class="d-inline cursor-pointer" data-bs-toggle="tooltip" title="Early Bird Discount! Ends {{ 
                                 date('d M y g:i A', strtotime($event->signup->normal_signup_start_advanced_close) + (8 * 3600)) 
                             }}.">
                             <span class="text-decoration-line-through me-1"> RM {{ $event->tier->tierEntryFee }}</span>

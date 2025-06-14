@@ -158,7 +158,7 @@
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
                             <img loading="lazy"  alt="{{ $event->eventName }}" width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
-                                @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';" src="{{ $eventBannerImg }}"
+                                @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" src="{{ $eventBannerImg }}"
                                 alt="" 
                             >
                         </a>
@@ -385,7 +385,7 @@
                                 
                                 @if ($event->tier) 
                                     @if ($isEarly )
-                                        <div class="d-inline" data-bs-toggle="tooltip" title="Early Bird Discount! Ends {{ 
+                                        <div class="d-inline cursor-pointer" data-bs-toggle="tooltip" title="Early Bird Discount! Ends {{ 
                                             date('d M y g:i A', strtotime($event->signup->normal_signup_start_advanced_close) + (8 * 3600)) 
                                         }}.">
                                         <span class="text-decoration-line-through me-1"> RM {{ $event->tier->tierEntryFee }}</span>
