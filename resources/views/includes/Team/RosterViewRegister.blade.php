@@ -50,7 +50,7 @@
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
             <img 
                 id="eventBanner"
-                onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';" @class([
+                onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" @class([
                 'opacity-until-hover object-fit-cover border-0 w-100 h-100 ',
             ])
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px; "
@@ -93,7 +93,7 @@
                                         <img class="rounded-circle object-fit-cover random-color-circle me-2" width="25"
                                             height="25" 
                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
-                                            onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;"
+                                            onerror="this.src='{{ asset('assets/images/404.png') }}'; this.onerror=null;"
                                             {{-- onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" --}}
                                         >
                                          @if ($joinEvent->roster_captain_id == $roster->id)

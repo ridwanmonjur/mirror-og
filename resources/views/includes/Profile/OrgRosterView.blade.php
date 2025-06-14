@@ -35,7 +35,7 @@
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug ]) }}">
             <img 
                 id="eventBanner"
-                onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';"
+                onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                 @class([
                 'opacity-until-hover w-100 h-100 object-fit-cover me-1 border-0',
             ])

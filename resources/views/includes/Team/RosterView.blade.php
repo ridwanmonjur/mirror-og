@@ -38,7 +38,7 @@
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => $joinEvent->eventDetails->slug]) }}">
-            <img onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';"
+            <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                 id="eventBanner"
                 @class([
                 'opacity-until-hover border-0 w-100 h-100',
@@ -64,7 +64,7 @@
                             >
                                  <img class="rounded-circle object-fit-cover random-color-circle ms-1 me-2 mb-1" width="25" height="25" 
                                     src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
-                                    onerror="this.src='{{ asset('assets/images/404q.png') }}'; this.onerror=null;">
+                                    onerror="this.src='{{ asset('assets/images/404.png') }}'; this.onerror=null;">
                                 <small>{{ $roster->user->name }}</small>
                             </li>
                         @endforeach
