@@ -115,7 +115,6 @@
             ->format('d M y g:i A') 
         }}</small>
     </div>
-    @endif
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
@@ -150,18 +149,19 @@
             <div> </div>
             <div>
                 <div>
-                    <div class="mx-2 px-2 position-relative rounded-banner-parent">
+                    <div class="mx-2  position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
                             <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}" 
                                 onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
                                 width="120" height="90">
                         </div>
-                        <a title="{{$event->eventDescription}}"  data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}" >
-                            <img loading="lazy"  alt="{{ $event->eventName }}" 
-                                @class([' rounded-banner height-image ms-0 cursor-pointer object-fit-cover ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';" src="{{ $eventBannerImg }}"
-                                alt="{{$event->eventDescription}}" 
+                        <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
+                            <img loading="lazy"  alt="{{ $event->eventName }}" width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
+                                @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404q.png')}}';" src="{{ $eventBannerImg }}"
+                                alt="" 
                             >
                         </a>
+                       
                     </div>
                 </div>
                 <div class="grid-container-two-columns-at-desktop px-3">
