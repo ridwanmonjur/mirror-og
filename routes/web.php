@@ -26,8 +26,8 @@ use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
-Route::view('/','Public.ClosedBeta')->name('public.closedBeta.view');
-Route::redirect( '/closedbeta','/');
+Route::view('/', 'Public.ClosedBeta')->name('public.closedBeta.view');
+Route::redirect('/closedbeta', '/');
 
 Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
 // Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
@@ -44,7 +44,7 @@ Route::get('/test', function () {
         'Carbon::today()' => Carbon::today(),
         'Carbon::today()->utc()' => Carbon::today()->utc(),
     ];
-    
+
     return view('Public.test', compact('dateData'));
 });
 // Forget, reset password
@@ -73,15 +73,11 @@ Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respo
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
 
 // Search bar
-Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view')->middleware('prevent-back-history');
-Route::get('/event/{id}/{title?}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view')
-    ->middleware('prevent-back-history');
-Route::get('/view/team/{id}/{title?}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view')
-    ->middleware('prevent-back-history');
-Route::get('/view/participant/{id}/{title?}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view')
-    ->middleware('prevent-back-history');
-Route::get('/view/organizer/{id}/{title?}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view')
-    ->middleware('prevent-back-history');
+Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
+Route::get('/event/{id}/{title?}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
+Route::get('/view/team/{id}/{title?}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
+Route::get('/view/participant/{id}/{title?}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
+Route::get('/view/organizer/{id}/{title?}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
 
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
@@ -89,11 +85,11 @@ Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback'
 Route::feeds();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::group(['middleware' => 'check-permission:participant'], function () {
-        Route::get('/wallet', [StripeController::class, 'showWalletDashboard'])->name('wallet.dashboard')->middleware('prevent-back-history');
-        Route::get('/wallet/payment-method', [StripeController::class, 'showPaymentMethodForm'])->name('wallet.payment-method')->middleware('prevent-back-history');
+    Route::group(['middleware' => ['check-permission:participant', 'prevent-back-history']], function () {
+        Route::get('/wallet', [StripeController::class, 'showWalletDashboard'])->name('wallet.dashboard');
+        Route::get('/wallet/payment-method', [StripeController::class, 'showPaymentMethodForm'])->name('wallet.payment-method');
         Route::post('/wallet/payment-method', [StripeController::class, 'savePaymentMethod'])->name('wallet.save-payment-method');
-        Route::get('/wallet/topupCallback', [StripeController::class, 'topupCallback'])->name('wallet.topupCallback')->middleware('prevent-back-history');
+        Route::get('/wallet/topupCallback', [StripeController::class, 'topupCallback'])->name('wallet.topupCallback');
         Route::get('/wallet/transactions', [StripeController::class, 'showTransactions'])->name('wallet.transactions');
 
         Route::post('/wallet/checkout', [StripeController::class, 'checkoutTopup'])->name('wallet.checkout');
@@ -101,20 +97,17 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::group(['middleware' => 'check-permission:participant|organizer'], function () {
         // Notifications page
-   
-        Route::view('/user/notifications', 'Users.Notifications')->name('user.notif.view')->middleware('prevent-back-history');
+        Route::view('/user/notifications', 'Users.Notifications')->name('user.notif.view');
         Route::post('/media', [ImageVideoController::class, 'upload']);
-        Route::get('/user/message', [ChatController::class, 'message'])->name('user.message.view')->middleware('prevent-back-history');
-        Route::get('/user/settings', [UserController::class, 'settings'])->name('user.settings.view')->middleware('prevent-back-history');
+        Route::get('/user/message', [ChatController::class, 'message'])->name('user.message.view');
+        Route::get('/user/settings', [UserController::class, 'settings'])->name('user.settings.view');
         Route::post('user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackground.action');
-
     });
 });
 
-
 Route::group(['prefix' => 'admin'], function () {
-    Route::group(['middleware' => 'auth'], function () {
-        Route::redirect('/profile', '/admin', 301)->name('admin.profile.view')->middleware('prevent-back-history');
+    Route::group(['middleware' => ['auth', 'prevent-back-history']], function () {
+        Route::redirect('/profile', '/admin', 301)->name('admin.profile.view');
         Route::get('/brackets/{eventId}', [FirebaseController::class, 'showBrackets'])->name('admin.brackets.index');
         Route::get('/disputes/{eventId}', [FirebaseController::class, 'showDisputes']);
         Route::post('/brackets/{eventId}', [FirebaseController::class, 'storeBrackets'])->name('admin.brackets.store');
@@ -128,9 +121,7 @@ Route::group(['prefix' => 'admin'], function () {
 /* THIS IS THE PARTICIPANT VIEW */
 Route::group(['prefix' => 'participant'], function () {
     // Normal login
-    Route::get('/signin', [AuthController::class, 'participantSignIn'])
-        ->name('participant.signin.view')
-        ->middleware('prevent-back-history');
+    Route::get('/signin', [AuthController::class, 'participantSignIn'])->name('participant.signin.view');
     Route::view('/signup', 'Auth.ParticipantSignUp')->name('participant.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('participant.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('participant.signup.action');
@@ -141,16 +132,15 @@ Route::group(['prefix' => 'participant'], function () {
 
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
-        Route::group(['middleware' => 'check-permission:participant|admin'], function () {
+        Route::group(['middleware' => ['check-permission:participant|admin', 'prevent-back-history']], function () {
             Route::get('/home', [ParticipantEventController::class, 'home'])->name('participant.home.view');
-       
+
             Route::post('/friends', [SocialController::class, 'updateFriend'])->name('participant.friends.update');
             Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
 
             // Team management
             Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])
-                ->middleware('prevent-back-history')
-                ->name('participant.team.view');
+            ->name('participant.team.view');
             Route::view('/team/create', 'Participant.CreateTeam')->name('participant.team.create');
             Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name('participant.team.edit');
             Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);
@@ -168,25 +158,21 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/member/{id}/pending', [ParticipantTeamController::class, 'pendingTeamMember'])->name('participant.member.pending');
 
             // Event management
-   
+
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
-            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view')->middleware('prevent-back-history');
+            Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
-            Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->middleware('prevent-back-history')
-                ->name('participant.event.selectOrCreateTeam.redirect');
-            Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])
-                ->name('participant.event.createTeam.redirect');
+            Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');
+            Route::post('/event/{id}/join/redirect/createTeamToJoinEvent', [ParticipantEventController::class, 'redirectToCreateTeamToJoinEvent'])->name('participant.event.createTeam.redirect');
             Route::get('event/checkout/transition', [ParticipantCheckoutController::class, 'showCheckoutTransition'])->name('participant.checkout.transition');
-            Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action')
-                ->middleware('prevent-back-history');
+            Route::post('event/checkout', [ParticipantCheckoutController::class, 'showCheckout'])->name('participant.checkout.action');
             Route::post('/event/walletCheckout', action: [ParticipantCheckoutController::class, 'walletCheckout'])->name('participant.walletCheckout.action');
 
             Route::post('/event/confirmOrCancel', [ParticipantEventController::class, 'confirmOrCancel'])->name('participant.confirmOrCancel.action');
 
             // Profile
-            Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view')
-                ->middleware('prevent-back-history');
+            Route::get('/profile', [ParticipantController::class, 'viewOwnProfile'])->name('participant.profile.view');
         });
     });
 });
@@ -194,10 +180,8 @@ Route::group(['prefix' => 'participant'], function () {
 /* THIS IS THE ORGANIZER VIEW */
 Route::group(['prefix' => 'organizer'], function () {
     // Normal login
-    Route::get('/signin', [AuthController::class, 'organizerSignin'])
-        ->name('organizer.signin.view')
-        ->middleware('prevent-back-history');
-        
+    Route::get('/signin', [AuthController::class, 'organizerSignin'])->name('organizer.signin.view');
+
     Route::view('/signup', 'Auth.OrganizerSignUp')->name('organizer.signup.view');
     Route::post('/signin', [AuthController::class, 'accessUser'])->name('organizer.signin.action');
     Route::post('/signup', [AuthController::class, 'storeUser'])->name('organizer.signup.action');
@@ -228,19 +212,15 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::get('/event/{id}/invitation', [OrganizerInvitationController::class, 'index'])->name('event.invitation.index');
             Route::post('event/{id}/updateForm', [OrganizerEventController::class, 'updateForm'])->name('event.updateForm');
             // Success page
-            Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->middleware('prevent-back-history')
-                ->name('organizer.success.view');
+            Route::get('event/{id}/success', [OrganizerEventController::class, 'showSuccess'])->name('organizer.success.view');
 
             // Live page
-            Route::get('event/{event}/live', [OrganizerEventController::class, 'show'])->middleware('prevent-back-history')
-                ->name('organizer.live.view');
+            Route::get('event/{event}/live', [OrganizerEventController::class, 'show'])->name('organizer.live.view');
             // Checkout page
-            Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])->middleware('prevent-back-history')
-                ->name('organizer.checkout.view');
+            Route::get('event/{id}/checkout', [OrganizerCheckoutController::class, 'showCheckout'])->name('organizer.checkout.view');
             Route::get('event/{id}/checkout/transition', [OrganizerCheckoutController::class, 'showCheckoutTransition'])->name('organizer.checkout.transition');
 
-            Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('organizer.profile.view')
-                ->middleware('prevent-back-history');
+            Route::get('/profile', [OrganizerController::class, 'viewOwnProfile'])->name('organizer.profile.view');
         });
     });
 });
