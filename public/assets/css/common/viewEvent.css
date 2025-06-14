@@ -230,7 +230,8 @@ input[type="submit"]:active {
 }
 
 .height-image {
-    height: 180px;
+    height: 400px;
+    aspect-ratio: auto;
 }
 
 .card-image {
@@ -463,7 +464,8 @@ input[type="submit"]:active {
 
 @media screen and (min-width: 1200px) {
     .height-image {
-        height: 30vh;
+        height: 45vh;
+        
     }
 
     .grid-container {
