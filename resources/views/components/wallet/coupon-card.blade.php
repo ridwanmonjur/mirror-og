@@ -19,10 +19,10 @@
         <div class="coupon  position-relative my-1 ">
             <div class=" w-100 row px-0 py-0 ">
                 <div class="col-lg-4  d-none d-lg-flex flex-column justify-content-center py-0 ps-1 pe-1">
-                    <h5 class="text-white my-2 py-0">
+                    <h5 class="text-white position-relative my-2 py-0">
                         RM {{ $coupon['amount'] }} 
                         @if ($redeemCount)
-                            <small class="bg-secondary px-1">x{{ $redeemCount }}</small>
+                            <small class="bg-secondary badge badge-secondary  px-1 position-absolute right-0 ms-1 rounded-circle " style="top: 0px; font-size: 12px;">x{{ $redeemCount }}</small>
                         @endif 
                     </h5>
                     <small class="text-light fst-italic">{{ $coupon['expires_at_human'] }}</small>
@@ -38,12 +38,11 @@
                         data-bs-title="{{ $coupon['description'] ?? 'No description.' }}"
                     >
                         {{ $coupon['description'] ?? 'No description.' }}
+                        
                     </div>
                     <div class="coupon__subtitle mt-2  text-light">
                         Code: {{ $coupon['code'] }}
-                        <span class="d-lg-none coupon__info-icon py-2 ms-2" >
-                            <svg width="16px" height="16px" viewBox="0 0 60.601004 60.601004" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#b1ccdd"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs></defs> <metadata> <rdf:rdf> <cc:work rdf:about=""> <dc:format>image/svg+xml</dc:format> <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type> <dc:title>情報コーナー; Information</dc:title> <dc:source>http://www.ecomo.or.jp/barrierfree/pictogram/data/zukigo_panfu_jis110.pdf</dc:source> </cc:work> </rdf:rdf> </metadata> <path d="m 0,0 c 0,12.079 -9.793,21.872 -21.872,21.872 -12.079,0 -21.871,-9.793 -21.871,-21.872 0,-12.079 9.792,-21.872 21.871,-21.872 C -9.793,-21.872 0,-12.079 0,0 Z" style="stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1;stroke:#b1ccdd;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-width:0.48500001;fill:#ffffff" transform="matrix(0.000000,1.250000,1.250000,0.000000,30.300503,57.639880)"></path> <path d="m 34.961753,47.76613 0,-23.573752 -13.182501,0 0,2.575 3.85875,0 0,20.998752 -3.85875,0 0,2.57375 17.041251,0 0,-2.57375 -3.85875,0" style="fill:#b1ccdd;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> <path d="m 30.299253,21.526128 c 3.1975,0 5.78875,-2.59125 5.78875,-5.78875 0,-3.197501 -2.59125,-5.7900009 -5.78875,-5.7900009 -3.19875,0 -5.79,2.5924999 -5.79,5.7900009 0,3.1975 2.59125,5.78875 5.79,5.78875" style="fill:#b1ccdd;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g></svg>
-                        </span>
+                       
                     </div>
 
                 </div>
