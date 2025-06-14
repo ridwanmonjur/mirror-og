@@ -115,6 +115,7 @@
             ->format('d M y g:i A') 
         }}</small>
     </div>
+    @endif
     <input type="hidden" id="signin_url" name="url" value="{{ route('participant.signin.view') }}">
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
