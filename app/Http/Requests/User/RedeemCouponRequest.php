@@ -68,10 +68,13 @@ class RedeemCouponRequest extends FormRequest
             return;
         }
 
-        if ($userCoupon->redeemable_count <= 0) {
+
+        if ($userCoupon && $userCoupon->redeemable_count <= 0) {
             $fail('You have already redeemed this coupon too many times.');
             return;
         }
+
+        
         
     }
 
