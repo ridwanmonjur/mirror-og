@@ -50,11 +50,12 @@
     <div v-cloak class="member-details mx-auto text-center">
         <div v-show="isEditMode" class="pb-3">
             <div v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
-            <input placeholder = "Enter your name..." style="width: 250px;" name="name" autocomplete="off"
+            <input placeholder = "Enter your name..."  name="name" autocomplete="off"
                 autocomplete="nope" class="form-control border-secondary player-profile__input d-inline"
-                v-model="userProfile.name">
+                v-model="userProfile.name" :style="{color: userProfile.fontColor, width: '250px'}"  >
             <br>
             <input placeholder = "Enter your company name..." style="width: 300px;"
+                :style="{color: userProfile.fontColor}"   
                 class="form-control border-secondary player-profile__input d-inline me-3"
                 v-model="organizer.companyName" autocomplete="off" autocomplete="nope">
             <a type="submit" data-url="{{ route('organizer.profile.update') }}" v-on:click="submitEditProfile(event);"
