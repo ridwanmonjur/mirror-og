@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Open;
 
 use App\Http\Controllers\Controller;
+use App\Models\CountryRegion;
 use App\Models\EventDetail;
 use Carbon\Carbon;
 use Database\Factories\BracketsFactory;
@@ -10,7 +11,6 @@ use Database\Factories\EventDetailFactory;
 use Database\Factories\JoinEventFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Io238\ISOCountries\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +21,8 @@ class MiscController extends Controller
 {
     public function countryList()
     {
-        $countries = Country::all(['name', 'emoji_flag', 'id']);
+     
+        $countries = CountryRegion::all(['name', 'id', 'emoji_flag', 'id',  'sort_order', 'type']);
 
         return response()->json(['success' => true, 'data' => $countries], 200);
     }
@@ -198,9 +199,9 @@ class MiscController extends Controller
         $factory = new JoinEventFactory();
         $key = strToUpper($validated['register_time']);
         $register_time = config("constants.SIGNUP_STATUS.{$key}");
-        
+
         // dd($register_time);
-        
+
         // dd($key, $register_time);
         $options = [
             'event' => [

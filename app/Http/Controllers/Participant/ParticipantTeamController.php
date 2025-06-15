@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\TeamSearchRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Jobs\HandleFollowsFriends;
+use App\Models\CountryRegion;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
@@ -179,7 +180,7 @@ class ParticipantTeamController extends Controller
             $team->slugify();
             $team->update($validatedData);
             if (isset($team->country)) {
-                $country = Country::select('emoji_flag', 'name', 'id')->findOrFail($team->country);
+                $country = CountryRegion::select(['name', 'id', 'emoji_flag', 'sort_order', 'type'])->findOrFail($team->country);
             } else {
                 $country = null;
             }

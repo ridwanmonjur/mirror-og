@@ -109,3 +109,20 @@ cd domains/oceansgaming.gg/public_html
 
 cd ../domains/driftwood.gg/public_html
 cd ../domains/oceansgaming.gg/public_html
+
+
+
+task division:
+1. no teams ui
+2. games for teams
+3. switch to teams
+4. backend for teams search
+5. frontend filters work
+6. join, full, apply flow
+
+join-> confirm?
+apply-> confirm?
+full -> no flow
+accept-> accept invitation
+
+rejections: team is full,can't join/ apply/accept (according to flow)

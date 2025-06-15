@@ -61,9 +61,9 @@ function submitSignInUpForm(event) {
     event.preventDefault(); 
 
     document.querySelector('.flash-message').innerHTML = '';
-    const formData = new FormData(event.target);
+    const formData = new FormData(event.currentTarget);
 
-    fetch( event.target.action, {
+    fetch( event.currentTarget.action, {
         method: 'POST',
         body: formData,
         headers: {

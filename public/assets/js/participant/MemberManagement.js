@@ -609,12 +609,43 @@ async function fetchCountries () {
         if (data?.data) {
             countries = data.data;
             const choices2 = document.getElementById('select2-country2');
-            let countriesHtml = "<option value=''";
-            countries.forEach((value) => {
-                countriesHtml +=`
-                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
-                `;
-            });
+            let regionsHtml = "";
+let countriesHtml = "";
+let countriesOptionsHtml = "";
+
+// Add default "No country" option
+countriesOptionsHtml += "<option value=''>No country</option>";
+
+// Single loop through all countries data
+countries.forEach((value) => {
+    if (value.type === 'region') {
+        regionsHtml += `
+            <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+        `;
+    } else if (value.type === 'country') {
+        countriesOptionsHtml += `
+            <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+        `;
+    }
+});
+
+// Add regions optgroup if there are regions
+if (regionsHtml) {
+    countriesHtml += "<optgroup label='Regions'>";
+    countriesHtml += regionsHtml;
+    countriesHtml += "</optgroup>";
+}
+
+// Add countries optgroup if there are countries
+if (countriesOptionsHtml) {
+    countriesHtml += "<optgroup label='Countries'>";
+    countriesHtml += countriesOptionsHtml;
+    countriesHtml += "</optgroup>";
+}
+
+if (choices2) {
+    choices2.innerHTML = countriesHtml;
+}
 
             choices2.innerHTML = countriesHtml;
         } else {

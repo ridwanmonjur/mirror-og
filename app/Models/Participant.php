@@ -21,15 +21,15 @@ class Participant extends Model
         'games_data' => 'array',
     ];
 
-    public function getRegionDetails(): ? Country
+    public function getRegionDetails(): ? CountryRegion
     {
-        return Country::select('emoji_flag', 'name', 'id')
+        return CountryRegion::select(['name', 'id', 'emoji_flag',   'sort_order', 'type'])
             ->find($this->region);
     }
 
     public function getRegionDetailsFromRegionIdList($regionIdList): Collection
     {
-        return Country::select('emoji_flag', 'name', 'id')
+        return CountryRegion::select(['name', 'id', 'emoji_flag', 'sort_order', 'type'])
             ->findOrFail($regionIdList)
             ->keyBy('id')
             ->map(function ($item) {

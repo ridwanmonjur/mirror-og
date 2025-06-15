@@ -228,7 +228,7 @@
                     </textarea>
                     <br>
                     <select 
-                        v-change="organizer.industry = event.target.value;"
+                        v-on:change="organizer.industry = event.target.value;"
                         v-bind:name="organizer.industry"
                         v-bind:value="organizer.industry || ''"
                         style="width: 220px;"
