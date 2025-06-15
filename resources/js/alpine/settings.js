@@ -1,6 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import Swal from "sweetalert2";
-import { Tooltip } from "bootstrap";
+import { window.bootstrap.Tooltip } from "bootstrap";
 
 document.querySelectorAll('.search-bar').forEach((element)=> {
     element.remove();
@@ -838,12 +838,12 @@ else if (wallet) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
         // Remove existing tooltip if it exists
-        const existingTooltip = Tooltip.getInstance(tooltipTriggerEl);
+        const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
         if (existingTooltip) {
             existingTooltip.dispose();
         }
         // Create new tooltip
-        return new Tooltip(tooltipTriggerEl);
+        return new window.bootstrap.Tooltip(tooltipTriggerEl);
     });
     let firstElement = null;
     let list = document.querySelectorAll('#wallet-view-coupons .coupon')

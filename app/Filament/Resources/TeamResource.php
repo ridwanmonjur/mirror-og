@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamResource\Pages;
 use App\Filament\Resources\TeamResource\RelationManagers;
+use App\Models\CountryRegion;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -27,7 +28,7 @@ class TeamResource extends Resource
         $countries = [];
         
         // Get all country codes and names from the package
-        foreach (Country::all() as $country) {
+        foreach (CountryRegion::all() as $country) {
             $countries[$country->id] = $country->name;
         }
         

@@ -7,6 +7,7 @@ use App\Http\Requests\User\FriendRequest;
 use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\UpdateParticipantsRequest;
 use App\Models\ActivityLogs;
+use App\Models\CountryRegion;
 use App\Models\EventInvitation;
 use App\Models\EventJoinResults;
 use App\Models\Friend;
@@ -90,7 +91,7 @@ class ParticipantController extends Controller
             $user->uploadUserBanner($request);
 
             if (isset($participant->region)) {
-                $region = Country::select('emoji_flag', 'name', 'id')->findOrFail($participant->region);
+                $region = CountryRegion::select(['name', 'id', 'emoji_flag',  'sort_order', 'type'])->findOrFail($participant->region);
             } else {
                 $region = null;
             }

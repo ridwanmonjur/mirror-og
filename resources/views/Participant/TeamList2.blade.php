@@ -106,9 +106,12 @@
                                 <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                     @foreach ([['title' => 'South East Asia (SEA)', 'value' => 'SEA']] as $region2)
-                                        <div class="px-3 py-1" style="width: 200px;">
-                                            <input type="checkbox" name="region2" class="form-check-input me-2" checked value="{{ $region2['value'] }}">
-                                            <label for="region2">{{ $region2['title'] }}</label>
+                                        <div class="px-3 py-1" style="width: 280px;">
+                                            <p class="mb-1">Choose a country/region of origin</p>
+
+                                            <select id="select2-country2" class="form-control form-select" name="region">
+                                            </select>
+                                            {{-- <input type="checkbox" name="region2" id="select2-country2" class="form-check-input me-2" checked value="{{ $region2['value'] }}"> --}}
                                         </div>
                                     @endforeach
                                 </div>
@@ -132,12 +135,12 @@
                                 <div onclick="event.stopPropagation;"; class="dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                     <div class="px-3 py-1">
-                                        <p class="mb-1">Choose a country of origin</p>
-                                        {{-- <input id="select2-country2" type="checkbox" name="venue"> --}}
-                                        <select id="select2-country2" class="form-control form-select" name="region"
+                                        <p class="mb-1">Choose a country/ region of origin</p>
+                                        {{-- <input id="select2-country2"  type="checkbox" name="region"> --}}
+                                        {{-- <select id="select2-country2" class="form-control form-select" name="region"
                                             style="width: 200px !important;">
                                             <option value=""> </option>
-                                        </select>
+                                        </select> --}}
                                         <button type="button"
                                             class="my-2 rounded-pill btn btn-sm btn-primary text-light"
                                             id="regionResetButton"

@@ -21,7 +21,8 @@ const {
     loggedUserId,
 } = document.querySelector('.laravel-data-storage').dataset;
 
-console.log({loggedUserId});
+userData.fontColor = userData?.profile?.fontColor ?? '#2e4b59';
+userData.backgroundColor = userData?.profile?.backgroundColor ?? 'darkgrey';
 
 function ParticipantData ()  {
     return {
@@ -30,7 +31,7 @@ function ParticipantData ()  {
         countries:
             [
                 {
-                    name: { en: 'No country' },
+                    name:  'No country' ,
                     emoji_flag: ''
                 }
             ],
@@ -42,7 +43,7 @@ function ParticipantData ()  {
             this.participant.region = event.target.value;
             let countryX = this.countries?.find(elem => elem.id == this.participant.region);
             if (countryX && countryX.emoji_flag) {
-                this.participant.region_name = countryX.name.en;
+                this.participant.region_name = countryX.name;
                 this.participant.region_flag = countryX.emoji_flag;
             } else {
                 this.participant.region_name = null;
@@ -72,12 +73,38 @@ function ParticipantData ()  {
                     this.countries = data.data;
                     const choices2 = document.getElementById('select2-country3');
 
-                    let countriesHtml = `<option value="">Do not display</option>`;
+                    let regionsHtml = "";
+                    let countriesHtml = "";
+                    let countriesOptionsHtml = "";
+                    countriesHtml += "<option value=''>No country</option>";
+
+                    // Single loop through all data
                     data?.data.forEach((value) => {
-                        countriesHtml += `
-                        <option value='${value.id}'>${value.emoji_flag} ${value.name.en}</option>
-                    `;
+                        if (value.type === 'region') {
+                            regionsHtml += `
+                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                            `;
+                        } else if (value.type === 'country') {
+                            countriesOptionsHtml += `
+                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                            `;
+                        }
                     });
+
+                    // Add regions optgroup if there are regions
+                    if (regionsHtml) {
+                        countriesHtml += "<optgroup label='Regions'>";
+                        countriesHtml += regionsHtml;
+                        countriesHtml += "</optgroup>";
+                    }
+
+                    // Add countries optgroup if there are countries
+                    if (countriesOptionsHtml) {
+                        countriesHtml += "<optgroup label='Countries'>";
+                        countriesHtml += countriesOptionsHtml;
+                        countriesHtml += "</optgroup>";
+                    }
+
                     if (choices2) {
                         choices2.innerHTML = countriesHtml;
                         choices2.selected = this.participant.region;
@@ -94,7 +121,7 @@ function ParticipantData ()  {
             try {
                 window.showLoading();
                 event.preventDefault();
-                const url = event.target.dataset.url;
+                const url = event.currentTarget.dataset.url;
                 this.participant.age = Number(this.participant.age);
 
                 let file = imageUpload.files[0];

@@ -226,14 +226,43 @@ async function fetchCountries () {
         const data = await storeFetchDataInLocalStorage('/countries');
         if (data?.data && choices2) {
             countries = data.data;
-            let countriesHtml = "<option value=''>Choose a country</option>";
+            let regionsHtml = "";
+            let countriesHtml = "";
+            let countriesOptionsHtml = "";
+            countriesHtml += "<option value=''>No country</option>";
+            // Add default "No country" option
+
+            // Single loop through all countries data
             countries.forEach((value) => {
-                countriesHtml +=`
-                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
-                `;
+                if (value.type === 'region') {
+                    regionsHtml += `
+                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    `;
+                } else if (value.type === 'country') {
+                    countriesOptionsHtml += `
+                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    `;
+                }
             });
 
-            if (choices2) { choices2.innerHTML = countriesHtml; }
+            // Add regions optgroup if there are regions
+            if (regionsHtml) {
+                countriesHtml += "<optgroup label='Regions'>";
+                countriesHtml += regionsHtml;
+                countriesHtml += "</optgroup>";
+            }
+
+            // Add countries optgroup if there are countries
+            if (countriesOptionsHtml) {
+                countriesHtml += "<optgroup label='Countries'>";
+                countriesHtml += countriesOptionsHtml;
+                countriesHtml += "</optgroup>";
+            }
+
+            if (choices2) {
+                choices2.innerHTML = countriesHtml;
+            }
+
         } else {
             errorMessage = "Failed to get data!";
         }

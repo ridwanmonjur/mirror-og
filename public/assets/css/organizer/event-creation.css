@@ -824,10 +824,6 @@ body {
 
 
 
-.menu-toggle {
-    display: block;
-}
-
 .swiper-container {
     display: none;
     width: 800px;
@@ -1322,13 +1318,8 @@ body{
         display: block; 
     }
 
-    .menu-toggle {
-        display: none;
-    }
 
-    .d-centered-at-mobile {
-        display: none;  
-    }
+   
 
     .grid-2-columns {
         grid-template-columns: 1fr 1fr;

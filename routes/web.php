@@ -20,33 +20,17 @@ use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /* THIS IS THE UNSIGNED VIEW */
 // Home
-Route::view('/', 'Public.ClosedBeta')->name('public.closedBeta.view');
-Route::redirect('/closedbeta', '/');
 
-Route::get('/home', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
+Route::get('/', [MiscController::class, 'showLandingPage'])->name('public.landing.view');
 // Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Public.About')->name('public.about.view');
 Route::view('/contact', 'Public.Contact')->name('public.contact.view');
 Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
-Route::get('/test', function () {
-    $dateData = [
-        'DB::raw("NOW()")' => DB::select('SELECT NOW() as now')[0]->now,
-        'now()' => now(),
-        'now()->utc()' => now()->utc(),
-        'Carbon::now()' => Carbon::now(),
-        'Carbon::now()->utc()' => Carbon::now()->utc(),
-        'Carbon::today()' => Carbon::today(),
-        'Carbon::today()->utc()' => Carbon::today()->utc(),
-    ];
 
-    return view('Public.test', compact('dateData'));
-});
 // Forget, reset password
 Route::view('/forget-password', view: 'Auth.ForgetPassword')->name('user.forget.view');
 Route::get('/reset-password/{token}', [AuthResetAndVerifyController::class, 'createReset'])->name('user.reset.view');

@@ -116,7 +116,7 @@
                             class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
                         >
                             <div class="px-3 py-1">
-                                <p class="mb-1">Choose a country of origin</p>
+                                <p class="mb-1">Choose a country/ region of origin</p>
                                 {{-- <input id="select2-country2" type="checkbox" name="venue"> --}}
                                 <select id="select2-country2" class="form-control form-select" name="region" style="width: 200px !important;">
                                     <option value=""> </option>

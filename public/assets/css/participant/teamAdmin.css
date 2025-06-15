@@ -81,11 +81,6 @@
     margin: 0;
 }
 
-.menu-toggle {
-    display: block;
-}
-
-
 
 .welcome {
     margin-top: 40px;
@@ -599,11 +594,7 @@
         justify-content: space-between;
     }
     
-    .menu-toggle {
-        display: none;
-    }
-    
-  
+   
     .swiper-slide {
         text-indent: 0px;
         font-size: 1rem;
@@ -652,7 +643,6 @@
     border-bottom-style: dotted !important;
     background-color: transparent !important;
     border-radius: 0px !important;
-    color: #2e4b59;
 }
 
 
@@ -664,7 +654,6 @@
     border-bottom-style: dotted !important;
     background-color: transparent !important;
     border-radius: 0px !important;
-    color: #2e4b59;
 }
 
 .iti, .iti--allow-dropdown, .iti--show-flags, .iti--inline-dropdown {

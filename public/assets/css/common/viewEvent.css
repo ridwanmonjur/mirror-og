@@ -24,14 +24,7 @@ img.fslightbox-source{
     display: auto;
 }
 
-.d-centered-at-mobile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
+
 
 body {
     background-image: url("/assets/images/event-management-bg.png");
@@ -75,12 +68,6 @@ svg:hover {
     opacity: 1; 
     z-index: 999 !important;
 }
-
-.menu-toggle {
-    display: block;
-}
-
-
 
 input[type="submit"],
 .oceans-gaming-default-button {
@@ -441,14 +428,7 @@ input[type="submit"]:active {
         position: relative;
     }
 
-    .menu-toggle {
-        display: none;
-    }
-
-    .d-centered-at-mobile {
-        display: none;
-    }
-
+   
    
 
     .grid-container {

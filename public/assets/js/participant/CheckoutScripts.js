@@ -266,7 +266,7 @@ class PaymentProcessor {
 
     async function handleSubmit(event) {
         event.preventDefault();
-        const form = event.target;
+        const form = event.currentTarget;
         form.submit();
     }
 
@@ -275,7 +275,7 @@ class PaymentProcessor {
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
-        const submitButton = event.target;
+        const submitButton = event.currentTarget;
         let savePaymentCheck = document.getElementById('save-payment');
         let saveDefaultCheck = document.getElementById('save-default');
 

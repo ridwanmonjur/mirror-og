@@ -22,10 +22,6 @@ main {
 }
 
 
-.menu-toggle {
-    display: block;
-}
-
 a {
     text-decoration: none; 
   }
@@ -460,7 +456,6 @@ a.custom-link:hover {
     border-bottom-style: dotted !important;
     background-color: transparent !important;
     border-radius: 0px !important;
-    color: #2e4b59;
 }
 
 
@@ -494,5 +489,4 @@ a.custom-link:hover {
 .custom-file-container .label-container {
     display: none !important;
 }
-
 

@@ -270,13 +270,8 @@ input[type="submit"]:active {
         display: block;
     }
 
-    .menu-toggle {
-        display: none;
-    }
-
-    .d-centered-at-mobile {
-        display: none;
-    }
+    
+    
 
    
     .grid-container {

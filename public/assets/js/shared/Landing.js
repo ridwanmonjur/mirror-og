@@ -36,12 +36,12 @@ window.addEventListener(
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
                 // Remove existing tooltip if it exists
-                const existingTooltip = Tooltip.getInstance(tooltipTriggerEl);
+                const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
                 if (existingTooltip) {
                     existingTooltip.dispose();
                 }
                 // Create new tooltip
-                return new Tooltip(tooltipTriggerEl);
+                return new window.bootstrap.Tooltip(tooltipTriggerEl);
             });
         });
     }, 100));

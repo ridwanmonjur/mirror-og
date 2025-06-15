@@ -21,11 +21,12 @@
                 class="oceans-gaming-default-button oceans-gaming-primary-button px-3 py-2 fs-7">
                 Edit Profile
             </button>
-            <a v-cloak v-show="isEditMode" v-on:click="submitEditProfile(event)"
+            <button v-cloak v-show="isEditMode" v-on:click="submitEditProfile(event)"
                 data-url="{{ route('participant.profile.update') }}"
-                class="oceans-gaming-default-button oceans-gaming-transparent-button btn simple-button cursor-pointer px-3 py-2 me-3 fs-7">
+                :style="{ color: user.fontColor, borderColor: user.fontColor }"
+                class="rounded-pill btn cursor-pointer px-4 py-2 me-3 fs-7">
                 Save
-            </a>
+            </button>
             {{-- Close icon --}}
             <svg v-cloak v-if="isEditMode" v-on:click="restoreAfterEditMode()" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24" fill="currentColor" class="bi bi-x-circle cursor-pointer align-middle "
@@ -85,22 +86,34 @@
             <div v-cloak v-show="isEditMode" style="color: black;">
                 <input placeholder = "Enter your nickname..." style="width: 250px;" autocomplete="off"
                     autocomplete="nope" class="form-control border-secondary player-profile__input d-inline"
-                    v-model="participant.nickname">
+                    v-model="participant.nickname"
+                    :style="{ color: user.fontColor  }"
+    
+                >
                 <input type="file" id="image-upload" accept=".png, .jpg, .jpeg, image/png, image/jpeg" v-cloak
                     v-show="isEditMode" class="d-none">
                 <br>
                 <span class="d-inline-flex flex-wrap justify-content-start align-items-center">
-                    <input placeholder = "Your name" style="width: min(200px, 60vw);" type="text"
-                        autocomplete="off" autocomplete="nope"
-                        class="form-control border-secondary player-profile__input d-inline me-3" v-model="user.name">
+                    <input 
+                        placeholder="Your name" 
+                        style="width: min(200px, 60vw);" 
+                        type="text"
+                        autocomplete="off"
+                        class="form-control border-secondary player-profile__input d-inline me-3" 
+                        v-model="user.name"
+                        :style="{ color: user.fontColor  }"
+                    >
                     <input placeholder="Birthday" type="date" style="width: min(150px, 60vw);"
                         default="1999-05-05" id="birthdate"
-                        class="form-control border-secondary player-profile__input d-inline me-2"
-                        v-model="participant.birthday">
+                        class="form-control custom-date-input border-secondary player-profile__input d-inline me-2"
+                        v-model="participant.birthday"
+                        :style="{ color: user.fontColor , '--user-font-color': user.fontColor  }"
+
+                    >
                     <template v-if="!participant.isAgeVisible">
                         {{-- Eye invisible icon --}}
                         <svg v-on:click="participant.isAgeVisible = true" xmlns="http://www.w3.org/2000/svg"
-                            width="20" height="20" fill="currentColor"
+                            width="20" height="20" v-bind:fill="user.fontColor"
                             class="bi bi-eye-slash-fill cursor-pointer" viewBox="0 0 16 16">
                             <path
                                 d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z" />
@@ -111,7 +124,7 @@
                     <template v-else>
                         {{-- Eye visible --}}
                         <svg v-on:click="participant.isAgeVisible = false" xmlns="http://www.w3.org/2000/svg"
-                            width="20" height="20" fill="currentColor" class="bi bi-eye-fill cursor-pointer"
+                            width="20" height="20" v-bind:fill="user.fontColor" class="bi bi-eye-fill cursor-pointer"
                             viewBox="0 0 16 16">
                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
                             <path
@@ -123,16 +136,21 @@
                 <input placeholder = "Write a description" style="width: min(80vw, 370px);" type="text"
                     autocomplete="off" autocomplete="nope"
                     class="mb-2 form-control border-secondary player-profile__input d-inline me-3"
-                    v-model="participant.bio">
+                    v-model="participant.bio"
+                    :style="{ color: user.fontColor  }"    
+                >
                 <div class="w-100 d-flex justify-content-start align-items-center flex-wrap">
                     <span class="me-3 d-flex justify-content-center align-items-center">
                         <svg class="me-2 align-middle" xmlns="http://www.w3.org/2000/svg" width="16"
-                            height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                            height="16" v-bind:fill="user.fontColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                             <path
                                 d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                         </svg>
                         <template v-if="countries">
-                            <select v-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;"
+                            <select 
+                                 :style="{ color: user.fontColor, backgroundColor: user.backgroundColor , borderColor: user.fontColor }"  
+                                v-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;"
+                                
                                 class="d-inline form-select" data-placeholder="Select a country"
                                 v-bind:value="participant.region || ''"
                                 v-bind:name="participant.region"
@@ -141,7 +159,7 @@
                     </span>
                     <span class="me-3">
                         <svg class="align-middle" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                            fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                            v-bind:fill="user.fontColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
                             <path
                                 d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z" />
                             <path
@@ -150,16 +168,18 @@
                         <input style="width: min(180px, 60vw);" placeholder = "Enter your domain..."
                             autocomplete="off" autocomplete="nope"
                             class="form-control border-secondary player-profile__input d-inline"
-                            v-model="participant.domain">
+                            v-model="participant.domain"
+                            :style="{ color: user.fontColor  }"    
+                        >
                     </span>
                     <br> <br> <br>
                     <span>
                         <svg class="align-middle" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                            fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                            v-bind:fill="user.fontColor" class="bi bi-person" viewBox="0 0 16 16">
                             <path
                                 d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
                         </svg>
-                        <span>Joined {{ $userProfile->createdIsoFormat() }}</span>
+                        <span :style="{ color: user.fontColor  }">Joined {{ $userProfile->createdIsoFormat() }}</span>
                     </span>
 
                 </div>
