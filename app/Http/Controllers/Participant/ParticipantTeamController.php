@@ -253,6 +253,7 @@ class ParticipantTeamController extends Controller
                 'actor' => 'user',
             ]);
 
+
             return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
         } catch (Exception $e) {
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {

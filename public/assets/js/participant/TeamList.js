@@ -15,6 +15,7 @@ let membersCountServerValue = JSON.parse(membersCountServer.value);
 let countServerValue = Number(countServer.value);
 let userIdServerValue = Number(userIdServer.value);
 let filterSortResultsDiv = document.getElementById('filter-sort-results');
+let isModeMyTeams = false;
 console.log({
     teamListServerValue,
     membersCountServerValue,
@@ -87,21 +88,21 @@ function changeSortType() {
         sortTypeElement.value = "";
     }
 
-    fetchTeams();
+    changeTeamsGrid();
 }
 
 
 window.addEventListener('formChange',
     debounce((event) => {
         changeFilterSortUI(event);
-        fetchTeams();
+        changeTeamsGrid();
     }, 300)
 );
 
 newTeamsForm.addEventListener('change',
     debounce((event) => {
         changeFilterSortUI(event);
-        fetchTeams();
+        changeTeamsGrid();
     }, 300)
 );
 
@@ -244,7 +245,7 @@ function sortTeams(arr, sortKey, sortOrder) {
     return arr2;
 }
 
-async function fetchTeams(event = null) {
+async function changeTeamsGrid(event = null) {
     let formData = new FormData(newTeamsForm);
     let sortedTeams = sortTeams(teamListServerValue, formData.get("sortKeys"), formData.get("sortType"));
     filteredSortedTeams = [];
@@ -307,7 +308,11 @@ async function fetchTeams(event = null) {
         console.log(filteredSortedTeams);    
     }
 
-    paintScreen(filteredSortedTeams, membersCountServerValue, countServerValue);
+    if (isModeMyTeams) {
+        paintScreen(filteredSortedTeams, membersCountServerValue, countServerValue);
+    } else {
+        console.log("hi");
+    }
 
 }
 
@@ -318,15 +323,42 @@ async function fetchCountries() {
         const data = await storeFetchDataInLocalStorage('/countries');
         if (data?.data && choices2) {
             countries = data.data;
-            let countriesHtml = "<option value=''>Choose a country</option>";
+            let regionsHtml = "";
+            let countriesHtml = "";
+            let countriesOptionsHtml = "";
+            
+            // Add default "No country" option
+            countriesOptionsHtml += "<option value=''>No country</option>";
+            
+            // Single loop through all countries data
             countries.forEach((value) => {
-                countriesHtml += `
-                    <option value='${value.id}''>${value.emoji_flag} ${value.name.en}</option>
-                `;
+                if (value.type === 'region') {
+                    regionsHtml += `
+                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    `;
+                } else if (value.type === 'country') {
+                    countriesOptionsHtml += `
+                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    `;
+                }
             });
+            
+            // Add regions optgroup if there are regions
+            if (regionsHtml) {
+                countriesHtml += "<optgroup label='Regions'>";
+                countriesHtml += regionsHtml;
+                countriesHtml += "</optgroup>";
+            }
+            
+            // Add countries optgroup if there are countries
+            if (countriesOptionsHtml) {
+                countriesHtml += "<optgroup label='Countries'>";
+                countriesHtml += countriesOptionsHtml;
+                countriesHtml += "</optgroup>";
+            }
+            
             if (choices2) {
                 choices2.innerHTML = countriesHtml;
-
             }
         } else {
             errorMessage = "Failed to get data!";

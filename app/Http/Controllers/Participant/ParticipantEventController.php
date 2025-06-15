@@ -322,6 +322,7 @@ class ParticipantEventController extends Controller
 
     public function confirmOrCancel(Request $request)
     {
+        $routeBack = null;
         try {
             $user = $request->attributes->get('user');
             $errorMessage = null;
@@ -331,9 +332,12 @@ class ParticipantEventController extends Controller
                 'user_id' => $request->attributes->get('user')?->id,
             ])->first();
 
-            if (!$rosterMember) {
-                return back()->with('errorMessage', 'Must be a member of the roster.');
+
+            if (!($rosterMember && $rosterMember->team_id)) {
+                return $this->showErrorParticipant("Doesn't belong to this roster!");
             }
+
+            $routeBack = route('participant.register.manage', ['id' => $rosterMember->team_id, 'scroll' => $request->join_event_id]);
 
             $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!' : 'You have started a vote to cancel registratin.';
 
@@ -398,7 +402,7 @@ class ParticipantEventController extends Controller
                     $rosterCount = $joinEvent->roster->count();
                     if ($rosterCount == 1) {
                         $errorMessage = "You're just one member. Please leave the roster instead!";
-                        return back()->with('errorMessage', $errorMessage)->with('scroll', $request->join_event_id);
+                        return redirect($routeBack)->with('errorMessage', $errorMessage)->with('scroll', $request->join_event_id);
                     } else {
                         $joinEvent->vote_starter_id = $user->id;
                         $joinEvent->vote_ongoing = true;
@@ -416,10 +420,10 @@ class ParticipantEventController extends Controller
                     }
                 }
             } else {
-                return back()->with('errorMessage', $errorMessage)->with('scroll', $request->join_event_id);
+                return redirect($routeBack)->with('errorMessage', $errorMessage)->with('scroll', $request->join_event_id);
             }
 
-            return back()->with('successMessage', $successMessage)->with('scroll', $request->join_event_id);
+            return redirect($routeBack)->with('successMessage', $successMessage)->with('scroll', $request->join_event_id);
         } catch (Exception $e) {
             return $this->showErrorParticipant($e->getMessage());
         }
