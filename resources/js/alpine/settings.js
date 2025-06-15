@@ -1,6 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import Swal from "sweetalert2";
-import { window.bootstrap.Tooltip } from "bootstrap";
+import { Tooltip } from "bootstrap";
 
 document.querySelectorAll('.search-bar').forEach((element)=> {
     element.remove();
