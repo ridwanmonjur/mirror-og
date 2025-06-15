@@ -76,6 +76,7 @@ function ParticipantData ()  {
                     let regionsHtml = "";
                     let countriesHtml = "";
                     let countriesOptionsHtml = "";
+                    countriesHtml += "<option value=''>No country</option>";
 
                     // Single loop through all data
                     data?.data.forEach((value) => {

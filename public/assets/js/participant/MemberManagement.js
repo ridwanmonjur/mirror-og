@@ -614,7 +614,7 @@ let countriesHtml = "";
 let countriesOptionsHtml = "";
 
 // Add default "No country" option
-countriesOptionsHtml += "<option value=''>No country</option>";
+countriesHtml += "<option value=''>No country</option>";
 
 // Single loop through all countries data
 countries.forEach((value) => {

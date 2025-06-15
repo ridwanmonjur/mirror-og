@@ -46,7 +46,7 @@ function TeamHead() {
                     this.countries = data.data;
                     const choices2 = document.getElementById('select2-country3');
                     
-                    let countriesHtml = "<option value=''>Do not display</option>";
+                    let countriesHtml = "<option value=''>Choose a country/region</option>";
 
                     let regionsHtml = "";
                     let countriesOptionsHtml = "";

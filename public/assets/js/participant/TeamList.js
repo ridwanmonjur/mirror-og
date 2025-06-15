@@ -326,9 +326,8 @@ async function fetchCountries() {
             let regionsHtml = "";
             let countriesHtml = "";
             let countriesOptionsHtml = "";
-            
+            countriesHtml += "<option value=''>No country</option>";
             // Add default "No country" option
-            countriesOptionsHtml += "<option value=''>No country</option>";
             
             // Single loop through all countries data
             countries.forEach((value) => {
