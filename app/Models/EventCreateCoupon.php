@@ -25,6 +25,11 @@ class EventCreateCoupon extends Model
 
     protected $table = 'event_create_coupon';
 
+    public static function getOrganizerPay( string| null $eventPrizePool) {
+        $entryFee = $eventPrizePool !== null ? (float) $eventPrizePool : 0.0;
+        return $entryFee + ($entryFee * 0.2);
+    }
+
     public static function createNoEventCreateCouponFeeObject(array $fee, string| null $eventPrizePool): array
     {
         $fee['discountFee'] = 0;
@@ -81,7 +86,7 @@ class EventCreateCoupon extends Model
         $fee['discountAmount'] = $discount->amount;
 
         if ($startTime < $currentDateTime && $endTime > $currentDateTime && $discount->isEnforced) {
-            $fee['entryFee'] = (float) $eventPrizePool * 1000;
+            $fee['entryFee'] = (float) $eventPrizePool ;
             $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
             $fee['discountFee'] = $discount->type === 'percent' ?
                 $discount->amount / 100 * $fee['totalFee'] : $discount->amount;
