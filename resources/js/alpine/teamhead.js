@@ -108,7 +108,7 @@ function TeamHead() {
                 }
 
 
-                const url = event.target.dataset.url;
+                const url = event.currentTarget.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {

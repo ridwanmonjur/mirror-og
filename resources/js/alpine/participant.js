@@ -120,7 +120,7 @@ function ParticipantData ()  {
             try {
                 window.showLoading();
                 event.preventDefault();
-                const url = event.target.dataset.url;
+                const url = event.currentTarget.dataset.url;
                 this.participant.age = Number(this.participant.age);
 
                 let file = imageUpload.files[0];
