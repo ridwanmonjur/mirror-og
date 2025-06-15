@@ -205,7 +205,7 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/home');
+        return redirect('/');
     }
 
     public function participantSignIn(Request $request)

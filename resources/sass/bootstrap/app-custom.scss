@@ -168,7 +168,6 @@ body.modal-open,
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 5px;
     margin-bottom: 5px;
 }
 
@@ -222,13 +221,8 @@ nav svg:hover,
 
 
 
-.navbar .nav-buttons {
-    display: none;
-}
 
-.menu-toggle {
-    display: block;
-}
+
 
 .search-bar {
     position: relative;
@@ -669,22 +663,15 @@ button:after {
         padding-left: 60px;
     }
 
-    .navbar .nav-buttons {
-        display: flex;
-        flex-wrap: nowrap !important;
-    }
+   
 
     .d-none-at-mobile {
         display: block;
     }
 
-    .menu-toggle {
-        display: none;
-    }
+    
 
-    .d-centered-at-mobile {
-        display: none;
-    }
+    
 
     .search-bar svg {
         left: 20px;

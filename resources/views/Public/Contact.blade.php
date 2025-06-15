@@ -71,12 +71,8 @@
 
 @section('content')
     <header>
-        @auth
-            @include('includes.Navbar')
-        @endauth
-        @guest
-            @include('includes.NavbarBeta')
-        @endguest
+        @include('includes.Navbar')
+
     </header>
     <!-- Contact & About Us Boxes and Social Media Data-->
     @php

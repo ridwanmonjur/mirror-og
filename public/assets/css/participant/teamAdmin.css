@@ -81,11 +81,6 @@
     margin: 0;
 }
 
-.menu-toggle {
-    display: block;
-}
-
-
 
 .welcome {
     margin-top: 40px;
@@ -599,11 +594,7 @@
         justify-content: space-between;
     }
     
-    .menu-toggle {
-        display: none;
-    }
-    
-  
+   
     .swiper-slide {
         text-indent: 0px;
         font-size: 1rem;

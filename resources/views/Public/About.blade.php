@@ -90,12 +90,8 @@
 @endpush
 @section('content')
     <header>
-        @auth
-            @include('includes.Navbar')
-        @endauth
-        @guest
-            @include('includes.NavbarBeta')
-        @endguest
+        @include('includes.Navbar')
+       
     </header>
     <main style="padding: 5vh 10vw ;">
         {{-- Para 1 --}}

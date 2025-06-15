@@ -21,12 +21,6 @@ main {
     background: none;
 }
 
-.menu-toggle {
-    display: block;
-}
-
-
-
 
 input[type="submit"],
 .oceans-gaming-default-button {
@@ -94,13 +88,8 @@ input[type="submit"],
     .d-none-at-mobile {
         display: block;
     }
-    .menu-toggle {
-        display: none;
-    }
-    .d-centered-at-mobile {
-        display: none;
-    }
-  
+
+   
 
     .grid-3-columns  {
         /* max-width: 1200px; */

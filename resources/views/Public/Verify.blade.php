@@ -5,7 +5,7 @@
 
 @section('content')
     <header>
-        @include('includes.NavbarBeta')
+        @include('includes.Navbar')
     </header>
     <main style="padding: 5vh 10vw ;">
         <br><br>

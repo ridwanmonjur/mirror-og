@@ -26,7 +26,7 @@
     </a>
     <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-        stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
+        stroke-linejoin="round" class="feather feather-menu menu-toggle d-block d-xl-none" onclick="toggleNavbar()">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -52,7 +52,7 @@
     <li class="nav-item" style="list-style-type: none;">
         <a class="nav-link {{ $currentRoute === 'public.contact.view' ? 'text-primary' : 'text-dark' }} me-5 ps-5 pe-0 text-center" 
            href="{{ route('public.contact.view') }}">
-            CONTACT US
+            CONTACT
         </a>
     </li>
 </div>
@@ -70,7 +70,7 @@
                 <a class="nav-link text-center text-dark" href="{{ route('public.about.view') }}">ABOUT</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-center text-dark" href="{{ route('public.contact.view') }}">CONTACT US</a>
+                <a class="nav-link text-center text-dark" href="{{ route('public.contact.view') }}">CONTACT</a>
             </li>
             <li class="nav-item mt-2 mx-auto"
                 onclick="
