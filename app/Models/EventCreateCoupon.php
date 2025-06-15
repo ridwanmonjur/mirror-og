@@ -9,7 +9,19 @@ use Illuminate\Database\Eloquent\Model;
 class EventCreateCoupon extends Model
 {
     use HasFactory;
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'coupon',
+        'type',
+        'amount',
+        'startDate',
+        'endDate',
+        'isEnforced',
+        'startTime',
+        'endTime'
+    ];
+
+    public $timestamps = NULL;
 
     protected $table = 'event_create_coupon';
 
