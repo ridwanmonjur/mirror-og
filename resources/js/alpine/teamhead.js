@@ -9,6 +9,8 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 })
 
 initOffCanvasListeners();
+teamData.fontColor = teamData?.profile?.fontColor ?? '#2e4b59';
+teamData.backgroundColor = teamData?.profile?.backgroundColor ?? 'darkgray';
 
 let imageUpload = document.getElementById("image-upload");
 
@@ -23,7 +25,7 @@ function TeamHead() {
         countries:
             [
                 {
-                    name: { en: 'No country' },
+                    name:  'No country' ,
                     emoji_flag: ''
                 }
             ],
@@ -31,7 +33,7 @@ function TeamHead() {
         changeFlagEmoji(event) {
             this.country = event.target.value;
             const countryX = this.countries?.find(c => c.id === this.country)
-            this.country_name = countryX?.name.en || null
+            this.country_name = countryX?.name || null
             this.country_flag = countryX?.emoji_flag || null
         },
         async fetchCountries() {
@@ -43,13 +45,39 @@ function TeamHead() {
                     this.isCountriesFetched = true;
                     this.countries = data.data;
                     const choices2 = document.getElementById('select2-country3');
-                    let countriesHtml = "<option value=''>Do not display</option>";
+                    
+                    let countriesHtml = "<option value=''>Choose a country/region</option>";
 
+                    let regionsHtml = "";
+                    let countriesOptionsHtml = "";
+
+                    // Single loop through all data
                     data?.data.forEach((value) => {
-                        countriesHtml += `
-                            <option value='${value.id}'>${value.emoji_flag} ${value.name.en}</option>
-                        `;
+                        if (value.type === 'region') {
+                            regionsHtml += `
+                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                            `;
+                        } else if (value.type === 'country') {
+                            countriesOptionsHtml += `
+                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                            `;
+                        }
                     });
+
+                    // Add regions optgroup if there are regions
+                    if (regionsHtml) {
+                        countriesHtml += "<optgroup label='Regions'>";
+                        countriesHtml += regionsHtml;
+                        countriesHtml += "</optgroup>";
+                    }
+
+                    // Add countries optgroup if there are countries
+                    if (countriesOptionsHtml) {
+                        countriesHtml += "<optgroup label='Countries'>";
+                        countriesHtml += countriesOptionsHtml;
+                        countriesHtml += "</optgroup>";
+                    }
+
                     if (choices2) {
                         choices2.innerHTML = countriesHtml;
                         let option = choices2.querySelector(`option[value='${this.country}']`);
@@ -80,7 +108,7 @@ function TeamHead() {
                 }
 
 
-                const url = event.target.dataset.url;
+                const url = event.currentTarget.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {

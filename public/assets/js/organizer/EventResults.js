@@ -152,7 +152,7 @@ async function addAward(event) {
 
 async function addAchievement(event) {
     event.preventDefault();
-    let formData = new FormData(event.target);
+    let formData = new FormData(event.currentTarget);
     let teamId = formData.get('teamId');
     let title = formData.get('title');
     let description = formData.get('description');

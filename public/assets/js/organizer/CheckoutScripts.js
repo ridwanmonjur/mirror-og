@@ -228,7 +228,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
 
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
-        const submitButton = event.target;
+        const submitButton = event.currentTarget;
         submitButton.disabled = true;
         try {
             let savePaymentCheck = document.getElementById('save-payment');

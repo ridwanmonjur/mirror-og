@@ -6,6 +6,8 @@
     @endphp
 @endauth
 @php
+    $currentRoute = Route::currentRouteName();
+
     $notificationsCountArray = [
         'social_count' => 0,
         'teams_count' => 0,
@@ -44,17 +46,17 @@
 >
 </div>
 <nav class="navbar justify-content-between align-items-center user-select-none px-3 ">
-    <a href="{{ $routeLogo }}">
-        <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="">
+    <a href="{{ $routeLogo }}" title="Home Page Link" class="w-25">
+        <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="Website Logo">
     </a>
-    <svg style="margin-top: 10px; margin-right: 10px;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-        stroke-linejoin="round" class="feather feather-menu menu-toggle" onclick="toggleNavbar()">
+        stroke-linejoin="round" class="feather feather-menu my-2 mx-2 menu-toggle d-block d-xl-none" onclick="toggleNavbar()">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
     </svg>
-    <div class="search-bar d-none-at-mobile">
+    <div class="search-bar d-none d-xl-block">
         <input type="text" name="search" id="search-bar"
             value="{{app('request')->input('search')}}"
             placeholder="Search for events..."
@@ -68,21 +70,48 @@
         </svg>
         <span class="search-hint">press enter to search</span>
     </div>
-    <div class="nav-buttons me-3">
+    <div class="nav-buttons d-none d-xl-flex me-3">
+       
         @guest
-           <div class="dropdown d-inline-block position-relative" data-reference="parent" data-bs-auto-close="outside" >
-                <a href="#" role="button" class="btn dropdown-toggle px-0  me-2 " id="dropdownMenuGuest" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="true" >
-                    <img width="40px" height="32px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
-                    <span class="pt-2 ms-1">Sign In</span>
+             
+            <div class="nav-item px-0 " style="list-style-type: none;">
+                <a class="nav-link py-navbar {{ $currentRoute === 'public.landing.view' ? 'text-primary' : 'text-dark' }} text-center" 
+                href="{{ route('public.landing.view') }}"
+                title="Home - Return to main page"
+                aria-label="Navigate to homepage">
+                    HOME
                 </a>
+            </div>
+            <div class="nav-item px-0 " style="list-style-type: none;">
+                <a class="nav-link py-navbar {{ $currentRoute === 'public.about.view' ? 'text-primary' : 'text-dark' }} text-center" 
+                href="{{ route('public.about.view') }}"
+                title="About Us - Learn more about our company"
+                aria-label="Navigate to about us page">
+                    ABOUT
+                </a>
+            </div>
+            <div class="nav-item px-0 " style="list-style-type: none;">
+                <a class="nav-link py-navbar {{ $currentRoute === 'public.contact.view' ? 'text-primary' : 'text-dark' }} text-center" 
+                href="{{ route('public.contact.view') }}"
+                title="Contact Us - Get in touch with our team"
+                aria-label="Navigate to contact page">
+                    CONTACT
+                </a>
+            </div>
+           <div class="dropdown  nav-item px-1 d-inline-block position-relative py-0" data-reference="parent" data-bs-auto-close="outside" >
+                <a href="#" role="button" class="nav-link   py-navbar dropdown-toggle px-0 text-dark text-center " id="dropdownMenuGuest" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true" >
+                    {{-- <img width="35px" height="28px" src="{{ asset('/assets/images/navbar-account.png') }}" alt=""> --}}
+                    SIGN IN
+                </a>
+   
                 <div class="dropdown-menu shadow-lg dropdown-menu-end text-start border rounded-lg py-0 " 
                     aria-labelledby="dropdownMenuGuest">
-                    <a class="dropdown-item py-navbar px-1 ps-3  special-font-signinin align-middle " href="{{ route('organizer.signin.view') }}">
+                    <a title="Organizer Login Link" class="dropdown-item py-navbar px-1 ps-3  special-font-signinin align-middle " href="{{ route('organizer.signin.view') }}">
                         <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="#2e4b59"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></g></svg>
                         Organizer
                     </a>
-                    <a class="dropdown-item py-navbar special-font-signinin  px-1 ps-3 align-middle " href="{{ route('participant.signin.view') }}">
+                    <a title="Participant Login Link" class="dropdown-item py-navbar special-font-signinin  px-1 ps-3 align-middle " href="{{ route('participant.signin.view') }}">
                     <svg class="me-1" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" width="20px" height="20px" fill="#2e4b59"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:none;stroke:#2e4b59;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;} </style> <path d="M11.5,28H2.2c0.6-2,2.2-3.5,4.2-4.1c2.7-0.7,4.5-3.1,4.5-5.8c0-0.4-0.2-0.7-0.5-0.9C9,16.4,8.1,14.7,8,12.9 c0-0.7,0.5-1.4,1.2-1.6l1.1-0.4c0.4-0.1,0.7-0.5,0.7-0.9V6.8c1.8,2.5,4.4,4.2,7.3,4.9C18.1,12.1,18,12.5,18,13c0,1.8-1,3.4-2.5,4.3 c-0.3,0.2-0.5,0.5-0.5,0.9c0,1.7,0.8,3.3,2,4.4c1.5-0.2,2.9-0.3,4.3-0.1c-0.5-0.2-0.9-0.4-1.4-0.5c-1.6-0.4-2.7-1.7-2.9-3.2 c1.8-1.3,3-3.4,3-5.7c0-0.6,0.4-1,1-1c0.6,0,1-0.4,1-1V8.7c0-3.4-2.5-6.3-5.8-6.7c-2-0.2-4,0.5-5.4,2C9.8,3.9,8.9,4.2,8,4.9 C6.7,5.8,6,7.3,6,9v3.8c0,0,0,0.1,0,0.1c0,0,0,0.1,0,0.1c0,0,0,0.1,0,0.1c0.1,2.2,1.2,4.3,2.9,5.6c-0.2,1.6-1.4,2.9-3,3.3 c-3,0.8-5.2,3.1-5.8,6.1c-0.1,0.5,0,0.9,0.3,1.3C0.8,29.8,1.2,30,1.7,30h10.2C11.3,29.5,11.2,28.6,11.5,28z"></path> <path d="M26,20c-1.2,0-2.3,0.3-3.3,1h-4.4c-1-0.7-2.1-1-3.3-1c-3.3,0-6,2.7-6,6s2.7,6,6,6c1.2,0,2.3-0.3,3.3-1h4.4 c1,0.7,2.1,1,3.3,1c3.3,0,6-2.7,6-6S29.3,20,26,20z M17,27h-1v1c0,0.6-0.4,1-1,1s-1-0.4-1-1v-1h-1c-0.6,0-1-0.4-1-1s0.4-1,1-1h1v-1 c0-0.6,0.4-1,1-1s1,0.4,1,1v1h1c0.6,0,1,0.4,1,1S17.6,27,17,27z M25.7,27.7c-0.1,0.1-0.2,0.2-0.3,0.2C25.3,28,25.1,28,25,28 c-0.1,0-0.1,0-0.2,0c-0.1,0-0.1,0-0.2-0.1c-0.1,0-0.1-0.1-0.2-0.1c0,0-0.1-0.1-0.1-0.1c-0.1-0.1-0.2-0.2-0.2-0.3S24,27.1,24,27 c0-0.3,0.1-0.5,0.3-0.7c0.3-0.3,0.7-0.4,1.1-0.2c0.1,0.1,0.2,0.1,0.3,0.2c0.2,0.2,0.3,0.4,0.3,0.7C26,27.3,25.9,27.5,25.7,27.7z M28,25.2c0,0.1,0,0.1-0.1,0.2c0,0.1,0,0.1-0.1,0.2c0,0-0.1,0.1-0.1,0.1C27.5,25.9,27.3,26,27,26c-0.1,0-0.1,0-0.2,0 c-0.1,0-0.1,0-0.2-0.1c-0.1,0-0.1-0.1-0.2-0.1c0,0-0.1-0.1-0.1-0.1C26.1,25.5,26,25.3,26,25c0-0.3,0.1-0.5,0.3-0.7 c0.4-0.4,1-0.4,1.4,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0.1,0.1,0.1,0.2c0,0.1,0,0.1,0.1,0.2c0,0.1,0,0.1,0,0.2S28,25.1,28,25.2z"></path> </g></svg>
                         Participant
                     </a>
@@ -108,29 +137,62 @@
         </svg>
         <span class="search-hint">press enter to search</span>
     </div>
-    <div class="nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
-        @guest
-            <a class="py-1" href="{{ route('organizer.signin.view') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                    class="bi bi-person-fill-gear" viewBox="0 0 16 16">
-                    <path
-                        d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
-                </svg>&nbsp;
-                Sign in as organizer
-            </a>
-            <a class="py-1" href="{{ route('participant.signin.view') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                    class="bi bi-people-fill" viewBox="0 0 16 16">
-                    <path
-                        d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                </svg>&nbsp;
-                Sign in as participant
-            </a>
-        @endguest
-        @auth
-            @include('includes.Navbar.MobileAuth')
-        @endauth
+    <div class="w-25 nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
+    <!-- Main Navigation Links -->
+    <div class="nav-item mb-2">
+        <a class="nav-link py-1 {{ $currentRoute === 'public.landing.view' ? 'text-primary' : 'text-dark' }} text-center" 
+           href="{{ route('public.landing.view') }}"
+           title="Home - Return to main page"
+           aria-label="Navigate to homepage">
+            HOME
+        </a>
     </div>
+    <div class="nav-item mb-2">
+        <a class="nav-link py-1 {{ $currentRoute === 'public.about.view' ? 'text-primary' : 'text-dark' }} text-center" 
+           href="{{ route('public.about.view') }}"
+           title="About Us - Learn more about our company"
+           aria-label="Navigate to about us page">
+            ABOUT
+        </a>
+    </div>
+    <div class="nav-item mb-2">
+        <a class="nav-link py-1 {{ $currentRoute === 'public.contact.view' ? 'text-primary' : 'text-dark' }} text-center" 
+           href="{{ route('public.contact.view') }}"
+           title="Contact Us - Get in touch with our team"
+           aria-label="Navigate to contact page">
+            CONTACT
+        </a>
+    </div>
+    
+    <!-- Authentication Links -->
+    @guest
+        <a class="py-1" href="{{ route('organizer.signin.view') }}" 
+           title="Organizer Sign In - Access your event management dashboard"
+           aria-label="Sign in as event organizer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                class="bi bi-person-fill-gear" viewBox="0 0 16 16"
+                aria-hidden="true">
+                <path
+                    d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+            </svg>&nbsp;
+            Sign in as organizer
+        </a>
+        <a class="py-1" href="{{ route('participant.signin.view') }}"
+           title="Participant Sign In - Join events and manage your registrations"
+           aria-label="Sign in as event participant">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                class="bi bi-people-fill" viewBox="0 0 16 16"
+                aria-hidden="true">
+                <path
+                    d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+            </svg>&nbsp;
+            Sign in as participant
+        </a>
+    @endguest
+    @auth
+        @include('includes.Navbar.MobileAuth')
+    @endauth
+</div>
     <div class="text-center cursor-pointer mb-2"
         onclick="
             let element = document.getElementById('mobile-navbar');

@@ -413,7 +413,7 @@ table.responsive thead {
     background: #b1ccdd;
     mask: url("data:image/svg+xml,%3csvg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 256'%3e%3cpath d='M1008.48,85.024c-29.696-0.011-56.432-8-75.906-20.971c-19.456-12.981-31.44-30.816-31.44-50.613v-10.336H122.88 v10.336c-0.016,19.797-11.984,37.632-31.44,50.613c-19.488,12.971-46.224,20.96-75.92,20.971H0V170.64h15.52 c29.696,0,56.432,7.989,75.92,20.96c19.456,12.981,31.424,30.807,31.44,50.604v10.347h778.256v-10.347 c0-19.797,11.984-37.621,31.44-50.604c19.472-12.971,46.21-20.96,75.906-20.96H1024v-10.347V85.024H1008.48z'/%3e%3c/svg%3e") center/contain no-repeat;
     mask-size: cover;
-    width: 320px;
+    width: 250px;
     height: 150px;
     padding-left: 10px;
     padding-right: 10px;
@@ -520,7 +520,7 @@ table.responsive thead {
 
 .min-h-85vh {
     min-height: 100vh;
-    position: absolute;
+    position: static;
     top: 0;
     left: 0;
     width: 100vw;
@@ -531,7 +531,19 @@ table.responsive thead {
 }
 
 
+@media (min-width: 500px)  {
+    .coupon {
+        width: 320px;
+
+    }
+}
+
+
 @media (min-width: 992px) { 
+    .min-h-85vh {
+        position: absolute;
+       
+    }
    
     .w-95-lg-50 {
         width: 50vw;

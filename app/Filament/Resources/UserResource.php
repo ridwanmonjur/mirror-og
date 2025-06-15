@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\CountryRegion;
 use App\Models\User;
 use App\Models\Participant;
 use App\Models\Organizer;
@@ -39,7 +40,7 @@ class UserResource extends Resource
     {
         $countries = [];
         
-        foreach (Country::all() as $country) {
+        foreach (CountryRegion::all() as $country) {
             $countries[$country->id] = $country->name;
         }
 

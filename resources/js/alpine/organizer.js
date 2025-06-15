@@ -57,6 +57,8 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 
 initOffCanvasListeners();
 
+initialUserProfile.fontColor = initialUserProfile?.profile?.fontColor ?? '#2e4b59';
+initialUserProfile.backgroundColor = initialUserProfile?.profile?.backgroundColor ?? 'darkgray';
 
 
 function OrganizerData() {
@@ -111,7 +113,7 @@ function OrganizerData() {
                     };
                 }
         
-                const url = event.target.dataset.url;
+                const url = event.currentTarget.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
