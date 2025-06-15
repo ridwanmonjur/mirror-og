@@ -112,7 +112,7 @@ class EventDetail extends Model implements Feedable
 
     public function paymentTransaction(): BelongsTo
     {
-        return $this->belongsTo(RecordStripe::class, 'payment_transaction_id');
+        return $this->belongsTo(OrganizerPayment::class, 'payment_transaction_id');
     }
 
     public function joinEvents(): HasMany
