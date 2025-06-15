@@ -41,14 +41,21 @@ class EventCreateCouponResource extends Resource
                         Forms\Components\Select::make('type')
                             ->required()
                             ->options([
-                                'percentage' => 'Percentage',
-                                'fixed' => 'Fixed Amount',
+                                'percent' => 'Percentage',
+                                'sum' => 'Fixed Amount',
                             ])
                             ->default('percentage'),
                             
                         Forms\Components\TextInput::make('amount')
                             ->required()
                             ->numeric()
+                            ->rules([
+                                function (Forms\Get $get) {
+                                    return $get('type') === 'percent'
+                                        ? 'max:100'
+                                        : null;
+                                }
+                            ])
                             ->placeholder('Enter discount amount'),
                     ])->columns(2),
                             
@@ -99,8 +106,8 @@ class EventCreateCouponResource extends Resource
                 Tables\Columns\TextColumn::make('type')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'percentage' => 'success',
-                        'fixed' => 'info',
+                        'percent' => 'success',
+                        'sum' => 'info',
                         default => 'gray',
                     }),
                     
@@ -108,7 +115,7 @@ class EventCreateCouponResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->formatStateUsing(fn (string $state, EventCreateCoupon $record): string => 
-                        $record->type === 'percentage' ? "{$state}%" : "\${$state}"),
+                        $record->type === 'percent' ? "{$state}%" : "RM {$state}"),
                     
                 Tables\Columns\TextColumn::make('startDate')
                     ->date()
@@ -127,8 +134,8 @@ class EventCreateCouponResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
                     ->options([
-                        'percentage' => 'Percentage',
-                        'fixed' => 'Fixed Amount',
+                        'percent' => 'Percentage',
+                        'sum' => 'Fixed Amount',
                     ]),
                     
                 Tables\Filters\Filter::make('active')
