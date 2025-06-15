@@ -64,14 +64,14 @@
                     <br><br>
                     <!-- <a style="" href="{{ route('event.show', $event->id) }}"> <u> Click to more details for event type: {{ $event->sub_action_private }} id: {{ $event->id }} </u></a> -->
                     
-                    <button onclick="goToManageScreen();" class="oceans-gaming-default-button"
+                    <a href="{{ route('event.show', $event->id) }}">
+                    <button  class="oceans-gaming-default-button"
                         style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
                         Go to event page
                     </button>
-                    <br><br>
-                    <a href="{{ route('event.show', $event->id) }}">
-                        <button class="oceans-gaming-default-button" style="padding:10px 100px;">Done</button>
                     </a>
+                    <br><br>
+                    <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding:10px 100px;">Done</button>
                 </div>
                 <script src="{{ asset('/assets/js/shared/CheckoutEventSuccess.js') }}"></script>
             </div>

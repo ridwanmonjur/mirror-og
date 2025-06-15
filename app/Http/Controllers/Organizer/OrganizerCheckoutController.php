@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Jobs\CreateUpdateEventTask;
 use App\Models\EventCreateCoupon;
 use App\Models\EventDetail;
+use App\Models\OrganizerPayment;
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
+use App\Models\TransactionHistory;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -51,6 +53,40 @@ class OrganizerCheckoutController extends Controller
             ]);
             
             [$fee, $isEventCreateCouponApplied, $error] = array_values(EventCreateCoupon::createEventCreateCouponFeeObject($request->coupon, $event->tier?->tierPrizePool));
+            // $fee['entryFee'] = (float) $eventPrizePool * 1000;
+            // $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
+            // $fee['discountFee'] = $discount->type === 'percent' ?
+            //     $discount->amount / 100 * $fee['totalFee'] : $discount->amount;
+            // $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
+
+            if ($fee['finalFee'] < config('constants.STRIPE.ZER0')) {
+                $historyId = TransactionHistory::insertGetId([
+                    'name' => "$event->eventName: Full Discount",
+                    'type' => 'Entry Fee',
+                    'link' => route('public.event.view', ['id'=> $event->id]),
+                    'amount' => 0,
+                    'summary' => 'Complete Discount',
+                    'date'=> DB::raw('NOW()'),
+                    'user_id' => $user->id
+                ]);
+
+                $paymentId = OrganizerPayment::insertGetId([
+                    'payment_amount' => 0,
+                    'discount_amount' => $fee['totalFee'],
+                    'user_id' => $user->id,
+                    'history_id' => $historyId,
+                    'payment_id' => null,
+                ]);
+
+                $event->payment_transaction_id = $paymentId;
+
+                $event->save();
+
+                return view('Organizer.CheckoutEventSuccess', [
+                    'event' => $event,
+                    'isUser' => true,
+                ]);
+            }
 
             if ($isEventCreateCouponApplied) {
                 session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon}!");
@@ -92,11 +128,31 @@ class OrganizerCheckoutController extends Controller
                 }
 
                 if ($paymentIntent['amount'] > 0 && $paymentIntent['amount_received'] === $paymentIntent['amount'] && $paymentIntent['metadata']['eventId'] === $id) {
-                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
-
                     $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null, 'joinEvents');
+                    $prizeFinal = EventCreateCoupon::getOrganizerPay($event->tier?->tierPrizePool);
+                    $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
+                    $historyId = TransactionHistory::insertGetId([
+                        'name' => "$event->eventName",
+                        'type' => 'Entry Fee',
+                        'isPositive' => false,
+                        'link' => route('public.event.view', ['id'=> $event->id]),
+                        'amount' => $transaction->payment_amount,
+                        'summary' => 'Entry Fee',
+                        'date'=> DB::raw('NOW()'),
+                        'user_id' => $user->id
+                    ]);
+    
+                    $paymentId = OrganizerPayment::insertGetId([
+                        'payment_amount' => $transaction->payment_amount,
+                        'discount_amount' => $prizeFinal - $transaction->payment_amount,
+                        'user_id' => $user->id,
+                        'history_id' => $historyId,
+                        'payment_id' => $transaction->id,
+                    ]);
+    
+                    $event->payment_transaction_id = $paymentId;
+                    $event->save();
 
-                    $event->payment_transaction_id = $transaction->id;
                     if ($event->status !== 'DRAFT') {
                         $event->status = 'NOT PENDING';
                         $event->status = $event->isCompleteEvent() ? $event->statusResolved() : 'PENDING';
