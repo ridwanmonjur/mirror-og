@@ -266,7 +266,7 @@
                     <div class="box mt-3">
                         <div class="small-detail" >End</div>
                         <div class="flatpickr">
-                            <input type="time" id="endTime" name="endTime" onchange="checkValidEndTime();setTimeRangeDisplay();"
+                            <input type="time" id="endTime" name="endTime" 
                                 value="{{ $isEventNotNull ? $event->endTime : '' }}" 
                                 class="form-control mx-auto py-1   text-dark" required data-input
                                 style="border: 1px solid  #d3d3d3 ;"
@@ -284,11 +284,37 @@
     <div class=" d-flex justify-content-between box-width back-next">
         <button onclick="goToNextScreen('step-4', 'timeline-1'); fillStepGameDetailsValues();" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-        <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
+        <button onclick="goToNextScreen('step-5-5', 'timeline-2')" type="button"
             class="oceans-gaming-default-button">
             Next&nbsp;&nbsp;  &gt; </button>
     </div>
 </div>
+
+<div class="text-center d-none create" id="step-5-5">
+    <div class="welcome text-center">
+            <h3>
+                STEP 2: Fill in your <span class="text-primary">event details</span>
+            </h3>
+        <p>
+            Then, where is your event happening?
+        </p>
+    </div>
+    <div class="event-details-form box-width">
+        <div class="form-group mx-auto">
+            <label for="eventName">Location of Event</label>
+            <p class="my-3">Pick a location for your event.</p>
+          <select id="select2-country2" class="form-control form-select" name="venue" data-value="{{$isEventNotNull ? $event->venue: null}}"></select>
+
+        </div>
+    </div>
+    <div class=" d-flex justify-content-between box-width back-next">
+        <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button"
+            class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
+        <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button" class="oceans-gaming-default-button">
+            Next&nbsp;&nbsp;  &gt; </button>
+    </div>
+</div>
+
 
 <div class="text-center d-none create" id="step-6">
     <div class="welcome text-center">
@@ -310,7 +336,7 @@
         </div>
     </div>
     <div class=" d-flex justify-content-between box-width back-next">
-        <button onclick="goToNextScreen('step-5', 'timeline-2')" type="button"
+        <button onclick="goToNextScreen('step-5-5', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-7', 'timeline-2')" type="button" class="oceans-gaming-default-button">
             Next&nbsp;&nbsp;  &gt; </button>
@@ -342,7 +368,7 @@
         </div>
     </div>
     <div class=" d-flex justify-content-between box-width back-next">
-        <button onclick="goToNextScreen('step-6', 'timeline-2')" type="button"
+        <button onclick="goToNextScreen('step-5-5', 'timeline-2')" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-8', 'timeline-2'); fillEventTags();" type="button"
             class="oceans-gaming-default-button">

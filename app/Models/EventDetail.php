@@ -813,7 +813,7 @@ class EventDetail extends Model implements Feedable
         $startTime = $eventDetail->stripSec($request->startTime);
         $endDate = $request->endDate;
         $endTime = $eventDetail->stripSec($request->endTime);
-
+        $eventDetail->venue = $request->venue;
         if ($startDate && $startTime) {
             $carbonStartDateTime = $eventDetail->storeTimeMy($startDate, $startTime);
             if ($isEditMode) {
