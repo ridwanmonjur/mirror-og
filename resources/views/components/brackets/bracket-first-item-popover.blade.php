@@ -18,7 +18,7 @@
                     <img src="{{ asset('storage/'.$teamBanner) }}" alt="Team Banner" width="100"
                         data-position="{{$position . 'hi'}}"
                         height="100" onerror="this.src='{{ asset('assets/images/404.svg') }}';"
-                        class="popover-team-img popover-img object-fit-cover rounded-circle border border-dark border-2"
+                        class="popover-team-img popover-img object-fit-cover rounded-circle border  border-2"
                     >
                     
                 </div>
@@ -31,7 +31,7 @@
                             <li class="d-inline">
                                 <img width="30" height="30" onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                                     src="{{ asset( 'storage/'.$rosterItem?->user?->userBanner) }}" alt="User Banner"
-                                    class="mb-2 rounded-circle border border-dark border-2 object-fit-cover me-3"
+                                    class="mb-2 rounded-circle border border-2 object-fit-cover me-3"
                                 >
                                 {{ $rosterItem->user->name }}
                             </li>
