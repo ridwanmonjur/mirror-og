@@ -348,7 +348,7 @@ button:after {
 
 .textarea-size {
     resize: none !important;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .description {
@@ -1560,5 +1560,36 @@ body{
     width: 190px;
     margin: auto;
   } 
+  .ts-wrapper.form-select {
+    background-color: transparent !important;
+  }
 
-  
+  .ts-control, .ts-control input, .ts-dropdown {
+    font-size: 1rem;
+  }
+
+  .ts-control, .ts-control .item, .ts-wrapper.single.input-active .ts-control {
+    background-color: transparent !important;
+    font-size: 1rem;
+  }
+
+  .ts-control .item {
+    display: inline !important;
+  }
+
+  #select2-country2-ts-control {
+    font-size: 1rem;
+    padding-left: 20px !important;
+    display: inline !important;
+  }
+
+  .ts-wrapper.form-control.form-select {
+    border: 1px solid black;
+    border-radius: 50px;
+  }
+
+  .ts-control {
+    display: flex !important;
+    justify-content: start !important;
+    border: 1px solid black;
+  }

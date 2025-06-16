@@ -68,3 +68,57 @@ function updateLaunchButton(type) {
             break;
     }
 }
+
+
+async function fetchCountries () {
+    try {
+        const data = await storeFetchDataInLocalStorage('/countries');
+        if (data?.data) {
+            countries = data.data;
+            const choices2 = document.getElementById('select2-country2');
+            let regionsHtml = "";
+            let countriesHtml = "";
+            let countriesOptionsHtml = "";
+
+        countriesHtml += "<option value=''>No country</option>";
+
+        countries.forEach((value) => {
+            if (value.type === 'region') {
+                regionsHtml += `
+                    <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                `;
+            } else if (value.type === 'country') {
+                countriesOptionsHtml += `
+                    <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                `;
+            }
+        });
+
+            // Add regions optgroup if there are regions
+            if (regionsHtml) {
+                countriesHtml += "<optgroup label='Regions'>";
+                countriesHtml += regionsHtml;
+                countriesHtml += "</optgroup>";
+            }
+
+            // Add countries optgroup if there are countries
+            if (countriesOptionsHtml) {
+                countriesHtml += "<optgroup label='Countries'>";
+                countriesHtml += countriesOptionsHtml;
+                countriesHtml += "</optgroup>";
+            }
+
+            if (choices2) {
+                choices2.innerHTML = countriesHtml;
+            }
+
+            choices2.innerHTML = countriesHtml;
+        } else {
+            errorMessage = "Failed to get data!";
+        }
+    } catch (error) {
+        console.error('Error fetching countries:', error);
+    }
+}
+
+fetchCountries();

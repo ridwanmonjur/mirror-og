@@ -81,7 +81,7 @@ function TeamHead() {
                     if (choices2) {
                         choices2.innerHTML = countriesHtml;
                         let option = choices2.querySelector(`option[value='${this.country}']`);
-                        option.selected = true;
+                        if (option) option.selected = true;
                     }
                 } else {
                     this.errorMessage = "Failed to get data!";
@@ -106,9 +106,14 @@ function TeamHead() {
                         content: fileContent
                     };
                 }
+                
 
-
-                const url = event.currentTarget.dataset.url;
+                const url = event?.target?.dataset?.url;
+                if (!url) {
+                    console.error('No URL found');
+                    console.log({url});
+                    return;
+                }
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {

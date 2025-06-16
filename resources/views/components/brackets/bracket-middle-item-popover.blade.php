@@ -28,8 +28,8 @@
         style="background-color: white; min-width: 400px !important;"
     >
         <div class="text-center text-uppercase" >
-            <h5> {{$winner_next_position}} </h5>
-            <p class="text-success status-box">UPCOMING</p>
+            <h5 class="text-primary"> {{$winner_next_position}} </h5>
+            {{-- <p class="text-success status-box">UPCOMING</p> --}}
         </div>
         <div class="col-12 col-lg-4">
             <div>

@@ -23,16 +23,6 @@ window.addEventListener(
         }
 
         infinteLoadMore(null, ENDPOINT_URL, ()=> {
-            let hasElement = document.querySelector("has-discount");
-            let discountAnnounce = document.querySelector('discount-announceMent');
-            if (discountAnnounce) {
-                if (hasElement) {
-                    discountAnnounce.classList.remove('d-none');
-                } else {
-                    discountAnnounce.classList.add('d-none');
-                }
-            }
-
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
                 // Remove existing tooltip if it exists

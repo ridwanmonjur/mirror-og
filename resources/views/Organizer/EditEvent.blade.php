@@ -7,7 +7,7 @@
     <title>Event Creation</title>
      @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/teamSelect.js'])    
 </head>
     <!-- https://stackoverflow.com/questions/895171/prevent-users-from-submitting-a-form-by-hitting-enter -->
 

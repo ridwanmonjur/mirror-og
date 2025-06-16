@@ -65,9 +65,7 @@
 <body>
     @include('googletagmanager::body')
     @include('includes.Navbar', ['search' => true ])
-    <div class="text-center bg-primary mx-auto text-white fw-bold  ">
-        <small>Save with our early bird pricing! We have an early bird pricing for some events.</small>
-    </div>
+    
     <main 
     >
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
