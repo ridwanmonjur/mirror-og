@@ -5,7 +5,9 @@
     if ($isEventNotNull) {
         $dateStartArray = $event->startDatesStr($event->startDate, $event->startTime);
         extract($dateStartArray);
+        $event->convertToMalaysianTime();
     }
+
 @endphp
 <div id="eventContainer" 
     data-event="{{ json_encode($event ?? null) }}"

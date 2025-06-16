@@ -46,8 +46,8 @@ class HandleEventUpdate implements ShouldQueue
             $malaysiaTimezone = new DateTimeZone('Asia/Kuala_Lumpur');
             $startTimeDate = $this->eventDetail->getDateTz($this->eventDetail->startDate, $this->eventDetail->startTime);
             $endTimeDate = $this->eventDetail->getDateTz($this->eventDetail->endDate, $this->eventDetail->startTime);
-            $startTimeDate->setTimezone($malaysiaTimezone);
-            $endTimeDate->setTimezone($malaysiaTimezone);
+            $startTimeDate?->setTimezone($malaysiaTimezone);
+            $endTimeDate?->setTimezone($malaysiaTimezone);
             $partialHtml = <<<HTML
                 The event, <button class="btn-transparent px-0 border-0 Color-{$this->eventDetail->tier->eventTier}" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
                 been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} MYT and ends on {$endTimeDate->format('l, F j, Y')} MYT.
