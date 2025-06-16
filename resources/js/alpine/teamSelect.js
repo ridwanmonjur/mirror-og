@@ -2,6 +2,8 @@ import TomSelect from "tom-select";
 
 let bankSelectElement = document.getElementById('bank-select');
 let teamSelectElement = document.getElementById('team-select');
+let countrySelect = document.getElementById('select2-country2');
+
 if (teamSelectElement) {
     new TomSelect('#team-select', {
         valueField: 'id',
@@ -104,5 +106,86 @@ if (teamSelectElement) {
             }
         },
     });
+} else if (countrySelect) {
+    async function fetchCountries() {
+        try {
+            const data = await storeFetchDataInLocalStorage('/countries');
+            if (data?.data) {
+                countries = data.data;
+                
+                let tomSelectOptions = [
+                    { 
+                        value: '', text: '',
+                    }
+                ];
+                
+                let regions = [];
+                let countryOptions = [];
+    
+                countries.forEach((value) => {
+                    if (value.type === 'region') {
+                        regions.push({
+                            value: value.name,
+                            text: `${value.emoji_flag} ${value.name}`,
+                            optgroup: 'Regions'
+                        });
+                    } else if (value.type === 'country') {
+                        countryOptions.push({
+                            value: value.name,
+                            text: `${value.emoji_flag} ${value.name}`,
+                            optgroup: 'Countries'
+                        });
+                    }
+                });
+    
+                tomSelectOptions = tomSelectOptions.concat(regions, countryOptions);
+    
+                const selectElement = document.getElementById('select2-country2');
+                if (selectElement) {
+                    if (selectElement.tomselect) {
+                        selectElement.tomselect.destroy();
+                    }
+    
+                    let tomSelectInstance = new TomSelect(selectElement, {
+                        optgroups: [
+                            { value: 'Regions', label: 'Regions' },
+                            { value: 'Countries', label: 'Countries' }
+                        ],
+                        options: tomSelectOptions,
+                        maxOptions: 300,
+                        closeAfterSelect: true,
+                        maxItems: 1, 
+                        valueField: 'value',
+                        placeholder: 'Select a country or region...',
+                        onItemAdd: function(value, item) {
+                            const self = this;
+                            
+                            // Close and reset input state
+                            this.close();
+                            
+                            // Clear the search input
+                            this.setTextboxValue('');
+                            
+                            // Remove focus to return to inline state
+                            setTimeout(() => {
+                                self.blur();
+                                self.control_input.blur();
+                            }, 50);
+                        }
+                    });
+
+                    if (selectElement?.dataset?.value) {
+                        tomSelectInstance.setValue(selectElement.dataset.value);
+                    }
+                }
+            } else {
+                errorMessage = "Failed to get data!";
+            }
+        } catch (error) {
+            console.error('Error fetching countries:', error);
+        }
+    }
+
+    fetchCountries();
 }
 
