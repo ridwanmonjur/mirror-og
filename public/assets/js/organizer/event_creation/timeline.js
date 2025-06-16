@@ -238,6 +238,7 @@ let inputKeyToStepNameMapping = {
     eventBanner: ['step-9', 'timeline-2'],
     startDate: ['step-5', 'timeline-2'],
     startTime: ['step-5', 'timeline-2'],
+    venue: ['step-5-5', 'timeline-2'],
     endDate: ['step-5', 'timeline-2'],
     endTime: ['step-5', 'timeline-2'],
     eventDescription: ['step-7', 'timeline-2'],
@@ -374,7 +375,7 @@ function goToNextScreen(nextId, nextTimeline) {
 
     const allIDs = [
         'step-0',
-        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-payment', 'step-launch-1',
+        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-5-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-payment', 'step-launch-1',
         'step-launch-2'];
 
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-payment', 'timeline-launch'];

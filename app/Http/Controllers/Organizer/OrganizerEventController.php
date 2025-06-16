@@ -63,7 +63,7 @@ class OrganizerEventController extends Controller
         $userId = $user->id;
         $count = 8;
         $organizer = Organizer::where('user_id', $userId)->first();
-        $eventListQuery = EventDetail::generateOrganizerPartialQueryForFilter($request);
+        $eventListQuery = EventDetail::filterEvents($request);
         $eventList = $eventListQuery
             ->with(['tier', 'type', 'game', 'user', 'signup'])
             ->where('user_id', $user->id)
@@ -93,7 +93,7 @@ class OrganizerEventController extends Controller
         $user = User::find($userId);
         $organizer = Organizer::where('user_id', $user->id)->first();
         $count = 8;
-        $eventListQuery = EventDetail::generateOrganizerFullQueryForFilter($request);
+        $eventListQuery = EventDetail::filterEventsFull($request);
         $followersCount = OrganizerFollow::where('organizer_user_id', $user->id)->count();
 
         $eventList = $eventListQuery

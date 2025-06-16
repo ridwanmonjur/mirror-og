@@ -484,6 +484,30 @@ class EventDetail extends Model implements Feedable
         }
     }
 
+    public function convertToMalaysianTime(): void
+    {
+        // Convert start datetime
+        if ($this->startDate && $this->startTime) {
+            $startStuff = $this->formatTimeMy($this->startDate, $this->startTime);
+            $this->startDate = $startStuff?->format('Y-m-d');
+            $this->startTime = $startStuff?->format('H:i');
+        }
+        
+        // Convert end datetime
+        if ($this->endDate && $this->endTime) {
+            $endStuff = $this->formatTimeMy($this->endDate, $this->endTime);
+            $this->endDate = $endStuff?->format('Y-m-d');
+            $this->endTime = $endStuff?->format('H:i');
+        }
+        
+        // Convert live/public datetime
+        if ($this->sub_action_public_date && $this->sub_action_public_time) {
+            $liveStuff = $this->formatTimeMy($this->sub_action_public_date, $this->sub_action_public_time);
+            $this->sub_action_public_date = $liveStuff?->format('Y-m-d');
+            $this->sub_action_public_time = $liveStuff?->format('H:i');
+        }
+    }
+
     public function getDateTz(string|null $date, string|null $time, string $timezone = 'UTC'): ?Carbon
     {
         if ($date === null || $time === null) {
@@ -506,6 +530,14 @@ class EventDetail extends Model implements Feedable
     $startTime = $this->stripSec($startTime);
     if ($startDate !== null && $startTime !== null) {
         $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC');
+        if (!$carbonDateTimeUtc) {
+            $datePart = 'Date is not set';
+            $timePart = 'Time is not set';
+            $dayStr = '';
+            $dateStr = 'Please enter date and time';
+            $combinedStr = 'Date/time is not set';
+        }
+
         $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
         $datePart = $carbonDateTimeMalaysia->format('d M y');
         $timePart = $carbonDateTimeMalaysia->format('g:i A');
@@ -572,7 +604,7 @@ class EventDetail extends Model implements Feedable
     }
 
  
-    public static function generateOrganizerPartialQueryForFilter(Request $request)
+    public static function filterEvents(Request $request)
     {
         $eventListQuery = self::query();
         $eventListQuery->when($request->has('status'), function ($query) use ($request) {
@@ -673,9 +705,9 @@ class EventDetail extends Model implements Feedable
         }]);
     }
 
-    public static function generateOrganizerFullQueryForFilter(Request $request)
+    public static function filterEventsFull(Request $request)
     {
-        $eventListQuery = self::generateOrganizerPartialQueryForFilter($request);
+        $eventListQuery = self::filterEvents($request);
 
         $eventListQuery->when($request->has('sort'), function ($query) use ($request) {
             $sort = $request->input('sort');
@@ -733,39 +765,24 @@ class EventDetail extends Model implements Feedable
         return $eventListQuery;
     }
 
-    public static function generateParticipantFullQueryForFilter(Request $request)
+    private function formatTimeMy(string|null $date, string|null $time): ?Carbon
     {
-        $eventListQuery = self::query();
-        $currentDateTime = Carbon::now()->utc();
-        $eventListQuery->where('status', '<>', 'DRAFT')
-            ->whereNotNull('payment_transaction_id')
-            ->whereRaw('CONCAT(endDate, " ", endTime) > ?', [$currentDateTime])
-            ->where('sub_action_private', '<>', 'private')
-            ->where(function ($query) use ($currentDateTime) {
-                $query
-                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
-                    ->orWhereNull('sub_action_public_time')
-                    ->orWhereNull('sub_action_public_date');
-            })
-            ->when($request->has('search'), function ($query) use ($request) {
-                $search = trim($request->input('search'));
+        if ($date === null || $time === null) {
+            return null;
+        }
 
-                if (empty($search)) {
-                    return $query;
-                }
-                return $query->where(function ($q) use ($search) {
-                    return $q
-                        ->orWhere('eventDescription', 'LIKE', "%{$search}%")
-                        ->orWhere('eventName', 'LIKE', "%{$search}%")
-                        ->orWhere('eventTags', 'LIKE', "%{$search}%")
-                        ->orWhereHas('game', function ($query) use ($search) {
-                            $query->where('gameTitle', 'LIKE', "%{$search}%");
-                        });
-                });
-            });
+        try {
+            return Carbon::createFromFormat(
+                'Y-m-d H:i', 
+                $date . ' ' . $this->stripSec($time),
+            )->setTimezone('Asia/Kuala_Lumpur')   ;
 
-        return $eventListQuery;
+        } catch (Exception $e) {
+            return null;
+        }
     }
+
+    
 
    
 
@@ -796,7 +813,7 @@ class EventDetail extends Model implements Feedable
         $startTime = $eventDetail->stripSec($request->startTime);
         $endDate = $request->endDate;
         $endTime = $eventDetail->stripSec($request->endTime);
-
+        $eventDetail->venue = $request->venue;
         if ($startDate && $startTime) {
             $carbonStartDateTime = $eventDetail->storeTimeMy($startDate, $startTime);
             if ($isEditMode) {

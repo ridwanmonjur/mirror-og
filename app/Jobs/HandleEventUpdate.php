@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\EventRescheduledMail;
+use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\NotifcationsUser;
 use Carbon\Carbon;
@@ -24,7 +25,7 @@ class HandleEventUpdate implements ShouldQueue
 
     public $eventDetail;
 
-    public function __construct($eventDetail)
+    public function __construct(EventDetail $eventDetail)
     {
         $this->eventDetail = $eventDetail;
     }
@@ -41,13 +42,13 @@ class HandleEventUpdate implements ShouldQueue
             Log::info($joinEvent);
             
             $memberMail = [];
-            $this->eventDetail->load(['user']);
+            $this->eventDetail->load(['user', 'signup']);
 
             $malaysiaTimezone = new DateTimeZone('Asia/Kuala_Lumpur');
             $startTimeDate = $this->eventDetail->getDateTz($this->eventDetail->startDate, $this->eventDetail->startTime);
             $endTimeDate = $this->eventDetail->getDateTz($this->eventDetail->endDate, $this->eventDetail->startTime);
-            $startTimeDate->setTimezone($malaysiaTimezone);
-            $endTimeDate->setTimezone($malaysiaTimezone);
+            $startTimeDate?->setTimezone($malaysiaTimezone);
+            $endTimeDate?->setTimezone($malaysiaTimezone);
             $partialHtml = <<<HTML
                 The event, <button class="btn-transparent px-0 border-0 Color-{$this->eventDetail->tier->eventTier}" data-href="/event/{$this->eventDetail->id}">{$this->eventDetail->eventName}</button> has
                 been RESCHEDULED. It starts on {$startTimeDate->format('l, F j, Y')} MYT and ends on {$endTimeDate->format('l, F j, Y')} MYT.

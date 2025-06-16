@@ -142,7 +142,7 @@
             "php artisan view:cache",
             "php artisan event:cache",
             "php artisan optimize",
-            "composer dump-autoload -o --classmap-authoritative"
+            "composer2 dump-autoload -o --classmap-authoritative"
 
         ],
         "staging": [

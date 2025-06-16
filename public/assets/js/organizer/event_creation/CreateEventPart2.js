@@ -442,7 +442,20 @@ window.onload = function() {
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: false,
-        minuteIncrement: 30
+        minuteIncrement: 30,
+        // formatDate: (date, format, locale) => {
+        //     const d = new Date(date);
+        //     let hours = d.getHours();
+        //     const minutes = d.getMinutes();
+        //     const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+        //     hours = hours % 12;
+        //     hours = hours ? hours : 12; // 0 should be 12
+            
+        //     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+            
+        //     return `${hours}:${minutesStr} ${ampm}`;
+        // }
     };
 
     const startPicker = window.createFlatpickr("#startTime", {

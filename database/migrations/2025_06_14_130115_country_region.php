@@ -28,35 +28,36 @@ return new class extends Migration
         // Insert regions first
         $regions = [
             // Asia
-            ['name' => 'Central Asia', 'emoji_flag' => '🏔️', 'type' => 'region', 'sort_order' => 1],
-            ['name' => 'East Asia', 'emoji_flag' => '🏮', 'type' => 'region', 'sort_order' => 2],
-            ['name' => 'Western Asia/Middle East', 'emoji_flag' => '🕌', 'type' => 'region', 'sort_order' => 3],
-            ['name' => 'South Asia', 'emoji_flag' => '🏛️', 'type' => 'region', 'sort_order' => 4],
-            ['name' => 'Southeast Asia', 'emoji_flag' => '🏝️', 'type' => 'region', 'sort_order' => 5],
-            ['name' => 'North Asia', 'emoji_flag' => '🏔️', 'type' => 'region', 'sort_order' => 6],
+            ['name' => 'Global', 'emoji_flag' => '🌏', 'type' => 'region', 'sort_order' => 101],
+            ['name' => 'Central Asia', 'emoji_flag' => '🏔️', 'type' => 'region', 'sort_order' => 2],
+            ['name' => 'East Asia', 'emoji_flag' => '🏮', 'type' => 'region', 'sort_order' => 3],
+            ['name' => 'Western Asia/Middle East', 'emoji_flag' => '🕌', 'type' => 'region', 'sort_order' => 4],
+            ['name' => 'South Asia', 'emoji_flag' => '🏛️', 'type' => 'region', 'sort_order' => 5],
+            ['name' => 'Southeast Asia', 'emoji_flag' => '🏝️', 'type' => 'region', 'sort_order' => 6],
+            ['name' => 'North Asia', 'emoji_flag' => '🏔️', 'type' => 'region', 'sort_order' => 7],
             
             // Africa
-            ['name' => 'North Africa', 'emoji_flag' => '🏺', 'type' => 'region', 'sort_order' => 7],
+            ['name' => 'North Africa', 'emoji_flag' => '🏺', 'type' => 'region', 'sort_order' => 12],
             ['name' => 'East Africa', 'emoji_flag' => '🦁', 'type' => 'region', 'sort_order' => 8],
             ['name' => 'West Africa', 'emoji_flag' => '🐘', 'type' => 'region', 'sort_order' => 9],
             ['name' => 'Southern Africa', 'emoji_flag' => '💎', 'type' => 'region', 'sort_order' => 10],
             ['name' => 'Central Africa', 'emoji_flag' => '🌿', 'type' => 'region', 'sort_order' => 11],
             
             // Americas
-            ['name' => 'North America', 'emoji_flag' => '🍁', 'type' => 'region', 'sort_order' => 12],
+            ['name' => 'North America', 'emoji_flag' => '🍁', 'type' => 'region', 'sort_order' => 16],
             ['name' => 'Central America', 'emoji_flag' => '🌮', 'type' => 'region', 'sort_order' => 13],
             ['name' => 'Caribbean', 'emoji_flag' => '🏖️', 'type' => 'region', 'sort_order' => 14],
             ['name' => 'South America', 'emoji_flag' => '🦙', 'type' => 'region', 'sort_order' => 15],
             
             // Europe
-            ['name' => 'Northern Europe', 'emoji_flag' => '❄️', 'type' => 'region', 'sort_order' => 16],
+            ['name' => 'Northern Europe', 'emoji_flag' => '❄️', 'type' => 'region', 'sort_order' => 21],
             ['name' => 'Western Europe', 'emoji_flag' => '🏛️', 'type' => 'region', 'sort_order' => 17],
             ['name' => 'Central Europe', 'emoji_flag' => '🏔️', 'type' => 'region', 'sort_order' => 18],
             ['name' => 'Southern Europe', 'emoji_flag' => '☀️', 'type' => 'region', 'sort_order' => 19],
             ['name' => 'Eastern Europe', 'emoji_flag' => '🌲', 'type' => 'region', 'sort_order' => 20],
             
             // Oceania
-            ['name' => 'Australia & New Zealand', 'emoji_flag' => '🦘', 'type' => 'region', 'sort_order' => 21],
+            ['name' => 'Australia & New Zealand', 'emoji_flag' => '🦘', 'type' => 'region', 'sort_order' => 24],
             ['name' => 'Polynesia', 'emoji_flag' => '🌺', 'type' => 'region', 'sort_order' => 22],
             ['name' => 'Melanesia', 'emoji_flag' => '🏝️', 'type' => 'region', 'sort_order' => 23],
             

@@ -46,7 +46,7 @@
 >
 </div>
 <nav class="navbar justify-content-between align-items-center user-select-none px-3 ">
-    <a href="{{ $routeLogo }}" title="Home Page Link" class="w-25">
+    <a href="{{ $routeLogo }}" title="Home Page Link" class="">
         <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="Website Logo">
     </a>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -74,34 +74,12 @@
        
         @guest
              
-            <div class="nav-item px-0 " style="list-style-type: none;">
-                <a class="nav-link py-navbar {{ $currentRoute === 'public.landing.view' ? 'text-primary' : 'text-dark' }} text-center" 
-                href="{{ route('public.landing.view') }}"
-                title="Home - Return to main page"
-                aria-label="Navigate to homepage">
-                    HOME
-                </a>
-            </div>
-            <div class="nav-item px-0 " style="list-style-type: none;">
-                <a class="nav-link py-navbar {{ $currentRoute === 'public.about.view' ? 'text-primary' : 'text-dark' }} text-center" 
-                href="{{ route('public.about.view') }}"
-                title="About Us - Learn more about our company"
-                aria-label="Navigate to about us page">
-                    ABOUT
-                </a>
-            </div>
-            <div class="nav-item px-0 " style="list-style-type: none;">
-                <a class="nav-link py-navbar {{ $currentRoute === 'public.contact.view' ? 'text-primary' : 'text-dark' }} text-center" 
-                href="{{ route('public.contact.view') }}"
-                title="Contact Us - Get in touch with our team"
-                aria-label="Navigate to contact page">
-                    CONTACT
-                </a>
-            </div>
+            
            <div class="dropdown  nav-item px-1 d-inline-block position-relative py-0" data-reference="parent" data-bs-auto-close="outside" >
                 <a href="#" role="button" class="nav-link   py-navbar dropdown-toggle px-0 text-dark text-center " id="dropdownMenuGuest" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true" >
-                    {{-- <img width="35px" height="28px" src="{{ asset('/assets/images/navbar-account.png') }}" alt=""> --}}
+                    
+                    <img width="35px" height="30px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">
                     SIGN IN
                 </a>
    
@@ -137,7 +115,7 @@
         </svg>
         <span class="search-hint">press enter to search</span>
     </div>
-    <div class="w-25 nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
+    <div class=" nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
     <!-- Main Navigation Links -->
     <div class="nav-item mb-2">
         <a class="nav-link py-1 {{ $currentRoute === 'public.landing.view' ? 'text-primary' : 'text-dark' }} text-center" 
