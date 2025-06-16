@@ -383,13 +383,13 @@
                         autocomplete="nope"
                         :style="{ color: fontColor,borderColor: fontColor  }"    
                     >
-                    <a
+                    <span
                         v-on:click="submitEditProfile(event);"
                         data-url="{{route('participant.team.update')}}"
-                         :style="{  borderColor: fontColor  }" 
-                        class="rounded-3 btn  px-3 py-1  rounded cursor-pointer  mx-auto me-3 ">
-                        <span :style="{ color: fontColor  }">Save</span>
-                    </a>
+                        :style="{  borderColor: fontColor, color: fontColor  }" 
+                        class="rounded-3 btn  px-3 py-1  rounded cursor-pointer me-3 mx-auto  ">
+                        Save
+                    </span>
                     {{-- Close icon --}}
                     <svg
                         v-on:click="reset();isEditMode = false;"

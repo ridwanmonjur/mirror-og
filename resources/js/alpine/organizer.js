@@ -113,7 +113,7 @@ function OrganizerData() {
                     };
                 }
         
-                const url = event.currentTarget.dataset.url;
+                const url = event.target.dataset.url;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
