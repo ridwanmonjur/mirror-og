@@ -157,7 +157,7 @@
                                 width="120" height="90">
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
-                            <img loading="lazy"  alt="{{ $event->eventName }}" width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: cover;"
+                            <img loading="lazy"  alt="{{ $event->eventName }}" width="100%" height="auto" style="aspect-ratio: 7/3; object-fit: contain;"
                                 @class([' rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" src="{{ $eventBannerImg }}"
                                 alt="" 
                             >
