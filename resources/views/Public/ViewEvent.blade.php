@@ -391,7 +391,7 @@
                                         <span class="text-decoration-line-through me-1"> RM {{ $event->tier->tierEntryFee }}</span>
                                         <span class="text-primary has-discount">RM {{ $entryFee }}</span>
                                         </div>    
-                                        <svg data-bs-toggle="tooltip" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi ms-2 bi-question-circle" viewBox="0 0 16 16"
+                                        <svg data-bs-toggle="tooltip" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#43a4d7" class="bi ms-2 bi-question-circle" viewBox="0 0 16 16"
                                             title="Early Bird Discount! Ends {{ 
                                                 date('d M y g:i A', strtotime($event->signup->normal_signup_start_advanced_close) + (8 * 3600)) 
                                             }}."
