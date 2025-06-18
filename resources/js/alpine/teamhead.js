@@ -32,7 +32,7 @@ function TeamHead() {
         errorMessage: errorInput?.value,
         changeFlagEmoji(event) {
             this.country = event.target.value;
-            const countryX = this.countries?.find(c => c.id === this.country)
+            const countryX = this.countries?.find(c => c.id == this.country);
             this.country_name = countryX?.name || null
             this.country_flag = countryX?.emoji_flag || null
         },

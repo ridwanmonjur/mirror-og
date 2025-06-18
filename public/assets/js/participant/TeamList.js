@@ -272,7 +272,7 @@ async function changeTeamsGrid(event = null) {
         })
 
 
-        if (regionFilter2 != "SEA") {
+        if (regionFilter2.region_name != regionFilter2) {
             isToBeAdded = isToBeAdded && false;
         }
 
@@ -333,11 +333,11 @@ async function fetchCountries() {
             countries.forEach((value) => {
                 if (value.type === 'region') {
                     regionsHtml += `
-                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                        <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                     `;
                 } else if (value.type === 'country') {
                     countriesOptionsHtml += `
-                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                        <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                     `;
                 }
             });

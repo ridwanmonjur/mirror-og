@@ -326,8 +326,8 @@ async function withdrawInviteMemberAction() {
 }
 
 async function fetchParticipants(event) {
-    let input = event.currentTarget;
-    let currentUrl = document.getElementById('participantMemberManageUrl').value;
+    // let input = event.currentTarget;
+    // let currentUrl = document.getElementById('participantMemberManageUrl').value;
 
     fetchData(
         url,
@@ -618,11 +618,11 @@ async function fetchCountries () {
         countries.forEach((value) => {
             if (value.type === 'region') {
                 regionsHtml += `
-                    <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                 `;
             } else if (value.type === 'country') {
                 countriesOptionsHtml += `
-                    <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                 `;
             }
         });

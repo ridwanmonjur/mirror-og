@@ -111,11 +111,11 @@ if (teamSelectElement) {
         try {
             const data = await storeFetchDataInLocalStorage('/countries');
             if (data?.data) {
-                countries = data.data;
+                let countries = data.data;
                 
                 let tomSelectOptions = [
                     { 
-                        value: '', text: '',
+                        value: '', text: 'No country/region chosen',
                     }
                 ];
                 
