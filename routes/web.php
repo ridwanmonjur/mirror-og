@@ -117,7 +117,7 @@ Route::group(['prefix' => 'participant'], function () {
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => ['check-permission:participant|admin', 'prevent-back-history']], function () {
-            Route::get('/home', [ParticipantEventController::class, 'home'])->name('participant.home.view');
+            Route::get('/home', [MiscController::class, 'showLandingPage'])->name('participant.home.view');
 
             Route::post('/friends', [SocialController::class, 'updateFriend'])->name('participant.friends.update');
             Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
