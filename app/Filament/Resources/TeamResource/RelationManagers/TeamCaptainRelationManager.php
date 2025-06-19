@@ -38,9 +38,9 @@ class TeamCaptainRelationManager extends RelationManager
                     ->label('Captain Name')
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                 ->visible(fn () => !$this->getOwnerRecord()->user()->exists())

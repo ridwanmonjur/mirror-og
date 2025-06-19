@@ -73,10 +73,14 @@ class EventCreateCouponResource extends Resource
                         Forms\Components\TimePicker::make('startTime')
                             ->required()
                             ->seconds(false)
+                            ->timezone('Asia/Kuala_Lumpur')
+                            ->displayFormat('g:i A') 
                             ->label('Start Time'),
                             
                         Forms\Components\TimePicker::make('endTime')
                             ->required()
+                            ->timezone('Asia/Kuala_Lumpur')
+                            ->displayFormat('g:i A') 
                             ->seconds(false)
                             ->label('End Time'),
                     ])->columns(2),
@@ -95,6 +99,7 @@ class EventCreateCouponResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
@@ -120,14 +125,28 @@ class EventCreateCouponResource extends Resource
                 Tables\Columns\TextColumn::make('startDate')
                     ->date()
                     ->sortable(),
-                    
-                Tables\Columns\TextColumn::make('endDate')
-                    ->date()
+                
+                Tables\Columns\TextColumn::make('startTime')
+                    ->time('h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable(),
+                    
+                Tables\Columns\TextColumn::make('startDate')
+                    ->date(),
+                
+                       
+                Tables\Columns\TextColumn::make('endTime')
+                    ->time('h:i A')
+                    ->timezone('Asia/Kuala_Lumpur'),
+                
+                Tables\Columns\TextColumn::make('endDate')
+                    ->date(),
+         
                     
                 Tables\Columns\IconColumn::make('isEnforced')
                     ->boolean()
                     ->label('Enforced'),
+
                     
              
             ])

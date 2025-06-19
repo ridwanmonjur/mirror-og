@@ -45,17 +45,19 @@ class EventInvitationsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('team.teamName')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])

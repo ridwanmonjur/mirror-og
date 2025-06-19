@@ -33,6 +33,7 @@ class ReportResource extends Resource
                     ->relationship('reportedUser', 'name')
                     ->label('Reported User')
                     ->searchable()
+                    ->different('reporter_id')
                     ->optionsLimit(10)
                     ->searchDebounce(500)
                   
@@ -64,17 +65,19 @@ class ReportResource extends Resource
                     ->sortable(),
                
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

@@ -28,8 +28,40 @@ class EventDetailResource extends Resource
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('startDate'),
                 Forms\Components\DatePicker::make('endDate'),
-                Forms\Components\TextInput::make('startTime'),
-                Forms\Components\TextInput::make('endTime'),
+                Forms\Components\DatePicker::make('sub_action_private_date')
+                    ->label('Launch Date')
+                    ->native(false)
+                    ->displayFormat('d/m/Y') // What user sees: 25/12/2024
+                    ->formatStateUsing(function ($state) {
+                        // If stored as "25/12/2024", convert to date picker format
+                        return $state ? \Carbon\Carbon::createFromFormat('d/m/Y', $state)->format('Y-m-d') : null;
+                    })
+                    ->dehydrateStateUsing(function ($state) {
+                        // Convert back to your preferred storage format
+                        return $state ? \Carbon\Carbon::parse($state)->format('d/m/Y') : null;
+                    }),
+                Forms\Components\TimePicker::make('sub_action_public_time')
+                    ->label('Launch Time')
+                    ->seconds(false)
+                    ->timezone('Asia/Kuala_Lumpur')
+                    ->displayFormat('g:i A') // Native 12-hour format
+                    ->format('H:i'), // Store as 24-hour
+            
+                Forms\Components\TimePicker::make('startTime')
+                    ->required()
+                    ->seconds(false)
+                    ->timezone('Asia/Kuala_Lumpur')
+                    ->label('Start Time')
+                    ->displayFormat('g:i A') // Native 12-hour format
+                    ->format('H:i:s'),
+                
+                Forms\Components\TimePicker::make('endTime')
+                    ->required()
+                    ->seconds(false)
+                    ->timezone('Asia/Kuala_Lumpur')
+                    ->label('End Time')
+                    ->displayFormat('g:i A') // Native 12-hour format
+                    ->format('H:i:s'),
                 Forms\Components\Textarea::make('eventDescription'),
                 Forms\Components\Section::make('Event Banner')
                     ->description('Image upload is only available when editing an existing item')
@@ -71,18 +103,15 @@ class EventDetailResource extends Resource
                                 return $path;
                     }),
                 ]),
+                
                 Forms\Components\TextInput::make('eventTags')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('status')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('venue')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('sub_action_public_date')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('sub_action_public_time')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('sub_action_private')
-                    ->maxLength(255),
+             
+             
                 Forms\Components\Select::make('user_id')
                     ->optionsLimit(10)
                     ->searchDebounce(500)
@@ -102,6 +131,9 @@ class EventDetailResource extends Resource
             ]);
     }
 
+
+    
+
     public static function table(Table $table): Table
     {
         return $table
@@ -117,6 +149,11 @@ class EventDetailResource extends Resource
                 Tables\Columns\TextColumn::make('type.eventType')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('startDate') // or any time field
+                    ->label('Start Time')
+                    ->dateTime('h:i A') // 12-hour format with AM/PM
+                    ->sortable()
+                    ->toggleable(),
             ])
           
             ->actions([

@@ -41,6 +41,7 @@ class ParticipantFollowResource extends Resource
                     ->label('Followee')
                     ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
                     ->searchable()
+                    ->different('participant_follower')
                     ->required()
                     ->relationship('followeeUser', 'name'),
             ]);
@@ -64,12 +65,14 @@ class ParticipantFollowResource extends Resource
                     ->searchable(),
                 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

@@ -46,7 +46,6 @@ class AddressRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('city')
             ->columns([
-                
                 Tables\Columns\TextColumn::make('postcode')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('city')
@@ -55,9 +54,9 @@ class AddressRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('country')
                     ->searchable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->visible(fn () => !$this->getOwnerRecord()->address()->exists())

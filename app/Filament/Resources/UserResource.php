@@ -251,12 +251,14 @@ class UserResource extends Resource
                     ->sortable(),
                
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

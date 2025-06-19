@@ -108,9 +108,9 @@ class EventTierResource extends Resource
                 Tables\Columns\TextColumn::make('tierEntryFee')
                     ->searchable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

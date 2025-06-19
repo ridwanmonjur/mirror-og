@@ -126,11 +126,13 @@ class JoinEventResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('team.teamName')
@@ -143,9 +145,9 @@ class JoinEventResource extends Resource
                 Tables\Columns\TextColumn::make('join_status'),
                
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

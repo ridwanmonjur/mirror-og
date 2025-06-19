@@ -128,19 +128,21 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('country_name')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                
               
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

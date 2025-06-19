@@ -87,7 +87,8 @@ class NotificationListRelationManager extends RelationManager
                     
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Received')
-                    ->dateTime()
+                    ->dateTime('M d, Y — h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(),
             ])

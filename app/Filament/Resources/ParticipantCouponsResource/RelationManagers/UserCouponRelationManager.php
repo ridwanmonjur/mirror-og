@@ -34,7 +34,10 @@ class UserCouponRelationManager extends RelationManager
                 
                 Forms\Components\DateTimePicker::make('redeemed_at')
                     ->label('Redeemed At')
+                    ->displayFormat('Y-m-d h:i A')
                     ->required()
+                    ->seconds(false)
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->default(now()),
                 ]
         );
@@ -56,18 +59,20 @@ class UserCouponRelationManager extends RelationManager
                 
                 Tables\Columns\TextColumn::make('redeemed_at')
                     ->label('Redeemed At')
-                    ->dateTime()
+                    ->dateTime('M d, Y — h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Record Created')
-                    ->dateTime()
+                    ->dateTime('M d, Y — h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])

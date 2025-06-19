@@ -36,16 +36,16 @@ class PTransactionsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('coupon_amount')
                     ->label('Coupon Amount')
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('RM'),
                 Forms\Components\TextInput::make('payment_amount')
                     ->label('Payment Amount')
                     ->numeric()
-                    ->prefix('$')
+                    ->prefix('RM')
                     ->required(),
                 Forms\Components\TextInput::make('released_amount')
                     ->label('Released Amount')
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('RM'),
             ]);
     }
 
@@ -79,13 +79,15 @@ class PTransactionsRelationManager extends RelationManager
                 
                 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
