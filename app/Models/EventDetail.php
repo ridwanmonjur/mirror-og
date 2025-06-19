@@ -702,6 +702,7 @@ class EventDetail extends Model implements Feedable
         ->withCount(
         ['joinEvents' => function ($q) {
             $q->where('join_status', 'confirmed');
+        }])
         ->orderBy('startDate', 'asc');
     }
 
