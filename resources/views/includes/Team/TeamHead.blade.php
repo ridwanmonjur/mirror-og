@@ -6,6 +6,7 @@
     ])
 </head>
 @php
+    $allCategorys = \App\Models\EventCategory::all(['id', 'gameTitle', 'gameIcon']);
     if (isset($user)) {
         $userId = $user->id;
         $role = $user->role;
@@ -72,6 +73,7 @@
         data-background-styles="<?php echo $backgroundStyles; ?>"
         data-font-styles="<?php echo $fontStyles; ?>"
         data-logged-user-id="{{ $loggedUserId }}"
+        data-all-categories="{{json_encode($allCategorys)}}"
         data-logged-user-role="{{ $role }}"
     >
     </div>
@@ -92,7 +94,7 @@
                     @csrf
                     <button
                         type="submit"
-                         v-if="!isEditMode"
+                        v-if="!isEditMode"
                         @class(["
                             btn rounded-pill py-2 px-4 fs-7 mt-2",
                             'btn-primary text-light' => !$isUserFollowingTeam,
@@ -370,11 +372,12 @@
             </div>
         </div>
             @if ($isCreator)
+                <div v-if="isEditMode" v-cloak>
                 <div
                     class="d-flex justify-content-center mt-2 align-items-center"
-                    v-cloak
-                     v-if="isEditMode"
+                    
                 >
+                
                     <input
                         placeholder="Enter your team description..."
                         class="form-control border-secondary player-profile__input d-inline py-2 me-3"
@@ -383,21 +386,73 @@
                         autocomplete="nope"
                         :style="{ color: fontColor,borderColor: fontColor  }"    
                     >
+                   
+                </div> 
+                <div class="d-flex justify-content-center my-3">
+                    <div v-scope="CategoryManager()" @vue:mounted="init" class="category-management">
+                        
+                        <div class="form-group my-2">
+                            {{-- <label for="default-category">Default Category</label> --}}
+                            <select id="default-category">
+                                <option value="">Select Default Category</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            {{-- <label for="other-categories">Other Categorys</label> --}}
+                            <select  id="other-categories" multiple>
+                            </select>
+                        </div>
+
+                        {{-- <button v-on:click="saveCategorys" class="save-btn">Save Categorys</button>
+                        <button v-on:click="loadExternalState" class="save-btn" style="background: #6c757d;">Load External State</button> --}}
+
+                        <!-- Display Current Selection -->
+                        <div class="category-info" v-if="state.defaultCategory || state.otherCategorys.length > 0">
+                            <h3>Current Selection:</h3>
+                            
+                            <div v-if="state.defaultCategory">
+                                <h4>Default Category:</h4>
+                                <div class="category-item">
+                                    <img :src="getDefaultCategoryIcon()" alt="category icon" class="category-icon" v-if="getDefaultCategoryIcon()">
+                                    <span v-html="getDefaultCategoryName()"></span>
+                                </div>
+                            </div>
+
+                            <div v-if="state.otherCategorys.length > 0">
+                                <h4>Other Categorys:</h4>
+                                <div v-for="categoryId in state.otherCategorys" :key="categoryId" class="category-item">
+                                    <img :src="getCategoryIcon(categoryId)" alt="category icon" class="category-icon" v-if="getCategoryIcon(categoryId)">
+                                    <span>@{{ getCategoryName(categoryId) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="state-display">
+                                <strong>Formatted Data:</strong><br>
+                                Default Category ID: @{{ state.defaultCategory }}<br>
+                                Other Categorys: @{{ formatOtherCategorys() }}<br>
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                </div>
+                <div class="d-flex justify-content-center my-3">
                     <span
                         v-on:click="submitEditProfile(event);"
                         data-url="{{route('participant.team.update')}}"
                         :style="{  borderColor: fontColor, color: fontColor  }" 
-                        class="rounded-3 btn  px-3 py-1  rounded cursor-pointer me-3 mx-auto  ">
+                        class="rounded-3 btn  px-3 py-1  rounded cursor-pointer me-3   ">
                         Save
                     </span>
-                    {{-- Close icon --}}
                     <svg
                         v-on:click="reset();isEditMode = false;"
-                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red position-relative " viewBox="0 0 16 16">
+                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red " viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                    </svg>
+                    </svg> 
                 </div>
+                </div> 
                 @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
                     <div class="my-3" v-cloak  v-if="!isEditMode">
                         <span class="ms-2" >{{$selectTeam->teamDescription}}</span>

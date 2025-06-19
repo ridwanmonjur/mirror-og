@@ -15,7 +15,7 @@ let membersCountServerValue = JSON.parse(membersCountServer.value);
 let countServerValue = Number(countServer.value);
 let userIdServerValue = Number(userIdServer.value);
 let filterSortResultsDiv = document.getElementById('filter-sort-results');
-let isModeMyTeams = false;
+let isModeMyTeams = true;
 console.log({
     teamListServerValue,
     membersCountServerValue,
@@ -248,13 +248,16 @@ function sortTeams(arr, sortKey, sortOrder) {
 async function changeTeamsGrid(event = null) {
     let formData = new FormData(newTeamsForm);
     let sortedTeams = sortTeams(teamListServerValue, formData.get("sortKeys"), formData.get("sortType"));
+    console.log({sortedTeams});
+    console.log({sortedTeams});
+    console.log({sortedTeams});
     filteredSortedTeams = [];
 
     for (let sortedTeam of sortedTeams) {
         let isToBeAdded = true;
         let nameFilter = String(formData.get('search')).toLowerCase().trim();
         // let regionFilter = formData.get('region');
-        let regionFilter2 = formData.get('region2');
+        let regionFilter2 = formData.get('region');
         let esportsTitleFilter = formData.get('esports_title');
         let createdAtFilter = formData.get('created_at');
         let statusListFilter = formData.getAll('status');
@@ -267,12 +270,11 @@ async function changeTeamsGrid(event = null) {
             isToBeAdded = isToBeAdded && false;
         }
 
-        console.log({
-            regionFilter2, esportsTitleFilter
-        })
 
-
-        if (regionFilter2.region_name != regionFilter2) {
+        if ( regionFilter2 != "" && sortedTeam.country_name != regionFilter2) {
+            console.log({
+                regionFilter2, esportsTitleFilter, country: sortedTeam.country_name
+            })
             isToBeAdded = isToBeAdded && false;
         }
 

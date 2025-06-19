@@ -35,7 +35,6 @@ class SignupRelationManager extends RelationManager
                     ->native(false) 
                     ->displayFormat('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-
                     ->required(),
             ]);
     }

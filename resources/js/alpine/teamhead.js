@@ -1,12 +1,193 @@
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
-import { createApp } from "petite-vue";
+import { createApp, reactive } from "petite-vue";
+import TomSelect from "tom-select";
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
     resetBg(teamData?.profile ?? null);
 })
+
+const storage = document.querySelector('.team-head-storage');
+
+const routes = {
+    allCategories: storage.dataset.allCategories
+};
+
+// External state management for categories
+const CategoryState = {
+    _state: reactive({
+        defaultCategory: '',
+        otherCategories: [],
+        allCategories: []
+    }),
+
+    init() {
+        this._state.defaultCategory = teamData?.profile?.defaultCategory || '';
+        this._state.otherCategories = this.parseOtherCategories(teamData.profile.otherCategories || '');
+        this._state.allCategories = routes.allCategories;
+        console.log(this._state.defaultCategory);
+        console.log(this._state.otherCategories);
+        console.log(this._state.allCategories);
+    },
+
+    parseOtherCategories(otherCategoriesString) {
+        if (!otherCategoriesString) return [];
+        return otherCategoriesString.split('|').filter(id => id !== '').map(id => parseInt(id));
+    },
+
+    formatOtherCategories(categoryArray = null) {
+        const categories = categoryArray || this._state.otherCategories;
+        if (categories?.length === 0) return '';
+        return '|' + categories.join('|') + '|';
+    },
+
+    get defaultCategory() {
+        return this._state.defaultCategory;
+    },
+
+    get otherCategories() {
+        return this._state.otherCategories;
+    },
+
+    get allCategories() {
+        return this._state.allCategories;
+    },
+
+    get state() {
+        return this._state;
+    },
+
+    setDefaultCategory(categoryId) {
+        this._state.defaultCategory = categoryId;
+    },
+
+    setOtherCategories(categoryIds) {
+        this._state.otherCategories = categoryIds;
+    },
+
+    addOtherCategory(categoryId) {
+        if (!this._state.otherCategories.includes(categoryId)) {
+            this._state.otherCategories.push(categoryId);
+        }
+    },
+
+    removeOtherCategory(categoryId) {
+        const index = this._state.otherCategories.indexOf(categoryId);
+        if (index > -1) {
+            this._state.otherCategories.splice(index, 1);
+        }
+    },
+
+    getCategoryById(id) {
+        return this._state.allCategories.find(category => category.id == id);
+    },
+
+    getCategoryName(id) {
+        const category = this.getCategoryById(id);
+        return category ? category.eventCategory : 'Unknown Category';
+    },
+
+    getCategoryIcon(id) {
+        const category = this.getCategoryById(id);
+        return category ? category.categoryIcon : null;
+    },
+
+    getDefaultCategoryName() {
+        return this.getCategoryName(this._state.defaultCategory);
+    },
+
+    getDefaultCategoryIcon() {
+        return this.getCategoryIcon(this._state.defaultCategory);
+    },
+
+    getDataForSaving() {
+        return {
+            default_category_id: this._state.defaultCategory || null,
+            other_categories: this.formatOtherCategories()
+        };
+    },
+
+    reset() {
+        this._state.defaultCategory = '';
+        this._state.otherCategories = [];
+    }
+};
+
+function CategoryManager() {
+   
+    return {
+
+    init() {
+        CategoryState.init();
+        this.initializeTomSelect();
+    },
+
+    initializeTomSelect() {
+        new TomSelect('#default-category', {
+            valueField: 'id',
+            labelField: 'eventCategory',
+            searchField: 'eventCategory',
+            options: CategoryState.allCategories,
+            items: CategoryState.defaultCategory ? [CategoryState.defaultCategory] : [],
+            render: {
+                option: function(data, escape) {
+                    return `<div class="category-option">
+                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 20px; height: 20px; margin-right: 8px;">` : ''}
+                        <span>${escape(data.eventCategory)}</span>
+                    </div>`;
+                },
+                item: function(data, escape) {
+                    return `<div>
+                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 16px; height: 16px; margin-right: 5px;">` : ''}
+                        ${escape(data.eventCategory)}
+                    </div>`;
+                }
+            },
+            onChange: function(value) {
+                CategoryState.setDefaultCategory(value);
+            }
+        });
+
+        new TomSelect('#other-categories', {
+            valueField: 'id',
+            labelField: 'eventCategory',
+            searchField: 'eventCategory',
+            options: CategoryState.allCategories,
+            items: CategoryState.otherCategories.map(String),
+            plugins: ['remove_button'],
+            render: {
+                option: function(data, escape) {
+                    return `<div class="category-option">
+                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 20px; height: 20px; margin-right: 8px;">` : ''}
+                        <span>${escape(data.eventCategory)}</span>
+                    </div>`;
+                },
+                item: function(data, escape) {
+                    return `<div>
+                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 16px; height: 16px; margin-right: 5px;">` : ''}
+                        ${escape(data.eventCategory)}
+                    </div>`;
+                }
+            },
+            onChange: function(values) {
+                CategoryState.setOtherCategories(values.map(v => parseInt(v)));
+            }
+        });
+    },
+
+   
+    state: CategoryState.state,
+    formatOtherCategories: () => CategoryState.formatOtherCategories(),
+    getCategoryName: (id) => CategoryState.getCategoryName(id),
+    getCategoryIcon: (id) => CategoryState.getCategoryIcon(id),
+    getDefaultCategoryName: () => CategoryState.getDefaultCategoryName(),
+    getDefaultCategoryIcon: () => CategoryState.getDefaultCategoryIcon(),
+    };
+}
+
+
 
 initOffCanvasListeners();
 teamData.fontColor = teamData?.profile?.fontColor ?? '#2e4b59';
@@ -213,6 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
         TeamHead,
         ProfileData,
         ReportFormData,
+        CategoryManager
     }).mount('.teamhead');
 });
 
