@@ -79,9 +79,12 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/organizer/follow', [SocialController::class, 'followOrganizer'])->name('participant.organizer.follow');
             Route::post('/profile', [ParticipantController::class, 'editProfile'])->name('participant.profile.update');
             Route::post('/team', [ParticipantTeamController::class, 'editTeam'])->name('participant.team.update');
+
             Route::post('/team/{id}/user/{userId}/invite', [ParticipantTeamController::class, 'inviteMember'])->name('participant.member.invite');
             Route::post('/team/{id}/member/{memberId}/captain', [ParticipantTeamController::class, 'captainMember'])->name('participant.member.captain');
             Route::post('/team/{id}/member/{memberId}/deleteCaptain', [ParticipantTeamController::class, 'deleteCaptain'])->name('participant.member.deleteCaptain');
+
+            // TODO check memebers
             Route::post('/team/member/{id}/update', [ParticipantTeamController::class, 'updateTeamMember'])->name('participant.member.update');
             Route::post('/team/member/{id}/deleteInvite', [ParticipantTeamController::class, 'withdrawInviteMember'])->name('participant.member.deleteInvite');
             Route::post('/team/member/{id}/rejectInvite', [ParticipantTeamController::class, 'rejectInviteMember'])->name('participant.member.rejectInvite');
