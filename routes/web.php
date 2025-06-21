@@ -117,7 +117,7 @@ Route::group(['prefix' => 'participant'], function () {
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => ['check-permission:participant|admin', 'prevent-back-history']], function () {
-            Route::get('/home', [ParticipantEventController::class, 'home'])->name('participant.home.view');
+            Route::get('/home', [MiscController::class, 'showLandingPage'])->name('participant.home.view');
 
             Route::post('/friends', [SocialController::class, 'updateFriend'])->name('participant.friends.update');
             Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
@@ -139,6 +139,8 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/team/roster/captain', [ParticipantRosterController::class, 'captainRosterMember'])->name('participant.roster.captain');
             Route::post('/team/create', [ParticipantTeamController::class, 'teamStore'])->name('participant.team.store');
             Route::post('/team/{id}/follow', [ParticipantTeamController::class, 'teamFollow'])->name('participant.team.follow');
+
+            // TODO check memebers
             Route::post('/team/member/{id}/pending', [ParticipantTeamController::class, 'pendingTeamMember'])->name('participant.member.pending');
 
             // Event management

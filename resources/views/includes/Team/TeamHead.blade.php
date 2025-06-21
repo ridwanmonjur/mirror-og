@@ -4,8 +4,54 @@
         'resources/js/app.js',
         'resources/js/alpine/teamhead.js',
     ])
+    <style>
+        .category-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .category-button {
+            max-width: 150px;
+        }
+
+        .category-input {
+            width: 200px;
+        }
+
+        .ts-wrapper {
+            display: inline-block !important;
+            background-color: white;
+        }
+        .ts-control {
+            background-color: white;
+            color: black;
+            width: 200px !important;
+            padding-top: 0.4rem !important;
+            padding-bottom: 0.4rem !important;
+        }
+
+        #backgroundBanner svg:hover {
+           scale: 1.2;
+        }
+
+        #backgroundBanner svg:active {
+            fill: white !important;
+            stroke: white !important;
+            animation-duration: 3s;
+        }
+    </style>
 </head>
 @php
+    $allCategorys = \App\Models\EventCategory::all(['id', 'gameTitle', 'gameIcon'])
+        ->mapWithKeys(function ($category) {
+            return [
+                $category->id => [
+                    'id' => $category->id,
+                    'gameTitle' => $category->gameTitle,
+                    'gameIcon' => $category->gameIcon,
+                ],
+            ];
+        });
     if (isset($user)) {
         $userId = $user->id;
         $role = $user->role;
@@ -72,6 +118,7 @@
         data-background-styles="<?php echo $backgroundStyles; ?>"
         data-font-styles="<?php echo $fontStyles; ?>"
         data-logged-user-id="{{ $loggedUserId }}"
+        data-all-categories="{{json_encode($allCategorys)}}"
         data-logged-user-role="{{ $role }}"
     >
     </div>
@@ -92,7 +139,7 @@
                     @csrf
                     <button
                         type="submit"
-                         v-if="!isEditMode"
+                        v-if="!isEditMode"
                         @class(["
                             btn rounded-pill py-2 px-4 fs-7 mt-2",
                             'btn-primary text-light' => !$isUserFollowingTeam,
@@ -370,34 +417,69 @@
             </div>
         </div>
             @if ($isCreator)
+                <div v-if="isEditMode" v-cloak>
                 <div
                     class="d-flex justify-content-center mt-2 align-items-center"
-                    v-cloak
-                     v-if="isEditMode"
+                    
                 >
+                
                     <input
                         placeholder="Enter your team description..."
-                        class="form-control border-secondary player-profile__input d-inline py-2 me-3"
+                        class="form-control border-secondary player-profile__input d-inline-block py-2 me-3"
                         v-model="teamDescription"
                         autocomplete="off"
                         autocomplete="nope"
-                        :style="{ color: fontColor,borderColor: fontColor  }"    
+                        :style="{ color: fontColor, borderColor: fontColor, width: 'min(100vw,450px)'  }"    
                     >
+                   
+                </div> 
+                <div class=" my-3">
+                    <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
+                        <div class="d-inline-flex mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
+                            <div class=" d-flex flex-col rounded-2 justify-content-between align-items-between px-3 py-1 btn-light text-primary  mx-1"
+                                :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
+                                :style="{ color: fontColor, borderColor: fontColor  }"
+                            >
+                                <div class="category-button d-inline-block text-ellipsis me-2">@{{ element?.gameTitle }}</div>
+                                <span class="ms-2">
+                                    <small class="cursor-pointer" v-if="element.id == defaultCategory">
+                                        <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f3ecec" stroke="#f3ecec"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 8 0 c -4.40625 0 -8 3.59375 -8 8 s 3.59375 8 8 8 s 8 -3.59375 8 -8 s -3.59375 -8 -8 -8 z m 3.398438 4.507812 c 0.265624 -0.027343 0.527343 0.050782 0.734374 0.21875 c 0.425782 0.351563 0.488282 0.980469 0.140626 1.40625 l -4.5 5.5 c -0.179688 0.21875 -0.441407 0.351563 -0.722657 0.367188 c -0.28125 0.011719 -0.558593 -0.09375 -0.757812 -0.292969 l -2.5 -2.5 c -0.390625 -0.390625 -0.390625 -1.023437 0 -1.414062 s 1.023437 -0.390625 1.414062 0 l 1.71875 1.71875 l 3.800781 -4.644531 c 0.167969 -0.203126 0.410157 -0.335938 0.671876 -0.363282 z m 0 0" fill="#43a4d7"></path> </g></svg>
+                                    </small>
+                                    <small v-else class="cursor-pointer invisible-until-hover" v-on:click="makeDefaultCategory(event, element.id)">
+                                        <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f3ecec" stroke="#f3ecec"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 8 0 c -4.40625 0 -8 3.59375 -8 8 s 3.59375 8 8 8 s 8 -3.59375 8 -8 s -3.59375 -8 -8 -8 z m 3.398438 4.507812 c 0.265624 -0.027343 0.527343 0.050782 0.734374 0.21875 c 0.425782 0.351563 0.488282 0.980469 0.140626 1.40625 l -4.5 5.5 c -0.179688 0.21875 -0.441407 0.351563 -0.722657 0.367188 c -0.28125 0.011719 -0.558593 -0.09375 -0.757812 -0.292969 l -2.5 -2.5 c -0.390625 -0.390625 -0.390625 -1.023437 0 -1.414062 s 1.023437 -0.390625 1.414062 0 l 1.71875 1.71875 l 3.800781 -4.644531 c 0.167969 -0.203126 0.410157 -0.335938 0.671876 -0.363282 z m 0 0" fill="#43a4d7"></path> </g></svg>
+                                    </small>
+                                    <small class="cursor-pointer" v-on:click="removeCategory(event, element.id)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red " viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"></path>
+                                        </svg>
+                                    </small>
+                                </span>
+                            </div>
+                        </div>
+                        <select id="default-category" class="category-input text-start" >
+                            <option value="">Select Game</option>
+                        </select>
+                    </div>
+
+                  
+                </div>
+                <div class="d-flex justify-content-center my-3">
                     <span
                         v-on:click="submitEditProfile(event);"
                         data-url="{{route('participant.team.update')}}"
                         :style="{  borderColor: fontColor, color: fontColor  }" 
-                        class="rounded-3 btn  px-3 py-1  rounded cursor-pointer me-3 mx-auto  ">
+                        class="rounded-3 btn  px-3 py-1  rounded cursor-pointer me-3   ">
                         Save
                     </span>
-                    {{-- Close icon --}}
                     <svg
                         v-on:click="reset();isEditMode = false;"
-                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red position-relative " viewBox="0 0 16 16">
+                        xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red " viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                    </svg>
+                    </svg> 
                 </div>
+                </div> 
                 @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
                     <div class="my-3" v-cloak  v-if="!isEditMode">
                         <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
@@ -413,32 +495,53 @@
                  @endif
             @endif
             <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
-                <div class="col-12 col-lg-4 text-center mx-auto"> 
-                    <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                        width="25px" height="25px" viewBox="0 0 96.979 96.979" xml:space="preserve" class="me-2"
-                    ><g id="SVGRepo_bgCarrier" stroke-width="0">
-                        </g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M59.07,46.021L59.07,46.021c4.576-3.373,7.31-8.754,7.31-14.393c0-9.863-8.025-17.889-17.89-17.889 c-9.864,0-17.889,8.025-17.889,17.889c0,5.717,2.66,10.959,7.297,14.385c-18.244,6.451-21.092,28.71-21.531,35.378 c-0.031,0.479,0.137,0.949,0.465,1.3c0.328,0.35,0.785,0.549,1.264,0.549h60.788c0.479,0,0.938-0.199,1.266-0.549 c0.328-0.351,0.496-0.82,0.465-1.3C80.175,74.736,77.32,52.511,59.07,46.021z"></path> <path d="M82.761,46.861c3.02-2.227,4.821-5.779,4.821-9.502c0-6.508-5.297-11.805-11.807-11.805c-1.867,0-3.627,0.447-5.199,1.223 c0.345,1.564,0.529,3.184,0.529,4.852c0,4.68-1.484,9.219-4.137,12.988c10.448,6.572,14.981,18.07,16.944,26.81h11.923 c0.315,0,0.618-0.131,0.836-0.361c0.215-0.23,0.325-0.541,0.305-0.857C96.688,65.812,94.805,51.144,82.761,46.861z"></path> <path d="M29.976,44.617c-2.654-3.748-4.104-8.238-4.104-12.988c0-1.668,0.188-3.287,0.531-4.852 c-1.572-0.775-3.332-1.223-5.199-1.223c-6.51,0-11.807,5.297-11.807,11.805c0,3.775,1.754,7.236,4.816,9.496 C2.172,51.113,0.291,65.806,0.002,70.207c-0.021,0.316,0.09,0.627,0.307,0.857c0.217,0.229,0.52,0.36,0.836,0.36H13.06 C15.019,62.685,19.543,51.179,29.976,44.617z"></path> </g> </g> </g>
-                    </svg>
-                    <span>{{$acceptedTeamMemberCount}}/{{$leftPlusAcceptedTeamMemberCount}} Members </span>
+                <div class="col-12 mb-2 mt-0">
+                    <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
+                        <div class="d-inline-flex cursor-pointer mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
+                            <div class=" d-flex flex-col rounded-2 justify-content-between align-items-between px-3 py-1 btn-light text-primary  mx-1"
+                                :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
+                                :style="{ color: fontColor, borderColor: fontColor  }"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                v-bind:title="element.gameTitle"
+                            >
+                                <div class="category-button d-inline-block text-ellipsis me-2">@{{ element?.gameTitle }}</div>
+                                <span>
+                                    <small class="cursor-pointer" v-if="element.id == defaultCategory">
+                                        <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f3ecec" stroke="#f3ecec"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 8 0 c -4.40625 0 -8 3.59375 -8 8 s 3.59375 8 8 8 s 8 -3.59375 8 -8 s -3.59375 -8 -8 -8 z m 3.398438 4.507812 c 0.265624 -0.027343 0.527343 0.050782 0.734374 0.21875 c 0.425782 0.351563 0.488282 0.980469 0.140626 1.40625 l -4.5 5.5 c -0.179688 0.21875 -0.441407 0.351563 -0.722657 0.367188 c -0.28125 0.011719 -0.558593 -0.09375 -0.757812 -0.292969 l -2.5 -2.5 c -0.390625 -0.390625 -0.390625 -1.023437 0 -1.414062 s 1.023437 -0.390625 1.414062 0 l 1.71875 1.71875 l 3.800781 -4.644531 c 0.167969 -0.203126 0.410157 -0.335938 0.671876 -0.363282 z m 0 0" fill="#43a4d7"></path> </g></svg>
+                                    </small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div onclick="openModal('followers')" class="user-select-none position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
-                    style="z-index: 998 !important; "
-                > 
-                    <span class="me-2"> 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                <div class="row col-12">
+                    <div class="col-12 col-lg-4 text-center mx-auto"> 
+                        <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                            width="25px" height="25px" viewBox="0 0 96.979 96.979" xml:space="preserve" class="me-2"
+                        ><g id="SVGRepo_bgCarrier" stroke-width="0">
+                            </g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M59.07,46.021L59.07,46.021c4.576-3.373,7.31-8.754,7.31-14.393c0-9.863-8.025-17.889-17.89-17.889 c-9.864,0-17.889,8.025-17.889,17.889c0,5.717,2.66,10.959,7.297,14.385c-18.244,6.451-21.092,28.71-21.531,35.378 c-0.031,0.479,0.137,0.949,0.465,1.3c0.328,0.35,0.785,0.549,1.264,0.549h60.788c0.479,0,0.938-0.199,1.266-0.549 c0.328-0.351,0.496-0.82,0.465-1.3C80.175,74.736,77.32,52.511,59.07,46.021z"></path> <path d="M82.761,46.861c3.02-2.227,4.821-5.779,4.821-9.502c0-6.508-5.297-11.805-11.807-11.805c-1.867,0-3.627,0.447-5.199,1.223 c0.345,1.564,0.529,3.184,0.529,4.852c0,4.68-1.484,9.219-4.137,12.988c10.448,6.572,14.981,18.07,16.944,26.81h11.923 c0.315,0,0.618-0.131,0.836-0.361c0.215-0.23,0.325-0.541,0.305-0.857C96.688,65.812,94.805,51.144,82.761,46.861z"></path> <path d="M29.976,44.617c-2.654-3.748-4.104-8.238-4.104-12.988c0-1.668,0.188-3.287,0.531-4.852 c-1.572-0.775-3.332-1.223-5.199-1.223c-6.51,0-11.807,5.297-11.807,11.805c0,3.775,1.754,7.236,4.816,9.496 C2.172,51.113,0.291,65.806,0.002,70.207c-0.021,0.316,0.09,0.627,0.307,0.857c0.217,0.229,0.52,0.36,0.836,0.36H13.06 C15.019,62.685,19.543,51.179,29.976,44.617z"></path> </g> </g> </g>
                         </svg>
-                    </span>
-                    <span data-follower-stats="{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam->profile->follower_count}}" >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bldPlural($selectTeam->profile->follower_count) }} </span>
+                        <span>{{$acceptedTeamMemberCount}}/{{$leftPlusAcceptedTeamMemberCount}} Members </span>
+                    </div>
+                    <div onclick="openModal('followers')" class="user-select-none position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
+                        style="z-index: 998 !important; "
+                    > 
+                        <span class="me-2"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                            </svg>
+                        </span>
+                        <span data-follower-stats="{{ is_null($selectTeam?->profile?->follower_count) ? 0 : $selectTeam->profile->follower_count}}" >{{ is_null($selectTeam?->profile?->follower_count) ? 0 . ' Followers'  : $selectTeam->profile->follower_count. ' Follower'. bldPlural($selectTeam->profile->follower_count) }} </span>
+                    </div>
+                    <div class="col-12 col-lg-4 text-center mx-auto"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-2 bi-calendar-date" viewBox="0 0 16 16">
+                        <path d="M6.445 11.688V6.354h-.633A13 13 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23"/>
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                        </svg>
+                        {{$selectTeam->createdAtHumaReadable()}}
+                    </div>
                 </div>
-                <div class="col-12 col-lg-4 text-center mx-auto"> 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-2 bi-calendar-date" viewBox="0 0 16 16">
-                    <path d="M6.445 11.688V6.354h-.633A13 13 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23"/>
-                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                    </svg>
-                    {{$selectTeam->createdAtHumaReadable()}}
-                </div>
-            
             </div>
             @if ($status == "accepted_me" || $status == "accepted_team")
                 <div v-cloak class="position-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2" style="bottom: 20px;">

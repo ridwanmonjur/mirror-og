@@ -116,6 +116,7 @@
         <span class="search-hint">press enter to search</span>
     </div>
     <div class=" nav-buttons search-bar-mobile d-centered-at-mobile py-2" style="font-size: 14px;">
+    @guest
     <!-- Main Navigation Links -->
     <div class="nav-item mb-2">
         <a class="nav-link py-1 {{ $currentRoute === 'public.landing.view' ? 'text-primary' : 'text-dark' }} text-center" 
@@ -141,9 +142,7 @@
             CONTACT
         </a>
     </div>
-    
-    <!-- Authentication Links -->
-    @guest
+   
         <a class="py-1" href="{{ route('organizer.signin.view') }}" 
            title="Organizer Sign In - Access your event management dashboard"
            aria-label="Sign in as event organizer">

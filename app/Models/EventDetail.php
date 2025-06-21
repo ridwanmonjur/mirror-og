@@ -702,7 +702,8 @@ class EventDetail extends Model implements Feedable
         ->withCount(
         ['joinEvents' => function ($q) {
             $q->where('join_status', 'confirmed');
-        }]);
+        }])
+        ->orderBy('startDate', 'asc');
     }
 
     public static function filterEventsFull(Request $request)
@@ -730,6 +731,13 @@ class EventDetail extends Model implements Feedable
 
         $eventListQuery->when($request->has('filter'), function ($query) use ($request) {
             $filter = $request->input('filter');
+            if (array_key_exists('venue', $filter)) {
+                if (isset($filter['venue'][0])) {
+                    $search = trim($filter['venue'][0]);
+                    $query->where('venue', $search);
+                }
+                
+            }
             if (array_key_exists('eventTier[]', $filter)) {
                 if (isset($filter['eventTier[]'][0])) {
                     $query->whereIn('event_tier_id', $filter['eventTier[]']);

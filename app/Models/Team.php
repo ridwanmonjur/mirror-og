@@ -24,7 +24,10 @@ class Team extends Model
 
     protected $table = 'teams';
 
-    protected $fillable = ['teamName', 'teamBanner', 'creator_id', 'teamDescription', 'country', 'country_name', 'country_flag'];
+    protected $fillable = ['teamName', 'teamBanner', 'creator_id', 'teamDescription', 
+        'country', 'country_name', 'country_flag', 
+        'default_category_id',  'all_categories', 'status'
+    ];
 
     public function user(): BelongsTo
     {
@@ -157,11 +160,54 @@ class Team extends Model
         ->findOrFail($teamId);
     }
 
+    public static function getFilteredUserTeams(array $filters, int|string $user_id): array
+    {
+        $teamQuery = self::query();
+        // $teamQuery = self::whereHas('members', function ($query) use ($user_id) {
+        //     // $query->where('user_id', $user_id)->whereNot('status', 'accepted');
+        // });
+
+        // if (!empty($filters['status']) && is_array($filters['status'])) {
+        //     $teamQuery->whereIn('status', $filters['status']);
+        // }
+        
+        if (!empty($filters['region']) && trim($filters['region']) !== '') {
+            $teamQuery->where('country_name', $filters['region']);
+        }
+        
+        if (!empty($filters['esports_title']) && trim($filters['esports_title']) !== '') {
+            $teamQuery->where('all_categories', 'like', '%' . $filters['esports_title'] . '%');
+        }
+        
+        if (!empty($filters['created_at']) && trim($filters['created_at']) !== '') {
+            $teamQuery->whereDate('created_at', '>', $filters['created_at']);
+        }
+        
+
+        $teamList = $teamQuery->get();
+        $teamIdList = $teamList->pluck('id')->toArray();
+
+        $membersCount = $teamIdList
+            ? self::getTeamMembersCountForEachTeam($teamIdList)
+            : 0;
+
+        $count = $teamList->count();
+
+        return [
+            'teamList' => $teamList,
+            'teamIdList' => $teamIdList,
+            'membersCount' => $membersCount,
+            'count' => $count,
+        ];
+    }
+
+
     public static function getUserTeamListAndPluckIds(int| string $user_id): array
     {
         $teamList = self::whereHas('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id)->where('status', 'accepted');
         })
+            // ->with('profile:id,team_id,all_categories,default_category_id')
             ->get();
 
         $teamIdList = $teamList->pluck('id')->toArray();

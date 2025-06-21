@@ -108,7 +108,7 @@ class PaymentsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('payment_amount')
                     ->label('Payment Amount')
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('RM '),
             ]);
     }
 
@@ -132,12 +132,14 @@ class PaymentsRelationManager extends RelationManager
                     ->sortable(),
                     
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                     
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

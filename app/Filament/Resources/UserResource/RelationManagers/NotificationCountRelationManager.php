@@ -46,6 +46,7 @@ class NotificationCountRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+
         return $table
             ->recordTitleAttribute('id')
             ->columns([
@@ -59,11 +60,13 @@ class NotificationCountRelationManager extends RelationManager
                     ->label('Event Notifications'),
                     
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('M d, Y — h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable(),
                     
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->timezone('Asia/Kuala_Lumpur')
+                    ->dateTime('M d, Y — h:i A') 
                     ->sortable(),
             ])
             ->headerActions([

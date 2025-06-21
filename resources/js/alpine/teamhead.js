@@ -1,12 +1,207 @@
 import { DateTime } from "luxon";
 import { initOffCanvasListeners, resetBg } from "../custom/resetBg";
 import { ProfileData, openModal, ReportFormData } from "../custom/followers";
-import { createApp } from "petite-vue";
+import { createApp, reactive } from "petite-vue";
+import TomSelect from "tom-select";
 
 const myOffcanvas = document.getElementById('profileDrawer');
 myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
     resetBg(teamData?.profile ?? null);
 })
+
+const storage = document.querySelector('.team-head-storage');
+
+const routes = {
+    allCategories: storage.dataset.allCategories
+};
+
+let allCategories = JSON.parse(routes.allCategories);
+let allCategoryArray = Object.values(allCategories);
+
+// External state management for categories
+const CategoryState = {
+    initialized: false,
+    _state: reactive({
+        defaultCategory: '',
+        userCategories: '',
+        userCategoriesArr: [],
+    }),
+
+    init() {
+        if (!this.initialized) {
+            if (teamData){
+                this._state.defaultCategory = teamData?.default_category_id || '';
+                let userCategories = teamData.all_categories || '';
+                this._state.userCategories = userCategories;
+                this._state.userCategoriesArr = [...this.parseAllCategories(userCategories)];
+                this.initialized = true;
+                console.log(userCategories, this.parseAllCategories(userCategories));
+            }
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
+                const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                if (existingTooltip) {
+                    existingTooltip.dispose();
+                }
+                return new window.bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
+    },
+
+    stringifyCategories(categoriesArray) {
+        let newString = '';
+        if (!categoriesArray || !categoriesArray[0]) return newString;
+        categoriesArray.forEach(element => {
+            newString += `|${element.id}|`;
+        });
+        return newString;
+    },
+
+    parseAllCategories(userCategories) {
+        if (!userCategories || typeof userCategories !== 'string') return [];
+    
+        const ids = userCategories
+            .split('|')
+            .filter(id => id !== '') // Removes leading/trailing empty strings
+            .map(id => parseInt(id))
+            .filter(id => !isNaN(id));
+    
+        return ids
+            .map(id => allCategories[id] ?? allCategories[id.toString()] ?? null)
+            .filter(Boolean);
+    },
+    
+
+    addCategory(categoryId) {
+        let checkExists = allCategories[categoryId];
+        if (!checkExists) {
+            window.Swal.fire({
+                icon: 'error',
+                text: 'The chosen game no longer exists!'
+            })
+            return; 
+        }
+        
+        let foundElement = this._state.userCategoriesArr?.find(element => element.id == categoryId);
+        if (foundElement) {
+            window.Swal.fire({
+                icon: 'error',
+                text: 'You have already added this game!',
+                confirmButtonColor: '#43a4d7'
+            })
+            
+            return; 
+        } else {
+            let isDefaultInCurrent = this._state.userCategoriesArr?.find(element => element.id == this._state.defaultCategory);
+            if (!isDefaultInCurrent) {
+                this._state.defaultCategory = categoryId;
+            }
+
+            this._state.userCategoriesArr.push(allCategories[categoryId]);
+            this._state.userCategories = this.stringifyCategories(this._state.userCategoriesArr);
+        }
+    },
+
+    removeCategory(event, categoryId) {
+        if (!event) return;
+
+        this._state.userCategoriesArr = this._state.userCategoriesArr?.filter(
+            element => element.id != categoryId
+        );       
+
+        this._state.userCategories = this.stringifyCategories(this._state.userCategoriesArr);
+    },
+
+    makeDefaultCategory(event, categoryId) {
+        if (!event) return;
+        this._state.defaultCategory = categoryId;
+        let category = allCategories[categoryId];
+        if (!category) {
+            window.Swal.fire({
+                icon: 'error',
+                text: 'The chosen game no longer exists!'
+            })
+            return; 
+        }
+
+        window.Swal.fire({
+            title: 'Default Category Updated',
+            html: `
+                <p>You have made ${category.gameTitle} your default category! Please save to persist this change.</p>
+                <img src="/storage/${category.gameIcon}" onerror="this.src='/images/default-fallback.png'" width="64" height="64">
+            `,
+            confirmButtonColor: '#43a4d7'
+        });
+    },
+    
+};
+
+function CategoryManager() {
+   
+    return {
+
+    init() {
+        CategoryState.init();
+        this.initializeTomSelect();
+        console.log(CategoryState._state);
+    },
+
+    get userCategoriesArr() {
+        return CategoryState._state.userCategoriesArr;
+    },
+
+    get defaultCategory() {
+        return CategoryState._state.defaultCategory;
+    },
+    initializeTomSelect() {
+        const categoryEl = document.querySelector('#default-category');
+
+        if (categoryEl && !categoryEl.tomselect) {
+            new TomSelect(categoryEl, {
+                valueField: 'id',
+                labelField: 'gameTitle',
+                searchField: 'gameTitle',
+                options: allCategoryArray,
+                items: [],
+                onItemAdd: function(value, item) {
+                    const self = this;
+                    this.close();
+                    this.setTextboxValue('');
+                    setTimeout(() => {
+                        self.blur();
+                        self.control_input.blur();
+                    }, 50);
+                },
+                render: {
+                    option: function(data, escape) {
+                        return `<div class="category-input text-truncate">
+                            ${data.gameIcon ? `<img src="${escape('/storage/' + data.gameIcon)}" class="category-icon me-2">` : ''}
+                            <span>${escape(data.gameTitle)}</span>
+                        </div>`;
+                    },
+                    item: function(data, escape) {
+                        return `<div class="category-input text-truncate">
+                            ${data.gameIcon ? `<img src="${escape('/storage/' + data.gameIcon)}" class="category-icon me-2">` : ''}
+                            <span>${escape(data.gameTitle)}</span>
+                        </div>`;
+                    }
+                },
+                onChange: function(value) {
+                    CategoryState.addCategory(value);
+                }
+            });
+        }
+    },
+   
+    removeCategory: (event, categoryId) => CategoryState.removeCategory(event, categoryId),
+    makeDefaultCategory: (event, categoryId) => CategoryState.makeDefaultCategory(event, categoryId),
+   
+    };
+}
+
+
 
 initOffCanvasListeners();
 teamData.fontColor = teamData?.profile?.fontColor ?? '#2e4b59';
@@ -16,6 +211,9 @@ let imageUpload = document.getElementById("image-upload");
 
 function TeamHead() {
     return {
+        get gamesTeam() {
+            return [CategoryState._state.defaultCategory, CategoryState._state.userCategories];
+        },
         select2: null,
         isEditMode: false,
         ...teamData,
@@ -32,7 +230,7 @@ function TeamHead() {
         errorMessage: errorInput?.value,
         changeFlagEmoji(event) {
             this.country = event.target.value;
-            const countryX = this.countries?.find(c => c.id === this.country)
+            const countryX = this.countries?.find(c => c.id == this.country);
             this.country_name = countryX?.name || null
             this.country_flag = countryX?.emoji_flag || null
         },
@@ -114,6 +312,9 @@ function TeamHead() {
                     console.log({url});
                     return;
                 }
+
+                let [defaultCategory, userCategories] = this.gamesTeam;
+
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -128,6 +329,8 @@ function TeamHead() {
                         country: this.country,
                         country_flag: this.country_flag,
                         country_name: this.country_name,
+                        default_category_id: defaultCategory,
+                        all_categories: userCategories,
                         ...(fileFetch && { file: fileFetch })
                     }),
                 });
@@ -213,6 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
         TeamHead,
         ProfileData,
         ReportFormData,
+        CategoryManager
     }).mount('.teamhead');
 });
 

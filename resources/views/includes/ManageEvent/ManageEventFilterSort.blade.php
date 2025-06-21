@@ -102,11 +102,12 @@
             </button>
             <div
                 onclick="event.stopPropagation();"; 
-                class="dropdown-menu px-0 py-1" aria-labelledby="dropdownFilterTier"
+                class="dropdown-menu px-0 py-2" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3 py-1 min-w-250px">
-                    <input onchange="setFilterForFetch(event, 'SEA');" type="checkbox" name="venue[]" value="SEA" class="form-check-input">
-                    <label for="eventTier">South East Asia (SEA)</label>
+                    <label for="eventTier">Choose a country/region</label>
+
+                    <select onchange="setFilterForFetch(event, 'SEA');" id="select2-country2" name="venue" ></select>
                 </div>
             </div>
         </div>

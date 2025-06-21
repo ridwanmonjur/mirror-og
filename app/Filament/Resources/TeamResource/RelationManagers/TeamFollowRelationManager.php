@@ -44,14 +44,15 @@ class TeamFollowRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('M d, Y — h:i A') 
                     ->sortable()
                     ->label('Followed At')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])

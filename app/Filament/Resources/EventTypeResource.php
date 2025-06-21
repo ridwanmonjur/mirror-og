@@ -41,9 +41,9 @@ class EventTypeResource extends Resource
                 // Tables\Columns\TextColumn::make('eventDefinitions')
                     // ->searchable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

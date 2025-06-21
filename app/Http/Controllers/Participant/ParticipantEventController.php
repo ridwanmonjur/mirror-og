@@ -41,31 +41,7 @@ class ParticipantEventController extends Controller
         $this->eventMatchService = $eventMatchService;
     }
 
-    public function home(Request $request)
-    {
-        if (Session::has('intended')) {
-            $intendedUrl = Session::get('intended');
-            Session::forget('intended');
-
-            return redirect($intendedUrl);
-        }
-
-        $userId = Auth::id();
-        $currentDateTime = Carbon::now()->utc();
-        $events = EventDetail::landingPageQuery($request, $currentDateTime)->simplePaginate();
-
-        $output = [
-            'events' => $events,
-            'id' => $userId,
-        ];
-
-        if ($request->ajax()) {
-            $view = view('includes.LandingHomeScroll', $output)->render();
-
-            return response()->json(['html' => $view]);
-        }
-        return view('Landing', $output);
-    }
+    
 
     public function viewEvent(ParticipantViewEventRequest $request, $id)
     {

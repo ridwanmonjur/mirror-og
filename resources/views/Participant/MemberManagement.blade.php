@@ -77,8 +77,9 @@
                 and {{ $teamMembersProcessed['left']['count'] }} past
                 member{{ bldPlural($teamMembersProcessed['left']['count']) }}
             </p>
-            <div class="mt-3 pt-3 tab-size">
+            <div class="mt-3 pt-3  tab-size">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
+                    <div class="min-h-250px">
                     <h5 class="pb-3">Present Members</h5>
                     <div class="row  w-100">
                         @foreach ($teamMembersProcessed['accepted']['members'] as $member)
@@ -120,9 +121,11 @@
                             </div>
                         @endforeach
                     </div>
+                    </div>
                 @endif
 
                 @if ($teamMembersProcessed['left']['count'] != 0)
+                    <div class="min-h-250px">
                     <h5 class="pb-3 mt-3">Past Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['left']['members'] as $member)
@@ -152,11 +155,12 @@
                             </div>
                         @endforeach
                     </div>
+                    </div>
                 @endif
             </div>
         </div>
         <div class="tab-content pb-4  inner-tab d-none" id="PendingMembers" data-type="member" >
-
+            
             <p class="text-center mx-auto mt-2">Team {{ $selectTeam->teamName }} has
                 {{ $teamMembersProcessed['pending']['count'] }} invited and
                 and {{ $teamMembersProcessed['rejected']['count'] }} rejected
@@ -164,6 +168,7 @@
             </p>
             <div class="  pt-3 tab-size">
                 @if ($teamMembersProcessed['pending']['count'] != 0)
+                    <div class="min-h-250px">
                     <h5 class="pb-3">Pending Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['pending']['members'] as $member)
@@ -211,9 +216,11 @@
                             </div>
                         @endforeach
                     </div>
+                    </div>
                 @endif
 
                 @if ($teamMembersProcessed['rejected']['count'] != 0)
+                     <div class="min-h-250px">
                     <h5 class="pb-3 mt-3">Rejected Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['rejected']['members'] as $member)
@@ -246,17 +253,13 @@
                             </div>
                         @endforeach
                     </div>
+                    </div>
                 @endif
-
+            
             </div>
         </div>
         <div class="tab-content pb-4 inner-tab mx-auto d-none" id="NewMembers">
-            @if (isset($redirect) && $redirect)
-                <div class="text-center">
-                    <h5><u>New Members</u></h5>
-                    <p>Add new members to your team</p>
-                </div>
-            @endif
+            
             <form id="newMembersForm" class="mt-4">
                 <input type="hidden" name="sortKeys" id="sortKeys" value="">
                 <input type="hidden" name="sortType" id="sortType" value="">
@@ -488,7 +491,7 @@
             </form>
 
             <section class="featured-events scrolling-pagination mt-2 tab-size">
-                <table class="member-table responsive " id="member-table-body">
+                <table class="member-table min-h-250px responsive " id="member-table-body">
                     <tbody>
                     </tbody>
                 </table>

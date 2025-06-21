@@ -277,6 +277,11 @@
     margin: 0 auto;
     border-collapse: collapse;
     margin-top: 20px;
+    
+}
+
+.min-h-250px {
+    min-height: 250px;
 }
 
 

@@ -53,12 +53,13 @@ class ActivityLogsRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('log'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('M d, Y — h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])

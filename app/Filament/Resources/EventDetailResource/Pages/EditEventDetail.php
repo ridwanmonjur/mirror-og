@@ -5,6 +5,8 @@ namespace App\Filament\Resources\EventDetailResource\Pages;
 use App\Filament\Resources\EventDetailResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use App\Jobs\HandleEventUpdate;
+use Filament\Actions\Action; // Changed this line
 
 class EditEventDetail extends EditRecord
 {
@@ -15,5 +17,13 @@ class EditEventDetail extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function getSaveFormAction(): Action
+    {
+        return parent::getSaveFormAction()
+            ->after(function () {
+                dispatch(new HandleEventUpdate($this->record));
+            });
     }
 }

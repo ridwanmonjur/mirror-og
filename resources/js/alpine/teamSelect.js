@@ -2,6 +2,7 @@ import TomSelect from "tom-select";
 
 let bankSelectElement = document.getElementById('bank-select');
 let teamSelectElement = document.getElementById('team-select');
+let gameSelectElement = document.getElementById('game-select');
 let countrySelect = document.getElementById('select2-country2');
 
 if (teamSelectElement) {
@@ -61,7 +62,9 @@ if (teamSelectElement) {
 
         },
     });
-} else if (bankSelectElement) {
+}  
+
+if (bankSelectElement) {
     let banksInput = document.getElementById('malay-banks');
     let banksInputValue = JSON.parse(banksInput.value ?? []);
     const logoBasePath = '/assets/images/logo/';
@@ -106,16 +109,18 @@ if (teamSelectElement) {
             }
         },
     });
-} else if (countrySelect) {
+}  
+
+if (countrySelect) {
     async function fetchCountries() {
         try {
             const data = await storeFetchDataInLocalStorage('/countries');
             if (data?.data) {
-                countries = data.data;
+                let countries = data.data;
                 
                 let tomSelectOptions = [
                     { 
-                        value: '', text: '',
+                        value: '', text: 'No country/region chosen',
                     }
                 ];
                 
@@ -187,5 +192,49 @@ if (teamSelectElement) {
     }
 
     fetchCountries();
+}  
+if (gameSelectElement) {
+    const categoryEl = document.querySelector('#game-select');
+    const storage = document.querySelector('.team-head-storage');
+    const routes = {
+        allCategories: storage.dataset.allCategories
+    };
+
+    let allCategoriesOg = JSON.parse(routes.allCategories);
+    let allCategories = allCategoriesOg['byTitle'];
+    console.log(allCategoriesOg)
+
+    if (categoryEl && !categoryEl.tomselect) {
+        new TomSelect(categoryEl, {
+            valueField: 'gameTitle',
+            labelField: 'gameTitle',
+            searchField: 'gameTitle',
+            options: Object.values(allCategories),
+            items: [],
+            onItemAdd: function(value, item) {
+                const self = this;
+                this.close();
+                this.setTextboxValue('');
+                setTimeout(() => {
+                    self.blur();
+                    self.control_input.blur();
+                }, 50);
+            },
+            render: {
+                option: function(data, escape) {
+                    return `<div class="category-input text-truncate">
+                        ${data.gameIcon ? `<img src="${escape('/storage/' + data.gameIcon)}" class="category-icon me-2">` : ''}
+                        <span>${escape(data.gameTitle)}</span>
+                    </div>`;
+                },
+                item: function(data, escape) {
+                    return `<div class="category-input text-truncate">
+                        ${data.gameIcon ? `<img src="${escape('/storage/' + data.gameIcon)}" class="category-icon me-2">` : ''}
+                        <span>${escape(data.gameTitle)}</span>
+                    </div>`;
+                }
+            },
+        });
+    }
 }
 

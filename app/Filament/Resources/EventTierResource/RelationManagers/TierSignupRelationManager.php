@@ -53,9 +53,9 @@ class TierSignupRelationManager extends RelationManager
                     ->numeric()
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])

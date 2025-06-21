@@ -232,7 +232,18 @@ function loadByPost(ENDPOINT_URL, body, successCb = null) {
                 noMoreDataElement.classList.remove('d-none');
                 noMoreDataElement.style.display = 'flex';
                 noMoreDataElement.style.justifyContent = 'center';
-                noMoreDataElement.textContent = "Data not found by your query...";
+                noMoreDataElement.innerHTML = `
+                    <div class="mx-auto text-center">
+
+                        <div>
+                        <svg class="text-muted" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                      </svg>
+                      <p>Data not found by your query...</p>
+
+                        </div>
+                    </div>
+                `;
             } else {
                 scrollingPaginationElement.innerHTML = response.html;
                 if (successCb) {
@@ -248,7 +259,7 @@ function loadByPost(ENDPOINT_URL, body, successCb = null) {
 }
 
 var isPickerShown = false;
-let formKeys = ['gameTitle[]', 'eventType[]', 'eventTier[]', 'venue[]', 'date[]'];
+let formKeys = ['gameTitle[]', 'eventType[]', 'eventTier[]', 'venue', 'date[]'];
 var datePicker = new Litepicker({ 
     element: document.getElementById('litepicker'),
     singleMode: false,
