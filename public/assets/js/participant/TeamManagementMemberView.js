@@ -236,11 +236,11 @@ async function fetchCountries () {
             countries.forEach((value) => {
                 if (value.type === 'region') {
                     regionsHtml += `
-                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                        <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                     `;
                 } else if (value.type === 'country') {
                     countriesOptionsHtml += `
-                        <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                        <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                     `;
                 }
             });
@@ -294,7 +294,7 @@ function sortMembers(arr, sortKey, sortOrder) {
     return arr2;
 }
 
-async function fetchMembers(event = null) {
+async function fetchMembers() {
     let bodyHtml = '';
 
     let formData = new FormData(newMembersForm);
@@ -315,7 +315,7 @@ async function fetchMembers(event = null) {
             isToBeAdded = isToBeAdded && false;
         } 
 
-        if (regionFilter != "" && sortedMember?.user?.participant?.region != regionFilter) {
+        if (regionFilter != "" && sortedMember?.user?.participant?.region_name != regionFilter) {
             isToBeAdded = isToBeAdded && false;
         } 
 

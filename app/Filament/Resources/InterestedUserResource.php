@@ -35,6 +35,9 @@ class InterestedUserResource extends Resource
                     ->maxLength(255),
                 DateTimePicker::make('email_verified_at')
                     ->label('Email Verified At')
+                    ->displayFormat('Y-m-d h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
+                    ->seconds(false)
                     ->nullable(),
                 TextInput::make('email_verified_token')
                     ->maxLength(255)
@@ -57,14 +60,17 @@ class InterestedUserResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email_verified_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->seconds(false)
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

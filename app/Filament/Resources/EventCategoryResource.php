@@ -99,17 +99,19 @@ class EventCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
+                    ->dateTime('M d, Y — h:i A') 
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
                     ->sortable()
+                    ->dateTime('M d, Y — h:i A') 
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

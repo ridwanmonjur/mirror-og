@@ -184,7 +184,7 @@ class User extends Authenticatable implements FilamentUser
         $mapSortKeysToValues = [
             'name' => 'name',
             'created_at' => 'created_at',
-            // 'region' => 'participants.region',
+            // 'region' => 'participants.region_name',
             // 'birthDate' => 'participants.birthday',
             'recent' => 'id',
         ];
@@ -217,7 +217,7 @@ class User extends Authenticatable implements FilamentUser
             })
             ->whereHas('participant', function ($query) use ($region, $birthDate) {
                 if (! empty($region)) {
-                    $query->where('region', $region);
+                    $query->where('region_name', $region);
                 }
 
                 if (! empty($birthDate)) {

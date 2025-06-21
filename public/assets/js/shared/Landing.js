@@ -25,12 +25,11 @@ window.addEventListener(
         infinteLoadMore(null, ENDPOINT_URL, ()=> {
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
-                // Remove existing tooltip if it exists
                 const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
                 if (existingTooltip) {
                     existingTooltip.dispose();
                 }
-                // Create new tooltip
+
                 return new window.bootstrap.Tooltip(tooltipTriggerEl);
             });
         });
@@ -55,3 +54,14 @@ window.onclick = function (event) {
     }
 }
 
+addOnLoad(()=> {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
+        const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+        if (existingTooltip) {
+            existingTooltip.dispose();
+        }
+        
+        return new window.bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});

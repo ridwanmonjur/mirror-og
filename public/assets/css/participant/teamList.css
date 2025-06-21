@@ -197,3 +197,20 @@ input[type="submit"],
     margin: 10px;
 }
 
+.category-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+.category-button {
+    max-width: 35ch;
+}
+
+.dropdown-size {
+    min-width: 250px;
+}
+  
+.category-input {
+    width: 200px;
+}
+  

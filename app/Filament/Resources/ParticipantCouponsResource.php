@@ -41,6 +41,9 @@ class ParticipantCouponsResource extends Resource
                     
                     Forms\Components\DateTimePicker::make('expires_at')
                         ->label('Expires At')
+                        ->displayFormat('Y-m-d h:i A')
+                        ->timezone('Asia/Kuala_Lumpur')
+                        ->seconds(false)
                         ->nullable()
                         ->columnSpan(1),
                 ])
@@ -93,13 +96,15 @@ class ParticipantCouponsResource extends Resource
                     ->label('Public'),
                 
                 Tables\Columns\TextColumn::make('expires_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->placeholder('Never'),
            
                 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

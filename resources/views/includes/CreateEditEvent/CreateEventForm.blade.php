@@ -303,7 +303,7 @@
         <div class="form-group mx-auto">
             <label for="eventName">Location of Event</label>
             <p class="my-3">Pick a location for your event.</p>
-          <select id="select2-country2" class="form-control form-select" name="venue" data-value="{{$isEventNotNull ? $event->venue: null}}"></select>
+            <select id="select2-country2" class="form-control form-select" name="venue" data-value="{{$isEventNotNull ? $event->venue: null}}"></select>
 
         </div>
     </div>

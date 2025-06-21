@@ -33,12 +33,22 @@ class FriendResource extends Resource
                 Forms\Components\Select::make('user2_id')
                     ->label('User 2')    
                     ->required()
+                    ->different('user1_id')
                     ->relationship('user2', 'name', 
                         fn ($query) => $query->where('role', 'PARTICIPANT') 
                 ),
                
                 Forms\Components\Select::make('actor_id')
                     ->required()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            $user1 = $get('user1_id');
+                            $user2 = $get('user2_id');
+                            if ($value != $user1 && $value != $user2) {
+                                $fail('Actor must be either User 1 or User 2.');
+                            }
+                        }
+                    ])
                     ->relationship('actor', 'name'),
                 Forms\Components\Select::make('status')
                     ->required()
@@ -65,19 +75,21 @@ class FriendResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status'),
                 
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

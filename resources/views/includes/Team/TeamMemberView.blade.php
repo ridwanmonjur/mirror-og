@@ -236,8 +236,8 @@
                 </span> 
             </div>
         </div>
-        <div class="tab-size">
-            <div class="member-table responsive " id="member-table-body">
+        <div class="tab-size ">
+            <div class="member-table min-h-250px responsive " id="member-table-body">
                 <input id="membersJson" type="hidden" value="{{json_encode($selectTeam->members)}}">
                 <input id="captainJson" type="hidden" value="{{json_encode($captain)}}">
                 <div class="team-body">

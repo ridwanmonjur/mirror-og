@@ -19,6 +19,7 @@ class EventSignup extends Model
         'signup_close'
     ];
 
+    public $timestamps = NULL;
 
     /**
      * Get the event details that this signup belongs to

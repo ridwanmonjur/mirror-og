@@ -326,8 +326,8 @@ async function withdrawInviteMemberAction() {
 }
 
 async function fetchParticipants(event) {
-    let input = event.currentTarget;
-    let currentUrl = document.getElementById('participantMemberManageUrl').value;
+    // let input = event.currentTarget;
+    // let currentUrl = document.getElementById('participantMemberManageUrl').value;
 
     fetchData(
         url,
@@ -618,11 +618,11 @@ async function fetchCountries () {
         countries.forEach((value) => {
             if (value.type === 'region') {
                 regionsHtml += `
-                    <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                 `;
             } else if (value.type === 'country') {
                 countriesOptionsHtml += `
-                    <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                    <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
                 `;
             }
         });
@@ -658,8 +658,8 @@ async function fetchMembers(event = null) {
     let route;
     let bodyHtml = '', pageHtml = '';
     let teamId = document.getElementById('teamId')?.value;
-    if (event?.target && event.target?.dataset?.url) {
-        route = event.target.dataset.url;
+    if (event?.currentTarget) {
+        route = event.currentTarget.dataset.url;
     } else {
         route = document.getElementById('membersUrl')?.value;
     }

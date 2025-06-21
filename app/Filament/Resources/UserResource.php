@@ -71,7 +71,10 @@ class UserResource extends Resource
                                 TextInput::make('recovery_email')
                                     ->email()
                                     ->maxLength(255),
-                                DateTimePicker::make('email_verified_at'),
+                                DateTimePicker::make('email_verified_at')
+                                    ->label('Email Verified At')
+                                    ->displayFormat('Y-m-d h:i A')
+                                    ->timezone('Asia/Kuala_Lumpur'),
                                 Forms\Components\Section::make('User Banner')
                                     ->description('Banner upload is only available when editing an existing item')
                                     ->icon('heroicon-o-photo')
@@ -251,12 +254,14 @@ class UserResource extends Resource
                     ->sortable(),
                
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
+                    ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

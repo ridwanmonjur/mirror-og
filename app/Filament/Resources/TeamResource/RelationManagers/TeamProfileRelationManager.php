@@ -7,8 +7,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
 
 class TeamProfileRelationManager extends RelationManager
@@ -95,9 +93,9 @@ class TeamProfileRelationManager extends RelationManager
                 Tables\Columns\ColorColumn::make('frameColor')
                     ->label('Frame Color'),
             ])
-            ->filters([
-                //
-            ])
+            // ->filters([
+            //     //
+            // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->visible(fn () => !$this->getOwnerRecord()->profile()->exists())
