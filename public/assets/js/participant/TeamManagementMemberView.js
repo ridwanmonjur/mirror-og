@@ -294,7 +294,7 @@ function sortMembers(arr, sortKey, sortOrder) {
     return arr2;
 }
 
-async function fetchMembers(event = null) {
+async function fetchMembers() {
     let bodyHtml = '';
 
     let formData = new FormData(newMembersForm);

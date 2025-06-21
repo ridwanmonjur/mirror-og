@@ -12,7 +12,7 @@ class TeamProfile extends Model
 
     public $timestamps = false;
 
-    public array $otherCategories;
+    // public array $arr_categories;
 
     protected $table = 'team_profile';
 
@@ -22,7 +22,7 @@ class TeamProfile extends Model
     }
 
     protected $fillable = ['frameColor', 'backgroundColor', 'backgroundGradient', 'fontColor', 
-        'follower_count', 'team_id', 'default_category_id',  'other_categories'];
+        'follower_count', 'team_id'];
 
         public function defaultCategory(): BelongsTo
         {
@@ -32,22 +32,22 @@ class TeamProfile extends Model
         /**
          * Set other categories from array of categories IDs
          */
-        public function setOtherCategories(array $categoriesIds): void
+        public function setAllCategories(array $categoriesIds): void
         {
-            $this->other_categories = '|' . implode('|', $categoriesIds) . '|';
+            $this->all_categories = '|' . implode('|', $categoriesIds) . '|';
             $this->save();
         }
     
         /**
          * Get other categories as array of categories IDs
          */
-        public function getOtherCategories(): array
+        public function getAllCategories(): array
         {
-            if (empty($this->other_categories)) {
+            if (empty($this->all_categories)) {
                 return [];
             }
             
-            return array_filter(explode('|', $this->other_categories), function($value) {
+            return array_filter(explode('|', $this->all_categories), function($value) {
                 return !empty($value);
             });
         }
@@ -57,11 +57,11 @@ class TeamProfile extends Model
          */
         public function addOtherCategory(int $categoriesId): void
         {
-            $currentCategories = $this->getOtherCategories();
+            $currentCategories = $this->getAllCategories();
             
             if (!in_array($categoriesId, $currentCategories)) {
                 $currentCategories[] = $categoriesId;
-                $this->setOtherCategories($currentCategories);
+                $this->setAllCategories($currentCategories);
             }
         }
     
@@ -70,12 +70,12 @@ class TeamProfile extends Model
          */
         public function removeOtherCategory(int $categoriesId): void
         {
-            $currentCategories = $this->getOtherCategories();
+            $currentCategories = $this->getAllCategories();
             $filteredCategories = array_filter($currentCategories, function($id) use ($categoriesId) {
                 return $id != $categoriesId;
             });
             
-            $this->setOtherCategories($filteredCategories);
+            $this->setAllCategories($filteredCategories);
         }
     
         /**
@@ -83,7 +83,7 @@ class TeamProfile extends Model
          */
         public function hasOtherCategory(int $categoriesId): bool
         {
-            return in_array($categoriesId, $this->getOtherCategories());
+            return in_array($categoriesId, $this->getAllCategories());
         }
     
         

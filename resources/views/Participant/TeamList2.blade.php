@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Teams</title>
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js',  'resources/js/alpine/teamSelect.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/manageEvent.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/participant/teamList.css') }}">
     @include('includes.HeadIcon')
@@ -18,20 +18,32 @@
     @include('googletagmanager::body')
     @include('includes.Navbar')
     <br>
+    <div class="team-head-storage d-none  " data-all-categories="{{json_encode($allCategorys)}}">
+    </div>
     <main>
         <div class="d-flex justify-content-between mb-2">
             <h5> Your Teams  </h5>
-            <a href="{{route('participant.team.create')}}" 
-                class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary me-2"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-                    class="mt-1 me-2"
-                    viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg>
-                Create Team
-            </a>
+            <div>
+                 <button onclick="setIsMyMode(event)"
+                    class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary me-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search mt-1 me-2" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                    <span id="browse-teams-btn"> Browse Team </span>
+                </button>
+                <a href="{{route('participant.team.create')}}" 
+                    class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary me-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                        class="mt-1 me-2"
+                        viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                    Create Team
+                </a>
+            </div>
         </div>
         <form id="newTeamsForm">
             <div>
@@ -79,14 +91,14 @@
                                         </svg>
                                     </span>
                                 </button>
-                                <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
+                                <div onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
                                     aria-labelledby="dropdownFilterSort">
-                                    @foreach ([['title' => 'Dota 2', 'value' => 'Dota 2']] as $esportsGame)
-                                        <div class="px-3 py-1" style="width: 200px;">
-                                            <input type="checkbox" name="esports_title" class="form-check-input me-2" checked value="{{ $esportsGame['value'] }}">
-                                            <label for="esports_title">{{ $esportsGame['title'] }}</label>
-                                        </div>
-                                    @endforeach
+                                    <p class="my-1">Choose the minimumn number of members in team</p>
+                                         
+                                    <select name="esports_title" id="game-select" class="mb-2 dropdown-size category-input text-start" >
+                                        <option value="">Select Game</option>
+                                    </select>
+
                                 </div>
                             </div>
                             <div class="dropdown me-3">
@@ -105,15 +117,21 @@
                                 </button>
                                 <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
-                                    @foreach ([['title' => 'South East Asia (SEA)', 'value' => 'SEA']] as $region2)
-                                        <div class="px-3 py-1" style="width: 280px;">
-                                            <p class="mb-1">Choose a country/region of origin</p>
+                                    <div class="px-3 py-1" style="width: 280px;">
+                                        <p class="my-1">Choose a country/region of origin</p>
 
-                                            <select id="select2-country2" class="form-control form-select" name="region">
-                                            </select>
-                                            {{-- <input type="checkbox" name="region2" id="select2-country2" class="form-check-input me-2" checked value="{{ $region2['value'] }}"> --}}
-                                        </div>
-                                    @endforeach
+                                        <select id="select2-country2" class="mb-2" name="region">
+                                        </select>
+                                        
+                                    </div>
+                                    <button type="button"
+                                        class="my-2 d-none rounded-pill btn btn-sm btn-primary text-light"
+                                        id="esports_titleResetButton"
+                                        onclick="
+                                            resetInput('esports_title');
+                                        ">
+                                        Reset 
+                                    </button>
                                 </div>
                             </div>
 
@@ -136,11 +154,7 @@
                                     aria-labelledby="dropdownFilterSort">
                                     <div class="px-3 py-1">
                                         <p class="mb-1">Choose a country/ region of origin</p>
-                                        {{-- <input id="select2-country2"  type="checkbox" name="region"> --}}
-                                        {{-- <select id="select2-country2" class="form-control form-select" name="region"
-                                            style="width: 200px !important;">
-                                            <option value=""> </option>
-                                        </select> --}}
+                                       
                                         <button type="button"
                                             class="my-2 rounded-pill btn btn-sm btn-primary text-light"
                                             id="regionResetButton"
@@ -168,9 +182,9 @@
                                         </svg>
                                     </span>
                                 </button>
-                                <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
+                                <div onclick="event.stopPropagation();" class="dropdown-size dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
-                                    @foreach ([['title' => 'Public (free to apply)', 'value' => 'public'], ['title' => 'Private', 'value' => 'Private (cannot apply)'] ] as $status)
+                                    @foreach ([['title' => 'Public (free to apply)', 'value' => 'public'], ['title' => 'Private (cannot apply)', 'value' => 'private'] ] as $status)
                                         <div class="px-3 py-1" style="width: 200px;">
                                             <input type="checkbox" name="status" class="form-check-input" checked value="{{ $status['value'] }}">
                                             <label for="status">{{ $status['title'] }}</label>
@@ -179,7 +193,7 @@
                                 </div>
                             </div>
 
-                            <div class="dropdown me-3" >
+                            <div class="dropdown me-3" id="members-dropdown">
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
@@ -193,7 +207,7 @@
                                         </svg>
                                     </span>
                                 </button>
-                                <div style="min-width: 250px;" onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
+                                <div  onclick="event.stopPropagation();" class="dropdown-size dropdown-menu px-3 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                         <p class="mb-1">Choose the minimumn number of members in team</p>
                                         <input type="range" class="form-range" name="membersCount" min="0" defaultValue="0" value="0" max="5" step="1" id="customRange3">

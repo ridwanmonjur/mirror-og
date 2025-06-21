@@ -15,104 +15,127 @@ const routes = {
     allCategories: storage.dataset.allCategories
 };
 
+let allCategories = JSON.parse(routes.allCategories);
+let allCategoryArray = Object.values(allCategories);
+
 // External state management for categories
 const CategoryState = {
+    initialized: false,
     _state: reactive({
         defaultCategory: '',
-        otherCategories: [],
-        allCategories: []
+        userCategories: '',
+        userCategoriesArr: [],
     }),
 
     init() {
-        this._state.defaultCategory = teamData?.profile?.defaultCategory || '';
-        this._state.otherCategories = this.parseOtherCategories(teamData.profile.otherCategories || '');
-        this._state.allCategories = routes.allCategories;
-        console.log(this._state.defaultCategory);
-        console.log(this._state.otherCategories);
-        console.log(this._state.allCategories);
+        if (!this.initialized) {
+            if (teamData){
+                this._state.defaultCategory = teamData?.default_category_id || '';
+                let userCategories = teamData.all_categories || '';
+                this._state.userCategories = userCategories;
+                this._state.userCategoriesArr = [...this.parseAllCategories(userCategories)];
+                this.initialized = true;
+                console.log(userCategories, this.parseAllCategories(userCategories));
+            }
+
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
+                const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                if (existingTooltip) {
+                    existingTooltip.dispose();
+                }
+                return new window.bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
     },
 
-    parseOtherCategories(otherCategoriesString) {
-        if (!otherCategoriesString) return [];
-        return otherCategoriesString.split('|').filter(id => id !== '').map(id => parseInt(id));
+    stringifyCategories(categoriesArray) {
+        let newString = '';
+        if (!categoriesArray || !categoriesArray[0]) return newString;
+        categoriesArray.forEach(element => {
+            newString += `|${element.id}|`;
+        });
+        return newString;
     },
 
-    formatOtherCategories(categoryArray = null) {
-        const categories = categoryArray || this._state.otherCategories;
-        if (categories?.length === 0) return '';
-        return '|' + categories.join('|') + '|';
+    parseAllCategories(userCategories) {
+        if (!userCategories || typeof userCategories !== 'string') return [];
+    
+        const ids = userCategories
+            .split('|')
+            .filter(id => id !== '') // Removes leading/trailing empty strings
+            .map(id => parseInt(id))
+            .filter(id => !isNaN(id));
+    
+        return ids
+            .map(id => allCategories[id] ?? allCategories[id.toString()] ?? null)
+            .filter(Boolean);
+    },
+    
+
+    addCategory(categoryId) {
+        let checkExists = allCategories[categoryId];
+        if (!checkExists) {
+            window.Swal.fire({
+                icon: 'error',
+                text: 'The chosen game no longer exists!'
+            })
+            return; 
+        }
+        
+        let foundElement = this._state.userCategoriesArr?.find(element => element.id == categoryId);
+        if (foundElement) {
+            window.Swal.fire({
+                icon: 'error',
+                text: 'You have already added this game!',
+                confirmButtonColor: '#43a4d7'
+            })
+            
+            return; 
+        } else {
+            let isDefaultInCurrent = this._state.userCategoriesArr?.find(element => element.id == this._state.defaultCategory);
+            if (!isDefaultInCurrent) {
+                this._state.defaultCategory = categoryId;
+            }
+
+            this._state.userCategoriesArr.push(allCategories[categoryId]);
+            this._state.userCategories = this.stringifyCategories(this._state.userCategoriesArr);
+        }
     },
 
-    get defaultCategory() {
-        return this._state.defaultCategory;
+    removeCategory(event, categoryId) {
+        if (!event) return;
+
+        this._state.userCategoriesArr = this._state.userCategoriesArr?.filter(
+            element => element.id != categoryId
+        );       
+
+        this._state.userCategories = this.stringifyCategories(this._state.userCategoriesArr);
     },
 
-    get otherCategories() {
-        return this._state.otherCategories;
-    },
-
-    get allCategories() {
-        return this._state.allCategories;
-    },
-
-    get state() {
-        return this._state;
-    },
-
-    setDefaultCategory(categoryId) {
+    makeDefaultCategory(event, categoryId) {
+        if (!event) return;
         this._state.defaultCategory = categoryId;
-    },
-
-    setOtherCategories(categoryIds) {
-        this._state.otherCategories = categoryIds;
-    },
-
-    addOtherCategory(categoryId) {
-        if (!this._state.otherCategories.includes(categoryId)) {
-            this._state.otherCategories.push(categoryId);
+        let category = allCategories[categoryId];
+        if (!category) {
+            window.Swal.fire({
+                icon: 'error',
+                text: 'The chosen game no longer exists!'
+            })
+            return; 
         }
-    },
 
-    removeOtherCategory(categoryId) {
-        const index = this._state.otherCategories.indexOf(categoryId);
-        if (index > -1) {
-            this._state.otherCategories.splice(index, 1);
-        }
+        window.Swal.fire({
+            title: 'Default Category Updated',
+            html: `
+                <p>You have made ${category.gameTitle} your default category! Please save to persist this change.</p>
+                <img src="/storage/${category.gameIcon}" onerror="this.src='/images/default-fallback.png'" width="64" height="64">
+            `,
+            confirmButtonColor: '#43a4d7'
+        });
     },
-
-    getCategoryById(id) {
-        return this._state.allCategories.find(category => category.id == id);
-    },
-
-    getCategoryName(id) {
-        const category = this.getCategoryById(id);
-        return category ? category.eventCategory : 'Unknown Category';
-    },
-
-    getCategoryIcon(id) {
-        const category = this.getCategoryById(id);
-        return category ? category.categoryIcon : null;
-    },
-
-    getDefaultCategoryName() {
-        return this.getCategoryName(this._state.defaultCategory);
-    },
-
-    getDefaultCategoryIcon() {
-        return this.getCategoryIcon(this._state.defaultCategory);
-    },
-
-    getDataForSaving() {
-        return {
-            default_category_id: this._state.defaultCategory || null,
-            other_categories: this.formatOtherCategories()
-        };
-    },
-
-    reset() {
-        this._state.defaultCategory = '';
-        this._state.otherCategories = [];
-    }
+    
 };
 
 function CategoryManager() {
@@ -122,68 +145,59 @@ function CategoryManager() {
     init() {
         CategoryState.init();
         this.initializeTomSelect();
+        console.log(CategoryState._state);
     },
 
+    get userCategoriesArr() {
+        return CategoryState._state.userCategoriesArr;
+    },
+
+    get defaultCategory() {
+        return CategoryState._state.defaultCategory;
+    },
     initializeTomSelect() {
-        new TomSelect('#default-category', {
-            valueField: 'id',
-            labelField: 'eventCategory',
-            searchField: 'eventCategory',
-            options: CategoryState.allCategories,
-            items: CategoryState.defaultCategory ? [CategoryState.defaultCategory] : [],
-            render: {
-                option: function(data, escape) {
-                    return `<div class="category-option">
-                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 20px; height: 20px; margin-right: 8px;">` : ''}
-                        <span>${escape(data.eventCategory)}</span>
-                    </div>`;
-                },
-                item: function(data, escape) {
-                    return `<div>
-                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 16px; height: 16px; margin-right: 5px;">` : ''}
-                        ${escape(data.eventCategory)}
-                    </div>`;
-                }
-            },
-            onChange: function(value) {
-                CategoryState.setDefaultCategory(value);
-            }
-        });
+        const categoryEl = document.querySelector('#default-category');
 
-        new TomSelect('#other-categories', {
-            valueField: 'id',
-            labelField: 'eventCategory',
-            searchField: 'eventCategory',
-            options: CategoryState.allCategories,
-            items: CategoryState.otherCategories.map(String),
-            plugins: ['remove_button'],
-            render: {
-                option: function(data, escape) {
-                    return `<div class="category-option">
-                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 20px; height: 20px; margin-right: 8px;">` : ''}
-                        <span>${escape(data.eventCategory)}</span>
-                    </div>`;
+        if (categoryEl && !categoryEl.tomselect) {
+            new TomSelect(categoryEl, {
+                valueField: 'id',
+                labelField: 'gameTitle',
+                searchField: 'gameTitle',
+                options: allCategoryArray,
+                items: [],
+                onItemAdd: function(value, item) {
+                    const self = this;
+                    this.close();
+                    this.setTextboxValue('');
+                    setTimeout(() => {
+                        self.blur();
+                        self.control_input.blur();
+                    }, 50);
                 },
-                item: function(data, escape) {
-                    return `<div>
-                        ${data.categoryIcon ? `<img src="${escape(data.categoryIcon)}" class="category-icon" style="width: 16px; height: 16px; margin-right: 5px;">` : ''}
-                        ${escape(data.eventCategory)}
-                    </div>`;
+                render: {
+                    option: function(data, escape) {
+                        return `<div class="category-input text-truncate">
+                            ${data.gameIcon ? `<img src="${escape('/storage/' + data.gameIcon)}" class="category-icon me-2">` : ''}
+                            <span>${escape(data.gameTitle)}</span>
+                        </div>`;
+                    },
+                    item: function(data, escape) {
+                        return `<div class="category-input text-truncate">
+                            ${data.gameIcon ? `<img src="${escape('/storage/' + data.gameIcon)}" class="category-icon me-2">` : ''}
+                            <span>${escape(data.gameTitle)}</span>
+                        </div>`;
+                    }
+                },
+                onChange: function(value) {
+                    CategoryState.addCategory(value);
                 }
-            },
-            onChange: function(values) {
-                CategoryState.setOtherCategories(values.map(v => parseInt(v)));
-            }
-        });
+            });
+        }
     },
-
    
-    state: CategoryState.state,
-    formatOtherCategories: () => CategoryState.formatOtherCategories(),
-    getCategoryName: (id) => CategoryState.getCategoryName(id),
-    getCategoryIcon: (id) => CategoryState.getCategoryIcon(id),
-    getDefaultCategoryName: () => CategoryState.getDefaultCategoryName(),
-    getDefaultCategoryIcon: () => CategoryState.getDefaultCategoryIcon(),
+    removeCategory: (event, categoryId) => CategoryState.removeCategory(event, categoryId),
+    makeDefaultCategory: (event, categoryId) => CategoryState.makeDefaultCategory(event, categoryId),
+   
     };
 }
 
@@ -197,6 +211,9 @@ let imageUpload = document.getElementById("image-upload");
 
 function TeamHead() {
     return {
+        get gamesTeam() {
+            return [CategoryState._state.defaultCategory, CategoryState._state.userCategories];
+        },
         select2: null,
         isEditMode: false,
         ...teamData,
@@ -295,6 +312,9 @@ function TeamHead() {
                     console.log({url});
                     return;
                 }
+
+                let [defaultCategory, userCategories] = this.gamesTeam;
+
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -309,6 +329,8 @@ function TeamHead() {
                         country: this.country,
                         country_flag: this.country_flag,
                         country_name: this.country_name,
+                        default_category_id: defaultCategory,
+                        all_categories: userCategories,
                         ...(fileFetch && { file: fileFetch })
                     }),
                 });

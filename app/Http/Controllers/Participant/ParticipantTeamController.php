@@ -7,6 +7,7 @@ use App\Http\Requests\Team\TeamSearchRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Jobs\HandleFollowsFriends;
 use App\Models\CountryRegion;
+use App\Models\EventCategory;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
@@ -27,6 +28,34 @@ class ParticipantTeamController extends Controller
 {
     public function teamList(Request $request)
     {
+        if ($request->expectsJson()) {
+            $filters = $request->only([
+                'created_at',
+                'esports_title',
+                'region',
+                'status',
+            ]);
+
+            // dd($filters);
+            
+            $user_id = $request->attributes->get('user')->id;
+            
+            extract(Team::getFilteredUserTeams($filters, $user_id));
+
+            return response()->json(
+                [
+                    'data' => [
+                        'teamList' => $teamList,
+                        'count' => $count,
+                        'membersCount' => $membersCount,
+                    ],
+                    'sucess' => true,
+                ],
+                200,
+            );
+        }
+
+
         $user_id = $request->attributes->get('user')->id;
         [
             'teamList' => $teamList,
@@ -41,20 +70,23 @@ class ParticipantTeamController extends Controller
             $count = 0;
         }
 
-        if ($request->expectsJson) {
-            return response()->json(
-                [
-                    'data' => [
-                        'teamList' => $teamList,
-                        'count' => $count,
-                        'membersCount' => $membersCount,
-                    ],
-                    'sucess' => true,
-                ],
-                200,
-            );
-        }
-        return view('Participant.TeamList2', compact('teamList', 'count', 'membersCount'));
+        $categories = EventCategory::all(['id', 'gameTitle', 'gameIcon']);
+
+        $allCategorys = $categories->reduce(function ($carry, $category) {
+            $data = [
+                'id' => $category->id,
+                'gameTitle' => $category->gameTitle,
+                'gameIcon' => $category->gameIcon,
+            ];
+
+            $carry['byId'][$category->id] = $data;
+            $carry['byTitle'][$category->gameTitle] = $data;
+
+            return $carry;
+        }, ['byId' => [], 'byTitle' => []]);
+
+
+        return view('Participant.TeamList2', compact('teamList', 'allCategorys', 'count', 'membersCount'));
     }
 
     public function teamManagement(Request $request, $id)
@@ -186,7 +218,13 @@ class ParticipantTeamController extends Controller
             }
 
             $team->uploadTeamBanner($request);
-
+            // $team->updateOrCreate([
+            //     'team_id' => $team->id
+            // ], [
+            //     'all_categories' => $validatedData['all_categories'],
+            //     'default_category_id' => $validatedData['default_category_id'] 
+            // ]);
+            
             return response()->json(
                 [
                     'message' => 'Team updated successfully',
@@ -245,6 +283,7 @@ class ParticipantTeamController extends Controller
     public function pendingTeamMember(Request $request, $id)
     {
         try {
+            // TODO check memebers
             $user = $request->attributes->get('user');
             TeamMember::create([
                 'user_id' => $user->id,
@@ -292,6 +331,7 @@ class ParticipantTeamController extends Controller
 
     public function updateTeamMember(Request $request, $id)
     {
+        // TODO check memebers
         $member = TeamMember::find($id);
         if (!$member) {
             return response()->json(['success' => false, 'message' => 'Team member not found'], 400);

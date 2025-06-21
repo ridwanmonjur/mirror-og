@@ -658,8 +658,8 @@ async function fetchMembers(event = null) {
     let route;
     let bodyHtml = '', pageHtml = '';
     let teamId = document.getElementById('teamId')?.value;
-    if (event?.target && event.target?.dataset?.url) {
-        route = event.target.dataset.url;
+    if (event?.currentTarget) {
+        route = event.currentTarget.dataset.url;
     } else {
         route = document.getElementById('membersUrl')?.value;
     }

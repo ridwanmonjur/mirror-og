@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
             return $request->user();
         });
         Route::get('/teams/search', [ParticipantTeamController::class, 'search']);
+        Route::post('/teams/list', [ParticipantTeamController::class, 'teamList']);
         Route::post('/event/{id}/brackets', [ParticipantEventController::class, 'validateBracket'])->name('event.matches.validate');
 
         Route::get('/user/firebase-token', [FirebaseController::class, 'createToken']);
