@@ -33,6 +33,7 @@ class ParticipantTeamController extends Controller
                 'created_at',
                 'esports_title',
                 'region',
+                'search',
                 'status',
             ]);
 
@@ -60,15 +61,9 @@ class ParticipantTeamController extends Controller
         [
             'teamList' => $teamList,
             'teamIdList' => $teamIdList,
+            'membersCount' => $membersCount,
+            'count' => $count
         ] = Team::getUserTeamListAndPluckIds($user_id);
-
-        if ($teamIdList) {
-            $membersCount = Team::getTeamMembersCountForEachTeam($teamIdList);
-            $count = $teamList->count();
-        } else {
-            $membersCount = 0;
-            $count = 0;
-        }
 
         $categories = EventCategory::all(['id', 'gameTitle', 'gameIcon']);
 
