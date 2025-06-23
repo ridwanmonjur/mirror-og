@@ -116,12 +116,10 @@ class ParticipantEventController extends Controller
         $user_id = $request->attributes->get('user')->id;
         [
             'teamList' => $selectTeam,
-            'teamIdList' => $teamIdList,
-        ] = Team::getUserTeamListAndPluckIds($user_id);
+            'count' => $count,
+        ] = Team::getUserTeamListAndCount($user_id);
 
         if ($selectTeam) {
-            $count = count($selectTeam);
-
             return view('Participant.SelectTeamToRegister', compact('selectTeam', 'count', 'id'));
         }
         $errorMessage = 'You have no team. Create a team.';

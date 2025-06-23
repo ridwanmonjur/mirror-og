@@ -265,16 +265,15 @@ async function changeTeamsGrid(event = null) {
 
     for (let sortedTeam of sortedTeams) {
         let isToBeAdded = true;
-        let nameFilter = String(formData.get('search')).toLowerCase().trim();
+        let nameFilter = String(formData.get('search')).toLowerCase();
         // let regionFilter = formData.get('region');
         let regionFilter2 = formData.get('region');
         let esportsTitleFilter = formData.get('esports_title');
         let createdAtFilter = formData.get('created_at');
         let statusListFilter = formData.getAll('status');
         let membersCountFilter = formData.getAll('membersCount');
-
-        if (nameFilter != "" && !(
-            String(sortedTeam?.teamName).includes(nameFilter) 
+        if (nameFilter != "" && (
+            !String(sortedTeam?.teamName).toLowerCase().includes(nameFilter) 
         )) {
             isToBeAdded = isToBeAdded && false;
         }
@@ -400,25 +399,58 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                 .slice(0, 3);
 
             let allCategoriesHtml = all_categories.map((element, index, arr) => {
-                let title = element.gameTitle.length > 8 
-                    ? element.gameTitle.slice(0, 8) + '..' 
+                let title = element.gameTitle.length > 10 
+                    ? element.gameTitle.slice(0, 10).trim() + '..' 
                     : element.gameTitle;
 
                 let comma = index < arr.length - 1 ? ',' : '';
 
                 return `
                     <small 
-                        class="btn text-nowrap btn-link btn-sm d-inline-block text-truncate mx-0 px-0" 
-                        style="max-width: 15ch; overflow: hidden;">
+                        class="fw-bold text-nowrap  py-0 my-0  text-truncate mx-0 px-0" 
+                        style="max-width: 15ch; font-size: 0.9rem;  overflow: hidden;">
                         ${title}${comma}
                     </small>
                 `;
             }).join('');
 
             if (!all_categories.length) {
-                allCategoriesHtml = `No Games`;
+                allCategoriesHtml = ` <small class="fw-bold" style="max-width: 15ch;  font-size: 0.9rem; overflow: hidden;">No Games</small>`;
             }
 
+            let statusText = '';
+            if (team?.creator_id == userIdServerValue) {
+                statusText= `<i>Created by you</i>`;
+            } else {
+                if (team.member_status) {
+                    const status = team.member_status;
+                    const actor = team.member_actor;
+
+                    if (status === "accepted") {
+                        statusText = `<i>You're a team member</i>`;
+                    } 
+                    else if (status === "pending") {
+                        if (actor === "team") {
+                            statusText = `<i>You've been invited to this team</i>`;
+                        } else if (actor === "user") {
+                            statusText = `<i>You've requested to join this team</i>`;
+                        }
+                    } 
+                    else if (status === "rejected") {
+                        if (actor === "team") {
+                            statusText = `<i>Your join request was rejected</i>`;
+                        } else if (actor === "user") {
+                            statusText = `<i>You rejected the team invitation</i>`;
+                        }
+                    } 
+                    else if (status === "left") {
+                        statusText = `<i>You left this team</i>`;
+                    }
+                }
+
+                
+            }
+           
             
            
             team['membersCount'] = membersCountServerValue[team?.id] ?? 0;
@@ -442,19 +474,20 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                 <h6  class="team-name  text-wrap " id="team-name">${team?.teamName}</h6>
                                 <span> Region: ${team?.country_name ? team?.country_name: '-'} </span>  <br>
                                 <div data-bs-toggle="tooltip" title="${allCategoriesTooltip}" class=" px-1 text-nowrap" style="max-width: 270px;">
-                                    <span class="text-primary">Games: </span> ${allCategoriesHtml}
+                                    <small > 
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#b4b4b4" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+                                    </svg>
+                                    ${allCategoriesHtml}
+                                    </small>
                                 </div>
-                                <br>
                                 <span> Members:
-                                    ${membersCountServerValue[team?.id] ? membersCountServerValue[team?.id] : 0}
+                                    ${membersCountServerValue[team?.id] ? membersCountServerValue[team?.id] : 0}/10
                                 </span> <br>
-                                <small class="${team?.creator_id != userIdServerValue && 'd-none'}"><i>Created by you</i></small>
+                                <small style="font-size: 0.9rem;"">${statusText}</small>
                                 <br>
                                 <span> 
-                                    ${membersCountServerValue[team?.id] ? 
-                                        (membersCountServerValue[team?.id] < 5 ? 'Status: Public (Apply)' : 'Status: Private')
-                                        : '' 
-                                    } 
+                                 Status: ${team?.status?.charAt(0).toUpperCase() + team?.status?.slice(1).toLowerCase()}
                                 </span>
                             </div>
                         </div>
@@ -485,7 +518,6 @@ addOnLoad(()=> {
 
 async function fetchTeams(event = null) {
     let route;
-    let bodyHtml = '', pageHtml = '';
 
     route = '/api/teams/list';
     let formData = new FormData(newTeamsForm);
@@ -514,6 +546,7 @@ async function fetchTeams(event = null) {
             esports_title: esportsTitleId,
             created_at: formData.get('created_at') == "" ? null: formData.get('created_at'),
             status: formData.getAll('status'),
+            search: formData.get('search')
         })
     });
 

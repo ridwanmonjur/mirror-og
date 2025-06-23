@@ -339,6 +339,7 @@
                     {{-- <small  id="default-sorts" class="btn btn-primary text-light px-2 py-0">Default</small> --}}
                 </span>
             </div>
+            <div class="d-none mx-auto text-center"></div>
             <div class="grid-3-columns justify-content-center" id="filter-sort-results" style="grid-auto-rows : 1fr !important;">
             </div>
         </form>
