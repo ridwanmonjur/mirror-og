@@ -163,13 +163,18 @@ class Team extends Model
     public static function getFilteredUserTeams(array $filters, int|string $user_id): array
     {
         $teamQuery = self::query();
-        // $teamQuery = self::whereHas('members', function ($query) use ($user_id) {
-        //     // $query->where('user_id', $user_id)->whereNot('status', 'accepted');
-        // });
 
-        // if (!empty($filters['status']) && is_array($filters['status'])) {
-        //     $teamQuery->whereIn('status', $filters['status']);
-        // }
+        if (!empty($filters['status']) && is_array($filters['status'])) {
+            $statusFilter = array_filter($filters['status'], fn($val) => $val != 0);
+            if (!empty($statusFilter)) {
+                $teamQuery->whereIn('status', $statusFilter);
+            }
+        }
+
+        if (!empty($filters['search']) && trim($filters['search']) !== '') {
+            $search = trim($filters['search']);
+            $teamQuery->where('teamName', 'LIKE', "%{$search}%");
+        }
         
         if (!empty($filters['region']) && trim($filters['region']) !== '') {
             $teamQuery->where('country_name', $filters['region']);
@@ -204,24 +209,41 @@ class Team extends Model
 
     public static function getUserTeamListAndPluckIds(int| string $user_id): array
     {
-        $teamList = self::whereHas('members', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id)->where('status', 'accepted');
-        })
-            // ->with('profile:id,team_id,all_categories,default_category_id')
+        $teamList = self::join('team_members', 'teams.id', '=', 'team_members.team_id')
+            ->where('team_members.user_id', $user_id)
+            ->orderBy('team_members.updated_at')
+            ->withCount([
+                'members' => function ($q) {
+                    $q->where('status', 'accepted');
+                },
+            ])
+            ->select('teams.*', 'team_members.id as member_id', 
+                'team_members.actor as member_actor', 
+                'team_members.updated_at as member_updated', 
+                'team_members.status as member_status'
+                )
             ->get();
+        
+        $count = count($teamList);
 
         $teamIdList = $teamList->pluck('id')->toArray();
 
-        if ($teamList->isNotEmpty()) {
+        if (isset($teamList[0])) {
             return [
                 'teamList' => $teamList,
                 'teamIdList' => $teamIdList,
+                'count' => $count,
+                'membersCount' =>  $teamIdList
+                ? self::getTeamMembersCountForEachTeam($teamIdList)
+                : 0
             ];
         }
 
         return [
             'teamList' => null,
             'teamIdList' => null,
+            'membersCount' =>  0,
+            'count' => 0
         ];
     }
 
