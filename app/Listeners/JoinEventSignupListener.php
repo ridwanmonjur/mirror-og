@@ -89,8 +89,12 @@ class JoinEventSignupListener implements ShouldQueue
         NotifcationsUser::insertWithCount($memberNotification);
     }
 
-    public function failed($error): void
+    public function failed($event, $exception): void
     {
-        Log::error($error->message());
+        Log::error('JoinEventSignupListener failed', [
+            'exception' => $exception->getMessage(),
+            'team_member_id' => $this->teamMember->id ?? null,
+            'stack_trace' => $exception->getTraceAsString()
+        ]);
     }
 }
