@@ -5,6 +5,9 @@ let filteredSortedTeams = [];
 let newTeamsFormKeys = ['sortKeys', 'created_at', 'region', 'region2', 'status', 'membersCount', 'esports_title'];
 let sortKeysInput = document.getElementById("sortKeys");
 let csrfToken99 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const noResultsDiv = document.getElementById('no-results-div');
+const pageLinks = document.getElementById('page-links');
+let dialogForMember = new DialogForMember();
 
 let teamListServer = document.getElementById('teamListServer');
 let userIdServer = document.getElementById('userIdServer');
@@ -215,7 +218,6 @@ function changeFilterSortUI(event) {
             }
         }
     }
-
 }
 
 function sortTeams(arr, sortKey, sortOrder) {
@@ -397,10 +399,13 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             all_categories = all_categories
                 .filter(cat => typeof cat?.gameTitle === 'string')
                 .slice(0, 3);
+            
+            let game = allCategoriesId[team?.default_category_id] ??  null;
+            let imgString = game ? `<img width="45" height="45" class="rounded-2 border border-secondary" src="/storage/${game.gameIcon}">` : '';
 
             let allCategoriesHtml = all_categories.map((element, index, arr) => {
-                let title = element.gameTitle.length > 10 
-                    ? element.gameTitle.slice(0, 10).trim() + '..' 
+                let title = element.gameTitle.length > 8 
+                    ? element.gameTitle.slice(0, 8).trim() + '..' 
                     : element.gameTitle;
 
                 let comma = index < arr.length - 1 ? ',' : '';
@@ -420,33 +425,133 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
 
             let statusText = '';
             if (team?.creator_id == userIdServerValue) {
-                statusText= `<i>Created by you</i>`;
+                statusText= `<i class="text-primary">Created by you</i>`;
             } else {
                 if (team.member_status) {
                     const status = team.member_status;
                     const actor = team.member_actor;
 
                     if (status === "accepted") {
-                        statusText = `<i>You're a team member</i>`;
+                        statusText = `<i class="text-success">You're a team member</i>`;
                     } 
                     else if (status === "pending") {
                         if (actor === "team") {
-                            statusText = `<i>You've been invited to this team</i>`;
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button onclick="event.preventDefault(); event.stopPropagation(); approveMember(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill btn-success bg-white btn-sm btn-link me-1" type="button">
+                                    <span class="text-success">Yes, join team</span>
+                                </button>
+                                <button onclick="event.preventDefault(); event.stopPropagation(); rejectMember(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill border border-danger bg-white btn-sm btn-link" type="button">
+                                    <span class="text-red">Reject</span>
+                                </button>
+                            </div>
+                            `;
                         } else if (actor === "user") {
-                            statusText = `<i>You've requested to join this team</i>`;
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button style="font-size: 0.875rem;" class="btn rounded-pill btn-primary bg-white btn-sm btn-link" type="button">
+                                    <span>Requested</span>
+                                </button>
+                                <button class="gear-icon-btn mt-0 ms-1" onclick="event.preventDefault(); event.stopPropagation(); withdrawInviteMember(${team.member_id})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            `;
+                        }
+                    } 
+                    else if (status == "left") {
+                        if (actor == "team") {
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button disabled style="pointer-events: none; border: none;" class="me-2 btn-sm bg-white text-red py-1 px-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                    <span>Removed by team</span>
+                                </button>
+                            </div>
+                            `;
+                        } else if (actor == "user") {
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button class="me-2 btn rounded-pill btn-sm text-red bg-white py-1 px-2" style="border: 1px solid red; pointer-events: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                    <span>Left Team</span>
+                                </button>
+                                <button onclick="event.preventDefault(); event.stopPropagation(); rejoinTean(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill border border-success bg-white btn-sm" type="button">
+                                    <span class="text-success">Change decision</span>
+                                </button>
+                            </div>
+                            
+                            `;
                         }
                     } 
                     else if (status === "rejected") {
-                        if (actor === "team") {
-                            statusText = `<i>Your join request was rejected</i>`;
-                        } else if (actor === "user") {
-                            statusText = `<i>You rejected the team invitation</i>`;
+                        if (actor == "team") {
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button disabled style="pointer-events: none; border: none;" class="me-2 btn-sm bg-white text-red py-1 px-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                    <span>Team Rejected</span>
+                                </button>
+                            </div>
+                            `;
+                        } else if (actor == "user") {
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button class="me-2 btn rounded-pill btn-sm text-red bg-white py-1 px-2" style="border: 1px solid red; pointer-events: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                    <span>You Rejected</span>
+                                </button>
+                                <button onclick="event.preventDefault(); event.stopPropagation(); approveMember(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill border border-success bg-white btn-sm" type="button">
+                                    <span class="text-success">Change decision</span>
+                                </button>
+                            </div>
+                            
+                            `;
                         }
-                    } 
-                    else if (status === "left") {
-                        statusText = `<i>You left this team</i>`;
                     }
-                }
+                } else {
+                    let membersCount = membersCountServerValue[team?.id] ?? 0;
+                    if (membersCount>=10) {
+                    statusText = `
+                    <div class="d-block d-lg-inline-block pt-1 px-0">
+                        <button disabled style="font-size: 0.875rem;" class="btn rounded-pill btn-secondary text-dark px-3 btn-sm" type="button">
+                            Full
+                        </button>
+                    </div>
+                    `;
+                    } else if (membersCount<5) {
+                        statusText = `
+                        <div class="d-block d-lg-inline-block pt-1 px-0">
+                            <button onclick=" joinTeam(event, ${team.id})" style="font-size: 0.875rem;" class="btn rounded-pill btn-primary text-white px-3 btn-sm" type="button">
+                                Join
+                            </button>
+                        </div>
+                        `;
+                        } else {
+                            statusText = `
+                            <div class="d-block d-lg-inline-block pt-1 px-0">
+                                <button onclick=" joinTeam(event, ${team.id})" style="font-size: 0.875rem;" class="btn rounded-pill border-primary bg-white text-primary border-3 px-3 btn-sm" type="button">
+                                    Apply to Join
+                                </button>
+                            </div>
+                            `;
+                        }
+                } 
 
                 
             }
@@ -457,8 +562,11 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             html += `
                 <a style="cursor:pointer;"  href="/participant/team/${team?.id}/manage">
                     <div class="wrapper">
-                        <div class="team-section">
-                            <div class="upload-container text-center">
+                        <div class="team-section position-relative">
+                            <div class="position-absolute top-0 right-0 w-100">
+                                <div class="d-flex justify-content-end">${imgString}</div>
+                            </div>
+                            <div class="upload-container  text-center">
                                 <div class="circle-container" style="cursor: pointer;">
                                     <img
                                         onerror="this.onerror=null;this.src='/assets/images/404.png';"
@@ -467,8 +575,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                     >
                                     </label>
                                 </div>
-                                <div>
-                                </div>
+                               
                             </div>
                             <div class="text-center position-relative">
                                 <h6  class="team-name  text-wrap " id="team-name">${team?.teamName}</h6>
@@ -495,7 +602,21 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                 </a>
             `;
         }
+    } else {
+            Swal.fire({
+                position: "center",
+                icon: 'info',
+                confirmButtonColor: '#43a4d7',
+                text: 'No teams found by this search. Please change your search.',
+            })
+
+            noResultsDiv.classList.remove('d-none');
+            pageLinks.classList.add('d-none');
+            return;
     }
+
+    noResultsDiv.classList.add('d-none');
+    pageLinks.classList.add('d-none');
    
     filterSortResultsDiv.innerHTML = html;
 
@@ -511,15 +632,19 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
 }
 
 addOnLoad(()=> {
-    paintScreen(teamListServerValue, membersCountServerValue, countServerValue);
-
+    if (isModeMyTeams) {
+        paintScreen(teamListServerValue, membersCountServerValue, countServerValue);
+    } else {
+        fetchTeams();
+    }
 });
 
 
-async function fetchTeams(event = null) {
-    let route;
+async function fetchTeams(route = null) {
+    if (!route) {
+        route = '/api/teams/list';
+    }
 
-    route = '/api/teams/list';
     let formData = new FormData(newTeamsForm);
   
     formData.set('isTeamBrowse', true)
@@ -533,7 +658,6 @@ async function fetchTeams(event = null) {
         esportsTitleId = null;
     }
 
-    let links = [];
     data = await fetch(route, {
         method: "POST",
         headers: {
@@ -546,7 +670,9 @@ async function fetchTeams(event = null) {
             esports_title: esportsTitleId,
             created_at: formData.get('created_at') == "" ? null: formData.get('created_at'),
             status: formData.getAll('status'),
-            search: formData.get('search')
+            search: formData.get('search'),
+            sortKey: formData.get("sortKeys"), 
+            sortType: formData.get("sortType")
         })
     });
 
@@ -618,7 +744,6 @@ let actionMap = {
     'disapprove': disapproveMemberAction,
     'deleteInvite': withdrawInviteMemberAction,
     'reject': rejectMemberAction,
-    'rejoin': rejoinTeamAction
 };
 
 let csrfToken77 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -746,27 +871,6 @@ function rejectMember(memberId) {
     window.dialogOpen('Reject join invitation?', takeYesAction, takeNoAction, {
         innerHTML: "<strong class='text-red'>Do you want to reject this member from your team?</strong><br><em class='text-muted'>This will permanently decline their request.</em><br><span class='text-muted'>This action cannot be undone and will notify the member.</span>"
     })
-}
-
-async function rejoinTeamAction(memberId) {
-    const url = getUrl("participantMemberUpdateUrl", memberId);
-    fetchData(url,
-        function(responseData) {
-            if (responseData.success) {
-                let currentUrl = document.getElementById('currentMemberUrl').value;
-                reloadUrl(currentUrl);
-            } else {
-                toastError(responseData.message)
-            }
-        },
-        function(error) { toastError('Error rejoining team.', error);}, 
-        {
-            headers: generateHeaders(), 
-            body: JSON.stringify({
-               'actor' : 'user', 'status' : 'accepted'
-            })
-        }
-    );
 }
 
 

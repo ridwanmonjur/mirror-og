@@ -102,47 +102,65 @@ function takeNoAction() {
 function approveMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('approve')
-    window.dialogOpen('Continue with approval?', takeYesAction, takeNoAction)
+    window.dialogOpen('Approve this user?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-success'>Do you want to accept this user request to join your team?</strong><br><em class='text-muted'>They can join and take part in events with you.</em>",
+    })
 }
 
 function inviteMember(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('invite')
-    window.dialogOpen('Are you sure you want to send invite to this member?', takeYesAction, takeNoAction)
+    window.dialogOpen('Send invitation to this user?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-primary'>Do you want to invite this user to join your team?</strong><br><em class='text-muted'>They will receive an invitation request.</em>",
+    })
 }
 
 function captainMember(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('captain')
-    window.dialogOpen('Are you sure you want to this user captain?', takeYesAction, takeNoAction)
+    window.dialogOpen('Make this user a team captain?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-warning'>Do you want to promote this member to team captain?</strong><br><em class='text-muted'>Captains are spokepersons & representatives for the team.</em>",
+    })
 }
 
 function deleteCaptain(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('deleteCaptain')
-    window.dialogOpen('Are you sure you want to remove this user from captain?', takeYesAction, takeNoAction)
+    window.dialogOpen('Remove captain role from this user?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-warning'>Do you want to remove captain privileges from this member?</strong><br><em class='text-muted'>They will return to regular member status.</em>",
+    })
 }
 
 function withdrawInviteMember(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('deleteInvite')
-    window.dialogOpen('Are you sure you want to delete your invite to this member?', takeYesAction, takeNoAction)
+    window.dialogOpen('Withdraw invitation to this member?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-secondary'>Do you want to cancel your team's invitation to this user?</strong><br><em class='text-muted'>The pending invitation will be removed.</em>",
+    })
+   
+
 }
 
 function disapproveMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('disapprove')
-    window.dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
+    window.dialogOpen('Remove User from Team?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-red'>Do you want to disapprove this member's request?</strong><br><em class='text-muted'>They will not be added to your team.</em>",
+    })
 }
 
 function rejectMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('reject')
-    window.dialogOpen('Continue with rejecting this member?', takeYesAction, takeNoAction)
+    window.dialogOpen('Continue with rejecting this member?', takeYesAction, takeNoAction);
+    window.dialogOpen('Reject this member?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-red'>Do you want to reject this member from your team?</strong><br><em class='text-muted'>This will permanently decline their request.</em>",
+        footer: "<span class='text-muted'>This action cannot be undone and will notify the member.</span>"
+    })
 }
 
 
@@ -176,7 +194,7 @@ function approveMemberAction() {
                 toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error accepting member.', error);},  
+        function(error) { toastError('Error accepting user in the team.', error);},  
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
@@ -198,7 +216,7 @@ async function disapproveMemberAction() {
                 toastError(responseData.message)
             }
         },
-        function(error) { toastError('Error disapproving member.', error);}, 
+        function(error) { toastError('Error removing team member.', error);}, 
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
@@ -220,7 +238,7 @@ async function rejectMemberAction() {
                 toastError(responseData.message)
             }
         },
-        function(error) { toastError('Error disapproving member.', error);}, 
+        function(error) { toastError('Error rejecting user as team member.', error);}, 
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
@@ -251,7 +269,7 @@ async function capatainMemberAction() {
                 toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error making captain.', error); }, 
+        function(error) { toastError('Error making this user as team captain.', error); }, 
         {   headers: generateHeaders(), }
     );
 }
@@ -278,7 +296,7 @@ async function deleteCaptainAction() {
             }
         },
         function(error) {
-            toastError('Error removing captain.', error);
+            toastError('Error removing captain from the team.', error);
         }, { headers: generateHeaders(), }
     );
 }
@@ -299,7 +317,7 @@ async function inviteMemberAction() {
                toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error inviting members.', error); }, 
+        function(error) { toastError('Error inviting members to join your team.', error); }, 
         {  headers: generateHeaders(),  }
     );
 }
@@ -320,7 +338,7 @@ async function withdrawInviteMemberAction() {
                 toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error deleting invite members.', error);}, 
+        function(error) { toastError('Error deleting invitation from members.', error);}, 
         {  headers: generateHeaders()  }
     );
 }

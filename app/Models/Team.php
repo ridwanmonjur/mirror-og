@@ -162,7 +162,10 @@ class Team extends Model
 
     public static function getFilteredUserTeams(array $filters, int|string $user_id): array
     {
-        $teamQuery = self::query();
+
+        $teamQuery = self::whereDoesntHave('members', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        });
 
         if (!empty($filters['status']) && is_array($filters['status'])) {
             $statusFilter = array_filter($filters['status'], fn($val) => $val != 0);
@@ -179,6 +182,20 @@ class Team extends Model
         if (!empty($filters['region']) && trim($filters['region']) !== '') {
             $teamQuery->where('country_name', $filters['region']);
         }
+
+        if (!empty($filters['sortKey']) && trim($filters['sortKey']) !== '') {
+            $sortKeyOg = trim($filters['sortKey']);
+            $sortKeyMap = ['name' => 'teamName', 'created_at' => 'created_at', 'recent' => 'updated_at'];
+            $sortKey = $sortKeyMap[$sortKeyOg];
+            if ($sortKey) {
+                $sortType = $filters['sortType'];
+                if (trim($sortType) == '') {
+                    $sortType = 'asc';
+                }
+
+                $teamQuery->orderBy ($sortKey, $sortType);
+            }
+        }
         
         if (!empty($filters['esports_title']) && trim($filters['esports_title']) !== '') {
             $teamQuery->where('all_categories', 'like', '%' . $filters['esports_title'] . '%');
@@ -189,17 +206,26 @@ class Team extends Model
         }
         
 
-        $teamList = $teamQuery->get();
-        $teamIdList = $teamList->pluck('id')->toArray();
+        $teamList0g = $teamQuery->simplePaginate(4);
+        $teamList =  $teamList0g->items();
+        $next_page_url = $teamList0g->nextPageUrl();
+        $has_more = $teamList0g->hasMorePages();
+        $prev_page_url = $teamList0g->previousPageUrl();
+        $teamIdList = array_column($teamList, 'id');
 
         $membersCount = $teamIdList
             ? self::getTeamMembersCountForEachTeam($teamIdList)
             : 0;
 
-        $count = $teamList->count();
+        $count = count($teamList);
 
         return [
             'teamList' => $teamList,
+            'links' => [
+                'next_page_url' => $next_page_url,
+                'has_more' => $has_more,
+                'prev_page_url' => $prev_page_url
+            ],
             'teamIdList' => $teamIdList,
             'membersCount' => $membersCount,
             'count' => $count,

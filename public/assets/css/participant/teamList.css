@@ -148,7 +148,7 @@ input[type="submit"],
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 20px 20px;
+    margin: 0 20px 5px;
 }
 
 .circle-container {
@@ -190,11 +190,15 @@ input[type="submit"],
 .wrapper {
     border-radius: 25px;
     border: 1px solid #676767;
-    padding: 20px;
+    padding: 20px 10px;
     max-width: 80vw;
+    height: 380px;
     background-color: #FFFBFB;
     width: min(90vw, 300px);
-    margin: 10px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .category-icon {
@@ -203,7 +207,7 @@ input[type="submit"],
   }
   
 .category-button {
-    max-width: 35ch;
+    max-width: 15ch;
 }
 
 .dropdown-size {
