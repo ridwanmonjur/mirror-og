@@ -79,7 +79,7 @@
             </p>
             <div class="mt-3 pt-3  tab-size">
                 @if ($teamMembersProcessed['accepted']['count'] != 0)
-                    <div class="min-h-250px">
+                    <div >
                     <h5 class="pb-3">Present Members</h5>
                     <div class="row  w-100">
                         @foreach ($teamMembersProcessed['accepted']['members'] as $member)
@@ -125,7 +125,7 @@
                 @endif
 
                 @if ($teamMembersProcessed['left']['count'] != 0)
-                    <div class="min-h-250px">
+                    <div >
                     <h5 class="pb-3 mt-3">Past Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['left']['members'] as $member)
@@ -168,7 +168,7 @@
             </p>
             <div class="  pt-3 tab-size">
                 @if ($teamMembersProcessed['pending']['count'] != 0)
-                    <div class="min-h-250px">
+                    <div >
                     <h5 class="pb-3">Pending Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['pending']['members'] as $member)
@@ -220,7 +220,7 @@
                 @endif
 
                 @if ($teamMembersProcessed['rejected']['count'] != 0)
-                     <div class="min-h-250px">
+                     <div >
                     <h5 class="pb-3 mt-3">Rejected Members</h5>
                     <div class="row w-100">
                         @foreach ($teamMembersProcessed['rejected']['members'] as $member)

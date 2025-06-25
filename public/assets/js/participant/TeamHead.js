@@ -297,7 +297,7 @@ let actionMap = {
     'disapprove': disapproveMemberAction,
     'invite': inviteMemberAction,
     'deleteInvite': withdrawInviteMemberAction,
-    'reject': rejectMemberAction
+    'reject': rejectMemberAction,
 };
 
 let dialogForMember = new DialogForMember();
@@ -357,33 +357,53 @@ function takeNoAction() {
 function approveMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('approve')
-    window.dialogOpen('Continue with accepting team?', takeYesAction, takeNoAction)
+    window.dialogOpen('Accept Team Request?', takeYesAction, takeNoAction, {
+        innerHTML: `<strong class='text-success'>Do you want to approve this invitation to join this team?</strong><br><em class='text-muted'>They can join and take part in events with you.</em>`
+    })
 }
 
 function inviteMember(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('invite')
-    window.dialogOpen('Are you sure you want to send invite to this team?', takeYesAction, takeNoAction)
+    window.dialogOpen('Send Join Request?', takeYesAction, takeNoAction, {
+        innerHTML: `<strong class='text-primary'>Do you want to request to join this team ?</strong><br><em class='text-muted'>
+        <br><span class='text-muted'>The team can accept or decline your invitation.</span>`
+    })
+}
+
+function rejoinTean(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('approve')
+    window.dialogOpen('Rejoin Team?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-success'>Do you want to rejoin your ex-team?</strong><br><em class='text-muted'>You can take part in events with them.</em><br>"
+    })
 }
 
 function withdrawInviteMember(memberId, teamId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setTeamId(teamId);
     dialogForMember.setActionName('deleteInvite')
-    window.dialogOpen('Are you sure you want to delete your invite to this team?', takeYesAction, takeNoAction)
+    window.dialogOpen('Withdraw Join Request?', takeYesAction, takeNoAction, {
+        innerHTML: `<strong class='text-secondary'>Do you want to cancel your invitation to join this team?</strong><br><em class='text-muted'>The pending invitation will be removed & you will have to request again.</em>
+        <br><span class='text-muted'>The team will no longer see your team invitation.</span>`
+    })
 }
 
 function disapproveMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('disapprove')
-    window.dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction)
+    window.dialogOpen('Leave This Team?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-red'>Do you want to leave this team?</strong><br><em class='text-muted'>You will not be able to take part in events with them.</em>",
+    })
 }
 
 function rejectMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('reject')
-    window.dialogOpen('Continue with rejecting this team?', takeYesAction, takeNoAction)
+    window.dialogOpen('Reject This Team?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-red'>Do you want to reject this team's invitation?</strong><br><em class='text-muted'>This will decline their request till you change your mind.</em>",
+    })
 }
 
 
@@ -401,7 +421,7 @@ function approveMemberAction() {
                 toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error accepting member.', error);},  
+        function(error) { toastError('Error accepting this request.', error);},  
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
@@ -423,7 +443,7 @@ async function disapproveMemberAction() {
                 toastError(responseData.message)
             }
         },
-        function(error) { toastError('Error disapproving member.', error);}, 
+        function(error) { toastError('Error leaving team.', error);}, 
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
@@ -445,7 +465,7 @@ async function rejectMemberAction() {
                 toastError(responseData.message)
             }
         },
-        function(error) { toastError('Error disapproving member.', error);}, 
+        function(error) { toastError('Error rejecting the request.', error);}, 
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
@@ -471,7 +491,7 @@ async function inviteMemberAction() {
                toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error inviting members.', error); }, 
+        function(error) { toastError('Error applying to join the team.', error); }, 
         {  headers: generateHeaders(),  }
     );
 }
@@ -492,7 +512,7 @@ async function withdrawInviteMemberAction() {
                 toastError(responseData.message);
             }
         },
-        function(error) { toastError('Error deleting invite members.', error);}, 
+        function(error) { toastError('Error withdrawing team join request.', error);}, 
         {  headers: generateHeaders()  }
     );
 }

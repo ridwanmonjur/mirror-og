@@ -35,6 +35,8 @@ class ParticipantTeamController extends Controller
                 'region',
                 'search',
                 'status',
+                'sortKey',
+                'sortType'
             ]);
 
             // dd($filters);
@@ -49,6 +51,7 @@ class ParticipantTeamController extends Controller
                         'teamList' => $teamList,
                         'count' => $count,
                         'membersCount' => $membersCount,
+                        'links' => $links
                     ],
                     'sucess' => true,
                 ],
@@ -213,12 +216,6 @@ class ParticipantTeamController extends Controller
             }
 
             $team->uploadTeamBanner($request);
-            // $team->updateOrCreate([
-            //     'team_id' => $team->id
-            // ], [
-            //     'all_categories' => $validatedData['all_categories'],
-            //     'default_category_id' => $validatedData['default_category_id'] 
-            // ]);
             
             return response()->json(
                 [
@@ -287,6 +284,12 @@ class ParticipantTeamController extends Controller
                 'actor' => 'user',
             ]);
 
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Your request to this team was sent!'
+                ]);
+            }
 
             return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
         } catch (Exception $e) {
@@ -294,6 +297,13 @@ class ParticipantTeamController extends Controller
                 $errorMessage = 'You have requested before!';
             } else {
                 $errorMessage = 'Your request to this team failed!';
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage
+                ], 400);
             }
 
             return redirect()->back()->with('errorJoin', $errorMessage);

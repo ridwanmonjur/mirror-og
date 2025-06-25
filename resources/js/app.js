@@ -55,8 +55,8 @@ window.toastWarningAboutRole = function (button, message) {
     button.style.cursor = 'not-allowed';
 }
 
-window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
-    Swal.fire({
+window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb, options = null) => {
+    const config = {
         icon: "warning",
         title: title,
         showDenyButton: true,
@@ -64,7 +64,39 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
         confirmButtonColor: "#43A4D7",
-    }).then((result) => {
+    };
+    
+    if (options && typeof options === 'object') {
+        if (options.image) {
+            config.imageUrl = options.image;
+            delete config.icon;
+        }
+        
+        if (options.svgIcon && !options.image) {
+            config.iconHtml = options.svgIcon;
+            delete config.icon;
+        }
+        
+        if (options.innerHTML) {
+            config.html = options.innerHTML;
+        }
+        
+        if (options.icon && !options.image && !options.svgIcon) {
+            config.icon = options.icon;
+        }
+        
+        if (options.footer) {
+            config.footer = options.footer;
+        }
+        
+        Object.keys(options).forEach(key => {
+            if (!['image', 'innerHTML', 'icon', 'footer', 'svgIcon'].includes(key)) {
+                config[key] = options[key];
+            }
+        });
+    }
+    
+    Swal.fire(config).then((result) => {
         if (result.isConfirmed) {
             resultConfirmedCb()
         } else if (result.isDenied) {
@@ -72,6 +104,55 @@ window.dialogOpen = (title, resultConfirmedCb, resultDeniedCb) => {
         }
     })
 }
+
+// Usage examples:
+
+// 1. Original usage (unchanged - maintains backward compatibility)
+// dialogOpen("Are you sure?", confirmCallback, denyCallback);
+
+// 2. With custom image
+// dialogOpen("Delete item?", confirmCallback, denyCallback, {
+//     image: "https://example.com/warning.png"
+// });
+
+// 3. With custom SVG icon
+// dialogOpen("Custom warning", confirmCallback, denyCallback, {
+//     svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#ff6b6b" viewBox="0 0 16 16">
+//                 <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+//               </svg>`
+// });
+
+// 4. With custom HTML content
+// dialogOpen("Confirm action", confirmCallback, denyCallback, {
+//     innerHTML: "<strong>This action cannot be undone!</strong><br><em>Please confirm.</em>"
+// });
+
+// 5. With custom icon
+// dialogOpen("Success!", confirmCallback, denyCallback, {
+//     icon: "success"
+// });
+
+// 6. With footer
+// dialogOpen("Are you sure?", confirmCallback, denyCallback, {
+//     footer: "<small>This action will affect all users</small>"
+// });
+
+// 7. Combined options with SVG
+// dialogOpen("Delete user account?", confirmCallback, denyCallback, {
+//     svgIcon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16">
+//                 <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5Z"/>
+//               </svg>`,
+//     innerHTML: "<strong>Warning!</strong><br>This will permanently delete the user account and all associated data.",
+//     footer: "<small>This action cannot be undone</small>"
+// });
+
+// 8. With additional SweetAlert2 options
+// dialogOpen("Confirm?", confirmCallback, denyCallback, {
+//     confirmButtonText: "Delete",
+//     denyButtonText: "Keep",
+//     confirmButtonColor: "#d33",
+//     width: 600
+// });
 
 window.loadMessage = () => {
     let success = localStorage.getItem('success');
