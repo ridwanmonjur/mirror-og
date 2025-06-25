@@ -33,8 +33,8 @@ class UpdateTeamRequest extends FormRequest
             'file.type' => 'string',
             'file.size' => 'numeric|max:3',
             'file.content' => 'string',
-            'all_categories' => 'string',
-            'default_category_id' => 'required',
+            'all_categories' => 'string|nullable',
+            'default_category_id' => 'required|nullable',
         ];
     }
 

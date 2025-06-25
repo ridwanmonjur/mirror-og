@@ -11,7 +11,7 @@
         }
 
         .category-button {
-            max-width: 150px;
+            max-width: 130px;
         }
 
         .category-input {
@@ -163,9 +163,9 @@
                 @endif
             </div>
 
-        <div v-cloak :class="{'upload-container': true, }" >
+        <div v-cloak :class="{'upload-container my-2': true, }" >
             <label class="upload-label">
-                <div class="circle-container mt-3">
+                <div class="circle-container mt-1">
                     <div class="uploaded-image motion-logo "
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner  }} ), url({{asset('assets/images/404.png')}}) ; object-fit:cover; {{$frameStyles}}"
                     ></div>
@@ -337,7 +337,7 @@
                                 <span> Your previous team </span>
                             </button>
                                 <button  class="btn btn-primary bg-white badge btn-link position-relative py-2"
-                                    type="button"  onclick="approveMember({{$teamMember->id}})"
+                                    type="button"  onclick="rejoinTean({{$teamMember->id}})"
                                 >
                                     <span class="text-primary"> Rejoin team! </span>
                                 </button>
@@ -436,11 +436,14 @@
                 <div class=" my-3">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
                         <div class="d-inline-flex mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
-                            <div class=" d-flex flex-col rounded-2 justify-content-between align-items-between px-3 py-1 btn-light text-primary  mx-1"
+                            <div class=" d-flex flex-col rounded-2 justify-content-between align-items-center px-0 py-0  mx-1"
                                 :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
-                                :style="{ color: fontColor, borderColor: fontColor  }"
+                                :style="{ color: '#43a4d7', backgroundColor: 'white', border: '1px solid #e7e7e7'  }"
                             >
-                                <div class="category-button d-inline-block text-ellipsis me-2">@{{ element?.gameTitle }}</div>
+                                <div class="category-button d-inline-block text-ellipsis me-2">
+                                    <img class="object-fit-cover rounded rounded-2" v-bind:src="'/storage/' + element.gameIcon" width="30" height="30">
+                                    <span>@{{ element?.gameTitle }}</span>
+                                </div>
                                 <span class="ms-2">
                                     <small class="cursor-pointer" v-if="element.id == defaultCategory">
                                         <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f3ecec" stroke="#f3ecec"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 8 0 c -4.40625 0 -8 3.59375 -8 8 s 3.59375 8 8 8 s 8 -3.59375 8 -8 s -3.59375 -8 -8 -8 z m 3.398438 4.507812 c 0.265624 -0.027343 0.527343 0.050782 0.734374 0.21875 c 0.425782 0.351563 0.488282 0.980469 0.140626 1.40625 l -4.5 5.5 c -0.179688 0.21875 -0.441407 0.351563 -0.722657 0.367188 c -0.28125 0.011719 -0.558593 -0.09375 -0.757812 -0.292969 l -2.5 -2.5 c -0.390625 -0.390625 -0.390625 -1.023437 0 -1.414062 s 1.023437 -0.390625 1.414062 0 l 1.71875 1.71875 l 3.800781 -4.644531 c 0.167969 -0.203126 0.410157 -0.335938 0.671876 -0.363282 z m 0 0" fill="#43a4d7"></path> </g></svg>
@@ -448,7 +451,7 @@
                                     <small v-else class="cursor-pointer invisible-until-hover" v-on:click="makeDefaultCategory(event, element.id)">
                                         <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f3ecec" stroke="#f3ecec"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 8 0 c -4.40625 0 -8 3.59375 -8 8 s 3.59375 8 8 8 s 8 -3.59375 8 -8 s -3.59375 -8 -8 -8 z m 3.398438 4.507812 c 0.265624 -0.027343 0.527343 0.050782 0.734374 0.21875 c 0.425782 0.351563 0.488282 0.980469 0.140626 1.40625 l -4.5 5.5 c -0.179688 0.21875 -0.441407 0.351563 -0.722657 0.367188 c -0.28125 0.011719 -0.558593 -0.09375 -0.757812 -0.292969 l -2.5 -2.5 c -0.390625 -0.390625 -0.390625 -1.023437 0 -1.414062 s 1.023437 -0.390625 1.414062 0 l 1.71875 1.71875 l 3.800781 -4.644531 c 0.167969 -0.203126 0.410157 -0.335938 0.671876 -0.363282 z m 0 0" fill="#43a4d7"></path> </g></svg>
                                     </small>
-                                    <small class="cursor-pointer" v-on:click="removeCategory(event, element.id)">
+                                    <small class="cursor-pointer me-1" v-on:click="removeCategory(event, element.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-x-circle cursor-pointer text-red " viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
                                             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"></path>
@@ -481,7 +484,7 @@
                 </div>
                 </div> 
                 @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
-                    <div class="my-3" v-cloak  v-if="!isEditMode">
+                    <div class="my-0" v-cloak  v-if="!isEditMode">
                         <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
                         <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
                     </div>
@@ -495,21 +498,23 @@
                  @endif
             @endif
             <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
-                <div class="col-12 mb-2 mt-0">
-                    <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
-                        <div class="d-inline-flex cursor-pointer mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
-                            <div class=" d-flex flex-col rounded-2 justify-content-between align-items-between px-3 py-1 btn-light text-primary  mx-1"
-                                :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
-                                :style="{ color: fontColor, borderColor: fontColor  }"
+                <div class="col-12 mb-3 mt-0">
+                    <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto ">
+                        <div class="d-inline-flex cursor-pointer justify-content-center align-items-center position-relative mx-1" v-for="element in userCategoriesArr" :key="element.id">
+                            <div class="rounded-2 text-primary"
+                                
+                                {{-- style="background-color: white; color: #43a4d7; padding: 2px;" --}}
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
                                 v-bind:title="element.gameTitle"
                             >
-                                <div class="category-button d-inline-block text-ellipsis me-2">@{{ element?.gameTitle }}</div>
-                                <span>
-                                    <small class="cursor-pointer" v-if="element.id == defaultCategory">
-                                        <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#f3ecec" stroke="#f3ecec"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 8 0 c -4.40625 0 -8 3.59375 -8 8 s 3.59375 8 8 8 s 8 -3.59375 8 -8 s -3.59375 -8 -8 -8 z m 3.398438 4.507812 c 0.265624 -0.027343 0.527343 0.050782 0.734374 0.21875 c 0.425782 0.351563 0.488282 0.980469 0.140626 1.40625 l -4.5 5.5 c -0.179688 0.21875 -0.441407 0.351563 -0.722657 0.367188 c -0.28125 0.011719 -0.558593 -0.09375 -0.757812 -0.292969 l -2.5 -2.5 c -0.390625 -0.390625 -0.390625 -1.023437 0 -1.414062 s 1.023437 -0.390625 1.414062 0 l 1.71875 1.71875 l 3.800781 -4.644531 c 0.167969 -0.203126 0.410157 -0.335938 0.671876 -0.363282 z m 0 0" fill="#43a4d7"></path> </g></svg>
-                                    </small>
+                                
+                                <img :class="{'border border-3 border-primary': element.id == defaultCategory }" class="object-fit-cover rounded-2" v-bind:src="'/storage/' + element.gameIcon" width="45" height="40">
+                                <!-- Badge with check circle icon -->
+                                <span class="position-absolute rounded-circle d-inline-block " style="right: 0%; top: -25%;  z-index: 50; width: 15px; height: 15px;" v-if="element.id == defaultCategory">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"  class="bi bi-check-circle-fill text-primary" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                    </svg>
                                 </span>
                             </div>
                         </div>
@@ -556,7 +561,6 @@
                     </button>
                 </div>
             @endif
-
        
     </div>
     @include('includes.Profile.ProfileStatsModal', [

@@ -18,6 +18,13 @@
     @include('googletagmanager::body')
     @include('includes.Navbar')
     <br>
+     <input type="hidden" id="currentMemberUrl" value="{{ url()->current() }}">
+    
+    <input type="hidden" id="participantMemberUpdateUrl" value="{{ route('participant.member.update', ['id' => ':id']) }}">
+    <input type="hidden" id="memberPendingUrl" value="{{ route('participant.member.pending', ['id' => ':id']) }}">
+    <input type="hidden" id="participantMemberDeleteInviteUrl" value="{{ route('participant.member.deleteInvite', ['id' => ':id']) }}">
+    <input type="hidden" id="participantMemberInviteUrl" value="{{ route('participant.member.invite', ['id' => ':id', 'userId' => ':userId']) }}">
+
     <div class="team-head-storage d-none  " data-all-categories="{{json_encode($allCategorys)}}">
     </div>
     <main>
@@ -43,6 +50,7 @@
                     </svg>
                     Create Team
                 </a>
+                
             </div>
         </div>
         <form id="newTeamsForm">
@@ -76,7 +84,7 @@
                         </svg>
                     </div>
                     <div id="filter-option" class="mx-0 px-0 mb-2 ms-3 d-inline-block">
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start flex-wrap">
                             <div class="dropdown me-3">
                                 <button class="ps-0 pe-3 py-2 button-design-removed" type="button"
                                     id="dropdownFilterSort" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -294,10 +302,7 @@
                                 onclick="setSortForFetch('name');">
                                 <label class="me-3 cursor-pointer" for="name">Name</label>
                             </div>
-                            <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
-                                onclick="setSortForFetch('membersCount');">
-                                <label class="me-3 cursor-pointer" for="name">Members</label>
-                            </div>
+                            
                              <div class="sort-box d-block min-w-150px hover-bigger ps-3 py-1"
                                 onclick="setSortForFetch('created_at');">
                                 <label class="me-3 cursor-pointer" for="created_at">Date Joined</label>
@@ -339,13 +344,24 @@
                     {{-- <small  id="default-sorts" class="btn btn-primary text-light px-2 py-0">Default</small> --}}
                 </span>
             </div>
-            <div class="d-none mx-auto text-center"></div>
+            <div id="no-results-div" class="d-none mx-auto my-5 py-5 text-center">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                    </svg>
+                </div>
+                <div>
+                    <i>No teams to view.</i>
+                </div>
+            </div>
             <div class="grid-3-columns justify-content-center" id="filter-sort-results" style="grid-auto-rows : 1fr !important;">
             </div>
+            <ul id="page-links" class="d-none pagination mx-auto text-center list-unstyled"> </ul>
         </form>
         <br>
         <br>
     </main>
+    <script src="{{ asset('/assets/js/organizer/DialogForMember.js') }}"></script>
     <script src="{{ asset('/assets/js/participant/TeamList.js') }}"></script>
 </body>
 
