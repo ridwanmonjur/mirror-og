@@ -556,100 +556,306 @@ async function fetchTeams(event = null) {
     console.log(data);
     
     // if (data.success && 'data' in data) {
-        let {teamList, count, membersCount} = data?.data;
-        paintScreen(teamList, membersCount, count);
-    // }
-    //     let {next_page_url, prev_page_url} = data?.data;
-    //     let newPagination = [];
-    //     if (prev_page_url) {
-    //         newPagination.push(
-    //             {'url' : prev_page_url, 'label': 'Previous Page'},
-    //         );
-    //     }
+    let {teamList, count, membersCount, links} = data?.data;
+    paintScreen(teamList, membersCount, count);
+    
+    let {next_page_url, prev_page_url, has_more} = links;
+        let newPagination = [];
+        if (prev_page_url) {
+            newPagination.push(
+                {'url' : prev_page_url, 'label': '&lt; Previous'},
+            );
+        }
 
-    //     if (next_page_url) {
-    //         newPagination.push(
-    //             {'url' : next_page_url, 'label': 'Next Page'},
-    //         );
-    //     }
+        if (next_page_url) {
+            newPagination.push(
+                {'url' : next_page_url, 'label': 'Next &gt;'},
+            );
+        }
           
-    //     links = [...newPagination];
+        links = [...newPagination];
 
-    //     if (!users[0]) {
-    //         Swal.fire({
-    //             position: "center",
-    //             icon: 'info',
-    //             confirmButtonColor: '#43a4d7',
-    //             text: 'No users found by this search. Please change your search.',
-    //         })
-    //     }
+        if (!teamList[0]) {
+            Swal.fire({
+                position: "center",
+                icon: 'info',
+                confirmButtonColor: '#43a4d7',
+                text: 'No teams found by this search. Please change your search.',
+            })
 
-    //     for (user of users) {
-    //         bodyHtml+=`
-    //             <tr class="st py-2">
-    //                 <td class="colorless-col px-0 mx-0   cursor-pointer  ">
-    //                     <svg 
-    //                         onclick="redirectToProfilePage(${user.id}, ${user.slug});"
-    //                         class="gear-icon-btn"
-    //                         xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-    //                         class="bi bi-eye-fill" viewBox="0 0 16 16">
-    //                         <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-    //                         <path
-    //                             d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-    //                     </svg>
-    //                 </td>
-    //                 <td class="colored-cell px-1   cursor-pointer  " onclick="redirectToProfilePage(${user.id}, ${user.slug});">
-    //                     <div class="player-info">
-    //                         <img 
-    //                             onerror="this.onerror=null;this.src='/assets/images/404.png';"
-    //                             width="45" height="45" 
-    //                             src="/storage/${user.userBanner}"
-    //                             class="mx-2 my-1 border border-2 border-secondary object-fit-cover rounded-circle"
-    //                         >
-    //                         <span>${user.name}</span>
-    //                     </div>
-    //                 </td>
-    //                 <td class="flag-cell colored-cell text-start text-lg-center px-3 fs-4">
-    //                     <span>${user?.participant?.region_flag? user.participant.region_flag: '-'}</span>
-    //                 </td>
-    //                  <td class="colored-cell px-3">
-    //                     ${user.is_in_team ?
-    //                         'Team status ' + user.members[0].status
-    //                     :
-    //                         'Not in team'
-    //                     }
-    //                 </td>
-    //                 <td class="colorless-col ps-0 pe-2 py-2 text-start text-lg-center" style="min-width: 1.875rem;">
-    //                     <div class="gear-icon-btn ${user.is_in_team ? 'd-none' : ''}" onclick="inviteMember('${user.id}', '${teamId}')">
-    //                         <img src="/assets/images/add.png" height="24px" width="24px">
-    //                     </div>
-    //                 </td>
-                  
-    //             </tr>
-    //         `;
-    //     }
+            noResultsDiv.classList.remove('d-none');
+            pageLinks.classList.add('d-none');
+            return;
+        }
 
-    //     for (let link of links) {
-    //         pageHtml += `
-    //             <li
-    //                 data-url='${link.url}'
-    //                 onclick="{ fetchMembers(event); }"  
-    //                 class="page-item " 
-    //             > 
-    //                 <a 
-    //                     onclick="event.preventDefault()"
-    //                     class="page-link"
-    //                 > 
-    //                     ${link.label}
-    //                 </a>
-    //             </li>
-    //         `;
-    //     }
+        let pageHtml = '';
+        for (let link of links) {
+            pageHtml += `
+                <li
+                    data-url='${link.url}'
+                    onclick="fetchTeams('${link.url}');"  
+                    class=" mt-4 border  border-secondary  mx-auto text-center rounded-3"
+                    style="width: 120px;"
+                    type='button' 
+                > 
+                <a class="page-link">${link.label}</a>
+                </li>
+            `;
+        }
 
-    // }
-
-    // let tbodyElement = document.querySelector('#member-table-body tbody');
-    // tbodyElement.innerHTML = bodyHtml;  
-    // let pageLinks = document.querySelector('#member-table-links');
-    // pageLinks.innerHTML = pageHtml; 
+        noResultsDiv.classList.add('d-none');
+        pageLinks.innerHTML = pageHtml;
+        pageLinks.classList.remove('d-none');
+    
 };
+
+// pagination + sorting + buttons + swal
+
+
+
+let actionMap = {
+    'approve': approveMemberAction,
+    'disapprove': disapproveMemberAction,
+    'deleteInvite': withdrawInviteMemberAction,
+    'reject': rejectMemberAction,
+    'rejoin': rejoinTeamAction
+};
+
+let csrfToken77 = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+function generateHeaders() {
+    return {
+        'X-CSRF-TOKEN': csrfToken77,
+        'credentials': 'include', 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+}
+
+
+addOnLoad( () => { window.loadMessage(); } )
+function reloadUrl(currentUrl) {
+    if (currentUrl.includes('?')) {
+        currentUrl = currentUrl.split('?')[0];
+    } 
+
+    localStorage.setItem('success', 'true');
+    localStorage.setItem('message', 'Successfully updated team.');
+    window.location.replace(currentUrl);
+}
+
+function toastError(message, error = null) {
+    console.error(error)
+    Toast.fire({
+        icon: 'error',
+        text: message
+    });
+}
+
+function takeYesAction() {
+    console.log({
+        memberId: dialogForMember.getMemberId(),
+        action: dialogForMember.getActionName()
+    })
+
+    const actionFunction = actionMap[dialogForMember.getActionName()];
+    if (actionFunction) {
+        actionFunction();
+    } else {
+        Toast.fire({
+            icon: 'error',
+            text: "No action found."
+        })
+    }
+} 
+
+function takeNoAction() {
+    dialogForMember.reset();
+}
+
+function joinTeam(event, teamId) {
+    event.preventDefault(); 
+    event.stopPropagation();
+    let button = event.currentTarget;
+    window.dialogOpen('Send join request?', ()=> {
+        const url = getUrl("memberPendingUrl", teamId);
+        fetchData(url,
+            function(responseData) {
+                if (responseData.success) {
+                    button.classList.remove('btn-primary');
+                    button.classList.remove('text-white');
+                    button.classList.add('btn-success');
+                    button.classList.add('text-dark');
+                    button.innerText = "Requested";
+                    button.disabled = true;
+                } else {
+                    toastError(responseData.message)
+                }
+            },
+            function(error) { toastError('Error joining team.', error);}, 
+            {
+                headers: generateHeaders(), 
+                body: JSON.stringify({
+                   'actor' : 'user', 'status' : 'pending'
+                })
+            }
+        );
+    }, ()=> {
+
+    }, {
+        innerHTML: "<strong class='text-success'>Do you want to join this team?</strong><br><em class='text-muted'>You can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>"
+    })
+}
+
+function approveMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('approve')
+    window.dialogOpen('Accept Team Request?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-success'>Do you want to approve this member to your team?</strong><br><em class='text-muted'>They can join and take part in events with you.</em><br><span class='text-muted'>This action will send a notification to the member.</span>"
+    })
+}
+
+function rejoinTean(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('approve')
+    window.dialogOpen('Rejoin Team?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-success'>Do you want to rejoin your ex-team?</strong><br><em class='text-muted'>You can take part in events with them.</em><br>"
+    })
+}
+
+function withdrawInviteMember(memberId, teamId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setTeamId(teamId);
+    dialogForMember.setActionName('deleteInvite')
+    window.dialogOpen('Withdraw Join Request?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-secondary'>Do you want to cancel your invitation to this user?</strong><br><em class='text-muted'>The pending invitation will be removed.</em><br><span class='text-muted'>The user will no longer see your team invitation.</span>"
+    })
+}
+
+function disapproveMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('disapprove')
+    window.dialogOpen('Continue with disapproval?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-red'>Do you want to disapprove this member's request?</strong><br><em class='text-muted'>They will not be added to your team.</em><br><span class='text-muted'>This action will notify the member of the decision.</span>"
+    })
+}
+
+function rejectMember(memberId) {
+    dialogForMember.setMemberId(memberId);
+    dialogForMember.setActionName('reject')
+    window.dialogOpen('Reject join invitation?', takeYesAction, takeNoAction, {
+        innerHTML: "<strong class='text-red'>Do you want to reject this member from your team?</strong><br><em class='text-muted'>This will permanently decline their request.</em><br><span class='text-muted'>This action cannot be undone and will notify the member.</span>"
+    })
+}
+
+async function rejoinTeamAction(memberId) {
+    const url = getUrl("participantMemberUpdateUrl", memberId);
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message)
+            }
+        },
+        function(error) { toastError('Error rejoining team.', error);}, 
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'user', 'status' : 'accepted'
+            })
+        }
+    );
+}
+
+
+function approveMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl('participantMemberUpdateUrl', memberId);
+
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message);
+            }
+        },
+        function(error) { toastError('Error accepting member.', error);},  
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'user', 'status' : 'accepted'
+            })
+        }
+    );
+}
+
+async function disapproveMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl("participantMemberUpdateUrl", memberId);
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message)
+            }
+        },
+        function(error) { toastError('Error disapproving member.', error);}, 
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'team', 'status' : 'left'
+            })
+        }
+    );
+}
+
+async function rejectMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    const url = getUrl("participantMemberUpdateUrl", memberId);
+    fetchData(url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message)
+            }
+        },
+        function(error) { toastError('Error disapproving member.', error);}, 
+        {
+            headers: generateHeaders(), 
+            body: JSON.stringify({
+               'actor' : 'user', 'status' : 'rejected'
+            })
+        }
+    );
+}
+
+
+async function withdrawInviteMemberAction() {
+    const memberId = dialogForMember.getMemberId();
+    
+    const urlTemplate = document.getElementById('participantMemberDeleteInviteUrl').value;
+    const url = urlTemplate.replace(':id', memberId);
+
+    fetchData(
+        url,
+        function(responseData) {
+            if (responseData.success) {
+                let currentUrl = document.getElementById('currentMemberUrl').value;
+                reloadUrl(currentUrl);
+            } else {
+                toastError(responseData.message);
+            }
+        },
+        function(error) { toastError('Error deleting invite members.', error);}, 
+        {  headers: generateHeaders()  }
+    );
+}
+
