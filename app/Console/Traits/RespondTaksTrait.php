@@ -56,8 +56,8 @@ trait RespondTaksTrait
                     $event->update(['status' => 'FAILED']);
                     $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
                     $deadlinesPast = $deadlines->pluck('id');
-                    Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', BracketDeadline::class)->delete();
-                    Task::where('taskable_id', $event->id)->where('taskable_type', EventDetail::class)->delete();
+                    Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', "Deadline")->delete();
+                    Task::where('taskable_id', $event->id)->where('taskable_type', "EventDetail")->delete();
                     BracketDeadline::where('event_details_id', $event->id)->delete();
                     Log::info("Event successfully cancelled and cleaned up. Event ID: {$event->id}");
                 }

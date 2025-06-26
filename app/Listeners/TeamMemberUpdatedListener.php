@@ -34,6 +34,8 @@ class TeamMemberUpdatedListener implements ShouldQueue
             }            
         ]);
 
+        $userNotification = '';
+
         $selectTeam = $event->teamMember->team;
         $user = $event->teamMember->user;
         $status = $event->teamMember->status;
@@ -246,13 +248,18 @@ class TeamMemberUpdatedListener implements ShouldQueue
     }
 
     
-    public function failed(Throwable $exception): void
+    public function failed(TeamMemberUpdated $event, Throwable $exception): void
     {
-        // Log the error
-        Log::error('TeamUpdatedListener failed', [
+        // Log the error with proper context
+        Log::error('TeamMemberUpdatedListener failed', [
             'exception' => $exception->getMessage(),
-            'team_member_id' => $this->teamMember->id ?? null,
-            'stack_trace' => $exception->getTraceAsString()
+            'team_member_id' => $event->teamMember->id ?? null,
+            'team_id' => $event->teamMember->team_id ?? null,
+            'user_id' => $event->teamMember->user_id ?? null,
+            'status' => $event->teamMember->status ?? null,
+            'stack_trace' => $exception->getTraceAsString(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine()
         ]);
     }
 }
