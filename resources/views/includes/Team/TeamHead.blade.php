@@ -560,7 +560,7 @@
                 </div>
             @else
                 @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '' || isset($teamMember))
-                    <p  v-cloak class="my-0 py-0 d-flex justify-content-center align-items-center">
+                    <p  v-cloak class="mb-0 mt-2 py-0 d-flex justify-content-center align-items-center">
                         <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                         @if ($selectTeam->country_flag)
                             <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
@@ -574,8 +574,8 @@
                     </p>
                  @endif
             @endif
-            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
-                <div class="col-12 mb-3 mt-0">
+            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-1 mb-1  ">
+                <div class="col-12 mb-2 mt-0">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto ">
                         <div class="d-inline-flex cursor-pointer justify-content-center align-items-center position-relative mx-1" v-for="element in userCategoriesArr" :key="element.id">
                             <div class="rounded-2 text-primary"
