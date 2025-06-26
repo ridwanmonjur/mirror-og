@@ -192,24 +192,25 @@ class EventDetail extends Model implements Feedable
     {
         $now = now();
 
+
         $status = $this->statusResolved();
-        Task::where('taskable_id', $this->getKey())
-            ->where('taskable_type', EventDetail::class)
+        Task::where('taskable_id', $this->id)
+            ->where('taskable_type', "EventDetail")
             ->whereIn('task_name', ['started', 'ended', 'live'])
             ->delete();
 
         if ($status !== 'PENDING' && $status!= 'DRAFT' && $status !== 'PREVIEW') {
             $tasksData = [
                 [
-                    'taskable_id' => $this->getKey(),
-                    'taskable_type' => EventDetail::class,                    
+                    'taskable_id' => $this->id,
+                    'taskable_type' => "EventDetail",                    
                     'task_name' => 'started',
                     'action_time' => $this->startDate . ' ' . $this->startTime,
                     'created_at' => $now,
                 ],
                 [
-                    'taskable_id' => $this->getKey(),
-                    'taskable_type' => EventDetail::class,  
+                    'taskable_id' => $this->id,
+                    'taskable_type' => "EventDetail",  
                     'task_name' => 'ended',
                     'action_time' => $this->endDate . ' ' . $this->endTime,
                     'created_at' => $now,
@@ -222,10 +223,9 @@ class EventDetail extends Model implements Feedable
                     'task_name' => 'live',
                     'action_time' => $this->sub_action_public_date . ' ' . $this->sub_action_public_time,
                     'created_at' => $now,
-                    'taskable_id' => $this->getKey(),
-                    'taskable_type' => EventDetail::class,  
+                    'taskable_id' => $this->id,
+                    'taskable_type' => "EventDetail",  
                 ];
-                
             }
 
             Task::insert($tasksData);
@@ -271,7 +271,7 @@ class EventDetail extends Model implements Feedable
 
             Task::where([
                 'taskable_id' => $this->id,
-                'taskable_type' => EventDetail::class,                    
+                'taskable_type' => "EventDetail",                    
                 'task_name' => 'reg_over',
             ])->delete();
             
@@ -296,7 +296,7 @@ class EventDetail extends Model implements Feedable
         $deadlinesPast = $deadlines->pluck("id");
         
         Task::whereIn('taskable_id', $deadlinesPast)
-            ->where('taskable_type', BracketDeadline::class)
+            ->where('taskable_type', "Deadline")
             ->delete();
         
         BracketDeadline::whereIn('id', $deadlinesPast)->delete();
@@ -351,21 +351,21 @@ class EventDetail extends Model implements Feedable
                 $tasksToCreate = [...$tasksToCreate, 
                     [
                         'taskable_id' => $deadline->id,
-                        'taskable_type' => BracketDeadline::class,
+                        'taskable_type' => "Deadline",
                         'task_name' => 'start_report',
                         'action_time' => $startReport,
                         'created_at' => $now,
                     ], 
                     [
                         'taskable_id' => $deadline->id,
-                        'taskable_type' => BracketDeadline::class,
+                        'taskable_type' => "Deadline",
                         'task_name' => 'end_report',
                         'action_time' => $endReport,
                         'created_at' => $now,
                     ],
                     [
                         'taskable_id' => $deadline->id,
-                        'taskable_type' => BracketDeadline::class,
+                        'taskable_type' => "Deadline",
                         'task_name' => 'org_report',
                         'action_time' => $orgReport,
                         'created_at' => $now,

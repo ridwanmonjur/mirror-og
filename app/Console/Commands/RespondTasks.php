@@ -62,13 +62,13 @@ class RespondTasks extends Command
             $regOverTaskIds = [];
 
             if ($type === 0) {
-                $tasks = Task::where('taskable_type', EventDetail::class)
+                $tasks = Task::where('taskable_type', "EventDetail")
                     ->where('action_time', '>=', $now)
                     ->where('action_time', '<=', $now->copy()->addMinutes(29))
                     ->get();
             } else {
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', EventDetail::class)->get();
+                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', "EventDetail")->get();
             }
 
             if ($type == 5) {
