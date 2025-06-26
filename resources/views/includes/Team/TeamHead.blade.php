@@ -351,32 +351,32 @@
                 @if ($role == "PARTICIPANT")
                     @if (is_null($status))
                         @if ($acceptedTeamMemberCount>=10)
-                            <button  class="btn btn-primary bg-white rounded-pill border-2 badge" type="button" disabled>
+                            <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="button" disabled>
                                 <span> Full </span>
                             </button>
                         @else
                             @if ($acceptedTeamMemberCount>=10)
-                                <button  class="btn btn-primary bg-secondary rounded-pill border-2 badge" type="button" disabled>
+                                <button  class="btn btn-primary bg-secondary rounded-pill border-2 btn-sm" type="button" disabled>
                                     <span> Full </span>
                                 </button>
                             @else
                                 @if ($selectTeam->status == "private")
-                                    <button  class="btn btn-primary bg-secondary rounded-pill border-2 badge" type="button" disabled>
+                                    <button  class="btn btn-primary bg-secondary rounded-pill border-2 btn-sm" type="button" disabled>
                                         <span> Private </span>
                                     </button>
                                 @elseif ($selectTeam->status == "open")
 
                                     <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                                         @csrf()
-                                        <button  class="btn btn-primary bg-white rounded-pill border-2 badge" type="submit">
-                                            <span> Join Team </span>
+                                        <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="submit">
+                                            <span class="text-primary"> Join Team </span>
                                         </button>
                                     </form>
                                 @else 
                                     <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                                         @csrf()
-                                        <button  class="btn btn-primary bg-white rounded-pill border-2 badge" type="submit">
-                                            <span> Apply to join </span>
+                                        <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="submit">
+                                            <span class="text-primary"> Apply to join </span>
                                         </button>
                                     </form>
                                 @endif
@@ -385,7 +385,7 @@
                         
                     @elseif ($status == "pending_me")
                         <div  v-if="!isEditMode"  class="d-block d-lg-inline-block   px-0" >
-                            <span  class=" btn btn-success text-dark badge " type="button">
+                            <span  class=" btn btn-success text-dark btn-sm " type="button">
                                  Applied to join 
                             </span>
                             <button class="gear-icon-btn mt-0 ms-1"
@@ -546,7 +546,7 @@
                     </svg> 
                 </div>
                 </div> 
-                <div class="my-0 d-flex justify-content-center" v-cloak  v-if="!isEditMode">
+                <div class="my-0 d-flex justify-content-center align-items-center" v-cloak  v-if="!isEditMode">
                     <span class="ms-2" >{{$selectTeam->teamDescription ?? 'Add a team description'}}</span>
                     @if ($selectTeam->country_flag)
                         <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
@@ -560,7 +560,7 @@
                 </div>
             @else
                 @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '' || isset($teamMember))
-                    <p  v-cloak class="my-0 py-0 d-flex justify-content-center">
+                    <p  v-cloak class="my-0 py-0 d-flex justify-content-center align-items-center">
                         <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                         @if ($selectTeam->country_flag)
                             <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
