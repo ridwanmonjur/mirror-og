@@ -56,17 +56,19 @@ class RespondTasks extends Command
         Log::info("Event of type {$type} ran");
         $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
         try {
-            $today = Carbon::today();
             $endedTaskIds = [];
             $liveTaskIds = [];
             $startedTaskIds = [];
             $regOverTaskIds = [];
 
             if ($type === 0) {
-                $tasks = Task::whereDate('action_time', $today)->where('taskable_type', EventDetail::class)->where('action_time', '>=', $now)->where('action_time', '<=', $now->addMinutes(30))->get();
+                $tasks = Task::where('taskable_type', "EventDetail")
+                    ->where('action_time', '>=', $now)
+                    ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                    ->get();
             } else {
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', EventDetail::class)->get();
+                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', "EventDetail")->get();
             }
 
             if ($type == 5) {

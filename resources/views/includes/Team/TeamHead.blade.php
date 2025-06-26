@@ -39,6 +39,10 @@
             stroke: white !important;
             animation-duration: 3s;
         }
+
+        .border-red {
+            border-color: red !important;
+        }
     </style>
 </head>
 @php
@@ -336,10 +340,10 @@
                                 </svg>
                                 <span> Your previous team </span>
                             </button>
-                                <button  class="btn btn-primary bg-white badge btn-link position-relative py-2"
+                                <button  class="btn rounded-pill border-2 bg-white border-primary btn-sm  position-relative "
                                     type="button"  onclick="rejoinTean({{$teamMember->id}})"
                                 >
-                                    <span class="text-primary"> Rejoin team! </span>
+                                    <span class="text-primary   "> Rejoin team! </span>
                                 </button>
                         @endif
                     </div>
@@ -347,20 +351,21 @@
                 @endauth
                 @if ($role == "PARTICIPANT")
                     @if (is_null($status))
-                        <form  v-if="!isEditMode"  class="d-block d-lg-inline-block pt-1 px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                        <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                             @csrf()
-                            <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="submit">
+                            <button  class="btn btn-primary bg-white rounded-pill border-2 badge" type="submit">
                                 <span> Join Team </span>
                             </button>
                         </form>
+                        
                     @elseif ($status == "pending_me")
-                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
-                            <button style="font-size: 0.875rem;" class="btn btn-primary bg-white btn-sm btn-link" type="button">
-                                <span> Requested </span>
-                            </button>
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block   px-0" >
+                            <span  class=" btn btn-success text-dark badge " type="button">
+                                 Applied to join 
+                            </span>
                             <button class="gear-icon-btn mt-0 ms-1"
                                 onclick="withdrawInviteMember({{ $teamMember->id }})">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                     <path
                                         d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
@@ -369,32 +374,31 @@
                                 </svg>
                             </button>
                         </div>
-                        {{-- <span   v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
 
                     @elseif ($status == "pending_team" )
-                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
-                            <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn btn-success bg-white btn-sm btn-link me-1" type="button">
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block   px-0" >
+                            <button onclick="approveMember({{$teamMember->id}})"  class="btn rounded-pill border-2 btn-success bg-white btn-sm me-1" type="button">
                                 <span class="text-success"> Yes, join team </span>
                             </button>
-                            <button onclick="rejectMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-danger bg-white btn-sm  btn-link" type="button">
-                                <span class="text-red">Reject</span>
+                            </button>
+                            <button onclick="rejectMember({{$teamMember->id}})"  class="btn rounded-pill border-2 border border-red bg-white btn-sm  " type="button">
+                                 <span class="text-red">Reject</span>   
                             </button>
                         </div>
-                        {{-- <span   v-if="!isEditMode"  class="d-inline-block mt-2 ps-2 ms-0 me-2 pt-2 badge rounded-pill border form-color d-inline"></span> --}}
                     @elseif ($status == "rejected_me" )
-                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block  pt-1 px-0" >
+                        <div  v-if="!isEditMode"  class="d-block d-lg-inline-block   px-0" >
                             <button
-                                class="me-2 btn btn-sm text-red bg-white py-1 px-2"
+                                class="me-2 btn badge text-red bg-white py-1 px-2"
                                 style="border: 1px solid red; pointer-events: none;"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                 </svg>
-                                <span> Rejected team</span>
+                                <span> You rejected team</span>
                             </button>
-                            <button onclick="approveMember({{$teamMember->id}})" style="font-size: 0.875rem;" class="btn border border-success bg-white btn-sm " type="button">
-                                <span class="text-success">Change decision</span>
+                            <button onclick="approveMember({{$teamMember->id}})"  class="btn border rounded-pill border-2 border-success bg-white btn-sm text-success " type="button">
+                                No, Join
                             </button>
                         </div>
                     @elseif ($status == "rejected_team" )
@@ -402,7 +406,7 @@
                             <button
                                 disabled
                                 style="pointer-events: none; border: none;"
-                                class="me-2 btn-sm bg-white text-red py-1 px-2"
+                                class="me-2 badge bg-white text-red py-1 px-2"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -414,7 +418,11 @@
                         </div>
                     @endif
                 @endif
+                
             </div>
+            <div class="text-center my-0 py-0 text-red">@if (session('errorJoin'))
+                    <div>{{session('errorJoin')}}</div>
+                @endif</div>
         </div>
             @if ($isCreator)
                 <div v-if="isEditMode" v-cloak>
@@ -435,6 +443,9 @@
                 </div> 
                 <div class=" my-3">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
+                        <div class="d-inline me-2" v-if="!userCategoriesArr || !userCategoriesArr[0]">
+                            Add your favourite games.
+                        </div>
                         <div class="d-inline-flex mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
                             <div class=" d-flex flex-col rounded-2 justify-content-between align-items-center px-0 py-0  mx-1"
                                 :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
@@ -509,8 +520,7 @@
                                 v-bind:title="element.gameTitle"
                             >
                                 
-                                <img :class="{'border border-3 border-primary': element.id == defaultCategory }" class="object-fit-cover rounded-2" v-bind:src="'/storage/' + element.gameIcon" width="45" height="40">
-                                <!-- Badge with check circle icon -->
+                                <img :class="{'border border-2 border-primary': element.id == defaultCategory }" class="object-fit-cover rounded-2" v-bind:src="'/storage/' + element.gameIcon" width="45" height="40">
                                 <span class="position-absolute rounded-circle d-inline-block " style="right: 0%; top: -25%;  z-index: 50; width: 15px; height: 15px;" v-if="element.id == defaultCategory">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"  class="bi bi-check-circle-fill text-primary" viewBox="0 0 16 16">
                                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>

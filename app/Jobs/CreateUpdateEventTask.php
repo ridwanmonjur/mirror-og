@@ -38,11 +38,7 @@ class CreateUpdateEventTask implements ShouldQueue
             $this->eventDetail->createStatusUpdateTask();
             $this->eventDetail->createDeadlinesTask();
         } catch (Exception $e) {
-            // Log the error
             logger()->error('Failed to create event tasks: ' . $e->getMessage());
-            
-            // Optionally, throw the exception to mark the job as failed
-            throw $e;
         }
     }
 }

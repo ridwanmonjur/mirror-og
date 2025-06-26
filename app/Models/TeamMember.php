@@ -115,4 +115,10 @@ class TeamMember extends Model
 
         return self::insert($data);
     }
+
+    public function countTeamMembers() {
+        return $this->where('team_id', $this->team_id)
+            ->where('status', 'accepted')
+            ->count('id');
+    }
 }

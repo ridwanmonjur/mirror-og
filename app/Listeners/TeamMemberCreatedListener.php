@@ -99,7 +99,7 @@ class TeamMemberCreatedListener implements ShouldQueue
         
     }
 
-    public function failed(Exception $exception): void
+    public function failed($event, $exception): void
     {
           // Log the error
           Log::error('TeamCreatedListener failed', [

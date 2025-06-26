@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\TeamSearchRequest;
+use App\Http\Requests\Team\UpdateMemberRequest;
+use App\Http\Requests\Team\AddMemberRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Jobs\HandleFollowsFriends;
 use App\Models\CountryRegion;
@@ -272,42 +274,46 @@ class ParticipantTeamController extends Controller
         return response()->json(['success' => true, 'message' => 'Team member invited'], 201);
     }
 
-    public function pendingTeamMember(Request $request, $id)
+    public function pendingTeamMember(AddMemberRequest $request, $id)
     {
         try {
-            // TODO check memebers
             $user = $request->attributes->get('user');
+            $status = $request->getStatusByTeamType();
+            
             TeamMember::create([
                 'user_id' => $user->id,
                 'team_id' => $id,
-                'status' => 'pending',
+                'status' => $status,
                 'actor' => 'user',
             ]);
-
+    
+            $successMessage = $status === 'accepted' 
+                ? 'You have joined the team!' 
+                : 'Your request to this team was sent!';
+    
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Your request to this team was sent!'
+                    'status' => $status,
+                    'message' => $successMessage
                 ]);
             }
-
-            return redirect()->back()->with('successJoin', 'Your request to this team was sent!');
+    
+            return redirect()->back()->with('successJoin', $successMessage);
+            
         } catch (Exception $e) {
-            if ($e->getCode() === '23000' || $e->getCode() === 1062) {
-                $errorMessage = 'You have requested before!';
-            } else {
-                $errorMessage = 'Your request to this team failed!';
-            }
-
+            $errorMessage = 'Your request to this team failed!';
+    
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => $errorMessage
                 ], 400);
             }
-
+            
             return redirect()->back()->with('errorJoin', $errorMessage);
         }
+    
     }
 
     public function withdrawInviteMember(Request $request, $id)
@@ -334,91 +340,29 @@ class ParticipantTeamController extends Controller
         return response()->json(['success' => false, 'message' => 'Invalid operation or team member not found'], 400);
     }
 
-    public function updateTeamMember(Request $request, $id)
+    public function updateTeamMember(UpdateMemberRequest $request, $id)
     {
-        // TODO check memebers
-        $member = TeamMember::find($id);
-        if (!$member) {
-            return response()->json(['success' => false, 'message' => 'Team member not found'], 400);
-        }
-
-        $status = $request->status;
-        $isSameActor = $request->actor === $member->actor;
-
-        $permissionRules = [
-            'left' => true,
-            'accepted' => [
-                'pending' => !$isSameActor,
-                'rejected' => $isSameActor,
-                'left' => $isSameActor,
-            ],
-            'rejected' => [
-                'pending' => !$isSameActor,
-                'rejected' => $isSameActor,
-                'accepted' => $isSameActor,
-            ],
-        ];
-
-        $errorMessages = [
-            'accepted' => [
-                'pending' => $isSameActor ? 'You cannot accept your own pending request' : '',
-                'rejected' => !$isSameActor ? 'Only the original requester can accept after rejection' : '',
-                'left' => !$isSameActor ? 'Only the original member can accept after leaving' : '',
-                'accepted' => 'Request is already accepted',
-            ],
-            'rejected' => [
-                'pending' => $isSameActor ? 'You cannot reject your own pending request' : '',
-                'rejected' => !$isSameActor ? 'Only the original requester can modify a rejected request' : '',
-                'accepted' => !$isSameActor ? 'Only the accepted member can reject their request' : '',
-            ],
-        ];
-
-        $isPermitted = $permissionRules[$status] ?? false;
-        if (is_array($isPermitted)) {
-            $isPermitted = $isPermitted[$member->status] ?? false;
-        }
-
-        if (!$isPermitted) {
-            $message = 'This request is not allowed. ';
-            if (isset($errorMessages[$status][$member->status])) {
-                $message .= $errorMessages[$status][$member->status];
-            }
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => trim($message),
-                    'details' => [
-                        'requested_status' => $status,
-                        'current_status' => $member->status,
-                        'is_same_actor' => $isSameActor,
-                    ],
-                ],
-                400,
-            );
-        }
-
-        $team = Team::where('id', $member->team_id)->first();
-
-        if ($team->creator_id === $member->user_id) {
-            return response()->json(['success' => false, 'message' => "Can't modify creator of the team"], 400);
-        }
-
-        $member->status = $status;
+        $member = $request->getTeamMember();
+    
+    $member->status = $request->status;
         $member->actor = $request->actor;
         $member->save();
 
-        if ($member->status == 'left') {
+        if ($member->status === 'left') {
             $captain = TeamCaptain::where([
-                'team_member_id' => $id,
+                'team_member_id' => $member->id,
                 'teams_id' => $member->team_id,
             ])->first();
-
+        
             if ($captain) {
                 $captain->delete();
             }
         }
 
-        return response()->json(['success' => true, 'message' => "Team member status updated to {$status}"]);
+        return response()->json([
+            'success' => true, 
+            'message' => "Team member status updated to {$request->status}"
+        ]);
     }
 
     public function captainMember(Request $request, $id, $memberId)
@@ -483,10 +427,10 @@ class ParticipantTeamController extends Controller
         try {
             $team = new Team();
             $user_id = $request->attributes->get('user')->id;
-            [
-                'count' => $count,
-            ] = Team::getUserTeamListAndCount($user_id);
-
+            $count = Team::whereHas('members', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)->where('status', 'accepted');
+            })->count('id');
+           
             if ($count < 5) {
                 $existingTeam = Team::where('teamName', $request->input('teamName'))->exists();
                 if ($existingTeam) {
