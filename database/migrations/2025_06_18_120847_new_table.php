@@ -13,10 +13,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('team_profile')) {
             Schema::table('team_profile', function (Blueprint $table) {
-                if (Schema::hasColumns('team_profile', ['default_category_id'])) {
-                    $table->dropForeign(['default_category_id']);
-                }
-
+                
                 if (Schema::hasColumns('team_profile', ['default_category_id', 'all_categories'])) {
                     $table->dropColumn(['default_category_id', 'all_categories']);
                 }
@@ -26,7 +23,6 @@ return new class extends Migration
         Schema::table('teams', function (Blueprint $table) {
             if (!Schema::hasColumns('teams', ['default_category_id'])) {
                 $table->unsignedBigInteger('default_category_id')->nullable();
-                $table->foreign('default_category_id')->references('id')->on('event_categories')->onDelete('set null');
             }
 
             if (!Schema::hasColumns('teams', ['all_categories'])) {
@@ -34,7 +30,7 @@ return new class extends Migration
             }
 
             if (!Schema::hasColumns('teams', ['status'])) {
-                $table->enum('status', ['public', 'private'])->default('public');
+                $table->enum('status', ['public', 'private', 'open'])->default('open');
             }
         });
 
@@ -59,15 +55,11 @@ return new class extends Migration
 
         if (Schema::hasTable('teams')) {
             Schema::table('teams', function (Blueprint $table) {
-                if (Schema::hasColumns('teams', ['default_category_id'])) {
-                    $table->dropForeign(['default_category_id']);
-                }
-
                 if (Schema::hasColumns('teams', ['default_category_id', 'all_categories'])) {
                     $table->dropColumn(['default_category_id', 'all_categories']);
                 }
 
-                if (Schema::hasColumns('teams', ['staus'])) {
+                if (Schema::hasColumns('teams', ['status'])) {
                     $table->dropColumn(['status']);
                 }
             });

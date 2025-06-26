@@ -104,7 +104,7 @@
                                     <p class="my-1">Choose the minimumn number of members in team</p>
                                          
                                     <select name="esports_title" id="game-select" class="mb-2 dropdown-size category-input text-start" >
-                                        <option value="">Select Game</option>
+                                        <option value="">Add your favourite games</option>
                                     </select>
 
                                 </div>
@@ -192,7 +192,7 @@
                                 </button>
                                 <div onclick="event.stopPropagation();" class="dropdown-size dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
-                                    @foreach ([['title' => 'Public (free to apply)', 'value' => 'public'], ['title' => 'Private (cannot apply)', 'value' => 'private'] ] as $status)
+                                    @foreach ([['title' => 'Open (can join freely)', 'value' => 'open'],  ['title' => 'Public (free to apply)', 'value' => 'public'], ['title' => 'Private (cannot apply)', 'value' => 'private'] ] as $status)
                                         <div class="px-3 py-1" style="width: 200px;">
                                             <input type="checkbox" name="status" class="form-check-input" checked value="{{ $status['value'] }}">
                                             <label for="status">{{ $status['title'] }}</label>

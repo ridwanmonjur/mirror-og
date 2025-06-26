@@ -35,6 +35,7 @@ class UpdateTeamRequest extends FormRequest
             'file.content' => 'string',
             'all_categories' => 'string|nullable',
             'default_category_id' => 'required|nullable',
+            'status' => 'sometimes|in:private,open,public'
         ];
     }
 
