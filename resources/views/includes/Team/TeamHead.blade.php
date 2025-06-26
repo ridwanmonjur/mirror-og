@@ -222,10 +222,9 @@
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                 </svg>
                                 <select 
-                                    :style="{ color: fontColor, backgroundColor: backgroundColor, borderColor: fontColor  }"
+                                    style=" color: '#94087'; background-color: 'white'; width: 200px; font-size: 0.9rem;"
                                     v-on:change="changeFlagEmoji" 
                                     id="select2-country3" 
-                                    style="width: 200px;" 
                                     class="d-inline form-select"  
                                     data-placeholder="Select a country" 
                                     v-bind:value="country || ''"
@@ -351,16 +350,42 @@
                 @endauth
                 @if ($role == "PARTICIPANT")
                     @if (is_null($status))
-                        <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
-                            @csrf()
-                            <button  class="btn btn-primary bg-white rounded-pill border-2 badge" type="submit">
-                                <span> Join Team </span>
+                        @if ($acceptedTeamMemberCount>=10)
+                            <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="button" disabled>
+                                <span> Full </span>
                             </button>
-                        </form>
+                        @else
+                            @if ($acceptedTeamMemberCount>=10)
+                                <button  class="btn btn-primary bg-secondary rounded-pill border-2 btn-sm" type="button" disabled>
+                                    <span> Full </span>
+                                </button>
+                            @else
+                                @if ($selectTeam->status == "private")
+                                    <button  class="btn btn-primary bg-secondary rounded-pill border-2 btn-sm" type="button" disabled>
+                                        <span> Private </span>
+                                    </button>
+                                @elseif ($selectTeam->status == "open")
+
+                                    <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                                        @csrf()
+                                        <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="submit">
+                                            <span class="text-primary"> Join Team </span>
+                                        </button>
+                                    </form>
+                                @else 
+                                    <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
+                                        @csrf()
+                                        <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="submit">
+                                            <span class="text-primary"> Apply to join </span>
+                                        </button>
+                                    </form>
+                                @endif
+                            @endif
+                        @endif
                         
                     @elseif ($status == "pending_me")
                         <div  v-if="!isEditMode"  class="d-block d-lg-inline-block   px-0" >
-                            <span  class=" btn btn-success text-dark badge " type="button">
+                            <span  class=" btn btn-success text-dark btn-sm " type="button">
                                  Applied to join 
                             </span>
                             <button class="gear-icon-btn mt-0 ms-1"
@@ -443,9 +468,7 @@
                 </div> 
                 <div class=" my-3">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
-                        <div class="d-inline me-2" v-if="!userCategoriesArr || !userCategoriesArr[0]">
-                            Add your favourite games.
-                        </div>
+                        
                         <div class="d-inline-flex mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
                             <div class=" d-flex flex-col rounded-2 justify-content-between align-items-center px-0 py-0  mx-1"
                                 :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
@@ -472,11 +495,40 @@
                             </div>
                         </div>
                         <select id="default-category" class="category-input text-start" >
-                            <option value="">Select Game</option>
+                            <option value="">Add your favourite games</option>
                         </select>
                     </div>
+                </div>
+                <div class="my-3 d-flex justify-content-between" v-scope="TeamSettings()"> 
+                        
+                    <small class="form-check  form-switch mb-1 me-3">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            id="receiveInvites"
+                            :checked="settings.receiveInvites"
+                            v-on:change="settings.setReceiveInvites($event.target.checked)"
+                            v-model="settings.receiveInvites"
+                        >
+                        <label class="form-check-label" for="receiveInvites">
+                            Receive invites from participants
+                        </label>
+                    </small>
 
-                  
+                    <small class="form-check  form-switch mb-1">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            id="needsPermission"
+                            v-model="settings.needsPermission"
+                            :disabled="!settings.receiveInvites"
+                        >
+                        <label class="form-check-label" for="needsPermission">
+                            Participants need permission to join
+                        </label>
+                    </small>
+
+
                 </div>
                 <div class="d-flex justify-content-center my-3">
                     <span
@@ -494,22 +546,36 @@
                     </svg> 
                 </div>
                 </div> 
-                @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
-                    <div class="my-0" v-cloak  v-if="!isEditMode">
-                        <span class="ms-2" >{{$selectTeam->teamDescription}}</span>
+                <div class="my-0 d-flex justify-content-center align-items-center" v-cloak  v-if="!isEditMode">
+                    <span class="ms-2" >{{$selectTeam->teamDescription ?? 'Add a team description'}}</span>
+                    @if ($selectTeam->country_flag)
                         <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
-                    </div>
-                @endif
+                    @endif
+                    <span class="ms-1 text-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-question-circle ms-1 cursor-pointer" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                        </svg>
+                    </span>
+                </div>
             @else
-                @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '')
-                    <p  v-cloak class="my-0 py-0">
+                @if ($selectTeam->teamDescription != '' || $selectTeam->country_flag != '' || isset($teamMember))
+                    <p  v-cloak class="mb-0 mt-2 py-0 d-flex justify-content-center align-items-center">
                         <span class="d-inline">{{$selectTeam->teamDescription}}</span>
-                        <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
+                        @if ($selectTeam->country_flag)
+                            <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
+                        @endif
+                        <span class="ms-2 border-primary text-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="ms-1 cursor-pointer bi bi-question-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                            </svg>
+                        </small>
                     </p>
                  @endif
             @endif
-            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-2 mb-2  ">
-                <div class="col-12 mb-3 mt-0">
+            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-1 mb-1  ">
+                <div class="col-12 mb-2 mt-0">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto ">
                         <div class="d-inline-flex cursor-pointer justify-content-center align-items-center position-relative mx-1" v-for="element in userCategoriesArr" :key="element.id">
                             <div class="rounded-2 text-primary"

@@ -20,6 +20,7 @@ let allCategoryArray = Object.values(allCategories);
 
 // External state management for categories
 const CategoryState = {
+
     initialized: false,
     _state: reactive({
         defaultCategory: '',
@@ -141,7 +142,6 @@ const CategoryState = {
 function CategoryManager() {
    
     return {
-
     init() {
         CategoryState.init();
         this.initializeTomSelect();
@@ -214,6 +214,11 @@ function TeamHead() {
         get gamesTeam() {
             return [CategoryState._state.defaultCategory, CategoryState._state.userCategories];
         },
+
+        get teamStatus () {
+            return TeamState.getTeamStatus()
+        },
+
         select2: null,
         isEditMode: false,
         ...teamData,
@@ -331,6 +336,7 @@ function TeamHead() {
                         country_name: this.country_name,
                         default_category_id: defaultCategory,
                         all_categories: userCategories,
+                        status: String(this.teamStatus[0])?.toLowerCase(),
                         ...(fileFetch && { file: fileFetch })
                     }),
                 });
@@ -385,6 +391,35 @@ function TeamHead() {
     }
 }
 
+const TeamState = reactive({
+    receiveInvites: teamData.status != 'private',
+    needsPermission: teamData.status == 'public',
+
+    setReceiveInvites(value) {
+        this.receiveInvites = value;
+        if (!value) {
+            this.needsPermission = false;
+        }
+    },
+
+    getTeamStatus() {
+        if (!this.receiveInvites) {
+            return ['Private', 'Team is private & receives no applications to join from participants'];
+        } else if (this.needsPermission) {
+            return ['Public', 'Participants can request to join but need approval'];
+        } else {
+            return ['Open', 'Anyone can join without approval'];
+        }
+    },
+});
+
+function TeamSettings() {
+    return {
+        settings: TeamState,
+        getTeamStatus: () => TeamState.getTeamStatus(),
+    }
+}
+
 
 window.formatDateLuxon = (date) => {
     if (!date) return 'Not available';
@@ -416,7 +451,8 @@ document.addEventListener('DOMContentLoaded', () => {
         TeamHead,
         ProfileData,
         ReportFormData,
-        CategoryManager
+        CategoryManager,
+        TeamSettings
     }).mount('.teamhead');
 });
 

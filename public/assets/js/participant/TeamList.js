@@ -404,23 +404,31 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             let imgString = game ? `<img width="45" height="45" class="rounded-2 border border-secondary" src="/storage/${game.gameIcon}">` : '';
 
             let allCategoriesHtml = all_categories.map((element, index, arr) => {
-                let title = element.gameTitle.length > 8 
-                    ? element.gameTitle.slice(0, 8).trim() + '..' 
-                    : element.gameTitle;
+                let title = element.gameTitle;
 
                 let comma = index < arr.length - 1 ? ',' : '';
 
-                return `
-                    <small 
-                        class="fw-bold text-nowrap  py-0 my-0  text-truncate mx-0 px-0" 
-                        style="max-width: 15ch; font-size: 0.9rem;  overflow: hidden;">
-                        ${title}${comma}
-                    </small>
-                `;
+                return `${title}${comma}`;
             }).join('');
 
             if (!all_categories.length) {
                 allCategoriesHtml = ` <small class="fw-bold" style="max-width: 15ch;  font-size: 0.9rem; overflow: hidden;">No Games</small>`;
+            } else {
+                // Count how many complete titles fit in 30 chars
+                let displayedCount = 0;
+                let length = 0;
+                for (let i = 0; i < all_categories.length; i++) {
+                let nextLength = length + all_categories[i].gameTitle.length + (i > 0 ? 1 : 0); // +1 for comma
+                if (nextLength <= 30) {
+                    displayedCount++;
+                    length = nextLength;
+                } else break;
+                }
+
+                allCategoriesHtml = allCategoriesHtml.substring(0, 30);
+                // if (displayedCount > 0) {
+                    allCategoriesHtml += ` <span class="text-decoration-underline">& ${all_categories.length - displayedCount} more...</span>`;
+                // }
             }
 
             let statusText = '';
@@ -535,7 +543,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                             </button>
                         </div>
                     `;
-                    } else if (team.status == "public") {
+                    } else if (team.status == "open") {
                         statusText = `
                         <div class="d-block d-lg-inline-block pt-1 px-0">
                             <button onclick=" joinTeam(event, ${team.id})"  class="btn rounded-pill border-3 btn-primary text-white px-3 btn-sm" type="button">
@@ -543,7 +551,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                             </button>
                         </div>
                         `;
-                        } else if (team.status == "mixed") {
+                        } else if (team.status == "public") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
                                 <button onclick=" applyToJoin(event, ${team.id})"  class="btn rounded-pill border-3 border-primary bg-white text-primary border-3 px-3 btn-sm" type="button">
@@ -586,12 +594,12 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                 <h6  class="team-name  text-wrap " id="team-name">${team?.teamName}</h6>
                                 <span> Region: ${team?.country_name ? team?.country_name: '-'} </span>  <br>
                                 <div data-bs-toggle="tooltip" title="${allCategoriesTooltip}" class=" px-1 text-nowrap" style="max-width: 270px;">
-                                    <small > 
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#b4b4b4" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
-                                    </svg>
-                                    ${allCategoriesHtml}
-                                    </small>
+                                    <div class="text-truncate text-nowrap" style="font-size: 0.875rem;"> 
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#b4b4b4" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+                                        </svg>
+                                        ${allCategoriesHtml}
+                                    </div>
                                 </div>
                                 <span> Members:
                                     ${membersCountServerValue[team?.id] ? membersCountServerValue[team?.id] : 0}/10
@@ -1007,3 +1015,17 @@ async function withdrawInviteMemberAction() {
     );
 }
 
+
+
+const htmlOutput = `
+<div data-bs-toggle="tooltip" title="${allCategoriesTooltip}" class="px-1 text-nowrap" style="max-width: 270px;">
+    <div class="text-nowrap text-truncate"> 
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#b4b4b4" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+        </svg>
+        ${allCategoriesHtml}
+    </div>
+</div>`;
+
+
+    
