@@ -320,7 +320,7 @@ async function changeTeamsGrid(event = null) {
 
     }
 
-    paintScreen(filteredSortedTeams, membersCountServerValue, countServerValue);
+    paintScreen(filteredSortedTeams, membersCountServerValue, filteredSortedTeams.length);
 }
 
 
@@ -438,10 +438,10 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                         if (actor === "team") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button onclick="event.preventDefault(); event.stopPropagation(); approveMember(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill btn-success bg-white btn-sm btn-link me-1" type="button">
+                                <button onclick="event.preventDefault(); event.stopPropagation(); approveMember(${team.member_id})"  class="btn rounded-pill border-3 btn-success bg-white btn-sm btn-link me-1" type="button">
                                     <span class="text-success">Yes, join team</span>
                                 </button>
-                                <button onclick="event.preventDefault(); event.stopPropagation(); rejectMember(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill border border-danger bg-white btn-sm btn-link" type="button">
+                                <button onclick="event.preventDefault(); event.stopPropagation(); rejectMember(${team.member_id})"  class="btn rounded-pill border-3 border border-danger bg-white btn-sm btn-link" type="button">
                                     <span class="text-red">Reject</span>
                                 </button>
                             </div>
@@ -449,11 +449,11 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                         } else if (actor === "user") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button style="font-size: 0.875rem;" class="btn rounded-pill btn-primary bg-white btn-sm btn-link" type="button">
-                                    <span>Requested</span>
-                                </button>
+                                <span  class=" text-primary bg-white btn-sm " >
+                                    Applied to join
+                                </span>
                                 <button class="gear-icon-btn mt-0 ms-1" onclick="event.preventDefault(); event.stopPropagation(); withdrawInviteMember(${team.member_id})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                                     </svg>
@@ -466,28 +466,29 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                         if (actor == "team") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button disabled style="pointer-events: none; border: none;" class="me-2 btn-sm bg-white text-red py-1 px-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                <span class="me-2 btn-sm bg-white text-red py-1 px-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle me-1" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                     </svg>
-                                    <span>Removed by team</span>
-                                </button>
+                                    <span>Team removed you</span>
+                                </span>
                             </div>
                             `;
                         } else if (actor == "user") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button class="me-2 btn rounded-pill btn-sm text-red bg-white py-1 px-2" style="border: 1px solid red; pointer-events: none;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
+                                
+                                <span  class="border-0 bg-white btn-sm" type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi me-1 svg-font-color bi-x-circle" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                     </svg>
-                                    <span>Left Team</span>
-                                </button>
-                                <button onclick="event.preventDefault(); event.stopPropagation(); rejoinTean(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill border border-success bg-white btn-sm" type="button">
-                                    <span class="text-success">Change decision</span>
-                                </button>
+                                    <span class="me-2">Left Team</span>
+                                    <span  onclick="event.preventDefault(); event.stopPropagation(); rejoinTean(${team.member_id})" class="text-success">
+                                        Rejoin team
+                                    </span>
+                                </span>
                             </div>
                             
                             `;
@@ -497,27 +498,27 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                         if (actor == "team") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button disabled style="pointer-events: none; border: none;" class="me-2 btn-sm bg-white text-red py-1 px-2">
+                                <span  class="me-2 btn-sm bg-white text-red py-1 px-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                     </svg>
                                     <span>Team Rejected</span>
-                                </button>
+                                </span>
                             </div>
                             `;
                         } else if (actor == "user") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button class="me-2 btn rounded-pill btn-sm text-red bg-white py-1 px-2" style="border: 1px solid red; pointer-events: none;">
+                                <span class="me-1 py-1 px-0" >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi svg-font-color bi-x-circle" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                     </svg>
                                     <span>You Rejected</span>
-                                </button>
-                                <button onclick="event.preventDefault(); event.stopPropagation(); approveMember(${team.member_id})" style="font-size: 0.875rem;" class="btn rounded-pill border border-success bg-white btn-sm" type="button">
-                                    <span class="text-success">Change decision</span>
+                                </span>
+                                <span onclick="event.preventDefault(); event.stopPropagation(); approveMember(${team.member_id})"  class=" bg-white btn-sm" type="button">
+                                    <span class="text-success">No, join team</span>
                                 </button>
                             </div>
                             
@@ -528,32 +529,36 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                     let membersCount = membersCountServerValue[team?.id] ?? 0;
                     if (membersCount>=10) {
                     statusText = `
-                    <div class="d-block d-lg-inline-block pt-1 px-0">
-                        <button disabled style="font-size: 0.875rem;" class="btn rounded-pill btn-secondary text-dark px-3 btn-sm" type="button">
-                            Full
-                        </button>
-                    </div>
+                        <div class="d-block d-lg-inline-block pt-1 px-0">
+                            <button disabled  class="btn rounded-pill border-3 btn-secondary text-dark px-3 btn-sm" type="button">
+                                Full
+                            </button>
+                        </div>
                     `;
-                    } else if (membersCount<5) {
+                    } else if (team.status == "public") {
                         statusText = `
                         <div class="d-block d-lg-inline-block pt-1 px-0">
-                            <button onclick=" joinTeam(event, ${team.id})" style="font-size: 0.875rem;" class="btn rounded-pill btn-primary text-white px-3 btn-sm" type="button">
+                            <button onclick=" joinTeam(event, ${team.id})"  class="btn rounded-pill border-3 btn-primary text-white px-3 btn-sm" type="button">
                                 Join
                             </button>
                         </div>
                         `;
-                        } else {
+                        } else if (team.status == "mixed") {
                             statusText = `
                             <div class="d-block d-lg-inline-block pt-1 px-0">
-                                <button onclick=" joinTeam(event, ${team.id})" style="font-size: 0.875rem;" class="btn rounded-pill border-primary bg-white text-primary border-3 px-3 btn-sm" type="button">
+                                <button onclick=" applyToJoin(event, ${team.id})"  class="btn rounded-pill border-3 border-primary bg-white text-primary border-3 px-3 btn-sm" type="button">
                                     Apply to Join
                                 </button>
                             </div>
                             `;
+                        } else {
+                            statusText = `
+                            <button disabled  class="btn rounded-pill border-3 btn-secondary text-dark px-3 btn-sm" type="button">
+                                Private
+                            </button>
+                            `;
                         }
-                } 
-
-                
+                }        
             }
            
             
@@ -811,7 +816,11 @@ function joinTeam(event, teamId) {
                     button.classList.remove('text-white');
                     button.classList.add('btn-success');
                     button.classList.add('text-dark');
-                    button.innerText = "Requested";
+                    if (responseData.status == "accepted") {
+                        button.innerText = "Joined";
+                    } else {
+                        button.innerText = "Requested";
+                    }
                     button.disabled = true;
                 } else {
                     toastError(responseData.message)
@@ -832,6 +841,41 @@ function joinTeam(event, teamId) {
     })
 }
 
+function applyToJoinTeam(event, teamId) {
+    event.preventDefault(); 
+    event.stopPropagation();
+    let button = event.currentTarget;
+    window.dialogOpen('Send join application?', ()=> {
+        const url = getUrl("memberPendingUrl", teamId);
+        fetchData(url,
+            function(responseData) {
+                if (responseData.success) {
+                    button.classList.remove('btn-primary');
+                    button.classList.remove('text-white');
+                    button.classList.add('btn-success');
+                    button.classList.add('text-dark');
+                    button.innerText = "Requested";
+                    button.disabled = true;
+                } else {
+                    toastError(responseData.message)
+                }
+            },
+            function(error) { toastError('Error applying to joining team.', error);}, 
+            {
+                headers: generateHeaders(), 
+                body: JSON.stringify({
+                   'actor' : 'user', 'status' : 'pending'
+                })
+            }
+        );
+    }, ()=> {
+
+    }, {
+        innerHTML: "<strong class='text-success'>Do you want to apply to join this team?</strong><br><em class='text-muted'>If the team accepts, you can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>"
+    })
+}
+
+
 function approveMember(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('approve')
@@ -844,7 +888,7 @@ function rejoinTean(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('approve')
     window.dialogOpen('Rejoin Team?', takeYesAction, takeNoAction, {
-        innerHTML: "<strong class='text-success'>Do you want to rejoin your ex-team?</strong><br><em class='text-muted'>You can take part in events with them.</em><br>"
+        innerHTML: "<strong class='text-success'>Do you want to rejoin your ex-team?</strong><br><em class='text-muted'>You can take part in events with them again.</em><br>"
     })
 }
 
@@ -913,7 +957,7 @@ async function disapproveMemberAction() {
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
-               'actor' : 'team', 'status' : 'left'
+               'actor' : 'user', 'status' : 'left'
             })
         }
     );

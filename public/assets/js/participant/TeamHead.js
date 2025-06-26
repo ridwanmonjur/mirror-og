@@ -376,7 +376,7 @@ function rejoinTean(memberId) {
     dialogForMember.setMemberId(memberId);
     dialogForMember.setActionName('approve')
     window.dialogOpen('Rejoin Team?', takeYesAction, takeNoAction, {
-        innerHTML: "<strong class='text-success'>Do you want to rejoin your ex-team?</strong><br><em class='text-muted'>You can take part in events with them.</em><br>"
+        innerHTML: "<strong class='text-success'>Do you want to rejoin your ex-team?</strong><br><em class='text-muted'>You can take part in events with them again.</em><br>"
     })
 }
 
@@ -447,7 +447,7 @@ async function disapproveMemberAction() {
         {
             headers: generateHeaders(), 
             body: JSON.stringify({
-               'actor' : 'team', 'status' : 'left'
+               'actor' : 'user', 'status' : 'left'
             })
         }
     );
