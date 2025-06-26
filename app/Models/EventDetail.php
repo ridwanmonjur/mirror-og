@@ -257,12 +257,11 @@ class EventDetail extends Model implements Feedable
                 
             $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
             
-            $finalDate = $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close);
             $insertData = [
                 'event_id' => $this->id,
                 'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
                 'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
-                'normal_signup_start_advanced_close' => $finalDate
+                'normal_signup_start_advanced_close' =>  $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close)
             ];
             
             DB::table('event_signup_dates')->updateOrInsert(
@@ -270,12 +269,17 @@ class EventDetail extends Model implements Feedable
                 $insertData
             );
 
-            Task::updateOrCreate([
-                'taskable_id' => $this->getKey(),
+            Task::where([
+                'taskable_id' => $this->id,
                 'taskable_type' => EventDetail::class,                    
                 'task_name' => 'reg_over',
-            ], [
-                'action_time' => $finalDate->format('Y-m-d H:i:s'),
+            ])->delete();
+            
+            Task::create([
+                'taskable_id' => $this->id,
+                'taskable_type' => "EventDetail",                    
+                'task_name' => 'reg_over',
+                'action_time' => $insertData['signup_close'],
             ]);
         }
     }
