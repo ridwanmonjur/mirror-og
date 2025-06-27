@@ -149,9 +149,9 @@
                         <template v-if="countries">
                             <select 
                                  :style="{ color: user.fontColor, backgroundColor: user.backgroundColor , borderColor: user.fontColor }"  
-                                v-on:change="changeFlagEmoji" id="select2-country3" style="width: 150px;"
+                                v-on:change="changeFlagEmoji" id="select2-country3" style="width: 250px;"
                                 
-                                class="d-inline form-select" data-placeholder="Select a country"
+                                class="d-inline-block text-truncate text-nowrap form-select" data-placeholder="Select a country"
                                 v-bind:value="participant.region || ''"
                                 v-bind:name="participant.region"
                             >
