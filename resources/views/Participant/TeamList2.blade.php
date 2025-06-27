@@ -101,7 +101,7 @@
                                 </button>
                                 <div onclick="event.stopPropagation();" class="dropdown-menu px-3 py-1"
                                     aria-labelledby="dropdownFilterSort">
-                                    <p class="my-1">Choose the minimumn number of members in team</p>
+                                    <p class="my-1">Choose the game to search by</p>
                                          
                                     <select name="esports_title" id="game-select" class="mb-2 dropdown-size category-input text-start" >
                                         <option value="">Add your favourite games</option>
