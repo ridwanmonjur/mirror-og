@@ -228,6 +228,7 @@ class User extends Authenticatable implements FilamentUser
                 'participant' => function ($query) {
                     $query->select([
                         'region_flag',
+                        'region_name',
                         'region',
                         'birthday',
                         'user_id',

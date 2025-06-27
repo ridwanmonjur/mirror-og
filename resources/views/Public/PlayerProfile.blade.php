@@ -237,7 +237,9 @@
                                                     alt="{{ $team->teamName }}">
                                                 <div>
                                                     <h5 class="card-title mb-0 text-wrap">{{ $team->teamName }} <span
-                                                            class="ps-2 fs-5">{{ $team->country_flag }}</span></h5>
+                                                            class="ps-2 fs-5">{{ $team->country_flag }}</span>
+                                                        <small class="fw-bold fs-7 text-muted">{{ $team->country_name }}</small>        
+                                                    </h5>
                                                     <div class="text-muted">
                                                         <span class="me-3">{{ $team->members_count }}/5
                                                             members</span>
@@ -292,6 +294,7 @@
                                                         <span class="me-3">{{ $team->members_count }}/5
                                                             members</span>
                                                         <span class="me-2 fs-5">{{ $team->country_flag }}</span>
+                                                        <span class="fw-bold  fs-7 text-muted">{{ $team->country_name }}</span>  
 
                                                     </div>
                                                 </div>
