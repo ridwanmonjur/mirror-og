@@ -47,7 +47,7 @@ function formatStringUpper(str) {
         .replace(/([a-z])([A-Z])/g, '$1 $2')
         .replace(/(_|\s)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase())
         .replace(/_/g, ' ');
-    return formatted.length > 30 ? formatted.slice(0, 30) + '...' : formatted;
+    return formatted.length > 15 ? formatted.slice(0, 15) + '...' : formatted;
 
 }
 
