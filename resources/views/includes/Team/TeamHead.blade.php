@@ -28,6 +28,17 @@
             width: 200px !important;
             padding-top: 0.4rem !important;
             padding-bottom: 0.4rem !important;
+            font-size: 1rem !important;
+        }
+
+         .ts-control, .ts-control input, .ts-control input::placeholder, .ts-dropdown,
+        .ts-control, .ts-control .item, .ts-wrapper.single.input-active .ts-control {
+            font-size: 0.9rem;
+            color: rgb(46, 75, 89) !important;
+        }
+
+        .form-select {
+            background-image: none;
         }
 
         #backgroundBanner svg:hover {
@@ -204,7 +215,7 @@
                             style="display: none;"
                         >
                         <div  v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
-                        <div class="d-flex flex-row flex-wrap justify-content-center">
+                        <div class="d-flex flex-row flex-wrap mt-1 justify-content-center">
                             <input
                                 placeholder="Enter your team name..."
                                 style="width: 200px;"
@@ -226,7 +237,7 @@
                                     v-on:change="changeFlagEmoji" 
                                     id="select2-country3" 
                                     class="d-inline form-select"  
-                                    data-placeholder="Select a country" 
+                                    data-placeholder="Select a region" 
                                     v-bind:value="country || ''"
                                     v-bind:name="country"
                                 >
@@ -495,7 +506,7 @@
                             </div>
                         </div>
                         <select id="default-category" class="category-input text-start" >
-                            <option value="">Add your favourite games</option>
+                            <option value="">Add your game title</option>
                         </select>
                     </div>
                 </div>
@@ -550,8 +561,9 @@
                     <span class="ms-2" >{{$selectTeam->teamDescription ?? 'Add a team description'}}</span>
                     @if ($selectTeam->country_flag)
                         <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
+                        <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>  
                     @endif
-                    <span class="ms-1 text-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team
+                    <span class="ms-1  badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-question-circle ms-1 cursor-pointer" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
@@ -564,8 +576,9 @@
                         <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                         @if ($selectTeam->country_flag)
                             <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
+                            <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>  
                         @endif
-                        <span class="ms-2 border-primary text-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team 
+                        <span class="ms-2 badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team 
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="ms-1 cursor-pointer bi bi-question-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>

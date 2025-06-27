@@ -105,7 +105,7 @@
                 class="dropdown-menu px-0 py-2" aria-labelledby="dropdownFilterTier"
             >
                 <div class="px-3 py-1 min-w-250px">
-                    <label for="eventTier">Choose a country/region</label>
+                    <label for="eventTier">Choose a region</label>
 
                     <select onchange="setFilterForFetch(event, 'SEA');" id="select2-country2" name="venue" ></select>
                 </div>

@@ -448,7 +448,7 @@ input[type="submit"]:active {
 
     .grid-container {
         padding: 0px;
-        grid-template-columns: 0.75fr 4fr 0.75fr;
+        grid-template-columns: 1fr 2fr 1fr;
     }
 
 }

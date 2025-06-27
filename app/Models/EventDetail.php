@@ -678,36 +678,37 @@ class EventDetail extends Model implements Feedable
     }
 
     public static function landingPageQuery(Request $request, $currentDateTime) {
-        return self::whereNotIn('status', ['DRAFT', 'PENDING'])
-        ->whereNotNull('payment_transaction_id')
-        ->where('sub_action_private', '<>', 'private')
-        ->where(function ($query) use ($currentDateTime) {
-            $query
-                ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
-                ->orWhereNull('sub_action_public_time')
-                ->orWhereNull('sub_action_public_date');
-        })
-        ->when($request->has('search'), function ($query) use ($request) {
-            $search = trim($request->input('search'));
-            if (empty($search)) {
-                return $query;
-            }
+        return self::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
+            ->whereNotNull('payment_transaction_id')
+            ->where('sub_action_private', '<>', 'private')
+            ->where(function ($query) use ($currentDateTime) {
+                $query
+                    ->whereRaw('CONCAT(sub_action_public_time, " ", sub_action_public_date) < ?', [$currentDateTime])
+                    ->orWhereNull('sub_action_public_time')
+                    ->orWhereNull('sub_action_public_date');
+            })
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = trim($request->input('search'));
+                if (empty($search)) {
+                    return $query;
+                }
 
-            return $query->where('eventName', 'LIKE', "%{$search}%")->orWhere('eventTags', 'LIKE', "%{$search}%");
-        })
-        ->with(['tier', 'type', 'game', 'signup'])
-        ->with(['user' => function($q) {
-            $q->select('id', 'name')
-              ->with(['organizer' => function ($innerQ) {
-                  $innerQ->select(['id', 'user_id']);
-              }])
-              ->withCount('follows');
-        }])
-        ->withCount(
-        ['joinEvents' => function ($q) {
-            $q->where('join_status', 'confirmed');
-        }])
-        ->orderBy('startDate', 'asc');
+                return $query->where('eventName', 'LIKE', "%{$search}%")
+                    ->orWhere('eventTags', 'LIKE', "%{$search}%");
+            })
+            ->with(['tier', 'type', 'game', 'signup'])
+            ->with(['user' => function($q) {
+                $q->select('id', 'name')
+                ->with(['organizer' => function ($innerQ) {
+                    $innerQ->select(['id', 'user_id']);
+                }])
+                ->withCount('follows');
+            }])
+            ->withCount(
+            ['joinEvents' => function ($q) {
+                $q->where('join_status', 'confirmed');
+            }])
+            ->orderBy('startDate', 'asc');
     }
 
     public static function filterEventsFull(Request $request)

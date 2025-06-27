@@ -98,9 +98,9 @@
         >
             @include('includes.Landing')
         </section>
-      @if (isset($events[0]))
-        <div class="no-more-data d-none"></div>
-    @else
+        @if (isset($events[0]))
+            <div class="no-more-data d-none"></div>
+        @else
             <div class="container d-flex justify-content-center align-items-center">
                 <div class="no-more-data text-center mx-auto">
                     <div class=" d-flex flex-column justify-content-center align-items-center rounded-box-dolphin event shadow-sm" style="max-width: 400px; background-color: rgba(255, 255, 255, 0.7);">
