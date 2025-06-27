@@ -202,23 +202,23 @@ public function showPaymentMethodForm(Request $request)
         ];
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
-        $couponsQ = ParticipantCoupon::where('is_public', true)
+        $demoCoupons = ParticipantCoupon::where('is_public', true)
             ->orWhereHas('userCoupons', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->with(['userCoupons' => function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             }])
-            ->get();
+            ->limit(2)
+            ->orderBy('id', 'desc')
+            ->get()
+            ->toArray();
 
         
-        $demoCoupons = $couponsQ->take(2)->toArray();
-        $coupons = $couponsQ->toArray();
         // dd($coupons);
 
         return view('Users.Dashboard', [
             'wallet' => $wallet,
-            'coupons' => $coupons,
             'demoCoupons' => $demoCoupons,
             'transactions' => $transactions
         ]);
@@ -242,6 +242,44 @@ public function showPaymentMethodForm(Request $request)
         return view('Users.Transaction', [
             'wallet' => $wallet,
             'transactions' => $transactions
+        ]);
+        
+    }
+
+    public function showCoupons(Request $request)
+    {
+        $user = $request->get('user');
+        $code = trim($request->query('code', ''));
+        $emptyCode = trim($request->query('empty', ''));
+
+        if ($code === '') {
+            $code = null;
+        }
+
+        if ($emptyCode === '') {
+            $emptyCode = null;
+        }
+
+
+        $coupons = ParticipantCoupon::where('is_public', true)
+            ->orWhereHas('userCoupons', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->with(['userCoupons' => function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }])
+            ->orderBy('id', 'desc')
+            ->get()
+            ->toArray();
+
+
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
+        
+        return view('Users.Coupon', [
+            'wallet' => $wallet,
+            'coupons' => $coupons,
+            'code' => $code,
+            'emptyCode' => $emptyCode
         ]);
     }
 

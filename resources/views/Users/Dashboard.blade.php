@@ -64,8 +64,9 @@
                     <div class="card-body">
                         <div class="row text-secondary">
                             <p class="col-6 text-start">Coupons expiring soon</p>
-                            <p class="col-6 text-end cursor-pointer" onclick="openTab('wallet-view-coupons')">
-                                <i class="d-inline">View all my coupons </i>
+                            {{-- ahref --}}
+                            <a href="{{route('wallet.coupons')}}" class="col-6 text-end cursor-pointer">
+                                <span class="text-secondary">View all my coupons</span>
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                         fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -73,7 +74,8 @@
                                             d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
                                     </svg>
                                 </span>
-                            </p>
+                            </a>
+                           
                             <div class="row  p-0">
                                 @if (isset($demoCoupons[0]))
                                     @foreach ($demoCoupons as $coupon)
@@ -300,7 +302,9 @@
                         <div class="row ">
                             <h3 class="col-6 text-start transaction-history__title ">My Coupons</h3>
                             <div class="col-6 text-end">
-                                <button type="button" onclick="emptyCoupons(); " class="btn rounded-pill border-dark text-dark">
+                                <a type="button" 
+                                    href="{{route('wallet.coupons', ['empty' => 1 ]) }}"
+                                    class="btn rounded-pill border-dark text-dark">
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-ticket-perforated" viewBox="0 0 16 16">
                                         <path d="M4 4.85v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9zm-7 1.8v.9h1v-.9zm7 0v.9h1v-.9z"/>
@@ -308,7 +312,7 @@
                                         </svg>
                                     </span>
                                     Redeem coupons
-                                </button>
+                                </a>
                             </div>
                            
                         </div>
@@ -326,79 +330,6 @@
             </div>
         </div>
 
-
-        <div class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-redeem-coupons">
-            <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-50 rounded-30px">
-                <div class="card-body px-2 py-2">
-                    <div class=" px-2 py-2">
-                        <div class=" px-1 py-0 my-0">
-                            <h5 class="text-center mt-2 mb-3 text-secondary">Have a coupon?</h5>
-                        </div>
-                        <div class="mt-3">
-                            <!-- Topup Form -->
-                            <div class="my-2">
-                                <div id="coupon-form" v-scope="CouponStatusComponent()">
-                                    
-                                    <form v-on:submit="submitCoupon">
-                                        <div class="w-50 mx-auto text-center my-3">
-
-                                            <label :class="statusClass" v-if="statusLabel" class="mb-0" >@{{ statusLabel }}</label>
-                                            <label :class="statusClass" v-if="message" class="mb-2" >@{{ message }}</label>
-
-                                            <!-- Status Icon and Label -->
-                                            <div class="mb-2 input-group">
-                                                <label 
-                                                    :class="{ ' text-success border-success ': status === 'success', ' border-red text-red ': status === 'error' }"
-                                                    v-html="statusIcon" class="input-group-text">
-                                                </label>
-                                                <input 
-                                                id="coupon_code"
-                                                type="text" 
-                                                spellcheck="false"
-                                                name="coupon_code"
-                                                class="px-4 form-control border-secondary text-start " 
-                                                :class="{ ' border-success text-success ': status === 'success', ' border-red text-red ': status === 'error' }"
-                                                placeholder="XXXXXXX"
-                                                :disabled="isSubmitting"
-                                                required
-                                            >
-                                            </div>
-                                            
-                                            
-                                        </div>
-                                        
-                                        <div class="d-flex justify-content-around w-75 mb-4 mx-auto">
-                                            <button 
-                                                onclick="openTab('wallet-main')" 
-                                                type="button"
-                                                class="btn border-secondary text-dark rounded-pill"
-                                                :disabled="isSubmitting">
-                                                Cancel
-                                            </button>
-
-                                            <button 
-                                                type="submit"
-                                                class="btn btn-primary text-light rounded-pill"
-                                                :disabled="isSubmitting ">
-                                                <span v-if="isSubmitting">
-                                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                                                    Processing...
-                                                </span>
-                                                <span v-else>Confirm</span>
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        
-
-        
     <input type="hidden" id="wallet" value="{{ json_encode($wallet) }}">
 
     </main>

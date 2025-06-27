@@ -717,6 +717,19 @@ function CouponStatusComponent() {
                     this.status = 'success';
                     this.message = data.message;
 
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                
+                    setTimeout(() => {
+                        window.location.href = '/wallet';
+                    }, 3000);
+
                 } else {
                     this.status = 'error';
                     this.message = data.message;
