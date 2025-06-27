@@ -28,6 +28,17 @@
             width: 200px !important;
             padding-top: 0.4rem !important;
             padding-bottom: 0.4rem !important;
+            font-size: 1rem !important;
+        }
+
+         .ts-control, .ts-control input, .ts-control input::placeholder, .ts-dropdown,
+        .ts-control, .ts-control .item, .ts-wrapper.single.input-active .ts-control {
+            font-size: 0.9rem;
+            color: rgb(46, 75, 89) !important;
+        }
+
+        .form-select {
+            background-image: none;
         }
 
         #backgroundBanner svg:hover {
@@ -204,7 +215,7 @@
                             style="display: none;"
                         >
                         <div  v-show="errorMessage != null" class="text-red" v-text="errorMessage"> </div>
-                        <div class="d-flex flex-row flex-wrap justify-content-center">
+                        <div class="d-flex flex-row flex-wrap mt-1 justify-content-center">
                             <input
                                 placeholder="Enter your team name..."
                                 style="width: 200px;"
@@ -226,7 +237,7 @@
                                     v-on:change="changeFlagEmoji" 
                                     id="select2-country3" 
                                     class="d-inline form-select"  
-                                    data-placeholder="Select a country" 
+                                    data-placeholder="Select a region" 
                                     v-bind:value="country || ''"
                                     v-bind:name="country"
                                 >
@@ -495,7 +506,7 @@
                             </div>
                         </div>
                         <select id="default-category" class="category-input text-start" >
-                            <option value="">Add your favourite games</option>
+                            <option value="">Add your game title</option>
                         </select>
                     </div>
                 </div>
