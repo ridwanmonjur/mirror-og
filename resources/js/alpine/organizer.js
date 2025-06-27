@@ -58,7 +58,7 @@ myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
 initOffCanvasListeners();
 
 initialUserProfile.fontColor = initialUserProfile?.profile?.fontColor ?? '#2e4b59';
-initialUserProfile.backgroundColor = initialUserProfile?.profile?.backgroundColor ?? 'darkgray';
+initialUserProfile.backgroundColor = initialUserProfile?.profile?.backgroundColor ?? '#f4f2f2';
 
 
 function OrganizerData() {

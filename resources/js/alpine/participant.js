@@ -22,7 +22,7 @@ const {
 } = document.querySelector('.laravel-data-storage').dataset;
 
 userData.fontColor = userData?.profile?.fontColor ?? '#2e4b59';
-userData.backgroundColor = userData?.profile?.backgroundColor ?? 'darkgrey';
+userData.backgroundColor = userData?.profile?.backgroundColor ?? '#f4f2f2';
 
 function ParticipantData ()  {
     return {
