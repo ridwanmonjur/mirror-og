@@ -205,7 +205,7 @@ function CategoryManager() {
 
 initOffCanvasListeners();
 teamData.fontColor = teamData?.profile?.fontColor ?? '#2e4b59';
-teamData.backgroundColor = teamData?.profile?.backgroundColor ?? 'darkgray';
+teamData.backgroundColor = teamData?.profile?.backgroundColor ?? '#f4f2f2';
 
 let imageUpload = document.getElementById("image-upload");
 
