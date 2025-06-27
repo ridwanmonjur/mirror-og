@@ -328,13 +328,11 @@ class MiscController extends Controller
 
     public function showLandingPage(Request $request)
     {
-        $count = 6;
         $currentDateTime = Carbon::now()->utc();
 
         $events = EventDetail::landingPageQuery($request, $currentDateTime)->simplePaginate();
 
         $output = compact('events');
-
         if ($request->ajax()) {
             $view = view('includes.Landing', $output)->render();
 

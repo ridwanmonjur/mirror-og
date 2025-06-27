@@ -20,6 +20,9 @@
              <span class="fs-5 ms-2 ">
                 {{ $member?->user?->participant?->region_flag ?? ''  }}
             </span>
+            <span class="fw-bold fs-7 text-muted">
+                {{ $member?->user?->participant?->region_name ?? '' }}
+            </span>
         </div>
         <div>
            

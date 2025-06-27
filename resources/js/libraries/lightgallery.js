@@ -51,15 +51,10 @@ class VanillaLightbox {
                 ";
 
             >
-                <div class="modal-dialog modal-dialog-centered modal-xl" aria-hidden="true"
+                <div class="modal-dialog py-2 modal-dialog-centered modal-xl" aria-hidden="true"
                 >
-                    <div class="modal-content " aria-hidden="true">
-                        <div class="modal-header border-0" aria-hidden="true">
-                            <button type="button" 
-                                    class="btn-close" 
-                                    data-bs-dismiss="modal" 
-                                    aria-hidden="true"></button>
-                        </div>
+                    <div class="modal-content my-2 py-2" aria-hidden="true">
+                        
                         <div class="modal-body text-center p-0" aria-hidden="true">
                             <img src="${src}" 
                                  class="fslightbox-source" 
@@ -72,7 +67,7 @@ class VanillaLightbox {
                                  onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                                  >
                         </div>
-                        <div class="modal-footer border-0 text-center my-2 mx-auto p-0" aria-hidden="true">
+                        <div class="modal-footer border-0 text-center mt-1 mx-auto p-0" aria-hidden="true">
                             <button type="button" 
                             class="btn btn-primary text-white" 
                             data-bs-dismiss="modal" 

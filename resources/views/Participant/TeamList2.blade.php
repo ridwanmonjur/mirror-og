@@ -126,7 +126,7 @@
                                 <div onclick="event.stopPropagation();" class="dropdown-menu px-0 py-1"
                                     aria-labelledby="dropdownFilterSort">
                                     <div class="px-3 py-1" style="width: 280px;">
-                                        <p class="my-1">Choose a country/region of origin</p>
+                                        <p class="my-1">Choose a region of origin</p>
 
                                         <select id="select2-country2" class="mb-2" name="region">
                                         </select>
