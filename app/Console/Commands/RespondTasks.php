@@ -21,12 +21,15 @@ class RespondTasks extends Command
     use PrinterLoggerTrait, RespondTaksTrait;
 
     protected $stripeService;
+    protected $taskIdParent;
 
     public function __construct(StripeConnection $stripeService)
     {
         parent::__construct();
-
-        $this->initializeTrait($stripeService);
+        $now = Carbon::now();
+        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $this->taskIdParent = $taskId;
+        $this->initializeTrait($stripeService, $taskId);
     }
 
     /**
@@ -54,7 +57,8 @@ class RespondTasks extends Command
         $eventId = $this->option('event_id');
         $eventIdInt = 0;
         Log::info("Event of type {$type} ran");
-        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $taskId = $this->taskIdParent;
+
         try {
             $endedTaskIds = [];
             $liveTaskIds = [];
@@ -63,7 +67,7 @@ class RespondTasks extends Command
 
             if ($type === 0) {
                 $tasks = Task::where('taskable_type', "EventDetail")
-                    ->where('action_time', '>=', $now)
+                    ->where('action_time', '>=', $now->copy()->subMinutes(5))
                     ->where('action_time', '<=', $now->copy()->addMinutes(29))
                     ->get();
             } else {
@@ -89,7 +93,7 @@ class RespondTasks extends Command
                 } catch (Exception $e) {
                     Log::info(message: "Failed to reset event for ID: {$eventIdInt}");
 
-                    $this->logError(null, $e);
+                    $this->logError($taskId, $e);
                 }
             }
 
@@ -153,7 +157,7 @@ class RespondTasks extends Command
                             }
                         }
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($taskId, $e);
                     }
                 }
             }
@@ -168,7 +172,7 @@ class RespondTasks extends Command
                         EventDetail::where('id', $eventId)->update(['status' => 'UPCOMING']);
                         $this->handleEventTypes($this->getLiveNotifications($joinEvents), $joinEvents);
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($taskId, $e);
                     }
                 }
             }
@@ -269,7 +273,7 @@ class RespondTasks extends Command
                             $this->checkAndCancelEvent($event);
                         }
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($taskId, $e);
                     }
                 }
             }
@@ -278,7 +282,7 @@ class RespondTasks extends Command
             $this->logExit($taskId, $now);
             Cache::clear();
         } catch (Exception $e) {
-            $this->logError(null, $e);
+            $this->logError($taskId, $e);
         }
     }
 }
