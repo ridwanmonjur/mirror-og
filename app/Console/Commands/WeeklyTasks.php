@@ -35,7 +35,7 @@ class WeeklyTasks extends Command
     public function handle()
     {
         $today = Carbon::now();
-        $id = $this->logEntry($this->description, $this->signature, '0 0 * *', $today);
+        $taskId = $this->logEntry($this->description, $this->signature, '0 0 * *', $today);
         try {
             $weekAgo = Carbon::now()->subDays(7);
             $monthAgo = Carbon::now()->copy()->subDays(29);
@@ -46,9 +46,9 @@ class WeeklyTasks extends Command
             NotificationCounter::resetNegativeCounts();
             Task::where('created_at', '<', $weekAgo)->delete();
             $now = Carbon::now();
-            $this->logExit($id, $now);
+            $this->logExit($taskId, $now);
         } catch (Exception $e) {
-            $this->logError(null, $e);
+            $this->logError($taskId, $e);
         }
     }
 }

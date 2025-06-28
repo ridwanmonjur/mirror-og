@@ -12,11 +12,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('queue:work --stop-when-empty')
-            ->everyMinute()
-            ->withoutOverlapping();
+        // $schedule->command('queue:work --stop-when-empty')
+        //     ->everyMinute()
+        //     ->withoutOverlapping();
 
-        $schedule->command('queue:restart')->hourly();
+        // $schedule->command('queue:restart')->hourly();
+
+        $schedule->command('tasks:respond')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('tasks:weekly')->weeklyOn(1, '00:00')->withoutOverlapping(); // Monday
+        $schedule->command('tasks:weekly')->weeklyOn(4, '00:00')->withoutOverlapping(); // Thursday
+        
+        // */5 * * * * /usr/bin/php /home/u472033366/domains/oceansgaming.gg/public_html/artisan schedule:run >> /dev/null 2>&1
+        // */5 * * * * /usr/bin/php /home/u472033366/domains/driftwood.gg/public_html/artisan schedule:run >> /dev/null 2>&1
+
 
     }
 

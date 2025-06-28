@@ -29,10 +29,12 @@ use Illuminate\Support\Facades\Mail;
 trait RespondTaksTrait
 {
     protected $stripeService;
+    protected $childTaskId;
 
-    protected function initializeTrait(StripeConnection $stripeService)
+    protected function initializeTrait(StripeConnection $stripeService, $taskId)
     {
         $this->stripeService = $stripeService;
+        $this->childTaskId = $taskId;
     }
 
     public function checkAndCancelEvent(EventDetail $event)
@@ -177,7 +179,7 @@ trait RespondTaksTrait
                         } catch (Exception $e) {
                             
                             Log::error("Error in releaseFunds for JOIN ID {$join->id}: && PAY ID {$participantPay->id}");
-                            $this->logError(null, $e);
+                            $this->logError($this->childTaskId, $e);
                             throw $e;
                         }
                     }
@@ -186,12 +188,12 @@ trait RespondTaksTrait
                     
                     DB::rollback();
                     Log::error("Error in releaseFunds for Join Event ID {$join->id}");
-                    $this->logError(null, $e);
+                    $this->logError($this->childTaskId, $e);
                     throw $e;
                 }
             }
         } catch (Exception $e) {
-            $this->logError(null, $e);
+            $this->logError($this->childTaskId, $e);
             return [
                 'released_payments' => 0,
                 'created_discounts' => 0,
@@ -240,14 +242,14 @@ trait RespondTaksTrait
                         Log::error("Payment processed successfully for participant payment ID: {$participantPay->id}");
                     } catch (Exception $e) {
                         Log::error("Error processing participant payment ID {$participantPay->id}");
-                        $this->logError(null, $e);
+                        $this->logError($this->childTaskId, $e);
                         throw $e;
                     }
                 }
                 DB::commit();
             } catch (Exception $e) {
                 Log::error("Error processing join ID {$join->id} ");
-                $this->logError(null, $e);
+                $this->logError($this->childTaskId, $e);
                 DB::rollBack();
                 throw $e;
             }
@@ -302,7 +304,7 @@ trait RespondTaksTrait
                 }
             } catch (Exception $e) {
                 Log::error("Error processing function getLiveNotifications join ID {$join->id} ");
-                $this->logError(null, $e);
+                $this->logError($this->childTaskId, $e);
             }
         }
 
@@ -357,7 +359,7 @@ trait RespondTaksTrait
                 }
             } catch (Exception $e) {
                 Log::error("Error processing function getStartedNotifications join ID {$join->id}: ");
-                $this->logError(null, $e);
+                $this->logError($this->childTaskId, $e);
             }
         }
 
@@ -415,7 +417,7 @@ trait RespondTaksTrait
                                     $memberEmails[] = $member->user->email;
                                 }
                             } catch (Exception $e) {
-                                $this->logError(null, $e);
+                                $this->logError($this->childTaskId, $e);
                                 throw $e;
                             }
                         }
@@ -424,7 +426,7 @@ trait RespondTaksTrait
                             Mail::to($memberEmails)->send($memberMailInvocation);
                         }
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($this->childTaskId, $e);
                     }
                 }
 
@@ -457,7 +459,7 @@ trait RespondTaksTrait
                             Mail::to($user->email)->send($orgMailInvocation);
                         }
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($this->childTaskId, $e);
                         throw $e;
                     }
                 }
@@ -466,12 +468,12 @@ trait RespondTaksTrait
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack(); 
-                $this->logError(null, $e);
+                $this->logError($this->childTaskId, $e);
                 throw $e;
             }
         }
         } catch (Exception $e) {
-            $this->logError(null, $e);
+            $this->logError($this->childTaskId, $e);
         }
     }
 
@@ -568,7 +570,7 @@ trait RespondTaksTrait
                         'processed_before_failure' => $processedCount,
                     ]);
 
-                    $this->logError(null, $e);
+                    $this->logError($this->childTaskId, $e);
                     throw $e;
                 }
             }
@@ -737,7 +739,7 @@ trait RespondTaksTrait
                 $members = $join->roster?->pluck('user_id')->toArray() ?? [];
                 $memberIdList[$join->id] = $members;
             } catch (Exception $e) {
-                $this->logError(null, $e);
+                $this->logError($this->childTaskId, $e);
             }
         }
 
