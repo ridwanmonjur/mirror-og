@@ -34,22 +34,24 @@ class DeadlineTasks extends Command
     protected $description = 'Respond tasks in the database';
 
     protected $bracketDataService;
+    protected $taskIdParent;
 
     public function __construct(BracketDataService $bracketDataService)
     {
         parent::__construct();
+        $now = Carbon::now();
         $firebaseConfig = Config::get('services.firebase');
         $disputeEnums = Config::get('constants.DISPUTE');
-
+        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $this->taskIdParent = $taskId;
         $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
     }
 
     public function handle()
     {
         $now = Carbon::now();
-        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $taskId = $this->taskIdParent;
         try {
-            $today = Carbon::today();
             $type = (int) $this->argument('type');
             $eventId = $this->option('event_id');
             $tasks = null;
@@ -59,7 +61,7 @@ class DeadlineTasks extends Command
 
             if ($type === 0) {
                 $tasks = Task::where('taskable_type', "Deadline")
-                    ->where('action_time', '>=', $now)
+                    ->where('action_time', '>=', $now->copy()->subMinutes(5))
                     ->where('action_time', '<=', $now->copy()->addMinutes(29))
                     ->get();
             } else {
@@ -90,7 +92,7 @@ class DeadlineTasks extends Command
                     try {
                         $this->handleStartedTasks($detail->matches);
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($taskId, $e);
                     }
                 }
             }
@@ -103,7 +105,7 @@ class DeadlineTasks extends Command
                         $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
                         $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id);
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($taskId, $e);
                     }
                 }
             }
@@ -116,7 +118,7 @@ class DeadlineTasks extends Command
                         $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
                         $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id);
                     } catch (Exception $e) {
-                        $this->logError(null, $e);
+                        $this->logError($taskId, $e);
                     }
                 }
             }
@@ -124,7 +126,7 @@ class DeadlineTasks extends Command
             $now = Carbon::now();
             $this->logExit($taskId, $now);
         } catch (Exception $e) {
-            $this->logError(null, $e);
+            $this->logError($taskId, $e);
         }
     }
 }
