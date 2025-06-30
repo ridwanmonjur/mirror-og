@@ -146,7 +146,9 @@ class Team extends Model
     }
 
     public function createdAtHumaReadable() {
-        return Carbon::parse($this->created_at)->diffForHumans();
+        return Carbon::parse($this->created_at)
+            ->setTimezone('Asia/Kuala_Lumpur')
+            ->format('d M Y');
     }
 
     public static function getTeamAndMembersByTeamId(int| string $teamId): ?self
