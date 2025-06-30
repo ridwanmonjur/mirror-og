@@ -393,7 +393,7 @@ function TeamHead() {
 
 const TeamState = reactive({
     receiveInvites: teamData.status != 'private',
-    needsPermission: teamData.status == 'public',
+    needsPermission: teamData.status != 'private' && teamData.status == 'public',
 
     setReceiveInvites(value) {
         this.receiveInvites = value;
