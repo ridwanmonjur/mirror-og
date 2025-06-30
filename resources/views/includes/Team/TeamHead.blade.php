@@ -96,7 +96,7 @@
         $loggedUserId = null;
         $status = "not_signed";
         $statusMessage = "Please sign in!";
-        $acceptedTeamMemberCount = $leftPlusAcceptedTeamMemberCount = 0;
+        $acceptedTeamMemberCount = 0
     @endphp
 @endguest
 @auth
@@ -114,7 +114,7 @@
 
         $loggedUserId = $user->id;
         $isCreator = $selectTeam->creator_id == $loggedUserId;
-        ['accepted' => $acceptedTeamMemberCount, 'left_plus_accepted' => $leftPlusAcceptedTeamMemberCount] = $selectTeam->getMembersAndTeamCount();
+        ['accepted' => $acceptedTeamMemberCount] = $selectTeam->getMembersAndTeamCount();
     @endphp
 @endauth
 <main class="main1 teamhead"
@@ -469,7 +469,7 @@
                 
                     <input
                         placeholder="Enter your team description..."
-                        class="form-control border-secondary player-profile__input d-inline-block py-2 me-3"
+                        class="form-control border-secondary player-profile__input d-inline-block py-2 mx-3"
                         v-model="teamDescription"
                         autocomplete="off"
                         autocomplete="nope"
@@ -480,7 +480,7 @@
                 <div class=" my-3">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto category-management">
                         
-                        <div class="d-inline-flex mb-2 justify-content-between align-items-center" v-for="element in userCategoriesArr" :key="element.id">
+                        <div class="d-inline-flex mb-2 justify-content-between align-items-center flex-wrap" v-for="element in userCategoriesArr" :key="element.id">
                             <div class=" d-flex flex-col rounded-2 justify-content-between align-items-center px-0 py-0  mx-1"
                                 :class="{'invisible-until-hover-parent': element.id != defaultCategory }"
                                 :style="{ color: '#43a4d7', backgroundColor: 'white', border: '1px solid #e7e7e7'  }"
@@ -510,7 +510,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="my-3 d-flex justify-content-between" v-scope="TeamSettings()"> 
+                <div class="my-3 d-flex justify-content-center flex-wrap" v-scope="TeamSettings()"> 
                         
                     <small class="form-check  form-switch mb-1 me-3">
                         <input 
@@ -537,6 +537,23 @@
                         <label class="form-check-label" for="needsPermission">
                             Participants need permission to join
                         </label>
+                    </small>
+
+                    <small class="form-check mb-1">
+                        <label class="form-check-label me-2" for="member_limit">
+                            Team member limit:
+                        </label>
+                        <input 
+                            class="form-control d-inline-block py-0" 
+                            style="width: 65px;" 
+                            type="number"
+                            id="member_limit"
+                            min="5"
+                            max="50"
+                            name="member_limit"
+                            v-model="member_limit" 
+                            placeholder="Enter limit"
+                        >
                     </small>
 
 
@@ -616,7 +633,7 @@
                         ><g id="SVGRepo_bgCarrier" stroke-width="0">
                             </g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M59.07,46.021L59.07,46.021c4.576-3.373,7.31-8.754,7.31-14.393c0-9.863-8.025-17.889-17.89-17.889 c-9.864,0-17.889,8.025-17.889,17.889c0,5.717,2.66,10.959,7.297,14.385c-18.244,6.451-21.092,28.71-21.531,35.378 c-0.031,0.479,0.137,0.949,0.465,1.3c0.328,0.35,0.785,0.549,1.264,0.549h60.788c0.479,0,0.938-0.199,1.266-0.549 c0.328-0.351,0.496-0.82,0.465-1.3C80.175,74.736,77.32,52.511,59.07,46.021z"></path> <path d="M82.761,46.861c3.02-2.227,4.821-5.779,4.821-9.502c0-6.508-5.297-11.805-11.807-11.805c-1.867,0-3.627,0.447-5.199,1.223 c0.345,1.564,0.529,3.184,0.529,4.852c0,4.68-1.484,9.219-4.137,12.988c10.448,6.572,14.981,18.07,16.944,26.81h11.923 c0.315,0,0.618-0.131,0.836-0.361c0.215-0.23,0.325-0.541,0.305-0.857C96.688,65.812,94.805,51.144,82.761,46.861z"></path> <path d="M29.976,44.617c-2.654-3.748-4.104-8.238-4.104-12.988c0-1.668,0.188-3.287,0.531-4.852 c-1.572-0.775-3.332-1.223-5.199-1.223c-6.51,0-11.807,5.297-11.807,11.805c0,3.775,1.754,7.236,4.816,9.496 C2.172,51.113,0.291,65.806,0.002,70.207c-0.021,0.316,0.09,0.627,0.307,0.857c0.217,0.229,0.52,0.36,0.836,0.36H13.06 C15.019,62.685,19.543,51.179,29.976,44.617z"></path> </g> </g> </g>
                         </svg>
-                        <span>{{$acceptedTeamMemberCount}}/{{$leftPlusAcceptedTeamMemberCount}} Members </span>
+                        <span>{{$acceptedTeamMemberCount}}/{{$selectTeam->member_limit}} Members </span>
                     </div>
                     <div onclick="openModal('followers')" class="user-select-none position-relative col-12 col-lg-4 text-center mx-auto cursor-pointer"
                         style="z-index: 998 !important; "

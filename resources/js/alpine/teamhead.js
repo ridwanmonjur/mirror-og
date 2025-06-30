@@ -333,6 +333,7 @@ function TeamHead() {
                         teamDescription: this.teamDescription,
                         country: this.country,
                         country_flag: this.country_flag,
+                        member_limit: this.member_limit,
                         country_name: this.country_name,
                         default_category_id: defaultCategory,
                         all_categories: userCategories,
