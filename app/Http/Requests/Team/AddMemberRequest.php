@@ -71,8 +71,8 @@ class AddMemberRequest extends FormRequest
             $query->where('user_id', $user_id)->where('status', 'accepted');
         })->count('id');
 
-        if ($count > 5) {
-            $validator->errors()->add('team_limit', "You already members of $count teams!");
+        if ($count >= 5) {
+            $validator->errors()->add('team_limit', "You are already a member of $count teams!");
             return;
         }
 
