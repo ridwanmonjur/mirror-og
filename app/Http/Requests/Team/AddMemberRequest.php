@@ -103,7 +103,7 @@ class AddMemberRequest extends FormRequest
             return 'pending'; 
         }
 
-        return $this->team->status === 'public' ? 'accepted' : 'pending';
+        return $this->team->status == 'open' ? 'accepted' : 'pending';
     }
 
     protected function failedValidation(Validator $validator)

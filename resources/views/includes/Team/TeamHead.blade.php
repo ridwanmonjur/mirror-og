@@ -587,7 +587,7 @@
                     </p>
                  @endif
             @endif
-            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-1 mb-1  ">
+            <div  v-cloak v-show="!isEditMode" class="row w-75-lg-60 py-1 mt-2 mb-1  ">
                 <div class="col-12 mb-2 mt-0">
                     <div v-scope="CategoryManager()" @vue:mounted="init" class="text-center mx-auto ">
                         <div class="d-inline-flex cursor-pointer justify-content-center align-items-center position-relative mx-1" v-for="element in userCategoriesArr" :key="element.id">
