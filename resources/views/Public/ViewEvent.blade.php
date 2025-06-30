@@ -121,17 +121,7 @@
     <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
     <main x-data="alpineDataComponent">
         <br class="d-none-at-desktop">
-        <div class="pt-2">
-            <header>
-                    <h5 class="text-start heading">
-                     <u>
-                        View your events
-                        </u>
-                    </h5>
-                </u>
-            </header>
-        </div>
-        <br>
+        
         <div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
@@ -148,16 +138,26 @@
         <div class="grid-container">
             <div> </div>
             <div>
+                <div class="py-3">
+            <header>
+                    <h5 class=" py-0 my-0">
+                     <u>
+                        View your events
+                        </u>
+                    </h5>
+                </u>
+            </header>
+        </div>
                 <div>
-                    <div class="mx-2  position-relative rounded-banner-parent">
+                    <div class="position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
                             <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}"
                                 onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
                                 width="120" height="90">
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
-                            <img loading="lazy"  alt="{{ $event->eventName }}"  width="100%"
-                                @class(['object-fit-cover rounded-banner height-image ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" src="{{ $eventBannerImg }}"
+                            <img   alt="{{ $event->eventName }}"  
+                                @class([' event-image rounded-banner  ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" src="{{ $eventBannerImg }}"
                                 alt=""
                             >
                         </a>
@@ -370,7 +370,7 @@
                                     </svg>
 
                                     @if ($event->game)
-                                        <span style="width: 150px;" class="d-inline-block  text-truncate text-nowrap"> 
+                                        <span  class=" text-wrap"> 
                                             {{ $event->game?->gameTitle ?? 'No Title' }}
                                         </span>
                                     @else
