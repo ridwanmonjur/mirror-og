@@ -135,7 +135,7 @@ function AccountComponent() {
                     reverseButtons: true,
                    
                     html: `
-                        <div class="pt-4 pb-3">
+                        <div class="pt-4 pb-1">
                             <h5 class="modal-heading text-center"> Enter a new email address </h5>
                             <div class="mx-3 text-start mt-4">
                                 <input type="email" 
@@ -143,7 +143,7 @@ function AccountComponent() {
                                     class="form-control border-primary" 
                                     placeholder="Enter new email"
                                 >
-                                <div class="text-red text-center mt-3 d-none" id="current-email-error">
+                                <div class="text-red text-center mt-0 d-none" id="current-email-error">
                                 
                                 </div>
                             </div>
@@ -293,7 +293,7 @@ function AccountComponent() {
                     reverseButtons: true,
                    
                     html: `
-                        <div class="pt-4 pb-3">
+                        <div class="pt-4 pb-1">
                             <h5 class="modal-heading text-center"> Enter a new email address </h5>
                             <div class="mx-3 text-start mt-4">
                                 <input type="email" 
@@ -301,7 +301,7 @@ function AccountComponent() {
                                     class="form-control border-primary" 
                                     placeholder="Enter new email"
                                 >
-                                <div class="text-red text-center mt-3 d-none" id="current-email-error">
+                                <div class="text-red text-center mt-0 d-none" id="current-email-error">
                                 
                                 </div>
                             </div>
@@ -383,7 +383,7 @@ function AccountComponent() {
                         reverseButtons: true,
                         
                         html: `
-                            <div class="pt-4 pb-3">
+                            <div class="pt-4 pb-1">
                                 <h5 class="modal-heading text-center">Verify Current Password</h5>
                                 <div class="mx-3 text-start mt-4">
                                     <input type="password" 
@@ -393,7 +393,7 @@ function AccountComponent() {
                                         autoComplete="new-password"
 
                                     >
-                                    <div class="text-center mt-2 text-red d-none" id="current-password-error"></div>
+                                    <div class="text-center mt-0 text-red d-none" id="current-password-error"></div>
                                 </div>
                             </div>
                         `,

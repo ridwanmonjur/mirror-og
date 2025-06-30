@@ -17,7 +17,7 @@
                     @if ($category->gameIcon)
                         <div 
                             @class([
-                                ' cursor-pointer game-events my-3',
+                                'border-invsible cursor-pointer game-events my-3',
                                 'color-border-success--thick  mx-auto px-0 d-inline-block' =>
                                     $event && $category->id == $event->event_category_id,
                             ])
@@ -36,7 +36,7 @@
                     @endif
                 @endforeach
             
-                <div class=" scroll-images game-events game-events--ignore" style=" pointer-events: none !important;">
+                <div class="border-invsible scroll-images game-events game-events--ignore" style="cursor: not-allowed !important;">
                     <a href="javascript:void(0)"  > 
                         <img 
                             class="border border-dark selectable-image" 

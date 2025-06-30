@@ -9,7 +9,7 @@
         data-item-type="first" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
     >
-        <x-brackets.bracket-table :bracket="$bracket" :isFirst="true" />
+        <x-brackets.bracket-table :bracket="$bracket" :isFirst="false" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen user-select-none position-relative  ">
 
             <x-brackets.bracket-first-item-popover 
@@ -44,6 +44,8 @@
                 :isTeam2="$isTeam2" 
                 :isOrg="$isOrg"
             />
+
+            <x-brackets.bracket-table :bracket="$bracket"  :isFirst="false" />
 
             <small class="position-absolute winner-label ">
                 @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
