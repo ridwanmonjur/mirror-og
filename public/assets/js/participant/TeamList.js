@@ -19,7 +19,7 @@ let membersCountServerValue = JSON.parse(membersCountServer.value);
 let countServerValue = Number(countServer.value);
 let userIdServerValue = Number(userIdServer.value);
 let filterSortResultsDiv = document.getElementById('filter-sort-results');
-let isModeMyTeams = true;
+let isModeMyTeams = window.location.href.includes('/participant/team/list');
 
 
 // UTILITIES
@@ -363,24 +363,28 @@ function setIsMyMode(event) {
     let target = event.currentTarget;
     if (!target) return;
     target.disabled = true;
-    let button2 = target.querySelector('#browse-teams-btn');
-    let membersBtn = document.getElementById('members-dropdown');
-   
-    if (!button2) return;
-    isModeMyTeams = !isModeMyTeams;
-    if (isModeMyTeams) {
-        button2.innerText = 'Browse Teams';
-        membersBtn.classList.remove('d-none');
-        paintScreen(teamListServerValue, membersCountServerValue, countServerValue)
-    } else {
-        membersBtn.classList.add('d-none');
-        button2.innerText = 'Go Back To My Teams';
-        fetchTeams();
-    }
 
-    setTimeout(() => {
-        target.disabled = false;
-    }, 3000);
+    if (window.location.pathname == '/participant/team/list') {
+        window.location.href = '/participant/team/search';
+    } else {
+        window.location.href = '/participant/team/list';
+    }
+    
+    // if (isModeMyTeams) {
+    //     button2.innerText = 'Browse Teams';
+    //     membersBtn.classList.remove('d-none');
+    //     paintScreen(teamListServerValue, membersCountServerValue, countServerValue)
+    // } else {
+    //     membersBtn.classList.add('d-none');
+    //     button2.innerText = 'Go Back To My Teams';
+    //     fetchTeams();
+    // }
+
+    // setTimeout(() => {
+    //     target.disabled = false;
+    // }, 3000);
+
+    isModeMyTeams = !isModeMyTeams;
 
 }
 
@@ -426,9 +430,9 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                 }
 
                 allCategoriesHtml = allCategoriesHtml.substring(0, 30);
-                // if (displayedCount > 0) {
+                if (all_categories.length - displayedCount > 0) {
                     allCategoriesHtml += ` <span class="text-decoration-underline">& ${all_categories.length - displayedCount} more...</span>`;
-                // }
+                }
             }
 
             let statusText = '';
@@ -616,13 +620,12 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             `;
         }
     } else {
-            Swal.fire({
-                position: "center",
-                icon: 'info',
-                confirmButtonColor: '#43a4d7',
-                text: 'No teams found by this search. Please change your search.',
-            })
-
+            // Swal.fire({
+            //     position: "center",
+            //     icon: 'info',
+            //     confirmButtonColor: '#43a4d7',
+            //     text: 'No teams found by this search. Please change your search.',
+            // })
             noResultsDiv.classList.remove('d-none');
             pageLinks.classList.add('d-none');
             return;
@@ -715,12 +718,12 @@ async function fetchTeams(route = null) {
         links = [...newPagination];
 
         if (!teamList[0]) {
-            Swal.fire({
-                position: "center",
-                icon: 'info',
-                confirmButtonColor: '#43a4d7',
-                text: 'No teams found by this search. Please change your search.',
-            })
+            // Swal.fire({
+            //     position: "center",
+            //     icon: 'info',
+            //     confirmButtonColor: '#43a4d7',
+            //     text: 'No teams found by this search. Please change your search.',
+            // })
 
             noResultsDiv.classList.remove('d-none');
             pageLinks.classList.add('d-none');
@@ -811,30 +814,58 @@ function takeNoAction() {
     dialogForMember.reset();
 }
 
-function joinTeam(event, teamId) {
+
+// Method 1: Single function with type parameter
+function handleTeamJoin(event, teamId, joinType = 'join') {
     event.preventDefault(); 
     event.stopPropagation();
     let button = event.currentTarget;
-    window.dialogOpen('Send join request?', ()=> {
+    
+    const config = {
+        join: {
+            dialogTitle: 'Send join request?',
+            dialogContent: "<strong class='text-success'>Do you want to join this team?</strong><br><em class='text-muted'>You can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>",
+            successText: (status) => status == "accepted" ? "Joined" : "Requested",
+            successMessage: "Successfully joined",
+            errorMessage: 'Error joining team.'
+        },
+        apply: {
+            dialogTitle: 'Send join application?',
+            dialogContent: "<strong class='text-success'>Do you want to apply to join this team?</strong><br><em class='text-muted'>If the team accepts, you can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>",
+            successText: () => "Applied",
+            successMessage: "Applied successfully.",
+            errorMessage: 'Error applying to join team.'
+        }
+    };
+    
+    const currentConfig = config[joinType];
+    
+    window.dialogOpen(currentConfig.dialogTitle, () => {
         const url = getUrl("memberPendingUrl", teamId);
         fetchData(url,
             function(responseData) {
                 if (responseData.success) {
-                    button.classList.remove('btn-primary');
-                    button.classList.remove('text-white');
-                    button.classList.add('btn-success');
-                    button.classList.add('text-dark');
-                    if (responseData.status == "accepted") {
-                        button.innerText = "Joined";
-                    } else {
-                        button.innerText = "Requested";
-                    }
+                    // Remove existing classes
+                    button.classList.remove('btn-primary', 'text-white', 'border-primary', 'bg-white', 'text-primary');
+                    // Add success classes
+                    button.classList.add('btn-success', 'text-white');
+                    button.innerText = currentConfig.successText(responseData.status);
                     button.disabled = true;
+                    
+                    // Show success message with Swal
+                    Swal.fire({
+                        position: "center",
+                        icon: 'success',
+                        confirmButtonColor: '#43a4d7',
+                        text: currentConfig.successMessage,
+                    });
                 } else {
                     toastError(responseData.message)
                 }
             },
-            function(error) { toastError('Error joining team.', error);}, 
+            function(error) { 
+                toastError(currentConfig.errorMessage, error);
+            }, 
             {
                 headers: generateHeaders(), 
                 body: JSON.stringify({
@@ -842,33 +873,42 @@ function joinTeam(event, teamId) {
                 })
             }
         );
-    }, ()=> {
-
-    }, {
-        innerHTML: "<strong class='text-success'>Do you want to join this team?</strong><br><em class='text-muted'>You can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>"
-    })
+    }, () => {}, {
+        innerHTML: currentConfig.dialogContent
+    });
 }
 
-function applyToJoinTeam(event, teamId) {
+// Wrapper functions for backward compatibility
+function joinTeam(event, teamId) {
+    handleTeamJoin(event, teamId, 'join');
+}
+
+function applyToJoin(event, teamId) {
+    handleTeamJoin(event, teamId, 'apply');
+}
+
+// Method 2: Base function with callback customization
+function baseTeamJoin(event, teamId, options) {
     event.preventDefault(); 
     event.stopPropagation();
     let button = event.currentTarget;
-    window.dialogOpen('Send join application?', ()=> {
+    
+    window.dialogOpen(options.dialogTitle, () => {
         const url = getUrl("memberPendingUrl", teamId);
         fetchData(url,
             function(responseData) {
                 if (responseData.success) {
-                    button.classList.remove('btn-primary');
-                    button.classList.remove('text-white');
-                    button.classList.add('btn-success');
-                    button.classList.add('text-dark');
-                    button.innerText = "Requested";
+                    button.classList.remove('btn-primary', 'text-white', 'border-primary', 'bg-white', 'text-primary');
+                    button.classList.add('btn-success', 'text-white');
+                    button.innerText = options.getSuccessText(responseData.status);
                     button.disabled = true;
                 } else {
                     toastError(responseData.message)
                 }
             },
-            function(error) { toastError('Error applying to joining team.', error);}, 
+            function(error) { 
+                toastError(options.errorMessage, error);
+            }, 
             {
                 headers: generateHeaders(), 
                 body: JSON.stringify({
@@ -876,11 +916,103 @@ function applyToJoinTeam(event, teamId) {
                 })
             }
         );
-    }, ()=> {
+    }, () => {}, {
+        innerHTML: options.dialogContent
+    });
+}
 
-    }, {
-        innerHTML: "<strong class='text-success'>Do you want to apply to join this team?</strong><br><em class='text-muted'>If the team accepts, you can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>"
-    })
+function joinTeam(event, teamId) {
+    baseTeamJoin(event, teamId, {
+        dialogTitle: 'Send join request?',
+        dialogContent: "<strong class='text-success'>Do you want to join this team?</strong><br><em class='text-muted'>You can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>",
+        getSuccessText: (status) => status == "accepted" ? "Joined" : "Requested",
+        errorMessage: 'Error joining team.'
+    });
+}
+
+function applyToJoin(event, teamId) {
+    baseTeamJoin(event, teamId, {
+        dialogTitle: 'Send join application?',
+        dialogContent: "<strong class='text-success'>Do you want to apply to join this team?</strong><br><em class='text-muted'>If the team accepts, you can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>",
+        getSuccessText: () => "Applied",
+        errorMessage: 'Error applying to join team.'
+    });
+}
+
+// Method 3: Most concise - using default parameters with single if check
+function teamAction(event, teamId, isApply = false) {
+    event.preventDefault(); 
+    event.stopPropagation();
+    let button = event.currentTarget;
+    
+    let title, content, errorMsg, successMsg;
+    
+    if (isApply) {
+        title = 'Send join application?';
+        content = "<strong class='text-success'>Do you want to apply to join this team?</strong><br><em class='text-muted'>If the team accepts, you can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>";
+        errorMsg = 'Error applying to join team.';
+        successMsg = 'Applied. Find this in your team list';
+    } else {
+        title = 'Send join request?';
+        content = "<strong class='text-success'>Do you want to join this team?</strong><br><em class='text-muted'>You can join and take part in events with them.</em><br><span class='text-muted'>This action will send a notification to the team creator.</span>";
+        errorMsg = 'Error joining team.';
+        successMsg = 'Successfully joined';
+    }
+    
+    window.dialogOpen(title, () => {
+        const url = getUrl("memberPendingUrl", teamId);
+        fetchData(url,
+            function(responseData) {
+                if (responseData.success) {
+                    button.classList.remove('btn-primary', 'text-white', 'border-primary', 'bg-white', 'text-primary');
+                    button.classList.add('btn-success', 'text-white');
+                    
+                    if (isApply) {
+                        button.innerText = "Applied";
+                    } else {
+                        button.innerText = responseData.status == "accepted" ? "Joined" : "Requested";
+                    }
+                    button.disabled = true;
+                    
+                    // Show success message with Swal and action buttons
+                    Swal.fire({
+                        position: "center",
+                        icon: 'success',
+                        title: successMsg,
+                        showCancelButton: true,
+                        confirmButtonColor: '#43a4d7',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'View My Teams',
+                        cancelButtonText: 'Continue Searching'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect to team list
+                            window.location.href = '/participant/team/list';
+                        }
+                        // If cancelled, stay on current page (continue searching)
+                    });
+                } else {
+                    toastError(responseData.message)
+                }
+            },
+            function(error) { toastError(errorMsg, error);}, 
+            {
+                headers: generateHeaders(), 
+                body: JSON.stringify({
+                   'actor' : 'user', 'status' : 'pending'
+                })
+            }
+        );
+    }, () => {}, { innerHTML: content });
+}
+
+// Simple wrappers
+function joinTeam(event, teamId) {
+    teamAction(event, teamId, false);
+}
+
+function applyToJoin(event, teamId) {
+    teamAction(event, teamId, true);
 }
 
 

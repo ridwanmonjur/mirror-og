@@ -37,7 +37,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search mt-1 me-2" viewBox="0 0 16 16">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                     </svg>
-                    <span id="browse-teams-btn"> Browse Team </span>
+                    <span id="browse-teams-btn"> 
+                        @if(request()->is('participant/team/list'))
+                            Browse Teams
+                        @else
+                            My Teams
+                        @endif
+                    </span>
                 </button>
                 <a href="{{route('participant.team.create')}}" 
                     class="d-inline-flex ms-4 py-2 rounded-pill px-4 text-light btn btn-primary me-2"

@@ -1,5 +1,5 @@
   <div class="text-center" id="step-0">
-      <div class="welcome mt-5" id="invisible-until-loaded">
+      <div class="welcome welcome--first" id="invisible-until-loaded">
           <div >
               <br>
               <u>

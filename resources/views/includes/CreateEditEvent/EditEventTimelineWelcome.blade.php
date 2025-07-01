@@ -1,6 +1,7 @@
   <div class="text-center" id="step-0">
-      <div class="welcome mt-5" id="invisible-until-loaded">
+      <div class="welcome welcome--first" id="invisible-until-loaded">
           <div >
+            <br>
               <u>
                   <h2>
                       @if (isset($error))
@@ -10,7 +11,7 @@
                       @endif
                   </h2>
               </u>
-              <br><br><br>
+              <br><br>
               <p class="create-online-esports">
                   @if (isset($error))
                       <span style="color: #EF4444;"> {{ $error }} </span>
@@ -18,7 +19,7 @@
                       Edit the event you just created.
                   @endif
               </p>
-              <br><br><br>
+              <br><br>
           </div>
           <input type="button" onclick="goToNextScreen('step-1', 'timeline-1')" value="Continue" class="me-3">
           {{-- <input type="button" class="bg-secondary" onclick="cancelEvent();" value="Cancel your event"> --}}

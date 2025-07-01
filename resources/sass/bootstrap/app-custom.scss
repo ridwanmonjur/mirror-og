@@ -46,6 +46,12 @@ svg{
     border-radius: 25px;
 }
 
+
+.border-invsible {
+    border: 6px solid transparent ;
+}
+
+
 .color-border-success-dotted {
     border-width: 3px !important;
     border-style: dashed !important;
