@@ -738,3 +738,9 @@
     font-size: 13px;
 
 }
+
+@media screen and (min-height: 900px) { 
+    .welcome {
+        margin-top: 12vh;
+    }
+}

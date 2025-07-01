@@ -7,6 +7,8 @@
     --timeline-normal-width-mobile: 160px;
 }
 
+
+
 .custom-scrollbar2 {
     --scrollbar-size: 48px;
     
@@ -1592,4 +1594,14 @@ body{
     display: flex !important;
     justify-content: start !important;
     border: 1px solid black;
+  }
+
+  @media (min-height: 900px) {
+    .welcome {
+        margin-top: 8vh;
+    }
+
+    .welcome--first {
+        margin-top: 12vh;
+    }
   }

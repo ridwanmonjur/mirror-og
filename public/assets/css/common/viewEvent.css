@@ -225,15 +225,9 @@ input[type="submit"]:active {
     }
   }
 
-  @media (min-width: 1200px) {
-    :root {
-      --event-width: 800px;
-      --event-height: 342px;     /* 700 / (7 / 3) */
+ 
   
-    }
-  }
-  
-  @media (min-width: 1500px) {
+  @media (min-height: 900px) {
     :root {
       --event-width: 900px;
       --event-height: 385.57px;     /* still same size here */
@@ -412,12 +406,12 @@ input[type="submit"]:active {
 
     .side-image-absolute-top{
         top: 5vh;
-        left: 3vw;
+        left: 40px;
     }
 
     .side-image-absolute-bottom {
         top: 60vh;
-        right: 3vw;
+        right: 40px;
     }
 
     .d-lg-none {

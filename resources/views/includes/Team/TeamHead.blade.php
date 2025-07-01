@@ -526,7 +526,7 @@
                         </label>
                     </small>
 
-                    <small class="form-check  form-switch mb-1">
+                    <small class="form-check  form-switch mb-1 me-3">
                         <input 
                             class="form-check-input" 
                             type="checkbox" 
@@ -539,12 +539,9 @@
                         </label>
                     </small>
 
-                    <small class="form-check mb-1">
-                        <label class="form-check-label me-2" for="member_limit">
-                            Team member limit:
-                        </label>
+                    <small class=" mb-1">
                         <input 
-                            class="form-control d-inline-block py-0" 
+                            class="form-control d-inline-block py-0 me-2" 
                             style="width: 65px;" 
                             type="number"
                             id="member_limit"
@@ -554,6 +551,10 @@
                             v-model="member_limit" 
                             placeholder="Enter limit"
                         >
+                        <label class="form-check-label " for="member_limit">
+                            Team member limit:
+                        </label>
+                        
                     </small>
 
 
