@@ -124,8 +124,8 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/follow', [SocialController::class, 'followParticipant'])->name('participant.participant.follow');
 
             // Team management
-            Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])
-            ->name('participant.team.view');
+            Route::get('/team/list', [ParticipantTeamController::class, 'teamList'])->name('participant.team.view');
+            Route::get('/team/search', [ParticipantTeamController::class, 'teamList'])->name('participant.team.search');
             Route::view('/team/create', 'Participant.CreateTeam')->name('participant.team.create');
             Route::get('/team/{id}/edit', [ParticipantTeamController::class, 'editTeamView'])->name('participant.team.edit');
             Route::get('/team/confirm', [ParticipantEventController::class, 'confirmUpdate']);

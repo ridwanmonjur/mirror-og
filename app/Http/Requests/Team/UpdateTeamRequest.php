@@ -34,7 +34,8 @@ class UpdateTeamRequest extends FormRequest
             'file.size' => 'numeric|max:3',
             'file.content' => 'string',
             'all_categories' => 'string|nullable',
-            'default_category_id' => 'required|nullable',
+            'default_category_id' => 'nullable',
+            'member_limit' => 'required|numeric|min:5|max:50',
             'status' => 'sometimes|in:private,open,public'
         ];
     }
@@ -54,8 +55,12 @@ class UpdateTeamRequest extends FormRequest
             'teamName.max' => 'Team name cannot exceed 25 characters',
             'teamDescription.required' => 'Please add a description for your team',
             'teamDescription.max' => 'Team description must be less than 150 characters',
-            'file.size' => 'The file is too large, over 3 MB in size'
-
+            'file.size' => 'The file is too large, over 3 MB in size',
+            
+            'member_limit.required' => 'Please specify the team member limit.',
+            'member_limit.numeric' => 'The member limit must be a number.',
+            'member_limit.min' => 'Team must have at least 5 members.',
+            'member_limit.max' => 'Team cannot exceed 50 members.',
         ];
     }
 }

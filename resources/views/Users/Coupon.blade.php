@@ -70,14 +70,14 @@
             class="d-none mx-auto px-0 container-main min-h-85vh" id="wallet-redeem-coupons"
         >
             <div class="card px-0 py-0 border border-2 mx-auto border-secondary mt-2 w-95-lg-50 rounded-30px">
-                <div class="card-body px-2 py-2">
+                <div class="card-body d-flex flex-column justify-content-center w-100 px-2 py-2">
                     <div class=" px-2 py-2">
                         <div class=" px-1 py-0 my-0">
                             <h5 class="text-center mt-2 mb-3 text-secondary">Have a coupon?</h5>
                         </div>
-                        <div class="mt-3">
+                        <div >
                             <!-- Topup Form -->
-                            <div class="my-2">
+                            <div class="my-0">
                                 <div id="coupon-form" v-scope="CouponStatusComponent()">
                                     
                                     <form v-on:submit="submitCoupon">

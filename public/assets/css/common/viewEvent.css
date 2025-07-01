@@ -6,6 +6,12 @@
     box-sizing: border-box;
 }
 
+:root {
+    --event-width: 95%;           
+    --event-height: auto;         
+    
+  }
+
 
 img.fslightbox-source{
     aspect-ratio: 1/1 !important;
@@ -148,7 +154,6 @@ input[type="submit"]:active {
     border-radius: 30px 30px;
     border-width: 3px;
     border-style: solid;
-    min-width: 80%;
     z-index: 1;
   
 }
@@ -158,13 +163,12 @@ input[type="submit"]:active {
     border-width: 3px;
     border-style: solid;
     z-index: 1;
-    max-width: 100%;
     
 }
 
 .popover-team-img {
-    width: 50px;
-    height: 50px;
+    width: 72px;
+    height: 72px;
 }
 
 .rounded-banner-parent:hover .rounded-banner {
@@ -190,7 +194,7 @@ input[type="submit"]:active {
     border-radius: 50% !important;
     width: 50px;
     height: 50px;
-    object-fit: contain;
+    object-fit: cover;
     border-style: solid;
 }
 
@@ -206,11 +210,31 @@ input[type="submit"]:active {
     text-decoration: none;
 }
 
-.box-width {
-    width: 600px !important;
-    max-width: 80vw !important;
-    margin: auto !important;
-}
+.event-image {
+    width: var(--event-width);
+    height: var(--event-height);
+    aspect-ratio: 7/3;
+    object-fit: cover;
+  }
+
+  @media (min-width: 992px) {
+    :root {
+      --event-width: 700px;
+      --event-height: 300px;     /* 700 / (7 / 3) */
+  
+    }
+  }
+
+ 
+  
+  @media (min-height: 900px) {
+    :root {
+      --event-width: 900px;
+      --event-height: 385.57px;     /* still same size here */
+    }
+  }
+
+
 
 .card-image-holder {
     border-radius: 30px 30px;
@@ -364,7 +388,7 @@ input[type="submit"]:active {
         display: none;
         padding: 15px 10px;
         border-top: none;
-        width: 70vw;
+        width: var(--event-width);
     }
 
     .card-heading {
@@ -379,22 +403,21 @@ input[type="submit"]:active {
     .height-image {
         height: 35vh;
     }
+
     .side-image-absolute-top{
-        top: 0vh;
-        left: 3vw;
+        top: 5vh;
+        left: 40px;
     }
 
     .side-image-absolute-bottom {
         top: 60vh;
-        right: 3vw;
+        right: 40px;
     }
 
     .d-lg-none {
         display: none;
     }
-    .rounded-banner {
-        max-width: 80%;
-    }
+    
 
 
     .flexbox-filter {
@@ -433,7 +456,7 @@ input[type="submit"]:active {
 
     .grid-container {
         padding: 0px;
-        grid-template-columns:  0.5fr 4fr 0.5fr;
+        grid-template-columns:  0.5fr 2fr 0.5fr;
     }
 
     .grid-container-two-columns-at-desktop {
@@ -444,6 +467,14 @@ input[type="submit"]:active {
 @media screen and (min-width: 1200px) {
     .height-image {
         height: 30vh;
+    }
+
+    .side-image-absolute-top{
+        left: 10vw;
+    }
+
+    .side-image-absolute-bottom {
+        right: 10vw;
     }
 
     .grid-container {
@@ -1027,7 +1058,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     }
 
     .tab-bracketlist {
-        width: 70vw; 
+        width: var(--event-width);
         left: 10px;
         top:20px;
     }

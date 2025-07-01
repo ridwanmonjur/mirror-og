@@ -15,7 +15,7 @@ function initSocialShareModals() {
                     icon: 'success',
                     text: "Successfully copied to clipboard!",
                     html: `<div>Successfully copied to clipboard!</div>
-                           <div style="background-color: black; color: white; padding: 10px; margin-top: 10px; border-radius: 4px; word-break: break-all;">${shareUrl}</div>`,
+                    <div class="bg-secondary text-light rounded-3 px-3 py-2 mt-2" style="word-break: break-all;">${shareUrl}</div>`,
                     confirmButtonColor: '#43A4D7'
                 });
             })

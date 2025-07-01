@@ -32,6 +32,10 @@ return new class extends Migration
             if (!Schema::hasColumns('teams', ['status'])) {
                 $table->enum('status', ['public', 'private', 'open'])->default('open');
             }
+
+            if (!Schema::hasColumns('teams', ['member_limit'])) {
+                $table->integer('member_limit', )->default(10);
+            }
         });
 
     }
@@ -61,6 +65,10 @@ return new class extends Migration
 
                 if (Schema::hasColumns('teams', ['status'])) {
                     $table->dropColumn(['status']);
+                }
+
+                if (Schema::hasColumns('teams', ['member_limit'])) {
+                    $table->dropColumn('member_limit' );
                 }
             });
         }

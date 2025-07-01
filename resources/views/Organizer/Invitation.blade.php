@@ -42,8 +42,8 @@
                     <br>
                     <div>
                         <div class="w-75 mx-auto">
-                            <select id="team-select"  class="d-block w-100" placeholder="Select a team..." >
-                                <option value="">Select a team...</option>
+                            <select id="team-select"  class="d-block w-100" placeholder="Search for a team by name..." >
+                                <option value="">Search for a team by name...</option>
                             </select>
                         </div>
                     </div>

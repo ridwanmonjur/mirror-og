@@ -678,7 +678,7 @@ class EventDetail extends Model implements Feedable
     }
 
     public static function landingPageQuery(Request $request, $currentDateTime) {
-        return self::whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
+        return self::whereNotIn('status', ['DRAFT', 'ENDED', 'FAILED', 'PENDING', 'PREVIEW'])
             ->whereNotNull('payment_transaction_id')
             ->where('sub_action_private', '<>', 'private')
             ->where(function ($query) use ($currentDateTime) {

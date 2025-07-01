@@ -122,12 +122,14 @@ class AuthService {
         DB::beginTransaction();
         
         try{
+            $uniqueName = $user->name . '_' . date('mdHi');
+
             $newUser = User::create([
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => Str::random(13),
-                'role' => strtoupper($role),
-                'created_at' => now(),
+               'name' => $uniqueName,
+               'email' => $user->email,
+               'password' => Str::random(13),
+               'role' => strtoupper($role),
+               'created_at' => DB::raw('NOW()'),
             ]);
 
             NotificationCounter::create(['user_id' => $newUser->id]);

@@ -25,8 +25,8 @@ class Team extends Model
     protected $table = 'teams';
 
     protected $fillable = ['teamName', 'teamBanner', 'creator_id', 'teamDescription', 
-        'country', 'country_name', 'country_flag', 
-        'default_category_id',  'all_categories', 'status'
+        'country', 'country_name', 'country_flag', 'member_limit',
+        'default_category_id',  'all_categories', 'status',
     ];
 
     public function user(): BelongsTo
@@ -133,20 +133,22 @@ class Team extends Model
                 'members as accepted_count' => function ($query) {
                     $query->where('status', 'accepted');
                 },
-                'members as left_count' => function ($query) {
-                    $query->where('status', 'left');
-                },
+                // 'members as left_count' => function ($query) {
+                //     $query->where('status', 'left');
+                // },
             ]);
 
             return [
                 'accepted' => $this->accepted_count,
-                'left_plus_accepted' => $this->accepted_count + $this->left_count,
+                // 'left_plus_accepted' => $this->accepted_count + $this->left_count,
             ];
         // });
     }
 
     public function createdAtHumaReadable() {
-        return Carbon::parse($this->created_at)->diffForHumans();
+        return Carbon::parse($this->created_at)
+            ->setTimezone('Asia/Kuala_Lumpur')
+            ->format('d M Y');
     }
 
     public static function getTeamAndMembersByTeamId(int| string $teamId): ?self

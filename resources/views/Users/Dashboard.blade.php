@@ -28,7 +28,7 @@
         <div class="row container-main " id="wallet-main">
             <div class="col-12 px-0 col-xl-5">
                 <div class="card my-2 mx-2 py-0 border border-3 border-primary  rounded-30px ">
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column justify-content-center">
                         <h5 class="my-3 text-secondary">Current Balance </h5>
                         <h2 class="text-primary my-3"> RM {{ number_format($wallet->current_balance, 2) }} </h2>
                         <div class="my-2">

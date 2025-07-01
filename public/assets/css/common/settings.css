@@ -618,6 +618,13 @@ table.responsive thead {
 
     .accordion-container {
         max-width: 60vw;
+        margin-top: 20px;
     }
 }
 
+
+@media screen and (min-height: 800px) { 
+    .accordion-container {
+        margin-top: 8vh;
+    }
+}
