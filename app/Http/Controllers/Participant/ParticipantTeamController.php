@@ -344,11 +344,8 @@ class ParticipantTeamController extends Controller
     {
         $member = $request->getTeamMember();
     
-    $member->status = $request->status;
-        $member->actor = $request->actor;
-        $member->save();
 
-        if ($member->status === 'left') {
+        if ($request->status === 'left') {
             $captain = TeamCaptain::where([
                 'team_member_id' => $member->id,
                 'teams_id' => $member->team_id,
@@ -357,6 +354,12 @@ class ParticipantTeamController extends Controller
             if ($captain) {
                 $captain->delete();
             }
+
+            $member->delete();
+        } else {
+            $member->status = $request->status;
+            $member->actor = $request->actor;
+            $member->save();
         }
 
         return response()->json([
