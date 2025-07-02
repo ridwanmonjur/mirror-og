@@ -61,15 +61,21 @@ class ParticipantTeamController extends Controller
             );
         }
 
+        $isModeMyTeams = request()->is('participant/team/list');
 
-        $user_id = $request->attributes->get('user')->id;
-        [
-            'teamList' => $teamList,
-            'teamIdList' => $teamIdList,
-            'membersCount' => $membersCount,
-            'count' => $count
-        ] = Team::getUserTeamListAndPluckIds($user_id);
+        $teamList = [];
+        $membersCount = [];
+        $count = 0;
 
+        if ($isModeMyTeams) {
+            $user_id = $request->attributes->get('user')->id;
+            [
+                'teamList' => $teamList,
+                'teamIdList' => $teamIdList,
+                'membersCount' => $membersCount,
+                'count' => $count
+            ] = Team::getUserTeamListAndPluckIds($user_id);
+        }
         $categories = EventCategory::all(['id', 'gameTitle', 'gameIcon']);
 
         $allCategorys = $categories->reduce(function ($carry, $category) {
@@ -86,7 +92,7 @@ class ParticipantTeamController extends Controller
         }, ['byId' => [], 'byTitle' => []]);
 
 
-        return view('Participant.TeamList2', compact('teamList', 'allCategorys', 'count', 'membersCount'));
+        return view('Participant.TeamList2', compact('teamList', 'allCategorys', 'isModeMyTeams', 'count', 'membersCount'));
     }
 
     public function teamManagement(Request $request, $id)
@@ -344,6 +350,7 @@ class ParticipantTeamController extends Controller
     {
         $member = $request->getTeamMember();
     
+        
 
         if ($request->status === 'left') {
             $captain = TeamCaptain::where([
