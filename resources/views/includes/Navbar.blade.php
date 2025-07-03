@@ -45,7 +45,7 @@
     data-event-count="{{ $notificationsCountArray['event_count'] }}"
 >
 </div>
-<nav class="navbar justify-content-between align-items-center user-select-none px-3 ">
+<nav class="navbar py-2 justify-content-between align-items-center user-select-none px-3 ">
     <a href="{{ $routeLogo }}" title="Home Page Link" class="">
         <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="Website Logo">
     </a>
@@ -76,7 +76,7 @@
              
             
            <div class="dropdown  nav-item px-1 d-inline-block position-relative py-0" data-reference="parent" data-bs-auto-close="outside" >
-                <a href="#" role="button" class="nav-link   py-navbar dropdown-toggle px-0 text-dark text-center " id="dropdownMenuGuest" data-bs-toggle="dropdown"
+                <a href="#" role="button" class="nav-link   py-1 dropdown-toggle px-0 text-dark text-center " id="dropdownMenuGuest" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true" >
                     
                     <img width="35px" height="30px" src="{{ asset('/assets/images/navbar-account.png') }}" alt="">

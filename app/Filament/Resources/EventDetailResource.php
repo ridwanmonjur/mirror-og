@@ -73,7 +73,7 @@ class EventDetailResource extends Resource
                 Forms\Components\Textarea::make('eventDescription'),
 
                 Forms\Components\Section::make('Event Banner')
-                    ->description('Image upload is only available when editing an existing item')
+                    ->description('Image upload is only available when editing an existing event')
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
@@ -159,15 +159,12 @@ class EventDetailResource extends Resource
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('type.eventType')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('startDate') // or any time field
                     ->label('Start Time')
                     ->dateTime('h:i A') // 12-hour format with AM/PM
-                    ->sortable()
                     ->toggleable(),
             ])
           

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventTypeResource\Pages;
-use App\Filament\Resources\EventTypeResource\RelationManagers;
 use App\Models\EventType;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -68,7 +67,7 @@ class EventTypeResource extends Resource
         return [
             'index' => Pages\ListEventTypes::route('/'),
             // 'create' => Pages\CreateEventType::route('/create'),
-            'edit' => Pages\EditEventType::route('/{record}/edit'),
+            // 'edit' => Pages\EditEventType::route('/{record}/edit'),
         ];
     }
 }

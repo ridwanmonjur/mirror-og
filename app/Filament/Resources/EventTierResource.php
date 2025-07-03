@@ -101,14 +101,10 @@ class EventTierResource extends Resource
 
                 Tables\Columns\TextColumn::make('eventTier')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('tierIcon')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tierTeamSlot')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tierPrizePool')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tierEntryFee')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('tierIcon'),
+                Tables\Columns\TextColumn::make('tierTeamSlot'),
+                Tables\Columns\TextColumn::make('tierPrizePool'),
+                Tables\Columns\TextColumn::make('tierEntryFee'),
             ])
             // ->filters([
             //     //

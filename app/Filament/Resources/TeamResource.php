@@ -48,8 +48,8 @@ class TeamResource extends Resource
                 ),
                 Forms\Components\TextInput::make('teamDescription')
                     ->maxLength(255),
-                Forms\Components\Section::make('Event Category')
-                    ->description('Image upload is only available when editing an existing item')
+                Forms\Components\Section::make('Team Banner')
+                    ->description('Image upload is only available when editing an existing category ')
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')

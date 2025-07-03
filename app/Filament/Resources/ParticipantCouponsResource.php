@@ -79,14 +79,11 @@ class ParticipantCouponsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')
-                    ->searchable()
-                    ->sortable()
                     ->copyable(),
                 
                 
                 Tables\Columns\TextColumn::make('amount')
-                    ->prefix('RM ')
-                    ->sortable(),
+                    ->prefix('RM '),
                 
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
@@ -100,14 +97,12 @@ class ParticipantCouponsResource extends Resource
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     
-                    ->sortable()
                     ->placeholder('Never'),
            
                 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             // ->filters([

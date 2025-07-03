@@ -85,7 +85,7 @@ class PaymentsRelationManager extends RelationManager
                     ->toArray();
                 })
                 ->searchable()
-                ->preload()
+                ->preload(false)
                 ->createOptionForm([
                     // Fields matching your RecordStripeResource form
                     Forms\Components\TextInput::make('payment_id')

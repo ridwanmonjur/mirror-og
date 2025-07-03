@@ -26,20 +26,35 @@ class ReportResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('reporter_id')
-                    ->relationship('reporter', 'name')
-                    ->searchable()
-                    ->optionsLimit(10)
-                    ->searchDebounce(500)
-                    ->required(),
-                Forms\Components\Select::make('reported_user_id')
-                    ->relationship('reportedUser', 'name')
-                    ->label('Reported User')
-                    ->searchable()
-                    ->different('reporter_id')
-                    ->optionsLimit(10)
-                    ->searchDebounce(500)
-                  
-                    ->required(),
+                ->relationship('reporter', 'name')
+                ->searchable()
+                ->optionsLimit(10)
+                ->searchDebounce(500)
+                ->required()
+                ->live()
+                ->rules([
+                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                        if ($value && $value == $get('reported_user_id')) {
+                            $fail('A user cannot report themselves. Please select different users.');
+                        }
+                    }
+                ]),
+                
+            Forms\Components\Select::make('reported_user_id')
+                ->relationship('reportedUser', 'name')
+                ->label('Reported User')
+                ->searchable()
+                ->optionsLimit(10)
+                ->searchDebounce(500)
+                ->required()
+                ->live()
+                ->rules([
+                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                        if ($value && $value == $get('reporter_id')) {
+                            $fail('A user cannot report themselves. Please select different users.');
+                        }
+                    }
+                ]),
                 Forms\Components\TextInput::make('reason')
                     ->required()
                     ->maxLength(255),

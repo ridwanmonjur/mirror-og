@@ -36,14 +36,29 @@ class ParticipantFollowResource extends Resource
                     ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
                     ->searchable()
                     ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('participant_followee')) {
+                                $fail('A user cannot follow themselves. Please select different users for Follower and Followee.');
+                            }
+                        }
+                    ])
                     ->relationship('followerUser', 'name'),
 
                 Forms\Components\Select::make('participant_followee')
                     ->label('Followee')
                     ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
                     ->searchable()
-                    ->different('participant_follower')
                     ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('participant_follower')) {
+                                $fail('A user cannot follow themselves. Please select different users for Follower and Followee.');
+                            }
+                        }
+                    ])
                     ->relationship('followeeUser', 'name'),
             ]);
     }
