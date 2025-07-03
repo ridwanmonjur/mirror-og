@@ -63,12 +63,21 @@ class BlocksResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('user_name')
+                Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
-                    ->getStateUsing(fn ($record) => $record->user->name),
-                Tables\Columns\TextColumn::make('blocked_user_name')
+                    ->searchable()
+                    ->numeric(),
+                Tables\Columns\TextColumn::make('blockedUser.name')
                     ->label('Blocked User')
-                    ->getStateUsing(fn ($record) => $record->blockedUser->name),
+                    ->searchable()
+                    ->numeric(),
+                    
+                // Tables\Columns\TextColumn::make('user_name')
+                //     ->label('User')
+                //     ->getStateUsing(fn ($record) => $record->user->name),
+                // Tables\Columns\TextColumn::make('blocked_user_name')
+                //     ->label('Blocked User')
+                //     ->getStateUsing(fn ($record) => $record->blockedUser->name),
                 Tables\Columns\TextColumn::make('created_at')
                     
                     ->timezone('Asia/Kuala_Lumpur')

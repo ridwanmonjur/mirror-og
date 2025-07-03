@@ -84,9 +84,11 @@ class FriendResource extends Resource
 
                 Tables\Columns\TextColumn::make('user1.name')
                     ->label('User 1')
+                    ->searchable()
                     ->numeric(),
                 Tables\Columns\TextColumn::make('user2.name')
                     ->label('User 2')
+                    ->searchable()
                     ->numeric(),
                 Tables\Columns\TextColumn::make('actor.name')
                     ->label('Actor')

@@ -93,33 +93,7 @@ class ParticipantFollowResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('follower_role')
-                    ->label('Follower Role')
-                    ->options([
-                        'PARTICIPANT' => 'Participant',
-                        'ORGANIZER' => 'Organizer',
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when(
-                                $data['value'],
-                                fn (Builder $query, $role): Builder => $query->whereHas('followerUser', fn ($q) => $q->where('role', $role))
-                            );
-                    }),
                 
-                Tables\Filters\SelectFilter::make('followee_role')
-                    ->label('Followee Role')
-                    ->options([
-                        'PARTICIPANT' => 'Participant',
-                        'ORGANIZER' => 'Organizer',
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when(
-                                $data['value'],
-                                fn (Builder $query, $role): Builder => $query->whereHas('followeeUser', fn ($q) => $q->where('role', $role))
-                            );
-                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

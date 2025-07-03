@@ -122,20 +122,17 @@ class TeamResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Team Creator')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
 
                 Tables\Columns\TextColumn::make('country_name')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                
               

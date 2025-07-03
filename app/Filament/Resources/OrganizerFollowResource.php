@@ -44,10 +44,12 @@ class OrganizerFollowResource extends Resource
 
                 Tables\Columns\TextColumn::make('participantUser.name')
                     ->numeric()
+                    ->searchable()
                     ->label('Participant')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('organizer.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
