@@ -3,18 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FriendResource\Pages;
-use App\Filament\Resources\FriendResource\RelationManagers;
 use App\Models\Friend;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class FriendResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = Friend::class;
     
     protected static ?string $navigationIcon = 'heroicon-o-users';

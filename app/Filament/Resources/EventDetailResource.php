@@ -10,12 +10,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class EventDetailResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = EventDetail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
@@ -26,8 +26,11 @@ class EventDetailResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('eventName')
                     ->maxLength(255),
+
                 Forms\Components\DatePicker::make('startDate'),
+
                 Forms\Components\DatePicker::make('endDate'),
+
                 Forms\Components\DatePicker::make('sub_action_private_date')
                     ->label('Launch Date')
                     ->native(false)
@@ -40,6 +43,7 @@ class EventDetailResource extends Resource
                         // Convert back to your preferred storage format
                         return $state ? \Carbon\Carbon::parse($state)->format('d/m/Y') : null;
                     }),
+
                 Forms\Components\TimePicker::make('sub_action_public_time')
                     ->label('Launch Time')
                     ->seconds(false)
@@ -65,14 +69,16 @@ class EventDetailResource extends Resource
                     ->label('End Time')
                     ->displayFormat('g:i A') // Native 12-hour format
                     ->format('H:i:s'),
+
                 Forms\Components\Textarea::make('eventDescription'),
+
                 Forms\Components\Section::make('Event Banner')
                     ->description('Image upload is only available when editing an existing item')
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
-                        ->content('Please create the object first, then edit to upload an image.')
-                        ->visible(fn (string $context): bool => $context === 'create'),
+                            ->content('Please create the object first, then edit to upload an image.')
+                            ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('eventBanner')
                             ->image()
                             ->directory('images/events') 
@@ -109,8 +115,10 @@ class EventDetailResource extends Resource
                 
                 Forms\Components\TextInput::make('eventTags')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('status')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('venue')
                     ->maxLength(255),
              
@@ -123,12 +131,16 @@ class EventDetailResource extends Resource
                     ->relationship('user', 'name', 
                     fn ($query) => $query->where('role', 'ORGANIZER') )
                     ->required(),
+
                 Forms\Components\Select::make('event_type_id')
                     ->relationship('type', 'eventType'),
+
                 Forms\Components\Select::make('event_tier_id')
                     ->relationship('tier', 'eventTier'),
+
                 Forms\Components\Select::make('event_category_id')
                     ->relationship('game', 'gameTitle'),
+
                 Forms\Components\Toggle::make('willNotify')
                     ->required(),
             ]);
@@ -143,7 +155,7 @@ class EventDetailResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('eventBanner')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')

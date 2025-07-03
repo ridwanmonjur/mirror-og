@@ -14,9 +14,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class InterestedUserResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = InterestedUser::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-star';

@@ -7,11 +7,14 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 use App\Models\User;
 
 class ActivityLogsRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+    
     protected static string $relationship = 'activities';
 
     public function form(Form $form): Form

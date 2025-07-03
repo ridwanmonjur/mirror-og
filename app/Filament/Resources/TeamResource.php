@@ -13,9 +13,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class TeamResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = Team::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';

@@ -3,18 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrganizerFollowResource\Pages;
-use App\Filament\Resources\OrganizerFollowResource\RelationManagers;
 use App\Models\OrganizerFollow;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
+
 
 class OrganizerFollowResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = OrganizerFollow::class;
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 

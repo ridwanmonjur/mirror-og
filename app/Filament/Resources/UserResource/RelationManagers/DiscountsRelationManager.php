@@ -9,9 +9,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class DiscountsRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+
     protected static string $relationship = 'wallet';
 
     protected static bool $hasAssociatedRecord = true;

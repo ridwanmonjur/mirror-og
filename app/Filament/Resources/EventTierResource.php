@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventTierResource\Pages;
 use App\Filament\Resources\EventTierResource\RelationManagers;
+use App\Filament\Traits\HandlesFilamentExceptions;
 use App\Models\EventTier;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 
 class EventTierResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = EventTier::class;
     protected static ?string $navigationIcon = 'heroicon-o-building-library';
 

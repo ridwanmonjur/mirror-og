@@ -11,12 +11,13 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class ParticipantFollowResource extends Resource
 {
     protected static ?string $model = ParticipantFollow::class;
 
-
+    use HandlesFilamentExceptions;
     protected static ?string $navigationLabel = 'Participant Follows';
 
     protected static ?string $navigationGroup = 'User Management';

@@ -8,10 +8,11 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class PTransactionsRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
     protected static string $relationship = 'paymentTransaction';
     
     protected static ?string $recordTitleAttribute = 'payment_id';

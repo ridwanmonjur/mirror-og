@@ -13,9 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class EventCategoryResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = EventCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';

@@ -24,9 +24,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class UserResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = User::class;
 
     protected static ?string $navigationLabel = 'Users';
