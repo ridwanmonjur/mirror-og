@@ -43,6 +43,7 @@ class EventDetailResource extends Resource
                 Forms\Components\TimePicker::make('sub_action_public_time')
                     ->label('Launch Time')
                     ->seconds(false)
+                    ->native(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->displayFormat('g:i A') // Native 12-hour format
                     ->format('H:i'), // Store as 24-hour
@@ -50,6 +51,7 @@ class EventDetailResource extends Resource
                 Forms\Components\TimePicker::make('startTime')
                     ->required()
                     ->seconds(false)
+                    ->native(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->label('Start Time')
                     ->displayFormat('g:i A') // Native 12-hour format
@@ -58,6 +60,7 @@ class EventDetailResource extends Resource
                 Forms\Components\TimePicker::make('endTime')
                     ->required()
                     ->seconds(false)
+                    ->native(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->label('End Time')
                     ->displayFormat('g:i A') // Native 12-hour format

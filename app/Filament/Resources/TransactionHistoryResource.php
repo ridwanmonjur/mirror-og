@@ -61,6 +61,7 @@ class TransactionHistoryResource extends Resource
                             ->displayFormat('M j, Y g:i A')
                             ->timezone('Asia/Kuala_Lumpur')
                             ->seconds(false)
+                            ->native(false)
                             ->placeholder('Select date and time'),
 
                         Forms\Components\TextInput::make('link')
@@ -118,7 +119,6 @@ class TransactionHistoryResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
-                    ->seconds(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(),
 

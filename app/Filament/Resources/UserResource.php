@@ -22,10 +22,8 @@ use Filament\Forms\Components\Tabs;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Io238\ISOCountries\Models\Country;
 
 class UserResource extends Resource
 {
@@ -74,6 +72,7 @@ class UserResource extends Resource
                                 DateTimePicker::make('email_verified_at')
                                     ->label('Email Verified At')
                                     ->displayFormat('Y-m-d h:i A')
+                                    ->native(false)
                                     ->timezone('Asia/Kuala_Lumpur'),
                                 Forms\Components\Section::make('User Banner')
                                     ->description('Banner upload is only available when editing an existing item')
@@ -183,15 +182,15 @@ class UserResource extends Resource
                                             ->label('Country')
                                             ->options($countries)
                                             ->reactive()
-                                            ->afterStateUpdated(function ($state, callable $set) {
+                                            ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
                                                 if ($state) {
-                                                    $country = Country::find($state);
-                                                    if ($country && $country->flag) {
-                                                        $set('region_name', $country->name);
-                                                        $set('region_flag', $country->flag);
+                                                    $country = CountryRegion::find($state);
+                                                    if ($country) {
+                                                        $set('participant.region_name', $country['name']);
+                                                        $set('participant.region_flag', $country['emoji_flag']);
                                                     } else {
-                                                        $set('region_name', null);
-                                                        $set('region_flag', null);
+                                                        $set('participant.region_name', null);
+                                                        $set('participant.region_flag', null);
                                                     }
                                                 }
                                             })
@@ -264,6 +263,7 @@ class UserResource extends Resource
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->deferLoading()
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
                     ->options([

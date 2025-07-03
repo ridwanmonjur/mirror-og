@@ -11,10 +11,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Io238\ISOCountries\Models\Country;
 
 class TeamResource extends Resource
 {
@@ -92,12 +90,12 @@ class TeamResource extends Resource
                     ->label('Country')
                     ->options($countries)
                     ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
+                    ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
                         if ($state) {
-                            $country = Country::find($state);
+                            $country = CountryRegion::find($state);
                             if ($country) {
-                                $set('country_name', $country->name);
-                                $set('country_flag', $country->flag);
+                                $set('country_name', $country['name']);
+                                $set('country_flag', $country['emoji_flag']);
                             }
                         } else {
                             $set('country_name', null);

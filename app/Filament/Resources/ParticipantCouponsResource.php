@@ -44,6 +44,7 @@ class ParticipantCouponsResource extends Resource
                         ->displayFormat('Y-m-d h:i A')
                         ->timezone('Asia/Kuala_Lumpur')
                         ->seconds(false)
+                        ->native(false)
                         ->nullable()
                         ->columnSpan(1),
                 ])
@@ -98,6 +99,7 @@ class ParticipantCouponsResource extends Resource
                 Tables\Columns\TextColumn::make('expires_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
+                    
                     ->sortable()
                     ->placeholder('Never'),
            

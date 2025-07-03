@@ -73,12 +73,14 @@ class EventCreateCouponResource extends Resource
                         Forms\Components\TimePicker::make('startTime')
                             ->required()
                             ->seconds(false)
+                            ->native(false)
                             ->timezone('Asia/Kuala_Lumpur')
                             ->displayFormat('g:i A') 
                             ->label('Start Time'),
                             
                         Forms\Components\TimePicker::make('endTime')
                             ->required()
+                            ->native(false)
                             ->timezone('Asia/Kuala_Lumpur')
                             ->displayFormat('g:i A') 
                             ->seconds(false)

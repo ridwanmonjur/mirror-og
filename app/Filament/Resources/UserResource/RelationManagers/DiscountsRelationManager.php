@@ -31,8 +31,6 @@ class DiscountsRelationManager extends RelationManager
                         ->numeric()
                         ->prefix('RM')                   
                         ->label('Usable Balance'),
-                ])
-                ->schema([
                     Forms\Components\TextInput::make('current_balance')
                         ->required()
                         ->numeric()

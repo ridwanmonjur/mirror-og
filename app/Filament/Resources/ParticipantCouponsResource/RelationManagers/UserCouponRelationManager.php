@@ -36,6 +36,7 @@ class UserCouponRelationManager extends RelationManager
                     ->label('Redeemed At')
                     ->displayFormat('Y-m-d h:i A')
                     ->required()
+                    ->native(false)
                     ->seconds(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->default(now()),
