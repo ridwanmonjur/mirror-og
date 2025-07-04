@@ -70,13 +70,13 @@ class AdminPanelProvider extends PanelProvider
                             ->collapsible(false),
                         
          
-                        NavigationGroup::make('Event Setup')
+                        NavigationGroup::make('Setup')
                             ->items([
                                 ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
                                 // ...\App\Filament\Resources\EventTierSignupResource::getNavigationItems(),
-
+                                ...\App\Filament\Resources\GameResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCreateCouponResource::getNavigationItems(),
                             ]),
          

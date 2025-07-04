@@ -45,7 +45,9 @@ class ActivityLogsRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')
                     ->formatStateUsing(fn (string $state): string => class_basename($state))

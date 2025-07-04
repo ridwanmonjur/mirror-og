@@ -75,10 +75,12 @@ class ReportResource extends Resource
 
                 Tables\Columns\TextColumn::make('reporter.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reportedUser.name')
                     ->label('Reported User')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                
                 Tables\Columns\TextColumn::make('created_at')

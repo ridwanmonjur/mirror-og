@@ -116,8 +116,9 @@ class TeamResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\ImageColumn::make('teamBanner'),
-
+                Tables\Columns\ImageColumn::make('teamBanner')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')

@@ -155,7 +155,8 @@ class EventDetailResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('eventBanner')
-                    ->searchable(),
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')

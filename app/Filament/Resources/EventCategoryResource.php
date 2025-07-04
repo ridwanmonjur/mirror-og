@@ -97,7 +97,8 @@ class EventCategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('gameIcon')
-                    ->searchable(),
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

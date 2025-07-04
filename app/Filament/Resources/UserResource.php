@@ -243,7 +243,9 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\ImageColumn::make('userBanner'),
+                Tables\Columns\ImageColumn::make('userBanner')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),

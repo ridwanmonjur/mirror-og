@@ -82,7 +82,9 @@ class TeamProfileRelationManager extends RelationManager
 
                 Tables\Columns\ColorColumn::make('backgroundColor')
                     ->label('Background Color'),
-                Tables\Columns\ImageColumn::make('backgroundBanner'),
+                Tables\Columns\ImageColumn::make('backgroundBanner')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\ViewColumn::make('backgroundGradient')
                     ->label('Gradient')
                     ->view('filament.tables.columns.gradient-preview')
