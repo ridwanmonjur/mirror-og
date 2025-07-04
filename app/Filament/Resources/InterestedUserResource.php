@@ -14,9 +14,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class InterestedUserResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = InterestedUser::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
@@ -38,6 +40,7 @@ class InterestedUserResource extends Resource
                     ->displayFormat('Y-m-d h:i A') 
                     ->timezone('Asia/Kuala_Lumpur')
                     ->seconds(false)
+                    ->native(false)
                     ->nullable(),
                 TextInput::make('email_verified_token')
                     ->maxLength(255)
@@ -61,7 +64,6 @@ class InterestedUserResource extends Resource
                     ->sortable(),
                 TextColumn::make('email_verified_at')
                     ->dateTime('Y-m-d h:i A')
-                    ->seconds(false)
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')

@@ -126,3 +126,51 @@ full -> no flow
 accept-> accept invitation
 
 rejections: team is full,can't join/ apply/accept (according to flow)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+hey guys, here are the admin panel additions that we need:
+
+Variable event parameters
+
+this system is to allow the admin to add new game titles and change event type parameters
+1) evc edit
+game title
+2) change
+event prize pool split: how much each team receives out of the prize pool, including 0
+3) admin panel now, later do the other
+event parameters: players per team, number of games per match
+4) database, evc
+
+Fund withdrawal system
+
+this system is to allow the admin to process fund withdrawal requests (If you have a better way of handling this, please let me know)
+located on admin panel
+system will generate a PASSWORD PROTECTED CSV file pulling linked user bank account data collated with dates defined by admin request
+password of CSV file defined by Password field on Fund Withdrawal page on admin panel. This password can only be changed with verification through admin email (multifactor auth) (if you have a better way of handling this, please let us know)
+
+Analytics integration
+
+player data (event participation, spending habits, activity logs, site interactions)
+organiser data (tbd if it's possible to add to timeline)
+
+Coupon generation
+
+this system is to allow the admin to generate coupons for players and organisers
+unique coupon code
+number of uses (up to possible max of 10 uses per code) (include option for one-time use and infinite use)
+discount type (entry fee, event creation fee)
+discount amount (e.g. RM 5) OR discount percentage (up to 100%)
+expiry date (including never)
+
+admin panel
+evc, 
+roster view,
+brackets,
+scheduler, 
+player checkout, 
+spreadsheet generation, 

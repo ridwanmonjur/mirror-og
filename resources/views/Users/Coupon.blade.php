@@ -33,9 +33,9 @@
             <div class="center-container mx-auto" 
             >
                 <div class="card px-3 py-2 border border-2 mx-auto border-secondary  min-w-95vw rounded-30px">
-                    <div class="card-body px-2 py-2">
+                    <div class="card-body d-flex justify-content-center flex-column px-2 py-2">
                         <div class="row ">
-                            <h3 class="col-6 text-start transaction-history__title ">My Coupons {{$code}} {{$emptyCode}}</h3>
+                            <h3 class="col-6 text-start transaction-history__title ">My Coupons</h3>
                             <div class="col-6 text-end">
                                 <a type="button" 
                                     href="{{route('wallet.coupons', ['empty' => 1 ]) }}"
@@ -51,7 +51,7 @@
                             </div>
                            
                         </div>
-                        <div class="px-0 pt-4 pb-4 row">
+                        <div class="px-0 py-2 row">
                             @if (isset($coupons[0]))
                                 @foreach ($coupons as $coupon)
                                     <x-wallet.coupon-card :coupon="$coupon" :className="' col-lg-6  col-xl-4 '" />

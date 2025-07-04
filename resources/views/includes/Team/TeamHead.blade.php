@@ -57,7 +57,7 @@
     </style>
 </head>
 @php
-    $allCategorys = \App\Models\EventCategory::all(['id', 'gameTitle', 'gameIcon'])
+    $allCategorys = \App\Models\Game::all(['id', 'gameTitle', 'gameIcon'])
         ->mapWithKeys(function ($category) {
             return [
                 $category->id => [

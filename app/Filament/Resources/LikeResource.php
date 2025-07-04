@@ -12,9 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class LikeResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = Like::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-heart';
@@ -42,9 +44,11 @@ class LikeResource extends Resource
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('event.eventName')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')

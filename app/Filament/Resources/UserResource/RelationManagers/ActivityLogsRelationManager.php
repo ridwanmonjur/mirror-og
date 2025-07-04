@@ -7,11 +7,14 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 use App\Models\User;
 
 class ActivityLogsRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+    
     protected static string $relationship = 'activities';
 
     public function form(Form $form): Form
@@ -42,7 +45,9 @@ class ActivityLogsRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')
                     ->formatStateUsing(fn (string $state): string => class_basename($state))

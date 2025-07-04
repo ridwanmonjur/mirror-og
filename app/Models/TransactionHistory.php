@@ -140,4 +140,9 @@ public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): arr
         return $result;
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventTypeResource\Pages;
-use App\Filament\Resources\EventTypeResource\RelationManagers;
 use App\Models\EventType;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,9 +11,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class EventTypeResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = EventType::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
@@ -36,8 +37,7 @@ class EventTypeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
 
-                Tables\Columns\TextColumn::make('eventType')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('eventType'),
                 // Tables\Columns\TextColumn::make('eventDefinitions')
                     // ->searchable(),
             ])
@@ -66,7 +66,7 @@ class EventTypeResource extends Resource
         return [
             'index' => Pages\ListEventTypes::route('/'),
             // 'create' => Pages\CreateEventType::route('/create'),
-            'edit' => Pages\EditEventType::route('/{record}/edit'),
+            // 'edit' => Pages\EditEventType::route('/{record}/edit'),
         ];
     }
 }

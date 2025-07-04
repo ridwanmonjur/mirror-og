@@ -7,11 +7,12 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Traits\HandlesFilamentExceptions;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SignupRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
     protected static string $relationship = 'signup';
 
     public function form(Form $form): Form

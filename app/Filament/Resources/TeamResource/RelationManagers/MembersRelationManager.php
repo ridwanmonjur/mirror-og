@@ -10,9 +10,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\User;
+use App\Filament\Traits\HandlesFilamentExceptions;
+
 
 class MembersRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+
     protected static string $relationship = 'members';
 
     public function form(Form $form): Form

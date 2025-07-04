@@ -11,13 +11,13 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Io238\ISOCountries\Models\Country;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class TeamResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = Team::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -48,8 +48,8 @@ class TeamResource extends Resource
                 ),
                 Forms\Components\TextInput::make('teamDescription')
                     ->maxLength(255),
-                Forms\Components\Section::make('Event Category')
-                    ->description('Image upload is only available when editing an existing item')
+                Forms\Components\Section::make('Team Banner')
+                    ->description('Image upload is only available when editing an existing category ')
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
@@ -92,12 +92,12 @@ class TeamResource extends Resource
                     ->label('Country')
                     ->options($countries)
                     ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
+                    ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
                         if ($state) {
-                            $country = Country::find($state);
+                            $country = CountryRegion::find($state);
                             if ($country) {
-                                $set('country_name', $country->name);
-                                $set('country_flag', $country->flag);
+                                $set('country_name', $country['name']);
+                                $set('country_flag', $country['emoji_flag']);
                             }
                         } else {
                             $set('country_name', null);
@@ -116,26 +116,24 @@ class TeamResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\ImageColumn::make('teamBanner'),
-
+                Tables\Columns\ImageColumn::make('teamBanner')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Team Creator')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
 
                 Tables\Columns\TextColumn::make('country_name')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                
               
