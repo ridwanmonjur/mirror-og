@@ -9,7 +9,7 @@ use App\Http\Requests\Team\AddMemberRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Jobs\HandleFollowsFriends;
 use App\Models\CountryRegion;
-use App\Models\EventCategory;
+use App\Models\Game;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
@@ -61,16 +61,22 @@ class ParticipantTeamController extends Controller
             );
         }
 
+        $isModeMyTeams = request()->is('participant/team/list');
 
-        $user_id = $request->attributes->get('user')->id;
-        [
-            'teamList' => $teamList,
-            'teamIdList' => $teamIdList,
-            'membersCount' => $membersCount,
-            'count' => $count
-        ] = Team::getUserTeamListAndPluckIds($user_id);
+        $teamList = [];
+        $membersCount = [];
+        $count = 0;
 
-        $categories = EventCategory::all(['id', 'gameTitle', 'gameIcon']);
+        if ($isModeMyTeams) {
+            $user_id = $request->attributes->get('user')->id;
+            [
+                'teamList' => $teamList,
+                'teamIdList' => $teamIdList,
+                'membersCount' => $membersCount,
+                'count' => $count
+            ] = Team::getUserTeamListAndPluckIds($user_id);
+        }
+        $categories = Game::all(['id', 'gameTitle', 'gameIcon']);
 
         $allCategorys = $categories->reduce(function ($carry, $category) {
             $data = [
@@ -86,7 +92,7 @@ class ParticipantTeamController extends Controller
         }, ['byId' => [], 'byTitle' => []]);
 
 
-        return view('Participant.TeamList2', compact('teamList', 'allCategorys', 'count', 'membersCount'));
+        return view('Participant.TeamList2', compact('teamList', 'allCategorys', 'isModeMyTeams', 'count', 'membersCount'));
     }
 
     public function teamManagement(Request $request, $id)
@@ -344,11 +350,9 @@ class ParticipantTeamController extends Controller
     {
         $member = $request->getTeamMember();
     
-    $member->status = $request->status;
-        $member->actor = $request->actor;
-        $member->save();
+        
 
-        if ($member->status === 'left') {
+        if ($request->status === 'left') {
             $captain = TeamCaptain::where([
                 'team_member_id' => $member->id,
                 'teams_id' => $member->team_id,
@@ -357,6 +361,12 @@ class ParticipantTeamController extends Controller
             if ($captain) {
                 $captain->delete();
             }
+
+            $member->delete();
+        } else {
+            $member->status = $request->status;
+            $member->actor = $request->actor;
+            $member->save();
         }
 
         return response()->json([

@@ -3,18 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrganizerFollowResource\Pages;
-use App\Filament\Resources\OrganizerFollowResource\RelationManagers;
 use App\Models\OrganizerFollow;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
+
 
 class OrganizerFollowResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = OrganizerFollow::class;
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
@@ -44,10 +44,12 @@ class OrganizerFollowResource extends Resource
 
                 Tables\Columns\TextColumn::make('participantUser.name')
                     ->numeric()
+                    ->searchable()
                     ->label('Participant')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('organizer.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')

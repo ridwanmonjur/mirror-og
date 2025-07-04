@@ -13,9 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class EventCategoryResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = EventCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
@@ -28,7 +30,7 @@ class EventCategoryResource extends Resource
                     ->maxLength(255),
                
                 Forms\Components\Section::make('Event Category')
-                    ->description('Image upload is only available when editing an existing item')
+                    ->description('Image upload is only available when editing an existing category ')
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
@@ -95,7 +97,8 @@ class EventCategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('gameIcon')
-                    ->searchable(),
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

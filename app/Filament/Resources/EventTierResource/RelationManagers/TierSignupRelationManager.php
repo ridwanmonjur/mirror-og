@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\EventTierResource\RelationManagers;
 
+use App\Filament\Traits\HandlesFilamentExceptions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TierSignupRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
     protected static string $relationship = 'tierSignups';
 
     public function form(Form $form): Form

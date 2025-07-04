@@ -8,9 +8,11 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class UserProfileRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
     protected static string $relationship = 'profile';
     protected static bool $hasAssociatedRecord = true;
 
@@ -75,7 +77,9 @@ class UserProfileRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\ColorColumn::make('backgroundColor')
                     ->label('Background Color'),
-                Tables\Columns\ImageColumn::make('backgroundBanner'),
+                Tables\Columns\ImageColumn::make('backgroundBanner')
+                    ->circular()
+                    ->size(60),
                 Tables\Columns\ViewColumn::make('backgroundGradient')
                     ->label('Gradient')
                     ->view('filament.tables.columns.gradient-preview')

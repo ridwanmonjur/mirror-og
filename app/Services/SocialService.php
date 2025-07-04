@@ -43,7 +43,6 @@ class SocialService {
             $message = 'Successfully followed the organizer';
             $isFollowing = true;
             dispatch(new HandleFollowsFriends('FollowOrg', [
-                'subject_type' => User::class,
                 'object_type' => User::class,
                 'subject_id' => $participant->id,
                 'object_id' => $organizer->id,
@@ -114,7 +113,6 @@ class SocialService {
                 if ($status === 'left') {
                     $friend?->deleteOrFail();
                     ActivityLogs::findActivityLog([
-                        'subject_type' => User::class,
                         'subject_id' => [$user->id, $updateUser->id],
                         'object_type' => Friend::class,
                         'object_id' => $friend->id,
@@ -212,7 +210,6 @@ class SocialService {
         
         if ($existingFollow) {
             ActivityLogs::findActivityLog([
-                'subject_type' => User::class,
                 'subject_id' => $user->id,
                 'object_type' => ParticipantFollow::class,
                 'object_id' => $existingFollow->id,

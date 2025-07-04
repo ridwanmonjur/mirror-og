@@ -11,12 +11,13 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class ParticipantFollowResource extends Resource
 {
     protected static ?string $model = ParticipantFollow::class;
 
-
+    use HandlesFilamentExceptions;
     protected static ?string $navigationLabel = 'Participant Follows';
 
     protected static ?string $navigationGroup = 'User Management';
@@ -35,14 +36,29 @@ class ParticipantFollowResource extends Resource
                     ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
                     ->searchable()
                     ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('participant_followee')) {
+                                $fail('A user cannot follow themselves. Please select different users for Follower and Followee.');
+                            }
+                        }
+                    ])
                     ->relationship('followerUser', 'name'),
 
                 Forms\Components\Select::make('participant_followee')
                     ->label('Followee')
                     ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
                     ->searchable()
-                    ->different('participant_follower')
                     ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('participant_follower')) {
+                                $fail('A user cannot follow themselves. Please select different users for Follower and Followee.');
+                            }
+                        }
+                    ])
                     ->relationship('followeeUser', 'name'),
             ]);
     }
@@ -77,33 +93,7 @@ class ParticipantFollowResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('follower_role')
-                    ->label('Follower Role')
-                    ->options([
-                        'PARTICIPANT' => 'Participant',
-                        'ORGANIZER' => 'Organizer',
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when(
-                                $data['value'],
-                                fn (Builder $query, $role): Builder => $query->whereHas('followerUser', fn ($q) => $q->where('role', $role))
-                            );
-                    }),
                 
-                Tables\Filters\SelectFilter::make('followee_role')
-                    ->label('Followee Role')
-                    ->options([
-                        'PARTICIPANT' => 'Participant',
-                        'ORGANIZER' => 'Organizer',
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when(
-                                $data['value'],
-                                fn (Builder $query, $role): Builder => $query->whereHas('followeeUser', fn ($q) => $q->where('role', $role))
-                            );
-                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

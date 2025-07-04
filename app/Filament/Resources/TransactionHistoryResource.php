@@ -5,82 +5,36 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TransactionHistoryResource\Pages;
 use App\Filament\Resources\TransactionHistoryResource\RelationManagers;
 use App\Models\TransactionHistory;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class TransactionHistoryResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = TransactionHistory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Transaction Details')
-                    ->schema([
-                        Forms\Components\Grid::make(2)
-                            ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->placeholder('Transaction name'),
-
-                                Forms\Components\TextInput::make('type')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->placeholder('Write transaction type'),
-                            ]),
-
-                        Forms\Components\Grid::make(2)
-                            ->schema([
-                                Forms\Components\TextInput::make('amount')
-                                    ->required()
-                                    ->numeric()
-                                    ->inputMode('decimal')
-                                    ->step(0.01)
-                                    ->minValue(0)
-                                    ->prefix('RM')
-                                    ->placeholder('0.00'),
-
-                                Forms\Components\Toggle::make('isPositive')
-                                    ->label('Positive Amount')
-                                    ->helperText('Toggle on for income/credits, off for expenses/debits')
-                                    ->default(true),
-                            ]),
-
-                        Forms\Components\DateTimePicker::make('date')
-                            ->required()
-                            ->default(now())
-                            ->displayFormat('M j, Y g:i A')
-                            ->timezone('Asia/Kuala_Lumpur')
-                            ->seconds(false)
-                            ->placeholder('Select date and time'),
-
-                        Forms\Components\TextInput::make('link')
-                            ->url()
-                            ->maxLength(500)
-                            ->placeholder('https://example.com')
-                            ->helperText('Optional link related to this transaction'),
-
-                        Forms\Components\Textarea::make('summary')
-                            ->maxLength(1000)
-                            ->rows(3)
-                            ->placeholder('Additional details about this transaction...'),
-                    ]),
-            ]);
-    }
+    
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
@@ -118,7 +72,6 @@ class TransactionHistoryResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->dateTime('M j, Y g:i A')
                     ->sortable()
-                    ->seconds(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(),
 
@@ -140,9 +93,43 @@ class TransactionHistoryResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-           
-            ;
-            
+            ->filters([
+                SelectFilter::make('user_id')
+                    ->label('User')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload(false) // Don't preload all users
+                    ->getSearchResultsUsing(function (string $search) {
+                        return User::where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->limit(15)
+                            ->pluck('name', 'id');
+                    })
+                    ->getOptionLabelUsing(function ($value) {
+                        return User::find($value)?->name;
+                    })
+                    ->default(function () {
+                        
+                        // Set default to current authenticated user if available
+                        $user = User::select(['id', 'role'])
+                            ->where('role', 'PARTICIPANT')
+                            ->first();
+
+                        return $user ? $user->id : auth()->id;
+                    }),
+            ])
+            ->defaultSort('date', 'desc')
+            ->persistFiltersInSession()
+            ->filtersFormColumns(2);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        // Remove any scopes that might hide records
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     public static function getRelations(): array

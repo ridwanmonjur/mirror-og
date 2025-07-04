@@ -9,13 +9,15 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class AddressRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+
     protected static string $relationship = 'address';
 
     protected static bool $hasAssociatedRecord = true;
-    protected static ?string $recordTitleAttribute = 'city';
 
     public function form(Form $form): Form
     {
@@ -31,9 +33,6 @@ class AddressRelationManager extends RelationManager
                 Forms\Components\TextInput::make('addressLine2')
                     ->maxLength(255)
                     ->label('Address Line 2'),
-                Forms\Components\TextInput::make('postcode')
-                    ->required()
-                    ->maxLength(20),
                 Forms\Components\TextInput::make('country')
                     ->required()
                 // user_id will be automatically handled by Filament
@@ -46,8 +45,6 @@ class AddressRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('city')
             ->columns([
-                Tables\Columns\TextColumn::make('postcode')
-                ->searchable(),
                 Tables\Columns\TextColumn::make('city')
                     ->searchable(),
               

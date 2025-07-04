@@ -19,7 +19,7 @@ let membersCountServerValue = JSON.parse(membersCountServer.value);
 let countServerValue = Number(countServer.value);
 let userIdServerValue = Number(userIdServer.value);
 let filterSortResultsDiv = document.getElementById('filter-sort-results');
-let isModeMyTeams = window.location.href.includes('/participant/team/list');
+let isModeMyTeams = window.location.href.includes('/list');
 
 
 // UTILITIES
@@ -364,10 +364,10 @@ function setIsMyMode(event) {
     if (!target) return;
     target.disabled = true;
 
-    if (window.location.pathname == '/participant/team/list') {
-        window.location.href = '/participant/team/search';
+    if (isModeMyTeams) {
+        window.location.replace('/participant/team/search');
     } else {
-        window.location.href = '/participant/team/list';
+        window.location.replace('/participant/team/list');
     }
     
     // if (isModeMyTeams) {
@@ -987,7 +987,7 @@ function teamAction(event, teamId, isApply = false) {
                     }).then((result) => {
                         if (result.isConfirmed) {
                             // Redirect to team list
-                            window.location.href = '/participant/team/list';
+                            window.location.replace('/participant/team/list');
                         }
                         // If cancelled, stay on current page (continue searching)
                     });

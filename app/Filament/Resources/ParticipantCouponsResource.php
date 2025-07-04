@@ -10,11 +10,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class ParticipantCouponsResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = ParticipantCoupon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
@@ -44,6 +44,7 @@ class ParticipantCouponsResource extends Resource
                         ->displayFormat('Y-m-d h:i A')
                         ->timezone('Asia/Kuala_Lumpur')
                         ->seconds(false)
+                        ->native(false)
                         ->nullable()
                         ->columnSpan(1),
                 ])
@@ -78,14 +79,11 @@ class ParticipantCouponsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')
-                    ->searchable()
-                    ->sortable()
                     ->copyable(),
                 
                 
                 Tables\Columns\TextColumn::make('amount')
-                    ->prefix('RM ')
-                    ->sortable(),
+                    ->prefix('RM '),
                 
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
@@ -98,14 +96,13 @@ class ParticipantCouponsResource extends Resource
                 Tables\Columns\TextColumn::make('expires_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
+                    
                     ->placeholder('Never'),
            
                 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             // ->filters([

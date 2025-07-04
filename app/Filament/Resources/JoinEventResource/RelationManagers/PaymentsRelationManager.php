@@ -8,10 +8,12 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class PaymentsRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+
     protected static string $relationship = 'payments';
     
     protected static ?string $recordTitleAttribute = 'payment_id';
@@ -83,7 +85,7 @@ class PaymentsRelationManager extends RelationManager
                     ->toArray();
                 })
                 ->searchable()
-                ->preload()
+                ->preload(false)
                 ->createOptionForm([
                     // Fields matching your RecordStripeResource form
                     Forms\Components\TextInput::make('payment_id')

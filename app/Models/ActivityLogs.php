@@ -68,9 +68,7 @@ class ActivityLogs extends Model
 
     public static function retrievePaginatedActivityLogs($userId, $duration, $perPage, $page)
     {
-        $activityLogsQuery = ActivityLogs::where('subject_id', $userId)
-                ->where('subject_type', User::class);
-    
+        $activityLogsQuery = ActivityLogs::where('subject_id', $userId);
             if ($duration == 'new') {
                 $activityLogsQuery->whereDate('created_at', operator: Carbon::today());
             } elseif ($duration == 'recent') {

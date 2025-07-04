@@ -10,10 +10,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
+
 
 class EventCreateCouponResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = EventCreateCoupon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
@@ -73,12 +75,14 @@ class EventCreateCouponResource extends Resource
                         Forms\Components\TimePicker::make('startTime')
                             ->required()
                             ->seconds(false)
+                            ->native(false)
                             ->timezone('Asia/Kuala_Lumpur')
                             ->displayFormat('g:i A') 
                             ->label('Start Time'),
                             
                         Forms\Components\TimePicker::make('endTime')
                             ->required()
+                            ->native(false)
                             ->timezone('Asia/Kuala_Lumpur')
                             ->displayFormat('g:i A') 
                             ->seconds(false)

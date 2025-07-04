@@ -12,9 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Filament\Traits\HandlesFilamentExceptions;
+
 
 class RosterRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
     protected static string $relationship = 'roster';
 
     public function form(Form $form): Form

@@ -10,11 +10,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Traits\HandlesFilamentExceptions;
+
 
 class JoinEventResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = JoinEvent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';

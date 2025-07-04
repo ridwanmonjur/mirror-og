@@ -3,18 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FriendResource\Pages;
-use App\Filament\Resources\FriendResource\RelationManagers;
 use App\Models\Friend;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+use App\Filament\Traits\HandlesFilamentExceptions;
 
 class FriendResource extends Resource
 {
+    use HandlesFilamentExceptions;
     protected static ?string $model = Friend::class;
     
     protected static ?string $navigationIcon = 'heroicon-o-users';
@@ -23,37 +23,57 @@ class FriendResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('user1_id')
-                    ->relationship('user1', 'name', 
+        ->schema([
+            Forms\Components\Select::make('user1_id')
+                ->relationship('user1', 'name', 
                     fn ($query) => $query->where('role', 'PARTICIPANT') 
-                    )
-                    ->label('User 1')
-                    ->required(),
-                Forms\Components\Select::make('user2_id')
-                    ->label('User 2')    
-                    ->required()
-                    ->different('user1_id')
-                    ->relationship('user2', 'name', 
-                        fn ($query) => $query->where('role', 'PARTICIPANT') 
+                )
+                ->label('User 1')
+                ->rules([
+                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                        if ($value && $value == $get('user2_id')) {
+                            $fail('User 1 and User 2 must be different.');
+                        }
+                    }
+                ])
+                ->required(),
+                
+            Forms\Components\Select::make('user2_id')
+                ->label('User 2')    
+                ->required()
+                ->rules([
+                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                        if ($value && $value == $get('user1_id')) {
+                            $fail('User 1 and User 2 must be different.');
+                        }
+                    }
+                ])
+                ->relationship('user2', 'name', 
+                    fn ($query) => $query->where('role', 'PARTICIPANT') 
                 ),
                
-                Forms\Components\Select::make('actor_id')
-                    ->required()
-                    ->rules([
-                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                            $user1 = $get('user1_id');
-                            $user2 = $get('user2_id');
-                            if ($value != $user1 && $value != $user2) {
-                                $fail('Actor must be either User 1 or User 2.');
-                            }
+            Forms\Components\Select::make('actor_id')
+                ->required()
+                ->rules([
+                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                        $user1 = $get('user1_id');
+                        $user2 = $get('user2_id');
+                        if ($value != $user1 && $value != $user2) {
+                            $fail('Actor must be either User 1 or User 2.');
                         }
-                    ])
-                    ->relationship('actor', 'name'),
-                Forms\Components\Select::make('status')
-                    ->required()
-                    ->options(['pending', 'accepted','rejected','left']),
-            ]);
+                    }
+                ])
+                ->relationship('actor', 'name'),
+                
+            Forms\Components\Select::make('status')
+                ->required()
+                ->options([
+                    'pending' => 'Pending',
+                    'accepted' => 'Accepted', 
+                    'rejected' => 'Rejected',
+                    'left' => 'Left'
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -64,24 +84,21 @@ class FriendResource extends Resource
 
                 Tables\Columns\TextColumn::make('user1.name')
                     ->label('User 1')
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable()
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('user2.name')
                     ->label('User 2')
-                    ->numeric()
-                    ->sortable(),
+                    ->searchable()
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('actor.name')
                     ->label('Actor')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
-                    ->sortable()
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('Y-m-d h:i A')
-                    ->sortable()
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status'),
