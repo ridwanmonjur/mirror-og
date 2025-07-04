@@ -589,7 +589,7 @@ input, select {
 
 .tournament-bracket__box {
     display: flex;
-    border: 0.1px solid var(--border-color); 
+    border: 0.25px solid var(--border-color); 
     border-collapse: collapse !important; 
     margin-bottom: -1.5px;
     justify-content: space-between !important;
@@ -614,7 +614,7 @@ body {
 }
 
 .tournament-bracket__list{
-    padding-left: 2px !important;
+    padding-left: 0px !important;
 }
 
 caption.tournament-bracket__caption {
@@ -694,9 +694,9 @@ h2 {
     flex-flow: row wrap;
     justify-content: center;
     min-height: 100%;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 2em;
-    margin-bottom: 2em;
+    border-bottom: 0.25px solid var(--border-color);
+    padding-bottom: 0.25em;
+    margin-bottom: 0.25em;
     color: #2E4B59;
     transition: padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 }
@@ -783,25 +783,25 @@ h2 {
         border-right: 0px solid var(--border-color);
    }
     .tournament-bracket__item.red::after {
-        border-right: 1px solid red !important;
+        border-right: 0.25px solid red !important;
     }
     .tournament-bracket__item:nth-child(odd)::after {
         top: 50%;
-        border-top: 1px solid var(--border-color);
+        border-top: 0.25px solid var(--border-color);
    }
 
    .tournament-bracket__item.final:nth-child(odd)::after {
-        border-top: 1px dashed var(--border-color);
+        border-top: 0.25px dashed var(--border-color);
    }
  
     .tournament-bracket__item:nth-child(even)::after {
         bottom: 50%;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 0.25px solid var(--border-color);
         transform: translateY(1px);
    }
 
    .tournament-bracket__item.final:nth-child(even)::after {
-    border-top: 1px dashed var(--border-color);
+    border-top: 0.25px dashed var(--border-color);
 }
    
     .tournament-bracket__round:first-child .tournament-bracket__item {
@@ -820,7 +820,7 @@ h2 {
     display: flex;
     width: 100%;
     padding: 1px;
-    border: 1px solid transparent;
+    border: 0.25px solid transparent;
     outline: none;
     transition: padding 0.2s ease-in-out, border 0.2s linear;
 }

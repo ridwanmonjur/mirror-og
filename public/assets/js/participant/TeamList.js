@@ -405,7 +405,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                 .slice(0, 3);
             
             let game = allCategoriesId[team?.default_category_id] ??  null;
-            let imgString = game ? `<img width="45" height="45" class="rounded-2 border border-secondary" src="/storage/${game.gameIcon}">` : '';
+            let imgString = game ? `<img width="45" height="45" class="rounded-2 object-fit-cover" src="/storage/${game.gameIcon}">` : '';
 
             let allCategoriesHtml = all_categories.map((element, index, arr) => {
                 let title = element.gameTitle;
