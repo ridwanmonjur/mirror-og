@@ -118,6 +118,10 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('teamBanner')
                     ->circular()
+->defaultImageUrl(url('/assets/images/404q.png'))
+ ->extraImgAttributes([
+        'class' => 'border-2 border-gray-300 dark:border-gray-600',
+    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),

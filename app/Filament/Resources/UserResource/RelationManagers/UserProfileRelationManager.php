@@ -9,13 +9,19 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Traits\HandlesFilamentExceptions;
-
+use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Database\Eloquent\Builder;
 class UserProfileRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
     protected static string $relationship = 'profile';
     protected static bool $hasAssociatedRecord = true;
 
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
+    }
+    
     public function form(Form $form): Form
     {
         return $form
@@ -79,6 +85,10 @@ class UserProfileRelationManager extends RelationManager
                     ->label('Background Color'),
                 Tables\Columns\ImageColumn::make('backgroundBanner')
                     ->circular()
+->defaultImageUrl(url('/assets/images/404q.png'))
+ ->extraImgAttributes([
+        'class' => 'border-2 border-gray-300 dark:border-gray-600',
+    ])
                     ->size(60),
                 Tables\Columns\ViewColumn::make('backgroundGradient')
                     ->label('Gradient')

@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Filament\Traits\HandlesFilamentExceptions;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 
 
 class RosterRelationManager extends RelationManager
@@ -95,5 +96,10 @@ class RosterRelationManager extends RelationManager
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\BulkAction::make('set_vote_true')->label('Set Vote to Quit: Yes')->icon('heroicon-o-check')->action(fn($records) => $records->each->update(['vote_to_quit' => true]))->requiresConfirmation()->modalHeading('Set Vote to Quit: Yes')->modalDescription('Are you sure you want to mark these roster entries as having voted to quit?'), Tables\Actions\BulkAction::make('set_vote_false')->label('Set Vote to Quit: No')->icon('heroicon-o-x-mark')->action(fn($records) => $records->each->update(['vote_to_quit' => false]))->requiresConfirmation()->modalHeading('Set Vote to Quit: No')->modalDescription('Are you sure you want to mark these roster entries as not having voted to quit?'), Tables\Actions\DeleteBulkAction::make()])]);
+    }
+
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
 }

@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Traits\HandlesFilamentExceptions;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 
 class PTransactionsRelationManager extends RelationManager
 {
@@ -138,5 +139,10 @@ class PTransactionsRelationManager extends RelationManager
                         }),
                 ]),
             ]);
+    }
+
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
 }

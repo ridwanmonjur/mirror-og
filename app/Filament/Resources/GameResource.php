@@ -58,6 +58,10 @@ class GameResource extends Resource
                 Tables\Columns\ImageColumn::make('gameIcon')
                     ->label('Icon')
                     ->circular()
+->defaultImageUrl(url('/assets/images/404q.png'))
+ ->extraImgAttributes([
+        'class' => 'border-2 border-gray-300 dark:border-gray-600',
+    ])
                     ->size(60)
                     ->defaultImageUrl(url('/images/default-game-icon.png')),
 
