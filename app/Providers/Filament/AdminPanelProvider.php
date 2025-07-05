@@ -45,9 +45,7 @@ class AdminPanelProvider extends PanelProvider
                             // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
                             ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
                             ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
-                            NavigationItem::make('Onboarding Email')
-                                ->icon('heroicon-o-envelope')
-                                ->url(route('admin.onboardBeta.view')),
+                           
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
                         ]),
                         NavigationGroup::make('Social')
