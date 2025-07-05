@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Traits\HandlesFilamentExceptions;
 use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Support\Facades\DB;
 
 class PaymentsRelationManager extends RelationManager
 {
@@ -40,7 +41,8 @@ class PaymentsRelationManager extends RelationManager
                     
                     // Get all team members for this team with their user names
                     return \App\Models\TeamMember::query()
-                        ->where('team_id', $teamId)
+                        ->where('team_members.team_id', $teamId)
+                        ->join('roster_members', 'roster_members.team_member_id', '=', DB::raw($teamId))
                         ->with('user')
                         ->get()
                         ->mapWithKeys(function ($member) {
@@ -131,7 +133,7 @@ class PaymentsRelationManager extends RelationManager
                     
                 Tables\Columns\TextColumn::make('payment_amount')
                     ->label('Amount')
-                    ->money('USD')
+                    ->prefix('RM ')
                     ->sortable(),
                     
                 Tables\Columns\TextColumn::make('created_at')

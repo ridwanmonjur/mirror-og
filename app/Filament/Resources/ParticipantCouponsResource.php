@@ -34,9 +34,24 @@ class ParticipantCouponsResource extends Resource
                     Forms\Components\TextInput::make('amount')
                         ->required()
                         ->numeric()
-                        ->prefix('RM')
+                        ->prefix('RM ')
                         ->minValue(0)
                         ->maxValue(9999999.99)
+                        ->columnSpan(1),
+                    
+                    Forms\Components\TextInput::make('type')
+                        ->label('Type')
+                        ->maxLength(255)
+                        ->nullable()
+                        ->columnSpan(1),
+                    
+                    Forms\Components\Select::make('discount_type')
+                        ->label('Discount Type')
+                        ->options([
+                            'sum' => 'Sum',
+                            'percentage' => 'Percentage',
+                        ])
+                        ->default('sum')
                         ->columnSpan(1),
                     
                     Forms\Components\DateTimePicker::make('expires_at')
@@ -84,6 +99,18 @@ class ParticipantCouponsResource extends Resource
                 
                 Tables\Columns\TextColumn::make('amount')
                     ->prefix('RM '),
+                
+                Tables\Columns\TextColumn::make('type')
+                    ->placeholder('No Type'),
+                
+                Tables\Columns\TextColumn::make('discount_type')
+                    ->label('Discount Type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'sum' => 'success',
+                        'percentage' => 'info',
+                        default => 'gray',
+                    }),
                 
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()

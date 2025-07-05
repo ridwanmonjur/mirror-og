@@ -32,6 +32,11 @@ class ResultsRelationManager extends RelationManager
                     ->integer()
                     ->minValue(1)
                     ->required(),
+                Forms\Components\TextInput::make('prize_sum')
+                    ->label('Prize Sum')
+                    ->numeric()
+                    ->prefix('RM ')
+                    ->nullable(),
             ]);
     }
 
@@ -41,6 +46,9 @@ class ResultsRelationManager extends RelationManager
             ->recordTitleAttribute('position')
             ->columns([
                 Tables\Columns\TextColumn::make('position')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('prize_sum')
+                    ->prefix('RM ')
                     ->sortable(),
             ])
             ->filters([

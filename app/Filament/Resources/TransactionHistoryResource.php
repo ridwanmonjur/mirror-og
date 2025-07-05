@@ -54,7 +54,7 @@ class TransactionHistoryResource extends Resource
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Amount')
-                    ->money('USD')
+                    ->prefix('RM ')
                     ->color(fn (TransactionHistory $record): string => $record->isPositive ? 'success' : 'danger')
                     ->weight('bold')
                     ->sortable(['amount'])

@@ -38,16 +38,16 @@ class PTransactionsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('coupon_amount')
                     ->label('Coupon Amount')
                     ->numeric()
-                    ->prefix('RM'),
+                    ->prefix('RM '),
                 Forms\Components\TextInput::make('payment_amount')
                     ->label('Payment Amount')
                     ->numeric()
-                    ->prefix('RM')
+                    ->prefix('RM ')
                     ->required(),
                 Forms\Components\TextInput::make('released_amount')
                     ->label('Released Amount')
                     ->numeric()
-                    ->prefix('RM'),
+                    ->prefix('RM '),
             ]);
     }
 
@@ -75,7 +75,7 @@ class PTransactionsRelationManager extends RelationManager
                     }),
                 
                 Tables\Columns\TextColumn::make('payment_amount')
-                    ->money('USD')
+                    ->prefix('RM ')
                     ->sortable(),
                 
                 

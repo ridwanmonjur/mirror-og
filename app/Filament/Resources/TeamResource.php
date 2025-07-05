@@ -48,6 +48,36 @@ class TeamResource extends Resource
                 ),
                 Forms\Components\TextInput::make('teamDescription')
                     ->maxLength(255),
+
+                Forms\Components\Select::make('default_category_id')
+                    ->label('Default Category')
+                    ->relationship('defaultCategory', 'gameTitle')
+                    ->searchable()
+                    ->nullable(),
+
+                Forms\Components\Textarea::make('all_categories')
+                    ->label('All Categories')
+                    ->rows(3)
+                    ->nullable(),
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'public' => 'Public',
+                        'private' => 'Private',
+                        'open' => 'Open',
+                    ])
+                    ->default('open')
+                    ->required(),
+
+                Forms\Components\TextInput::make('member_limit')
+                    ->label('Member Limit')
+                    ->numeric()
+                    ->default(10)
+                    ->minValue(1)
+                    ->maxValue(100)
+                    ->required(),
+
                 Forms\Components\Section::make('Team Banner')
                     ->description('Image upload is only available when editing an existing category ')
                     ->icon('heroicon-o-photo')
@@ -127,6 +157,24 @@ class TeamResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Team Creator')
+                    ->numeric(),
+
+                Tables\Columns\TextColumn::make('defaultCategory.gameTitle')
+                    ->label('Default Category')
+                    ->placeholder('No Category'),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'public' => 'success',
+                        'private' => 'danger',
+                        'open' => 'warning',
+                        default => 'gray',
+                    }),
+
+                Tables\Columns\TextColumn::make('member_limit')
+                    ->label('Member Limit')
                     ->numeric(),
 
                 Tables\Columns\TextColumn::make('country_name')

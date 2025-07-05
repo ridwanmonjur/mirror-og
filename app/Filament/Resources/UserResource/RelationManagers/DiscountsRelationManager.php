@@ -33,12 +33,12 @@ class DiscountsRelationManager extends RelationManager
                     Forms\Components\TextInput::make('usable_balance')
                         ->required()
                         ->numeric()
-                        ->prefix('RM')                   
+                        ->prefix('RM ')                   
                         ->label('Usable Balance'),
                     Forms\Components\TextInput::make('current_balance')
                         ->required()
                         ->numeric()
-                        ->prefix('RM')                   
+                        ->prefix('RM ')                   
                         ->label('Current Balance'),
                 ])
                 ->columnSpan('full'),
