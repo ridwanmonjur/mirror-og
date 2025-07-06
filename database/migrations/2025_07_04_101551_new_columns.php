@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -59,10 +61,10 @@ return new class extends Migration
         if (Schema::hasTable('event_details')) {
             Schema::table('event_details', function (Blueprint $table) {
                 if (!Schema::hasColumn('event_details', 'player_per_team')) {
-                    $table->integer('player_per_team')->nullable();
+                    $table->integer('player_per_team')->default(5)->nullable();
                 }
                 if (!Schema::hasColumn('event_details', 'games_per_match')) {
-                    $table->integer('games_per_match')->nullable();
+                    $table->integer('games_per_match')->default(3)->nullable();
                 }
             });
         }
@@ -76,6 +78,47 @@ return new class extends Migration
                     $table->string('discount_type')->default('sum');
                 }
             });
+        }
+        
+        if (!Schema::hasTable('super_admins')) {
+
+            Schema::create('super_admins', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('user_id');
+                $table->timestamps();
+                
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->unique('user_id');
+            });
+
+            $userId = DB::table('users')->insertGetId([
+                'name' => 'Super Admin',
+                'email' => 'superadmin@driftwood.com',
+                'password' => Hash::make('12345678'),
+                'role' => 'ADMIN',
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            DB::table('super_admins')->insert([
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+
+        if (!Schema::hasTable('csv_passwords')) {
+            Schema::create('csv_passwords', function (Blueprint $table) {
+                $table->id();
+                $table->string('password');
+            });
+
+            // Insert the default password
+            DB::table('csv_passwords')->insert([
+                'password' => Hash::make('123456'),
+            ]);
         }
     }
 
@@ -135,5 +178,15 @@ return new class extends Migration
                 }
             });
         }
+
+
+        Schema::dropIfExists('super_admins');
+
+        DB::table('users')->where([
+            'name' => 'Super Admin',
+        ])->delete();
+
+        Schema::dropIfExists('csv_passwords');
+
     }
 };
