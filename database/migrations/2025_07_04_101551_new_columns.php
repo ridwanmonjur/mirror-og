@@ -117,7 +117,7 @@ return new class extends Migration
 
             // Insert the default password
             DB::table('csv_passwords')->insert([
-                'password' => Hash::make('123456'),
+                'password' => '123456',
             ]);
         }
     }
