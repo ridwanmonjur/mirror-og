@@ -22,7 +22,7 @@ class MiscController extends Controller
     public function countryList()
     {
      
-        $countries = CountryRegion::all(['name', 'id', 'emoji_flag', 'id',  'sort_order', 'type']);
+        $countries = CountryRegion::getAllCached(['name', 'id', 'emoji_flag', 'id',  'sort_order', 'type']);
 
         return response()->json(['success' => true, 'data' => $countries], 200);
     }

@@ -8,8 +8,8 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Traits\HandlesFilamentExceptions;
-
-use App\Models\User;
+use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class ActivityLogsRelationManager extends RelationManager
 {
@@ -36,6 +36,11 @@ class ActivityLogsRelationManager extends RelationManager
             ]);
     }
 
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
+    }
+
     public function table(Table $table): Table
     {
         return $table
@@ -47,6 +52,10 @@ class ActivityLogsRelationManager extends RelationManager
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->circular()
+->defaultImageUrl(url('/assets/images/404q.png'))
+ ->extraImgAttributes([
+        'class' => 'border-2 border-gray-300 dark:border-gray-600',
+    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')
