@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use ZipArchive;
 
@@ -69,7 +70,8 @@ class WithdrawalPasswordResource extends Resource
                 ->minLength(6)
                 ->maxLength(50)
                 ->password()
-                ->revealable()
+                ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                ->dehydrated(fn ($state) => filled($state))
                 ->helperText('Password must be at least 6 characters long')
                 ->columnSpanFull(),
             ]);
