@@ -15,6 +15,7 @@ use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 use ZipArchive;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
 
@@ -44,6 +45,8 @@ class ListWithdrawals extends ListRecords
                     TextInput::make('password')
                         ->label('CSV Password')
                         ->password()
+                        ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                        ->dehydrated(fn ($state) => filled($state))
                         ->required()
                         ->minLength(6)
                         ->helperText('Password must be at least 6 characters long'),

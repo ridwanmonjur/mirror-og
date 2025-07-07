@@ -58,8 +58,8 @@ class InterestedUserResource extends Resource
                 TextInput::make('pass_text')
                     ->label('Password')
                     ->password()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->dehydrated(fn ($state) => filled($state))
-                    ->dehydrateStateUsing(fn ($state) => $state)
                     ->maxLength(255)
                     ->nullable(),
             ]);
