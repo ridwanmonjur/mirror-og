@@ -5,10 +5,17 @@ namespace App\Filament\Resources\GameResource\Pages;
 use App\Filament\Resources\GameResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListGames extends ListRecords
 {
     protected static string $resource = GameResource::class;
+
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
+    }
 
     protected function getHeaderActions(): array
     {

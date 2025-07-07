@@ -13,7 +13,7 @@ class EventJoinResults extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'event_join_results';
-    protected $fillable = ['join_events_id', 'position'];
+    protected $fillable = ['join_events_id', 'position', 'prize_sum'];
 
     public  function joinEvent() : BelongsTo {
         return $this->belongsTo(EventDetail::class, 'event_id');

@@ -56,7 +56,6 @@ class EventDetail extends Model implements Feedable
 
     protected $table = 'event_details';
     protected $fillable = [
-        'eventDefinitions',
         'eventName',
         'startDate',
         'endDate',
@@ -76,6 +75,8 @@ class EventDetail extends Model implements Feedable
         'event_category_id',
         'payment_transaction_id',
         'willNotify',
+        'games_per_match',
+        'player_per_team'
     ];
 
     protected $guarded = [];

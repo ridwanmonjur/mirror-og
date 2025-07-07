@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Traits\HandlesFilamentExceptions;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 
 class DiscountsRelationManager extends RelationManager
 {
@@ -32,12 +33,12 @@ class DiscountsRelationManager extends RelationManager
                     Forms\Components\TextInput::make('usable_balance')
                         ->required()
                         ->numeric()
-                        ->prefix('RM')                   
+                        ->prefix('RM ')                   
                         ->label('Usable Balance'),
                     Forms\Components\TextInput::make('current_balance')
                         ->required()
                         ->numeric()
-                        ->prefix('RM')                   
+                        ->prefix('RM ')                   
                         ->label('Current Balance'),
                 ])
                 ->columnSpan('full'),
@@ -74,5 +75,10 @@ class DiscountsRelationManager extends RelationManager
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);
+    }
+
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
 }

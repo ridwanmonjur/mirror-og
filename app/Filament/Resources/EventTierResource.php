@@ -96,6 +96,23 @@ class EventTierResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                Tables\Actions\Action::make('first_setup_guide')
+                    ->label('Must Configure Deadline for Each Type')
+                    ->icon('heroicon-m-information-circle')
+                    ->color('warning')
+                    ->modalDescription('⚠️ IMPORTANT: You must configure registration open, close & early deadline durations for all event types. Without it, registration & event updates will not progress smoothly.')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Got it'),
+                
+                Tables\Actions\Action::make('second_setup_guide')
+                    ->label('Must Configure Prize for Each Position')
+                    ->icon('heroicon-m-information-circle')
+                    ->color('success')
+                    ->modalDescription('⚠️ IMPORTANT: You must configure the prize sum for each position. Without it, the system cannot allocate rewards to the players\' wallets.')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Got it'),
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
 
@@ -103,6 +120,10 @@ class EventTierResource extends Resource
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('tierIcon')
                     ->circular()
+->defaultImageUrl(url('/assets/images/404q.png'))
+ ->extraImgAttributes([
+        'class' => 'border-2 border-gray-300 dark:border-gray-600',
+    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('tierTeamSlot'),
                 Tables\Columns\TextColumn::make('tierPrizePool'),
@@ -124,7 +145,8 @@ class EventTierResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\TierSignupRelationManager::class
+            RelationManagers\TierSignupRelationManager::class,
+            RelationManagers\PrizesRelationManager::class,
         ];
     }
 

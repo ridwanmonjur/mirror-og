@@ -34,4 +34,9 @@ class EventTier extends Model
     {
         return $this->hasMany(EventTierSignup::class, 'tier_id');
     }
+
+    public function prizes(): HasMany
+    {
+        return $this->hasMany(EventTierPrize::class, 'event_tier_id');
+    }
 }
