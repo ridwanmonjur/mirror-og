@@ -70,8 +70,7 @@ class WithdrawalPasswordResource extends Resource
                 ->minLength(6)
                 ->maxLength(50)
                 ->password()
-                ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                ->dehydrated(fn ($state) => filled($state))
+                ->revealable()
                 ->helperText('Password must be at least 6 characters long')
                 ->columnSpanFull(),
             ]);

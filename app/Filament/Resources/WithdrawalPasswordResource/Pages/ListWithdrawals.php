@@ -5,6 +5,7 @@ namespace App\Filament\Resources\WithdrawalPasswordResource\Pages;
 use App\Filament\Resources\WithdrawalPasswordResource;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
+use App\Models\WithdrawalPassword;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Actions\Action;
@@ -42,14 +43,7 @@ class ListWithdrawals extends ListRecords
                         ->timezone('Asia/Kuala_Lumpur')
                         ->required()
                         ->after('date_from'),
-                    TextInput::make('password')
-                        ->label('CSV Password')
-                        ->password()
-                        ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                        ->dehydrated(fn ($state) => filled($state))
-                        ->required()
-                        ->minLength(6)
-                        ->helperText('Password must be at least 6 characters long'),
+                   
                     Toggle::make('include_bank_details')
                         ->label('Include Bank Account Details')
                         ->default(true)
@@ -65,7 +59,7 @@ class ListWithdrawals extends ListRecords
     {
         $dateFrom = $data['date_from'];
         $dateTo = $data['date_to'];
-        $password = $data['password'];
+        $password = WithdrawalPassword::first();
         $includeBankDetails = $data['include_bank_details'] ?? true;
 
         // Query withdrawals within the date range
@@ -101,7 +95,10 @@ class ListWithdrawals extends ListRecords
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
             $zip->addFile($csvPath, $csvFileName);
-            $zip->setPassword($password);
+            if ($password) {
+                $zip->setPassword($password);
+            }
+            
             $zip->setEncryptionName($csvFileName, ZipArchive::EM_AES_256);
             $zip->close();
 
