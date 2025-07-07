@@ -82,9 +82,7 @@ class WithdrawalPasswordResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('password')
                 ->label('Password of CSV File Generated')
-                ->formatStateUsing(fn (string $state): string => str_repeat('•', strlen($state)))
-                ->searchable()
-                ->sortable(),
+                ->formatStateUsing(fn (string $state): string => str_repeat('•', strlen($state))),
             ])
             
             ->actions([
@@ -105,8 +103,7 @@ class WithdrawalPasswordResource extends Resource
                     }),
             ])
             
-            ->persistFiltersInSession()
-            ->filtersFormColumns(3);
+            ->persistFiltersInSession();
     }
 
     public static function getEloquentQuery(): Builder
