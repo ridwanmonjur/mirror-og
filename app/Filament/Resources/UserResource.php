@@ -4,10 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\SuperAdminHelper;
 use App\Models\CountryRegion;
 use App\Models\User;
-use App\Models\Participant;
-use App\Models\Organizer;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
@@ -25,6 +24,8 @@ use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Traits\HandlesFilamentExceptions;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class UserResource extends Resource
 {
@@ -40,8 +41,18 @@ class UserResource extends Resource
     {
         $countries = [];
         
-        foreach (CountryRegion::all() as $country) {
+        foreach (CountryRegion::getAllCached() as $country) {
             $countries[$country->id] = $country->name;
+        }
+
+        $roleOptions = [
+            'ADMIN' => 'Admin',
+            'PARTICIPANT' => 'Participant',
+            'ORGANIZER' => 'Organizer',
+        ];
+
+        if (SuperAdminHelper::isCurrentUserSuperAdmin()) {
+            $roleOptions['SUPERADMIN'] = 'Super Admin';
         }
 
         return $form
@@ -124,15 +135,15 @@ class UserResource extends Resource
                                 ]),
                                 
                                 Select::make('role')
-                                    ->options([
-                                        'ADMIN' => 'Admin',
-                                        'PARTICIPANT' => 'Participant',
-                                        'ORGANIZER' => 'Organizer',
-                                    ])
+                                    ->options($roleOptions)
                                     ->required()
                                     ->reactive()
                                     ->afterStateUpdated(function ($state, callable $set, $livewire) {
-                                        if ($state === 'ADMIN') {
+                                        if ($state === 'SUPERADMIN' && $livewire->record) {
+                                            SuperAdminHelper::makeSuperAdmin($livewire->record->id);
+                                        }
+                                        
+                                        if ($state === 'ADMIN' || $state === 'SUPERADMIN') {
                                             if ($livewire->record && $livewire->record->participant) {
                                                 $livewire->record->participant->delete();
                                                 $livewire->record->refresh();
@@ -145,8 +156,7 @@ class UserResource extends Resource
                                             
                                             $set('participant.nickname', null);
                                             $set('organizer.companyName', null);
-                                        }
-                                        else if ($state === 'PARTICIPANT') {
+                                        } else if ($state === 'PARTICIPANT') {
                                             if ($livewire->record && $livewire->record->organizer) {
                                                 $livewire->record->organizer->delete();
                                                 $livewire->record->refresh();
@@ -154,9 +164,7 @@ class UserResource extends Resource
                                             
                                             // Clear organizer form fields
                                             $set('organizer.companyName', null);
-                                        }
-                                        // If switching to ORGANIZER, delete any participant record
-                                        else if ($state === 'ORGANIZER') {
+                                        } else if ($state === 'ORGANIZER') {
                                             if ($livewire->record && $livewire->record->participant) {
                                                 $livewire->record->participant->delete();
                                                 $livewire->record->refresh();
@@ -165,7 +173,7 @@ class UserResource extends Resource
                                             // Clear participant form fields
                                             $set('participant.nickname', null);
                                         }
-                                    }),
+                                    })
                             ]),
                             
                         Tabs\Tab::make('Participant Profile')
@@ -238,17 +246,46 @@ class UserResource extends Resource
             ]);
     }
 
+    public static function canEdit($record): bool
+    {
+        if (SuperAdminHelper::isSuperAdmin($record->id)) {
+            return SuperAdminHelper::isCurrentUserSuperAdmin();
+        }
+
+        return true;
+    }
+
+    public static function canDelete($record): bool
+    {
+        if (SuperAdminHelper::isSuperAdmin($record->id)) {
+            return SuperAdminHelper::isCurrentUserSuperAdmin();
+        }
+
+        return true;
+    }
+
+
     public static function table(Table $table): Table
     {
         return $table
+        ->modifyQueryUsing(function (Builder $query) {
+            // Hide superadmin users from non-superadmin users
+            if (!SuperAdminHelper::isCurrentUserSuperAdmin()) {
+                $superAdminIds = DB::table('super_admins')->pluck('user_id')->toArray();
+                if (!empty($superAdminIds)) {
+                    $query->whereNotIn('id', $superAdminIds);
+                }
+            }
+            return $query;
+        })
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\ImageColumn::make('userBanner')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-        'class' => 'border-2 border-gray-300 dark:border-gray-600',
-    ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                            'class' => 'border-2 border-gray-300 dark:border-gray-600',
+                        ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -283,13 +320,15 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
+            // ->bulkActions([
+            //     Tables\Actions\BulkActionGroup::make([
+            //         Tables\Actions\DeleteBulkAction::make(),
+            //     ]),
+            // ]);
     }
+
+    
 
     public static function getRelations(): array
     {

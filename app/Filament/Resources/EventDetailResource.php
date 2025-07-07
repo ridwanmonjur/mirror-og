@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EventDetailResource\Pages;
 use App\Filament\Resources\EventDetailResource\RelationManagers;
+use App\Models\CountryRegion;
 use App\Models\EventDetail;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -22,6 +23,10 @@ class EventDetailResource extends Resource
 
     public static function form(Form $form): Form
     {
+        foreach (CountryRegion::getAllCached() as $country) {
+            $countries[$country->name] = $country->name;
+        }
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('eventName')
@@ -119,13 +124,17 @@ class EventDetailResource extends Resource
                 Forms\Components\TextInput::make('status')
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('venue')
-                    ->maxLength(255),
 
                 Forms\Components\TextInput::make('player_per_team')
                     ->label('Players per Team')
                     ->numeric()
                     ->minValue(1),
+
+                Forms\Components\Select::make('venue')
+                    ->label('Region')
+                    ->options($countries)
+                    ->reactive()
+                    ->placeholder('Select a region'),
 
                 Forms\Components\TextInput::make('games_per_match')
                     ->label('Games per Match')
@@ -165,10 +174,10 @@ class EventDetailResource extends Resource
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('eventBanner')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-        'class' => 'border-2 border-gray-300 dark:border-gray-600',
-    ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                            'class' => 'border-2 border-gray-300 dark:border-gray-600',
+                        ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),

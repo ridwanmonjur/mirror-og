@@ -18,38 +18,9 @@ class PTransactionsRelationManager extends RelationManager
     
     protected static ?string $recordTitleAttribute = 'payment_id';
     
-    protected static ?string $title = 'Payment Transactions';
+    protected static ?string $title = 'Organizer Payments';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('payment_id')
-                    ->maxLength(255),
-                Forms\Components\Select::make('payment_status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
-                        'failed' => 'Failed',
-                        'refunded' => 'Refunded',
-                        'canceled' => 'Canceled',
-                    ])
-                    ->required(),
-                Forms\Components\TextInput::make('coupon_amount')
-                    ->label('Coupon Amount')
-                    ->numeric()
-                    ->prefix('RM '),
-                Forms\Components\TextInput::make('payment_amount')
-                    ->label('Payment Amount')
-                    ->numeric()
-                    ->prefix('RM ')
-                    ->required(),
-                Forms\Components\TextInput::make('released_amount')
-                    ->label('Released Amount')
-                    ->numeric()
-                    ->prefix('RM '),
-            ]);
-    }
+  
 
     public function table(Table $table): Table
     {
@@ -57,88 +28,63 @@ class PTransactionsRelationManager extends RelationManager
             ->recordTitleAttribute('payment_id')
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('payment_id')
-                    ->searchable()
-                    ->label('Payment Intent'),
+                    ->label('Payment ID')
+                    ->copyable()
+                    ->copyMessage('Payment ID copied')
+                    ->copyMessageDuration(1500),
                 
-                Tables\Columns\TextColumn::make('payment_status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'succeeded' => 'success',
-                        'couponed' => 'primary',
-                        'released' => 'primary',
-                        'refunded' => 'primary',
-                        'canceled' => 'danger',
-                        default => 'gray',
-                    }),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('User')
+                    ->sortable()
+                    ->description(fn ($record) => $record->user?->email),
                 
                 Tables\Columns\TextColumn::make('payment_amount')
                     ->prefix('RM ')
-                    ->sortable(),
-                
-                
-                
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('Y-m-d h:i A')
                     ->sortable()
-                    ->timezone('Asia/Kuala_Lumpur')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Payment Amount')
+                    ->numeric(
+                        decimalPlaces: 2,
+                        decimalSeparator: '.',
+                        thousandsSeparator: ',',
+                    ),
                 
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('Y-m-d h:i A')
+                Tables\Columns\TextColumn::make('discount_amount')
+                    ->prefix('RM ')
                     ->sortable()
-                    ->timezone('Asia/Kuala_Lumpur')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Discount Amount')
+                    ->numeric(
+                        decimalPlaces: 2,
+                        decimalSeparator: '.',
+                        thousandsSeparator: ',',
+                    )
+                    ->default('0.00'),
+                
+                Tables\Columns\TextColumn::make('net_amount')
+                    ->label('Net Amount')
+                    ->prefix('RM ')
+                    ->getStateUsing(fn ($record) => number_format($record->payment_amount - ($record->discount_amount ?? 0), 2))
+                    ->sortable(false),
+                
+                Tables\Columns\TextColumn::make('history.name')
+                    ->label('Transaction History')
+                    
+                    ->description(fn ($record) => $record->history ? "RM " . number_format($record->history->amount, 2) : null)
+                    ->placeholder('No history linked'),
+                
+                Tables\Columns\TextColumn::make('stripeTransaction.payment_id')
+                    ->label('Stripe Payment'),
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('payment_status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'completed' => 'Completed',
-                        'failed' => 'Failed',
-                        'refunded' => 'Refunded',
-                        'canceled' => 'Canceled',
-                    ]),
-            ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make()
-                ->visible(fn () => !$this->getOwnerRecord()->paymentTransaction()->exists())
-                // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                ->createAnother(false)
-            ])
+           
+            
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\BulkAction::make('updateStatus')
-                        ->label('Update Status')
-                        ->icon('heroicon-o-check-circle')
-                        ->form([
-                            Forms\Components\Select::make('payment_status')
-                                ->label('Payment Status')
-                                ->options([
-                                    'pending' => 'Pending',
-                                    'completed' => 'Completed',
-                                    'failed' => 'Failed',
-                                    'refunded' => 'Refunded',
-                                    'canceled' => 'Canceled',
-                                ])
-                                ->required(),
-                        ])
-                        ->action(function (array $records, array $data): void {
-                            foreach ($records as $record) {
-                                $record->update([
-                                    'payment_status' => $data['payment_status'],
-                                ]);
-                            }
-                        }),
-                ]),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation(),
             ]);
+            
     }
 
     protected function paginateTableQuery(Builder $query): CursorPaginator

@@ -28,9 +28,9 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            
             ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
                 return $builder
+
                     ->item(
                         NavigationItem::make('Dashboard')
                             ->icon('heroicon-o-home')
@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
                             // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
                             ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
                             ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
-                           
+                            ...\App\Filament\Resources\WithdrawalPasswordResource::getNavigationItems(),
                             ...\App\Filament\Resources\TeamResource::getNavigationItems(),
                         ]),
                         NavigationGroup::make('Social')
@@ -71,7 +71,6 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
-                                ...\App\Filament\Resources\EventTierPrizeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\ParticipantCouponsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\GameResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCreateCouponResource::getNavigationItems(),

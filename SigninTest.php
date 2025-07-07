@@ -11,10 +11,6 @@
 
 // class SigninTest extends DuskTestCase
 // {
-
-  
-  
-
     // public function test_user_can_register_with_valid_data()
     // {
     //     $userPost = [

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WithdrawalPasswordResource\Pages;
 
 use App\Filament\Resources\WithdrawalPasswordResource;
+use App\Models\Wallet;
 use App\Models\Withdrawal;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -145,6 +146,12 @@ class ListWithdrawals extends ListRecords
         $csvData = [];
         $csvData[] = $headers;
 
+        $wallet = null;
+        if (isset($withdrawals[0])) {
+            $wallet = Wallet::retrieveOrCreateCache($withdrawals[0]->user_id);
+        }
+
+
         foreach ($withdrawals as $withdrawal) {
             $row = [
                 $withdrawal->id,
@@ -158,9 +165,9 @@ class ListWithdrawals extends ListRecords
 
             if ($includeBankDetails) {
                 $row = array_merge($row, [
-                    $withdrawal->user->bank_name ?? 'N/A',
-                    $withdrawal->user->bank_account_number ?? 'N/A',
-                    $withdrawal->user->account_holder_name ?? 'N/A',
+                    $wallet?->bank_name ?? 'N/A',
+                    $wallet?->account_number ?? 'N/A',
+                    $wallet?->account_holder_name ?? 'N/A',
                 ]);
             }
 

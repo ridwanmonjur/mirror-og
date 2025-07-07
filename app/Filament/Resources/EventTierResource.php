@@ -101,7 +101,7 @@ class EventTierResource extends Resource
                     ->label('Must Configure Deadline for Each Type')
                     ->icon('heroicon-m-information-circle')
                     ->color('warning')
-                    ->modalDescription('⚠️ IMPORTANT: You must configure registration open, close & early deadlines durations for all event types. Without it, registration & event updates will not progress smoothly.')
+                    ->modalDescription('⚠️ IMPORTANT: You must configure registration open, close & early deadline durations for all event types. Without it, registration & event updates will not progress smoothly.')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Got it'),
                 

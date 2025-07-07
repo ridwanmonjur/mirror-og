@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TeamResource\Pages;
 use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\CountryRegion;
+use App\Models\Game;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,12 +27,20 @@ class TeamResource extends Resource
     {
         // Make sure the countries are loaded
         $countries = [];
-        
+        $games = [];
         // Get all country codes and names from the package
-        foreach (CountryRegion::all() as $country) {
+        $countryColection = CountryRegion::getAllCached();
+        foreach ($countryColection as $country) {
             $countries[$country->id] = $country->name;
         }
-        
+
+        $gameCollection = Game::getAllCached();
+        foreach ($gameCollection as $game) {
+            if ($game && $game->gameTitle != null && $game->gameTitle !== '') {
+                $games[$game->id] = $game->gameTitle;
+            }
+        }
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('teamName')
@@ -49,23 +58,73 @@ class TeamResource extends Resource
                 Forms\Components\TextInput::make('teamDescription')
                     ->maxLength(255),
 
-                Forms\Components\Select::make('default_category_id')
-                    ->label('Default Category')
-                    ->relationship('defaultCategory', 'gameTitle')
+                Forms\Components\Select::make('all_categories_array')
+                    ->label('All Games')
+                    ->options($games)
+                    ->multiple()
                     ->searchable()
-                    ->nullable(),
+                    ->nullable()
+                    ->placeholder('Select games this team participates in')
+                    ->reactive()
+                    ->afterStateHydrated(function ($component, $state, $record) {
+                        // Convert pipe-separated string to array when loading
+                        if ($record && $record->all_categories) {
+                            $gameIds = [];
+                            preg_match_all('/\|(\d+)\|/', $record->all_categories, $matches);
+                            if (!empty($matches[1])) {
+                                $gameIds = array_map('intval', $matches[1]);
+                            }
+                            $component->state($gameIds);
+                        }
+                    })
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        // Store selected games and clear default game if it's not in the selected games
+                        $selectedGames = is_array($state) ? $state : [];
+                        $currentDefault = $get('default_category_id');
+                        
+                        if ($currentDefault && !in_array($currentDefault, $selectedGames)) {
+                            $set('default_category_id', null);
+                        }
+                    })
+                    ->dehydrated(false), // Don't save this field directly
 
-                Forms\Components\Textarea::make('all_categories')
-                    ->label('All Categories')
-                    ->rows(3)
-                    ->nullable(),
+                Forms\Components\Select::make('default_category_id')
+                    ->label('Default Game')
+                    ->options(function (callable $get) use ($games) {
+                        $selectedGames = $get('all_categories_array');
+                        $selectedGames = is_array($selectedGames) ? $selectedGames : [];
+                        
+                        if (empty($selectedGames)) {
+                            return [];
+                        }
+                        
+                        // Only show games that are selected in all_categories_array
+                        return array_intersect_key($games, array_flip($selectedGames));
+                    })
+                    ->searchable()
+                    ->nullable()
+                    ->placeholder('Select a default game')
+                    ->helperText('Select from games chosen above'),
+
+                Forms\Components\Hidden::make('all_categories')
+                    ->afterStateHydrated(function ($component, $state, $record) {
+                        // This will be handled by the all_categories_array field
+                    })
+                    ->dehydrateStateUsing(function ($state, $get) {
+                        // Convert array back to pipe-separated string when saving
+                        $selectedGames = $get('all_categories_array');
+                        if (is_array($selectedGames) && !empty($selectedGames)) {
+                            return '|' . implode('|', $selectedGames) . '|';
+                        }
+                        return null;
+                    }),
 
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options([
-                        'public' => 'Public',
-                        'private' => 'Private',
-                        'open' => 'Open',
+                        'public' => 'Public - Players can apply to join',
+                        'private' => 'Private - Only team can send invites to players',
+                        'open' => 'Open - Players immediately join',
                     ])
                     ->default('open')
                     ->required(),
@@ -118,8 +177,9 @@ class TeamResource extends Resource
                                 return $path;
                             }),
                         ]),
+
                 Forms\Components\Select::make('country')
-                    ->label('Country')
+                    ->label('Region')
                     ->options($countries)
                     ->reactive()
                     ->afterStateUpdated(function ($state, callable $set, callable $get, $record) {
@@ -148,10 +208,10 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('teamBanner')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-        'class' => 'border-2 border-gray-300 dark:border-gray-600',
-    ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                            'class' => 'border-2 border-gray-300 dark:border-gray-600',
+                        ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),
@@ -159,9 +219,6 @@ class TeamResource extends Resource
                     ->label('Team Creator')
                     ->numeric(),
 
-                Tables\Columns\TextColumn::make('defaultCategory.gameTitle')
-                    ->label('Default Category')
-                    ->placeholder('No Category'),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')

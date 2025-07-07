@@ -36,8 +36,8 @@ class OrganizerPayment extends Model
     /**
      * Get the stripe transaction associated with the payment.
      */
-    public function stripeTransaction(): BelongsTo
-    {
-        return $this->belongsTo(RecordStripe::class, 'payment_id');
-    }
+    // public function stripeTransaction(): BelongsTo
+    // {
+    //     return $this->belongsTo(RecordStripe::class, 'payment_id');
+    // }
 }

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\WithdrawalPasswordResource\Pages;
 use App\Filament\Traits\HandlesFilamentExceptions;
+use App\Models\SuperAdminHelper;
 use App\Models\WithdrawalPassword;
 use App\Models\User;
 use App\Models\Withdrawal;
@@ -18,20 +19,45 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Response;
 use ZipArchive;
 
 class WithdrawalPasswordResource extends Resource
 {
     use HandlesFilamentExceptions;
-    
+
+    // Solution 1: Remove the static property and use a method instead
     protected static ?string $model = WithdrawalPassword::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-lock-closed';
 
+    protected static ?string $label = 'Withdrawal History';
+
+    protected static ?string $pluralLabel = 'Withdrawal History';
+
+
     protected static ?string $navigationLabel = 'Withdrawal History';
 
     protected static ?int $navigationSort = 3;
+
+    // Cached result to avoid multiple DB calls
+    protected static ?bool $hasRecords = null;
+
+    // Helper method to check if records exist (more efficient than count())
+    protected static function hasRecords(): bool
+    {
+        if (static::$hasRecords === null) {
+            static::$hasRecords = WithdrawalPassword::query()->exists();
+        }
+        return static::$hasRecords;
+    }
+
+    // Helper method to check if current user is super admin
+    protected static function isSuperAdmin(): bool
+    {
+        return SuperAdminHelper::isCurrentUserSuperAdmin();
+    }
 
     public static function form(Form $form): Form
     {
@@ -61,8 +87,21 @@ class WithdrawalPasswordResource extends Resource
             ])
             
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn () => static::isSuperAdmin()),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => static::isSuperAdmin()),
+            ])
+            
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->visible(fn () => !static::hasRecords())
+                    ->label('Create Password')
+                    ->tooltip('Create the first password')
+                    ->after(function () {
+                        // Reset cache after creating
+                        static::$hasRecords = null;
+                    }),
             ])
             
             ->persistFiltersInSession()
@@ -77,9 +116,20 @@ class WithdrawalPasswordResource extends Resource
             ]);
     }
 
-   
-    
-   
+    public static function canEdit(Model $record): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::isSuperAdmin();
+    }
+
+    public static function canCreate(): bool
+    {
+        return !static::hasRecords() && static::isSuperAdmin();
+    }
 
     public static function getPages(): array
     {

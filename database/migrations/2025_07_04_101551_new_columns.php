@@ -93,7 +93,7 @@ return new class extends Migration
 
             $userId = DB::table('users')->insertGetId([
                 'name' => 'Super Admin',
-                'email' => 'superadmin@driftwood.com',
+                'email' => 'superadmin@driftwood.gg',
                 'password' => Hash::make('12345678'),
                 'role' => 'ADMIN',
                 'email_verified_at' => now(),
