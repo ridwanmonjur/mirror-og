@@ -96,9 +96,9 @@ class ListWithdrawals extends ListRecords
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
             $zip->addFile($csvPath, $csvFileName);
             if ($password) {
-                $zip->setPassword($password);
+                $zip->setPassword($password->password);
             }
-            
+
             $zip->setEncryptionName($csvFileName, ZipArchive::EM_AES_256);
             $zip->close();
 
