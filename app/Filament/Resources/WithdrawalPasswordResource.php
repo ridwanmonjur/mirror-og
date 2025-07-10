@@ -4,25 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\WithdrawalPasswordResource\Pages;
 use App\Filament\Traits\HandlesFilamentExceptions;
-use App\Models\SuperAdminHelper;
 use App\Models\WithdrawalPassword;
-use App\Models\User;
-use App\Models\Withdrawal;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Carbon\Carbon;
-use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Response;
-use ZipArchive;
+
 
 class WithdrawalPasswordResource extends Resource
 {
@@ -54,11 +45,7 @@ class WithdrawalPasswordResource extends Resource
         return static::$hasRecords;
     }
 
-    // Helper method to check if current user is super admin
-    protected static function isSuperAdmin(): bool
-    {
-        return SuperAdminHelper::isCurrentUserSuperAdmin();
-    }
+   
 
     public static function form(Form $form): Form
     {
@@ -86,10 +73,8 @@ class WithdrawalPasswordResource extends Resource
             ])
             
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->visible(fn () => static::isSuperAdmin()),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->visible(fn () => static::isSuperAdmin()),
             ])
             
             ->headerActions([
@@ -114,19 +99,14 @@ class WithdrawalPasswordResource extends Resource
             ]);
     }
 
-    public static function canEdit(Model $record): bool
-    {
-        return static::isSuperAdmin();
-    }
-
     public static function canDelete(Model $record): bool
     {
-        return static::isSuperAdmin();
+        return false;
     }
 
     public static function canCreate(): bool
     {
-        return !static::hasRecords() && static::isSuperAdmin();
+        return !static::hasRecords();
     }
 
     public static function getPages(): array
