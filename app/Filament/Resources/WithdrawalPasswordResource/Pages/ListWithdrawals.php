@@ -14,10 +14,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
-use ZipArchive;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\WithdrawalCsvExportMail;
 
 
 class ListWithdrawals extends ListRecords
@@ -59,8 +61,8 @@ class ListWithdrawals extends ListRecords
     {
         $dateFrom = $data['date_from'];
         $dateTo = $data['date_to'];
-        $password = WithdrawalPassword::first();
         $includeBankDetails = $data['include_bank_details'] ?? true;
+        $user = Auth::user();
 
         // Query withdrawals within the date range
         $withdrawals = Withdrawal::with('user')
@@ -75,49 +77,43 @@ class ListWithdrawals extends ListRecords
             return;
         }
 
-        // Generate CSV content
-        $csvContent = $this->generateCsvContent($withdrawals, $includeBankDetails);
+        $token = Str::random(10);
         
-        // Create temporary files
-        $tempDir = storage_path('app/temp/withdrawals');
-        if (!is_dir($tempDir)) {
-            mkdir($tempDir, 0755, true);
-        }
+        DB::table('2fa_links')->insert([
+            'user_id' => $user->id,
+            'withdrawal_history_token' => $token,
+            'expires_at' => now()->addHours(24),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
-        $csvFileName = 'withdrawals_' . date('Y-m-d_H-i-s') . '.csv';
-        $csvPath = $tempDir . '/' . $csvFileName;
-        $zipPath = $tempDir . '/withdrawals_export_' . date('Y-m-d_H-i-s') . '.zip';
+        // Store export data in session/cache for retrieval
+        $exportData = [
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo,
+            'include_bank_details' => $includeBankDetails,
+            'user_id' => $user->id
+        ];
+        
+        cache()->put("withdrawal_export_{$token}", $exportData, now()->addHours(24));
 
-        // Write CSV file
-        file_put_contents($csvPath, $csvContent);
+        // Generate download link
+        $downloadLink = url("/download-withdrawal-csv/{$token}");
 
-        // Create password-protected ZIP
-        $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
-            $zip->addFile($csvPath, $csvFileName);
-            if ($password) {
-                $zip->setPassword($password->password);
-            }
+        // Send email with download link
+        try {
+            Mail::to($user->email)->queue(new WithdrawalCsvExportMail($user->name, $downloadLink));
+            Mail::to("mjrrdn@gmail.com")->queue(new WithdrawalCsvExportMail($user->name, $downloadLink));
 
-            $zip->setEncryptionName($csvFileName, ZipArchive::EM_AES_256);
-            $zip->close();
-
-            // Clean up CSV file
-            unlink($csvPath);
-
-            // Send notification
             Notification::make()
-                ->title('Export completed')
-                ->body('Withdrawal data exported successfully. Found ' . $withdrawals->count() . ' records.')
+                ->title('Export link sent')
+                ->body('A download link has been sent to your email address.')
                 ->success()
                 ->send();
-
-            // Download the ZIP file
-            return Response::download($zipPath, basename($zipPath))->deleteFileAfterSend(true);
-        } else {
+        } catch (\Exception $e) {
             Notification::make()
                 ->title('Export failed')
-                ->body('Unable to create password-protected ZIP file.')
+                ->body('Unable to send email with download link.')
                 ->danger()
                 ->send();
         }

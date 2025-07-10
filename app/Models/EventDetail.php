@@ -796,10 +796,6 @@ class EventDetail extends Model implements Feedable
         }
     }
 
-    
-
-   
-
     public static function storeLogic(EventDetail $eventDetail, Request $request): mixed
     {
         try {
@@ -821,6 +817,9 @@ class EventDetail extends Model implements Feedable
         $carbonStartDateTime = $carbonEndDateTime = $carbonPublishedDateTime = null;
         $eventDetail->event_type_id = $request->eventTypeId;
         $eventDetail->event_tier_id = $request->eventTierId;
+        $eventDetail->games_per_match = $request->games_per_match ?? 3;
+        $eventDetail->player_per_team = $request->player_per_team ?? 5;
+
         $eventDetail->event_category_id = $request->gameTitleId;
 
         $startDate = $request->startDate;

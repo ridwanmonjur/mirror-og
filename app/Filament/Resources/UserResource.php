@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\SuperAdminHelper;
 use App\Models\CountryRegion;
 use App\Models\User;
 use Filament\Forms;
@@ -51,9 +50,7 @@ class UserResource extends Resource
             'ORGANIZER' => 'Organizer',
         ];
 
-        if (SuperAdminHelper::isCurrentUserSuperAdmin()) {
-            $roleOptions['SUPERADMIN'] = 'Super Admin';
-        }
+     
 
         return $form
             ->schema([
@@ -139,11 +136,9 @@ class UserResource extends Resource
                                     ->required()
                                     ->reactive()
                                     ->afterStateUpdated(function ($state, callable $set, $livewire) {
-                                        if ($state === 'SUPERADMIN' && $livewire->record) {
-                                            SuperAdminHelper::makeSuperAdmin($livewire->record->id);
-                                        }
                                         
-                                        if ($state === 'ADMIN' || $state === 'SUPERADMIN') {
+                                        
+                                        if ($state === 'ADMIN') {
                                             if ($livewire->record && $livewire->record->participant) {
                                                 $livewire->record->participant->delete();
                                                 $livewire->record->refresh();
@@ -246,38 +241,13 @@ class UserResource extends Resource
             ]);
     }
 
-    public static function canEdit($record): bool
-    {
-        if (SuperAdminHelper::isSuperAdmin($record->id)) {
-            return SuperAdminHelper::isCurrentUserSuperAdmin();
-        }
-
-        return true;
-    }
-
-    public static function canDelete($record): bool
-    {
-        if (SuperAdminHelper::isSuperAdmin($record->id)) {
-            return SuperAdminHelper::isCurrentUserSuperAdmin();
-        }
-
-        return true;
-    }
+   
 
 
     public static function table(Table $table): Table
     {
         return $table
-        ->modifyQueryUsing(function (Builder $query) {
-            // Hide superadmin users from non-superadmin users
-            if (!SuperAdminHelper::isCurrentUserSuperAdmin()) {
-                $superAdminIds = DB::table('super_admins')->pluck('user_id')->toArray();
-                if (!empty($superAdminIds)) {
-                    $query->whereNotIn('id', $superAdminIds);
-                }
-            }
-            return $query;
-        })
+        
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\ImageColumn::make('userBanner')

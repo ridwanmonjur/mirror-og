@@ -116,7 +116,13 @@ function ParticipantData ()  {
                 console.error('Error fetching countries:', error);
             }
         },
-      
+        async removeProfile(event) {
+            event.stopPropagation();
+            event.preventDefault();
+                imageUpload.value = "";
+                uploadedImageList[0].style.backgroundImage = `none`;
+                uploadedImageList[1].style.backgroundImage = `none`;
+        },
         async submitEditProfile(event) {
             try {
                 window.showLoading();

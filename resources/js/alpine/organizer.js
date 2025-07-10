@@ -83,6 +83,13 @@ function OrganizerData() {
                 element.style.backgroundImage = `url(/storage/${initialUserProfile.userBanner})`;
             })
         },
+        async removeProfile(event) {
+            event.stopPropagation();
+            event.preventDefault();
+                imageUpload.value = "";
+                uploadedImageList[0].style.backgroundImage = `none`;
+                uploadedImageList[1].style.backgroundImage = `none`;
+        },
         async submitEditProfile(event) {
             try {
                 window.showLoading();

@@ -388,15 +388,19 @@ function setIsMyMode(event) {
 
 }
 
+let allCategoriesTooltip = "";
+let allCategoriesHtml = "";
+
 function paintScreen(teamListServerValue, membersCountServerValue, countServerValue) {
     let html = ``;
     filterSortResultsDiv.innerHTML = html;
     console.log(teamListServerValue, membersCountServerValue, countServerValue)
+   
     if (countServerValue > 0)  {
         for (let team of teamListServerValue) {
             let all_categories = parseAllCategories(team?.all_categories) || [];
 
-            let allCategoriesTooltip = all_categories
+            allCategoriesTooltip = all_categories
                 ?.map(cat => cat.gameTitle)
                 .join(', ');
 
@@ -407,7 +411,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             let game = allCategoriesId[team?.default_category_id] ??  null;
             let imgString = game ? `<img width="45" height="45" class="rounded-2 object-fit-cover" src="/storage/${game.gameIcon}">` : '';
 
-            let allCategoriesHtml = all_categories.map((element, index, arr) => {
+            allCategoriesHtml = all_categories.map((element, index, arr) => {
                 let title = element.gameTitle;
 
                 let comma = index < arr.length - 1 ? ',' : '';
@@ -577,9 +581,9 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
            
             team['membersCount'] = membersCountServerValue[team?.id] ?? 0;
             html += `
-                <a style="cursor:pointer;"  href="/participant/team/${team?.id}/manage">
-                    <div class="wrapper">
-                        <div class="team-section position-relative">
+                <a class="p-0 m-0" style="cursor:pointer;"  href="/participant/team/${team?.id}/manage">
+                    <div class="wrapper p-0 m-0">
+                        <div class="team-section position-relative ">
                             <div class="position-absolute top-0 right-0 w-100">
                                 <div class="d-flex justify-content-end">${imgString}</div>
                             </div>
@@ -594,7 +598,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
                                 </div>
                                
                             </div>
-                            <div class="text-center position-relative">
+                            <div class="text-center position-relative mb-2">
                                 <h6  class="team-name  text-wrap " id="team-name">${team?.teamName}</h6>
                                 <span> Region: ${team?.country_name ? team?.country_name: '-'} </span>  <br>
                                 <div data-bs-toggle="tooltip" title="${allCategoriesTooltip}" class=" px-1 text-nowrap" style="max-width: 270px;">
