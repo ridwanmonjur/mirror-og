@@ -388,15 +388,19 @@ function setIsMyMode(event) {
 
 }
 
+let allCategoriesTooltip = "";
+let allCategoriesHtml = "";
+
 function paintScreen(teamListServerValue, membersCountServerValue, countServerValue) {
     let html = ``;
     filterSortResultsDiv.innerHTML = html;
     console.log(teamListServerValue, membersCountServerValue, countServerValue)
+   
     if (countServerValue > 0)  {
         for (let team of teamListServerValue) {
             let all_categories = parseAllCategories(team?.all_categories) || [];
 
-            let allCategoriesTooltip = all_categories
+            allCategoriesTooltip = all_categories
                 ?.map(cat => cat.gameTitle)
                 .join(', ');
 
@@ -407,7 +411,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             let game = allCategoriesId[team?.default_category_id] ??  null;
             let imgString = game ? `<img width="45" height="45" class="rounded-2 object-fit-cover" src="/storage/${game.gameIcon}">` : '';
 
-            let allCategoriesHtml = all_categories.map((element, index, arr) => {
+            allCategoriesHtml = all_categories.map((element, index, arr) => {
                 let title = element.gameTitle;
 
                 let comma = index < arr.length - 1 ? ',' : '';
