@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Open;
 use App\Http\Controllers\Controller;
 use App\Models\CountryRegion;
 use App\Models\EventDetail;
+use App\Models\Wallet;
+use App\Models\Withdrawal;
+use App\Models\WithdrawalPassword;
 use Carbon\Carbon;
 use Database\Factories\BracketsFactory;
 use Database\Factories\EventDetailFactory;
@@ -16,6 +19,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
+use ZipArchive;
 
 class MiscController extends Controller
 {
@@ -340,5 +345,141 @@ class MiscController extends Controller
         }
 
         return view('Landing', $output);
+    }
+
+    public function downloadWithdrawalCsv($token)
+    {
+        // Verify token exists and is not expired
+        $tokenData = DB::table('2fa_links')
+            ->where('withdrawal_history_token', $token)
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$tokenData) {
+            abort(404, 'Invalid or expired download link');
+        }
+
+        // Get export data from cache
+        $exportData = cache()->get("withdrawal_export_{$token}");
+        if (!$exportData) {
+            abort(404, 'Export data not found');
+        }
+
+        // Verify user matches
+        if ($tokenData->user_id !== $exportData['user_id']) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Query withdrawals within the date range
+        $withdrawals = Withdrawal::with('user')->get();
+
+        if ($withdrawals->isEmpty()) {
+            abort(404, 'No withdrawal data found');
+        }
+
+        // Generate CSV content
+        $csvContent = $this->generateCsvContent($withdrawals, $exportData['include_bank_details']);
+        
+        // Get password for ZIP encryption
+        $password = WithdrawalPassword::first();
+        
+        // Create temporary files
+        $tempDir = storage_path('app/temp/withdrawals');
+        if (!is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        $csvFileName = 'withdrawals_' . date('Y-m-d_H-i-s') . '.csv';
+        $csvPath = $tempDir . '/' . $csvFileName;
+        $zipPath = $tempDir . '/withdrawals_export_' . date('Y-m-d_H-i-s') . '.zip';
+
+        // Write CSV file
+        file_put_contents($csvPath, $csvContent);
+
+        // Create password-protected ZIP
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            $zip->addFile($csvPath, $csvFileName);
+            if ($password) {
+                $zip->setPassword($password->password);
+            }
+
+            $zip->setEncryptionName($csvFileName, ZipArchive::EM_AES_256);
+            $zip->close();
+
+            // Clean up CSV file
+            unlink($csvPath);
+
+            // Clean up token and cache data after successful download
+            DB::table('2fa_links')->where('withdrawal_history_token', $token)->delete();
+            cache()->forget("withdrawal_export_{$token}");
+
+            // Download the ZIP file
+            return Response::download($zipPath, basename($zipPath))->deleteFileAfterSend(true);
+        } else {
+            abort(500, 'Unable to create password-protected ZIP file');
+        }
+    }
+
+    private function generateCsvContent($withdrawals, bool $includeBankDetails): string
+    {
+        $headers = [
+            'ID',
+            'User ID',
+            'User Name',
+            'User Email',
+            'Amount (RM)',
+            'Status',
+            'Requested At',
+        ];
+
+        if ($includeBankDetails) {
+            $headers = array_merge($headers, [
+                'Bank Name',
+                'Account Number',
+                'Account Holder Name',
+            ]);
+        }
+
+        $csvData = [];
+        $csvData[] = $headers;
+
+        $wallet = null;
+        if (isset($withdrawals[0])) {
+            $wallet = Wallet::retrieveOrCreateCache($withdrawals[0]->user_id);
+        }
+
+        foreach ($withdrawals as $withdrawal) {
+            $row = [
+                $withdrawal->id,
+                $withdrawal->user_id,
+                $withdrawal->user->name ?? 'N/A',
+                $withdrawal->user->email ?? 'N/A',
+                number_format($withdrawal->withdrawal, 2),
+                ucfirst($withdrawal->status),
+                $withdrawal->requested_at ? $withdrawal->requested_at->setTimezone('Asia/Kuala_Lumpur')->format('Y-m-d H:i:s') : 'N/A',
+            ];
+
+            if ($includeBankDetails) {
+                $row = array_merge($row, [
+                    $wallet?->bank_name ?? 'N/A',
+                    $wallet?->account_number ?? 'N/A',
+                    $wallet?->account_holder_name ?? 'N/A',
+                ]);
+            }
+
+            $csvData[] = $row;
+        }
+
+        // Convert to CSV format
+        $output = fopen('php://temp', 'w');
+        foreach ($csvData as $row) {
+            fputcsv($output, $row);
+        }
+        rewind($output);
+        $csvContent = stream_get_contents($output);
+        fclose($output);
+
+        return $csvContent;
     }
 }

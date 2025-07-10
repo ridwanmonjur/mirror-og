@@ -80,34 +80,7 @@ return new class extends Migration
             });
         }
         
-        if (!Schema::hasTable('super_admins')) {
-
-            Schema::create('super_admins', function (Blueprint $table) {
-                $table->id();
-                $table->unsignedBigInteger('user_id');
-                $table->timestamps();
-                
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->unique('user_id');
-            });
-
-            $userId = DB::table('users')->insertGetId([
-                'name' => 'Super Admin',
-                'email' => 'superadmin@driftwood.gg',
-                'password' => Hash::make('12345678'),
-                'role' => 'ADMIN',
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-    
-            DB::table('super_admins')->insert([
-                'user_id' => $userId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
+        
 
         if (!Schema::hasTable('csv_passwords')) {
             Schema::create('csv_passwords', function (Blueprint $table) {
@@ -180,11 +153,7 @@ return new class extends Migration
         }
 
 
-        Schema::dropIfExists('super_admins');
 
-        DB::table('users')->where([
-            'name' => 'Super Admin',
-        ])->delete();
 
         Schema::dropIfExists('csv_passwords');
 

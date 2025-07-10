@@ -52,6 +52,7 @@ Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
 Route::get('/deadlineTasks/{id}/{taskType}', [MiscController::class, 'deadlineTasks']);
 Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respondTasks']);
+Route::get('/download-withdrawal-csv/{token}', [MiscController::class, 'downloadWithdrawalCsv'])->name('download.withdrawal.csv');
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
