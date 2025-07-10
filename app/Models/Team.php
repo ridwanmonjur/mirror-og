@@ -488,8 +488,12 @@ class Team extends Model
        $newBannerPath = null;
        
        try {
+
             $requestData = json_decode($request->getContent(), true);
             if (!isset($requestData['file'])) {
+                $this->destroyTeanBanner($oldBanner);
+                $this->teamBanner = null;
+                $this->save();
                 return null;
             }
 

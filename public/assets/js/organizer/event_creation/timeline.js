@@ -227,10 +227,14 @@ let inputKeyToInputNameMapping = {
     launch_time: "launch time",
     launch_schedule: "launch schedule",
     launch_visible: "launch type (public/ private/ draft)",
-    isPaymentDone: "payment"
+    isPaymentDone: "payment",
+    player_per_team: "players per team",
+    games_per_match: "games per match"
 }
 
 let inputKeyToStepNameMapping = {
+    player_per_team: ['step-3-5', 'timeline-1'],
+    games_per_match: ['step-3-5', 'timeline-1'],
     eventTier: ['step-3', 'timeline-1'],
     eventType: ['step-2', 'timeline-1'],
     gameTitle: ['step-1', 'timeline-1'],
@@ -375,8 +379,11 @@ function goToNextScreen(nextId, nextTimeline) {
 
     const allIDs = [
         'step-0',
-        'step-1', 'step-2', 'step-3', 'step-4', 'step-5', 'step-5-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-payment', 'step-launch-1',
-        'step-launch-2'];
+        'step-1', 'step-2', 'step-3', 
+        'step-3-5', 
+        'step-4', 'step-5', 'step-5-5', 'step-6', 'step-7', 'step-8', 'step-9', 'step-payment', 'step-launch-1',
+        'step-launch-2'
+    ];
 
     const allTimelines = ['timeline-1', 'timeline-2', 'timeline-payment', 'timeline-launch'];
     
@@ -419,7 +426,9 @@ function goToNextScreen(nextId, nextTimeline) {
         }
     })
 
-    if (nextId == allIDs[4]) {
+    console.log({nextId, currentId});
+
+    if (nextId == allIDs[5]) {
         let box = document.getElementById('event-tier-display');
         let eventTierTitle = localStorage.getItem('eventTierTitle') ?? null;
         
