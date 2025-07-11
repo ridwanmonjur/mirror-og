@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\RedeemCouponRequest;
 use App\Jobs\CreateUpdateEventTask;
-use App\Models\EventCreateCoupon;
+use App\Models\SystemCoupon;
 use App\Models\EventDetail;
 use App\Models\OrganizerPayment;
 use App\Models\RecordStripe;
@@ -26,9 +27,8 @@ class OrganizerCheckoutController extends Controller
         $this->stripeClient = $stripeClient;
     }
 
-    public function showCheckout(Request $request, $id): View
+    public function showCheckout(RedeemCouponRequest $request, $id): View
     {
-        session()->forget(['successMessageCoupon', 'errorMessageCoupon']);
 
         try {
             $user = $request->get('user');
@@ -52,34 +52,11 @@ class OrganizerCheckoutController extends Controller
                 'customer' => $user->stripe_customer_id,
             ]);
             
-            [$fee, $isEventCreateCouponApplied, $error] = array_values(EventCreateCoupon::createEventCreateCouponFeeObject($request->coupon, $event->tier?->tierPrizePool));
-            // $fee['entryFee'] = (float) $eventPrizePool * 1000;
-            // $fee['totalFee'] = $fee['entryFee'] + $fee['entryFee'] * 0.2;
-            // $fee['discountFee'] = $discount->type === 'percent' ?
-            //     $discount->amount / 100 * $fee['totalFee'] : $discount->amount;
-            // $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
+            [$fee, $isCouponApplied, $error] = array_values(SystemCoupon::loadCoupon($request->coupon_code, $event->tier?->tierPrizePool, 'organizer'));
 
             if ($fee['finalFee'] < config('constants.STRIPE.ZER0')) {
-                $historyId = TransactionHistory::insertGetId([
-                    'name' => "$event->eventName: Full Discount",
-                    'type' => 'Entry Fee',
-                    'link' => route('public.event.view', ['id'=> $event->id]),
-                    'amount' => 0,
-                    'summary' => 'Complete Discount',
-                    'date'=> DB::raw('NOW()'),
-                    'user_id' => $user->id
-                ]);
-
-                $paymentId = OrganizerPayment::insertGetId([
-                    'payment_amount' => 0,
-                    'discount_amount' => $fee['totalFee'],
-                    'user_id' => $user->id,
-                    'history_id' => $historyId,
-                    'payment_id' => null,
-                ]);
-
+                $paymentId = SystemCoupon::orgFullCheckout($event, $user, $fee['totalFee']);
                 $event->payment_transaction_id = $paymentId;
-
                 $event->save();
 
                 return view('Organizer.CheckoutEventSuccess', [
@@ -88,10 +65,10 @@ class OrganizerCheckoutController extends Controller
                 ]);
             }
 
-            if ($isEventCreateCouponApplied) {
-                session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon}!");
+            if ($isCouponApplied) {
+                session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon_code}! Note, the minimum stripe payment must be RM 5.0");
             } elseif (!is_null($error)) {
-                session()->flash('errorMessageCoupon', $error);
+                throw new Exception($error);
             }
 
             return view('Organizer.CheckoutEvent', [
@@ -129,7 +106,7 @@ class OrganizerCheckoutController extends Controller
 
                 if ($paymentIntent['amount'] > 0 && $paymentIntent['amount_received'] === $paymentIntent['amount'] && $paymentIntent['metadata']['eventId'] === $id) {
                     $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null, 'joinEvents');
-                    $prizeFinal = EventCreateCoupon::getOrganizerPay($event->tier?->tierPrizePool);
+                    $prizeFinal = SystemCoupon::getIncrementedFee($event->tier?->tierPrizePool);
                     $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
                     $historyId = TransactionHistory::insertGetId([
                         'name' => "$event->eventName",

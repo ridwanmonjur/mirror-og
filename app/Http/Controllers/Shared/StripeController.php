@@ -3,14 +3,13 @@
 
 namespace App\Http\Controllers\Shared;
 
-use App\Exceptions\BankAccountNeededException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RedeemCouponRequest;
 use App\Http\Requests\User\SavePaymentMethodRequest;
 use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
 use App\Http\Resources\TransactionHistoryResource;
-use App\Models\ParticipantCoupon;
+use App\Models\SystemCoupon;
 use App\Models\PaymentIntent;
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
@@ -202,7 +201,8 @@ public function showPaymentMethodForm(Request $request)
         ];
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
-        $demoCoupons = ParticipantCoupon::where('is_public', true)
+        $demoCoupons = SystemCoupon::where('is_public', true)
+            ->where('for_type', 'participant')
             ->orWhereHas('userCoupons', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
@@ -261,7 +261,8 @@ public function showPaymentMethodForm(Request $request)
         }
 
 
-        $coupons = ParticipantCoupon::where('is_public', true)
+        $coupons = SystemCoupon::where('is_public', true)
+            ->where('for_type', 'participant')
             ->orWhereHas('userCoupons', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
@@ -423,6 +424,7 @@ public function showPaymentMethodForm(Request $request)
         try {
             $user = $request->get('user');
             $coupon = $request->getCoupon();
+            $userCoupon = $request->getUserCoupon();
             $wallet = Wallet::retrieveOrCreateCache($user->id);
             $newBalance = $wallet->usable_balance + $coupon->amount;
             
@@ -430,22 +432,21 @@ public function showPaymentMethodForm(Request $request)
                 'usable_balance' => $newBalance,
                 'current_balance' => $newBalance,
             ]);
-    
-            $userCoupon = UserCoupon::firstOrCreate(
-                [
+
+            if (!$userCoupon) {
+                $userCoupon = UserCoupon::create([
                     'user_id' => $user->id,
                     'coupon_id' => $coupon->id,
-                ],
-                [
-                    'redeemable_count' => 1,
-                ]
-            );
-            
+                    'redeemed_at' => null,
+                    'redeemable_count' => 0,
+                ]);
+            }
+
             $userCoupon->update([
                 'redeemed_at' => now(),
             ]);
             
-            $userCoupon->decrement('redeemable_count');
+            $userCoupon->increment('redeemable_count');
 
             TransactionHistory::create([
                 'name' => "Wallet Coupon Registration: RM {$coupon->amount}",

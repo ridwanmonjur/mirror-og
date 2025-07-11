@@ -10,7 +10,7 @@ use App\Models\EventJoinResults;
 use App\Models\EventTier;
 use App\Models\JoinEvent;
 use App\Models\NotifcationsUser;
-use App\Models\ParticipantCoupon;
+use App\Models\SystemCoupon;
 use App\Models\UserCoupon;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -142,35 +142,39 @@ trait RespondTaksTrait
                                 } else {
                                     Log::info('entered here');
                                     // Check if a coupon with the same code already exists
-                                    $existingCoupon = ParticipantCoupon::where('code', "Refund RM {$participantPay->payment_amount}")->first();
+                                    $existingCoupon = SystemCoupon::where('for_type', 'participant')
+                                        ->where('code', "Refund RM {$participantPay->payment_amount}")
+                                        ->first();
 
                                     if (!$existingCoupon) {
-                                        $participantCoupon = new ParticipantCoupon([
+                                        $systemCoupon = new SystemCoupon([
                                             'code' => "Refund RM {$participantPay->payment_amount}",
-                                            'amount' => $participantPay->payment_amount, // You were missing the value here
+                                            'amount' => $participantPay->payment_amount,
                                             'description' => 'Refund from organizers',
                                             'is_active' => true,
                                             'is_public' => false,
                                             'expires_at' => Carbon::now()->addYears(1),
+                                            'for_type' => 'participant',
+                                            'redeem_count' => 1,
                                         ]);
 
-                                        $participantCoupon->save();
+                                        $systemCoupon->save();
                                     } else {
-                                        $participantCoupon = $existingCoupon;
+                                        $systemCoupon = $existingCoupon;
                                     }
 
-                                    $existingUserCoupon = UserCoupon::where('user_id', $participantPay->user_id)->where('coupon_id', $participantCoupon->id)->first();
+                                    $existingUserCoupon = UserCoupon::where('user_id', $participantPay->user_id)->where('coupon_id', $systemCoupon->id)->first();
 
                                     if (!$existingUserCoupon) {
                                         $newUserCoupon = new UserCoupon([
                                             'user_id' => $participantPay->user_id,
-                                            'coupon_id' => $participantCoupon->id,
-                                            'redeemed_at' => null, // Should be null, not false for datetime field
+                                            'coupon_id' => $systemCoupon->id,
+                                            'redeemed_at' => null,
+                                            'redeemable_count' => 0,
                                         ]);
 
                                         $newUserCoupon->save();
 
-                                        $newUserCoupon->increment('redeemable_count');
                                     } else {
                                         $existingUserCoupon->increment('redeemable_count');
                                     }

@@ -8,7 +8,6 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
-use App\Models\RosterMember;
 use App\Models\StripeConnection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,7 +18,7 @@ use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 use App\Http\Requests\Match\DiscountCheckoutRequest;
 use App\Models\TransactionHistory;
-use Illuminate\Support\Facades\Log;
+
 
 class ParticipantCheckoutController extends Controller
 {
@@ -33,8 +32,10 @@ class ParticipantCheckoutController extends Controller
     public function showCheckout(ShowCheckoutRequest $request): RedirectResponse|View
     {
         try {
+            $user = $request->attributes->get('user');
             session()->forget(['successMessageCoupon', 'errorMessageCoupon']);
-
+            $prevForm = $request->prevForm;
+            $fee = $request->fee; 
             $user = $request->attributes->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
 
@@ -69,6 +70,8 @@ class ParticipantCheckoutController extends Controller
                 'event' => $request->event,
                 'user_wallet' => $user_wallet,
                 'isUser' => true,
+                'fee'=> $fee,
+                'prevForm' => $prevForm,
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
                 'payment_amount_min' => $payment_amount_min,
@@ -77,6 +80,7 @@ class ParticipantCheckoutController extends Controller
                 'paymentLowerMin' => config('constants.STRIPE.MINIMUM_RM'),
             ]);
         } catch (Exception $e) {
+            session()->flash('errorMessage', $e->getMessage());
             return back()->with('errorMessage', $e->getMessage())->with('scroll', $request->joinEventId);
         }
     }
@@ -92,7 +96,6 @@ class ParticipantCheckoutController extends Controller
             $regStatus = $request->getStatus();
             $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');
             $event = $request->event;
-
             $pending_total_after_discount = $request->attributes->get('pending_total_after_discount');
             $walletAmount = $userWallet->usable_balance - $request->discount_applied_amount;
             $currentAmount = $userWallet->current_balance - $request->discount_applied_amount;
@@ -107,7 +110,6 @@ class ParticipantCheckoutController extends Controller
             if ($isNormalReg) {
                 $transaction = new TransactionHistory([
                     'name' => "{$event->eventName}",
-                    
                     'type' => 'Event Entry Fee Hold',
                     'link' => route('public.event.view', ['id' => $event->id]),
                     'amount' => $request->discount_applied_amount,
@@ -133,14 +135,7 @@ class ParticipantCheckoutController extends Controller
                 $transaction->save();
             }
 
-            if (!$isCompletePayment) {
-                if ($request->payment_intent_id) {
-                    $stripePaymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($request->payment_intent_id);
-                    $this->stripeClient->updatePaymentIntent($stripePaymentIntent->id, [
-                        'amount' => $newAmount * 100,
-                    ]);
-                }
-            }
+          
 
             ParticipantPayment::create([
                 'team_members_id' => $request->member_id,
@@ -153,12 +148,11 @@ class ParticipantCheckoutController extends Controller
             ]);
 
             if ($isCompletePayment) {
-                if ($pending_total_after_discount < 0.1) {
+                if ($pending_total_after_discount < config("constants.STRIPE.ZERO")) {
                     $joinEvent = $request->joinEvent;
                     $joinEvent->payment_status = 'completed';
                     $joinEvent->register_time = $regStatus;
                     $joinEvent->save();
-                    // add column for registration
                 }
             }
 
@@ -261,26 +255,11 @@ class ParticipantCheckoutController extends Controller
                         'type' => 'stripe',
                     ]);
 
-                    if ($total - ($participantPaymentSum + $paymentDone) < 0.1) {
+                    if ($total - ($participantPaymentSum + $paymentDone) < config("constants.STRIPE.ZERO")) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->register_time = $regStatus;
                         $joinEvent->save();
                     }
-
-                    // try {
-                    //     $customerId = $paymentIntent['customer'] ?? null;
-                        
-                    //     if ($customerId) {
-                    //         $this->stripeClient->createStripeInvoice($customerId);
-                    //     }
-                        
-                    // } catch (Exception $invoiceException) {
-                    //     Log::error("Failed to create invoice after payment", [
-                    //         'error' => $invoiceException->getMessage(),
-                    //         'payment_intent_id' => $intentId
-                    //     ]);
-                    // }
-
                     DB::commit();
 
                     return redirect()
@@ -307,6 +286,7 @@ class ParticipantCheckoutController extends Controller
                         ]);
                     }
                 } catch (Exception $e) {
+                    return $this->showErrorParticipant($e->getMessage());
                 }
             }
             

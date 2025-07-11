@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ParticipantCouponsResource\RelationManagers;
+namespace App\Filament\Resources\SystemCouponsResource\RelationManagers;
 
 use App\Models\User;
 use Filament\Forms;
@@ -37,12 +37,16 @@ class UserCouponRelationManager extends RelationManager
                 // ->required(),
                 Forms\Components\Select::make('user_id')
                     ->label('User')
-                    ->options(User::where('role', 'PARTICIPANT')->pluck('name', 'id'))
-                    ->required()
-                    ->relationship('user', 'name'),
+                    ->options(function () {
+                        $coupon = $this->getOwnerRecord();
+                        $role = $coupon->for_type === 'organizer' ? 'ORGANIZER' : 'PARTICIPANT';
+                        return User::where('role', $role)->pluck('name', 'id');
+                    })
+                    ->required(),
                 
 
                 Forms\Components\TextInput::make('redeemable_count')
+                    ->default(1)
                     ->label('Redeem Count'),
 
                 Forms\Components\DateTimePicker::make('redeemed_at')

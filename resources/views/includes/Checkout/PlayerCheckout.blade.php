@@ -218,20 +218,7 @@
             </div>
             <div class="collapse px-3 py-2 multi-collapse" id="other-methods-accordion">
                 <div class="grid-4-columns">
-                    {{-- @foreach (bladeGetPaymentLogos('otherEWallet') as $logo)
-                        <div class="position-relative" style="width: min-content;">
-                            <img src="{{ asset('/assets/images/logo/' . $logo['src']) }}" alt="{{ $logo['name'] }}"
-                                width="{{ $logo['width'] }}" height="{{ $logo['height'] }}"
-                                @class([
-                                    'payment-element',
-                                    'mt-3',
-                                    'hover-bigger',
-                                    'object-fit-cover' => $logo['cover'],
-                                ])
-                                onclick="onChoosePayment(event, 'otherEWallet', '{{ $logo['name'] }}');">
-                            <div class="rounded-circle position-absolute  px-1 check-tick d-none">✔</div>
-                        </div>
-                    @endforeach --}}
+                   
                 </div>
             </div>
         </div>
@@ -254,13 +241,28 @@
             <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier?->eventTier }}</span></div>
             <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
-            <br>
             <div class=" d-flex justify-content-between w-75">
                 <h5> TOTAL </h5>
                 <h5 id="paymentTotal">RM
                     <span id="actualPaymentTable" class="transform-number me-1">{{ $amount }} </span>
                 </h5>
             </div>
+            <div>Promo Code</div>
+            <form method="POST" class="row mx-0 px-0 mb-1">
+                @csrf
+                <div class="form-group mb-0 px-0 mx-0">
+                    <input type="hidden" name="teamId" value="{{ $prevForm['id'] }}">
+                    <input type="hidden" name="teamName" value="{{ $prevForm['teamName'] }}">
+                    <input type="hidden" name="joinEventId" value="{{ $prevForm['joinEventId'] }}">
+                    <input type="hidden" name="id" value="{{ $prevForm['event_details_id'] }}">
+                    <input type="hidden" name="memberId" value="{{$prevForm['memberId']}}">
+                    <input type="text" name="coupon_code" class="mb-2 px-3 w-75" style="padding-top: 6px; padding-bottom: 6px;"
+                        value="{{ old('coupon_code', request('coupon_code')) }}">
+                    <button class="ms-2 oceans-gaming-default-button ps-3" style="background-color: #95ADBD;">
+                        <span> Apply </span>
+                    </button>
+                </div>
+            </form>
             <div class="d-flex justify-content-center w-75">
           
                     <a href="{{ route('participant.register.manage', ['id' => $teamId]) }}" class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2 submit-texts d-block"> Cancel </a>

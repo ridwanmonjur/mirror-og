@@ -42,3 +42,10 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 - Stripe account for payments
 - Firebase project for real-time features
 - Google OAuth and Steam API credentials
+
+## Development Notes
+- When creating/updating database tables in laravel migration:
+  * Check table existence/non-existence in create operations
+  * In update operations, verify both table and column do not exist before proceeding
+- Email Sending Workflow:
+  * Always check one email event live to understand email sending process

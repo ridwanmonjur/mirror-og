@@ -35,6 +35,6 @@ class UserCoupon extends Model
      */
     public function coupon(): BelongsTo
     {
-        return $this->belongsTo(ParticipantCoupon::class, 'coupon_id');
+        return $this->belongsTo(SystemCoupon::class, 'coupon_id');
     }
 }
