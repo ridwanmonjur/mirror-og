@@ -95,7 +95,7 @@ trait RespondTaksTrait
                                         'id' => $participantPay->payment_id,
                                     ])->update(['payment_status' => 'canceled']);
                                 } elseif ($participantPay->type == 'wallet') {
-                                    $wallet = Wallet::firstOrNew(['user_id' => $participantPay->user_id]);
+                                    $wallet = Wallet::retrieveOrCreateCache($participantPay->user_id);
 
                                     if (!$wallet->exists) {
                                         $wallet->usable_balance = 0;
@@ -116,7 +116,7 @@ trait RespondTaksTrait
                                 }
                             } else {
                                 if ($participantPay->type == 'wallet') {
-                                    $wallet = Wallet::firstOrNew(['user_id' => $participantPay->user_id]);
+                                    $wallet = Wallet::retrieveOrCreateCache($participantPay->user_id);
                                     Log::info($wallet);
 
                                     if (!$wallet->exists) {
@@ -584,35 +584,11 @@ trait RespondTaksTrait
     }
     private function getPrizeFromPositionTIer(string|int $position, EventTier $tier)
     {
-        $positionTierMap = [
-            'Dolphin' => [
-                '1' => 200,
-                '2' => 125,
-                '3' => 75,
-                '4' => 50,
-                '5' => 25,
-                '6' => 25,
-            ],
-            'Starfish' => [
-                '1' => 200,
-                '2' => 125,
-                '3' => 75,
-                '4' => 50,
-                '5' => 25,
-                '6' => 25,
-            ],
-            'Turtle' => [
-                '1' => 200,
-                '2' => 125,
-                '3' => 75,
-                '4' => 50,
-                '5' => 25,
-                '6' => 25,
-            ],
-        ];
+        $tierPrize = $tier->prizes()
+            ->where('position', $position)
+            ->first();
 
-        $prize = isset($positionTierMap[$tier->eventTier]) && isset($positionTierMap[$tier->eventTier][$position]) ? $positionTierMap[$tier->eventTier][$position] : null;
-        return $prize;
+        return $tierPrize ? $tierPrize->prize_sum : null;
     }
 
     public function getEndedNotifications(Collection $joinList, EventTier $tier)
