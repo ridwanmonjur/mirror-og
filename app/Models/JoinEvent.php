@@ -94,7 +94,7 @@ class JoinEvent extends Model
             ->where('join_status', '<>', 'canceled')
             ->with(['eventDetails',  'user', 'roster' => function ($q) {
                 $q->with('user');
-            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user',
+            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.type', 'eventDetails.user',
             ])
             ->get();
     }
@@ -108,7 +108,7 @@ class JoinEvent extends Model
             ->where('join_status', '<>', 'canceled')
             ->with(['eventDetails',  'user', 'roster' => function ($q) {
                 $q->with('user');
-            }, 'eventDetails.tier', 'eventDetails.game', 'eventDetails.user',
+            }, 'eventDetails.tier', 'eventDetails.type', 'eventDetails.game', 'eventDetails.user',
             ])
             ->get();
     }
@@ -205,7 +205,7 @@ class JoinEvent extends Model
         $joinEvents = collect();
         $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
-            'eventDetails', 'eventDetails.tier', 'eventDetails.signup', 'eventDetails.user', 
+            'eventDetails', 'eventDetails.tier', 'eventDetails.type', 'eventDetails.signup', 'eventDetails.user', 
             'eventDetails.game', 
             'members' => function($q) {
                 $q->where('status', 'accepted')
@@ -351,6 +351,13 @@ class JoinEvent extends Model
         $this->save();
 
         return [$leaveRatio, $stayRatio];
+    }
+
+    public function completePayment($status)
+    {
+        $this->payment_status = 'completed';
+        $this->register_time = $status;
+        $this->save();
     }
 
 }

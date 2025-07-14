@@ -6,6 +6,7 @@ import * as bootstrap from 'bootstrap'
 window.bootstrap = bootstrap;
 import { createApp } from 'petite-vue';
 import { PageNotificationComponent } from './custom/notifications';
+import './custom/analytics.js';
 
 const Toast = Swal.mixin({
     toast: true,
@@ -186,6 +187,109 @@ window.loadMessage = () => {
 
 window.Toast = Toast;
 window.Swal = Swal;
+
+// Google Analytics initialized via import above
+// Maintain existing event tracking functionality using new analytics service
+
+let eventClickCount = 0;
+let tierCounts = {};
+let typeCounts = {};
+let esportCounts = {};
+let locationCounts = {};
+
+window.trackEventCardClick = function(element) {
+    eventClickCount++;
+    
+    const eventId = element.dataset.eventId;
+    const eventName = element.dataset.eventName;
+    const eventTier = element.dataset.eventTier;
+    const eventType = element.dataset.eventType;
+    const esportTitle = element.dataset.esportTitle;
+    const location = element.dataset.location;
+    const tierId = element.dataset.tierId;
+    const typeId = element.dataset.typeId;
+    const gameId = element.dataset.gameId;
+    const userId = element.dataset.userId;
+    
+    if (eventTier) tierCounts[eventTier] = (tierCounts[eventTier] || 0) + 1;
+    if (eventType) typeCounts[eventType] = (typeCounts[eventType] || 0) + 1;
+    if (esportTitle) esportCounts[esportTitle] = (esportCounts[esportTitle] || 0) + 1;
+    if (location) locationCounts[location] = (locationCounts[location] || 0) + 1;
+    
+    const eventData = {
+        event_category: 'event_interaction',
+    };
+    
+    if (eventName) eventData.event_label = eventName;
+    if (eventId) eventData.event_id = eventId;
+    if (tierId) eventData.tier_id = tierId;
+    if (typeId) eventData.type_id = typeId;
+    if (gameId) eventData.game_id = gameId;
+    if (userId) eventData.user_id = userId;
+    
+    // Use analytics service for tracking
+    window.analytics.trackEvent('event_card_click', eventData);
+
+    window.analytics.trackEvent('cumulative_event_clicks', {
+        event_label: 'total_event_clicks',
+    });
+    
+    if (eventTier) {
+        const tierData = {
+            event_category: 'tier_selection',
+            event_label: eventTier,
+            value: tierCounts[eventTier],
+        };
+        if (tierId) tierData.tier_id = tierId;
+        window.analytics.trackEvent('event_tier_click', tierData);
+    }
+    
+    if (eventType) {
+        const typeData = {
+            event_category: 'type_selection',
+            event_label: eventType,
+            value: typeCounts[eventType],
+        };
+        if (typeId) typeData.type_id = typeId;
+        window.analytics.trackEvent('event_type_click', typeData);
+    }
+    
+    if (esportTitle) {
+        const esportData = {
+            event_category: 'esport_selection',
+            event_label: esportTitle,
+            value: esportCounts[esportTitle],
+        };
+        if (gameId) esportData.game_id = gameId;
+        window.analytics.trackEvent('esport_title_click', esportData);
+    }
+    
+    if (location) {
+        const locationData = {
+            event_category: 'location_selection',
+            event_label: location,
+            value: locationCounts[location],
+        };
+        if (userId) locationData.user_id = userId;
+        window.analytics.trackEvent('location_click', locationData);
+}
+
+// Track social interactions (follow/unfollow)
+window.trackSocialInteraction = function(action, target, targetType = 'user') {
+    if (window.analytics) {
+        window.analytics.trackSocialInteraction(action, target, targetType);
+    }
+}
+
+// Track form submissions
+window.trackFormSubmission = function(formName, additionalParams = {}) {
+    if (window.analytics) {
+        window.analytics.trackFormSubmission(formName, additionalParams);
+    }
+    }
+};
+
+
 
 import './libraries/lightgallery';
 import './libraries/lightpicker';

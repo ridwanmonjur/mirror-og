@@ -28,7 +28,6 @@ use App\Services\EventMatchService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Match\ParticipantViewEventRequest;
-use App\Models\Participant;
 
 class ParticipantEventController extends Controller
 {
@@ -168,7 +167,8 @@ class ParticipantEventController extends Controller
             ])
                 ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
                 ->with(['tier:id,eventTier', 'user:id,name,userBanner', 'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'])
-                ->find($id);
+                ->where('id', $id)
+                ->first();
 
             $status = $event->getRegistrationStatus();
             if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
@@ -246,7 +246,8 @@ class ParticipantEventController extends Controller
 
             $event = EventDetail::select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')
                 ->with(['tier:id,eventTier', 'user:id,name,userBanner', 'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'])
-                ->find($id);
+                ->where('id', $id)
+                ->first();
 
             $status = $event->getRegistrationStatus();
 
