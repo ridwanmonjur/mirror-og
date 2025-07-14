@@ -169,7 +169,7 @@
             <form method="GET" class="row mx-0 px-0 mb-1">
                 <div class="form-group mb-0 px-0 mx-0">
                     <input type="text" name="coupon_code" class="mb-2 px-3 w-75" style="padding-top: 6px; padding-bottom: 6px;"
-                        value="{{ old('coupon_code', request('coupon_code')) }}">
+                        value="{{ old('coupon_code', $prevForm['coupon_code']) }}">
                     <button class="ms-2 oceans-gaming-default-button ps-3" style="background-color: #95ADBD;">
                         <span> Apply </span>
                     </button>

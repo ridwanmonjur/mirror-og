@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
+use App\Models\Wallet;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -114,18 +115,11 @@ class PaymentService
                 foreach ($updatedDiscounts as $discount) {
                     $amount = $discount['amount'];
 
-                    $userWallet = DB::table('user_wallet')->where('user_id', $discount['user_id'])->first();
+                    $userWallet = Wallet::retrieveOrCreateCache($discount['user_id']);
 
                     if ($userWallet) {
-                        DB::table('user_wallet')
-                            ->where('user_id', $discount['user_id'])
-                            ->update(['usable_balance' => $userWallet->usable_balance + $amount]);
-                    } else {
-                        DB::table('user_wallet')->insert([
-                            'usable_balance' => $amount,
-                            'user_id' => $discount['user_id']
-                        ]);
-                    }
+                        $userWallet->update(['usable_balance' => $userWallet->usable_balance + $amount]);
+                    } 
                 }
                 DB::commit();
             } catch (Exception $e) {

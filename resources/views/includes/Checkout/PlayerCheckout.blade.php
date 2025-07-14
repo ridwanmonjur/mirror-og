@@ -1,3 +1,4 @@
+
 <div class="row px-5 mb-2" id="payment-discount-view">
     <div class="modal fade" id="discountModal" tabindex="-1"
         aria-labelledby="#discountModal" aria-hidden="true">
@@ -14,16 +15,17 @@
                             <h5 class="mt-4 mb-3 text-success">Pay using your remaining wallet funds!</h5>
                             <small> Avoid paying for this event by using funds from your wallet.</small>
                             <br><br>
-                            @if ($discountStatusEnums['ABSENT'] == $discountStatus || $discountStatusEnums['INVALID'] == $discountStatus)
+                            @if ($walletStatusEnums['ABSENT'] == $walletStatus || $walletStatusEnums['INVALID'] == $walletStatus)
                                 <br> <br>
                                 <p class="text-center text-red">Ooops, no wallet fund </p> 
                             @else
                                 <p> 
+
                                     You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> usable balance in your wallet.
-                                    @if ($discountStatusEnums['COMPLETE'] == $discountStatus )
+                                    @if ($walletStatusEnums['COMPLETE'] == $walletStatus )
                                         <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your wallet. </span>
                                         
-                                    @elseif ($discountStatusEnums['PARTIAL'] == $discountStatus )
+                                    @elseif ($walletStatusEnums['PARTIAL'] == $walletStatus )
                                         @if ( $paymentLowerMin < $payment_amount_min )
                                             <span> You can apply <span>RM {{$payment_amount_min}}</span> towards your fees. </span>
                                         @endif
@@ -32,14 +34,15 @@
                                     @endif
                                 </p>
                                 <div class="text-center mx-auto input-group mt-4 w-75">
-                                    <input type="hidden" id="amount" name="amount" value="{{ $amount }}">
+                                    <input type="hidden" id="amount" name="amount" value="{{ $payment_amount_min }}">
                                     <input type="hidden" id="teamId" name="teamId" value="{{ $teamId }}">
-                                    <input type="hidden" id="member_id" name="member_id" value="{{ $memberId }}">
-                                    <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $joinEventId }}">
-                                    <input type="hidden" id="payment_intent_id" name="payment_intent_id"> 
+                                    <input type="hidden" id="member_id" name="member_id" value="{{ $prevForm['memberId'] }}">
+                                    <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $prevForm['joinEventId'] }}">
+                                    <input type="hidden" id="payment_intent_id" name="payment_intent_id">
+                                    <input type="hidden" id="coupon_code" name="coupon_code" value="{{ $prevForm['coupon_code'] }}">
                                 </div>
                                 <div class="mx-auto text-center">
-                                    @if ($paymentLowerMin < $payment_amount_min)
+                                    @if ($paymentLowerMin <= $payment_amount_min)
                                         <button 
                                             type="submit"
                                             class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
@@ -61,7 +64,7 @@
     <div class="d-none d-lg-block px-3">
     </div>
     <div class="col-12 col-xl-8 px-3">
-        <h5 class="my-0">Payment Method</h5>
+        <h5 class="my-0 py-0">Payment Method</h5>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
                 {{ session('errorCheckout') }}
@@ -87,9 +90,9 @@
                         </div>
                         <div class="col-12 col-lg-6">
                             <div id="discount-element" class="mt-3 d-none">
-                                @if ($discountStatusEnums['ABSENT'] == $discountStatus) 
+                                @if ($walletStatusEnums['ABSENT'] == $walletStatus) 
                                     You have no discount to apply.
-                                @elseif ($discountStatusEnums['INVALID'] == $discountStatus)
+                                @elseif ($walletStatusEnums['INVALID'] == $walletStatus)
                                         You have RM {{$user_wallet->current_balance}} net balance and RM {{$user_wallet->usable_balance}} usable balance in your wallet to apply towards this event.
                                         But this is not enough for the next transaction.
                                 @else
@@ -241,28 +244,59 @@
             <div class="ms-3">Tier: <span id="paymentTier">{{ $event->tier?->eventTier }}</span></div>
             <div class="ms-3">Region: <span id="paymentTier">South East Asia (SEA)</span></div>
             <br>
-            <div class=" d-flex justify-content-between w-75">
+             {{-- @php
+                dd($fee['finalFee'] );
+            @endphp  --}}
+             <div class="mt-2 d-flex justify-content-between w-75">
                 <h5> TOTAL </h5>
-                <h5 id="paymentTotal">RM
-                    <span id="actualPaymentTable" class="transform-number me-1">{{ $amount }} </span>
-                </h5>
+                <h5 id="paymentTotal">
+                @if ($fee['discountFee'] > 0)
+                    <span class=" me-1" style="text-decoration: line-through;">
+                        RM {{ number_format($fee['totalFee'], 2)  }}
+                    </span>
+                    <span >
+                        RM {{ number_format($fee['finalFee'], 2) }}
+                    </span>
+                @else
+                    <span>
+                        RM {{ number_format($fee['finalFee'], 2) }}
+                    </span>
+                @endif
+            </h5>
             </div>
             <div>Promo Code</div>
             <form method="POST" class="row mx-0 px-0 mb-1">
                 @csrf
                 <div class="form-group mb-0 px-0 mx-0">
                     <input type="hidden" name="teamId" value="{{ $prevForm['id'] }}">
+                    <input type="hidden" id="amount" name="amount" value="{{ $amount }}">
                     <input type="hidden" name="teamName" value="{{ $prevForm['teamName'] }}">
                     <input type="hidden" name="joinEventId" value="{{ $prevForm['joinEventId'] }}">
                     <input type="hidden" name="id" value="{{ $prevForm['event_details_id'] }}">
                     <input type="hidden" name="memberId" value="{{$prevForm['memberId']}}">
                     <input type="text" name="coupon_code" class="mb-2 px-3 w-75" style="padding-top: 6px; padding-bottom: 6px;"
-                        value="{{ old('coupon_code', request('coupon_code')) }}">
+                        value="{{ $prevForm['coupon_code'] }}">
                     <button class="ms-2 oceans-gaming-default-button ps-3" style="background-color: #95ADBD;">
                         <span> Apply </span>
                     </button>
                 </div>
             </form>
+            
+            {{-- @php
+                dd($couponStatus);
+            @endphp --}}
+
+            @if (isset($couponStatus['error']) && $couponStatus['error'])
+                <div class="text-red mb-2">
+                    {{ $couponStatus['error'] }}
+                </div>
+            @endif
+            
+            @if (isset($couponStatus['success']) && $couponStatus['success'])
+                <div class="text-success mb-2">
+                    We have applied your coupon: {{$prevForm['coupon_code']}} successfully!
+                </div>
+            @endif
             <div class="d-flex justify-content-center w-75">
           
                     <a href="{{ route('participant.register.manage', ['id' => $teamId]) }}" class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2 submit-texts d-block"> Cancel </a>

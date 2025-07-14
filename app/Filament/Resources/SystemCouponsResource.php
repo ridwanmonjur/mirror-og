@@ -34,9 +34,11 @@ class SystemCouponsResource extends Resource
                     Forms\Components\TextInput::make('amount')
                         ->required()
                         ->numeric()
-                        ->prefix('RM ')
                         ->minValue(0)
-                        ->maxValue(9999999.99)
+                        ->prefix(fn (callable $get) => $get('discount_type') === 'percent' ? '' : 'RM ')
+                        ->suffix(fn (callable $get) => $get('discount_type') === 'percent' ? '%' : '')
+                        ->maxValue(fn (callable $get) => $get('discount_type') === 'percent' ? 100 : 9999999.99)
+                        ->live()
                         ->columnSpan(1),
                     
                     Forms\Components\Select::make('for_type')
@@ -62,9 +64,10 @@ class SystemCouponsResource extends Resource
                         ->label('Discount Type')
                         ->options([
                             'sum' => 'Sum',
-                            'percentage' => 'Percentage',
+                            'percent' => 'Percent',
                         ])
                         ->default('sum')
+                        ->live()
                         ->columnSpan(1),
                     
                     Forms\Components\DateTimePicker::make('expires_at')
@@ -111,7 +114,11 @@ class SystemCouponsResource extends Resource
                 
                 
                 Tables\Columns\TextColumn::make('amount')
-                    ->prefix('RM '),
+                    ->formatStateUsing(fn ($record) => 
+                        $record->discount_type === 'percent' 
+                            ? $record->amount . '%' 
+                            : 'RM ' . $record->amount
+                    ),
                 
                 Tables\Columns\TextColumn::make('for_type')
                     ->label('Role Type')
@@ -131,7 +138,7 @@ class SystemCouponsResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'sum' => 'success',
-                        'percentage' => 'info',
+                        'percent' => 'info',
                         default => 'gray',
                     }),
                 
