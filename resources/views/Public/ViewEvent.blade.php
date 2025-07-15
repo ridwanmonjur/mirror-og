@@ -339,27 +339,24 @@
                                     >
                                             <span>Joined</span>
                                     </a>
-                                    <br><br>
                                     @if ($existingJoint->join_status == "pending")
 
-                                        <a class="text-success" href="{{route('participant.register.manage',
+                                        <a class="text-success d-block mt-3 fw-bold w-100" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
                                             )}}">
-                                            <svg class="me-1" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            </svg>
-                                            <u class="fs-7"> Click to confirm your registration.</u>
+                                           
+                                            <span class="fs-7"> Click to confirm your registration.</span>
                                         </a>
                                     @elseif  ($existingJoint->join_status == "confirmed")
-                                        <a class="mt-2 fs-7 text-success" href="{{route('participant.register.manage',
+                                        <a class="mt-2 fs-7 text-success fw-bold" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
-                                            )}}"><u>Click to manage your registration.</u>
+                                            )}}"><span class="fs-7">Click to manage your registration.</span>
                                         </a>
 
                                     @elseif  ($existingJoint->join_status == "canceled")
-                                        <a class="mt-2" href="{{route('participant.register.manage',
+                                        <a class="mt-2 fw-bold" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
-                                            )}}"><u>Your registration is canceled. Click to view.</u>
+                                            )}}"><span class="fs-7">Your registration is canceled. Click to view.</span>
                                         </a>
                                     @endif
 
