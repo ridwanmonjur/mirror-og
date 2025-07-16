@@ -16,7 +16,8 @@ export default defineConfig({
                 'resources/js/alpine/adminBrackets.js',
                 'resources/js/alpine/participant.js',
                 'resources/js/alpine/notifications.js',
-                'resources/js/custom/share.js'
+                'resources/js/custom/share.js',
+                'resources/js/custom/filament-analytics.js'
             ],
             refresh: true,
         }),

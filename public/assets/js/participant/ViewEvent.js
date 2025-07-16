@@ -598,3 +598,4 @@ function checkIfLoading(event) {
 
     return true;
  }
+

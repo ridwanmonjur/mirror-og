@@ -62,10 +62,10 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         userName: hiddenElement.dataset.userName,
         stripeCustomerId: hiddenElement.dataset.stripeCustomerId,
         eventId: hiddenElement.dataset.eventId,
+        couponCode: hiddenElement.dataset.couponCode,
         stripeKey: hiddenElement.dataset.stripeKey,
         stripeReturnUrl: hiddenElement.dataset.stripeReturnUrl,
         stripeIntentUrl: hiddenElement.dataset.stripeIntentUrl
-
     } : {};
 
     document.querySelectorAll('.transform-number').forEach((element) => {
@@ -188,7 +188,8 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                     name: hiddenVars['userName'],
                     stripe_customer_id: hiddenVars['stripeCustomerId'],
                     metadata : {
-                        eventId: hiddenVars['eventId']
+                        eventId: hiddenVars['eventId'],
+                        couponCode: hiddenVars['couponCode'] || null
                     }
                 })
             });

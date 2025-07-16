@@ -11,7 +11,7 @@
 
     <main class="px-1"   class="row" >
         <div class="row my-2 px-5 py-2"> 
-            <h3 class="col-12 col-md-6 my-2 py-0 text-start">My Coupons</h3>
+            <h3 class="col-12 col-md-6 my-2 py-0 text-start"></h3>
             <a 
                 href="{{route('wallet.dashboard')}}" 
                 style="z-index: 99;"
@@ -27,7 +27,9 @@
         </div>
         
         
-        <div class="d-none mx-auto px-0 container-main min-h-85vh"
+        <div @class(["d-none mx-auto px-0 container-main", 
+            "min-h-85vh" => !isset($coupons[4])
+        ])
             id="wallet-view-coupons"
         >
             <div class="center-container mx-auto" 

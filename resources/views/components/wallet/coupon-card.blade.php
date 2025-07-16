@@ -20,8 +20,8 @@
         <div class="me-2">
             <div class="coupon  position-relative my-1 ">
                 <div class=" w-100 row px-0 py-0 ">
-                    <div class="col-lg-4  d-none d-lg-flex flex-column justify-content-center py-0 ps-1 pe-1">
-                        <h5 class="text-white position-relative my-2 py-0">
+                    <div class="col-lg-5 col-xl-4 d-none d-lg-flex flex-column justify-content-center py-0 ps-1 pe-1">
+                        <h5 class="text-white fs-7 position-relative my-2 py-0 " style="z-index: 4;">
                             RM {{ $coupon['amount'] }} 
                             @if ($redeemCount)
                                 <small class="bg-secondary badge badge-secondary  px-1 position-absolute right-0 ms-1 rounded-circle " style="top: 0px; font-size: 12px;">x{{ $redeemCount }}</small>
@@ -29,7 +29,7 @@
                         </h5>
                         <small class="text-light fst-italic">{{ $coupon['expires_at_human'] }}</small>
                     </div>
-                    <div class="coupon__details py-2  col-lg-8 pe-0 ">
+                    <div class="coupon__details py-2  col-lg-7 col-xl-8 pe-0 ">
                         <div class="py-0 my-0 fs-5 d-lg-none text-light mb-2">
                             <u>RM
                                 {{ $coupon['amount'] }} ({{ $coupon['expires_at_human'] }}) <br>

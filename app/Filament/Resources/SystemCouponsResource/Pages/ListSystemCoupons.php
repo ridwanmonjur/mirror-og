@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\ParticipantCouponsResource\Pages;
+namespace App\Filament\Resources\SystemCouponsResource\Pages;
 
-use App\Filament\Resources\ParticipantCouponsResource;
+use App\Filament\Resources\SystemCouponsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 
-class ListParticipantCoupons extends ListRecords
+class ListSystemCoupons extends ListRecords
 {
-    protected static string $resource = ParticipantCouponsResource::class;
+    protected static string $resource = SystemCouponsResource::class;
 
     protected function paginateTableQuery(Builder $query): CursorPaginator
     {
