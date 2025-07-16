@@ -14,7 +14,7 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 
 ## Architecture
 - **Backend**: Laravel 10 with JWT authentication
-- **Frontend**: Vite + Alpine.js + Bootstrap 5
+- **Frontend**: Vite + Petite Vue + Alpine.js + Bootstrap 5
 - **Admin**: Filament 3.2 with Livewire 3.5
 - **Database**: MySQL with Redis caching
 - **Payments**: Stripe for transactions
@@ -45,6 +45,7 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 - Google OAuth and Steam API credentials
 
 ## Development Notes
+- Must log errors using Logger::log (backend) or console.error (frontend) in all try catches 
 - When creating/updating database tables in laravel migration:
   * Check table existence/non-existence in create operations
   * In update operations, verify both table and column do not exist before proceeding
@@ -52,52 +53,4 @@ Driftwood is a comprehensive community esports platform that facilitates competi
   * Always check one email event live to understand email sending process
 
 ## Analytics Implementation
-The platform includes comprehensive analytics tracking using Google Tag Manager and a custom analytics service.
-
-### Configuration
-- **Google Tag Manager ID**: `AW-345473430` (via environment variable)
-- **Package**: Spatie Laravel Google Tag Manager (`spatie/laravel-googletagmanager`)
-- **Environment Variables**: 
-  - `GOOGLE_TAG_MANAGER_ID`
-  - `GOOGLE_TAG_MANAGER_ENABLED`
-  - `VITE_GOOGLE_TAG_MANAGER_ID`
-  - `VITE_GOOGLE_TAG_MANAGER_ENABLED`
-
-### Analytics Service (`resources/js/custom/analytics.js`)
-A comprehensive JavaScript service that provides:
-- **Dual Support**: Google Tag Manager (primary) + Direct Google Analytics (fallback)
-- **Event Tracking**: Custom events with detailed parameters
-- **Social Interaction Tracking**: Follow/unfollow actions with context
-- **Form Submission Tracking**: Form interactions and submissions
-- **Page View Tracking**: Enhanced page views with event data
-- **User Engagement**: Engagement metrics and conversion tracking
-- **Event Registration**: Tournament registration tracking with entry fees
-
-### Key Features
-- **Event Card Clicks**: Tracks user interactions with event cards including tier, type, esport, and location data
-- **Social Features**: Follow interactions, social sharing with event context
-- **Tournament Data**: Registration tracking, entry fees, event details
-- **User Attribution**: Custom dimensions for user_id, event_id, tier_id, type_id, game_id
-- **Real-time Tracking**: Immediate event pushing to dataLayer
-
-### Implementation Details
-- **Template Integration**: GTM includes in blade templates (`@include('googletagmanager::head')` and `@include('googletagmanager::body')`)
-- **Data Attributes**: Event cards and forms include analytics data attributes
-- **Analytics Data Element**: Uses `id="analytics-data"` for event-specific tracking
-- **Event Context**: Comprehensive event data extraction and tracking
-- **Fallback Support**: Graceful degradation when GTM is unavailable
-
-### Usage Examples
-```javascript
-// Track event card click
-window.trackEventCardClick(element);
-
-// Track social interaction
-window.trackSocialInteraction('follow', userId, 'user');
-
-// Track form submission
-window.trackFormSubmission('eventRegistration', {event_id: 123});
-
-// Track page view with event data
-window.analytics.trackPageViewWithEventData(title, path, eventData);
-```
+The platform includes comprehensive analytics tracking using Google Analytics.

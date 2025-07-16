@@ -121,6 +121,12 @@
     @include('googletagmanager::body')
     <input type="hidden" id="disputeLevelEnums" value="{{json_encode($DISPUTE_ACCESS)}}">
     @include('includes.Navbar')
+    <div class="d-none" id="analytics-data" 
+        data-event-id="{{$event->id}}"
+        data-event-name="{{ $event->eventName }}"
+        {!! $eventDataAttributes !!}
+    >
+    </div>
     @if ($isEarly)
     <div class="text-center discount-announceMent bg-primary mx-auto text-white fw-bold  ">
         <small>Save with our early bird pricing! Discount ends {{
@@ -229,7 +235,7 @@
                                                 @endguest
                                             </form>
                                             {{-- Share icon --}}
-                                        <svg
+                                            <svg
                                                 data-event-id="{{$event->id}}"
                                                 data-event-name="{{ $event->eventName }}"
                                                 {!! $eventDataAttributes !!}

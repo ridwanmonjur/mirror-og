@@ -1,37 +1,20 @@
-// Filament Analytics API - GA4 Integration for admin panel
-
-// Initialize data layer if it doesn't exist
 window.dataLayer = window.dataLayer || [];
 
-// Get GTM ID from environment
-const gtmId = import.meta.env.VITE_GOOGLE_TAG_MANAGER_ID;
 const measurementId = import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID;
 
-// Load Google Tag Manager script
-function loadGTM() {
-    console.log('🚀 Loading GTM with ID:', gtmId);
-    console.log('🎯 GA4 Measurement ID:', measurementId);
-    
-    if (gtmId && !window.gtag) {
-        // Load GTM script
+function loadGA4() {
+    if (measurementId && !window.gtag) {
         const script = document.createElement('script');
         script.async = true;
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${gtmId}`;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
         document.head.appendChild(script);
         
-        console.log('📡 GTM script loaded from:', script.src);
-        
-        // Initialize gtag
         window.dataLayer = window.dataLayer || [];
         window.gtag = function() {
             window.dataLayer.push(arguments);
         };
         
-        // Configure GTM
         window.gtag('js', new Date());
-        window.gtag('config', gtmId);
-        
-        // Also configure GA4 measurement ID
         window.gtag('config', measurementId, {
             'custom_map': {
                 'custom_dimension_1': 'event_tier',
@@ -40,62 +23,42 @@ function loadGTM() {
                 'custom_dimension_4': 'location'
             }
         });
-        
-        console.log('✅ GTM and GA4 configured successfully');
-    } else {
-        console.warn('⚠️ GTM already loaded or GTM ID missing');
     }
 }
 
-// Enhanced gtag function with error handling
 function gtag() {
     if (typeof window.gtag === 'function') {
         window.gtag.apply(window, arguments);
     } else {
-        console.warn('gtag not loaded, queuing event:', arguments);
         window.dataLayer.push(arguments);
     }
 }
 
-// Load GTM on initialization
-loadGTM();
+loadGA4();
 
 class FilamentAnalyticsAPI {
     constructor() {
         this.baseUrl = window.location.origin;
         this.isInitialized = false;
-        this.propertyId = measurementId.replace('G-', ''); // Extract property ID from measurement ID
-        this.gtmId = gtmId;
         this.measurementId = measurementId;
         this.init();
     }
 
     init() {
-        // console.log('🔧 Initializing Filament Analytics API...');
-        // console.log('🆔 Property ID:', this.propertyId);
-        // console.log('🏷️ GTM ID:', this.gtmId);
-        // console.log('📊 Measurement ID:', this.measurementId);
-        
-        // Check if we have GTM dataLayer and gtag available
         const hasDataLayer = typeof window.dataLayer !== 'undefined';
         const hasGtag = typeof window.gtag !== 'undefined';
         
         if (hasDataLayer && hasGtag) {
             this.isInitialized = true;
-            console.log('✅ Filament Analytics API initialized');
         } else if (hasDataLayer) {
             this.isInitialized = true;
-            console.log('✅ Filament Analytics API initialized');
         } else {
             this.isInitialized = false;
         }
     }
 
-
     getAnalyticsFromDataLayer() {
-        
         if (typeof window.dataLayer === 'undefined') {
-            console.warn('⚠️ DataLayer not available');
             return null;
         }
 
@@ -135,7 +98,6 @@ class FilamentAnalyticsAPI {
     }
 
     async fetchAnalyticsData() {
-        
         try {
             const analyticsData = {
                 pageViews: this.getPageViewsDataFromDataLayer(),
@@ -154,26 +116,17 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Get page views data from dataLayer
     getPageViewsDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
-            console.log({events});
-            console.log({events});
-            console.log({events});
-            console.log({events});
-            console.log({events});
             if (!events) return this.getDefaultPageViewsData();
 
-            // Count actual event_card_click events (real user interactions)
             const eventClicks = events.filter(event => event.event === 'event_card_click');
             const total = eventClicks.length;
             
-            // Simple counts - no fake estimates
-            const today = 0; // Would need timestamp analysis
-            const yesterday = 0; // Would need timestamp analysis
+            const today = 0;
+            const yesterday = 0;
 
-            // Get actual pages where events occurred
             const pageCounts = {};
             eventClicks.forEach(event => {
                 const path = event.page_url || 'unknown';
@@ -199,7 +152,6 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Default page views data
     getDefaultPageViewsData() {
         return {
             total: 0,
@@ -211,24 +163,19 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    // Get event interactions data from dataLayer
     getEventInteractionsDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
             if (!events) return this.getDefaultEventInteractionsData();
 
-            // Count actual event card clicks
             const eventClickEvents = events.filter(event => event.event === 'event_card_click');
             const totalClicks = eventClickEvents.length;
 
-            // Count actual form submissions
             const registrationEvents = events.filter(event => event.event === 'form_submit');
             const registrations = registrationEvents.length;
 
-            // Calculate actual conversion rate
             const conversionRate = totalClicks > 0 ? (registrations / totalClicks * 100).toFixed(1) : 0;
 
-            // Get actual event counts by name
             const eventCounts = {};
             eventClickEvents.forEach(event => {
                 const eventName = event.event_name || 'Unknown Event';
@@ -241,7 +188,7 @@ class FilamentAnalyticsAPI {
                 .map(([name, clicks]) => ({
                     name,
                     clicks,
-                    registrations: 0, // Would need to track actual registrations per event
+                    registrations: 0,
                     tier: eventClickEvents.find(e => e.event_name === name)?.event_tier || '',
                     type: eventClickEvents.find(e => e.event_name === name)?.event_type || '',
                     esport: eventClickEvents.find(e => e.event_name === name)?.esport_title || ''
@@ -259,7 +206,6 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Default event interactions data
     getDefaultEventInteractionsData() {
         return {
             total_clicks: 0,
@@ -269,13 +215,11 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    // Get social interactions data from dataLayer
     getSocialInteractionsDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
             if (!events) return this.getDefaultSocialInteractionsData();
 
-            // Count actual social interactions
             const socialEvents = events.filter(event => event.event === 'social_interaction');
             
             let totalFollows = 0;
@@ -290,7 +234,7 @@ class FilamentAnalyticsAPI {
             });
 
             const followRate = totalFollows > 0 ? (totalFollows / (totalFollows + totalLikes) * 100).toFixed(1) : 0;
-            const engagementRate = 0; // Would need proper engagement metrics
+            const engagementRate = 0;
 
             return {
                 total_follows: totalFollows,
@@ -306,7 +250,6 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Default social interactions data
     getDefaultSocialInteractionsData() {
         return {
             total_follows: 0,
@@ -318,25 +261,22 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    // Get form submissions data from dataLayer
     getFormSubmissionsDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
             if (!events) return this.getDefaultFormSubmissionsData();
 
-            // Count actual form submissions
             const formEvents = events.filter(event => event.event === 'form_submit');
             const totalSubmissions = formEvents.length;
-            const successfulSubmissions = 0; // Would need success/failure tracking
+            const successfulSubmissions = 0;
 
-            // Count actual form types
             const formTypes = {};
             formEvents.forEach(event => {
                 const formName = event.form_name || event.event_label || 'unknown';
                 formTypes[formName] = (formTypes[formName] || 0) + 1;
             });
 
-            const successRate = 0; // Would need proper success tracking
+            const successRate = 0;
 
             return {
                 total_submissions: totalSubmissions,
@@ -350,7 +290,6 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Default form submissions data
     getDefaultFormSubmissionsData() {
         return {
             total_submissions: 0,
@@ -360,13 +299,11 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    // Get top events data from dataLayer
     getTopEventsDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
             if (!events) return [];
 
-            // Count actual event_card_click events by their event_name
             const eventCounts = {};
             const eventClickEvents = events.filter(event => event.event === 'event_card_click');
             
@@ -385,7 +322,7 @@ class FilamentAnalyticsAPI {
                     return {
                         name,
                         participants,
-                        revenue: 0, // Would need actual revenue tracking
+                        revenue: 0,
                         tier: sampleEvent?.event_tier || '',
                         type: sampleEvent?.event_type || '',
                         esport: sampleEvent?.esport_title || '',
@@ -400,13 +337,11 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Get user engagement data from dataLayer
     getUserEngagementDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
             if (!events) return this.getDefaultUserEngagementData();
 
-            // Count actual unique users from user_id in events
             const userIds = new Set();
             const eventClickEvents = events.filter(event => event.event === 'event_card_click');
             
@@ -418,11 +353,11 @@ class FilamentAnalyticsAPI {
 
             const totalEvents = events.length;
             const activeUsers = userIds.size || 0;
-            const sessionDuration = 0; // Would need actual session tracking
-            const bounceRate = 0; // Would need actual bounce tracking
-            const pagesPerSession = 0; // Would need actual page tracking
-            const newUsers = 0; // Would need new/returning user tracking
-            const returningUsers = 0; // Would need new/returning user tracking
+            const sessionDuration = 0;
+            const bounceRate = 0;
+            const pagesPerSession = 0;
+            const newUsers = 0;
+            const returningUsers = 0;
 
             return {
                 active_users: activeUsers,
@@ -438,7 +373,6 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Default user engagement data
     getDefaultUserEngagementData() {
         return {
             active_users: 0,
@@ -450,16 +384,13 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    // Get real-time data from dataLayer
     getRealTimeDataFromDataLayer() {
         try {
             const events = this.getAnalyticsFromDataLayer();
             if (!events) return this.getDefaultRealTimeData();
 
-            // Get recent events (last 10)
             const recentEvents = events.slice(-10);
             
-            // Count actual unique users from recent events
             const recentUserIds = new Set();
             recentEvents.forEach(event => {
                 if (event.user_id) {
@@ -470,7 +401,6 @@ class FilamentAnalyticsAPI {
             const activeUsersNow = recentUserIds.size || 0;
             const currentPageViews = recentEvents.filter(event => event.event === 'event_card_click').length;
 
-            // Get actual pages from page_url in events
             const pageCounts = {};
             recentEvents.forEach(event => {
                 const path = event.page_url || 'unknown';
@@ -482,7 +412,6 @@ class FilamentAnalyticsAPI {
                 .slice(0, 5)
                 .map(([path, active_users]) => ({ path, active_users }));
 
-            // Format recent events
             const formattedRecentEvents = recentEvents.map(event => ({
                 event: event.event,
                 timestamp: event.timestamp || new Date().toISOString(),
@@ -506,7 +435,6 @@ class FilamentAnalyticsAPI {
         }
     }
 
-    // Default real-time data
     getDefaultRealTimeData() {
         return {
             active_users_now: 0,
@@ -516,7 +444,6 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    // Get default analytics data structure
     getDefaultAnalyticsData() {
         return {
             pageViews: this.getDefaultPageViewsData(),
@@ -529,14 +456,10 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    
-
-    // Refresh analytics data
     async refreshData() {
         return await this.fetchAnalyticsData();
     }
 
-    // Check if analytics service is available
     isAnalyticsAvailable() {
         return this.isInitialized && (
             typeof window.dataLayer !== 'undefined' || 
@@ -544,20 +467,16 @@ class FilamentAnalyticsAPI {
         );
     }
 
-    // Get connection status
     getConnectionStatus() {
         return {
             analytics_service: this.isAnalyticsAvailable(),
-            gtm_available: typeof window.dataLayer !== 'undefined',
+            dataLayer_available: typeof window.dataLayer !== 'undefined',
             gtag_available: typeof window.gtag !== 'undefined',
-            property_id: this.propertyId,
-            gtm_id: this.gtmId,
             measurement_id: this.measurementId
         };
     }
 }
 
-// Create and initialize the Filament Analytics API
 const filamentAnalytics = new FilamentAnalyticsAPI();
 
 window.filamentAnalytics = filamentAnalytics;

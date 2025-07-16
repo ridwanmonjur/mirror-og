@@ -599,36 +599,3 @@ function checkIfLoading(event) {
     return true;
  }
 
-function initializeAnalytics() {
-    if (window.analytics) {
-        const analyticsData = document.getElementById('analytics-data');
-        
-        if (analyticsData) {
-            const eventId = analyticsData.dataset.eventId;
-            const eventName = analyticsData.dataset.eventName;
-            const entryFee = analyticsData.dataset.entryFee;
-            
-            // Track page view with all available event data
-            window.analytics.trackPageViewWithEventData(
-                'Event View - ' + eventName,
-                window.location.href,
-                analyticsData.dataset
-            );
-            
-            // Track event registration when form is submitted
-            const joinForm = document.querySelector('form[name="joinForm"]');
-            if (joinForm) {
-                joinForm.addEventListener('submit', function(e) {
-                    window.analytics.trackEventRegistration(
-                        parseInt(eventId),
-                        eventName,
-                        parseInt(entryFee || 0),
-                        analyticsData.dataset
-                    );
-                });
-            }
-        }
-    }
-}
-
-addOnLoad(initializeAnalytics);

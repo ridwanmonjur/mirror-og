@@ -1,34 +1,34 @@
-// Enhanced GTM Click Tracking - Simplified without localStorage counts
-// This implementation uses GTM's data layer and gtag properly
-
-// Initialize data layer if it doesn't exist
 window.dataLayer = window.dataLayer || [];
 
-// Get GTM ID from environment
-const gtmId = import.meta.env.VITE_GOOGLE_TAG_MANAGER_ID;
+const ga4MeasurementId = import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID;
 
-// Load Google Tag Manager script
-function loadGTM() {
-    if (gtmId && !window.gtag) {
-        // Load GTM script
+function loadGA4() {
+    if (ga4MeasurementId && !window.gtag) {
         const script = document.createElement('script');
         script.async = true;
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${gtmId}`;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`;
         document.head.appendChild(script);
         
-        // Initialize gtag
         window.dataLayer = window.dataLayer || [];
         window.gtag = function() {
             window.dataLayer.push(arguments);
         };
         
-        // Configure GTM
         window.gtag('js', new Date());
-        window.gtag('config', gtmId);
+        window.gtag('config', ga4MeasurementId, {
+            // Modern approach - no custom_map needed
+            send_page_view: true,
+            // Optional: Configure enhanced measurement
+            enhanced_measurement: {
+                scrolls: true,
+                clicks: true,
+                file_downloads: true,
+                page_changes: true
+            }
+        });
     }
 }
 
-// Enhanced gtag function with error handling
 function gtag() {
     if (typeof window.gtag === 'function') {
         window.gtag.apply(window, arguments);
@@ -38,58 +38,38 @@ function gtag() {
     }
 }
 
-// Load GTM on initialization
-loadGTM();
+loadGA4();
 
-// Simplified GTM Analytics class
-class GTMAnalytics {
+class GA4Analytics {
     constructor() {
         this.sessionId = this.generateSessionId();
-        this.initializeGTM();
+        this.initializeGA4();
     }
 
-    // Generate unique session ID
     generateSessionId() {
         return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
 
-    // Initialize GTM configuration
-    initializeGTM() {
-        // Push initial configuration to data layer
+    initializeGA4() {
         window.dataLayer.push({
             'event': 'analytics_initialized',
-            'analytics_version': '2.0',
+            'analytics_version': '3.0',
             'session_id': this.sessionId,
             'initialization_time': new Date().toISOString()
         });
-
-        // Get measurement ID from environment
-        const measurementId = import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID;
-        
-        // Set up custom dimensions if needed
-        gtag('config', measurementId, {
-            'custom_map': {
-                'custom_dimension_1': 'event_tier',
-                'custom_dimension_2': 'event_type',
-                'custom_dimension_3': 'esport_title',
-                'custom_dimension_4': 'location'
-            }
-        });
     }
 
-    // Get session ID
     getSessionId() {
         return this.sessionId;
     }
 }
 
-// Initialize analytics
-const gtmAnalytics = new GTMAnalytics();
+const ga4Analytics = new GA4Analytics();
 
-// Enhanced event tracking function
+// Modern event tracking functions
 window.trackEventCardClick = function(element) {
+    console.log("Event card click tracked");
     try {
-        // Extract event data from element
         const eventData = {
             eventId: element.dataset.eventId,
             eventName: element.dataset.eventName,
@@ -103,14 +83,13 @@ window.trackEventCardClick = function(element) {
             userId: element.dataset.userId
         };
 
-        // Prepare enhanced event data for GTM
-        const enhancedEventData = {
-            event: 'event_card_click',
+        
+
+        // Modern GA4 event with direct parameter names
+        gtag('event', 'event_card_click', {
             event_category: 'event_interaction',
-            event_action: 'click',
-            event_label: eventData.eventName || 'unknown_event',
-            
-            // Custom event parameters
+            event_label: eventData.eventName,
+            // Direct parameter mapping - matches PHP service expectations
             event_id: eventData.eventId,
             event_name: eventData.eventName,
             event_tier: eventData.eventTier,
@@ -120,36 +99,15 @@ window.trackEventCardClick = function(element) {
             tier_id: eventData.tierId,
             type_id: eventData.typeId,
             game_id: eventData.gameId,
-            user_id: eventData.userId,
-            
-            // Session data
-            session_id: gtmAnalytics.sessionId,
-            timestamp: new Date().toISOString(),
-            
-            // Additional context
-            page_url: window.location.href,
-            page_title: document.title,
-            referrer: document.referrer
-        };
-
-        // Push to data layer for GTM
-        window.dataLayer.push(enhancedEventData);
-
-        // Also send via gtag for immediate tracking
-        gtag('event', 'event_card_click', {
-            event_category: 'event_interaction',
-            event_label: eventData.eventName,
-            custom_parameter_1: eventData.eventTier,
-            custom_parameter_2: eventData.eventType,
-            custom_parameter_3: eventData.esportTitle,
-            custom_parameter_4: eventData.location
+            user_id: eventData.userId
         });
 
-        // Track specific metrics
+        // Send additional contextual events
         if (eventData.eventTier) {
             gtag('event', 'tier_selection', {
                 event_category: 'tier_interaction',
-                event_label: eventData.eventTier
+                event_label: eventData.eventTier,
+                event_tier: eventData.eventTier
             });
         }
 
@@ -174,36 +132,104 @@ window.trackEventCardClick = function(element) {
             });
         }
 
-        // Log for debugging
-        console.log('Event tracked:', enhancedEventData);
+        console.log('Event card click tracked:', eventData);
 
     } catch (error) {
-        console.error('Error tracking event:', error);
+        console.error('Error tracking event card click:', error);
         
-        // Send error event to GTM
         window.dataLayer.push({
             event: 'tracking_error',
             error_message: error.message,
-            error_stack: error.stack,
+            error_type: 'event_card_click',
             timestamp: new Date().toISOString()
         });
     }
 };
 
-// Additional tracking functions
-window.trackSocialInteraction = function(action, target, targetType = 'user') {
-    const eventData = {
-        event: 'social_interaction',
-        event_category: 'social',
-        event_action: action,
-        event_label: `${action}_${targetType}`,
-        social_action: action,
-        social_target: target,
-        social_type: targetType,
-        timestamp: new Date().toISOString()
-    };
+window.trackEventViewFromDiv = function(element) {
+    console.log("Event view tracked");
+    try {
+        const eventData = {
+            eventId: element.dataset.eventId,
+            eventName: element.dataset.eventName,
+            eventTier: element.dataset.eventTier,
+            eventType: element.dataset.eventType,
+            esportTitle: element.dataset.esportTitle,
+            location: element.dataset.location,
+            tierId: element.dataset.tierId,
+            typeId: element.dataset.typeId,
+            gameId: element.dataset.gameId,
+            userId: element.dataset.userId
+        };
 
-    window.dataLayer.push(eventData);
+       
+
+        // Modern GA4 event - matches your PHP service expectations exactly
+        gtag('event', 'page_view', {
+            event_category: 'event_interaction',
+            event_label: eventData.eventName,
+            // These parameter names match your PHP service
+            event_id: eventData.eventId,
+            event_name: eventData.eventName,
+            event_tier: eventData.eventTier,
+            event_type: eventData.eventType,
+            esport_title: eventData.esportTitle,
+            location: eventData.location,
+            tier_id: eventData.tierId,
+            type_id: eventData.typeId,
+            game_id: eventData.gameId,
+            user_id: eventData.userId
+        });
+
+        // if (eventData.eventTier) {
+        //     gtag('event', 'tier_view', {
+        //         event_category: 'tier_interaction',
+        //         event_label: eventData.eventTier,
+        //         event_tier: eventData.eventTier,
+        //         esport_title: eventData.esportTitle,
+        //         location: eventData.location
+        //     });
+        // }
+
+        // if (eventData.eventType) {
+        //     gtag('event', 'type_selection', {
+        //         event_category: 'type_interaction',
+        //         event_label: eventData.eventType
+        //     });
+        // }
+
+        // if (eventData.esportTitle) {
+        //     gtag('event', 'esport_selection', {
+        //         event_category: 'esport_interaction',
+        //         event_label: eventData.esportTitle
+        //     });
+        // }
+
+        // if (eventData.location) {
+        //     gtag('event', 'location_selection', {
+        //         event_category: 'location_interaction',
+        //         event_label: eventData.location
+        //     });
+        // }
+
+        cosnsole.log({eventData});
+
+        console.log('Event view tracked:', eventData);
+
+    } catch (error) {
+        console.error('Error tracking event view:', error);
+        
+        window.dataLayer.push({
+            event: 'tracking_error',
+            error_message: error.message,
+            error_type: 'event_view',
+            timestamp: new Date().toISOString()
+        });
+    }
+};
+
+window.trackSocialInteraction = function(action, target, targetType = 'user') {
+
     
     gtag('event', 'social_interaction', {
         event_category: 'social',
@@ -214,18 +240,9 @@ window.trackSocialInteraction = function(action, target, targetType = 'user') {
     });
 };
 
+// Form submission tracking
 window.trackFormSubmission = function(formName, additionalParams = {}) {
-    const eventData = {
-        event: 'form_submit',
-        event_category: 'form',
-        event_action: 'submit',
-        event_label: formName,
-        form_name: formName,
-        timestamp: new Date().toISOString(),
-        ...additionalParams
-    };
-
-    window.dataLayer.push(eventData);
+    
     
     gtag('event', 'form_submit', {
         event_category: 'form',
@@ -235,58 +252,38 @@ window.trackFormSubmission = function(formName, additionalParams = {}) {
     });
 };
 
-// New utility functions for GA4 data access
-window.getEventCounts = () => {
-    console.log('Event counts are stored in GA4. Use GA4 reporting API or interface to access aggregated data.');
-    return null;
-};
+// Utility functions
+window.getSessionId = () => ga4Analytics.getSessionId();
 
-window.resetEventCounts = () => {
-    console.log('Event counts are managed by GA4. Cannot reset from client-side.');
-    return null;
-};
-
-window.getTierCount = (tier) => {
-    console.log(`Tier counts for '${tier}' are stored in GA4. Use GA4 reporting to access this data.`);
-    return null;
-};
-
-window.getTypeCount = (type) => {
-    console.log(`Type counts for '${type}' are stored in GA4. Use GA4 reporting to access this data.`);
-    return null;
-};
-
-window.getEsportCount = (esport) => {
-    console.log(`Esport counts for '${esport}' are stored in GA4. Use GA4 reporting to access this data.`);
-    return null;
-};
-
-window.getLocationCount = (location) => {
-    console.log(`Location counts for '${location}' are stored in GA4. Use GA4 reporting to access this data.`);
-    return null;
-};
-
-// New function to get session ID
-window.getSessionId = () => gtmAnalytics.getSessionId();
-
-// Page visibility tracking for better analytics
+// Page visibility tracking
 document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
         window.dataLayer.push({
             event: 'page_hidden',
             timestamp: new Date().toISOString(),
-            session_id: gtmAnalytics.sessionId
+            session_id: ga4Analytics.sessionId
         });
     } else {
         window.dataLayer.push({
             event: 'page_visible',
             timestamp: new Date().toISOString(),
-            session_id: gtmAnalytics.sessionId
+            session_id: ga4Analytics.sessionId
         });
     }
 });
 
-// Export for module usage
+// Enhanced error tracking
+window.addEventListener('error', function(error) {
+    window.dataLayer.push({
+        event: 'javascript_error',
+        error_message: error.message,
+        error_filename: error.filename,
+        error_lineno: error.lineno,
+        error_colno: error.colno,
+        timestamp: new Date().toISOString()
+    });
+});
+
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { gtmAnalytics };
+    module.exports = { ga4Analytics };
 }
