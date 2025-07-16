@@ -25,7 +25,20 @@
         style="background-color: rgba(255, 255, 255, 0.7);"
         
     >
-        <a class="d-block" href="/event/{{ $event['id'] }}/{{$event->slug}}" title="Event {{$event->slug}}">
+        <a class="d-block" onclick="window.trackEventCardClick(this)" 
+            data-event-id="{{ $event['id'] }}" 
+            data-event-name="{{ $event->eventName }}"
+            @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif
+            @if($event->type?->eventType) data-event-type="{{ $event->type->eventType }}" @endif
+            @if($event->game?->gameTitle) data-esport-title="{{ $event->game->gameTitle }}" @endif
+            @if($event->venue) data-location="{{ $event->venue }}" @endif
+            @if($event->tier?->id) data-tier-id="{{ $event->tier->id }}" @endif
+            @if($event->type?->id) data-type-id="{{ $event->type->id }}" @endif
+            @if($event->game?->id) data-game-id="{{ $event->game->id }}" @endif
+            @if($event->user?->id) data-user-id="{{ $event->user->id }}" @endif
+            href="/event/{{ $event['id'] }}/{{$event->slug}}" 
+            title="Event {{$event->slug}}"
+        >
             <div style="display: flex; justify-content: center;">
                 <button  
                     @class([
@@ -166,7 +179,18 @@
                         @endif
                     @else
                         <div class="text-center mt-1">
-                            <button class="btn btn-small py-1 px-2 border-primary text-primary"> See bracket</button>
+                            <button onclick="window.trackEventCardClick(this)" 
+                                data-event-id="{{ $event['id'] }}" 
+                                data-event-name="{{ $event->eventName }}"
+                                @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif
+                                @if($event->type?->eventType) data-event-type="{{ $event->type->eventType }}" @endif
+                                @if($event->game?->gameTitle) data-esport-title="{{ $event->game->gameTitle }}" @endif
+                                @if($event->user?->participant?->region_name) data-location="{{ $event->user->participant->region_name }}" @endif
+                                @if($event->tier?->id) data-tier-id="{{ $event->tier->id }}" @endif
+                                @if($event->type?->id) data-type-id="{{ $event->type->id }}" @endif
+                                @if($event->game?->id) data-game-id="{{ $event->game->id }}" @endif
+                                @if($event->user?->id) data-user-id="{{ $event->user->id }}" @endif
+                                class="btn btn-small py-1 px-2 border-primary text-primary"> See bracket</button>
                         </div>
                     @endif
                 </div>

@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Match\ShowCheckoutRequest;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
+use App\Models\Wallet;
+
 use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
-use App\Models\RosterMember;
 use App\Models\StripeConnection;
+use App\Models\SystemCoupon;
+use App\Models\UserCoupon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
@@ -17,9 +20,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
-use App\Http\Requests\Match\DiscountCheckoutRequest;
+use App\Http\Requests\Match\WalletCheckoutRequest;
 use App\Models\TransactionHistory;
-use Illuminate\Support\Facades\Log;
+
 
 class ParticipantCheckoutController extends Controller
 {
@@ -33,85 +36,98 @@ class ParticipantCheckoutController extends Controller
     public function showCheckout(ShowCheckoutRequest $request): RedirectResponse|View
     {
         try {
-            session()->forget(['successMessageCoupon', 'errorMessageCoupon']);
+            $user = $request->attributes->get('user');
+            $prevForm = $request->prevForm;
+            if ($request->paymentDone) {
+                $message = "100% discount achieved through coupon.";
+                session()->flash('successMessage', $message);
+                return redirect()
+                    ->route('participant.register.manage', ['id' => $prevForm['id'], 'scroll' => $request->joinEventId])
+                    ->with('successMessage', $message)
+                    ->with('scroll', $request->joinEventId);
+    
+            }
 
+            $fee = $request->fee; 
             $user = $request->attributes->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
 
-            $user_wallet = DB::table('user_wallet')->where('user_id', $user->id)->first();
+            $user_wallet = Wallet::retrieveOrCreateCache($user->id);
 
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
                 'customer' => $user->stripe_customer_id,
             ]);
 
-            $discountStatusEnums = config('constants.DISCOUNT_STATUS');
-            $discountStatus = is_null($user_wallet) || $user_wallet?->usable_balance < 0 ? $discountStatusEnums['ABSENT'] : $discountStatusEnums['COMPLETE'];
-            $payment_amount_min = $pendingAfterDiscount = 0.0;
-            if ($discountStatus != $discountStatusEnums['ABSENT']) {
-                $payment_amount_min = $request->amount;
-                if ($user_wallet->usable_balance < $request->amount) {
+            $walletStatusEnums = config('constants.DISCOUNT_STATUS');
+            $walletStatus = is_null($user_wallet) || $user_wallet?->usable_balance < 0 ? $walletStatusEnums['ABSENT'] : $walletStatusEnums['COMPLETE'];
+            $payment_amount_min = $pendingAfterWallet = 0.0;
+            if ($walletStatus != $walletStatusEnums['ABSENT']) {
+                $payment_amount_min = $fee['finalFee'];
+                if ($user_wallet->usable_balance < $payment_amount_min) {
                     $payment_amount_min = min($user_wallet->usable_balance, $request->total - $request->participantPaymentSum - config('constants.STRIPE.MINIMUM_RM'));
 
-                    $discountStatus = $discountStatusEnums['PARTIAL'];
-                    $pendingAfterDiscount = $request->total - ($request->participantPaymentSum + $payment_amount_min);
-                    if ($pendingAfterDiscount < config('constants.STRIPE.MINIMUM_RM')) {
-                        $discountStatus = $discountStatusEnums['INVALID'];
+                    $walletStatus = $walletStatusEnums['PARTIAL'];
+                    $pendingAfterWallet = $request->total - ($request->participantPaymentSum + $payment_amount_min);
+                    if ($pendingAfterWallet < config('constants.STRIPE.MINIMUM_RM')) {
+                        $walletStatus = $walletStatusEnums['INVALID'];
                     }
                 }
             }
 
             return view('Participant.CheckoutEvent', [
                 'teamId' => $request->teamId,
-                'amount' => $request->amount,
+                'amount' => number_format($request->amount, 2),
                 'teamName' => $request->teamName,
                 'joinEventId' => $request->joinEventId,
                 'memberId' => $request->memberId,
                 'event' => $request->event,
                 'user_wallet' => $user_wallet,
                 'isUser' => true,
+                'fee'=> $fee,
+                'couponStatus' => $request->couponStatus,
+                'prevForm' => $prevForm,
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
-                'payment_amount_min' => $payment_amount_min,
-                'discountStatusEnums' => $discountStatusEnums,
-                'discountStatus' => $discountStatus,
+                'payment_amount_min' => number_format($payment_amount_min),
+                'walletStatusEnums' => $walletStatusEnums,
+                'walletStatus' => $walletStatus,
                 'paymentLowerMin' => config('constants.STRIPE.MINIMUM_RM'),
             ]);
         } catch (Exception $e) {
+            session()->flash('errorMessage', $e->getMessage());
             return back()->with('errorMessage', $e->getMessage())->with('scroll', $request->joinEventId);
         }
     }
 
-    public function walletCheckout(DiscountCheckoutRequest $request)
+    public function walletCheckout(WalletCheckoutRequest $request)
     {
         $user = $request->attributes->get('user');
         DB::beginTransaction();
         try {
+
             $userWallet = $request->attributes->get('user_wallet');
-            $newAmount = $request->attributes->get('new_amount_after_discount');
+            $newAmount = $request->attributes->get('stripe_after_wallet');
             $isCompletePayment = $request->attributes->get('complete_payment');
             $regStatus = $request->getStatus();
+            $transaction = null;
             $isNormalReg = $regStatus == config('constants.SIGNUP_STATUS.NORMAL');
             $event = $request->event;
+            $pending_total_after_wallet = $request->attributes->get('pending_total_after_wallet');
 
-            $pending_total_after_discount = $request->attributes->get('pending_total_after_discount');
-            $walletAmount = $userWallet->usable_balance - $request->discount_applied_amount;
-            $currentAmount = $userWallet->current_balance - $request->discount_applied_amount;
-            $transaction = null;
-            DB::table('user_wallet')
-                ->where('user_id', $user->id)
-                ->update([
-                    'usable_balance' => $walletAmount,
-                    'current_balance' => $currentAmount,
-                ]);
+            $walletAmount = $userWallet->usable_balance - $request->wallet_to_decrement;
+            $currentAmount = $userWallet->current_balance - $request->wallet_to_decrement;
+            $userWallet = Wallet::retrieveOrCreateCache($user->id);
+            $userWallet->update(['usable_balance' => $walletAmount,
+                'current_balance' => $currentAmount,
+            ]);
 
             if ($isNormalReg) {
                 $transaction = new TransactionHistory([
                     'name' => "{$event->eventName}",
-                    
                     'type' => 'Event Entry Fee Hold',
                     'link' => route('public.event.view', ['id' => $event->id]),
-                    'amount' => $request->discount_applied_amount,
-                    'summary' => "User Wallet RM {$request->discount_applied_amount}",
+                    'amount' => $request->wallet_to_decrement,
+                    'summary' => "User Wallet RM {$request->wallet_to_decrement}",
                     'isPositive' => false,
                     'date' => now(),
                     'user_id' => $user->id,
@@ -123,7 +139,7 @@ class ParticipantCheckoutController extends Controller
                     'name' => "{$event->eventName}",
                     'type' => 'Event Entry Fee',
                     'link' => route('public.event.view', ['id' => $event->id]),
-                    'amount' => $request->discount_applied_amount,
+                    'amount' => $request->wallet_to_decrement,
                     'summary' => "{$event->game->gameTitle}, {$event->tier->eventTier}, {$event->type->eventType}",
                     'isPositive' => false,
                     'date' => now(),
@@ -133,38 +149,29 @@ class ParticipantCheckoutController extends Controller
                 $transaction->save();
             }
 
-            if (!$isCompletePayment) {
-                if ($request->payment_intent_id) {
-                    $stripePaymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($request->payment_intent_id);
-                    $this->stripeClient->updatePaymentIntent($stripePaymentIntent->id, [
-                        'amount' => $newAmount * 100,
-                    ]);
-                }
-            }
-
             ParticipantPayment::create([
                 'team_members_id' => $request->member_id,
                 'user_id' => $user->id,
                 'join_events_id' => $request->joinEventId,
-                'payment_amount' => $request->discount_applied_amount,
+                'payment_amount' => $request->wallet_to_decrement,
                 'register_time' => $regStatus,
                 'history_id' => $transaction?->id,
                 'type' => 'wallet',
             ]);
 
+            [ 'coupon' => $coupon ] = $request->couponDetails;
+            $coupon?->validateAndIncrementCoupon();
+
             if ($isCompletePayment) {
-                if ($pending_total_after_discount < 0.1) {
+                if ($pending_total_after_wallet <= config("constants.STRIPE.ZERO")) {
                     $joinEvent = $request->joinEvent;
-                    $joinEvent->payment_status = 'completed';
-                    $joinEvent->register_time = $regStatus;
-                    $joinEvent->save();
-                    // add column for registration
+                    $joinEvent->completePayment($regStatus);
                 }
             }
 
             DB::commit();
 
-            $message = $isCompletePayment ? 'Discount applied successfully. You have completed this payment.' : "Discount applied. You have RM {$newAmount} to pay.";
+            $message = $isCompletePayment ? 'Wallet payment applied successfully.' : "Partial payment via wallet applied. You have RM {$newAmount} to pay.";
 
             return redirect()
                 ->route('participant.register.manage', ['id' => $request->teamId])
@@ -210,6 +217,13 @@ class ParticipantCheckoutController extends Controller
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
                         ->sum('payment_amount');
+
+                    $couponCode = $paymentIntent['metadata']['coupon_code'] ?? null;
+                    if ($couponCode) {
+                        [$coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['totalFee'], 0.0, 'participant', $user->id);
+
+                        $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
+                    }
 
                     $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
 
@@ -261,26 +275,11 @@ class ParticipantCheckoutController extends Controller
                         'type' => 'stripe',
                     ]);
 
-                    if ($total - ($participantPaymentSum + $paymentDone) < 0.1) {
+                    if ($total - ($participantPaymentSum + $paymentDone) < config("constants.STRIPE.ZERO")) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->register_time = $regStatus;
                         $joinEvent->save();
                     }
-
-                    // try {
-                    //     $customerId = $paymentIntent['customer'] ?? null;
-                        
-                    //     if ($customerId) {
-                    //         $this->stripeClient->createStripeInvoice($customerId);
-                    //     }
-                        
-                    // } catch (Exception $invoiceException) {
-                    //     Log::error("Failed to create invoice after payment", [
-                    //         'error' => $invoiceException->getMessage(),
-                    //         'payment_intent_id' => $intentId
-                    //     ]);
-                    // }
-
                     DB::commit();
 
                     return redirect()
@@ -307,6 +306,7 @@ class ParticipantCheckoutController extends Controller
                         ]);
                     }
                 } catch (Exception $e) {
+                    return $this->showErrorParticipant($e->getMessage());
                 }
             }
             
@@ -323,4 +323,6 @@ class ParticipantCheckoutController extends Controller
             return $this->showErrorParticipant($e->getMessage());
         }
     }
+
+    
 }

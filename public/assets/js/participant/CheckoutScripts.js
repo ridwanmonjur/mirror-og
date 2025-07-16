@@ -59,6 +59,7 @@ class PaymentProcessor {
     let variablesDiv = document.getElementById('payment-variables');
     const paymentVars = {
         paymentAmount: variablesDiv.dataset.paymentAmount,
+        totalFee: variablesDiv.dataset.totalFee,
         userEmail: variablesDiv.dataset.userEmail,
         userName: variablesDiv.dataset.userName,
         stripeCustomerId: variablesDiv.dataset.stripeCustomerId,
@@ -67,6 +68,7 @@ class PaymentProcessor {
         teamId: variablesDiv.dataset.teamId,
         eventId: variablesDiv.dataset.eventId,
         eventType: variablesDiv.dataset.eventType,
+        couponCode: variablesDiv.dataset.couponCode,
         stripeKey: variablesDiv.dataset.stripeKey,
         stripeCardIntentUrl: variablesDiv.dataset.stripeCardIntentUrl,
         checkoutTransitionUrl: variablesDiv.dataset.checkoutTransitionUrl
@@ -182,6 +184,8 @@ class PaymentProcessor {
 
     async function initializeStripeCardPayment() {
         try {
+            const paymentAmount = Math.round(paymentProcessor.getPaymentAmount());
+
             const response = await fetch(paymentVars['stripeCardIntentUrl'], {
                 method: "POST",
                 headers: {
@@ -189,7 +193,8 @@ class PaymentProcessor {
                     "X-CSRF-TOKEN": csrfToken
                 },
                 body: JSON.stringify({
-                    paymentAmount: paymentProcessor.getPaymentAmount(),
+                    paymentAmount: paymentAmount,
+                    totalFee: totalFee,
                     email: paymentVars['userEmail'],
                     name: paymentVars['userName'],
                     capture_method: 'manual',
@@ -200,7 +205,8 @@ class PaymentProcessor {
                         memberId: paymentVars['memberId'],
                         teamId: paymentVars['teamId'],
                         eventId: paymentVars['eventId'],
-                        eventType: paymentVars['eventType']
+                        eventType: paymentVars['eventType'],
+                        couponCode: paymentVars['couponCode'] || null
                     }
                 })
             });

@@ -24,13 +24,13 @@
     @include('googletagmanager::body')
     @include('includes.Navbar')
     <main class="main-background-2 pt-3">
-        <br>
         @include('includes.Checkout.PlayerCheckout')
-        <br><br>
+        <br>
     </main>
     
     <div class="d-none" id="payment-variables" 
-        data-payment-amount="{{ $amount }}"
+        data-payment-amount="{{ $fee['finalFee'] }}"
+        data-total-fee="{{ $fee['totalFee'] }}"
         data-user-email="{{ $user->email }}"
         data-user-name="{{ $user->name }}"
         data-stripe-customer-id="{{ $user->stripe_customer_id }}"
@@ -39,7 +39,8 @@
         data-team-id="{{ $teamId }}"
         data-event-id="{{ $event->id }}"
         data-event-type="{{ $event->getRegistrationStatus() }}"
-            data-stripe-key="{{ config('services.stripe.key') }}"
+        data-coupon-code="{{ $prevForm['coupon_code'] }}"
+        data-stripe-key="{{ config('services.stripe.key') }}"
         data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
         data-checkout-transition-url="{{ route('participant.checkout.transition') }}"
     >    

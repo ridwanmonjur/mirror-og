@@ -350,6 +350,16 @@ async function onFollowSubmit(event) {
         });
 
         let data = await response.json();
+        
+        // Track social interaction
+        if (window.analytics) {
+            window.analytics.trackSocialInteraction(
+                data.isFollowing ? 'follow' : 'unfollow',
+                dataset.joinEventUser || 'unknown',
+                'organizer'
+            );
+        }
+        
         [...followButtons].forEach((followButton) => {
             followButton.style.setProperty('pointer-events', 'none');
 

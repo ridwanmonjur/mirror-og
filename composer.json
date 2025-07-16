@@ -8,6 +8,8 @@
         "php": "^8.1",
         "fakerphp/faker": "^1.24",
         "filament/filament": "^3.2",
+        "google/analytics-admin": "^0.29.0",
+        "google/analytics-data": "^0.22.2",
         "google/cloud-firestore": "^1.48",
         "guzzlehttp/guzzle": "^7.2",
         "io238/laravel-iso-countries": "^1.2",
@@ -23,7 +25,7 @@
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
         "spatie/laravel-feed": "^4.4",
-        "spatie/laravel-googletagmanager": "^2.7",
+        "spatie/laravel-googletagmanager": "^2.8",
         "spatie/laravel-sitemap": "^7.3",
         "stripe/stripe-php": "^13.0"
     },

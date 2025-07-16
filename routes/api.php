@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Shared\AnalyticsController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Open\BetaController;
 use App\Http\Controllers\Organizer\OrganizerController;
@@ -112,3 +112,32 @@ Route::group(['prefix' => 'organizer'], function () {
 });
 
 
+
+Route::prefix('analytics')->group(function () {
+    
+    // Test connection
+    Route::get('test', [AnalyticsController::class, 'testConnection']);
+    
+    // Summary and dashboard
+    Route::get('summary', [AnalyticsController::class, 'getSummary']);
+    Route::get('dashboard', [AnalyticsController::class, 'getDashboard']);
+    
+    // All events
+    Route::get('events', [AnalyticsController::class, 'getAllEvents']);
+    Route::get('events/{eventId}', [AnalyticsController::class, 'getEventDetails']);
+    
+    // Events by dimension
+    Route::get('events/by/{dimension}', [AnalyticsController::class, 'getEventsByDimension']);
+    
+    // Specific dimension shortcuts
+    Route::get('games', [AnalyticsController::class, 'getGames']);
+    Route::get('tiers', [AnalyticsController::class, 'getTiers']);
+    Route::get('esports', [AnalyticsController::class, 'getEsports']);
+    Route::get('locations', [AnalyticsController::class, 'getLocations']);
+    Route::get('types', [AnalyticsController::class, 'getTypes']);
+    
+    // Tier-specific endpoints
+    Route::get('tiers/hit', [AnalyticsController::class, 'getAllTiersHit']);
+    Route::get('tiers/analytics', [AnalyticsController::class, 'getTierAnalytics']);
+    
+});

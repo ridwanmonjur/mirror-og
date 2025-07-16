@@ -69,13 +69,12 @@ function updateLaunchButton(type) {
     }
 }
 
-
+const choices2 = document.getElementById('select2-country2');
 async function fetchCountries () {
     try {
         const data = await storeFetchDataInLocalStorage('/countries');
         if (data?.data) {
             countries = data.data;
-            const choices2 = document.getElementById('select2-country2');
             let regionsHtml = "";
             let countriesHtml = "";
             let countriesOptionsHtml = "";
@@ -121,4 +120,7 @@ async function fetchCountries () {
     }
 }
 
-fetchCountries();
+if (choices2) {
+    fetchCountries();
+
+}

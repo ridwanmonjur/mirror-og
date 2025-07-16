@@ -71,9 +71,17 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventTierResource::getNavigationItems(),
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
-                                ...\App\Filament\Resources\ParticipantCouponsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\SystemCouponsResource::getNavigationItems(),
                                 ...\App\Filament\Resources\GameResource::getNavigationItems(),
-                                ...\App\Filament\Resources\EventCreateCouponResource::getNavigationItems(),
+                            ]),
+                        NavigationGroup::make('Analytics')
+                            ->items([
+                                NavigationItem::make('Analytics')
+                                    ->icon('heroicon-o-chart-bar')
+                                    ->activeIcon('heroicon-s-chart-bar')
+                                    ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.analytics'))
+                                    ->url(fn (): string => \App\Filament\Pages\Analytics::getUrl())
+                                    ->visible(fn (): bool => auth()->check() && auth()->user()->role === 'ADMIN'),
                             ]),
          
                    

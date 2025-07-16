@@ -6,6 +6,7 @@ import * as bootstrap from 'bootstrap'
 window.bootstrap = bootstrap;
 import { createApp } from 'petite-vue';
 import { PageNotificationComponent } from './custom/notifications';
+import './custom/analytics2.js';
 
 const Toast = Swal.mixin({
     toast: true,
@@ -186,6 +187,14 @@ window.loadMessage = () => {
 
 window.Toast = Toast;
 window.Swal = Swal;
+
+// Google Analytics initialized via import above
+// Maintain existing event tracking functionality using new analytics service
+
+// Analytics functions are now imported from analytics2.js
+// No need to redefine - they're already available as global functions
+
+
 
 import './libraries/lightgallery';
 import './libraries/lightpicker';

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ParticipantCouponsResource\Pages;
-use App\Filament\Resources\ParticipantCouponsResource\RelationManagers;
-use App\Models\ParticipantCoupon;
+use App\Filament\Resources\SystemCouponsResource\Pages;
+use App\Filament\Resources\SystemCouponsResource\RelationManagers;
+use App\Models\SystemCoupon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +12,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Traits\HandlesFilamentExceptions;
 
-class ParticipantCouponsResource extends Resource
+class SystemCouponsResource extends Resource
 {
     use HandlesFilamentExceptions;
-    protected static ?string $model = ParticipantCoupon::class;
+    protected static ?string $model = SystemCoupon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
@@ -34,24 +34,40 @@ class ParticipantCouponsResource extends Resource
                     Forms\Components\TextInput::make('amount')
                         ->required()
                         ->numeric()
-                        ->prefix('RM ')
                         ->minValue(0)
-                        ->maxValue(9999999.99)
+                        ->prefix(fn (callable $get) => $get('discount_type') === 'percent' ? '' : 'RM ')
+                        ->suffix(fn (callable $get) => $get('discount_type') === 'percent' ? '%' : '')
+                        ->maxValue(fn (callable $get) => $get('discount_type') === 'percent' ? 100 : 9999999.99)
+                        ->live()
                         ->columnSpan(1),
                     
-                    Forms\Components\TextInput::make('type')
-                        ->label('Type')
-                        ->maxLength(255)
-                        ->nullable()
+                    Forms\Components\Select::make('for_type')
+                        ->label('Role')
+                        ->options([
+                            'organizer' => 'Organizer',
+                            'participant' => 'Participant',
+                        ])
+                        ->default('participant')
+                        ->disabled(fn ($record) => $record !== null)
+                        ->columnSpan(1),
+                    
+                    Forms\Components\TextInput::make('redeem_count')
+                        ->label('Redeem Count')
+                        ->required()
+                        ->numeric()
+                        ->minValue(1)
+                        ->maxValue(9999)
+                        ->default(1)
                         ->columnSpan(1),
                     
                     Forms\Components\Select::make('discount_type')
                         ->label('Discount Type')
                         ->options([
                             'sum' => 'Sum',
-                            'percentage' => 'Percentage',
+                            'percent' => 'Percent',
                         ])
                         ->default('sum')
+                        ->live()
                         ->columnSpan(1),
                     
                     Forms\Components\DateTimePicker::make('expires_at')
@@ -98,17 +114,31 @@ class ParticipantCouponsResource extends Resource
                 
                 
                 Tables\Columns\TextColumn::make('amount')
-                    ->prefix('RM '),
+                    ->formatStateUsing(fn ($record) => 
+                        $record->discount_type === 'percent' 
+                            ? $record->amount . '%' 
+                            : 'RM ' . $record->amount
+                    ),
                 
-                Tables\Columns\TextColumn::make('type')
-                    ->placeholder('No Type'),
+                Tables\Columns\TextColumn::make('for_type')
+                    ->label('Role Type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'organizer' => 'success',
+                        'participant' => 'info',
+                        default => 'gray',
+                    }),
+                
+                Tables\Columns\TextColumn::make('redeem_count')
+                    ->label('Redeem Count')
+                    ->numeric(),
                 
                 Tables\Columns\TextColumn::make('discount_type')
                     ->label('Discount Type')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'sum' => 'success',
-                        'percentage' => 'info',
+                        'percent' => 'info',
                         default => 'gray',
                     }),
                 
@@ -158,9 +188,9 @@ class ParticipantCouponsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListParticipantCoupons::route('/'),
-            // 'create' => Pages\CreateParticipantCoupons::route('/create'),
-            'edit' => Pages\EditParticipantCoupons::route('/{record}/edit'),
+            'index' => Pages\ListSystemCoupons::route('/'),
+            // 'create' => Pages\CreateSystemCoupons::route('/create'),
+            'edit' => Pages\EditSystemCoupons::route('/{record}/edit'),
         ];
     }
 }

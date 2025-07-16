@@ -46,7 +46,19 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-6 col-xl-5 d-flex justify-content-start d my-1 px-0">
-                    <a class="d-flex w-100 justify-content-start align-items-center"
+                    <a class="d-flex w-100 justify-content-start align-items-center" 
+                        onclick="window.trackEventCardClick(this)" 
+                        data-event-id="{{ $joinEvent->id }}" 
+                        data-event-name="{{ $joinEvent->eventName }}"
+                        @if($joinEvent->tier?->eventTier) data-event-tier="{{ $joinEvent->tier->eventTier }}" @endif
+                        @if($joinEvent->type?->eventType) data-event-type="{{ $joinEvent->type->eventType }}" @endif
+                        @if($joinEvent->game?->gameTitle) data-esport-title="{{ $joinEvent->game->gameTitle }}" @endif
+                        @if($joinEvent->venue) data-location="{{ $joinEvent->venue }}" @endif
+                        @if($joinEvent->tier?->id) data-tier-id="{{ $joinEvent->tier->id }}" @endif
+                        @if($joinEvent->type?->id) data-type-id="{{ $joinEvent->type->id }}" @endif
+                        @if($joinEvent->game?->id) data-game-id="{{ $joinEvent->game->id }}" @endif
+                        @if($joinEvent->user?->id) data-user-id="{{ $joinEvent->user->id }}" @endif
+                        title="Event {{$joinEvent->slug}}"
                         href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug]) }}">
 
                         <img 

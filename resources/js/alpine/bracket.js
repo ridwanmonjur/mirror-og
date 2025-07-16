@@ -1272,6 +1272,15 @@ const validateDisputeCreation = async (data) => {
   return errors;
 };
 
+function initializeAnalytics() {
+  console.log("zzzzz");
+  if (window.analytics) {
+      const analyticsData = document.getElementById('analytics-data');
+      window.window.trackEventViewFromDiv(analyticsData);
+  }
+}
+
+
 window.onload = () => {
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
@@ -1291,29 +1300,32 @@ window.onload = () => {
   }).mount('#Bracket');
 
   const modalIds = ['updateModal', 'reportModal', 'disputeModal'];
-let isModalOpening = false;
+  let isModalOpening = false;
 
-modalIds.forEach(modalId => {
-  const modalElement = document.getElementById(modalId);
-  
-  if (modalElement) {
-    modalElement.addEventListener('show.bs.modal', function() {
-      isModalOpening = true;
-      window.closeAllTippy();
-    });
+  modalIds.forEach(modalId => {
+    const modalElement = document.getElementById(modalId);
+    
+    if (modalElement) {
+      modalElement.addEventListener('show.bs.modal', function() {
+        isModalOpening = true;
+        window.closeAllTippy();
+      });
 
-    modalElement.addEventListener('shown.bs.modal', function() {
-      isModalOpening = false;
-    });
+      modalElement.addEventListener('shown.bs.modal', function() {
+        isModalOpening = false;
+      });
 
-    modalElement.addEventListener('hide.bs.modal', function() {
-      setTimeout(() => {
-        if (!isModalOpening) {
-          window.openAllTippy();
-        }
-      }, 200);
-    });
-  }
-});
+      modalElement.addEventListener('hide.bs.modal', function() {
+        setTimeout(() => {
+          if (!isModalOpening) {
+            window.openAllTippy();
+          }
+        }, 200);
+      });
+    }
+  });
+
+  initializeAnalytics();
+
 }
 

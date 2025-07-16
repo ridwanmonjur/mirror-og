@@ -14,12 +14,13 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 
 ## Architecture
 - **Backend**: Laravel 10 with JWT authentication
-- **Frontend**: Vite + Alpine.js + Bootstrap 5
+- **Frontend**: Vite + Petite Vue + Alpine.js + Bootstrap 5
 - **Admin**: Filament 3.2 with Livewire 3.5
 - **Database**: MySQL with Redis caching
 - **Payments**: Stripe for transactions
 - **Real-time**: Firebase integration
 - **Auth**: Social login (Google, Steam)
+- **Analytics**: Google Tag Manager + Custom Analytics Service
 
 ## Key Directories
 - `app/Models/` - 40+ models including User, EventDetail, Team, Bracket
@@ -42,3 +43,14 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 - Stripe account for payments
 - Firebase project for real-time features
 - Google OAuth and Steam API credentials
+
+## Development Notes
+- Must log errors using Logger::log (backend) or console.error (frontend) in all try catches 
+- When creating/updating database tables in laravel migration:
+  * Check table existence/non-existence in create operations
+  * In update operations, verify both table and column do not exist before proceeding
+- Email Sending Workflow:
+  * Always check one email event live to understand email sending process
+
+## Analytics Implementation
+The platform includes comprehensive analytics tracking using Google Analytics.

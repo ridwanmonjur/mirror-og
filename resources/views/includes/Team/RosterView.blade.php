@@ -76,9 +76,21 @@
         <div class="frame1 p-0 mx-0 mb-0">
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-6 col-xl-5 d-flex justify-content-start d my-1 px-0">
-                    <a class="d-flex w-100 justify-content-start align-items-center"
-                        href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => $joinEvent->eventDetails->slug ]) }}">
-
+                    <a class="d-flex w-100 justify-content-start align-items-center" 
+                        onclick="window.trackEventCardClick(this)" 
+                        data-event-id="{{ $joinEvent->eventDetails->id }}" 
+                        data-event-name="{{ $joinEvent->eventDetails->eventName }}"
+                        @if($joinEvent->tier?->eventTier) data-event-tier="{{ $joinEvent->tier->eventTier }}" @endif
+                        @if($joinEvent->eventDetails->type?->eventType) data-event-type="{{ $joinEvent->eventDetails->type->eventType }}" @endif
+                        @if($joinEvent->game?->gameTitle) data-esport-title="{{ $joinEvent->game->gameTitle }}" @endif
+                        @if($joinEvent->eventDetails?->venue) data-location="{{ $joinEvent->eventDetails->venue }}" @endif
+                        @if($joinEvent->tier?->id) data-tier-id="{{ $joinEvent->tier->id }}" @endif
+                        @if($joinEvent->eventDetails->type?->id) data-type-id="{{ $joinEvent->eventDetails->type->id }}" @endif
+                        @if($joinEvent->game?->id) data-game-id="{{ $joinEvent->game->id }}" @endif
+                        @if($joinEvent->eventDetails->user?->id) data-user-id="{{ $joinEvent->eventDetails->user->id }}" @endif
+                        title="Event {{$joinEvent->eventDetails->slug}}"
+                        href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => $joinEvent->eventDetails->slug ]) }}"
+                    >
                         <img 
                             onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" style="max-width: 50px; "
                             src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
