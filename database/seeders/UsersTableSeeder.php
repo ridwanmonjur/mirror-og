@@ -1,87 +1,52 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use TCG\Voyager\Models\Role;
-use TCG\Voyager\Models\User;
+use Illuminate\Support\Facades\Hash;
+use App\User;
 
 class UsersTableSeeder extends Seeder
 {
     /**
-     * Auto generated seed file.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        // Get roles
-        $adminRole = Role::where('name', 'admin')->firstOrFail();
-        $userRole = Role::where('name', 'user')->firstOrFail();
-
-        // Create Admin user
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
+        // Create admin user
+        User::firstOrCreate(
+            ['email' => 'mjrrdn@gmail.com'],
             [
-                'name'           => 'Admin User',
-                'password'       => bcrypt('password'),
-                'remember_token' => str_random(60),
-                'role_id'        => $adminRole->id,
+                'name' => 'Admin User',
+                'password' => Hash::make('password'),
+                'role' => 'ADMIN',
+                'email_verified_at' => now(),
             ]
         );
 
-        // Create Manager user
-        $manager = User::firstOrCreate(
-            ['email' => 'manager@example.com'],
+        // Create organizer user
+        User::firstOrCreate(
+            ['email' => 'mjrrdnasm@gmail.com'],
             [
-                'name'           => 'Store Manager',
-                'password'       => bcrypt('password'),
-                'remember_token' => str_random(60),
-                'role_id'        => $adminRole->id,
+                'name' => 'Organizer User',
+                'password' => Hash::make('password'),
+                'role' => 'ORGANIZER',
+                'email_verified_at' => now(),
             ]
         );
 
-        // Create regular users
-        $users = [
+        // Create participant user
+        User::firstOrCreate(
+            ['email' => 'mjrrdn2@gmail.com'],
             [
-                'name' => 'John Doe',
-                'email' => 'john@example.com',
-                'password' => bcrypt('password'),
-                'role_id' => $userRole->id,
-            ],
-            [
-                'name' => 'Jane Smith',
-                'email' => 'jane@example.com',
-                'password' => bcrypt('password'),
-                'role_id' => $userRole->id,
-            ],
-            [
-                'name' => 'Bob Johnson',
-                'email' => 'bob@example.com',
-                'password' => bcrypt('password'),
-                'role_id' => $userRole->id,
-            ],
-            [
-                'name' => 'Alice Williams',
-                'email' => 'alice@example.com',
-                'password' => bcrypt('password'),
-                'role_id' => $userRole->id,
-            ],
-            [
-                'name' => 'Charlie Brown',
-                'email' => 'charlie@example.com',
-                'password' => bcrypt('password'),
-                'role_id' => $userRole->id,
-            ],
-        ];
+                'name' => 'Participant User',
+                'password' => Hash::make('password'),
+                'role' => 'PARTICIPANT',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        foreach ($users as $userData) {
-            User::firstOrCreate(
-                ['email' => $userData['email']],
-                array_merge($userData, [
-                    'remember_token' => str_random(60),
-                ])
-            );
-        }
+       
     }
 }

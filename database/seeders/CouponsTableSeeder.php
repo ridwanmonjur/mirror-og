@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeders;
 
 use App\Coupon;
 use Illuminate\Database\Seeder;
@@ -64,7 +65,10 @@ class CouponsTableSeeder extends Seeder
         ];
 
         foreach ($coupons as $couponData) {
-            Coupon::create($couponData);
+            Coupon::firstOrCreate(
+                ['code' => $couponData['code']],
+                $couponData
+            );
         }
     }
 }
