@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\NewCart;
 use App\CartItem;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use DB;
 
 class CartController extends Controller
 {
@@ -16,11 +19,15 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         $userId = auth()->id();
         
-        $cart = NewCart::getUserCart($userId);
+        $cart = NewCart::where('user_id', $userId)->with(['items.product'])->first();
+        
+        if (!$cart) {
+            $cart = NewCart::create(['user_id' => $userId]);
+        }
         
         $mightAlsoLike = Product::mightAlsoLike()->get();
         $top_pick = DB::table('products')->orderBy('id','DESC')->paginate(4);
@@ -45,10 +52,14 @@ class CartController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function store(Product $product)
+    public function store(Product $product): RedirectResponse
     {
         $userId = auth()->id();
-        $cart = NewCart::getUserCart($userId);
+        $cart = NewCart::where('user_id', $userId)->first();
+        
+        if (!$cart) {
+            $cart = NewCart::create(['user_id' => $userId]);
+        }
         
         try {
             $cart->addItem($product->id, 1, $product->price);
@@ -65,10 +76,14 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $userId = auth()->id();
-        $cart = NewCart::getUserCart($userId);
+        $cart = NewCart::where('user_id', $userId)->first();
+        
+        if (!$cart) {
+            return response()->json(['success' => false], 404);
+        }
         
         $validator = Validator::make($request->all(), [
             'quantity' => 'required|numeric|between:1,20'
@@ -102,9 +117,11 @@ class CartController extends Controller
     public function destroy($id)
     {
         $userId = auth()->id();
-        $cart = NewCart::getUserCart($userId);
+        $cart = NewCart::where('user_id', $userId)->first();
         
-        $cart->removeItem($id);
+        if ($cart) {
+            $cart->removeItem($id);
+        }
 
         return back()->with('success_message', 'Item has been removed!');
     }

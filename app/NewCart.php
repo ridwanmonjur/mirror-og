@@ -77,6 +77,7 @@ class NewCart extends Model
             $item->subtotal = $quantity * $price;
             $item->save();
             $this->updateTotal();
+            $this->load(['items.product']); // Reload relationships after changes
         }
         
         return $this;
@@ -113,6 +114,12 @@ class NewCart extends Model
 
     public function getContent()
     {
+        // If items are already loaded with products, return them
+        if ($this->relationLoaded('items')) {
+            return $this->items;
+        }
+        
+        // Otherwise, load items with products
         return $this->items()->with('product')->get();
     }
 }
