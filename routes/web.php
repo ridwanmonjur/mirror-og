@@ -18,6 +18,13 @@ use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
+use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\Shop\OrdersController;
+use App\Http\Controllers\Shop\CartController;
+use App\Http\Controllers\Shop\CheckoutController;
+use App\Http\Controllers\Shop\ConfirmationController;
+use App\Http\Controllers\Shop\CouponsController;
+
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -212,3 +219,38 @@ Route::group(['prefix' => 'organizer'], function () {
         });
     });
 });
+
+
+
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrdersController::class, 'show'])->name('orders.show');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+    Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/coupon', [CouponsController::class, 'store'])->name('coupon.store');
+    Route::delete('/coupon', [CouponsController::class, 'destroy'])->name('coupon.destroy');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/paypal-checkout', [CheckoutController::class, 'paypalCheckout'])->name('checkout.paypal');
+    Route::get('/guestCheckout', [CheckoutController::class, 'index'])->name('guestCheckout.index');
+
+
+    Route::get('/thankyou', [ConfirmationController::class, 'index'])->name('confirmation.index');
+    
+});
+
+
+
+
+
+
+Route::get('/search', [ShopController::class, 'search'])->name('search');
+
+Route::get('/search-algolia', [ShopController::class, 'searchAlgolia'])->name('search-algolia');
+
