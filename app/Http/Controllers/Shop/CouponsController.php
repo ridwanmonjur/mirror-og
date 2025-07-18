@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Shop;
 
+use App\Http\Controllers\Controller;
 use App\Coupon;
 use App\Jobs\UpdateCoupon;
 use Illuminate\Http\RedirectResponse;

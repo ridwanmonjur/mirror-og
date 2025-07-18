@@ -18,12 +18,12 @@ use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
-use App\Http\Controllers\ShopController;
-use App\Http\Controllers\OrdersController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ConfirmationController;
-use App\Http\Controllers\CouponsController;
+use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\Shop\OrdersController;
+use App\Http\Controllers\Shop\CartController;
+use App\Http\Controllers\Shop\CheckoutController;
+use App\Http\Controllers\Shop\ConfirmationController;
+use App\Http\Controllers\Shop\CouponsController;
 
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
