@@ -317,4 +317,9 @@ class User extends Authenticatable implements FilamentUser
     public function slugify () {
         $this->slug = Str::slug($this->name);
     }
+
+    public function orders()
+    {
+        return $this->hasMany('App\Order');
+    }
 }

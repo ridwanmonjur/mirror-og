@@ -120,7 +120,7 @@ trait PrinterLoggerTrait
      */
     private function getCommandErrorStats(string $className, int $days = 7): array
     {
-        return DB::table('daily_command_errors')
+        return  DB::table('daily_command_errors')
             ->select('error_date', 'error_count', 'email_sent')
             ->where('class_name', $className)
             ->where('error_date', '>=', now()->subDays($days)->toDateString())
