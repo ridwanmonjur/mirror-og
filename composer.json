@@ -27,7 +27,11 @@
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-googletagmanager": "^2.8",
         "spatie/laravel-sitemap": "^7.3",
-        "stripe/stripe-php": "^13.0"
+        "stripe/stripe-php": "^13.0",
+        "algolia/algoliasearch-client-php": "*",
+        "doctrine/dbal": "^3.10",
+        "laravel/scout": "^10.16",
+        "laravel/ui": "^4.6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
