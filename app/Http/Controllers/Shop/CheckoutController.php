@@ -34,7 +34,7 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.index');
         }
 
-        return view('checkout')->with([
+        return view('shop.checkout')->with([
             'cart' => $cart,
             'discount' => getNumbers()->get('discount'),
             'newSubtotal' => getNumbers()->get('newSubtotal'),
@@ -67,7 +67,7 @@ class CheckoutController extends Controller
             
             $charge = \Stripe\Charge::create([
                 'amount' => getNumbers()->get('newTotal'),
-                'currency' => 'USD',
+                'currency' => 'MYR',
                 'source' => $request->stripeToken,
                 'description' => 'Order',
                 'receipt_email' => $request->email,

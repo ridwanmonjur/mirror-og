@@ -64,7 +64,9 @@ a:hover{
 
                                     <div class="col-sm-3 col-xs-6">
                                         <a href="{{ route('shop.show', $product->slug) }}">
-                                            <img src="{{ productImage($product->image) }}" alt="Image" style="width: 250px; height:250px;" class="img-responsive">
+                                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('img/not-found.jpg') }}" 
+                                                 alt="Image" style="width: 250px; height:250px;" class="img-responsive"
+                                                 onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
                                             
                                         </a>
                                         <p><a href="{{ route('shop.show', $product->slug) }}">{{$product->name}}</a></p>

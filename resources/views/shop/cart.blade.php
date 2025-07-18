@@ -1,47 +1,30 @@
-@extends('layout')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('title', 'Shopping Cart')
-
-@section('extra-css')
+<head>
+    @include('googletagmanager::head')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Shopping Cart</title>
+    @include('includes.HeadIcon')
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
-@endsection
+</head>
 
-@section('content')
+<body>
+    @include('googletagmanager::body')
+    @include('includes.Navbar')
 
-    <style type="text/css">
-        form {
-            float: left;
-            margin-top: 0em;
-        }
-
-        .btn-link {
-            color: black;
-            text-decoration: underline;
-
-        }
-
-        .btn-link:hover {
-            color: black;
-            text-decoration: underline;
-
-        }
-
-        /*text-transform: uppercase;*/
-    </style>
-    <br>
-
-    <div class="container">
+    <main class="px-3">
+        <br>
 
         {{-- ----------------------------- ROW CART START ----------------------------- --}}
         <div class="row">
             <div class="col-12 col-lg-9 ">
 
-
-
-
                 @if ($cart->getContent()->count() > 0)
-                    <h2>YOUR BAG <span class="title_cartpage">{{ $cart->getContent()->count() }} ITEMS </span></h2>
-
+                    <h2>Your Cart <span class="title_cartpage text-primary">{{ $cart->getContent()->count() }} Items </span></h2>
 
                     {{-- success error msg start --}}
                     @if (session()->has('success_message'))
@@ -71,9 +54,15 @@
                                     <div class="col-lg-2">
                                         @if ($item->product && $item->product->slug)
                                             <a href="{{ route('shop.show', $item->product->slug) }}">
-                                                <img src="{{ productImage($item->product->image) }}" class="img_cartpage"></a>
+                                                <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('img/not-found.jpg') }}" 
+                                                     class="img_cartpage"
+                                                     width="50" height="50"
+                                                     onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';"></a>
                                         @else
-                                            <img src="{{ productImage($item->product->image ?? '') }}" class="img_cartpage">
+                                            <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('img/not-found.jpg') }}" 
+                                                 class="img_cartpage"
+                                                 width="50" height="50"
+                                                 onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
                                         @endif
                                     </div>
 
@@ -119,7 +108,7 @@
                                     </div>
 
                                     <div class="col-lg-1"></div>
-                                    <div class="col-lg-2">$ {{ $item->subtotal }}</div>
+                                    <div class="col-lg-2">RM {{ $item->subtotal }}</div>
                                 </div>
                             </div>
                             <hr>
@@ -129,12 +118,11 @@
                     <div class="row">
                         <div class="col-md-10">
                             <a href="{{ route('shop.index') }}" style="margin-right: 8px">Continue Shopping</a>
-                            <a href="{{ route('checkout.index') }}" class="btn btn-dark">Checkout <i
-                                    class="fa fa-arrow-right" style="width: 60px;"></i></a>
+                            <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white">Checkout ></i></a>
                         </div>
                         <div class="col-md-2">
-                            <p>Subtotal : ${{ $cart->getSubTotal() }}</p>
-                            <p><b>Total: ${{ $cart->getTotal() }} </b></p>
+                            <p>Subtotal : RM{{ $cart->getSubTotal() }}</p>
+                            <p><b>Total: RM{{ $cart->getTotal() }} </b></p>
                         </div>
                     </div>
                 @else
@@ -146,10 +134,7 @@
             </div>
             <div class="col-12 col-lg-3 ">
                 <div class="cart_sidebar">
-                    <br>
-                    <a href="{{ route('checkout.index') }}" class="btn btn-dark btn-lg btn-block"
-                        style=" margin-right: :4px;">Checkout <i class="fa fa-arrow-right"
-                            style="margin-left: 35px;"></i></a>
+                    
                     <h4 style="font-weight: 600; font-size: 22px; margin-left: 9px;">ORDER SUMMARY:</h4>
                     <div class="cart-calculator">
                         <table class="table">
@@ -159,7 +144,7 @@
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>${{ $cart->getSubTotal() }}</td>
+                                <td>RM{{ $cart->getSubTotal() }}</td>
 
                             </tr>
                             @if (session()->has('coupon'))
@@ -168,7 +153,7 @@
                                         COUPON : {{ session()->get('coupon')['name'] }}
                                     </td>
 
-                                    <td>- ${{ session()->get('coupon')['discount'] }}
+                                    <td>- RM{{ session()->get('coupon')['discount'] }}
                                         <form method="post" action="{{ route('coupon.destroy') }}" style="display:inline">
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
@@ -182,19 +167,16 @@
                             @endif
                             <tr style="font-weight: bold">
                                 <td>Total</td>
-                                <td>${{ $cart->getTotal() }}</td>
+                                <td>RM{{ $cart->getTotal() }}</td>
                             </tr>
-
-
-
 
                             @if (session()->has('coupon'))
                                 <tr>
                                     <td>Discount<br>
                                         <b>Net Total</b>
                                     </td>
-                                    <td>- ${{ $discount }}<br>
-                                        <b>${{ $newTotal }} </b>
+                                    <td>- RM{{ $discount }}<br>
+                                        <b>RM{{ $newTotal }} </b>
 
                                     </td>
                                 </tr>
@@ -212,14 +194,14 @@
                         <table class="table">
                             <tr>
                                 <td>
-                                    <a class="btn btn-link" data-toggle="collapse" href="#multiCollapseExample1"
+                                    <a class="btn btn-link" data-bs-toggle="collapse" href="#multiCollapseExample1"
                                         role="button" aria-expanded="false" aria-controls="multiCollapseExample1"
                                         style="color: #000;">
                                         <b>PROMO CODE</b>
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="btn btn-link" data-toggle="collapse" href="#multiCollapseExample1"
+                                    <a class="btn btn-link" data-bs-toggle="collapse" href="#multiCollapseExample1"
                                         role="button" aria-expanded="false" aria-controls="multiCollapseExample1"
                                         style="color: #000;">
                                         <i class="fa fa-chevron-down"></i> </a>
@@ -245,58 +227,20 @@
                         </div>
                     </div>
                 </div>
-                
 
+                <br>
+                    <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white  btn-block"
+                        style=" margin-right: :4px;">Checkout <i class="fa fa-arrow-right"
+                            style="margin-left: 35px;"></i></a>
+                
 
             </div>
 
         </div>
 
+        {{-- ----------------------------- ROW CART END ----------------------------- --}}
+    </main>
 
-
-
-
-
-
-        {{--    -------------- Coupon code start ----------------------- --}}
-        {{--   <div>
-                        Subtotal <br>
-                        @if (session()->has('coupon'))
-                            Code ({{ session()->get('coupon')['name'] }})
-                            <form action="{{ route('coupon.destroy') }}" method="POST" style="display:block">
-                                {{ csrf_field() }}
-                                {{ method_field('delete') }}
-                                <button type="submit" style="font-size:14px;">Remove</button>
-                            </form>
-                            <hr>
-                            New Subtotal <br>
-                        @endif
-                        Tax ({{config('cart.tax')}}%)<br>
-                        <span class="cart-totals-total">Total</span>
-                    </div>
-                    <div class="cart-totals-subtotal">
-                        {{ $cart->getSubTotal() }} <br>
-                        @if (session()->has('coupon'))
-                            -{{ $discount }} <br>&nbsp;<br>
-                            <hr>
-                            {{ $newSubtotal }} <br>
-                        @endif
-                        {{ $newTax }} <br>
-                        <span class="cart-totals-total">{{ $newTotal }}</span>
-                    </div> --}}
-        {{--    -------------- Coupon code end ----------------------- --}}
-
-
-    </div> {{-- col-lg-9 col-sm-6 col-xs-12 end --}}
-
-    </div>{{--  row end --}}
-
-    {{-- ----------------------------- ROW CART END ----------------------------- --}}
-
-
-@endsection
-
-@section('extra-js')
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
         (function() {
@@ -307,9 +251,16 @@
                     const id = element.getAttribute('data-id')
                     const productQuantity = element.getAttribute('data-productQuantity')
 
-                    axios.patch(`/cart/${id}`, {
-                            quantity: this.value,
-                            productQuantity: productQuantity
+                    fetch(`/cart/${id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                quantity: this.value,
+                                productQuantity: productQuantity
+                            })
                         })
                         .then(function(response) {
                             // console.log(response);
@@ -328,4 +279,6 @@
     <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
     <script src="{{ asset('js/algolia.js') }}"></script>
-@endsection
+</body>
+
+</html>

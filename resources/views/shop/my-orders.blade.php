@@ -1,29 +1,22 @@
-@extends('layout')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('title', 'My Orders')
-
-@section('extra-css')
+<head>
+    @include('googletagmanager::head')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    @include('includes.HeadIcon')
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
-@endsection
+   
+</head>
 
-@section('content')
+<body>
+    @include('googletagmanager::body')
+    @include('includes.Navbar')
 
-<style type="text/css">
-    a{
-        color: black;
-        
-    }
-    a:hover{
-        color: black;
-    }
-    ul li{
-        list-style: none;
-    }
-</style>
-
-       
-    
-
+    <main class="container">
     <div class="container">
 
         @if (session()->has('success_message'))
@@ -80,7 +73,10 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-5">
-                                    <img src="{{ productImage($product->image) }}" alt="item" class="img_cartpage">
+                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('img/not-found.jpg') }}" 
+                                         alt="item" class="img_cartpage"
+                                         width="50" height="50"
+                                         onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
                                 </div>
                                 <div class="col-lg-7">
                                   <a href="{{ route('shop.show', $product->slug) }}" style="color: black;">{{ $product->name }}</a>
@@ -107,13 +103,13 @@
 
          
         </div>
-    
+    </div>
+    </main>
 
-@endsection
-
-@section('extra-js')
     <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
     <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
     <script src="{{ asset('js/algolia.js') }}"></script>
-@endsection
+</body>
+
+</html>

@@ -1,17 +1,23 @@
-@extends('layout')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('title', 'Search Results Algolia')
-
-@section('extra-css')
+<head>
+    @include('googletagmanager::head')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results Algolia</title>
+    @include('includes.HeadIcon')
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
-@endsection
+</head>
 
-@section('content')
+<body>
+    @include('googletagmanager::body')
+    @include('includes.Navbar')
 
-
-    <div class="container">
+    <main class="container">
         @if (session()->has('success_message'))
             <div class="alert alert-success">
                 {{ session()->get('success_message') }}
@@ -27,9 +33,7 @@
                 </ul>
             </div>
         @endif
-    </div>
 
-    <div class="container">
         <div class="search-results-container-algolia">
             <div>
                 <h2>Search</h2>
@@ -55,16 +59,15 @@
                     <!-- Pagination widget will appear here -->
                 </div>
             </div>
-        </div> <!-- end search-results-container-algolia -->
-    </div> <!-- end container -->
+        </div>
+    </main>
 
-@endsection
-
-@section('extra-js')
     <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
     <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
     <script src="{{ asset('js/algolia.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0"></script>
     <script src="{{ asset('js/algolia-instantsearch.js') }}"></script>
-@endsection
+</body>
+
+</html>

@@ -36,7 +36,7 @@ a:hover{
 
 </style>
 
-<div class="ftr2">
+<main class="ftr2">
   
 <div class="container">
 
@@ -44,13 +44,13 @@ a:hover{
                 <h2 style="font-size: 28px; text-align: center;">BEST SELLER</h2>
   <br>
                 
-                    <div id="blogCarousel" class="carousel slide" data-ride="carousel">
+                    <div id="blogCarousel" class="carousel slide" data-bs-ride="carousel">
 
                         <ol class="carousel-indicators">
-                            <li data-target="#blogCarousel" data-slide-to="0" class="active" style=" border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;"></li>
-                            <li data-target="#blogCarousel" data-slide-to="1" style=" border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;"></li>
+                            <button type="button" data-bs-target="#blogCarousel" data-bs-slide-to="0" class="active" style=" border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;"></button>
+                            <button type="button" data-bs-target="#blogCarousel" data-bs-slide-to="1" style=" border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;"></button>
                         </ol>
 
                         <!-- Carousel items -->
@@ -62,7 +62,9 @@ a:hover{
 
                                     <div class="col-sm-3 col-xs-6">
                                         <a href="{{ route('shop.show', $product->slug) }}">
-                                            <img src="{{ productImage($product->image) }}" alt="Image" style="width: 250px; height:250px;" class="img-responsive">
+                                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('img/not-found.jpg') }}" 
+                                                 alt="Image" style="width: 250px; height:250px;" class="img-fluid"
+                                                 onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
                                             
                                         </a>
                                         <p><a href="{{ route('shop.show', $product->slug) }}">{{$product->name}}</a></p>
@@ -81,7 +83,7 @@ a:hover{
                                     @foreach($best_seller2 as $product)
                                     <div class="col-sm-3 col-xs-6">
                                         <a href="{{ route('shop.show', $product->slug) }}">
-                                           <img src="{{ productImage($product->image) }}" alt="Image" style="width: 250px; height:250px;" class="img-responsive">
+                                           <img src="{{ productImage($product->image) }}" alt="Image" style="width: 250px; height:250px;" class="img-fluid">
                                         </a>
                                          <p><a href="{{ route('shop.show', $product->slug) }}">{{$product->name}}</a></p>
                                         <p><strong>$ {{$product->price}}</strong></p>
@@ -94,18 +96,18 @@ a:hover{
 
                         </div>
                         <!--.carousel-inner-->
-                         <a class="carousel-control-prev" href="#blogCarousel" role="button" data-slide="prev" style="margin-top: 100px; font-size: 10px; color: #000; background: #fff; border-radius: 50%; width: 40px; height: 40px;"">
+                         <button class="carousel-control-prev" type="button" data-bs-target="#blogCarousel" data-bs-slide="prev" style="margin-top: 100px; font-size: 10px; color: #000; background: #fff; border-radius: 50%; width: 40px; height: 40px;">
     <span class="fa fa-angle-left fa-2x" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#blogCarousel" role="button" data-slide="next" style="margin-top: 100px; font-size: 10px; color: #000; background: #fff; border-radius: 50%; width: 40px; height: 40px;">
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#blogCarousel" data-bs-slide="next" style="margin-top: 100px; font-size: 10px; color: #000; background: #fff; border-radius: 50%; width: 40px; height: 40px;">
     <span class="fa fa-angle-right fa-2x" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
+    <span class="visually-hidden">Next</span>
+  </button>
                     </div>
                     <!--.Carousel-->
 
              
             </div>
 </div>
-</div> <!-- ftr2 end -->
+</main>

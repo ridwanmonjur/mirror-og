@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('shop.layout')
 @section('title', 'Reset Password')
 @section('content')
 <div class="container">

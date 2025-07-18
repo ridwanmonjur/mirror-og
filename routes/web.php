@@ -222,7 +222,7 @@ Route::group(['prefix' => 'organizer'], function () {
 
 
 
-Route::get('/', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
 
 Route::middleware('auth')->group(function () {

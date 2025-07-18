@@ -1,13 +1,15 @@
-@extends('layout')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('title', 'My Order')
-
-@section('extra-css')
+<head>
+    @include('googletagmanager::head')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Order</title>
+    @include('includes.HeadIcon')
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
-@endsection
-
-@section('content')
-<style type="text/css">
+    <style type="text/css">
      ul li{
         list-style: none;
     }
@@ -32,7 +34,13 @@
     
 }
 </style>
+</head>
 
+<body>
+    @include('googletagmanager::body')
+    @include('includes.Navbar')
+
+    <main class="container">
         <br><br>
    
 
@@ -125,7 +133,9 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-5">
-                                    <img src="{{ productImage($product->image) }}" alt="item" class="img_cartpage">
+                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('img/not-found.jpg') }}" 
+                                         alt="item" class="img_cartpage"
+                                         onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
                                 </div>
                                 <div class="col-lg-7">
                                   <a href="{{ route('shop.show', $product->slug) }}" style="color: black; font-size: 18px; font-weight: 600">{{ $product->name }}</a>
@@ -164,12 +174,13 @@
 
     <div style="height: 190px;"></div>
         
+    </div>
+    </main>
 
-@endsection
-
-@section('extra-js')
     <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
     <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
     <script src="{{ asset('js/algolia.js') }}"></script>
-@endsection
+</body>
+
+</html>

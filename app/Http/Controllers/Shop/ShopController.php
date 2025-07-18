@@ -82,7 +82,7 @@ class ShopController extends Controller
             $products = $products->paginate($pagination);
         }
 
-        return view('shop')->with([
+        return view('shop.shop')->with([
             'products' => $products,
             'categories' => $categories,
             'categoryName' => $categoryName,
@@ -104,7 +104,7 @@ class ShopController extends Controller
 
         $stockLevel = getStockLevel($product->quantity);
 
-        return view('product')->with([
+        return view('shop.product')->with([
             'product' => $product,
             'stockLevel' => $stockLevel,
             'mightAlsoLike' => $mightAlsoLike,
@@ -127,11 +127,11 @@ class ShopController extends Controller
 
         $products = Product::search($query)->paginate(10);
 
-        return view('search-results')->with('products', $products);
+        return view('shop.search-results')->with('products', $products);
     }
 
     public static function searchAlgolia(Request $request)
     {
-        return view('search-results-algolia');
+        return view('shop.search-results-algolia');
     }
 }

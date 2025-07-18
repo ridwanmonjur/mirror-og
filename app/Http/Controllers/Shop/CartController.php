@@ -36,7 +36,7 @@ class CartController extends Controller
         $discount = 0;
         $cartTotal = $cart->getTotal();
         
-        return view('cart')->with([
+        return view('shop.cart')->with([
             'cart' => $cart,
             'mightAlsoLike' => $mightAlsoLike,
             'top_pick' => $top_pick,

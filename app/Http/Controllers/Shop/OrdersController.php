@@ -19,7 +19,7 @@ class OrdersController extends Controller
 
         $orders = auth()->user()->orders()->with('products')->orderby('id','desc')->get(); // fix n + 1 issues
 
-        return view('my-orders')->with('orders', $orders);
+        return view('shop.my-orders')->with('orders', $orders);
     }
 
     /**
@@ -57,7 +57,7 @@ class OrdersController extends Controller
 
         $products = $order->products;
 
-        return view('my-order')->with([
+        return view('shop.my-order')->with([
             'order' => $order,
             'products' => $products,
         ]);
