@@ -9,6 +9,7 @@
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
     <style>
         .StripeElement {
             box-sizing: border-box;
@@ -44,9 +45,9 @@
     @include('googletagmanager::body')
     @include('includes.Navbar')
 
-    <main class="px-4">
+    <main class="px-4 product">
 
-        <p class="lead">Complete your order</p>
+        <p class="lead mt-3">Complete your order</p>
 
         <hr>
 
@@ -64,7 +65,7 @@
 
                 @if (count($errors) > 0)
                     <div class="spacer"></div>
-                    <div class="alert alert-danger">
+                    <div class=" text-red">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{!! $error !!}</li>
@@ -245,35 +246,26 @@
                         <table class="table">
                             <tr>
                                 <td>
-                                    <a class="btn btn-link" data-bs-toggle="collapse" href="#multiCollapseExample1"
-                                        role="button" aria-expanded="false" aria-controls="multiCollapseExample1"
-                                        style="color: #000;">
-                                        <b>PROMO CODE</b>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a class="btn btn-link" data-bs-toggle="collapse" href="#multiCollapseExample1"
-                                        role="button" aria-expanded="false" aria-controls="multiCollapseExample1"
-                                        style="color: #000;">
-                                        <i class="fa fa-chevron-down"></i> </a>
+                                    <b>PROMO CODE</b>
                                 </td>
                             </tr>
                         </table>
                         <div class="row">
                             <div class="col">
-                                <div class="collapse multi-collapse" id="multiCollapseExample1">
-                                    <div class="card card-body">
-                                        <form method="post" action="{{ route('coupon.store') }}">
-                                            {{ csrf_field() }}
-                                            <input type="text" name="coupon_code" class="form-control"
-                                                placeholder="CODES ARE CASE-SENSITIVE">
-                                            <p style="font-size: 12px; color: grey;">Casing & hyphens need to be exact
-                                            </p>
+                                <div class="card card-body">
+                                    <form method="post" action="{{ route('coupon.store') }}">
+                                        {{ csrf_field() }}
+                                        <input type="text" name="coupon_code" class="form-control"
+                                            placeholder="CODES ARE CASE-SENSITIVE">
+                                        <p style="font-size: 12px; color: grey;">Casing & hyphens need to be exact
+                                        </p>
 
-                                            <button type="submit" class="btn btn-dark btn-lg btn-block">Apply <i
-                                                    class="fa fa-arrow-right" style="margin-left: 35px;"></i></button>
-                                        </form>
-                                    </div>
+                                        <button type="submit" class="btn btn-success text-dark btn-lg btn-block rounded-pill">Apply 
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
