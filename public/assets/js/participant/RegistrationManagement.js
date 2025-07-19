@@ -115,14 +115,14 @@ function confirmSuccess(successMessage, joinEventId) {
 }
 
 // if (rosterMap[member.user.id]) return '';
-function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap) {
+function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap, eventDetails = null) {
     const count = roster.reduce((sum, player)=> {
         if (!rosterMap[player.user.id])  sum+=1;
         return sum;
     }, 0);
     return `
         <div class="roster-container">
-            <div class="my-3 text-start">Current roster (${count}/${getData('maxRosterSize')})</div>
+            <div class="my-3 text-start">Current roster (${count}/${eventDetails?.game?.player_per_team || getData('maxRosterSize')})</div>
             ${roster.map(player =>  {
 
                 if (!rosterMap[player.user.id])  return '';
@@ -851,7 +851,7 @@ function approveMemberAction(event) {
                 
             </h5>
             ${drawEventTable(eventDetails, followCounts)}
-            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId, rosterMap)}
+            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId, rosterMap, eventDetails)}
             <small class="text-center mt-4 mb-3 d-block text-red"> You can freely leave and join a roster as long as registration has not been confirmed. </small>
             <small class="text-center text-red d-block "> Once registration is confirmed, the roster is locked in and no changes can be made to the roster. </small>
         `,
@@ -924,7 +924,7 @@ async function disapproveMemberAction(event) {
             }
             </h5>
             ${drawEventTable(eventDetails, followCounts)}
-            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId, rosterMap)}
+            ${rosterCountCaptainHtmlGenerater(membersValue, rosterCaptainId, rosterMap, eventDetails)}
             <small class="text-center mt-4 mb-3 d-block text-red"> You can freely leave and join a roster as long as registration has not been confirmed. </small>
             <small class="text-center text-red d-block "> Once registration is confirmed, the roster is locked in and no changes can be made to the roster. </small>
         `,

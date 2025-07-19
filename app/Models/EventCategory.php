@@ -11,7 +11,15 @@ class EventCategory extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'gameTitle',
+        'gameIcon',
+        'gameDescription',
+        'eventTags',
+        'user_id',
+        'player_per_team',
+        'games_per_match'
+    ];
 
     protected $table = 'event_categories';
 

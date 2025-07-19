@@ -86,6 +86,18 @@ class EventCategoryResource extends Resource
                 ]),
                 Forms\Components\TextInput::make('eventDefinitions')
                     ->maxLength(255),
+                Forms\Components\TextInput::make('player_per_team')
+                    ->numeric()
+                    ->default(5)
+                    ->minValue(1)
+                    ->maxValue(50)
+                    ->label('Players per Team'),
+                Forms\Components\TextInput::make('games_per_match')
+                    ->numeric()
+                    ->default(3)
+                    ->minValue(1)
+                    ->maxValue(20)
+                    ->label('Games per Match'),
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name'),
             ]);
@@ -105,6 +117,12 @@ class EventCategoryResource extends Resource
                     ->size(60),
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('player_per_team')
+                    ->label('Players/Team')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('games_per_match')
+                    ->label('Games/Match')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
                     ->timezone('Asia/Kuala_Lumpur')

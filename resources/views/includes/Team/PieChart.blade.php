@@ -118,7 +118,7 @@
                     </button> <br>
 
                 @endif
-                @if ($joinEvent->totalRosterCount >= $maxRosterSize 
+                @if ($joinEvent->totalRosterCount >= ($joinEvent->eventDetails->game?->player_per_team ?? config('constants.ROSTER_SIZE')) 
                     && $joinEvent->payment_status == "completed"
                     && $joinEvent->roster_captain_id
                 )
@@ -172,7 +172,7 @@
     
                     @endif
                 @endif
-                @if ($joinEvent->totalRosterCount == $maxRosterSize)
+                @if ($joinEvent->totalRosterCount == ($joinEvent->eventDetails->game?->player_per_team ?? config('constants.ROSTER_SIZE')))
                     <div class="mt-2 text-start text-success">
                         <span class="me-0">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">

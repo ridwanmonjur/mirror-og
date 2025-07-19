@@ -51,8 +51,8 @@ class SystemCouponsResource extends Resource
                         ->disabled(fn ($record) => $record !== null)
                         ->columnSpan(1),
                     
-                    Forms\Components\TextInput::make('redeem_count')
-                        ->label('Redeem Count')
+                    Forms\Components\TextInput::make('redeemable_count')
+                        ->label('Count')
                         ->required()
                         ->numeric()
                         ->minValue(1)
@@ -129,7 +129,7 @@ class SystemCouponsResource extends Resource
                         default => 'gray',
                     }),
                 
-                Tables\Columns\TextColumn::make('redeem_count')
+                Tables\Columns\TextColumn::make('redeemable_count')
                     ->label('Redeem Count')
                     ->numeric(),
                 

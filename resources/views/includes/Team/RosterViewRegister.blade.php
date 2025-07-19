@@ -153,7 +153,7 @@
                                     </li>
                                 @endforeach
                                 @if($joinEvent->join_status == "pending")
-                                    @for ($i = 0; $i < $maxRosterSize - $votes['totalCount'] ; $i++)
+                                    @for ($i = 0; $i < ($joinEvent->eventDetails->game?->player_per_team ?? config('constants.ROSTER_SIZE')) - $votes['totalCount'] ; $i++)
                                         <li 
                                             data-join-event-id="{{ $joinEvent->id }}"
                                             onclick="addRosterMembers(event);"
