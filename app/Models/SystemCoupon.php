@@ -20,7 +20,7 @@ class SystemCoupon extends Model
         'is_public',
         'expires_at',
         'for_type',
-        'redeem_count',
+        'redeemable_count',
         'discount_type'
     ];
 
@@ -29,7 +29,7 @@ class SystemCoupon extends Model
         'is_public' => 'boolean',
         'expires_at' => 'datetime',
         'amount' => 'integer',
-        'redeem_count' => 'integer'
+        'redeemable_count' => 'integer'
     ];
 
     public $timestamps = false;
@@ -131,7 +131,7 @@ class SystemCoupon extends Model
                     ];
                 }
 
-                if ($userCoupon && $userCoupon->redeemable_count >= $coupon->redeem_count) {
+                if ($userCoupon && $userCoupon->redeemable_count >= $coupon->redeemable_count) {
                     $fee = self::emptyOrgCoupon($fee, $eventPrizePool, $incrementPercent);
                     return [
                         $fee,
@@ -260,7 +260,7 @@ class SystemCoupon extends Model
             ->where('coupon_id', $this->id)
             ->first();
 
-        if ($userCoupon->redeemable_count >= $this->redeem_count) {
+        if ($userCoupon->redeemable_count >= $this->redeemable_count) {
             throw new Exception('You have exceeded the maximum number of redemptions for this coupon.');
         }
 

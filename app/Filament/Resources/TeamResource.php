@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TeamResource\Pages;
 use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\CountryRegion;
-use App\Models\Game;
+use App\Models\EventCategory;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -34,7 +34,7 @@ class TeamResource extends Resource
             $countries[$country->id] = $country->name;
         }
 
-        $gameCollection = Game::getAllCached();
+        $gameCollection = EventCategory::getAllCached();
         foreach ($gameCollection as $game) {
             if ($game && $game->gameTitle != null && $game->gameTitle !== '') {
                 $games[$game->id] = $game->gameTitle;

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.6.0/dist/instantsearch-theme-algolia.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
         @endif
 
         @if(count($errors) > 0)
-            <div class="alert alert-danger">
+            <div class=" text-red">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>

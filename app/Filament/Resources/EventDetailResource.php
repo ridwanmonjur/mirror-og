@@ -125,21 +125,11 @@ class EventDetailResource extends Resource
                     ->maxLength(255),
 
 
-                Forms\Components\TextInput::make('player_per_team')
-                    ->label('Players per Team')
-                    ->numeric()
-                    ->minValue(1),
-
                 Forms\Components\Select::make('venue')
                     ->label('Region')
                     ->options($countries)
                     ->reactive()
                     ->placeholder('Select a region'),
-
-                Forms\Components\TextInput::make('games_per_match')
-                    ->label('Games per Match')
-                    ->numeric()
-                    ->minValue(1),
              
                 Forms\Components\Select::make('user_id')
                     ->optionsLimit(10)

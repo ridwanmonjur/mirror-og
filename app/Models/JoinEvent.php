@@ -206,7 +206,7 @@ class JoinEvent extends Model
         $invitedEventOrganizerIds = $joinEventOrganizerIds = $invitedIds = $joinIds = [];
         $withClause = [
             'eventDetails', 'eventDetails.tier', 'eventDetails.type', 'eventDetails.signup', 'eventDetails.user', 
-            'eventDetails.game', 
+            'eventDetails.game',
             'members' => function($q) {
                 $q->where('status', 'accepted')
                     ->with('payments', 'user');

@@ -219,7 +219,7 @@ class OrganizerCheckoutController extends Controller
             ->where('coupon_id', $systemCoupon->id)
             ->first();
 
-        if ($userCoupon->redeemable_count >= $systemCoupon->redeem_count) {
+        if ($userCoupon->redeemable_count >= $systemCoupon->redeemable_count) {
             throw new Exception('You have exceeded the maximum number of redemptions for this coupon.');
         }
 

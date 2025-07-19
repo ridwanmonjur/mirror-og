@@ -104,22 +104,20 @@ class NewCart extends Model
 
     public function getSubTotal()
     {
-        return $this->items()->sum('subtotal');
+        return $this->total ?? $this->items()->sum('subtotal');
     }
 
     public function getTotal()
     {
-        return $this->total;
+        return $this->total ?? $this->getSubTotal();
     }
 
     public function getContent()
     {
-        // If items are already loaded with products, return them
         if ($this->relationLoaded('items')) {
             return $this->items;
         }
         
-        // Otherwise, load items with products
         return $this->items()->with('product')->get();
     }
 }

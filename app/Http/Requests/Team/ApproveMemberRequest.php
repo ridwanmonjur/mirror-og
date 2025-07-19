@@ -4,11 +4,12 @@ namespace App\Http\Requests\Team;
 
 use App\Models\JoinEvent;
 use App\Models\TeamMember;
+use App\Models\RosterMember;
+use App\Models\EventCategory;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
+
 
 class ApproveMemberRequest extends FormRequest
 {
@@ -26,7 +27,18 @@ class ApproveMemberRequest extends FormRequest
         $validator->after(function ($validator) {
 
             $userId = $this->user_id;
-            if (JoinEvent::isPartOfRoster($this->event_id, $userId)) {
+            $joinEventsId = $this->join_events_id;
+            
+            $joinEvent = JoinEvent::with('eventDetails.game')->find($joinEventsId);
+            if (!$joinEvent) {
+                $validator->errors()->add('event', 'Join event not found');
+                return;
+            }
+
+            $eventId = $joinEvent->event_details_id;
+            $eventCategoryId = $joinEvent->eventDetails->event_category_id;
+
+            if (JoinEvent::isPartOfRoster($eventId, $userId)) {
                 $validator->errors()->add('event',  'This user has already joined this event with the roster of another team!');
             };
 
@@ -37,10 +49,24 @@ class ApproveMemberRequest extends FormRequest
 
             if (!$teamMember) {
                 $validator->errors()->add('event',  'Team member not found');
+                return;
             }
 
             if ($teamMember->status != "accepted") {
                 $validator->errors()->add('event',  'Member is not accepted');
+                return;
+            }
+
+            $currentRosterCount = RosterMember::where('join_events_id', $joinEventsId)->count();
+            $eventCategory = EventCategory::find($eventCategoryId);
+            if (!$eventCategory) {
+                $validator->errors()->add('event', 'Event category not found');
+                return;
+            }
+
+            if ($currentRosterCount >= $eventCategory->player_per_team) {
+                $validator->errors()->add('event', "Team roster is full. Maximum {$eventCategory->player_per_team} players allowed for this game category.");
+                return;
             }
 
             $this->member_id = $teamMember->id;

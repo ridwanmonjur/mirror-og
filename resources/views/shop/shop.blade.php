@@ -8,6 +8,7 @@
     <title>Event Checkout</title>
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
 </head>
 
 <body>
@@ -21,7 +22,7 @@
         @endif
 
         @if (count($errors) > 0)
-            <div class="alert alert-danger">
+            <div class=" text-red">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -69,23 +70,23 @@
                             </div>
 
                             <div class="btn-group " >
-                                <button type="button" class="btn btn-light border-dark rounded-2 text-dark me-2 dropdown-toggle" id="dropdownMenuOffset3"
+                                <button type="button" class="btn  border-dark rounded-2 text-dark me-2 dropdown-toggle" id="dropdownMenuOffset3"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     PRICE
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset3">
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_less_than_50']) }}">
-                                        less than RM50</a>
+                                        less than RM 50</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_50_to_100']) }}">
-                                        RM50 - RM100</a>
+                                        RM 50 - RM 100</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_100_to_150']) }}">
-                                        RM100 - RM150</a>
+                                        RM 100 - RM 150</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_150_or_more']) }}">
-                                        RM150 or more</a>
+                                        RM 150 or more</a>
 
                                 </div>
                             </div>
@@ -102,13 +103,11 @@
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'low_high']) }}"
                                         style="color: #000;">
-                                        Price :low - high</a>
+                                        Price low - high</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'high_low']) }}">
-                                        Price :high - low</a>
-                                    <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'Top_Sellers']) }}">
-                                        Top Sellers</a>
+                                        Price high - low</a>
+                                   
 
                                 </div>
                             </div>
@@ -120,23 +119,86 @@
 
 
                     @forelse ($products as $product)
-                        <div class="col-12 col-lg-4 col-xl-3 ">
-                            <div class="shop">
-                                <a href="{{ route('shop.show', $product->slug) }}"><img
-                                    src="{{ productImage($product->image) }}" class="object-fit-cover rounded-3"
-                                    width="270" height="270"    
-                                    style="max-width: 95%;"    
-                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/404.png') }}';"
-                                ></a>
-                                <br><br>
+                        <div class="col-12 col-lg-4 col-xl-3 mb-4">
+                        <a href="{{ route('shop.show', $product->slug) }}">
+                            
+                            <div class="product-card border border-muted  p-3 h-100 d-flex flex-column">
+                                <div class="product-card__image-wrapper  mb-3">
+                                    
+                                        <img src="{{ asset('storage/' . $product->image) }}" 
+                                             class="product-card__image w-100 object-fit-cover border border-muted rounded-3"
+                                             style="height: 200px;"    
+                                             onerror="this.onerror=null;this.src='/assets/images/404q.png';"
+                                             alt="{{ $product->name }}">
+                                   
+                                </div>
 
-                                <a href="{{ route('shop.show', $product->slug) }}">{{ $product->name }}</a>
-                                <br>
+                                <div class="text-center  d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h2  class="product-card__name text-decoration-none text-primary d-block mb-1">
+                                            {{ $product->name }}
+                                        </h2>
+                                        
+                                        @if($product->description)
+                                        <div class="product-card__description mb-2">
+                                            {!! strip_tags($product->description) !!}
+                                        </div>
+                                        @endif
+                                    </div>
 
-                                RM {{ $product->price }}
-                                <br><br>
-
+                                    <div>
+                                        @php
+                                            $price = number_format($product->price, 2);
+                                            $parts = explode('.', $price);
+                                            $whole = $parts[0];
+                                            $decimal = $parts[1];
+                                        @endphp
+                                        
+                                        <div class="product-card__price">
+                                            <span class="product-card__currency">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
+                                        </div>
+                                        
+                                        <div class="mb-0">
+                                            <div class="d-inline-flex flex-wrap justify-content-center gap-1 mb-2">
+                                                @foreach($product->categories as $category)
+                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge bg-secondary text-white text-decoration-none" style="font-size: 0.7rem;">
+                                                        {{ $category->name }}
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                            
+                                            @php
+                                                $stockThreshold = 0;
+                                            @endphp
+                                            @if($product->quantity > $stockThreshold)
+                                                <span class="badge bg-success" style="font-size: 0.7rem;">
+                                                    <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                    </svg>
+                                                    In Stock
+                                                </span>
+                                            @elseif($product->quantity > 0)
+                                                <span class="badge bg-warning" style="font-size: 0.7rem;">
+                                                    <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                                    </svg>
+                                                    Low Stock
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger" style="font-size: 0.7rem;">
+                                                    <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                    </svg>
+                                                    Not available
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </div> 
+                             </a>
                         </div>
 
 

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\EventCategoryResource\Pages;
 
 use App\Filament\Resources\EventCategoryResource;
+use App\Models\EventCategory;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -13,7 +14,15 @@ class EditEventCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->after(function () {
+                    EventCategory::clearCache();
+                }),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        EventCategory::clearCache();
     }
 }
