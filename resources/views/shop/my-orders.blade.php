@@ -73,10 +73,10 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-5">
-                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('img/not-found.jpg') }}" 
-                                         alt="item" class="img_cartpage"
+                                    <img src="{{ asset('storage/' . $product->image) }}" 
+                                         alt="item" class="img_cartpage border border-secondary object-fit-cover"
                                          width="50" height="50"
-                                         onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
+                                         onerror="this.onerror=null;this.src='/assets/images/404q.png';">
                                 </div>
                                 <div class="col-lg-7">
                                   <a href="{{ route('shop.show', $product->slug) }}" style="color: black;">{{ $product->name }}</a>

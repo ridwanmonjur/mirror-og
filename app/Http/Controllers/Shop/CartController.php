@@ -31,16 +31,12 @@ class CartController extends Controller
         }
         
         $mightAlsoLike = Product::mightAlsoLike()->get();
-        $top_pick = DB::table('products')->orderBy('id','DESC')->paginate(4);
-        $top_pick2 = DB::table('products')->orderBy('id','ASC')->paginate(4);
         $discount = 0;
         $cartTotal = $cart->getTotal();
         
         return view('shop.cart')->with([
             'cart' => $cart,
             'mightAlsoLike' => $mightAlsoLike,
-            'top_pick' => $top_pick,
-            'top_pick2' => $top_pick2,
             'discount' => $discount,
             'newSubtotal' => $cartTotal,
             'newTotal' => $cartTotal - $discount,

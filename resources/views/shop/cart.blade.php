@@ -54,15 +54,15 @@
                                     <div class="col-lg-2">
                                         @if ($item->product && $item->product->slug)
                                             <a href="{{ route('shop.show', $item->product->slug) }}">
-                                                <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('img/not-found.jpg') }}" 
-                                                     class="img_cartpage"
+                                                <img src="{{ asset('storage/' . $item->product->image) }}" 
+                                                     class="img_cartpage rounded-3 object-fit-cover border border-secondary"
                                                      width="50" height="50"
-                                                     onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';"></a>
+                                                     onerror="this.onerror=null;this.src='/assets/images/404q.png';"></a>
                                         @else
-                                            <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : asset('img/not-found.jpg') }}" 
-                                                 class="img_cartpage"
+                                            <img src="{{ asset('storage/' . $item->product->image) }}" 
+                                                 class="img_cartpage border rounded-3 border-secondary object-fit-cover"
                                                  width="50" height="50"
-                                                 onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
+                                                 onerror="this.onerror=null;this.src='/assets/images/404q.png';">
                                         @endif
                                     </div>
 
@@ -108,7 +108,7 @@
                                     </div>
 
                                     <div class="col-lg-1"></div>
-                                    <div class="col-lg-2">RM {{ $item->subtotal }}</div>
+                                    <div class="col-lg-2">RM  {{ $item->subtotal }}</div>
                                 </div>
                             </div>
                             <hr>
@@ -121,8 +121,8 @@
                             <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white">Checkout ></i></a>
                         </div>
                         <div class="col-md-2">
-                            <p>Subtotal : RM{{ $cart->getSubTotal() }}</p>
-                            <p><b>Total: RM{{ $cart->getTotal() }} </b></p>
+                            <p>Subtotal : RM {{ $cart->getSubTotal() }}</p>
+                            <p><b>Total: RM {{ $cart->getTotal() }} </b></p>
                         </div>
                     </div>
                 @else
@@ -144,7 +144,7 @@
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>RM{{ $cart->getSubTotal() }}</td>
+                                <td>RM {{ $cart->getSubTotal() }}</td>
 
                             </tr>
                             @if (session()->has('coupon'))
@@ -153,7 +153,7 @@
                                         COUPON : {{ session()->get('coupon')['name'] }}
                                     </td>
 
-                                    <td>- RM{{ session()->get('coupon')['discount'] }}
+                                    <td>- RM {{ session()->get('coupon')['discount'] }}
                                         <form method="post" action="{{ route('coupon.destroy') }}" style="display:inline">
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
@@ -167,7 +167,7 @@
                             @endif
                             <tr style="font-weight: bold">
                                 <td>Total</td>
-                                <td>RM{{ $cart->getTotal() }}</td>
+                                <td>RM {{ $cart->getTotal() }}</td>
                             </tr>
 
                             @if (session()->has('coupon'))
@@ -175,8 +175,8 @@
                                     <td>Discount<br>
                                         <b>Net Total</b>
                                     </td>
-                                    <td>- RM{{ $discount }}<br>
-                                        <b>RM{{ $newTotal }} </b>
+                                    <td>- RM {{ $discount }}<br>
+                                        <b>RM {{ $newTotal }} </b>
 
                                     </td>
                                 </tr>

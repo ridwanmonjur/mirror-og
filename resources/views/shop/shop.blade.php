@@ -76,16 +76,16 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset3">
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_less_than_50']) }}">
-                                        less than RM50</a>
+                                        less than RM 50</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_50_to_100']) }}">
-                                        RM50 - RM100</a>
+                                        RM 50 - RM 100</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_100_to_150']) }}">
-                                        RM100 - RM150</a>
+                                        RM 100 - RM 150</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_150_or_more']) }}">
-                                        RM150 or more</a>
+                                        RM 150 or more</a>
 
                                 </div>
                             </div>
@@ -123,10 +123,10 @@
                         <div class="col-12 col-lg-4 col-xl-3 ">
                             <div class="shop">
                                 <a href="{{ route('shop.show', $product->slug) }}"><img
-                                    src="{{ productImage($product->image) }}" class="object-fit-cover rounded-3"
+                                    src="{{ asset('storage/' . $product->image) }}" class="object-fit-cover border border-secondary rounded-3"
                                     width="270" height="270"    
                                     style="max-width: 95%;"    
-                                    onerror="this.onerror=null;this.src='{{ asset('assets/images/404.png') }}';"
+                                    onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                                 ></a>
                                 <br><br>
 

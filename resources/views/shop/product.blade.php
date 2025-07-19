@@ -55,19 +55,26 @@
                                 <div class="carousel-inner">
                                     @foreach (json_decode($product->images, true) as $index => $image)
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                            <img src="{{ $image ? asset('storage/' . $image) : asset('img/not-found.jpg') }}" 
-                                                class="d-block w-100 rounded shadow-sm" 
+                                            <img src="{{ asset('storage/' . $image) }}" 
+                                                class="d-block w-100 rounded-3 shadow-sm object-fit-cover border border-secondary" 
                                                 alt="{{ $product->name }}"
-                                                style="height: 300px; object-fit: cover;"
-                                                onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
+                                                style="height: 300px; "
+                                                onerror="this.onerror=null;this.src='/assets/images/404q.png';">
                                         </div>
                                     @endforeach
                                 </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <button class="carousel-control-prev bg-dark bg-opacity-75 rounded-circle border border-white border-2 position-absolute top-50 translate-middle-y" 
+                                        type="button" data-bs-target="#productCarousel" data-bs-slide="prev"
+                                        style="width:50px; height: 50px;"    
+                                        
+                                    >
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <button class="carousel-control-next bg-dark bg-opacity-75 rounded-circle border border-white border-2  position-absolute top-50 translate-middle-y" 
+                                        type="button" data-bs-target="#productCarousel" data-bs-slide="next"
+                                        style="width:50px; height: 50px;"     
+                                    >
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>
@@ -82,7 +89,7 @@
                         <h4 class="product-detail-name h2 mb-3">{{ $product->name }}</h4>
                         
                         <div class="price-section mb-3">
-                            <span class="zms_price h3 text-success fw-bold">RM{{ $product->price }}</span>
+                            <span class="zms_price h3 text-success fw-bold">RM {{ $product->price }}</span>
                         </div>
 
                         <p class="mb-3">{{ $product->details }}</p>

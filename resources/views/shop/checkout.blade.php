@@ -178,7 +178,7 @@
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>RM{{ $cart->getSubTotal() }}</td>
+                                <td>RM {{ $cart->getSubTotal() }}</td>
 
                             </tr>
                             @if (session()->has('coupon'))
@@ -187,7 +187,7 @@
                                         COUPON : {{ session()->get('coupon')['name'] }}
                                     </td>
 
-                                    <td>- RM{{ session()->get('coupon')['discount'] }}
+                                    <td>- RM {{ session()->get('coupon')['discount'] }}
                                         <form method="post" action="{{ route('coupon.destroy') }}"
                                             style="display:inline">
                                             {{ csrf_field() }}
@@ -202,7 +202,7 @@
                             @endif
                             <tr style="font-weight: bold">
                                 <td>Total</td>
-                                <td>RM{{ $cart->getTotal() }}</td>
+                                <td>RM {{ $cart->getTotal() }}</td>
                             </tr>
 
                             @if (session()->has('coupon'))
@@ -210,8 +210,8 @@
                                     <td>Discount<br>
                                         <b>Net Total</b>
                                     </td>
-                                    <td>- RM{{ $discount }}<br>
-                                        <b>RM{{ $newTotal }} </b>
+                                    <td>- RM {{ $discount }}<br>
+                                        <b>RM {{ $newTotal }} </b>
 
                                     </td>
                                 </tr>
