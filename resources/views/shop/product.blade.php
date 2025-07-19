@@ -51,27 +51,18 @@
                 <div class="col-lg-3 col-12">
                     <div class="product-image-slider">
                         <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('img/not-found.jpg') }}" 
-                                         class="d-block img-fluid rounded shadow-sm" 
-                                         alt="{{ $product->name }}"
-                                         width="300" height="300"
-                                         onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
-                                </div>
-                                @if ($product->images)
-                                    @foreach (json_decode($product->images, true) as $image)
-                                        <div class="carousel-item">
+                            @if ($product->images)
+                                <div class="carousel-inner">
+                                    @foreach (json_decode($product->images, true) as $index => $image)
+                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                             <img src="{{ $image ? asset('storage/' . $image) : asset('img/not-found.jpg') }}" 
-                                                 class="d-block img-fluid rounded shadow-sm" 
-                                                 alt="{{ $product->name }}"
-                                                 width="300" height="300"
-                                                 onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
+                                                class="d-block w-100 rounded shadow-sm" 
+                                                alt="{{ $product->name }}"
+                                                style="height: 300px; object-fit: cover;"
+                                                onerror="this.onerror=null;this.src='{{ asset('img/not-found.jpg') }}';">
                                         </div>
                                     @endforeach
-                                @endif
-                            </div>
-                            @if ($product->images && count(json_decode($product->images, true)) > 0)
+                                </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
