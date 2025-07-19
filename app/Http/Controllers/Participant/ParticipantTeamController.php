@@ -9,7 +9,7 @@ use App\Http\Requests\Team\AddMemberRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Jobs\HandleFollowsFriends;
 use App\Models\CountryRegion;
-use App\Models\Game;
+use App\Models\EventCategory;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
@@ -76,7 +76,7 @@ class ParticipantTeamController extends Controller
                 'count' => $count
             ] = Team::getUserTeamListAndPluckIds($user_id);
         }
-        $categories = Game::all(['id', 'gameTitle', 'gameIcon']);
+        $categories = EventCategory::getAllCached();
 
         $allCategorys = $categories->reduce(function ($carry, $category) {
             $data = [

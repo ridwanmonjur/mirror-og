@@ -120,13 +120,16 @@ class EventCategoryResource extends Resource
             //     //
             // ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                Tables\Actions\EditAction::make()
+                    ->after(function () {
+                        EventCategory::clearCache();
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function () {
+                        EventCategory::clearCache();
+                    }),
+                ]);
+            
     }
 
     public static function getRelations(): array
@@ -140,8 +143,8 @@ class EventCategoryResource extends Resource
     {
         return [
             'index' => Pages\ListEventCategories::route('/'),
-            // 'create' => Pages\CreateEventCategory::route('/create'),
-            // 'edit' => Pages\EditEventCategory::route('/{record}/edit'),
+            'create' => Pages\CreateEventCategory::route('/create'),
+            'edit' => Pages\EditEventCategory::route('/{record}/edit'),
         ];
     }
 }
