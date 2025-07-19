@@ -161,7 +161,7 @@
                                         <div class="mb-0">
                                             <div class="d-inline-flex flex-wrap justify-content-center gap-1 mb-2">
                                                 @foreach($product->categories as $category)
-                                                    <a href="{{ '/shop'. '/' . $category->slug }}" class="badge bg-secondary text-white text-decoration-none" style="font-size: 0.7rem;">
+                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge bg-secondary text-white text-decoration-none" style="font-size: 0.7rem;">
                                                         {{ $category->name }}
                                                     </a>
                                                 @endforeach

@@ -115,7 +115,7 @@
                                         </form>
                                     
                                     </div>
-                                    <div class="col-lg-2 text-success fw-bold fs-6"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar me-1" viewBox="0 0 16 16"><path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/></svg>RM {{ $item->subtotal }}</div>
+                                    <div class="col-lg-2 text-success fw-bold fs-6"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar me-1" viewBox="0 0 16 16"><path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/></svg>RM {{ number_format($item->subtotal, 2) }}</div>
                                 </div>
                             </div>
                             <hr>
@@ -128,8 +128,8 @@
                             <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white fw-semibold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card me-2" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/></svg>Checkout</a>
                         </div>
                         <div class="col-md-2">
-                            <p class="text-muted fw-medium">Subtotal : <span class="text-dark">RM {{ $cart->getSubTotal() }}</span></p>
-                            <p class="text-success fw-bold fs-5">Total: RM {{ $cart->getTotal() }}</p>
+                            <p class="text-muted fw-medium">Subtotal : <span class="text-dark">RM {{ number_format($cart->getSubTotal(), 2) }}</span></p>
+                            <p class="text-success fw-bold fs-5">Total: RM {{ number_format($cart->getTotal(), 2) }}</p>
                         </div>
                     </div>
                 @else
@@ -151,7 +151,7 @@
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>RM {{ $cart->getSubTotal() }}</td>
+                                <td>RM {{ number_format($cart->getSubTotal(), 2) }}</td>
 
                             </tr>
                             @if (session()->has('coupon'))
@@ -160,7 +160,7 @@
                                         COUPON : {{ session()->get('coupon')['name'] }}
                                     </td>
 
-                                    <td>- RM {{ session()->get('coupon')['discount'] }}
+                                    <td>- RM {{ number_format(session()->get('coupon')['discount'], 2) }}
                                         <form method="post" action="{{ route('coupon.destroy') }}" style="display:inline">
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
@@ -174,7 +174,7 @@
                             @endif
                             <tr style="font-weight: bold">
                                 <td>Total</td>
-                                <td>RM {{ $cart->getTotal() }}</td>
+                                <td>RM {{ number_format($cart->getTotal(), 2) }}</td>
                             </tr>
 
                             @if (session()->has('coupon'))
@@ -182,8 +182,8 @@
                                     <td>Discount<br>
                                         <b>Net Total</b>
                                     </td>
-                                    <td>- RM {{ $discount }}<br>
-                                        <b>RM {{ $newTotal }} </b>
+                                    <td>- RM {{ number_format($discount, 2) }}<br>
+                                        <b>RM {{ number_format($newTotal, 2) }} </b>
 
                                     </td>
                                 </tr>
