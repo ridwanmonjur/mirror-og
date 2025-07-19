@@ -137,6 +137,11 @@
     </div>
 </div>
 
+{{-- 
+    DEPRECATED: player_per_team and games_per_match fields have been moved from EventDetail to EventCategory
+    These values are now determined by the selected game category and are no longer manually configurable per event
+--}}
+{{-- 
 <div id="step-3-5" class="d-none">
     <div class="welcome text-center" >
         <h3>
@@ -206,6 +211,7 @@
         </button>
     </div>
 </div>
+--}}
 
 
 

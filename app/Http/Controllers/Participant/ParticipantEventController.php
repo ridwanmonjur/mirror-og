@@ -97,14 +97,13 @@ class ParticipantEventController extends Controller
             $joinEvents = JoinEvent::processJoins($joinEvents, $isFollowing);
             $invitedEvents = JoinEvent::processJoins($invitedEvents, $isFollowing);
 
-            $maxRosterSize = config('constants.ROSTER_SIZE');
             $signupStatusEnum = config('constants.SIGNUP_STATUS');
             $paymentLowerMin = config('constants.STRIPE.MINIMUM_RM');
             if ($request->has('scroll')) {
                 session()->flash('scroll', $request->scroll);
             }
 
-            return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'groupedPaymentsByEvent', 'groupedPaymentsByEventAndTeamMember', 'member', 'joinEvents', 'isFollowing', 'isRedirect', 'eventId', 'maxRosterSize', 'paymentLowerMin', 'signupStatusEnum'));
+            return view('Participant.RegistrationManagement', compact('selectTeam', 'invitedEvents', 'followCounts', 'groupedPaymentsByEvent', 'groupedPaymentsByEventAndTeamMember', 'member', 'joinEvents', 'isFollowing', 'isRedirect', 'eventId', 'paymentLowerMin', 'signupStatusEnum'));
         }
 
         return redirect()->back()->with('error', "Team not found/ You're not authorized.");

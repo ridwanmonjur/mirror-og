@@ -118,7 +118,7 @@
                                     @enderror
                                 </div>
 
-                                <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+                                <div id="error-message" class=" text-red" style="display: none;"></div>
 
                                 <button id="submit-button" type="submit" class="btn rounded-pill text-light btn-primary">
                                     Save Bank Account Details

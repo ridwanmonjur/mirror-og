@@ -175,7 +175,7 @@ class EventMatchService {
             'likesCount' => Like::getLikesCount($event->id),
             'user' => $user,
             'existingJoint' => $existingJoint,
-            'maxRosterSize' => config("constants.ROSTER_SIZE")  
+            'maxRosterSize' => $event->game?->player_per_team ?? config("constants.ROSTER_SIZE")  
         ];
 
         if ($user) {

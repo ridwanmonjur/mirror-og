@@ -155,7 +155,7 @@ trait RespondTaksTrait
                                             'is_public' => false,
                                             'expires_at' => Carbon::now()->addYears(1),
                                             'for_type' => 'participant',
-                                            'redeem_count' => 1,
+                                            'redeemable_count' => 1,
                                         ]);
 
                                         $systemCoupon->save();

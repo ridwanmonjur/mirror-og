@@ -67,10 +67,6 @@ function bldImgF()
     return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
 }
 
-function productImage($path)
-{
-    return $path && file_exists('storage/'.$path) ? asset('storage/'.$path) : asset('img/not-found.jpg');
-}
 
 function getNumbers()
 {
@@ -100,11 +96,11 @@ function getStockLevel($quantity)
     $stockThreshold = config('app.stock_threshold', 5);
     
     if ($quantity > $stockThreshold) {
-        $stockLevel = '<div class="badge badge-success">In Stock</div>';
+        $stockLevel = '<div class="btn btn-success">In Stock</div>';
     } elseif ($quantity <= $stockThreshold && $quantity > 0) {
-        $stockLevel = '<div class="badge badge-warning">Low Stock</div>';
+        $stockLevel = '<div class="btn btn-warning">Low Stock</div>';
     } else {
-        $stockLevel = '<div class="badge badge-danger">Not available</div>';
+        $stockLevel = '<div class="btn btn-danger">Not available</div>';
     }
 
     return $stockLevel;

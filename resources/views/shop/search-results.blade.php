@@ -9,6 +9,7 @@
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
 </head>
 
 <body>
@@ -23,7 +24,7 @@
         @endif
 
         @if(count($errors) > 0)
-            <div class="alert alert-danger">
+            <div class=" text-red">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
