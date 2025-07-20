@@ -14,6 +14,8 @@ class Product extends Model
         'image', 'images', 'quantity', 'featured'
     ];
 
+    protected $perPage = 2;
+
 
     public function categories()
     {
@@ -22,10 +24,7 @@ class Product extends Model
 
    
 
-    public function scopeMightAlsoLike($query)
-    {
-        return $query->inRandomOrder()->take(4);
-    }
+   
 
     /**
      * Get the indexable data array for the model.

@@ -16,9 +16,9 @@ class ConfirmationController extends Controller
      */
     public function index(): View | RedirectResponse
     {
-        if (! session()->has('success_message')) {
-            return redirect('/');
-        }
+        // if (! session()->has('success_message')) {
+        //     return redirect('/');
+        // }
 
         return view('shop.thankyou');
     }
