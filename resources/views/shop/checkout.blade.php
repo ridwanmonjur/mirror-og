@@ -47,14 +47,16 @@
 
     <main class="px-4 product">
 
-        <p class="lead mt-3">Complete your order</p>
+        
 
-        <hr>
+        <div class="row mt-3">
+            <div class="bg-white p-3  rounded border border-light rounded-3 col-md-8 order-md-1">
+                <p class="lead px-3">Complete your order</p>
 
-        <div class="row">
-            <div class="col-md-8 order-md-1">
-                <h4 class="mb-3">SHIPPING ADDRESS</h4>
+                <hr>
+                <h4 class="mb-3 px-3">Shipping address</h4>
 
+                <div class="px-3">
                 {{-- success error msg start --}}
                 @if (session()->has('success_message'))
                     <div class="spacer"></div>
@@ -73,12 +75,13 @@
                         </ul>
                     </div>
                 @endif
+                </div>
                 {{-- success error msg end --}}
 
-                <form action="{{ route('checkout.store') }}" method="POST" id="payment-form">
+                <form class="px-3" action="{{ route('checkout.store') }}" method="POST" id="payment-form">
                     {{ csrf_field() }}
 
-                    <div class="mb-3">
+                    <div class="mb-3 col-xl-9">
                         <label for="email">Email Address</label>
                         @if (auth()->user())
                             <input type="email" class="form-control" id="email" name="email"
@@ -90,32 +93,32 @@
                     </div>
 
 
-                    <div class="mb-3">
+                    <div class="mb-3 col-xl-9">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" name="name"
                             value="{{ old('name') }}" required>
                     </div>
 
 
-                    <div class="mb-3">
+                    <div class="mb-3 col-xl-9">
                         <label for="address">Address</label>
                         <input type="text" class="form-control" id="address" name="address"
                             value="{{ old('address') }}" required>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 mb-3 col-xl-4">
                             <label for="city">City</label>
                             <input type="text" class="form-control" id="city" name="city"
                                 value="{{ old('city') }}" required>
                         </div>
-                        <div class="col-md-5 mb-3">
+                        <div class="col-md-5 mb-3 col-xl-3">
                             <label for="province">Province</label>
                             <input type="text" class="form-control" id="province" name="province"
                                 value="{{ old('province') }}" required>
                         </div>
 
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-3 mb-3 col-xl-2">
                             <label for="postalcode">Postal Code</label>
                             <input type="text" class="form-control" id="postalcode" name="postalcode"
                                 value="{{ old('postalcode') }}" required>
@@ -123,25 +126,24 @@
                     </div> <!-- row end -->
 
 
-                    <div class="mb-3">
+                    <div class="mb-3 col-xl-5">
                         <label for="phone">Phone</label>
                         <input type="text" class="form-control" id="phone" name="phone"
                             value="{{ old('phone') }}" required>
                     </div>
 
 
-                    <hr class="mb-4">
 
                     <h4 class="mb-3">Payment</h4>
 
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-12 col-xl-9 mb-3">
                             <label for="name_on_card">Name on Card</label>
                             <input type="text" class="form-control" id="name_on_card" name="name_on_card"
                                 value="">
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-12 col-xl-9">
                             <label for="card-element">
                                 Credit or debit card
                             </label>
@@ -166,11 +168,10 @@
 
             </div>{{--  col-md-8 order-md-1 end --}}
             <div class="col-md-4 order-md-2 mb-4">
-                <div class="cart_sidebar">
-                    <br>
+                <div class="cart_sidebar p-3 bg-white rounded rounded-3 border border-light">
 
-
-                    <h4 style="font-weight: 600; font-size: 22px; margin-left: 9px;">ORDER SUMMARY:</h4>
+                    <h4 class="p-0 m-0">ORDER SUMMARY</h4>
+                    <hr>
                     <div class="cart-calculator">
                         <table class="table">
                             <tr>
@@ -257,7 +258,7 @@
                                         {{ csrf_field() }}
                                         <input type="text" name="coupon_code" class="form-control"
                                             placeholder="CODES ARE CASE-SENSITIVE">
-                                        <p style="font-size: 12px; color: grey;">Casing & hyphens need to be exact
+                                        <p style="font-size: 12px; color: grey;" class="mt-2">Casing & hyphens need to be exact
                                         </p>
 
                                         <button type="submit" class="btn btn-success text-dark  btn-block rounded-pill">Apply 
