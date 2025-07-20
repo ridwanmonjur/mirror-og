@@ -16,7 +16,7 @@
 
     <main class="px-2 pt-4">
         @if (session()->has('success_message'))
-            <div class="alert alert-success">
+            <div class="text-success">
                 {{ session()->get('success_message') }}
             </div>
         @endif
@@ -45,7 +45,7 @@
             </div>
 
             <div class="col-12 col-xl-10 mb-6 mt-3">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center flex-wrap justify-content-between">
                     <div class=" mb-6">
                         <h4 style="font-weight: bold">{{ $categoryName }}</h4>
                     </div>
@@ -53,11 +53,14 @@
 
                         <!-- Example single danger button -->
 
-                        <div class="d-flex" >
+                        <div class="d-flex flex-wrap" >
                             <div class="dropdown me-1">
-                                <button type="button" class="btn border-dark rounded-2 text-dark dropdown-toggle me-2" id="dropdownMenuOffset"
+                                <button type="button" class="btn px-0 rounded-2 text-dark dropdown-toggle me-4" id="dropdownMenuOffset"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    PRODUCT TYPE
+                                    Product Type
+                                    <svg width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                                     @foreach ($categories as $category)
@@ -69,10 +72,13 @@
                                 </div>
                             </div>
 
-                            <div class="btn-group " >
-                                <button type="button" class="btn  border-dark rounded-2 text-dark me-2 dropdown-toggle" id="dropdownMenuOffset3"
+                            <div class="btn-group mb-2" >
+                                <button type="button" class="btn  px-0 rounded-2 text-dark me-4 dropdown-toggle" id="dropdownMenuOffset3"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    PRICE
+                                    Price
+                                    <svg width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset3">
                                     <a class="dropdown-item"
@@ -91,10 +97,13 @@
                                 </div>
                             </div>
 
-                            <div class="btn-group">
-                                <button type="button" class="btn border-dark rounded-2 text-dark  me-2 dropdown-toggle" id="dropdownMenuOffset2"
+                            <div class="btn-group mb-2">
+                                <button type="button" class="btn px-0 rounded-2 text-dark  me-4 dropdown-toggle" id="dropdownMenuOffset2"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    SORT BY
+                                    Sort By
+                                    <svg width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset2">
                                     <a class="dropdown-item"
@@ -115,32 +124,33 @@
 
                     </div>
                 </div>
-                <div class="row mt-3">
+                <div class="row px-3 mt-3">
 
 
                     @forelse ($products as $product)
-                        <div class="col-12 col-lg-4 col-xl-3 mb-4">
+                        <div class="col-12 col-md-6 col-lg-4 col-xxl-3 mb-4">
                         <a href="{{ route('shop.show', $product->slug) }}">
                             
-                            <div class="product-card border border-muted  p-3 h-100 d-flex flex-column">
+                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-muted pb-4 h-100 d-flex flex-column">
                                 <div class="product-card__image-wrapper  mb-3">
                                     
                                         <img src="{{ asset('storage/' . $product->image) }}" 
                                              class="product-card__image w-100 object-fit-cover border border-muted rounded-3"
-                                             style="height: 200px;"    
+                                             style="height: 200px;border-radius: 30px; "   
                                              onerror="this.onerror=null;this.src='/assets/images/404q.png';"
-                                             alt="{{ $product->name }}">
+                                             alt="{{ $product->name }}"
+                                    >
                                    
                                 </div>
 
-                                <div class="text-center  d-flex flex-column justify-content-between">
+                                <div class="text-start px-3 d-flex flex-column justify-content-between" >
                                     <div>
-                                        <h2  class="product-card__name text-decoration-none text-primary d-block mb-1">
+                                        <h5  class="product-card__name text-truncate mt-2 mb-3 px-0 text-decoration-none text-primary d-block mb-1">
                                             {{ $product->name }}
-                                        </h2>
+                                        </h5>
                                         
                                         @if($product->description)
-                                        <div class="product-card__description mb-2">
+                                        <div class="product-card__description mb-2 fs-7 ">
                                             {!! strip_tags($product->description) !!}
                                         </div>
                                         @endif
@@ -154,46 +164,49 @@
                                             $decimal = $parts[1];
                                         @endphp
                                         
-                                        <div class="product-card__price">
+                                        <div class="product-card__price ">
                                             <span class="product-card__currency">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
                                         </div>
                                         
                                         <div class="mb-0">
-                                            <div class="d-inline-flex flex-wrap justify-content-center gap-1 mb-2">
-                                                @foreach($product->categories as $category)
-                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge bg-secondary text-white text-decoration-none" style="font-size: 0.7rem;">
+                                            <div class="d-inline-flex flex-wrap justify-content-center align-items-center">
+                                                @foreach($product->categories->take(2) as $category)
+                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge mb-2 bg-secondary me-1 text-white text-decoration-none" style="font-size: 0.7rem;">
                                                         {{ $category->name }}
                                                     </a>
                                                 @endforeach
+                                                 @php
+                                                    $stockThreshold = 0;
+                                                @endphp
+                                                    @if($product->quantity > $stockThreshold)
+                                                    <span class="badge ms-1 mb-2 bg-success" style="font-size: 0.7rem;">
+                                                        <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                        </svg>
+                                                        In Stock
+                                                    </span>
+                                                @elseif($product->quantity > 0)
+                                                    <span class="badge ms-1 mb-2 bg-warning" style="font-size: 0.7rem;">
+                                                        <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                                        </svg>
+                                                        Low Stock
+                                                    </span>
+                                                @else
+                                                    <span class="badge ms-1 mb-2 bg-danger" style="font-size: 0.7rem;">
+                                                        <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                        </svg>
+                                                        Not available
+                                                    </span>
+                                                @endif
+                                                
+                                            
                                             </div>
                                             
-                                            @php
-                                                $stockThreshold = 0;
-                                            @endphp
-                                            @if($product->quantity > $stockThreshold)
-                                                <span class="badge bg-success" style="font-size: 0.7rem;">
-                                                    <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                                    </svg>
-                                                    In Stock
-                                                </span>
-                                            @elseif($product->quantity > 0)
-                                                <span class="badge bg-warning" style="font-size: 0.7rem;">
-                                                    <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                                                    </svg>
-                                                    Low Stock
-                                                </span>
-                                            @else
-                                                <span class="badge bg-danger" style="font-size: 0.7rem;">
-                                                    <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                    </svg>
-                                                    Not available
-                                                </span>
-                                            @endif
+                                            
                                         </div>
                                     </div>
                                 </div>

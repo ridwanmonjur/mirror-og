@@ -15,9 +15,9 @@
     @include('googletagmanager::body')
     @include('includes.Navbar')
 
-    <main class="product">
+    <main class="product py-3">
             @if (session()->has('success_message'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="text-success alert-dismissible fade show" role="alert">
                     {{ session()->get('success_message') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -89,19 +89,15 @@
 
                 <!-- Product Info -->
                 <div class="col-lg-9 col-12">
-                    <div class="product-info bg-white border border-light rounded p-4">
-                        <h4 class="product-detail-name text-dark border-bottom border-warning pb-2 mb-3">{{ $product->name }}</h4>
-                        
-                        <div class="price-section mb-2">
-                            <svg width="20" height="20" fill="currentColor" class="text-warning me-2" viewBox="0 0 16 16">
-                                <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
-                            </svg>
-                            <span class="zms_price h3 text-warning fw-bold">RM {{ number_format($product->price, 2) }}</span>
+                    <div class="product-info bg-white  rounded p-4">
+                        <div class=" pb-2">
+                            <h4 class="product-detail-name text-dark my-0 pt-0  text-truncate ">{{ $product->name }}</h4>
+                            
                         </div>
 
                         <!-- Product Description -->
                         @if($product->description)
-                        <div class="mb-3">
+                        <div class=" my-2">
                             
                             <div class="bg-light border-secondary border p-3 rounded">
                                 
@@ -119,67 +115,73 @@
 
                         <!-- Product Details Section -->
                         <div class="mb-2">
-                            <h5 class="product-details__title fw-bold text-dark border-bottom border-2 border-warning pb-2 mb-0">
-                                <svg width="18" height="18" fill="currentColor" class="text-warning me-2" viewBox="0 0 16 16">
-                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                                </svg>
-                                Product Details
-                            </h5>
+                            
                             
                             <div class="product-details__content">
-                                <div class="px-3 py-3 mt-0">
+                                <div class="px-0 py-2">
                                     {!! $product->details !!}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-2 pb-3 border-1 border-bottom border-warning ">
                             <div class="d-inline-flex flex-wrap gap-2">
                                 @foreach($product->categories as $category)
                                     <a href="{{ '/shop?category=' .  $category->slug }}" class="badge bg-secondary text-white text-decoration-none">
                                         {{ $category->name }}
                                     </a>
                                 @endforeach
+                                @php
+                                    $stockThreshold = 0;
+                                @endphp
+                                @if($product->quantity > $stockThreshold)
+                                    <span class="badge bg-success">
+                                        <svg width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                        </svg>
+                                        In Stock
+                                    </span>
+                                @elseif($product->quantity > 0)
+                                    <span class="badge bg-warning">
+                                        <svg width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                        </svg>
+                                        Low Stock
+                                    </span>
+                                @else
+                                    <span class="badge bg-danger">
+                                        <svg width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        Not available
+                                    </span>
+                                @endif
                             </div>
-                            @php
-                                $stockThreshold = 0;
-                            @endphp
-                            @if($product->quantity > $stockThreshold)
-                                <span class="badge bg-success">
-                                    <svg width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                    </svg>
-                                    In Stock
-                                </span>
-                            @elseif($product->quantity > 0)
-                                <span class="badge bg-warning">
-                                    <svg width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                                    </svg>
-                                    Low Stock
-                                </span>
-                            @else
-                                <span class="badge bg-danger">
-                                    <svg width="12" height="12" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                    Not available
-                                </span>
-                            @endif
+                            
+                        </div>
+
+
+                        <div class="price-section py-3 mb-2" >
+                           
+                            <h3 class="py-0 my-0  text-warning fw-bold" style="transform: scaleY(1.1); display: inline-block;">RM {{ number_format($product->price, 2) }}</h3>
                         </div>
 
                         <!-- Product Options -->
                         <div class="mb-4">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <!-- Labels Column -->
+                                <div class="col-md-4 col-xxl-2">
                                     <label for="size" class="form-label fw-semibold">
                                         <svg width="14" height="14" fill="currentColor" class="text-muted me-2" viewBox="0 0 16 16">
                                             <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
                                         </svg>
                                         Size
                                     </label>
+                                </div>
+                                <!-- Inputs Column -->
+                                <div class="col-md-4 col-lg-5">
                                     <select class="form-select" id="size" name="size">
                                         <option>Choose an option</option>
                                         <option>Size S</option>
@@ -188,7 +190,11 @@
                                         <option>Size XL</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <!-- Next line -->
+                            <div class="row g-3 mt-2">
+                                <!-- Labels Column -->
+                                <div class="col-md-4 col-xxl-2">
                                     <label for="color" class="form-label fw-semibold">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-palette me-2" viewBox="0 0 16 16">
                                         <path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
@@ -196,6 +202,9 @@
                                         </svg>
                                         Color
                                     </label>
+                                </div>
+                                <!-- Inputs Column -->
+                                <div class="col-md-4 col-lg-5">
                                     <select class="form-select" id="color" name="color">
                                         <option>Choose an option</option>
                                         <option>Gray</option>
@@ -204,7 +213,11 @@
                                         <option>Blue</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <!-- Next line -->
+                            <div class="row g-3 mt-2">
+                                <!-- Labels Column -->
+                                <div class="col-md-4 col-xxl-2">
                                      <label for="quantity" class="form-label fw-semibold">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle me-2" viewBox="0 0 16 16">
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -212,7 +225,10 @@
                                         </svg>
                                         Quantity
                                     </label>
-                                    <div class="input-group" style="width: 100px;">
+                                </div>
+                                <!-- Inputs Column -->
+                                <div class="col-md-3 col-lg-3">
+                                    <div class="input-group" >
                                         <input type="number"  class="form-control text-center num-product" name="num-product" value="1" min="1">
                                     </div>
                                 </div>
@@ -221,7 +237,7 @@
 
                        
 
-                        <div class="">
+                        <div class="mt-2">
                                 <div class="btn-addcart-product-detail">
                                     @if ($product->quantity > 0)
                                         <form action="{{ route('cart.store', $product) }}" method="POST" class="text-center mx-auto w-75">
@@ -236,12 +252,14 @@
                                     @endif
                                 </div>
                             </div>
-
+                        
                         
                        
                     </div>
                 </div>
             </div>
+        </div>
+        <br> <br>
     </main>
 
     <script type="text/javascript" src="{{ asset('jquery/jquery-3.2.1.min.js') }}"></script>
