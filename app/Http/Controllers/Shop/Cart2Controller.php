@@ -176,7 +176,7 @@ class Cart2Controller extends Controller
                     $couponCode = $paymentIntent['metadata']['couponCode'] ?? null;
                     $coupon = null;
                     if ($couponCode) {
-                        [$fee, null, null, $coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['cartTotal'], 0.0, 'shop', $user->id);
+                        [$fee, , , $coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['cartTotal'], 0.0, 'shop', $user->id);
                         $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
                     }
 
