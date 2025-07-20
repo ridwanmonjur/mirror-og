@@ -32,7 +32,7 @@
 
                     {{-- success error msg start --}}
                     @if (session()->has('success_message'))
-                        <div class="alert alert-success">
+                        <div class="text-success">
                             {{ session()->get('success_message') }}
                         </div>
                     @endif
@@ -52,10 +52,11 @@
                     <br>
                     @foreach ($cart->getContent() as $item)
                         @if ($item->product)
-                            <div class="container cart_item">
+                            <div class="">
                                 <div class="row">
 
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-6 flex-wrap d-flex justify-content-start align-items-start">
+                                        <div class="me-3">
                                         @if ($item->product && $item->product->slug)
                                             <a href="{{ route('shop.show', $item->product->slug) }}">
                                                 <img src="{{ asset('storage/' . $item->product->image) }}" 
@@ -68,9 +69,9 @@
                                                  width="50" height="50"
                                                  onerror="this.onerror=null;this.src='/assets/images/404q.png';">
                                         @endif
-                                    </div>
-
-                                    <div class="col-lg-5">
+                                        </div>
+                                        <div>
+                                    
                                         @if ($item->product && $item->product->slug)
                                             <a href="{{ route('shop.show', $item->product->slug) }}" class="cart_a text-dark fw-semibold fs-6 text-decoration-none">
                                                 {{ $item->product->name }}</a>
@@ -80,10 +81,7 @@
                                         <p class="cart_p text-muted fw-normal"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-palette me-1" viewBox="0 0 16 16"><path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/><path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8z"/></svg>Color: Black <br>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-rulers me-1" viewBox="0 0 16 16"><path d="M1 0a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1v1a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7h1v1a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7h1v1a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm2 4.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1zm3 0a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H6zm3 0a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9zm3 0a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1z"/></svg>Size: 9.5 <b class="ms-2 text-success fw-semibold"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-check-circle me-1" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>In Stock</b></p>
                                         </p>
-
-
-                                        
-
+                                        </div>
 
                                     </div> {{-- col-lg-5 end --}}
 
@@ -106,7 +104,7 @@
                                         <form action="{{ route('cart.destroy', $item->product_id) }}" method="POST">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
-                                            <button type="submit" class="btn btn-link text-danger" title="Remove item">
+                                            <button type="submit" class="btn btn-link py-0  text-danger" title="Remove item">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
@@ -115,7 +113,9 @@
                                         </form>
                                     
                                     </div>
-                                    <div class="col-lg-2 text-success fw-bold fs-6"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar me-1" viewBox="0 0 16 16"><path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/></svg>RM {{ number_format($item->subtotal, 2) }}</div>
+                                    <div class="col-lg-3 text-success fw-bold fs-7">
+                                        RM {{ number_format($item->subtotal, 2) }}
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -123,11 +123,11 @@
                     @endforeach
 
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-md-8">
                             <a href="{{ route('shop.index') }}" class="text-decoration-none fw-medium me-3" style="margin-right: 8px"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left me-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>Continue Shopping</a>
                             <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white fw-semibold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card me-2" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/></svg>Checkout</a>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <p class="text-muted fw-medium">Subtotal : <span class="text-dark">RM {{ number_format($cart->getSubTotal(), 2) }}</span></p>
                             <p class="text-success fw-bold fs-5">Total: RM {{ number_format($cart->getTotal(), 2) }}</p>
                         </div>
@@ -139,97 +139,59 @@
 
                 @endif
             </div>
-            <div class="col-12 col-lg-3  border border-light rounded rounded-2">
-                <div class="cart_sidebar bg-white px-2 py-3">
-                    
-                    <h4 class="text-secondary" style="font-weight: 600; font-size: 22px; margin-left: 9px;">ORDER SUMMARY:</h4>
+            <div class="col-12 col-lg-3">
+                <div class="cart_sidebar p-3 bg-white rounded rounded-3 border border-light">
+
+                    <h4 class="p-0 m-0 text-primary">Order Summary</h4>
+                    <hr>
                     <div class="cart-calculator">
-                        <table class="table">
+                        <table class="table table-borderless">
                             <tr>
-                                <td>{{ $cart->getContent()->count() }} PRODUCTS</td>
-                                <td></td>
+                                <td>Products</td>
+                                <td class="text-end">{{ $cart->getCount() }}</td>
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>RM {{ number_format($cart->getSubTotal(), 2) }}</td>
-
+                                <td class="text-end">RM {{ number_format($cart->getSubTotal(), 2) }}</td>
                             </tr>
                             @if (session()->has('coupon'))
                                 <tr>
                                     <td>
-                                        COUPON : {{ session()->get('coupon')['name'] }}
-                                    </td>
-
-                                    <td>- RM {{ number_format(session()->get('coupon')['discount'], 2) }}
-                                        <form method="post" action="{{ route('coupon.destroy') }}" style="display:inline">
+                                        Coupon: {{ session()->get('coupon')['name'] }}
+                                        <form method="post" action="{{ route('coupon.destroy') }}"
+                                            style="display:inline">
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
-                                            <button type="submit" class="btn btn-link"
+                                            <button type="submit" class="btn btn-link p-0 ms-1"
                                                 style="color: #000; font-size: 12px;"><span
                                                     class="fa fa-trash"></span></button>
                                         </form>
                                     </td>
-
+                                    <td class="text-end">- RM {{ number_format(session()->get('coupon')['discount'], 2) }}</td>
                                 </tr>
                             @endif
-                            <tr style="font-weight: bold">
-                                <td>Total</td>
-                                <td>RM {{ number_format($cart->getTotal(), 2) }}</td>
-                            </tr>
-
                             @if (session()->has('coupon'))
                                 <tr>
-                                    <td>Discount<br>
-                                        <b>Net Total</b>
-                                    </td>
-                                    <td>- RM {{ number_format($discount, 2) }}<br>
-                                        <b>RM {{ number_format($newTotal, 2) }} </b>
-
-                                    </td>
+                                    <td>Discount</td>
+                                    <td class="text-end">- RM {{ number_format($discount, 2) }}</td>
+                                </tr>
+                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                    <td>Net Total</td>
+                                    <td class="text-end">RM {{ number_format($newTotal, 2) }}</td>
+                                </tr>
+                            @else
+                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                    <td>Total</td>
+                                    <td class="text-end">RM {{ number_format($cart->getTotal(), 2) }}</td>
                                 </tr>
                             @endif
-
                         </table>
                     </div>
-                </div>
+                </div> {{-- cart_sidebar end --}}
                 <br>
 
-                {{--    Coupon start --}}
-                <div class="coupon_fr">
-
-                    <div class="coupon_in">
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <b>PROMO CODE</b>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="row">
-                            <div class="col">
-                                <div class="card card-body">
-                                    <form method="post" action="{{ route('coupon.store') }}">
-                                        {{ csrf_field() }}
-                                        <input type="text" name="coupon_code" class="form-control"
-                                            placeholder="CODES ARE CASE-SENSITIVE">
-                                        <p style="font-size: 12px; color: grey;">Casing & hyphens need to be exact</p>
-
-                                        <button type="submit" class="btn btn-success text-dark  btn-block rounded-pill">Apply 
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-2" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <br>
-                    <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white btn-block fw-semibold"
-                        style=" margin-right: :4px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card me-2" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/></svg>Checkout <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-3" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg></a>
-                
+                <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white btn-block fw-semibold"
+                    style=" margin-right: :4px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card me-2" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/></svg>Checkout <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right ms-3" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg></a>
 
             </div>
 

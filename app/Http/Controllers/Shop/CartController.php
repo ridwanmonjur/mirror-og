@@ -4,17 +4,22 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Product;
-use App\NewCart;
-use App\CartItem;
+use App\Services\ShopService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
+    protected $shopService;
+
+    public function __construct(ShopService $shopService)
+    {
+        $this->shopService = $shopService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,24 +28,9 @@ class CartController extends Controller
     public function index(): View
     {
         $userId = auth()->id();
+        $data = $this->shopService->getCartData($userId);
         
-        $cart = NewCart::where('user_id', $userId)->with(['items.product'])->first();
-        
-        if (!$cart) {
-            $cart = NewCart::create(['user_id' => $userId]);
-        }
-        
-        $mightAlsoLike = Product::mightAlsoLike()->get();
-        $discount = 0;
-        $cartTotal = $cart->getTotal();
-        
-        return view('shop.cart')->with([
-            'cart' => $cart,
-            'mightAlsoLike' => $mightAlsoLike,
-            'discount' => $discount,
-            'newSubtotal' => $cartTotal,
-            'newTotal' => $cartTotal - $discount,
-        ]);
+        return view('shop.cart')->with($data);
     }
 
     /**
@@ -52,17 +42,12 @@ class CartController extends Controller
     public function store(Product $product): RedirectResponse
     {
         $userId = auth()->id();
-        $cart = NewCart::where('user_id', $userId)->first();
+        $result = $this->shopService->addItemToCart($userId, $product);
         
-        if (!$cart) {
-            $cart = NewCart::create(['user_id' => $userId]);
-        }
-        
-        try {
-            $cart->addItem($product->id, 1, $product->price);
-            return redirect()->route('cart.index')->with('success_message', 'Item was added to your cart!');
-        } catch (\Exception $e) {
-            return redirect()->route('cart.index')->with('errors', collect(['Maximum quantity of 20 exceeded for this item.']));
+        if ($result['success']) {
+            return redirect()->route('cart.index')->with('success_message', $result['message']);
+        } else {
+            return redirect()->route('cart.index')->with('errors', collect([$result['message']]));
         }
     }
 
@@ -76,11 +61,6 @@ class CartController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $userId = auth()->id();
-        $cart = NewCart::where('user_id', $userId)->first();
-        
-        if (!$cart) {
-            return response()->json(['success' => false], 404);
-        }
         
         $validator = Validator::make($request->all(), [
             'quantity' => 'required|numeric|between:1,20'
@@ -91,18 +71,20 @@ class CartController extends Controller
             return response()->json(['success' => false], 400);
         }
 
-        if ($request->quantity > $request->productQuantity) {
-            session()->flash('errors', collect(['We currently do not have enough items in stock.']));
+        $result = $this->shopService->updateCartItem(
+            $userId,
+            $id,
+            $request->quantity,
+            $request->productQuantity
+        );
+        
+        if ($result['success']) {
+            session()->flash('success_message', $result['message']);
+            return response()->json(['success' => true]);
+        } else {
+            session()->flash('errors', collect([$result['message']]));
             return response()->json(['success' => false], 400);
         }
-
-        $product = Product::find($id);
-        if ($product) {
-            $cart->updateItem($id, $request->quantity, $product->price);
-        }
-        
-        session()->flash('success_message', 'Quantity was updated successfully!');
-        return response()->json(['success' => true]);
     }
 
     /**
@@ -114,13 +96,9 @@ class CartController extends Controller
     public function destroy($id)
     {
         $userId = auth()->id();
-        $cart = NewCart::where('user_id', $userId)->first();
+        $result = $this->shopService->removeItemFromCart($userId, $id);
         
-        if ($cart) {
-            $cart->removeItem($id);
-        }
-
-        return back()->with('success_message', 'Item has been removed!');
+        return back()->with('success_message', $result['message']);
     }
 
    

@@ -47,6 +47,7 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 ## Development Notes
 - Must log errors using Logger::log (backend) or console.error (frontend) in all try catches 
 - use BEM for CSS
+- don't use icons from bootstrap. use <svg> from bootstrap. if not found, go elsewhere
 - When creating/updating database tables in laravel migration:
   * Check table existence/non-existence in create operations
   * In update operations, verify both table and column do not exist before proceeding

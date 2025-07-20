@@ -120,4 +120,43 @@ class NewCart extends Model
         
         return $this->items()->with('product')->get();
     }
+
+    /**
+     * Get cart numbers including discount calculations
+     */
+    public function getNumbers()
+    {
+        $discount = session()->get('coupon')['discount'] ?? 0;
+        $code = session()->get('coupon')['name'] ?? null;
+        
+        $cartSubtotal = $this->getSubTotal();
+        $newSubtotal = ($cartSubtotal - $discount);
+        if ($newSubtotal < 0) {
+            $newSubtotal = 0;
+        }
+        $newTotal = $newSubtotal;
+
+        return collect([
+            'discount' => $discount,
+            'code' => $code,
+            'newSubtotal' => $newSubtotal,
+            'newTotal' => $newTotal,
+        ]);
+    }
+
+    /**
+     * Get valid cart quantity (items with available products)
+     */
+    public function getValidQuantity()
+    {
+        $validQuantity = 0;
+        
+        foreach ($this->getContent() as $item) {
+            if ($item->product) {
+                $validQuantity += $item->quantity;
+            }
+        }
+        
+        return $validQuantity;
+    }
 }
