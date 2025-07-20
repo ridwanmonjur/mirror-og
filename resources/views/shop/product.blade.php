@@ -178,8 +178,8 @@
 
                         <div class="price-section py-3 mb-2">
 
-                            <h3 class="py-0 my-0  text-warning fw-bold"
-                                style="transform: scaleY(1.1); display: inline-block;">RM
+                            <h3 class="py-0 my-0 leading text-warning d-inline-block fw-bold"
+                                style="transform: scaleY(1.05); ">RM
                                 {{ number_format($product->price, 2) }}</h3>
                         </div>
 

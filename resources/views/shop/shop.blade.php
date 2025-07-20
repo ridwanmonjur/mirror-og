@@ -38,7 +38,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="category" value="all" id="all-categories" 
                                {{ request()->category === 'all' || request()->category === null ? 'checked' : '' }} onchange="this.form.submit()">
-                        <label class="form-check-label" for="all-categories">
+                        <label class="form-check-label ms-2" for="all-categories">
                             All Categories
                         </label>
                     </div>
@@ -47,7 +47,7 @@
                             <input class="form-check-input" type="radio" name="category" value="{{ $category->slug }}" 
                                    id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }} 
                                    onchange="this.form.submit()">
-                            <label class="form-check-label" for="category-{{ $category->slug }}">
+                            <label class="form-check-label ms-2" for="category-{{ $category->slug }}">
                                 {{ $category->name }}
                             </label>
                         </div>
