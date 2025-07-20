@@ -17,7 +17,7 @@
                     <div class="text-red-500 mr-2">⚠️</div>
                     <div class="text-red-700 dark:text-red-300">
                         <strong>Error loading analytics data</strong>
-                        <p class="text-sm mt-1" id="error-message">Please check your GA4 configuration and try again.</p>
+                        <p class="text-sm mt-1" id="error-message">Please check your Firebase configuration and try again.</p>
                     </div>
                 </div>
                 <button id="retry-analytics" class="mt-3 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm transition-colors">
@@ -28,102 +28,101 @@
             <!-- Analytics Content -->
             <div id="analytics-content" class="hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Page Views -->
+                    
+                    <!-- Event Tiers -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Page Views</h3>
-                        <div class="text-3xl font-bold text-blue-600" id="page-views-total">0</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                            Today: <span id="page-views-today">0</span> | 
-                            Yesterday: <span id="page-views-yesterday">0</span>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Tiers</h3>
+                        <div id="event-tiers-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs mt-2" id="page-views-change">
-                            <span class="text-green-600">+0%</span> from yesterday
-                        </div>
+                        <div class="text-xs text-gray-500 mt-3" id="event-tiers-total">Total: 0</div>
                     </div>
 
-                    <!-- Event Interactions -->
+                    <!-- Event Types -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Interactions</h3>
-                        <div class="text-3xl font-bold text-green-600" id="event-clicks-total">0</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                            Registrations: <span id="event-registrations">0</span>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Types</h3>
+                        <div id="event-types-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs mt-2">
-                            Conversion Rate: <span class="text-blue-600" id="conversion-rate">0%</span>
+                        <div class="text-xs text-gray-500 mt-3" id="event-types-total">Total: 0</div>
+                    </div>
+
+                    <!-- Esport Titles -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Esport Titles</h3>
+                        <div id="esport-titles-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
+                        <div class="text-xs text-gray-500 mt-3" id="esport-titles-total">Total: 0</div>
+                    </div>
+
+                    <!-- Locations -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Locations</h3>
+                        <div id="locations-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-3" id="locations-total">Total: 0</div>
+                    </div>
+
+                    <!-- Event Names -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Names</h3>
+                        <div id="event-names-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-3" id="event-names-total">Total: 0</div>
                     </div>
 
                     <!-- Active Users -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Active Users</h3>
-                        <div class="text-3xl font-bold text-purple-600" id="active-users-total">0</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                            New: <span id="new-users">0</span> | 
-                            Returning: <span id="returning-users">0</span>
-                        </div>
-                        <div class="text-xs mt-2">
-                            Avg. Session: <span class="text-orange-600" id="session-duration">0</span>min
+                        <div class="text-3xl font-bold text-purple-600" id="active-users-count">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-2">Unique users tracked</div>
+                        <div id="top-users-list" class="space-y-1 mt-3 max-h-32 overflow-y-auto">
+                            <div class="text-xs text-gray-500">Loading users...</div>
                         </div>
                     </div>
 
-                    <!-- Real-time Data -->
+                    <!-- Social Actions -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Real-time</h3>
-                        <div class="text-3xl font-bold text-red-600" id="realtime-users">0</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-2">Users active now</div>
-                        <div class="text-xs mt-2">
-                            Page Views: <span class="text-blue-600" id="realtime-pageviews">0</span>
-                        </div>
-                    </div>
-
-                    <!-- Top Events -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Events</h3>
-                        <div id="top-events-list" class="space-y-2">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Social Actions</h3>
+                        <div id="social-actions-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
+                        <div class="text-xs text-gray-500 mt-3" id="social-actions-total">Total: 0</div>
                     </div>
 
-                    <!-- Social Interactions -->
+                    <!-- Social Target Types -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Social Activity</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-900 dark:text-white">Follows</span>
-                                <span class="text-sm font-medium text-blue-600" id="social-follows">0</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-900 dark:text-white">Likes</span>
-                                <span class="text-sm font-medium text-green-600" id="social-likes">0</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-900 dark:text-white">Shares</span>
-                                <span class="text-sm font-medium text-purple-600" id="social-shares">0</span>
-                            </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Social Targets</h3>
+                        <div id="social-targets-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
+                        <div class="text-xs text-gray-500 mt-3" id="social-targets-total">Total: 0</div>
                     </div>
 
                     <!-- Form Submissions -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Form Submissions</h3>
-                        <div class="text-3xl font-bold text-indigo-600" id="form-submissions-total">0</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                            Success Rate: <span class="text-green-600" id="form-success-rate">0%</span>
-                        </div>
-                        <div id="form-types-list" class="space-y-1 mt-3">
-                            <div class="text-xs text-gray-500">Loading form types...</div>
-                        </div>
-                    </div>
-
-                    <!-- Top Pages -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Pages</h3>
-                        <div id="top-pages-list" class="space-y-2">
+                        <div id="form-submissions-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
+                        <div class="text-xs text-gray-500 mt-3" id="form-submissions-total">Total: 0</div>
                     </div>
-
-                    
+                </div>
+                
+                <!-- Pagination Controls -->
+                <div class="mt-6 flex justify-center space-x-2">
+                    <button id="prev-page" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Previous
+                    </button>
+                    <span id="page-info" class="px-4 py-2 text-gray-700 dark:text-gray-300">
+                        Page 1
+                    </span>
+                    <button id="next-page" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Next
+                    </button>
                 </div>
             </div>
         </div>
@@ -132,9 +131,11 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const widgetId = '{{ $widgetId }}';
+                    let currentPage = 1;
+                    const itemsPerPage = 5;
                     
                     function waitForAnalytics() {
-                        if (window.filamentAnalytics) {
+                        if (window.getAnalyticsCounts) {
                             initializeAnalyticsDashboard();
                         } else {
                             setTimeout(waitForAnalytics, 100);
@@ -166,87 +167,97 @@
                             contentEl.classList.remove('hidden');
                         }
                         
-                        async function updateDashboard() {
+                        function createCountList(data, containerId, totalId, page = 1) {
+                            const container = document.getElementById(containerId);
+                            const totalEl = document.getElementById(totalId);
+                            
+                            if (!data || Object.keys(data).length === 0) {
+                                container.innerHTML = '<div class="text-sm text-gray-600 dark:text-gray-400">No data available</div>';
+                                totalEl.textContent = 'Total: 0';
+                                return;
+                            }
+                            
+                            const entries = Object.entries(data);
+                            const total = entries.reduce((sum, [, count]) => sum + count, 0);
+                            
+                            // Sort by count descending and paginate
+                            const sortedEntries = entries.sort(([,a], [,b]) => b - a);
+                            const startIndex = (page - 1) * itemsPerPage;
+                            const endIndex = startIndex + itemsPerPage;
+                            const pageEntries = sortedEntries.slice(startIndex, endIndex);
+                            
+                            container.innerHTML = '';
+                            pageEntries.forEach(([name, count]) => {
+                                const div = document.createElement('div');
+                                div.className = 'flex justify-between items-center text-sm';
+                                div.innerHTML = `
+                                    <span class="text-gray-900 dark:text-white truncate pr-2">${name || 'Unknown'}</span>
+                                    <span class="text-blue-600 font-medium">${count.toLocaleString()}</span>
+                                `;
+                                container.appendChild(div);
+                            });
+                            
+                            totalEl.textContent = `Total: ${total.toLocaleString()}`;
+                        }
+                        
+                        async function updateDashboard(page = 1) {
                             showLoading();
+                            currentPage = page;
                             
                             try {
-                                const data = await window.filamentAnalytics.fetchAnalyticsData();
+                                // Get global counts
+                                const globalCounts = await window.getAnalyticsCounts();
+                                console.log('Global counts:', globalCounts);
                                 
-                                document.getElementById('page-views-total').textContent = data.pageViews.total.toLocaleString();
-                                document.getElementById('page-views-today').textContent = data.pageViews.today.toLocaleString();
-                                document.getElementById('page-views-yesterday').textContent = data.pageViews.yesterday.toLocaleString();
+                                if (!globalCounts) {
+                                    showError('No analytics data found');
+                                    return;
+                                }
                                 
-                                const changeEl = document.getElementById('page-views-change');
-                                const change = data.pageViews.weekly_change;
-                                const changeClass = change >= 0 ? 'text-green-600' : 'text-red-600';
-                                const changePrefix = change >= 0 ? '+' : '';
-                                changeEl.innerHTML = `<span class="${changeClass}">${changePrefix}${change}%</span> from yesterday`;
+                                // Update Event Tiers
+                                createCountList(globalCounts.eventTiers || {}, 'event-tiers-list', 'event-tiers-total', page);
                                 
-                                document.getElementById('event-clicks-total').textContent = data.eventInteractions.total_clicks.toLocaleString();
-                                document.getElementById('event-registrations').textContent = data.eventInteractions.registrations.toLocaleString();
-                                document.getElementById('conversion-rate').textContent = data.eventInteractions.conversion_rate + '%';
+                                // Update Event Types
+                                createCountList(globalCounts.eventTypes || {}, 'event-types-list', 'event-types-total', page);
                                 
-                                document.getElementById('active-users-total').textContent = data.userEngagement.active_users.toLocaleString();
-                                document.getElementById('new-users').textContent = data.userEngagement.new_users.toLocaleString();
-                                document.getElementById('returning-users').textContent = data.userEngagement.returning_users.toLocaleString();
-                                document.getElementById('session-duration').textContent = data.userEngagement.session_duration;
+                                // Update Esport Titles
+                                createCountList(globalCounts.esportTitles || {}, 'esport-titles-list', 'esport-titles-total', page);
                                 
-                                document.getElementById('realtime-users').textContent = data.realTimeData.active_users_now.toLocaleString();
-                                document.getElementById('realtime-pageviews').textContent = data.realTimeData.current_page_views.toLocaleString();
+                                // Update Locations
+                                createCountList(globalCounts.locations || {}, 'locations-list', 'locations-total', page);
                                 
-                                const topEventsList = document.getElementById('top-events-list');
-                                topEventsList.innerHTML = '';
-                                if (data.eventInteractions.top_events.length === 0) {
-                                    topEventsList.innerHTML = '<div class="text-sm text-gray-600 dark:text-gray-400">No events found</div>';
+                                // Update Event Names
+                                createCountList(globalCounts.eventNames || {}, 'event-names-list', 'event-names-total', page);
+                                
+                                // Update Active Users
+                                const userIds = globalCounts.userIds || {};
+                                const activeUsersCount = Object.keys(userIds).length;
+                                document.getElementById('active-users-count').textContent = activeUsersCount.toLocaleString();
+                                
+                                const topUsersList = document.getElementById('top-users-list');
+                                if (activeUsersCount === 0) {
+                                    topUsersList.innerHTML = '<div class="text-xs text-gray-500">No users tracked</div>';
                                 } else {
-                                    data.eventInteractions.top_events.slice(0, 5).forEach(event => {
+                                    const userEntries = Object.entries(userIds).sort(([,a], [,b]) => b - a).slice(0, 10);
+                                    topUsersList.innerHTML = '';
+                                    userEntries.forEach(([userId, count]) => {
                                         const div = document.createElement('div');
                                         div.className = 'flex justify-between items-center text-xs';
                                         div.innerHTML = `
-                                            <span class="text-gray-900 dark:text-white truncate">${event.name}</span>
-                                            <span class="text-blue-600 font-medium">${event.clicks}</span>
+                                            <span class="text-gray-700 dark:text-gray-300 truncate pr-1">User ${userId}</span>
+                                            <span class="text-purple-600 font-medium">${count}</span>
                                         `;
-                                        topEventsList.appendChild(div);
+                                        topUsersList.appendChild(div);
                                     });
                                 }
                                 
-                                document.getElementById('social-follows').textContent = data.socialInteractions.total_follows.toLocaleString();
-                                document.getElementById('social-likes').textContent = data.socialInteractions.total_likes.toLocaleString();
-                                document.getElementById('social-shares').textContent = data.socialInteractions.shares.toLocaleString();
+                                // For now, show empty data for social and form counts
+                                // These would be populated when social/form tracking is implemented
+                                createCountList({}, 'social-actions-list', 'social-actions-total', page);
+                                createCountList({}, 'social-targets-list', 'social-targets-total', page);
+                                createCountList({}, 'form-submissions-list', 'form-submissions-total', page);
                                 
-                                document.getElementById('form-submissions-total').textContent = data.formSubmissions.total_submissions.toLocaleString();
-                                document.getElementById('form-success-rate').textContent = data.formSubmissions.success_rate + '%';
-                                
-                                const formTypesList = document.getElementById('form-types-list');
-                                formTypesList.innerHTML = '';
-                                Object.entries(data.formSubmissions.form_types).forEach(([type, count]) => {
-                                    const div = document.createElement('div');
-                                    div.className = 'flex justify-between items-center text-xs';
-                                    div.innerHTML = `
-                                        <span class="text-gray-700 dark:text-gray-300">${type}</span>
-                                        <span class="text-indigo-600 font-medium">${count}</span>
-                                    `;
-                                    formTypesList.appendChild(div);
-                                });
-                                
-                                const topPagesList = document.getElementById('top-pages-list');
-                                topPagesList.innerHTML = '';
-                                if (data.pageViews.top_pages.length === 0) {
-                                    topPagesList.innerHTML = '<div class="text-sm text-gray-600 dark:text-gray-400">No pages found</div>';
-                                } else {
-                                    data.pageViews.top_pages.slice(0, 5).forEach(page => {
-                                        const div = document.createElement('div');
-                                        div.className = 'flex justify-between items-center text-xs';
-                                        div.innerHTML = `
-                                            <span class="text-gray-900 dark:text-white truncate">${page.path}</span>
-                                            <span class="text-blue-600 font-medium">${page.views}</span>
-                                        `;
-                                        topPagesList.appendChild(div);
-                                    });
-                                }
-                                
-                                
-                                
+                                updatePaginationControls();
                                 showContent();
                                 
                             } catch (error) {
@@ -254,14 +265,29 @@
                                 showError(error.message || 'Failed to load analytics data');
                             }
                         }
-                     
+                        
+                        function updatePaginationControls() {
+                            document.getElementById('page-info').textContent = `Page ${currentPage}`;
+                            document.getElementById('prev-page').disabled = currentPage <= 1;
+                        }
+                        
+                        // Event listeners
                         document.getElementById('retry-analytics').addEventListener('click', function() {
-                            updateDashboard();
+                            updateDashboard(currentPage);
                         });
                         
+                        document.getElementById('prev-page').addEventListener('click', function() {
+                            if (currentPage > 1) {
+                                updateDashboard(currentPage - 1);
+                            }
+                        });
+                        
+                        document.getElementById('next-page').addEventListener('click', function() {
+                            updateDashboard(currentPage + 1);
+                        });
+                        
+                        // Initial load
                         updateDashboard();
-                        
-                        
                     }
                     
                     waitForAnalytics();
