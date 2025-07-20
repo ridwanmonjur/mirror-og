@@ -142,71 +142,49 @@
             <div class="col-12 col-lg-3">
                 <div class="cart_sidebar p-3 bg-white rounded rounded-3 border border-light">
 
-                    <h4 class="p-0 m-0">ORDER SUMMARY</h4>
+                    <h4 class="p-0 m-0 text-primary">Order Summary</h4>
                     <hr>
                     <div class="cart-calculator">
-                        <table class="table">
+                        <table class="table table-borderless">
                             <tr>
-                                <td>{{ $cart->getCount() }} PRODUCTS</td>
-                                <td></td>
+                                <td>Products</td>
+                                <td class="text-end">{{ $cart->getCount() }}</td>
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>RM {{ number_format($cart->getSubTotal(), 2) }}</td>
-
+                                <td class="text-end">RM {{ number_format($cart->getSubTotal(), 2) }}</td>
                             </tr>
                             @if (session()->has('coupon'))
                                 <tr>
                                     <td>
-                                        COUPON : {{ session()->get('coupon')['name'] }}
-                                    </td>
-
-                                    <td>- RM {{ number_format(session()->get('coupon')['discount'], 2) }}
+                                        Coupon: {{ session()->get('coupon')['name'] }}
                                         <form method="post" action="{{ route('coupon.destroy') }}"
                                             style="display:inline">
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
-                                            <button type="submit" class="btn btn-link"
+                                            <button type="submit" class="btn btn-link p-0 ms-1"
                                                 style="color: #000; font-size: 12px;"><span
                                                     class="fa fa-trash"></span></button>
                                         </form>
                                     </td>
-
+                                    <td class="text-end">- RM {{ number_format(session()->get('coupon')['discount'], 2) }}</td>
                                 </tr>
                             @endif
-                            <tr style="font-weight: bold">
-                                <td>Total</td>
-                                <td>RM {{ number_format($cart->getTotal(), 2) }}</td>
-                            </tr>
-
                             @if (session()->has('coupon'))
                                 <tr>
-                                    <td>Discount<br>
-                                        <b>Net Total</b>
-                                    </td>
-                                    <td>- RM {{ number_format($discount, 2) }}<br>
-                                        <b>RM {{ number_format($newTotal, 2) }} </b>
-
-                                    </td>
+                                    <td>Discount</td>
+                                    <td class="text-end">- RM {{ number_format($discount, 2) }}</td>
                                 </tr>
-
-                                <style type="text/css">
-                                    .cart_sidebar {
-                                        height: 465px;
-                                        width: 300px;
-                                        background-color: #f8f9fa;
-                                    }
-
-                                    .cart-calculator {
-                                        margin: 10px;
-
-                                        height: 395px;
-                                        width: 280px;
-                                        background-color: #fff;
-                                    }
-                                </style>
+                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                    <td>Net Total</td>
+                                    <td class="text-end">RM {{ number_format($newTotal, 2) }}</td>
+                                </tr>
+                            @else
+                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                    <td>Total</td>
+                                    <td class="text-end">RM {{ number_format($cart->getTotal(), 2) }}</td>
+                                </tr>
                             @endif
-
                         </table>
                     </div>
                 </div> {{-- cart_sidebar end --}}

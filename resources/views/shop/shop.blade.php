@@ -34,14 +34,25 @@
         <div class="row mx-2">
             <div class="col-12 col-xl-2 mb-6 mt-3">
                 <h5>Shop By Category</h5>
-                <div class="list-group  mt-4">
+                <form method="GET" action="{{ route('shop.index') }}" class="mt-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="category" value="all" id="all-categories" 
+                               {{ request()->category === 'all' || request()->category === null ? 'checked' : '' }} onchange="this.form.submit()">
+                        <label class="form-check-label" for="all-categories">
+                            All Categories
+                        </label>
+                    </div>
                     @foreach ($categories as $category)
-                        <a href="{{ route('shop.index', ['category' => $category->slug]) }}" 
-                           class="list-group-item list-group-item-action {{ setActiveCategory($category->slug) }} {{ setActiveCategory($category->slug, 'text-white') }}">
-                            {{ $category->name }}
-                        </a>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="category" value="{{ $category->slug }}" 
+                                   id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }} 
+                                   onchange="this.form.submit()">
+                            <label class="form-check-label" for="category-{{ $category->slug }}">
+                                {{ $category->name }}
+                            </label>
+                        </div>
                     @endforeach
-                </div>
+                </form>
             </div>
 
             <div class="col-12 col-xl-10 mb-6 mt-3">
@@ -219,6 +230,11 @@
                         @include('shop.notfound');
                     @endforelse
                 </div> <!--  row end-->
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $products->appends(request()->query())->links() }}
+                </div>
 
             </div>
         </div>

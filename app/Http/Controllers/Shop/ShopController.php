@@ -17,42 +17,38 @@ class ShopController extends Controller
      */
     public static function index()
     {
-        $pagination = 8;
+        $pagination = 12;
         $categories = Category::all();
 
-        if (request()->category) {
+        if (request()->category && request()->category !== 'all') {
             $products = Product::with('categories')->whereHas('categories', function ($query) {
                 $query->where('slug', request()->category);
             });
             $categoryName = optional($categories->where('slug', request()->category)->first())->name;
+        } elseif (request()->category === 'all') {
+            $products = Product::with('categories');
+            $categoryName = 'All Categories';
         } else {
             $products = Product::where('featured', true);
             $categoryName = 'Featured';
         }
 
         if (request()->sort == 'low_high') {
-            $products = $products->orderBy('price')->paginate($pagination);
+            $products = $products->orderBy('price')->simplePaginate($pagination);
         } elseif (request()->sort == 'high_low') {
-            $products = $products->orderBy('price', 'desc')->paginate($pagination);
+            $products = $products->orderBy('price', 'desc')->simplePaginate($pagination);
         } 
-        elseif (request()->sort == 'Top_Sellers') {
-            $products = DB::table('products')
-            ->leftJoin('order_product','products.id','=','order_product.product_id')
-            ->selectRaw('products.*, COALESCE(sum(order_product.quantity),0) total')
-            ->groupBy('products.id')
-            ->orderBy('total','desc')
-            ->paginate($pagination);
-        }
+       
 
         elseif (request()->sort == 'Newest') {
-            $products = $products->orderBy('id', 'desc')->paginate($pagination);
+            $products = $products->orderBy('id', 'desc')->simplePaginate($pagination);
         }
         elseif (request()->sort == 'price_50_to_100') {
             $products = DB::table('products')
                     ->where('price', '>=',50)
                     ->where('price', '<=', 100)
                     ->orderBy('id', 'desc')
-                    ->paginate($pagination);
+                    ->simplePaginate($pagination);
         }
 
         elseif (request()->sort == 'price_100_to_150') {
@@ -60,26 +56,26 @@ class ShopController extends Controller
                     ->where('price', '>=',100)
                     ->where('price', '<=', 150)
                     ->orderBy('id', 'desc')
-                    ->paginate($pagination);
+                    ->simplePaginate($pagination);
         }
 
         elseif (request()->sort == 'price_150_or_more') {
             $products = DB::table('products')
                     ->where('price', '>=', 150)
                     ->orderBy('id', 'desc')
-                    ->paginate($pagination);
+                    ->simplePaginate($pagination);
         }
 
         elseif (request()->sort == 'price_less_than_50') {
             $products = DB::table('products')
                     ->where('price', '<=', 50)
                     ->orderBy('id', 'desc')
-                    ->paginate($pagination);
+                    ->simplePaginate($pagination);
         }
 
 
          else {
-            $products = $products->paginate($pagination);
+            $products = $products->simplePaginate($pagination);
         }
 
         return view('shop.shop')->with([
@@ -99,7 +95,7 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)->firstOrFail();
         $mightAlsoLike = Product::where('slug', '!=', $slug)->mightAlsoLike()->get();
-        $products_sa = DB::table('products')->orderBy('id','DESC')->paginate(4);
+        $products_sa = DB::table('products')->orderBy('id','DESC')->simplePaginate(2);
 
         return view('shop.product')->with([
             'product' => $product,
@@ -121,7 +117,7 @@ class ShopController extends Controller
         //                    ->orWhere('description', 'like', "%$query%")
         //                    ->paginate(10);
 
-        $products = Product::search($query)->paginate(10);
+        $products = Product::search($query)->simplePaginate(2);
 
         return view('shop.search-results')->with('products', $products);
     }

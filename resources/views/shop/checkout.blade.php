@@ -39,6 +39,7 @@
             background-color: #fefde5 !important;
         }
     </style>
+     
 </head>
 
 <body>
@@ -51,10 +52,10 @@
 
         <div class="row mt-3">
             <div class="bg-white p-3  rounded border border-light rounded-3 col-md-8 order-md-1">
-                <p class="lead px-3">Complete your order</p>
+                <h4 class=" text-primary px-3">Complete your order</h4>
 
                 <hr>
-                <h4 class="mb-3 px-3">Shipping address</h4>
+                <h4 class="mb-3 lead text-primary px-3">Shipping address</h4>
 
                 <div class="px-3">
                 {{-- success error msg start --}}
@@ -83,64 +84,124 @@
 
                     <div class="mb-3 col-xl-9">
                         <label for="email">Email Address</label>
-                        @if (auth()->user())
-                            <input type="email" class="form-control" id="email" name="email"
-                                value="{{ auth()->user()->email }}" readonly>
-                        @else
-                            <input type="email" class="form-control" id="email" name="email"
-                                value="{{ old('email') }}" required>
-                        @endif
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                                </svg>
+                            </span>
+                            @if (auth()->user())
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{ auth()->user()->email }}" readonly>
+                            @else
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{ old('email') }}" required>
+                            @endif
+                        </div>
                     </div>
 
 
                     <div class="mb-3 col-xl-9">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name"
-                            value="{{ old('name') }}" required>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+                                </svg>
+                            </span>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ old('name') }}" required>
+                        </div>
                     </div>
 
 
                     <div class="mb-3 col-xl-9">
                         <label for="address">Address</label>
-                        <input type="text" class="form-control" id="address" name="address"
-                            value="{{ old('address') }}" required>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg>
+                            </span>
+                            <input type="text" class="form-control" id="address" name="address"
+                                value="{{ old('address') }}" required>
+                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3 col-xl-4">
                             <label for="city">City</label>
-                            <input type="text" class="form-control" id="city" name="city"
-                                value="{{ old('city') }}" required>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+                                        <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
+                                        <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="form-control" id="city" name="city"
+                                    value="{{ old('city') }}" required>
+                            </div>
                         </div>
                         <div class="col-md-5 mb-3 col-xl-3">
                             <label for="province">Province</label>
-                            <input type="text" class="form-control" id="province" name="province"
-                                value="{{ old('province') }}" required>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="form-control" id="province" name="province"
+                                    value="{{ old('province') }}" required>
+                            </div>
                         </div>
 
                         <div class="col-md-3 mb-3 col-xl-2">
                             <label for="postalcode">Postal Code</label>
-                            <input type="text" class="form-control" id="postalcode" name="postalcode"
-                                value="{{ old('postalcode') }}" required>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-postcard" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2ZM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4Zm7.5.5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7ZM2 5.5a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Zm0 2a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5Zm0 2a.5.5 0 0 1 .5-.5H6a.5.5 0 0 1 0 1H2.5a.5.5 0 0 1-.5-.5ZM10.5 7a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3ZM13 8v2h-2V8h2Z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="form-control" id="postalcode" name="postalcode"
+                                    value="{{ old('postalcode') }}" required>
+                            </div>
                         </div>
                     </div> <!-- row end -->
 
 
                     <div class="mb-3 col-xl-5">
                         <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone"
-                            value="{{ old('phone') }}" required>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                                    <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/>
+                                    <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                </svg>
+                            </span>
+                            <input type="text" class="form-control" id="phone" name="phone"
+                                value="{{ old('phone') }}" required>
+                        </div>
                     </div>
 
 
 
-                    <h4 class="mb-3">Payment</h4>
+                    <h4 class="mb-3 lead text-primary mt-2">Payment</h4>
 
                     <div class="row">
                         <div class="col-md-12 col-xl-9 mb-3">
                             <label for="name_on_card">Name on Card</label>
-                            <input type="text" class="form-control" id="name_on_card" name="name_on_card"
-                                value="">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card" viewBox="0 0 16 16">
+                                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/>
+                                        <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="form-control" id="name_on_card" name="name_on_card"
+                                    value="">
+                            </div>
                         </div>
 
                         <div class="col-md-12 col-xl-9">
@@ -170,71 +231,49 @@
             <div class="col-md-4 order-md-2 mb-4">
                 <div class="cart_sidebar p-3 bg-white rounded rounded-3 border border-light">
 
-                    <h4 class="p-0 m-0">ORDER SUMMARY</h4>
+                    <h4 class="p-0 m-0 text-primary">Order Summary</h4>
                     <hr>
                     <div class="cart-calculator">
-                        <table class="table">
+                        <table class="table table-borderless">
                             <tr>
-                                <td>{{ $cart->getCount() }} PRODUCTS</td>
-                                <td></td>
+                                <td>Products</td>
+                                <td class="text-end">{{ $cart->getCount() }}</td>
                             </tr>
                             <tr>
                                 <td>Product total</td>
-                                <td>RM {{ number_format($cart->getSubTotal(), 2) }}</td>
-
+                                <td class="text-end">RM {{ number_format($cart->getSubTotal(), 2) }}</td>
                             </tr>
                             @if (session()->has('coupon'))
                                 <tr>
                                     <td>
-                                        COUPON : {{ session()->get('coupon')['name'] }}
-                                    </td>
-
-                                    <td>- RM {{ number_format(session()->get('coupon')['discount'], 2) }}
+                                        Coupon: {{ session()->get('coupon')['name'] }}
                                         <form method="post" action="{{ route('coupon.destroy') }}"
                                             style="display:inline">
                                             {{ csrf_field() }}
                                             {{ method_field('delete') }}
-                                            <button type="submit" class="btn btn-link"
+                                            <button type="submit" class="btn btn-link p-0 ms-1"
                                                 style="color: #000; font-size: 12px;"><span
                                                     class="fa fa-trash"></span></button>
                                         </form>
                                     </td>
-
+                                    <td class="text-end">- RM {{ number_format(session()->get('coupon')['discount'], 2) }}</td>
                                 </tr>
                             @endif
-                            <tr style="font-weight: bold">
-                                <td>Total</td>
-                                <td>RM {{ number_format($cart->getTotal(), 2) }}</td>
-                            </tr>
-
                             @if (session()->has('coupon'))
                                 <tr>
-                                    <td>Discount<br>
-                                        <b>Net Total</b>
-                                    </td>
-                                    <td>- RM {{ number_format($discount, 2) }}<br>
-                                        <b>RM {{ number_format($newTotal, 2) }} </b>
-
-                                    </td>
+                                    <td>Discount</td>
+                                    <td class="text-end">- RM {{ number_format($discount, 2) }}</td>
                                 </tr>
-
-                                <style type="text/css">
-                                    .cart_sidebar {
-                                        height: 465px;
-                                        width: 300px;
-                                        background-color: #f8f9fa;
-                                    }
-
-                                    .cart-calculator {
-                                        margin: 10px;
-
-                                        height: 395px;
-                                        width: 280px;
-                                        background-color: #fff;
-                                    }
-                                </style>
+                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                    <td>Net Total</td>
+                                    <td class="text-end">RM {{ number_format($newTotal, 2) }}</td>
+                                </tr>
+                            @else
+                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                    <td>Total</td>
+                                    <td class="text-end">RM {{ number_format($cart->getTotal(), 2) }}</td>
+                                </tr>
                             @endif
-
                         </table>
                     </div>
                 </div> {{-- cart_sidebar end --}}
@@ -244,20 +283,24 @@
                 <div class="coupon_fr">
 
                     <div class="coupon_in">
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <b>PROMO CODE</b>
-                                </td>
-                            </tr>
-                        </table>
+                       
                         <div class="row">
                             <div class="col">
                                 <div class="card card-body">
+                                    <h4 class="p-0 m-0 text-primary">Promo Code</h4>
+                                    <hr>
                                     <form method="post" action="{{ route('coupon.store') }}">
                                         {{ csrf_field() }}
-                                        <input type="text" name="coupon_code" class="form-control"
-                                            placeholder="CODES ARE CASE-SENSITIVE">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+                                                    <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/>
+                                                    <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/>
+                                                </svg>
+                                            </span>
+                                            <input type="text" name="coupon_code" class="form-control"
+                                                placeholder="CODES ARE CASE-SENSITIVE">
+                                        </div>
                                         <p style="font-size: 12px; color: grey;" class="mt-2">Casing & hyphens need to be exact
                                         </p>
 

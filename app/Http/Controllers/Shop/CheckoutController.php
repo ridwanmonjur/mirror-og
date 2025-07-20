@@ -66,7 +66,7 @@ class CheckoutController extends Controller
             Stripe::setApiKey(config('services.stripe.secret'));
             
             $charge = \Stripe\Charge::create([
-                'amount' => getNumbers()->get('newTotal'),
+                'amount' => getNumbers()->get('newTotal')*100,
                 'currency' => 'MYR',
                 'source' => $request->stripeToken,
                 'description' => 'Order',
