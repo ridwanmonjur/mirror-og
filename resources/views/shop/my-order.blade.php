@@ -103,20 +103,8 @@
                                     <td>{{ $order->user->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Address</td>
-                                    <td>{{ $order->billing_address }}</td>
-                                </tr>
-                                <tr>
-                                    <td>City</td>
-                                    <td>{{ $order->billing_city }}</td>
-                                </tr>
-                                <tr>
                                     <td>Subtotal</td>
                                     <td>${{ number_format($order->billing_subtotal, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Tax</td>
-                                    <td>{{ $order->billing_tax }}</td>
                                 </tr>
                                 <tr>
                                     <td>Total</td>

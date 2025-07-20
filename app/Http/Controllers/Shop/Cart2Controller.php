@@ -8,6 +8,8 @@ use App\Http\Requests\Shop\WalletShopCheckoutRequest;
 use App\Models\Wallet;
 use App\Models\StripeConnection;
 use App\Models\TransactionHistory;
+use App\Models\RecordStripe;
+use App\Models\SystemCoupon;
 use App\Order;
 use App\Product;
 use App\OrderProduct;
@@ -128,7 +130,7 @@ class Cart2Controller extends Controller
 
             $transaction->save();
 
-            $order = $this->addToOrdersTables($request, null, $transaction->id);
+            $order = $this->addToOrdersTables($transaction->id);
 
             [$coupon] = $request->couponDetails;
             $coupon?->validateAndIncrementCoupon();
@@ -154,9 +156,101 @@ class Cart2Controller extends Controller
 
     public function showCheckoutTransition(Request $request)
     {
-        // For now, just redirect to confirmation page
-        // This can be expanded later to handle Stripe payment confirmations similar to participant checkout
-        return redirect()->route('confirmation.index')->with('successMessage', 'Your payment has succeeded!');
+        $paymentIntent = [];
+        DB::beginTransaction();
+        try {
+            $user = auth()->user();
+            $status = $request->get('redirect_status');
+            
+            if (($status === 'succeeded' || $status === 'requires_capture') && $request->has('payment_intent_client_secret')) {
+                $intentId = $request->get('payment_intent');
+                $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                $paymentMethodId = $paymentIntent['payment_method'];
+                $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
+
+                $paymentDone = (float) $paymentIntent['amount'] / 100;
+
+                if ($paymentIntent['amount'] > 0 && ($paymentIntent['amount_capturable'] === $paymentIntent['amount'] || $paymentIntent['amount_received'] === $paymentIntent['amount'])) {
+                    
+                    // Handle coupon if exists
+                    $couponCode = $paymentIntent['metadata']['couponCode'] ?? null;
+                    $coupon = null;
+                    if ($couponCode) {
+                        [$fee, null, null, $coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['cartTotal'], 0.0, 'shop', $user->id);
+                        $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
+                    }
+
+                    // Create Stripe transaction record
+                    $transaction = RecordStripe::createTransaction(
+                        $paymentIntent, 
+                        $paymentMethod, 
+                        $user->id, 
+                        $request->query('saveDefault'), 
+                        $request->query('savePayment')
+                    );
+
+                    // Create transaction history
+                    $history = new TransactionHistory([
+                        'name' => "Shop Order",
+                        'type' => 'Shop Order Payment',
+                        'link' => route('shop.index'),
+                        'amount' => $paymentDone,
+                        'summary' => "Shop order payment via Stripe RM {$paymentDone}",
+                        'isPositive' => false,
+                        'date' => now(),
+                        'user_id' => $user->id,
+                    ]);
+                    $history->save();
+
+
+                    $order = $this->addToOrdersTables(null, $transaction->id, $paymentDone, $couponCode, $fee);
+
+                    $cart = NewCart::getUserCart($user->id);
+                    $this->clearCartAndDecrease($cart);
+
+                    DB::commit();
+
+                    return redirect()
+                        ->route('confirmation.index')
+                        ->with('successMessage', 'Your payment has succeeded!');
+                }
+            }
+
+            // Handle failed or cancelled payments
+            if ($request->has('payment_intent')) {
+                try {
+                    $intentId = $request->get('payment_intent');
+                    $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
+                    $cancelableStatuses = [
+                        'requires_payment_method',
+                        'requires_confirmation', 
+                        'requires_action',
+                        'processing'
+                    ];
+
+                    if (in_array($paymentIntent['status'], $cancelableStatuses)) {
+                        $this->stripeClient->cancelPaymentIntent($intentId, [
+                            'cancellation_reason' => 'abandoned'
+                        ]);
+                    }
+                } catch (Exception $e) {
+                    Log::error('Payment intent cancellation error: ' . $e->getMessage());
+                }
+            }
+
+            DB::rollBack();
+            return redirect()
+                ->route('shop.cart2')
+                ->with('errorMessage', 'Your payment has failed unfortunately!');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Shop checkout transition error: ' . $e->getMessage());
+            
+            return redirect()
+                ->route('shop.cart2')
+                ->with('errorMessage', 'Payment processing failed: ' . $e->getMessage());
+        }
     }
 
     protected function clearCartAndDecrease($cart = null)
@@ -170,12 +264,11 @@ class Cart2Controller extends Controller
         session()->forget('coupon');
     }
 
-    protected function addToOrdersTables($request, $error, $walletTransactionId = null)
+    protected function addToOrdersTables($walletTransactionId = null, $stripeTransactionId = null, $paymentAmount = null, $couponCode = null, $fee = null)
     {
         try {
-            $finalFee = isset($request->fee) ? $request->fee['finalFee'] : $request->wallet_to_decrement;
-            $couponCode = $request->input('coupon_code');
-            $discountAmount = isset($request->fee) ? $request->fee['discount'] : 0;
+            $finalFee = $paymentAmount ?? 0;
+            $discountAmount = $fee['discount'] ?? 0;
 
             $userId = auth()->id();
             $cart = NewCart::getUserCart($userId);
@@ -196,9 +289,7 @@ class Cart2Controller extends Controller
                 'billing_subtotal' => $numbers->get('newSubtotal'),
                 'billing_tax' => 0,
                 'billing_total' => $finalFee,
-                'error' => $error,
-                'wallet_transaction_id' => $walletTransactionId,
-                'payment_method' => $walletTransactionId ? 'wallet' : 'stripe',
+                'payment_gateway' => $walletTransactionId ? 'wallet' : 'stripe',
             ]);
 
             foreach ($cart->getContent() as $item) {

@@ -21,7 +21,6 @@ use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\Shop\OrdersController;
 use App\Http\Controllers\Shop\CartController;
-use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\Cart2Controller;
 use App\Http\Controllers\Shop\ConfirmationController;
 use App\Http\Controllers\Shop\CouponsController;
@@ -237,9 +236,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/coupon', [CouponsController::class, 'destroy'])->name('coupon.destroy');
 
     // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::post('/paypal-checkout', [CheckoutController::class, 'paypalCheckout'])->name('checkout.paypal');
-    Route::get('/guestCheckout', [CheckoutController::class, 'index'])->name('guestCheckout.index');
 
     // Cart2 routes with wallet and discount support
     Route::get('/checkout', [Cart2Controller::class, 'showCheckout'])->name('checkout.index');
