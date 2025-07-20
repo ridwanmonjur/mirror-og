@@ -107,7 +107,7 @@
                                 <div class="bg-light border-secondary border p-3 rounded">
 
 
-                                    <div class="text-muted">
+                                    <div class="text-dark">
                                         <svg width="16" height="16" fill="currentColor" class="text-warning me-2"
                                             viewBox="0 0 16 16">
                                             <path
@@ -117,7 +117,7 @@
                                         </svg>
                                         {!! $product->description !!}
                                     </div>
-                                     <div class="product-details__content">
+                                     <div class="product-details__content text-muted">
                                         <div class="px-0 pt-2">
                                             {!! $product->details !!}
                                         </div>
