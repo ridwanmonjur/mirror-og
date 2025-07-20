@@ -34,11 +34,13 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.index');
         }
 
+        $numbers = $cart->getNumbers();
+        
         return view('shop.checkout')->with([
             'cart' => $cart,
-            'discount' => getNumbers()->get('discount'),
-            'newSubtotal' => getNumbers()->get('newSubtotal'),
-            'newTotal' => getNumbers()->get('newTotal'),
+            'discount' => $numbers->get('discount'),
+            'newSubtotal' => $numbers->get('newSubtotal'),
+            'newTotal' => $numbers->get('newTotal'),
         ]);
     }
 
@@ -65,8 +67,9 @@ class CheckoutController extends Controller
         try {
             Stripe::setApiKey(config('services.stripe.secret'));
             
+            $numbers = $cart->getNumbers();
             $charge = \Stripe\Charge::create([
-                'amount' => getNumbers()->get('newTotal')*100,
+                'amount' => $numbers->get('newTotal')*100,
                 'currency' => 'MYR',
                 'source' => $request->stripeToken,
                 'description' => 'Order',
@@ -99,6 +102,10 @@ class CheckoutController extends Controller
     protected function addToOrdersTables($request, $error)
     {
         // Insert into orders table
+        $userId = auth()->id();
+        $cart = NewCart::getUserCart($userId);
+        $numbers = $cart->getNumbers();
+        
         $order = Order::create([
             'user_id' => auth()->user() ? auth()->user()->id : null,
             'billing_email' => $request->email,
@@ -109,17 +116,15 @@ class CheckoutController extends Controller
             'billing_postalcode' => $request->postalcode,
             'billing_phone' => $request->phone,
             'billing_name_on_card' => $request->name_on_card,
-            'billing_discount' => getNumbers()->get('discount'),
-            'billing_discount_code' => getNumbers()->get('code'),
-            'billing_subtotal' => getNumbers()->get('newSubtotal'),
+            'billing_discount' => $numbers->get('discount'),
+            'billing_discount_code' => $numbers->get('code'),
+            'billing_subtotal' => $numbers->get('newSubtotal'),
             'billing_tax' => 0,
-            'billing_total' => getNumbers()->get('newTotal'),
+            'billing_total' => $numbers->get('newTotal'),
             'error' => $error,
         ]);
 
         // Insert into order_product table
-        $userId = auth()->id();
-        $cart = NewCart::getUserCart($userId);
         foreach ($cart->getContent() as $item) {
             OrderProduct::create([
                 'order_id' => $order->id,

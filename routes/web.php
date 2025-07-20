@@ -22,6 +22,7 @@ use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\Shop\OrdersController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
+use App\Http\Controllers\Shop\Cart2Controller;
 use App\Http\Controllers\Shop\ConfirmationController;
 use App\Http\Controllers\Shop\CouponsController;
 
@@ -235,10 +236,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/coupon', [CouponsController::class, 'store'])->name('coupon.store');
     Route::delete('/coupon', [CouponsController::class, 'destroy'])->name('coupon.destroy');
 
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth');
+    // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('/paypal-checkout', [CheckoutController::class, 'paypalCheckout'])->name('checkout.paypal');
     Route::get('/guestCheckout', [CheckoutController::class, 'index'])->name('guestCheckout.index');
+
+    // Cart2 routes with wallet and discount support
+    Route::get('/checkout', [Cart2Controller::class, 'showCheckout'])->name('checkout.index');
+    Route::post('/walletCheckout', [Cart2Controller::class, 'walletCheckout'])->name('shop.walletCheckout');
+    Route::get('/checkout/transition', [Cart2Controller::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
 
 
     Route::get('/thankyou', [ConfirmationController::class, 'index'])->name('confirmation.index');
