@@ -89,7 +89,7 @@
                                 @elseif ($walletStatusEnums['INVALID'] == $walletStatus)
                                         You have RM {{$user_wallet->current_balance}} net balance and RM {{$user_wallet->usable_balance}} usable balance in your wallet to apply towards this order.
                                         But this is not enough for the next transaction.
-                                @else
+                                @elseif ($user_wallet->usable_balance)
                                     <span> 
                                         
                                         You can apply RM {{$user_wallet->usable_balance}} from your wallet to pay towards this order
@@ -114,7 +114,6 @@
                                 </div>
                             <div class="d-none d-lg-block">
 
-                                <br>
                             </div>
                             <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
                                 <button class="oceans-gaming-default-button" type="submit"> Submit </button>
@@ -160,7 +159,7 @@
             </h5>
             </div>
             <div>Promo Code</div>
-            <form method="POST" class="row mx-0 px-0 mb-1">
+            <form method="GET" class="row mx-0 px-0 mb-1">
                 @csrf
                 <div class="form-group mb-0 px-0 mx-0">
                     <input type="hidden" id="amount" name="amount" value="{{ $amount }}">
