@@ -19,6 +19,8 @@ class NewCart extends Model
         'total' => 'decimal:2'
     ];
 
+    protected $cachedCount = null;
+
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -32,6 +34,7 @@ class NewCart extends Model
     public function updateTotal()
     {
         $this->total = $this->items()->sum('subtotal');
+        $this->cachedCount = null; // Clear cache when items change
         $this->save();
         return $this->total;
     }
@@ -99,7 +102,10 @@ class NewCart extends Model
 
     public function getCount()
     {
-        return $this->items()->sum('quantity');
+        if ($this->cachedCount === null) {
+            $this->cachedCount = $this->items()->sum('quantity');
+        }
+        return $this->cachedCount;
     }
 
     public function getSubTotal()

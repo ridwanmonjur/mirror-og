@@ -14,12 +14,5 @@ class ConfirmationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): View | RedirectResponse
-    {
-        // if (! session()->has('success_message')) {
-        //     return redirect('/');
-        // }
-
-        return view('shop.thankyou');
-    }
+   
 }

@@ -131,87 +131,13 @@
         <div class=" d-flex justify-content-between box-width back-next">
             <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
-            <button onclick="goToNextScreen('step-3-5', 'timeline-1'); " type="button"
+            <button onclick="goToNextScreen('step-4', 'timeline-1'); " type="button"
                 class="oceans-gaming-default-button"> Next&nbsp;&nbsp;  &gt; </button>
         </div>
     </div>
 </div>
 
-{{-- 
-    DEPRECATED: player_per_team and games_per_match fields have been moved from EventDetail to EventCategory
-    These values are now determined by the selected game category and are no longer manually configurable per event
---}}
-{{-- 
-<div id="step-3-5" class="d-none">
-    <div class="welcome text-center" >
-        <h3>
-            STEP 1: Fill in your <span class="text-primary">event configuration</span>
-        </h3>
-        <p>
-            Choose the number of players per team and games per match.
-        </p>
-    </div>
-    <div class=" row  event-details-form mx-auto box-width" >
-        <div class="form-group px-0 py-0 col-12 col-xl-6 mx-0 mb-3">
-                <label for="player_per_team">Players Per Team</label>
-                <div class="my-3">Tell your teams how many players can be in the team.</div>
-                <div class="d-flex align-items-center justify-content-start">
-                    <input 
-                        id="player_per_team"
-                        name="player_per_team" 
-                        type="number" 
-                        min="1"
-                        max="50"
-                        value="{{ $isEventNotNull ? $event->player_per_team : 5 }}"
-                        style="background-color: transparent;"
-                        placeholder="Select the number of players per team." 
-                        class="px-3 me-2 text-start py-2 border-dark border rounded-pill form-control"
-                    >
-                    <span class="me-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cup-hot-fill" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6zM13 12.5a2 2 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5"/>
-  <path d="m4.4.8-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 3.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 6.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.252.382l-.019.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 9.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8"/>
-</svg>
-                    </span>
-                </div>
-            </div>
 
-            <!-- Games Per Match -->
-            <div class="form-group col-12 col-xl-6 mx-0 px-0 py-0 mb-3">
-                <label for="games_per_match">Games Per Match</label>
-                <div class="my-3">Tell your players the number of games per match.</div>
-                <div class="align-items-center  d-flex justify-content-start">
-                    <input 
-                        id="games_per_match"
-                        name="games_per_match"
-                        type="number" 
-                        min="1"
-                        max="20"
-                        value="{{ $isEventNotNull ? $event->games_per_match : 3 }}"
-                        placeholder="Select the number of games per match."
-                        style="background-color: transparent;"
-                        class="px-3 me-2 text-start py-2 border border-dark rounded-pill form-control" 
-                    >
-                    <span class="me-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-controller" viewBox="0 0 16 16">
-                        <path d="M11.5 6.027a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m-1.5 1.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m2.5-.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m-1.5 1.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m-6.5-3h1v1h1v1h-1v1h-1v-1h-1v-1h1z"/>
-                        <path d="M3.051 3.26a.5.5 0 0 1 .354-.613l1.932-.518a.5.5 0 0 1 .62.39c.655-.079 1.35-.117 2.043-.117.72 0 1.443.041 2.12.126a.5.5 0 0 1 .622-.399l1.932.518a.5.5 0 0 1 .306.729q.211.136.373.297c.408.408.78 1.05 1.095 1.772.32.733.599 1.591.805 2.466s.34 1.78.364 2.606c.024.816-.059 1.602-.328 2.21a1.42 1.42 0 0 1-1.445.83c-.636-.067-1.115-.394-1.513-.773-.245-.232-.496-.526-.739-.808-.126-.148-.25-.292-.368-.423-.728-.804-1.597-1.527-3.224-1.527s-2.496.723-3.224 1.527c-.119.131-.242.275-.368.423-.243.282-.494.575-.739.808-.398.38-.877.706-1.513.773a1.42 1.42 0 0 1-1.445-.83c-.27-.608-.352-1.395-.329-2.21.024-.826.16-1.73.365-2.606.206-.875.486-1.733.805-2.466.315-.722.687-1.364 1.094-1.772a2.3 2.3 0 0 1 .433-.335l-.028-.079zm2.036.412c-.877.185-1.469.443-1.733.708-.276.276-.587.783-.885 1.465a14 14 0 0 0-.748 2.295 12.4 12.4 0 0 0-.339 2.406c-.022.755.062 1.368.243 1.776a.42.42 0 0 0 .426.24c.327-.034.61-.199.929-.502.212-.202.4-.423.615-.674.133-.156.276-.323.44-.504C4.861 9.969 5.978 9.027 8 9.027s3.139.942 3.965 1.855c.164.181.307.348.44.504.214.251.403.472.615.674.318.303.601.468.929.503a.42.42 0 0 0 .426-.241c.18-.408.265-1.02.243-1.776a12.4 12.4 0 0 0-.339-2.406 14 14 0 0 0-.748-2.295c-.298-.682-.61-1.19-.885-1.465-.264-.265-.856-.523-1.733-.708-.85-.179-1.877-.27-2.913-.27s-2.063.091-2.913.27"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
-    </div>
-    <div class=" d-flex justify-content-between box-width back-next">
-        <button onclick="goToNextScreen('step-3', 'timeline-1'); fillStepGameDetailsValues();" type="button"
-            class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back 
-        </button>
-        <button onclick="goToNextScreen('step-4', 'timeline-1')" type="button"
-            class="oceans-gaming-default-button">
-            Next&nbsp;&nbsp;  &gt; 
-        </button>
-    </div>
-</div>
---}}
 
 
 
@@ -274,7 +200,7 @@
         </div>
     </section>
     <div class=" d-flex justify-content-between box-width back-next">
-        <button onclick="goToNextScreen('step-3-5', 'timeline-1');" type="button"
+        <button onclick="goToNextScreen('step-3', 'timeline-1');" type="button"
             class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
         <button onclick="goToNextScreen('step-5', 'timeline-2');" type="button"
             class="oceans-gaming-default-button"> Step 2 > </button>

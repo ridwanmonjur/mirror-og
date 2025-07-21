@@ -14,10 +14,12 @@ use App\Order;
 use App\Product;
 use App\OrderProduct;
 use App\NewCart;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 class Cart2Controller extends Controller
 {
@@ -324,5 +326,14 @@ class Cart2Controller extends Controller
             Log::error('Shop quantity decrease error: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    public function thankyou(): View | RedirectResponse
+    {
+        // if (! session()->has('success_message')) {
+        //     return redirect('/');
+        // }
+
+        return view('shop.thankyou');
     }
 }
