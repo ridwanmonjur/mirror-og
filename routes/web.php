@@ -227,7 +227,6 @@ Route::group(['prefix' => 'organizer'], function () {
 Route::middleware('auth')->group(function () {
     Route::group(['middleware' => ['check-permission:participant|organizer', 'prevent-back-history']], function () {
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
-        Route::get('/orders/{order}', [OrdersController::class, 'show'])->name('orders.show');
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
         Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');

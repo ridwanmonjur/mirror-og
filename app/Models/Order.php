@@ -10,6 +10,8 @@ class Order extends Model
         'user_id', 'billing_discount', 'billing_discount_code', 'billing_subtotal', 'billing_total',
     ];
 
+    protected $perPage = 1;
+
     public function user()
     {
         return $this->belongsTo('App\Models\User');

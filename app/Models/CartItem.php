@@ -10,7 +10,7 @@ class CartItem extends Model
     use HasFactory;
     
     protected $fillable = [
-        'cart_id', 'product_id', 'variant_id', 'quantity', 'subtotal'
+        'cart_id', 'product_id', 'quantity', 'subtotal'
     ];
 
     protected $casts = [
@@ -27,8 +27,8 @@ class CartItem extends Model
         return $this->belongsTo('App\Models\Product');
     }
 
-    public function variant()
+    public function cartProductVariants()
     {
-        return $this->belongsTo(ProductVariant::class, 'variant_id');
+        return $this->belongsToMany(ProductVariant::class, 'cart_item_product_variants', 'cart_item_id', 'variant_id');
     }
 }

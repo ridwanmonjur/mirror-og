@@ -69,7 +69,7 @@ class ShowShopCheckoutRequest extends FormRequest
         // Check product availability
         foreach ($cart->getContent() as $item) {
             $product = Product::find($item->product_id);
-            if (!$product || $product->quantity < $item->quantity) {
+            if (!$product ) {
                 $validator->errors()->add(
                     'products', 
                     "Some items in your cart are no longer available."
