@@ -151,6 +151,6 @@ class WalletShopCheckoutRequest extends FormRequest
     {
         $error = $validator->errors()->first();
         throw new \Illuminate\Validation\ValidationException($validator, response()
-            ->view('Participant.EventNotFound', compact('error')));
+            ->view('Participant.Error', compact('error')));
     }
 }
