@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,7 +28,7 @@ class NewCart extends Model
 
     public function items()
     {
-        return $this->hasMany('App\CartItem', 'cart_id');
+        return $this->hasMany('App\Models\CartItem', 'cart_id');
     }
 
     public function updateTotal()

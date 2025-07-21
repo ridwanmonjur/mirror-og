@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,11 +19,11 @@ class CartItem extends Model
 
     public function cart()
     {
-        return $this->belongsTo('App\NewCart', 'cart_id');
+        return $this->belongsTo('App\Models\NewCart', 'cart_id');
     }
 
     public function product()
     {
-        return $this->belongsTo('App\Product');
+        return $this->belongsTo('App\Models\Product');
     }
 }

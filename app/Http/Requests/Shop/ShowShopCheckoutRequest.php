@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Shop;
 
 use App\Models\SystemCoupon;
-use App\Product;
-use App\NewCart;
+use App\Models\Product;
+use App\Models\NewCart;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -44,13 +44,12 @@ class ShowShopCheckoutRequest extends FormRequest
 
     private function validateCartAndPayment($validator)
     {
-        $user = $this->user();
+        $user = $this->attributes->get('user');
+
         $userId = $user->id;
         
-        // Cache the cart to avoid duplicate queries
-        if (!$this->cart) {
-            $this->cart = NewCart::getUserCart($userId);
-        }
+        $this->cart = NewCart::getUserCart($userId);
+
         $cart = $this->cart;
 
         $prevForm = [
@@ -59,7 +58,6 @@ class ShowShopCheckoutRequest extends FormRequest
 
         $this->prevForm = $prevForm;
 
-        // Check if cart is empty
         if ($cart->getCount() == 0) {
             $validator->errors()->add(
                 'cart', 
@@ -148,8 +146,8 @@ class ShowShopCheckoutRequest extends FormRequest
 
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        throw new \Illuminate\Validation\ValidationException($validator, redirect()
-            ->route('checkout.index')            
-            ->with('errorMessage', $validator->errors()->first()));
+        $error = $validator->errors()->first();
+        throw new \Illuminate\Validation\ValidationException($validator, response()
+            ->view('Participant.EventNotFound', compact('error')));
     }
 }

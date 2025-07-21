@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
-use App\Product;
+use App\Models\Product;
 use App\Services\ShopService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;

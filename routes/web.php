@@ -21,8 +21,7 @@ use App\Http\Controllers\Shared\StripeController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\Shop\OrdersController;
 use App\Http\Controllers\Shop\CartController;
-use App\Http\Controllers\Shop\Cart2Controller;
-use App\Http\Controllers\Shop\ConfirmationController;
+use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CouponsController;
 
 use App\Http\Controllers\User\ChatController;
@@ -76,7 +75,6 @@ Route::get('/view/participant/{id}/{title?}', [ParticipantController::class, 'vi
 Route::get('/view/organizer/{id}/{title?}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
 
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
-Route::get('/auth/steam/callback', [AuthController::class, 'handleSteamCallback']);
 
 Route::feeds();
 
@@ -236,12 +234,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 
         // Cart2 routes with wallet and discount support
-        Route::get('/checkout', [Cart2Controller::class, 'showCheckout'])->name('checkout.index');
-        Route::post('/walletCheckout', [Cart2Controller::class, 'walletCheckout'])->name('shop.walletCheckout');
-        Route::get('/checkout/transition', [Cart2Controller::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
+        Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.index');
+        Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
+        Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
 
 
-        Route::get('/thankyou', [Cart2Controller::class, 'thankyou'])->name('confirmation.index');
+        Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
     });
 });
 

@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Product;
-use App\Category;
-use App\NewCart;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\NewCart;
 use Illuminate\Http\Request;
 
 class ShopService
