@@ -220,7 +220,7 @@ class ParticipantCheckoutController extends Controller
 
                     $couponCode = $paymentIntent['metadata']['coupon_code'] ?? null;
                     if ($couponCode) {
-                        [$coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['totalFee'], 0.0, 'participant', $user->id);
+                        [$fee, , ,$coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['totalFee'], 0.0, 'participant', $user->id);
 
                         $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
                     }

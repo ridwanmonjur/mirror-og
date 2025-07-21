@@ -95,7 +95,7 @@
                                 @elseif ($walletStatusEnums['INVALID'] == $walletStatus)
                                         You have RM {{$user_wallet->current_balance}} net balance and RM {{$user_wallet->usable_balance}} usable balance in your wallet to apply towards this event.
                                         But this is not enough for the next transaction.
-                                @else
+                                @elseif ($user_wallet->usable_balance)
                                     <span> 
                                         
                                         You can apply RM {{$user_wallet->usable_balance}} from your wallet to pay towards this event
@@ -126,7 +126,6 @@
                                 </div>
                             <div class="d-none d-lg-block">
 
-                                <br>
                             </div>
                             <div class="d-flex justify-content-center my-3 d-none" id="submit-button-element">
                                 <button class="oceans-gaming-default-button" type="submit"> Submit </button>
