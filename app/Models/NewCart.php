@@ -23,7 +23,7 @@ class NewCart extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function items()
@@ -44,9 +44,16 @@ class NewCart extends Model
         return static::firstOrCreate(['user_id' => $userId]);
     }
 
-    public function addItem($productId, $quantity, $price)
+    public function addItem($productId, $quantity, $price, $variantId = null)
     {
-        $existingItem = $this->items()->where('product_id', $productId)->first();
+        $query = $this->items()->where('product_id', $productId);
+        if ($variantId) {
+            $query->where('variant_id', $variantId);
+        } else {
+            $query->whereNull('variant_id');
+        }
+        
+        $existingItem = $query->first();
         
         if ($existingItem) {
             $newQuantity = $existingItem->quantity + $quantity;
@@ -62,6 +69,7 @@ class NewCart extends Model
             }
             $this->items()->create([
                 'product_id' => $productId,
+                'variant_id' => $variantId,
                 'quantity' => $quantity,
                 'subtotal' => $quantity * $price
             ]);

@@ -320,6 +320,6 @@ class User extends Authenticatable implements FilamentUser
 
     public function orders()
     {
-        return $this->hasMany('App\Order');
+        return $this->hasMany('App\Models\Order');
     }
 }

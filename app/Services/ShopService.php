@@ -69,7 +69,7 @@ class ShopService
 
     public function getProductDetails(string $slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::with('variants')->where('slug', $slug)->firstOrFail();
         $products_sa = Product::orderBy('id', 'DESC')->simplePaginate();
 
         return [
@@ -108,15 +108,26 @@ class ShopService
         ];
     }
 
-    public function addItemToCart(int $userId, Product $product)
+    public function addItemToCart(int $userId, Product $product, $variantId = null, $quantity = 1)
     {
         $cart = $this->getUserCart($userId);
         
         try {
-            $cart->addItem($product->id, 1, $product->price);
+            // Validate variant stock if variant is specified
+            if ($variantId) {
+                $variant = $product->variants()->find($variantId);
+                if (!$variant) {
+                    return ['success' => false, 'message' => 'Selected variant not found.'];
+                }
+                if ($variant->stock < $quantity) {
+                    return ['success' => false, 'message' => 'Not enough stock available for this variant.'];
+                }
+            }
+            
+            $cart->addItem($product->id, $quantity, $product->price, $variantId);
             return ['success' => true, 'message' => 'Item was added to your cart!'];
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Maximum quantity of 20 exceeded for this item.'];
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 

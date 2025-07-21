@@ -137,9 +137,10 @@
                                     </a>
                                 @endforeach
                                 @php
-                                    $stockThreshold = 0;
+                                    $totalStock = $product->variants->sum('stock');
+                                    $stockThreshold = 10;
                                 @endphp
-                                @if ($product->quantity > $stockThreshold)
+                                @if ($totalStock > $stockThreshold)
                                     <span class="badge bg-success">
                                         <svg width="12" height="12" fill="currentColor" class="me-1"
                                             viewBox="0 0 16 16">
@@ -150,7 +151,7 @@
                                         </svg>
                                         In Stock
                                     </span>
-                                @elseif($product->quantity > 0)
+                                @elseif($totalStock > 0)
                                     <span class="badge bg-warning">
                                         <svg width="12" height="12" fill="currentColor" class="me-1"
                                             viewBox="0 0 16 16">
@@ -183,91 +184,82 @@
                                 {{ number_format($product->price, 2) }}</h3>
                         </div>
 
-                        <!-- Product Options -->
-                        <div class="mb-4">
-                            <div class="row g-3">
-                                <!-- Labels Column -->
-                                <div class="col-md-4 col-xxl-2">
-                                    <label for="size" class="form-label fw-semibold">
-                                        <svg width="14" height="14" fill="currentColor"
-                                            class="text-muted me-2" viewBox="0 0 16 16">
-                                            <path
-                                                d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-                                        </svg>
-                                        Size
-                                    </label>
-                                </div>
-                                <!-- Inputs Column -->
-                                <div class="col-md-4 col-lg-5">
-                                    <select class="form-select" id="size" name="size">
-                                        <option>Choose an option</option>
-                                        <option>Size S</option>
-                                        <option>Size M</option>
-                                        <option>Size L</option>
-                                        <option>Size XL</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- Next line -->
-                            <div class="row g-3 mt-2">
-                                <!-- Labels Column -->
-                                <div class="col-md-4 col-xxl-2">
-                                    <label for="color" class="form-label fw-semibold">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-palette me-2" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                                            <path
-                                                d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8m-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7" />
-                                        </svg>
-                                        Color
-                                    </label>
-                                </div>
-                                <!-- Inputs Column -->
-                                <div class="col-md-4 col-lg-5">
-                                    <select class="form-select" id="color" name="color">
-                                        <option>Choose an option</option>
-                                        <option>Gray</option>
-                                        <option>Red</option>
-                                        <option>Black</option>
-                                        <option>Blue</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- Next line -->
-                            <div class="row g-3 mt-2">
-                                <!-- Labels Column -->
-                                <div class="col-md-4 col-xxl-2">
-                                    <label for="quantity" class="form-label fw-semibold">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-plus-circle me-2" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                                            <path
-                                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                                        </svg>
-                                        Quantity
-                                    </label>
-                                </div>
-                                <!-- Inputs Column -->
-                                <div class="col-md-3 col-lg-3">
-                                    <div class="input-group">
-                                        <input type="number" class="form-control text-center num-product"
-                                            name="num-product" value="1" min="1">
+                        <!-- Product Variants -->
+                        @if($product->variants->count() > 0)
+                            <div class="mb-4">
+                                @php
+                                    $variantsByName = $product->variants->groupBy('name');
+                                @endphp
+                                
+                                @foreach($variantsByName as $variantName => $variants)
+                                    <div class="row g-3 mb-3">
+                                        <!-- Labels Column -->
+                                        <div class="col-md-4 col-xxl-2">
+                                            <label for="variant_{{ Str::slug($variantName) }}" class="form-label fw-semibold">
+                                                <svg width="14" height="14" fill="currentColor"
+                                                    class="text-muted me-2" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                                                </svg>
+                                                {{ ucfirst($variantName) }}
+                                            </label>
+                                        </div>
+                                        <!-- Inputs Column -->
+                                        <div class="col-md-4 col-lg-5">
+                                            <select class="form-select variant-select" id="variant_{{ Str::slug($variantName) }}" name="variant_{{ Str::slug($variantName) }}" data-variant-name="{{ $variantName }}">
+                                                <option value="">Choose {{ $variantName }}</option>
+                                                @foreach($variants as $variant)
+                                                    <option value="{{ $variant->id }}" data-stock="{{ $variant->stock }}">
+                                                        {{ $variant->value }} 
+                                                        @if($variant->stock > 0)
+                                                            ({{ $variant->stock }} in stock)
+                                                        @else
+                                                            (Out of stock)
+                                                        @endif
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                
+                                <!-- Quantity Selection -->
+                                <div class="row g-3 mt-2">
+                                    <!-- Labels Column -->
+                                    <div class="col-md-4 col-xxl-2">
+                                        <label for="quantity" class="form-label fw-semibold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-plus-circle me-2" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                                <path
+                                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                                            </svg>
+                                            Quantity
+                                        </label>
+                                    </div>
+                                    <!-- Inputs Column -->
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="input-group">
+                                            <input type="number" class="form-control text-center num-product"
+                                                name="quantity" id="quantity" value="1" min="1" max="1">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
 
 
                         <div >
                             <div class="btn-addcart-product-detail my-3">
-                                @if ($product->quantity > 0)
+                                @if ($totalStock > 0)
                                     <form action="{{ route('cart.store', $product) }}" method="POST"
-                                        class="text-start mx-auto mt-2 ">
+                                        class="text-start mx-auto mt-2" id="addToCartForm">
                                         {{ csrf_field() }}
-                                        <button type="submit"
-                                            class="btn btn-warning   px-5  text-dark fw-bold rounded-pill">
+                                        <input type="hidden" name="variant_id" id="selected_variant_id">
+                                        <input type="hidden" name="quantity" id="selected_quantity" value="1">
+                                        <button type="submit" id="addToCartBtn"
+                                            class="btn btn-warning px-5 text-dark fw-bold rounded-pill" disabled>
                                             <svg width="16" height="16" fill="currentColor" class="me-2"
                                                 viewBox="0 0 16 16">
                                                 <path
@@ -300,6 +292,60 @@
         $(".selection-2").select2({
             minimumResultsForSearch: 20,
             dropdownParent: $('#dropDownSelect2')
+        });
+
+        // Product Variants Handler
+        $(document).ready(function() {
+            const variantSelects = $('.variant-select');
+            const quantityInput = $('#quantity');
+            const addToCartBtn = $('#addToCartBtn');
+            const selectedVariantInput = $('#selected_variant_id');
+            const selectedQuantityInput = $('#selected_quantity');
+
+            // Update cart button and quantity when variants change
+            function updateCartOptions() {
+                let selectedVariants = [];
+                let minStock = 0;
+                
+                variantSelects.each(function() {
+                    const selectedOption = $(this).find('option:selected');
+                    if (selectedOption.val()) {
+                        selectedVariants.push({
+                            id: selectedOption.val(),
+                            stock: parseInt(selectedOption.data('stock'))
+                        });
+                        if (minStock === 0) {
+                            minStock = parseInt(selectedOption.data('stock'));
+                        } else {
+                            minStock = Math.min(minStock, parseInt(selectedOption.data('stock')));
+                        }
+                    }
+                });
+
+                // Enable add to cart if all variants are selected and in stock
+                if (selectedVariants.length === variantSelects.length && minStock > 0) {
+                    addToCartBtn.prop('disabled', false);
+                    quantityInput.attr('max', minStock);
+                    
+                    // Use the first variant ID for cart (in real scenario, you might need combination logic)
+                    selectedVariantInput.val(selectedVariants[0].id);
+                } else {
+                    addToCartBtn.prop('disabled', true);
+                    quantityInput.attr('max', 1);
+                    selectedVariantInput.val('');
+                }
+            }
+
+            // Update quantity value in hidden input
+            quantityInput.on('input', function() {
+                selectedQuantityInput.val($(this).val());
+            });
+
+            // Bind change event to variant selects
+            variantSelects.on('change', updateCartOptions);
+            
+            // Initial call
+            updateCartOptions();
         });
     </script>
     <script type="text/javascript">
