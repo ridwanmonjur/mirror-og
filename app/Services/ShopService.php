@@ -85,7 +85,7 @@ class ShopService
 
     public function getUserCart(int $userId)
     {
-        $cart = NewCart::where('user_id', $userId)->with(['items.product'])->first();
+        $cart = NewCart::where('user_id', $userId)->with(['items.product', 'items.variant'])->first();
         
         if (!$cart) {
             $cart = NewCart::create(['user_id' => $userId]);
@@ -156,12 +156,58 @@ class ShopService
         return ['success' => false, 'message' => 'Product not found'];
     }
 
+    public function updateCartItemById(int $userId, int $cartItemId, int $quantity, int $maxQuantity)
+    {
+        $cart = $this->getUserCart($userId);
+        
+        if (!$cart) {
+            return ['success' => false, 'message' => 'Cart not found'];
+        }
+
+        if ($quantity < 1 || $quantity > 20) {
+            return ['success' => false, 'message' => 'Quantity must be between 1 and 20.'];
+        }
+
+        if ($quantity > $maxQuantity) {
+            return ['success' => false, 'message' => 'We currently do not have enough items in stock.'];
+        }
+
+        $cartItem = $cart->items()->find($cartItemId);
+        if (!$cartItem) {
+            return ['success' => false, 'message' => 'Cart item not found'];
+        }
+
+        $product = $cartItem->product;
+        if ($product) {
+            $cartItem->quantity = $quantity;
+            $cartItem->subtotal = $quantity * $product->price;
+            $cartItem->save();
+            $cart->updateTotal();
+            return ['success' => true, 'message' => 'Quantity was updated successfully!'];
+        }
+        
+        return ['success' => false, 'message' => 'Product not found'];
+    }
+
     public function removeItemFromCart(int $userId, int $productId)
     {
         $cart = $this->getUserCart($userId);
         
         if ($cart) {
             $cart->removeItem($productId);
+            return ['success' => true, 'message' => 'Item has been removed!'];
+        }
+        
+        return ['success' => false, 'message' => 'Cart not found'];
+    }
+
+    public function removeItemFromCartById(int $userId, int $cartItemId)
+    {
+        $cart = $this->getUserCart($userId);
+        
+        if ($cart) {
+            $cart->items()->where('id', $cartItemId)->delete();
+            $cart->updateTotal();
             return ['success' => true, 'message' => 'Item has been removed!'];
         }
         

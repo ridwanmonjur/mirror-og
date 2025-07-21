@@ -78,8 +78,32 @@
                                         @else
                                             <span class="cart_a">{{ $item->product->name ?? 'Product unavailable' }}</span>
                                         @endif
-                                        <p class="cart_p text-muted fw-normal"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-palette me-1" viewBox="0 0 16 16"><path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/><path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8z"/></svg>Color: Black <br>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-rulers me-1" viewBox="0 0 16 16"><path d="M1 0a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1v1a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7h1v1a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7h1v1a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm2 4.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1zm3 0a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H6zm3 0a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H9zm3 0a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1z"/></svg>Size: 9.5 <b class="ms-2 text-success fw-semibold"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-check-circle me-1" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>In Stock</b></p>
+                                        <p class="cart_p text-muted fw-normal">
+                                            @php
+                                                dd($item->variant);
+                                            @endphp
+                                            {{-- @if($item->variant)
+                                                @foreach($selectedVariants as $variantName => $variant)
+                                                    <div class="mb-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-tag me-1" viewBox="0 0 16 16"><path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/><path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/></svg>
+                                                        <span class="fw-semibold">{{ ucfirst($variantName) }}:</span> {{ $variant->value }}
+                                                        <b class="ms-2 {{ $variant->stock > 0 ? 'text-success' : 'text-danger' }} fw-semibold">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-{{ $variant->stock > 0 ? 'check-circle' : 'x-circle' }} me-1" viewBox="0 0 16 16">
+                                                                @if($variant->stock > 0)
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                                @else
+                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                @endif
+                                                            </svg>
+                                                            {{ $variant->stock > 0 ? ($variant->stock . ' in stock') : 'Out of stock' }}
+                                                        </b>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No variant selected</span>
+                                            @endif --}}
                                         </p>
                                         </div>
 
@@ -87,10 +111,14 @@
 
                                     <div class="col-lg-2">
                                         @if ($item->product)
-                                            <select class="quantity" data-id="{{ $item->product_id }}"
-                                                data-productQuantity="{{ $item->product->quantity ?? 0 }}"
+                                            @php
+                                                $maxQuantity = $item->variant ? min(20, $item->variant->stock) : 20;
+                                            @endphp
+                                            <select class="quantity" data-id="{{ $item->id }}"
+                                                data-productQuantity="{{ $maxQuantity }}"
+                                                data-variant-id="{{ $item->variant_id }}"
                                                 style="width: 50px; font-size:12px; font-weight: 700; border-radius: 2px; height: 30px;">
-                                                @for ($i = 1; $i <= 20; $i++)
+                                                @for ($i = 1; $i <= $maxQuantity; $i++)
                                                     <option value="{{ $i }}" {{ $item->quantity == $i ? 'selected' : '' }}>
                                                         {{ $i }}</option>
                                                 @endfor
@@ -101,7 +129,7 @@
                                     </div>
 
                                     <div class="col-lg-1">
-                                        <form action="{{ route('cart.destroy', $item->product_id) }}" method="POST">
+                                        <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
                                             <button type="submit" class="btn btn-link py-0  text-danger" title="Remove item">

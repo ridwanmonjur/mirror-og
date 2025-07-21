@@ -59,10 +59,10 @@ class CartController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $cartItemId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, $cartItemId): JsonResponse
     {
         $userId = auth()->id();
         
@@ -75,9 +75,9 @@ class CartController extends Controller
             return response()->json(['success' => false], 400);
         }
 
-        $result = $this->shopService->updateCartItem(
+        $result = $this->shopService->updateCartItemById(
             $userId,
-            $id,
+            $cartItemId,
             $request->quantity,
             $request->productQuantity
         );
@@ -94,13 +94,13 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $cartItemId
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($cartItemId)
     {
         $userId = auth()->id();
-        $result = $this->shopService->removeItemFromCart($userId, $id);
+        $result = $this->shopService->removeItemFromCartById($userId, $cartItemId);
         
         return back()->with('success_message', $result['message']);
     }

@@ -179,6 +179,18 @@
                                             <span class="product-card__currency">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
                                         </div>
                                         
+                                        <div class="mb-0">
+                                            <div class="d-inline-flex flex-wrap justify-content-center align-items-center">
+                                                @foreach($product->categories->take(2) as $category)
+                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge mb-2 bg-primary me-1 text-white text-decoration-none" style="font-size: 0.7rem;">
+                                                        {{ $category->name }}
+                                                    </a>
+                                                @endforeach
+                                            
+                                            </div>
+                                            
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div> 

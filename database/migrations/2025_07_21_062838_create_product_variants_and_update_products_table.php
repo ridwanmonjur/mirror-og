@@ -28,8 +28,10 @@ return new class extends Migration
         });
 
         Schema::table('cart_items', function (Blueprint $table) {
-            $table->unsignedBigInteger('variant_id')->nullable()->after('product_id');
-            $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
+            if (Schema::hasColumn('cart_items', 'variant_id')) {
+                $table->dropForeign(['variant_id']);
+                $table->dropColumn('variant_id');
+            }
         });
     }
 

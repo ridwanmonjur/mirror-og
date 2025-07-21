@@ -46,16 +46,20 @@ class NewCart extends Model
 
     public function addItem($productId, $quantity, $price, $variantId = null)
     {
-        $query = $this->items()->where('product_id', $productId);
-        if ($variantId) {
-            $query->where('variant_id', $variantId);
-        } else {
-            $query->whereNull('variant_id');
-        }
-        
-        $existingItem = $query->first();
+        // Check for existing item with same product and variant
+        $existingItem = $this->items()
+            ->where('product_id', $productId)
+            ->where(function($query) use ($variantId) {
+                if ($variantId) {
+                    $query->where('variant_id', $variantId);
+                } else {
+                    $query->whereNull('variant_id');
+                }
+            })
+            ->first();
         
         if ($existingItem) {
+            // Same product and variant - add to existing quantity
             $newQuantity = $existingItem->quantity + $quantity;
             if ($newQuantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
@@ -64,6 +68,7 @@ class NewCart extends Model
             $existingItem->subtotal = $existingItem->quantity * $price;
             $existingItem->save();
         } else {
+            // Different product or different variant - create new item
             if ($quantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
             }
@@ -132,7 +137,7 @@ class NewCart extends Model
             return $this->items;
         }
         
-        return $this->items()->with('product')->get();
+        return $this->items()->with(['product', 'variant'])->get();
     }
 
     /**

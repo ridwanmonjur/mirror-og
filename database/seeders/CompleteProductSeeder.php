@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductVariant;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CompleteProductSeeder extends Seeder
@@ -17,16 +18,16 @@ class CompleteProductSeeder extends Seeder
     public function run(): void
     {
         // Disable foreign key checks
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         
         // Clear existing data
         ProductVariant::truncate();
-        \DB::table('category_product')->truncate();
+        DB::table('category_product')->truncate();
         Product::truncate();
         Category::truncate();
         
         // Re-enable foreign key checks
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         // Create categories and products with variants
         $this->createElectronicsProducts();
