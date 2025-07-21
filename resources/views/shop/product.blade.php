@@ -137,7 +137,7 @@
                                     </a>
                                 @endforeach
                                 @php
-                                    $totalStock = $product->variants->sum('stock');
+                                    $totalStock = $product->productVariants->sum('stock');
                                     $stockThreshold = 10;
                                 @endphp
                                 @if ($totalStock > $stockThreshold)
@@ -185,10 +185,10 @@
                         </div>
 
                         <!-- Product Variants -->
-                        @if($product->variants->count() > 0)
+                        @if($product->productVariants->count() > 0)
                             <div class="mb-4">
                                 @php
-                                    $variantsByName = $product->variants->groupBy('name');
+                                    $variantsByName = $product->productVariants->groupBy('name');
                                 @endphp
                                 
                                 @foreach($variantsByName as $variantName => $variants)
@@ -256,7 +256,7 @@
                                     <form action="{{ route('cart.store', $product) }}" method="POST"
                                         class="text-start mx-auto mt-2" id="addToCartForm">
                                         {{ csrf_field() }}
-                                        <input type="hidden" name="variant_id" id="selected_variant_id">
+                                        <input type="hidden" name="variant_ids" id="selected_variant_ids">
                                         <input type="hidden" name="quantity" id="selected_quantity" value="1">
                                         <button type="submit" id="addToCartBtn"
                                             class="btn btn-warning px-5 text-dark fw-bold rounded-pill" disabled>
@@ -292,7 +292,7 @@
             const variantSelects = $('.variant-select');
             const quantityInput = $('#quantity');
             const addToCartBtn = $('#addToCartBtn');
-            const selectedVariantInput = $('#selected_variant_id');
+            const selectedVariantIdsInput = $('#selected_variant_ids');
             const selectedQuantityInput = $('#selected_quantity');
 
             // Update cart button and quantity when variants change
@@ -320,12 +320,13 @@
                     addToCartBtn.prop('disabled', false);
                     quantityInput.attr('max', minStock);
                     
-                    // Use the first variant ID for cart (in real scenario, you might need combination logic)
-                    selectedVariantInput.val(selectedVariants[0].id);
+                    // Send all variant IDs as JSON array
+                    const variantIds = selectedVariants.map(v => v.id);
+                    selectedVariantIdsInput.val(JSON.stringify(variantIds));
                 } else {
                     addToCartBtn.prop('disabled', true);
                     quantityInput.attr('max', 1);
-                    selectedVariantInput.val('');
+                    selectedVariantIdsInput.val('');
                 }
             }
 

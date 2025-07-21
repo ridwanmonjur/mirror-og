@@ -69,7 +69,7 @@ class ShopService
 
     public function getProductDetails(string $slug)
     {
-        $product = Product::with('variants')->where('slug', $slug)->firstOrFail();
+        $product = Product::with('productVariants')->where('slug', $slug)->firstOrFail();
         $products_sa = Product::orderBy('id', 'DESC')->simplePaginate();
 
         return [
@@ -85,7 +85,7 @@ class ShopService
 
     public function getUserCart(int $userId)
     {
-        $cart = NewCart::where('user_id', $userId)->with(['items.product', 'items.variant'])->first();
+        $cart = NewCart::where('user_id', $userId)->with(['items.product', 'items.cartProductVariants'])->first();
         
         if (!$cart) {
             $cart = NewCart::create(['user_id' => $userId]);
@@ -108,23 +108,25 @@ class ShopService
         ];
     }
 
-    public function addItemToCart(int $userId, Product $product, $variantId = null, $quantity = 1)
+    public function addItemToCart(int $userId, Product $product, $variantIds = null, $quantity = 1)
     {
         $cart = $this->getUserCart($userId);
         
         try {
-            // Validate variant stock if variant is specified
-            if ($variantId) {
-                $variant = $product->variants()->find($variantId);
-                if (!$variant) {
-                    return ['success' => false, 'message' => 'Selected variant not found.'];
-                }
-                if ($variant->stock < $quantity) {
-                    return ['success' => false, 'message' => 'Not enough stock available for this variant.'];
+            // Validate variant stock if variants are specified
+            if ($variantIds && is_array($variantIds)) {
+                foreach ($variantIds as $variantId) {
+                    $variant = $product->productVariants()->find($variantId);
+                    if (!$variant) {
+                        return ['success' => false, 'message' => 'Selected variant not found.'];
+                    }
+                    if ($variant->stock < $quantity) {
+                        return ['success' => false, 'message' => "Not enough stock available for variant {$variant->value}."];
+                    }
                 }
             }
             
-            $cart->addItem($product->id, $quantity, $product->price, $variantId);
+            $cart->addItem($product->id, $quantity, $product->price, $variantIds);
             return ['success' => true, 'message' => 'Item was added to your cart!'];
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];

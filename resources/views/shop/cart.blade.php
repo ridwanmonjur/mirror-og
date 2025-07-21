@@ -79,31 +79,29 @@
                                             <span class="cart_a">{{ $item->product->name ?? 'Product unavailable' }}</span>
                                         @endif
                                         <p class="cart_p text-muted fw-normal">
-                                            @php
-                                                dd($item->variant);
-                                            @endphp
-                                            {{-- @if($item->variant)
-                                                @foreach($selectedVariants as $variantName => $variant)
+                                           
+                                            @if($item->cartProductVariants)
+                                                @foreach($item->cartProductVariants as $key => $variant)
                                                     <div class="mb-1">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-tag me-1" viewBox="0 0 16 16"><path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/><path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/></svg>
-                                                        <span class="fw-semibold">{{ ucfirst($variantName) }}:</span> {{ $variant->value }}
+                                                        <span class="fw-semibold">{{ ucfirst($variant['name']) }}:</span> {{ $variant['value'] }}
                                                         <b class="ms-2 {{ $variant->stock > 0 ? 'text-success' : 'text-danger' }} fw-semibold">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-{{ $variant->stock > 0 ? 'check-circle' : 'x-circle' }} me-1" viewBox="0 0 16 16">
-                                                                @if($variant->stock > 0)
+                                                                {{-- @if($variant->stock > 0)
                                                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                                                     <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
                                                                 @else
                                                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                                                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                                @endif
+                                                                @endif --}}
                                                             </svg>
-                                                            {{ $variant->stock > 0 ? ($variant->stock . ' in stock') : 'Out of stock' }}
+                                                            {{-- {{ $variant->stock > 0 ? ($variant->stock . ' in stock') : 'Out of stock' }} --}}
                                                         </b>
                                                     </div>
                                                 @endforeach
                                             @else
                                                 <span class="text-muted">No variant selected</span>
-                                            @endif --}}
+                                            @endif 
                                         </p>
                                         </div>
 
@@ -112,11 +110,15 @@
                                     <div class="col-lg-2">
                                         @if ($item->product)
                                             @php
-                                                $maxQuantity = $item->variant ? min(20, $item->variant->stock) : 20;
+                                                $variants = $item->cartProductVariants;
+                                                $maxQuantity = 20;
+                                                if ($variants->count() > 0) {
+                                                    $maxQuantity = min(20, $variants->min('stock'));
+                                                }
                                             @endphp
                                             <select class="quantity" data-id="{{ $item->id }}"
                                                 data-productQuantity="{{ $maxQuantity }}"
-                                                data-variant-id="{{ $item->variant_id }}"
+                                                data-variant-ids="{{ $variants->pluck('id')->join(',') }}"
                                                 style="width: 50px; font-size:12px; font-weight: 700; border-radius: 2px; height: 30px;">
                                                 @for ($i = 1; $i <= $maxQuantity; $i++)
                                                     <option value="{{ $i }}" {{ $item->quantity == $i ? 'selected' : '' }}>

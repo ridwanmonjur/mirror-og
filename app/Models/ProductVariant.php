@@ -21,4 +21,9 @@ class ProductVariant extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function cartItems()
+    {
+        return $this->belongsToMany(CartItem::class, 'cart_item_product_variants', 'variant_id', 'cart_item_id');
+    }
 }

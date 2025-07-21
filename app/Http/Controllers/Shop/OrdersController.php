@@ -20,25 +20,14 @@ class OrdersController extends Controller
     {
         $user = $request->attributes->get('user');
 
-        $orders = $user->orders()->with('products')->orderby('id','desc')->get(); // fix n + 1 issues
+
+        $orders = $user->orders()->with('products')->orderby('id','desc')->simplePaginate(); // fix n + 1 issues
 
         return view('shop.my-orders')->with('orders', $orders);
     }
 
    
-    public function show(Order $order): RedirectResponse|View
-    {
-        if (auth()->id() !== $order->user_id) {
-            return back()->withErrors('You do not have access to this!');
-        }
-
-        $products = $order->products;
-
-        return view('shop.my-order')->with([
-            'order' => $order,
-            'products' => $products,
-        ]);
-    }
+    
 
     /**
      * Show the form for editing the specified resource.

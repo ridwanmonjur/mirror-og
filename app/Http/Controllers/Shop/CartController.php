@@ -37,16 +37,21 @@ class CartController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Product  $product
+     * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, Product $product): RedirectResponse
     {
         $userId = auth()->id();
-        $variantId = $request->input('variant_id');
+        $variantIds = $request->input('variant_ids');
         $quantity = $request->input('quantity', 1);
         
-        $result = $this->shopService->addItemToCart($userId, $product, $variantId, $quantity);
+        // Parse JSON array of variant IDs
+        if ($variantIds) {
+            $variantIds = json_decode($variantIds, true);
+        }
+        
+        $result = $this->shopService->addItemToCart($userId, $product, $variantIds, $quantity);
         
         if ($result['success']) {
             return redirect()->route('cart.index')->with('success_message', $result['message']);
