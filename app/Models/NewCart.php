@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,12 +23,12 @@ class NewCart extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function items()
     {
-        return $this->hasMany('App\CartItem', 'cart_id');
+        return $this->hasMany('App\Models\CartItem', 'cart_id');
     }
 
     public function updateTotal()
@@ -44,11 +44,41 @@ class NewCart extends Model
         return static::firstOrCreate(['user_id' => $userId]);
     }
 
-    public function addItem($productId, $quantity, $price)
+    public function addItem($productId, $quantity, $price, $variantIds = null)
     {
-        $existingItem = $this->items()->where('product_id', $productId)->first();
+        $existingItem = null;
+        
+        // If we have variants, look for an existing item with exactly the same variants
+        if ($variantIds && is_array($variantIds)) {
+            // Sort variant IDs for consistent comparison
+            sort($variantIds);
+            $variantIdsCount = count($variantIds);
+            
+            // Find existing items with same product
+            $potentialItems = $this->items()
+                ->where('product_id', $productId)
+                ->get();
+                
+            foreach ($potentialItems as $item) {
+                $existingVariantIds = $item->cartProductVariants()->pluck('variant_id')->toArray();
+                sort($existingVariantIds);
+                
+                // Check if variant counts match and all IDs match
+                if (count($existingVariantIds) === $variantIdsCount && $existingVariantIds === $variantIds) {
+                    $existingItem = $item;
+                    break;
+                }
+            }
+        } else {
+            // No variants - check for existing item with same product and no variants
+            $existingItem = $this->items()
+                ->where('product_id', $productId)
+                ->whereDoesntHave('cartProductVariants')
+                ->first();
+        }
         
         if ($existingItem) {
+            // Same product and all variants match - add to existing quantity
             $newQuantity = $existingItem->quantity + $quantity;
             if ($newQuantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
@@ -57,14 +87,20 @@ class NewCart extends Model
             $existingItem->subtotal = $existingItem->quantity * $price;
             $existingItem->save();
         } else {
+            // Different product or different variant combination - create new item
             if ($quantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
             }
-            $this->items()->create([
+            $cartItem = $this->items()->create([
                 'product_id' => $productId,
                 'quantity' => $quantity,
                 'subtotal' => $quantity * $price
             ]);
+            
+            // Attach all variants if specified
+            if ($variantIds && is_array($variantIds)) {
+                $cartItem->cartProductVariants()->attach($variantIds);
+            }
         }
         
         $this->updateTotal();
@@ -124,7 +160,7 @@ class NewCart extends Model
             return $this->items;
         }
         
-        return $this->items()->with('product')->get();
+        return $this->items()->with(['product', 'cartProductVariants'])->get();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,13 +10,15 @@ class Order extends Model
         'user_id', 'billing_discount', 'billing_discount_code', 'billing_subtotal', 'billing_total',
     ];
 
+    protected $perPage = 1;
+
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function products()
     {
-        return $this->belongsToMany('App\Product')->withPivot('quantity');
+        return $this->belongsToMany('App\Models\Product')->withPivot('quantity');
     }
 }

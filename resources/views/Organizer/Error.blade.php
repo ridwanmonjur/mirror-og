@@ -14,8 +14,6 @@
 <body style="margin-top: 0 !important;">
 @include('includes.Navbar')
     <main>
-        <input type="hidden" id="manage_event_route" value="{{ route('event.index') }}">
-        <input type="hidden" id="edit_event_route" value="{{ route('event.edit', ['event' => isset($id) ? $id : -1]) }}">
 
         <br><br><br><br>
         <div class="text-center" >
@@ -28,16 +26,15 @@
                 <p id="notification">{{ $error }}</p>
             </div>
             <br><br><br><br>
-            <button onclick="goToManageScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
+            <a href="{{ route('event.index') }}" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black; text-decoration: none; display: inline-block;">
                 Go to event page
-            </button>
+            </a>
             @if (isset($id) && isset($edit) && $edit )
                 <br><br>
-                <button onclick="goToEditScreen();" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black;">
+                <a href="{{ route('event.edit', ['event' => isset($id) ? $id : -1]) }}" class="oceans-gaming-default-button" style="padding: 10px 50px; background-color: white; color: #2e4b59; border: 1px solid black; text-decoration: none; display: inline-block;">
                     Edit event
-                </button>
+                </a>
             @endif
         </div>
-        <script src="{{ asset('/assets/js/organizer/EventNotFound.js') }}"></script>
     </main>
 </body>

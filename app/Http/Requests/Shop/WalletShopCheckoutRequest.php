@@ -4,8 +4,8 @@ namespace App\Http\Requests\Shop;
 
 use App\Models\SystemCoupon;
 use App\Models\Wallet;
-use App\Product;
-use App\NewCart;
+use App\Models\Product;
+use App\Models\NewCart;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -25,7 +25,8 @@ class WalletShopCheckoutRequest extends FormRequest
     public array $couponDetails = [
         'error' => null,
         'success' => null,
-        'coupon' => null
+        'coupon' => null,
+        'fee' => null
     ];
 
     public function rules(): array
@@ -41,7 +42,6 @@ class WalletShopCheckoutRequest extends FormRequest
             $user = $this->attributes->get('user');
             $userId = $user->id;
             
-            // Cache the cart to avoid duplicate queries
             if (!$this->cart) {
                 $this->cart = NewCart::getUserCart($userId);
             }
@@ -49,16 +49,14 @@ class WalletShopCheckoutRequest extends FormRequest
 
             $is_complete_payment = true;
             
-            // Check if cart is empty
             if ($cart->getCount() == 0) {
                 $validator->errors()->add('cart', "Your cart is empty!");
                 return;
             }
 
-            // Check product availability
             foreach ($cart->getContent() as $item) {
                 $product = Product::find($item->product_id);
-                if (!$product || $product->quantity < $item->quantity) {
+                if (!$product) {
                     $validator->errors()->add('products', "Some items in your cart are no longer available.");
                     return;
                 }
@@ -76,7 +74,8 @@ class WalletShopCheckoutRequest extends FormRequest
             $this->couponDetails = [
                 'success' => $isCouponApplied,
                 'error' => $error,
-                'coupon' => $coupon
+                'coupon' => $coupon,
+                'fee' => $fee
             ];
             
             $this->wallet_to_decrement = $fee['finalFee'];
@@ -150,8 +149,8 @@ class WalletShopCheckoutRequest extends FormRequest
 
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        throw new \Illuminate\Validation\ValidationException($validator, redirect()
-            ->route('checkout.index')            
-            ->with('errorMessage', $validator->errors()->first()));
+        $error = $validator->errors()->first();
+        throw new \Illuminate\Validation\ValidationException($validator, response()
+            ->view('Participant.Error', compact('error')));
     }
 }

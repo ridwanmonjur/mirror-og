@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
-use App\Order;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+
 
 class OrdersController extends Controller
 {
@@ -13,55 +16,18 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request): View
     {
-        // $orders = auth()->user()->orders; // n + 1 issues
+        $user = $request->attributes->get('user');
 
-        $orders = auth()->user()->orders()->with('products')->orderby('id','desc')->get(); // fix n + 1 issues
+
+        $orders = $user->orders()->with('products')->orderby('id','desc')->simplePaginate(); // fix n + 1 issues
 
         return view('shop.my-orders')->with('orders', $orders);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Order $order)
-    {
-        if (auth()->id() !== $order->user_id) {
-            return back()->withErrors('You do not have access to this!');
-        }
-
-        $products = $order->products;
-
-        return view('shop.my-order')->with([
-            'order' => $order,
-            'products' => $products,
-        ]);
-    }
+   
+    
 
     /**
      * Show the form for editing the specified resource.

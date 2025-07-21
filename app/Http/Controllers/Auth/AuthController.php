@@ -41,15 +41,7 @@ class AuthController extends Controller
         return $this->authService->handleUserRedirection($finduser, $error, $role);
     }
 
-    public function handleSteamCallback()
-    {
-        $user = Socialite::driver('steam')->user();
-        $role = Session::get('role');
-        ['finduser' => $finduser, 'error' => $error] = $this->authService->registerOrLoginUserForSocialAuth($user, 'steam', $role);
-        Session::forget('role');
-
-        return $this->authService->handleUserRedirection($finduser, $error, $role);
-    }
+    
 
     // Steam login
     public function redirectToSteam(Request $request)

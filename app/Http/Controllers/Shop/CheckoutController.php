@@ -10,10 +10,11 @@ use App\Models\StripeConnection;
 use App\Models\TransactionHistory;
 use App\Models\RecordStripe;
 use App\Models\SystemCoupon;
-use App\Order;
-use App\Product;
-use App\OrderProduct;
-use App\NewCart;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\OrderProduct;
+use App\Models\NewCart;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class Cart2Controller extends Controller
+class CheckoutController extends Controller
 {
     private $stripeClient;
 
@@ -71,10 +72,8 @@ class Cart2Controller extends Controller
                 }
             }
 
-            // Use the cached cart from the request to avoid duplicate queries
             $cart = $request->cart ?: NewCart::getUserCart(auth()->id());
             
-            // Use cart model method to get numbers
             $numbers = $cart->getNumbers();
 
             return view('shop.cartv2', [
@@ -104,12 +103,11 @@ class Cart2Controller extends Controller
 
     public function walletCheckout(WalletShopCheckoutRequest $request)
     {
-        $user = $request->user();
+        $user = $request->attributes->get('user');
         DB::beginTransaction();
         try {
             $userWallet = $request->attributes->get('user_wallet');
             $isCompletePayment = $request->attributes->get('complete_payment');
-            $pending_total_after_wallet = $request->attributes->get('pending_total_after_wallet');
 
             $walletAmount = $userWallet->usable_balance - $request->wallet_to_decrement;
             $currentAmount = $userWallet->current_balance - $request->wallet_to_decrement;
@@ -131,13 +129,11 @@ class Cart2Controller extends Controller
             ]);
 
             $transaction->save();
+            ['coupon' => $coupon, 'fee' => $fee] = $request->couponDetails;
 
-            $order = $this->addToOrdersTables($transaction->id);
-
-            [$coupon] = $request->couponDetails;
-            $coupon?->validateAndIncrementCoupon();
-
-            $this->clearCartAndDecrease($cart);
+            $cart = NewCart::getUserCart($user->id);
+            $this->addToOrdersTables( $user, $cart,  $coupon, $fee);
+            $this->clearCartAndDecreaseStock($cart);
 
             DB::commit();
 
@@ -148,13 +144,12 @@ class Cart2Controller extends Controller
                 ->with('successMessage', $message);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Shop wallet checkout error: ' . $e->getMessage());
+            Log::error('Shop wallet checkout error: ' . $e);
 
-            return redirect()
-                ->route('shop.cart2')
-                ->with('errorMessage', $e->getMessage());
+            return $this->showErrorParticipant($e->getMessage());
         }
     }
+
 
     public function showCheckoutTransition(Request $request)
     {
@@ -174,15 +169,16 @@ class Cart2Controller extends Controller
 
                 if ($paymentIntent['amount'] > 0 && ($paymentIntent['amount_capturable'] === $paymentIntent['amount'] || $paymentIntent['amount_received'] === $paymentIntent['amount'])) {
                     
-                    // Handle coupon if exists
                     $couponCode = $paymentIntent['metadata']['couponCode'] ?? null;
                     $coupon = null;
                     if ($couponCode) {
                         [$fee, , , $coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['cartTotal'], 0.0, 'shop', $user->id);
                         $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
+                    } else {
+                        $coupon = null;
+                        $fee = SystemCoupon::emptyOrgCoupon([],  $paymentDone);
                     }
 
-                    // Create Stripe transaction record
                     $transaction = RecordStripe::createTransaction(
                         $paymentIntent, 
                         $paymentMethod, 
@@ -191,7 +187,6 @@ class Cart2Controller extends Controller
                         $request->query('savePayment')
                     );
 
-                    // Create transaction history
                     $history = new TransactionHistory([
                         'name' => "Shop Order",
                         'type' => 'Shop Order Payment',
@@ -202,13 +197,12 @@ class Cart2Controller extends Controller
                         'date' => now(),
                         'user_id' => $user->id,
                     ]);
+
                     $history->save();
 
-
-                    $order = $this->addToOrdersTables(null, $transaction->id, $paymentDone, $couponCode, $fee);
-
                     $cart = NewCart::getUserCart($user->id);
-                    $this->clearCartAndDecrease($cart);
+                    $this->addToOrdersTables( $user, $cart, $coupon, $fee);
+                    $this->clearCartAndDecreaseStock($cart);
 
                     DB::commit();
 
@@ -218,80 +212,38 @@ class Cart2Controller extends Controller
                 }
             }
 
-            // Handle failed or cancelled payments
-            if ($request->has('payment_intent')) {
-                try {
-                    $intentId = $request->get('payment_intent');
-                    $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
-                    $cancelableStatuses = [
-                        'requires_payment_method',
-                        'requires_confirmation', 
-                        'requires_action',
-                        'processing'
-                    ];
-
-                    if (in_array($paymentIntent['status'], $cancelableStatuses)) {
-                        $this->stripeClient->cancelPaymentIntent($intentId, [
-                            'cancellation_reason' => 'abandoned'
-                        ]);
-                    }
-                } catch (Exception $e) {
-                    Log::error('Payment intent cancellation error: ' . $e->getMessage());
-                }
-            }
-
             DB::rollBack();
-            return redirect()
-                ->route('shop.cart2')
-                ->with('errorMessage', 'Your payment has failed unfortunately!');
-
+            return $this->showErrorParticipant('Your payment has failed unfortunately!');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Shop checkout transition error: ' . $e->getMessage());
+            Log::error('Shop checkout transition error: ' . $e);
             
-            return redirect()
-                ->route('shop.cart2')
-                ->with('errorMessage', 'Payment processing failed: ' . $e->getMessage());
+            return $this->showErrorParticipant('Your payment has failed unfortunately!');
         }
     }
 
-    protected function clearCartAndDecrease($cart = null)
+    protected function clearCartAndDecreaseStock(NewCart $cart )
     {
-        if (!$cart) {
-            $userId = auth()->id();
-            $cart = NewCart::getUserCart($userId);
-        }
         $cart->clearItems();
-        $this->decreaseQuantities($cart);
+        foreach ($cart->getContent() as $item) {
+            $product = Product::find($item->product_id);
+            if ($product) {
+                $product->update(['quantity' => $product->quantity - $item->quantity]);
+            }
+        }
+
         session()->forget('coupon');
     }
 
-    protected function addToOrdersTables($walletTransactionId = null, $stripeTransactionId = null, $paymentAmount = null, $couponCode = null, $fee = null)
+    protected function addToOrdersTables(User $user, NewCart $cart, ? SystemCoupon $coupon, array $fee )
     {
         try {
-            $finalFee = $paymentAmount ?? 0;
-            $discountAmount = $fee['discount'] ?? 0;
-
-            $userId = auth()->id();
-            $cart = NewCart::getUserCart($userId);
-            $numbers = $cart->getNumbers();
-
             $order = Order::create([
-                'user_id' => auth()->user() ? auth()->user()->id : null,
-                'billing_email' => auth()->user()->email,
-                'billing_name' => auth()->user()->name,
-                'billing_address' => '',
-                'billing_city' => '',
-                'billing_province' => '',
-                'billing_postalcode' => '',
-                'billing_phone' => '',
-                'billing_name_on_card' => '',
-                'billing_discount' => $discountAmount,
-                'billing_discount_code' => $couponCode,
-                'billing_subtotal' => $numbers->get('newSubtotal'),
-                'billing_tax' => 0,
-                'billing_total' => $finalFee,
-                'payment_gateway' => $walletTransactionId ? 'wallet' : 'stripe',
+                'user_id' => $user->id,
+                'billing_discount' => $fee['discount'] ?? 0,
+                'billing_discount_code' => $coupon->code ?? 0,
+                'billing_subtotal' =>$fee['discount'] ?? 0,
+                'billing_total' => $fee['finalFee'] ?? 0,
             ]);
 
             foreach ($cart->getContent() as $item) {
@@ -309,31 +261,10 @@ class Cart2Controller extends Controller
         }
     }
 
-    protected function decreaseQuantities($cart = null)
-    {
-        try {
-            if (!$cart) {
-                $userId = auth()->id();
-                $cart = NewCart::getUserCart($userId);
-            }
-            foreach ($cart->getContent() as $item) {
-                $product = Product::find($item->product_id);
-                if ($product) {
-                    $product->update(['quantity' => $product->quantity - $item->quantity]);
-                }
-            }
-        } catch (Exception $e) {
-            Log::error('Shop quantity decrease error: ' . $e->getMessage());
-            throw $e;
-        }
-    }
+    
 
     public function thankyou(): View | RedirectResponse
     {
-        // if (! session()->has('success_message')) {
-        //     return redirect('/');
-        // }
-
         return view('shop.thankyou');
     }
 }
