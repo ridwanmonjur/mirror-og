@@ -71,7 +71,7 @@ class OrganizerViewEventRequest extends FormRequest
     {
         $error = $validator->errors()->first();
     
-        throw new \Illuminate\Validation\ValidationException($validator, response()->view('Participant.EventNotFound', [
+        throw new \Illuminate\Validation\ValidationException($validator, response()->view('Participant.Error', [
             'error' => $error
         ]));
     }

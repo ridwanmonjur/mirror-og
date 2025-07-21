@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Product;
-use App\Category;
-use App\NewCart;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\NewCart;
 use Illuminate\Http\Request;
 
 class ShopService
@@ -69,7 +69,7 @@ class ShopService
 
     public function getProductDetails(string $slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product = Product::with('variants')->where('slug', $slug)->firstOrFail();
         $products_sa = Product::orderBy('id', 'DESC')->simplePaginate();
 
         return [
@@ -85,7 +85,7 @@ class ShopService
 
     public function getUserCart(int $userId)
     {
-        $cart = NewCart::where('user_id', $userId)->with(['items.product'])->first();
+        $cart = NewCart::where('user_id', $userId)->with(['items.product', 'items.variant'])->first();
         
         if (!$cart) {
             $cart = NewCart::create(['user_id' => $userId]);
@@ -108,15 +108,26 @@ class ShopService
         ];
     }
 
-    public function addItemToCart(int $userId, Product $product)
+    public function addItemToCart(int $userId, Product $product, $variantId = null, $quantity = 1)
     {
         $cart = $this->getUserCart($userId);
         
         try {
-            $cart->addItem($product->id, 1, $product->price);
+            // Validate variant stock if variant is specified
+            if ($variantId) {
+                $variant = $product->variants()->find($variantId);
+                if (!$variant) {
+                    return ['success' => false, 'message' => 'Selected variant not found.'];
+                }
+                if ($variant->stock < $quantity) {
+                    return ['success' => false, 'message' => 'Not enough stock available for this variant.'];
+                }
+            }
+            
+            $cart->addItem($product->id, $quantity, $product->price, $variantId);
             return ['success' => true, 'message' => 'Item was added to your cart!'];
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Maximum quantity of 20 exceeded for this item.'];
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
@@ -145,12 +156,58 @@ class ShopService
         return ['success' => false, 'message' => 'Product not found'];
     }
 
+    public function updateCartItemById(int $userId, int $cartItemId, int $quantity, int $maxQuantity)
+    {
+        $cart = $this->getUserCart($userId);
+        
+        if (!$cart) {
+            return ['success' => false, 'message' => 'Cart not found'];
+        }
+
+        if ($quantity < 1 || $quantity > 20) {
+            return ['success' => false, 'message' => 'Quantity must be between 1 and 20.'];
+        }
+
+        if ($quantity > $maxQuantity) {
+            return ['success' => false, 'message' => 'We currently do not have enough items in stock.'];
+        }
+
+        $cartItem = $cart->items()->find($cartItemId);
+        if (!$cartItem) {
+            return ['success' => false, 'message' => 'Cart item not found'];
+        }
+
+        $product = $cartItem->product;
+        if ($product) {
+            $cartItem->quantity = $quantity;
+            $cartItem->subtotal = $quantity * $product->price;
+            $cartItem->save();
+            $cart->updateTotal();
+            return ['success' => true, 'message' => 'Quantity was updated successfully!'];
+        }
+        
+        return ['success' => false, 'message' => 'Product not found'];
+    }
+
     public function removeItemFromCart(int $userId, int $productId)
     {
         $cart = $this->getUserCart($userId);
         
         if ($cart) {
             $cart->removeItem($productId);
+            return ['success' => true, 'message' => 'Item has been removed!'];
+        }
+        
+        return ['success' => false, 'message' => 'Cart not found'];
+    }
+
+    public function removeItemFromCartById(int $userId, int $cartItemId)
+    {
+        $cart = $this->getUserCart($userId);
+        
+        if ($cart) {
+            $cart->items()->where('id', $cartItemId)->delete();
+            $cart->updateTotal();
             return ['success' => true, 'message' => 'Item has been removed!'];
         }
         

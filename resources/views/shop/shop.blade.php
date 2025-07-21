@@ -182,38 +182,10 @@
                                         <div class="mb-0">
                                             <div class="d-inline-flex flex-wrap justify-content-center align-items-center">
                                                 @foreach($product->categories->take(2) as $category)
-                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge mb-2 bg-secondary me-1 text-white text-decoration-none" style="font-size: 0.7rem;">
+                                                    <a href="{{ '/shop?category=' .  $category->slug }}" class="badge mb-2 bg-primary me-1 text-white text-decoration-none" style="font-size: 0.7rem;">
                                                         {{ $category->name }}
                                                     </a>
                                                 @endforeach
-                                                 @php
-                                                    $stockThreshold = 0;
-                                                @endphp
-                                                    @if($product->quantity > $stockThreshold)
-                                                    <span class="badge ms-1 mb-2 bg-success" style="font-size: 0.7rem;">
-                                                        <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                                        </svg>
-                                                        In Stock
-                                                    </span>
-                                                @elseif($product->quantity > 0)
-                                                    <span class="badge ms-1 mb-2 bg-warning" style="font-size: 0.7rem;">
-                                                        <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                                                        </svg>
-                                                        Low Stock
-                                                    </span>
-                                                @else
-                                                    <span class="badge ms-1 mb-2 bg-danger" style="font-size: 0.7rem;">
-                                                        <svg width="10" height="10" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                        </svg>
-                                                        Not available
-                                                    </span>
-                                                @endif
-                                                
                                             
                                             </div>
                                             

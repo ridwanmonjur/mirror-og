@@ -30,13 +30,13 @@ class ErrorHandlerMiddleware
                 return response()->json(['error' => $errorMessage], $statusCode);
             }
             if ($request->is('admin/*')) {
-                $view = 'Participant.EventNotFound';
+                $view = 'Participant.Error';
             } elseif ($request->is('participant/*')) {
-                $view = 'Participant.EventNotFound';
+                $view = 'Participant.Error';
             } elseif ($request->is('organizer/*')) {
-                $view = 'Organizer.EventNotFound';
+                $view = 'Organizer.Error';
             } else {
-                $view = 'Participant.EventNotFound';
+                $view = 'Participant.Error';
             }
 
             return response()->view($view, ['statusCode' => $statusCode, 'errorMessage' => $errorMessage], $statusCode);

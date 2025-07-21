@@ -4,10 +4,8 @@ namespace App\Http\Requests\Match;
 
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
-use App\Models\ParticipantPayment;
 use App\Models\RosterMember;
 use App\Models\SystemCoupon;
-use App\Models\TransactionHistory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -54,7 +52,7 @@ class ShowCheckoutRequest extends FormRequest
 
     private function validateRosterMembership($validator)
     {
-        $user = $this->user();
+        $user = $this->attributes->get('user');
 
         $prevForm = [
             'id' => $this->input('teamId'),
@@ -72,14 +70,14 @@ class ShowCheckoutRequest extends FormRequest
         $this->id = $this->input('id');
         $rosterMember = RosterMember::where([
             'user_id' => $user->id,
-            'join_events_id' => $this->joinEventId,
-            'team_id' => $this->teamId,
+            'join_events_id' => $this->input('joinEventId'),
+            'team_id' => $this->input('teamId'),
         ])->exists();
 
         if (!$rosterMember) {
             $validator->errors()->add(
                 'roster', 
-                "You are a member of {$this->teamName}, but not a member of this event's roster."
+                "You are a member of {$this->input('teamName')}, but not a member of this event's roster."
             );
 
             return;

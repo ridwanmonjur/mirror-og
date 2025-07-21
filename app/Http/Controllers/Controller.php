@@ -12,7 +12,7 @@ class Controller extends BaseController
 
     public function showErrorOrganizer($error, $args = [])
     {
-        return view('Organizer.EventNotFound', [
+        return view('Organizer.Error', [
             'error' => $error,
             ...$args,
         ]);
@@ -20,7 +20,7 @@ class Controller extends BaseController
 
     public function showErrorParticipant($error)
     {
-        return view('Participant.EventNotFound', compact('error'));
+        return view('Participant.Error', compact('error'));
     }
 
     public function showErrorGeneral($error, $args = [])

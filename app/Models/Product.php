@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -11,20 +11,21 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'slug', 'details', 'price', 'description', 
-        'image', 'images', 'quantity', 'featured'
+        'image', 'images', 'featured'
     ];
 
-    protected $perPage = 2;
+    protected $perPage = 12;
 
 
     public function categories()
     {
-        return $this->belongsToMany('App\Category');
+        return $this->belongsToMany('App\Models\Category');
     }
 
-   
-
-   
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 
     /**
      * Get the indexable data array for the model.

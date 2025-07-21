@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,12 +23,12 @@ class NewCart extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function items()
     {
-        return $this->hasMany('App\CartItem', 'cart_id');
+        return $this->hasMany('App\Models\CartItem', 'cart_id');
     }
 
     public function updateTotal()
@@ -44,11 +44,22 @@ class NewCart extends Model
         return static::firstOrCreate(['user_id' => $userId]);
     }
 
-    public function addItem($productId, $quantity, $price)
+    public function addItem($productId, $quantity, $price, $variantId = null)
     {
-        $existingItem = $this->items()->where('product_id', $productId)->first();
+        // Check for existing item with same product and variant
+        $existingItem = $this->items()
+            ->where('product_id', $productId)
+            ->where(function($query) use ($variantId) {
+                if ($variantId) {
+                    $query->where('variant_id', $variantId);
+                } else {
+                    $query->whereNull('variant_id');
+                }
+            })
+            ->first();
         
         if ($existingItem) {
+            // Same product and variant - add to existing quantity
             $newQuantity = $existingItem->quantity + $quantity;
             if ($newQuantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
@@ -57,11 +68,13 @@ class NewCart extends Model
             $existingItem->subtotal = $existingItem->quantity * $price;
             $existingItem->save();
         } else {
+            // Different product or different variant - create new item
             if ($quantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
             }
             $this->items()->create([
                 'product_id' => $productId,
+                'variant_id' => $variantId,
                 'quantity' => $quantity,
                 'subtotal' => $quantity * $price
             ]);
@@ -124,7 +137,7 @@ class NewCart extends Model
             return $this->items;
         }
         
-        return $this->items()->with('product')->get();
+        return $this->items()->with(['product', 'variant'])->get();
     }
 
     /**
