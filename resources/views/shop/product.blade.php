@@ -5,7 +5,7 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $product->name }}</title>
+    <title>View | {{ $product->name }}</title>
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
@@ -14,6 +14,7 @@
 <body>
     @include('googletagmanager::body')
     @include('includes.Navbar')
+    <input type="hidden" id="user_role" value="{{ auth()->check() ? auth()->user()->role : null }}">
 
     <main class="product py-3">
         @if (session()->has('success_message'))
@@ -195,7 +196,7 @@
                                     <div class="row g-3 mb-3">
                                         <!-- Labels Column -->
                                         <div class="col-md-4 col-xxl-2">
-                                            <label for="variant_{{ Str::slug($variantName) }}" class="form-label fw-semibold">
+                                            <label for="variant_{{ Str::slug($variantName) }}" class="form-label py-2 fw-semibold">
                                                 <svg width="14" height="14" fill="currentColor"
                                                     class="text-muted me-2" viewBox="0 0 16 16">
                                                     <path
@@ -206,10 +207,11 @@
                                         </div>
                                         <!-- Inputs Column -->
                                         <div class="col-md-4 col-lg-5">
-                                            <select class="form-select variant-select" id="variant_{{ Str::slug($variantName) }}" name="variant_{{ Str::slug($variantName) }}" data-variant-name="{{ $variantName }}">
+                                            <select class="form-select py-2" id="variant_{{ Str::slug($variantName) }}" name="variant_{{ Str::slug($variantName) }}" data-variant-name="{{ $variantName }}">
                                                 <option value="">Choose {{ $variantName }}</option>
                                                 @foreach($variants as $variant)
-                                                    <option value="{{ $variant->id }}" data-stock="{{ $variant->stock }}">
+                                                    <option value="{{ $variant->id }}" data-stock="{{ $variant->stock }}"
+                                                    >
                                                         {{ $variant->value }} 
                                                         @if($variant->stock > 0)
                                                             ({{ $variant->stock }} in stock)
@@ -224,10 +226,10 @@
                                 @endforeach
                                 
                                 <!-- Quantity Selection -->
-                                <div class="row g-3 mt-2">
+                                <div class="row g-3 ">
                                     <!-- Labels Column -->
                                     <div class="col-md-4 col-xxl-2">
-                                        <label for="quantity" class="form-label fw-semibold">
+                                        <label for="quantity" class="form-label py-2 fw-semibold">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-plus-circle me-2" viewBox="0 0 16 16">
                                                 <path
@@ -241,8 +243,8 @@
                                     <!-- Inputs Column -->
                                     <div class="col-md-3 col-lg-3">
                                         <div class="input-group">
-                                            <input type="number" class="form-control text-center num-product"
-                                                name="quantity" id="quantity" value="1" min="1" max="1">
+                                            <input type="number" class="form-control  py-2 text-center "
+                                                name="quantity" id="quantity" value="1" min="1">
                                         </div>
                                     </div>
                                 </div>
@@ -259,7 +261,7 @@
                                         <input type="hidden" name="variant_ids" id="selected_variant_ids">
                                         <input type="hidden" name="quantity" id="selected_quantity" value="1">
                                         <button type="submit" id="addToCartBtn"
-                                            class="btn btn-warning px-5 text-dark fw-bold rounded-pill" disabled>
+                                            class="btn btn-warning px-5 text-dark fw-bold rounded-pill " data-disabled="true">
                                             <svg width="16" height="16" fill="currentColor" class="me-2"
                                                 viewBox="0 0 16 16">
                                                 <path
@@ -289,13 +291,68 @@
        
         // Product Variants Handler
         $(document).ready(function() {
-            const variantSelects = $('.variant-select');
+            const variantSelects = $('select[id^="variant_"]');
             const quantityInput = $('#quantity');
             const addToCartBtn = $('#addToCartBtn');
             const selectedVariantIdsInput = $('#selected_variant_ids');
             const selectedQuantityInput = $('#selected_quantity');
 
-            // Update cart button and quantity when variants change
+            // Function to reset all selects using vanilla JavaScript
+            function resetAllSelects() {
+                const selects = document.querySelectorAll('select');
+                selects.forEach(function(select) {
+                    select.selectedIndex = 0;
+                    select.value = '';
+                    const options = select.querySelectorAll('option');
+                    options.forEach(function(option) {
+                        option.selected = false;
+                    });
+                    const emptyOption = select.querySelector('option[value=""]');
+                    if (emptyOption) {
+                        emptyOption.selected = true;
+                    }
+                });
+            }
+
+            // Set all select elements to empty value and deselect all options on page load
+            resetAllSelects();
+
+            // Use setTimeout to ensure reset happens after page is fully loaded
+            setTimeout(function() {
+                resetAllSelects();
+            }, 100);
+
+            // Also reset when navigating back to page (browser back button)
+            window.addEventListener('pageshow', function(event) {
+                resetAllSelects();
+                setTimeout(function() {
+                    resetAllSelects();
+                }, 50);
+            });
+
+            // Reset on DOMContentLoaded as well
+            document.addEventListener('DOMContentLoaded', function() {
+                resetAllSelects();
+            });
+
+            $('#addToCartForm').on('submit', function(e) {
+                const userRole = $('#user_role').val();
+
+                console.log(userRole);
+                if (userRole !== 'PARTICIPANT') {
+                    window.toastError('Only participants can add to cart');
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (addToCartBtn.data('disabled') === true) {
+                    window.toastError('Please select all product options before adding to cart');
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+
             function updateCartOptions() {
                 let selectedVariants = [];
                 let minStock = 0;
@@ -315,19 +372,12 @@
                     }
                 });
 
-                // Enable add to cart if all variants are selected and in stock
                 if (selectedVariants.length === variantSelects.length && minStock > 0) {
-                    addToCartBtn.prop('disabled', false);
-                    quantityInput.attr('max', minStock);
+                    addToCartBtn.data('disabled', false).removeClass('btn-disabled');
                     
-                    // Send all variant IDs as JSON array
                     const variantIds = selectedVariants.map(v => v.id);
                     selectedVariantIdsInput.val(JSON.stringify(variantIds));
-                } else {
-                    addToCartBtn.prop('disabled', true);
-                    quantityInput.attr('max', 1);
-                    selectedVariantIdsInput.val('');
-                }
+                } 
             }
 
             // Update quantity value in hidden input
@@ -348,7 +398,6 @@
     </script>
 
     <!--===============================================================================================-->
-    <script src="{{ asset('js/main.js') }}"></script>
 
 
     <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->

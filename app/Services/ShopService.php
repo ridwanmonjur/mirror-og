@@ -113,7 +113,6 @@ class ShopService
         $cart = $this->getUserCart($userId);
         
         try {
-            // Validate variant stock if variants are specified
             if ($variantIds && is_array($variantIds)) {
                 foreach ($variantIds as $variantId) {
                     $variant = $product->productVariants()->find($variantId);
