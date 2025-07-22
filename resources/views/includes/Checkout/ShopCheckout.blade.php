@@ -1,3 +1,5 @@
+
+<br>
 <div class="row px-5 mb-2" id="payment-discount-view">
     <div class="modal fade" id="discountModal" tabindex="-1"
         aria-labelledby="#discountModal" aria-hidden="true">
@@ -158,8 +160,8 @@
                 @endif
             </h5>
             </div>
-            <div>Promo Code</div>
-            <form method="GET" class="row mx-0 px-0 mb-1">
+            <div class="d-none">Promo Code</div>
+            <form  method="GET" class=" d-none row mx-0 px-0 mb-1">
                 @csrf
                 <div class="form-group mb-0 px-0 mx-0">
                     <input type="hidden" id="amount" name="amount" value="{{ $amount }}">
@@ -183,8 +185,7 @@
                 </div>
             @endif
             <div class="d-flex justify-content-center w-75">
-          
-                    <a href="{{ route('shop.index') }}" class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2 submit-texts d-block"> Cancel </a>
+                    {{-- <a href="{{ route('shop.index') }}" class="oceans-gaming-default-button-base oceans-gaming-transparent-button px-2 py-2 mt-2 submit-texts d-block"> Cancel </a> --}}
                     <div class="spinner-border d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>

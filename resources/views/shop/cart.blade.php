@@ -6,10 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Shopping Cart</title>
+    <title>My Cart</title>
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/algolia.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
 </head>
 
@@ -22,8 +21,8 @@
 
         {{-- ----------------------------- ROW CART START ----------------------------- --}}
         <div class="row">
-            <div class="col-12 col-lg-9 bg-white py-3 px-3 border border-light rounded rounded-2">
-
+            <div class="col-12  col-xl-8  border border-light rounded rounded-2">
+                <div class="bg-white py-3 px-3">
                 @if ($cart->getContent()->count() > 0)
                     <h2 class="text-dark my-0 py-0 leading">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart3 text-primary mx-2" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
@@ -49,13 +48,12 @@
                     {{-- success error msg end --}}
                     <hr>
 
-                    <br>
                     @foreach ($cart->getContent() as $item)
                         @if ($item->product)
                             <div class="">
                                 <div class="row">
 
-                                    <div class="col-lg-6 flex-wrap d-flex justify-content-start align-items-start">
+                                    <div class="col-lg-6  my-2 flex-wrap d-flex justify-content-start align-items-start">
                                         <div class="me-3">
                                         @if ($item->product && $item->product->slug)
                                             <a href="{{ route('shop.show', $item->product->slug) }}">
@@ -78,7 +76,7 @@
                                         @else
                                             <span class="cart_a">{{ $item->product->name ?? 'Product unavailable' }}</span>
                                         @endif
-                                        <p class="cart_p text-muted fw-normal">
+                                        <p class="my-2 text-muted fw-normal">
                                            
                                             @if($item->cartProductVariants)
                                                 @foreach($item->cartProductVariants as $key => $variant)
@@ -105,9 +103,9 @@
                                         </p>
                                         </div>
 
-                                    </div> {{-- col-lg-5 end --}}
+                                    </div> 
 
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-2 my-2">
                                         @if ($item->product)
                                             @php
                                                 $variants = $item->cartProductVariants;
@@ -130,7 +128,7 @@
                                         @endif
                                     </div>
 
-                                    <div class="col-lg-1">
+                                    <div class="col-lg-1 my-2">
                                         <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
@@ -143,7 +141,7 @@
                                         </form>
                                     
                                     </div>
-                                    <div class="col-lg-3 text-success fw-bold fs-7">
+                                    <div class="col-lg-3 my-2 fw-bold fs-7 text-center">
                                         RM {{ number_format($item->subtotal, 2) }}
                                     </div>
                                 </div>
@@ -158,8 +156,7 @@
                             <a href="{{ route('checkout.index') }}" class="btn btn-primary text-white fw-semibold"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card me-2" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/><path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/></svg>Checkout</a>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted fw-medium">Subtotal : <span class="text-dark">RM {{ number_format($cart->getSubTotal(), 2) }}</span></p>
-                            <p class="text-success fw-bold fs-5">Total: RM {{ number_format($cart->getTotal(), 2) }}</p>
+                            <p class="leading my-1 fw-bold text-end fs-7">Total: RM {{ number_format($cart->getTotal(), 2) }}</p>
                         </div>
                     </div>
                 @else
@@ -168,8 +165,9 @@
                     <a href="{{ route('shop.index') }}" class="btn btn-link">Continue Shopping</a>
 
                 @endif
+                </div>
             </div>
-            <div class="col-12 col-lg-3">
+            <div class="col-12  col-xl-4">
                 <div class="cart_sidebar p-3 bg-white rounded rounded-3 border border-light">
 
                     <h4 class="p-0 m-0 text-primary">Order Summary</h4>
@@ -181,40 +179,19 @@
                                 <td class="text-end">{{ $cart->getCount() }}</td>
                             </tr>
                             <tr>
-                                <td>Product total</td>
+                                <td>Subtotal</td>
                                 <td class="text-end">RM {{ number_format($cart->getSubTotal(), 2) }}</td>
                             </tr>
-                            @if (session()->has('coupon'))
-                                <tr>
-                                    <td>
-                                        Coupon: {{ session()->get('coupon')['name'] }}
-                                        <form method="post" action="{{ route('coupon.destroy') }}"
-                                            style="display:inline">
-                                            {{ csrf_field() }}
-                                            {{ method_field('delete') }}
-                                            <button type="submit" class="btn btn-link p-0 ms-1"
-                                                style="color: #000; font-size: 12px;"><span
-                                                    class="fa fa-trash"></span></button>
-                                        </form>
-                                    </td>
-                                    <td class="text-end">- RM {{ number_format(session()->get('coupon')['discount'], 2) }}</td>
-                                </tr>
-                            @endif
-                            @if (session()->has('coupon'))
-                                <tr>
-                                    <td>Discount</td>
-                                    <td class="text-end">- RM {{ number_format($discount, 2) }}</td>
-                                </tr>
-                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
-                                    <td>Net Total</td>
-                                    <td class="text-end">RM {{ number_format($newTotal, 2) }}</td>
-                                </tr>
-                            @else
-                                <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
-                                    <td>Total</td>
-                                    <td class="text-end">RM {{ number_format($cart->getTotal(), 2) }}</td>
-                                </tr>
-                            @endif
+                            <tr>
+                                <td>Discount</td>
+                                <td class="text-end">RM 0.00</td>
+                            </tr>
+                            
+                           
+                            <tr style="font-weight: bold; border-top: 1px solid #dee2e6;">
+                                <td>Total</td>
+                                <td class="text-end">RM {{ number_format($cart->getTotal(), 2) }}</td>
+                            </tr>
                         </table>
                     </div>
                 </div> {{-- cart_sidebar end --}}
@@ -252,11 +229,9 @@
                             })
                         })
                         .then(function(response) {
-                            // console.log(response);
                             window.location.href = '{{ route('cart.index') }}'
                         })
                         .catch(function(error) {
-                            // console.log(error);
                             window.location.href = '{{ route('cart.index') }}'
                         });
                 })
@@ -264,9 +239,6 @@
         })();
     </script>
 
-    <!-- Include AlgoliaSearch JS Client and autocomplete.js library -->
-    <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
     <script src="{{ asset('js/algolia.js') }}"></script>
 </body>
 

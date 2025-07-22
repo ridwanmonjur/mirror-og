@@ -10,7 +10,6 @@ class Order extends Model
         'user_id', 'billing_discount', 'billing_discount_code', 'billing_subtotal', 'billing_total',
     ];
 
-    protected $perPage = 1;
 
     public function user()
     {
@@ -20,5 +19,10 @@ class Order extends Model
     public function products()
     {
         return $this->belongsToMany('App\Models\Product')->withPivot('quantity');
+    }
+
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 }
