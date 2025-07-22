@@ -48,6 +48,12 @@ body {
     font-weight: 700;
 }
 
+/* Disabled button styling */
+.btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+
 /* Product Card Components */
 .product-card {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -108,7 +114,6 @@ body {
 }
 
 .product-card__price {
-    color: #B12704;
     font-weight: 700;
     font-size: 1.1rem;
     margin: 0.5rem 0;

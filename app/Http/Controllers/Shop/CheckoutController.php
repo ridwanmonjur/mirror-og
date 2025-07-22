@@ -247,11 +247,17 @@ class CheckoutController extends Controller
             ]);
 
             foreach ($cart->getContent() as $item) {
-                OrderProduct::create([
+                $orderProduct = OrderProduct::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
                 ]);
+
+                // Add product variants to order if they exist
+                if ($item->cartProductVariants && $item->cartProductVariants->count() > 0) {
+                    $variantIds = $item->cartProductVariants->pluck('id')->toArray();
+                    $orderProduct->orderProductVariants()->attach($variantIds);
+                }
             }
 
             return $order;

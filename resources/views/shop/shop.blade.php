@@ -5,7 +5,7 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Checkout</title>
+    <title>Shop</title>
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
@@ -142,14 +142,14 @@
                         <div class="col-12 col-md-6 col-lg-4 col-xxl-3 mb-4">
                         <a href="{{ route('shop.show', $product->slug) }}">
                             
-                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-muted pb-4 h-100 d-flex flex-column">
+                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-3 border-primary pb-4 h-100 d-flex flex-column">
                                 <div class="product-card__image-wrapper  mb-3">
                                     
-                                        <img src="{{ asset('storage/' . $product->image) }}" 
-                                             class="product-card__image w-100 object-fit-cover border border-muted rounded-3"
-                                             style="height: 200px;border-radius: 30px; "   
-                                             onerror="this.onerror=null;this.src='/assets/images/404q.png';"
-                                             alt="{{ $product->name }}"
+                                    <img src="{{ asset('storage/' . $product->image) }}" 
+                                        class="product-card__image w-100 object-fit-cover   border-primary border-bottom"
+                                        style="height: 200px;border-radius: 30px 30px 0 0; "   
+                                        onerror="this.onerror=null;this.src='/assets/images/404q.png';"
+                                        alt="{{ $product->name }}"
                                     >
                                    
                                 </div>
@@ -180,15 +180,17 @@
                                         </div>
                                         
                                         <div class="mb-0">
+                                            <small class="text-muted me-2">Category: </small>
                                             <div class="d-inline-flex flex-wrap justify-content-center align-items-center">
                                                 @foreach($product->categories->take(2) as $category)
                                                     <a href="{{ '/shop?category=' .  $category->slug }}" class="badge mb-2 bg-primary me-1 text-white text-decoration-none" style="font-size: 0.7rem;">
                                                         {{ $category->name }}
                                                     </a>
                                                 @endforeach
-                                            
                                             </div>
-                                            
+                                            @if (isset ($product->categories[2])) 
+                                                ...
+                                            @endif
                                             
                                         </div>
                                     </div>

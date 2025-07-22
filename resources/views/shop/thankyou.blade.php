@@ -15,7 +15,7 @@
     @include('googletagmanager::body')
     @include('includes.Navbar')
 
-    <main class="position-absolute  top-50 start-50 translate-middle">
+    <main class="position-absolute  w-75  top-50 start-50 translate-middle">
         <div class="">
             <div class="text-center">
                 <div class="text-center bg-white p-5 border border-light rounded rounded-2">
@@ -25,17 +25,16 @@
                             <path
                                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                         </svg>
-                        <br>Thank you for your order!</h5>
-                    <br>
-                    <p class="text-muted fs-5"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        <br><h5 class="mt-3">Thank you for your purchase!</h5></h5>
+                    <p class="text-primary "><a href="{{ route('orders.index') }}" class="text-decoration-none text-primary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                             fill="currentColor" class="bi bi-envelope-check me-2" viewBox="0 0 16 16">
                             <path
                                 d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
                             <path
                                 d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686Z" />
-                        </svg>A confirmation email was sent</p>
+                        </svg>Please check your purchases.</a></p>
 
-                    <a href="{{ url('/shop') }}" class="btn btn-primary text-white rounded-pill px-4 py-2"><svg
+                    <a href="{{ url('/shop') }}" class="btn btn-primary mt-2 text-white rounded-pill px-4 py-2"><svg
                             xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-house-door me-2" viewBox="0 0 16 16">
                             <path

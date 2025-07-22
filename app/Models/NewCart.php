@@ -48,29 +48,20 @@ class NewCart extends Model
     {
         $existingItem = null;
         
-        // If we have variants, look for an existing item with exactly the same variants
         if ($variantIds && is_array($variantIds)) {
-            // Sort variant IDs for consistent comparison
             sort($variantIds);
             $variantIdsCount = count($variantIds);
             
-            // Find existing items with same product
-            $potentialItems = $this->items()
+            $existingItem = $this->items()
                 ->where('product_id', $productId)
-                ->get();
-                
-            foreach ($potentialItems as $item) {
-                $existingVariantIds = $item->cartProductVariants()->pluck('variant_id')->toArray();
-                sort($existingVariantIds);
-                
-                // Check if variant counts match and all IDs match
-                if (count($existingVariantIds) === $variantIdsCount && $existingVariantIds === $variantIds) {
-                    $existingItem = $item;
-                    break;
-                }
-            }
+                ->whereHas('cartProductVariants', function ($query) use ($variantIds) {
+                    $query->whereIn('variant_id', $variantIds);
+                }, '=', $variantIdsCount)
+                ->whereDoesntHave('cartProductVariants', function ($query) use ($variantIds) {
+                    $query->whereNotIn('variant_id', $variantIds);
+                })
+                ->first();
         } else {
-            // No variants - check for existing item with same product and no variants
             $existingItem = $this->items()
                 ->where('product_id', $productId)
                 ->whereDoesntHave('cartProductVariants')
@@ -78,7 +69,6 @@ class NewCart extends Model
         }
         
         if ($existingItem) {
-            // Same product and all variants match - add to existing quantity
             $newQuantity = $existingItem->quantity + $quantity;
             if ($newQuantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
@@ -87,7 +77,6 @@ class NewCart extends Model
             $existingItem->subtotal = $existingItem->quantity * $price;
             $existingItem->save();
         } else {
-            // Different product or different variant combination - create new item
             if ($quantity > 20) {
                 throw new \Exception('Maximum quantity of 20 exceeded');
             }
