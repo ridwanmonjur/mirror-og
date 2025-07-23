@@ -174,12 +174,18 @@
                         <div class="d-flex justify-content-center d-lg-none">
                             <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}"
                                 onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
-                                width="120" height="90">
+                                width="120" height="90"
+                            >
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
-                            <img   alt="{{ $event->eventName }}"  
-                                @class([' event-image rounded-banner  ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" src="{{ $eventBannerImg }}"
-                                alt=""
+                            <img   
+                                id="eventBannerImg"
+                                alt="{{ $event->eventName }}"  
+                                width="500"
+                                height="500"
+                                @class([' event-image rounded-banner  ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) 
+                                onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" 
+                                src="{{ $eventBannerImg }}"
                             >
                         </a>
 

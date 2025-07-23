@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, doc, getDoc } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -119,18 +119,45 @@ class FilamentAnalyticsAPI {
 
     async getStatsDocument(docName) {
         try {
-            const docRef = doc(db, 'stats', docName);
+            const docRef = doc(db, 'analytics', docName);
             const docSnap = await getDoc(docRef);
             
             if (docSnap.exists()) {
                 return docSnap.data();
             } else {
-                console.log(`No ${docName} document found`);
-                return null;
+                console.log(`No ${docName} document found, creating with default structure`);
+                
+                // Create document with default structure
+                let defaultData = {};
+                if (docName === 'globalCounts') {
+                    defaultData = {
+                        eventTiers: {},
+                        eventTypes: {},
+                        esportTitles: {},
+                        locations: {},
+                        eventNames: {},
+                        userIds: {},
+                        lastUpdated: serverTimestamp()
+                    };
+                } else if (docName === 'socialCounts') {
+                    defaultData = {
+                        actions: {},
+                        targetTypes: {},
+                        lastUpdated: serverTimestamp()
+                    };
+                } else if (docName === 'formJoins') {
+                    defaultData = {
+                        formNames: {},
+                        lastUpdated: serverTimestamp()
+                    };
+                }
+                
+                await setDoc(docRef, defaultData);
+                return defaultData;
             }
         } catch (error) {
             console.error(`Error fetching ${docName}:`, error);
-            return null;
+            return {};
         }
     }
     
@@ -335,18 +362,36 @@ window.initializeFilamentAnalytics = function() {
 
 window.getAnalyticsCounts = async function() {
     try {
-        const countsRef = doc(db, 'stats', 'globalCounts');
+        const countsRef = doc(db, 'analytics', 'globalCounts');
         const countsSnap = await getDoc(countsRef);
         
         if (countsSnap.exists()) {
             return countsSnap.data();
         } else {
-            console.log('No counts document found');
-            return null;
+            console.log('No counts document found, creating with default structure');
+            const defaultData = {
+                eventTiers: {},
+                eventTypes: {},
+                esportTitles: {},
+                locations: {},
+                eventNames: {},
+                userIds: {},
+                lastUpdated: serverTimestamp()
+            };
+            
+            await setDoc(countsRef, defaultData);
+            return defaultData;
         }
     } catch (error) {
         console.error('Error getting analytics counts:', error);
-        return null;
+        return {
+            eventTiers: {},
+            eventTypes: {},
+            esportTitles: {},
+            locations: {},
+            eventNames: {},
+            userIds: {}
+        };
     }
 };
 

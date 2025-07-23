@@ -77,12 +77,14 @@
                         loading="lazy"  
                         alt="{{ $eventTierLowerImg }}"
                         class="pe-3 tierIcon mt-2"
-                        alt=""
+                        alt="{{ $event->tier?->tierIcon }}"
+                        onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                     >
                     <img 
                         src="{{ $bladeEventGameImage }}" 
                         class="logo2 mt-2 object-fit-cover gameIcon" 
                         alt="{{ $event->game?->gameIcon }}"
+                        onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                         loading="lazy"
                     >
                 </div>

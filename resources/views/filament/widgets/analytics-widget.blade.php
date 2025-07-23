@@ -209,28 +209,33 @@
                                 const globalCounts = await window.getAnalyticsCounts();
                                 console.log('Global counts:', globalCounts);
                                 
-                                if (!globalCounts) {
-                                    showError('No analytics data found');
-                                    return;
-                                }
+                                // Always show content even if no data found
+                                const safeGlobalCounts = globalCounts || {
+                                    eventTiers: {},
+                                    eventTypes: {},
+                                    esportTitles: {},
+                                    locations: {},
+                                    eventNames: {},
+                                    userIds: {}
+                                };
                                 
                                 // Update Event Tiers
-                                createCountList(globalCounts.eventTiers || {}, 'event-tiers-list', 'event-tiers-total', page);
+                                createCountList(safeGlobalCounts.eventTiers || {}, 'event-tiers-list', 'event-tiers-total', page);
                                 
                                 // Update Event Types
-                                createCountList(globalCounts.eventTypes || {}, 'event-types-list', 'event-types-total', page);
+                                createCountList(safeGlobalCounts.eventTypes || {}, 'event-types-list', 'event-types-total', page);
                                 
                                 // Update Esport Titles
-                                createCountList(globalCounts.esportTitles || {}, 'esport-titles-list', 'esport-titles-total', page);
+                                createCountList(safeGlobalCounts.esportTitles || {}, 'esport-titles-list', 'esport-titles-total', page);
                                 
                                 // Update Locations
-                                createCountList(globalCounts.locations || {}, 'locations-list', 'locations-total', page);
+                                createCountList(safeGlobalCounts.locations || {}, 'locations-list', 'locations-total', page);
                                 
                                 // Update Event Names
-                                createCountList(globalCounts.eventNames || {}, 'event-names-list', 'event-names-total', page);
+                                createCountList(safeGlobalCounts.eventNames || {}, 'event-names-list', 'event-names-total', page);
                                 
                                 // Update Active Users
-                                const userIds = globalCounts.userIds || {};
+                                const userIds = safeGlobalCounts.userIds || {};
                                 const activeUsersCount = Object.keys(userIds).length;
                                 document.getElementById('active-users-count').textContent = activeUsersCount.toLocaleString();
                                 

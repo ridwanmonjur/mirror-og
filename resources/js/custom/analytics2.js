@@ -18,7 +18,11 @@ const db = initializeFirestore(app, {
 
 async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId) {
     try {
-        const countsRef = doc(db, 'stats', 'globalCounts');
+        const countsRef = doc(db, 'analytics', 'globalCounts');
+        
+        // Check if document exists first
+        const docSnap = await getDoc(countsRef);
+        
         const updateData = {
             lastUpdated: serverTimestamp()
         };
@@ -47,7 +51,31 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
             updateData[`userIds.${userId}`] = increment(1);
         }
 
-        await updateDoc(countsRef, updateData);
+        if (!docSnap.exists()) {
+            // Create document with initial structure
+            const initialData = {
+                eventTiers: {},
+                eventTypes: {},
+                esportTitles: {},
+                locations: {},
+                eventNames: {},
+                userIds: {},
+                lastUpdated: serverTimestamp()
+            };
+            
+            // Add initial counts
+            if (eventTier) initialData.eventTiers[eventTier] = 1;
+            if (eventType) initialData.eventTypes[eventType] = 1;
+            if (esportTitle) initialData.esportTitles[esportTitle] = 1;
+            if (location) initialData.locations[location] = 1;
+            if (eventName) initialData.eventNames[eventName] = 1;
+            if (userId) initialData.userIds[userId] = 1;
+            
+            await setDoc(countsRef, initialData);
+        } else {
+            await updateDoc(countsRef, updateData);
+        }
+        
         console.log('Analytics counts updated');
     } catch (error) {
         console.error('Error updating analytics counts:', error);
@@ -56,7 +84,11 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
 
 async function updateSocialCounts(action, targetType) {
     try {
-        const socialRef = doc(db, 'stats', 'socialCounts');
+        const socialRef = doc(db, 'analytics', 'socialCounts');
+        
+        // Check if document exists first
+        const docSnap = await getDoc(socialRef);
+        
         const updateData = {
             lastUpdated: serverTimestamp()
         };
@@ -69,7 +101,23 @@ async function updateSocialCounts(action, targetType) {
             updateData[`targetTypes.${targetType}`] = increment(1);
         }
 
-        await updateDoc(socialRef, updateData);
+        if (!docSnap.exists()) {
+            // Create document with initial structure
+            const initialData = {
+                actions: {},
+                targetTypes: {},
+                lastUpdated: serverTimestamp()
+            };
+            
+            // Add initial counts
+            if (action) initialData.actions[action] = 1;
+            if (targetType) initialData.targetTypes[targetType] = 1;
+            
+            await setDoc(socialRef, initialData);
+        } else {
+            await updateDoc(socialRef, updateData);
+        }
+        
         console.log('Social counts updated');
     } catch (error) {
         console.error('Error updating social counts:', error);
@@ -78,7 +126,11 @@ async function updateSocialCounts(action, targetType) {
 
 async function updateFormCounts(formName) {
     try {
-        const formRef = doc(db, 'stats', 'formJoins');
+        const formRef = doc(db, 'analytics', 'formJoins');
+        
+        // Check if document exists first
+        const docSnap = await getDoc(formRef);
+        
         const updateData = {
             lastUpdated: serverTimestamp()
         };
@@ -87,7 +139,21 @@ async function updateFormCounts(formName) {
             updateData[`formNames.${formName}`] = increment(1);
         }
 
-        await updateDoc(formRef, updateData);
+        if (!docSnap.exists()) {
+            // Create document with initial structure
+            const initialData = {
+                formNames: {},
+                lastUpdated: serverTimestamp()
+            };
+            
+            // Add initial counts
+            if (formName) initialData.formNames[formName] = 1;
+            
+            await setDoc(formRef, initialData);
+        } else {
+            await updateDoc(formRef, updateData);
+        }
+        
         console.log('Form counts updated');
     } catch (error) {
         console.error('Error updating form counts:', error);

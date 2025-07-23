@@ -73,6 +73,10 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\EventCategoryResource::getNavigationItems(),
                                 ...\App\Filament\Resources\SystemCouponsResource::getNavigationItems(),
                             ]),
+                        NavigationGroup::make('Shop')
+                            ->items([
+                                ...\App\Filament\Resources\ProductResource::getNavigationItems(),
+                            ]),
                         NavigationGroup::make('Analytics')
                             ->items([
                                 NavigationItem::make('Analytics')
