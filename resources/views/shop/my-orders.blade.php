@@ -100,9 +100,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="">RM {{ number_format($orderProduct->product->price, 2) }}</td>
-                                    <td class="fw-semibold">{{ $orderProduct->quantity }}</td>
-                                    <td class="text-muted fw-bold">RM {{ number_format($orderProduct->product->price * $orderProduct->quantity, 2) }}</td>
+                                    <td class="align-middle">RM {{ number_format($orderProduct->product->price, 2) }}</td>
+                                    <td class="fw-semibold align-middle">{{ $orderProduct->quantity }}</td>
+                                    <td class="text-muted fw-bold align-middle">RM {{ number_format($orderProduct->product->price * $orderProduct->quantity, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
