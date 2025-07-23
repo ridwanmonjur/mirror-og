@@ -19,7 +19,7 @@ class NewCart extends Model
         'total' => 'decimal:2'
     ];
 
-    protected $cachedCount = null;
+    public $cachedCount = null;
 
     public function user()
     {
@@ -31,98 +31,9 @@ class NewCart extends Model
         return $this->hasMany('App\Models\CartItem', 'cart_id');
     }
 
-    public function updateTotal()
-    {
-        $this->total = $this->items()->sum('subtotal');
-        $this->cachedCount = null; // Clear cache when items change
-        $this->save();
-        return $this->total;
-    }
-
     public static function getUserCart($userId)
     {
         return static::firstOrCreate(['user_id' => $userId]);
-    }
-
-    public function addItem($productId, $quantity, $price, $variantIds = null)
-    {
-        $existingItem = null;
-        
-        if ($variantIds && is_array($variantIds)) {
-            sort($variantIds);
-            $variantIdsCount = count($variantIds);
-            
-            $existingItem = $this->items()
-                ->where('product_id', $productId)
-                ->whereHas('cartProductVariants', function ($query) use ($variantIds) {
-                    $query->whereIn('variant_id', $variantIds);
-                }, '=', $variantIdsCount)
-                ->whereDoesntHave('cartProductVariants', function ($query) use ($variantIds) {
-                    $query->whereNotIn('variant_id', $variantIds);
-                })
-                ->first();
-        } else {
-            $existingItem = $this->items()
-                ->where('product_id', $productId)
-                ->whereDoesntHave('cartProductVariants')
-                ->first();
-        }
-        
-        if ($existingItem) {
-            $newQuantity = $existingItem->quantity + $quantity;
-            if ($newQuantity > 20) {
-                throw new \Exception('Maximum quantity of 20 exceeded');
-            }
-            $existingItem->quantity = $newQuantity;
-            $existingItem->subtotal = $existingItem->quantity * $price;
-            $existingItem->save();
-        } else {
-            if ($quantity > 20) {
-                throw new \Exception('Maximum quantity of 20 exceeded');
-            }
-            $cartItem = $this->items()->create([
-                'product_id' => $productId,
-                'quantity' => $quantity,
-                'subtotal' => $quantity * $price
-            ]);
-            
-            // Attach all variants if specified
-            if ($variantIds && is_array($variantIds)) {
-                $cartItem->cartProductVariants()->attach($variantIds);
-            }
-        }
-        
-        $this->updateTotal();
-        return $this;
-    }
-
-    public function updateItem($productId, $quantity, $price)
-    {
-        $item = $this->items()->where('product_id', $productId)->first();
-        
-        if ($item) {
-            $item->quantity = $quantity;
-            $item->subtotal = $quantity * $price;
-            $item->save();
-            $this->updateTotal();
-            $this->load(['items.product']); // Reload relationships after changes
-        }
-        
-        return $this;
-    }
-
-    public function removeItem($productId)
-    {
-        $this->items()->where('product_id', $productId)->delete();
-        $this->updateTotal();
-        return $this;
-    }
-
-    public function clearItems()
-    {
-        $this->items()->delete();
-        $this->updateTotal();
-        return $this;
     }
 
     public function getCount()
@@ -149,12 +60,10 @@ class NewCart extends Model
             return $this->items;
         }
         
-        return $this->items()->with(['product', 'cartProductVariants'])->get();
+        $this->load(['items.product', 'items.cartProductVariants']);
+        return $this->items;
     }
 
-    /**
-     * Get cart numbers including discount calculations
-     */
     public function getNumbers()
     {
         $discount = session()->get('coupon')['discount'] ?? 0;
@@ -173,21 +82,5 @@ class NewCart extends Model
             'newSubtotal' => $newSubtotal,
             'newTotal' => $newTotal,
         ]);
-    }
-
-    /**
-     * Get valid cart quantity (items with available products)
-     */
-    public function getValidQuantity()
-    {
-        $validQuantity = 0;
-        
-        foreach ($this->getContent() as $item) {
-            if ($item->product) {
-                $validQuantity += $item->quantity;
-            }
-        }
-        
-        return $validQuantity;
     }
 }

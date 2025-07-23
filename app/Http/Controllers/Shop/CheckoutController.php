@@ -15,6 +15,8 @@ use App\Models\Product;
 use App\Models\OrderProduct;
 use App\Models\NewCart;
 use App\Models\User;
+use App\Models\ProductVariant;
+use App\Services\CartService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,10 +27,12 @@ use Illuminate\View\View;
 class CheckoutController extends Controller
 {
     private $stripeClient;
+    private $cartService;
 
-    public function __construct(StripeConnection $stripeClient)
+    public function __construct(StripeConnection $stripeClient, CartService $cartService)
     {
         $this->stripeClient = $stripeClient;
+        $this->cartService = $cartService;
     }
 
     public function showCheckout(ShowShopCheckoutRequest $request)
@@ -72,7 +76,7 @@ class CheckoutController extends Controller
                 }
             }
 
-            $cart = $request->cart ?: NewCart::getUserCart(auth()->id());
+            $cart = $request->cart ?: $this->cartService->getUserCart(auth()->id());
             
             $numbers = $cart->getNumbers();
 
@@ -131,9 +135,10 @@ class CheckoutController extends Controller
             $transaction->save();
             ['coupon' => $coupon, 'fee' => $fee] = $request->couponDetails;
 
-            $cart = NewCart::getUserCart($user->id);
-            $this->addToOrdersTables( $user, $cart,  $coupon, $fee);
-            $this->clearCartAndDecreaseStock($cart);
+            $cart = $this->cartService->getUserCart($user->id);
+            $this->cartService->validateStock($cart);
+            $this->cartService->addToOrdersTables($cart, $user, $coupon, $fee);
+            $this->cartService->clearItemsAndDecreaseStock($cart);
 
             DB::commit();
 
@@ -200,9 +205,10 @@ class CheckoutController extends Controller
 
                     $history->save();
 
-                    $cart = NewCart::getUserCart($user->id);
-                    $this->addToOrdersTables( $user, $cart, $coupon, $fee);
-                    $this->clearCartAndDecreaseStock($cart);
+                    $cart = $this->cartService->getUserCart($user->id);
+                    $this->cartService->validateStock($cart);
+                    $this->cartService->addToOrdersTables($cart, $user, $coupon, $fee);
+                    $this->cartService->clearItemsAndDecreaseStock($cart);
 
                     DB::commit();
 
@@ -222,50 +228,8 @@ class CheckoutController extends Controller
         }
     }
 
-    protected function clearCartAndDecreaseStock(NewCart $cart )
-    {
-        $cart->clearItems();
-        foreach ($cart->getContent() as $item) {
-            $product = Product::find($item->product_id);
-            if ($product) {
-                $product->update(['quantity' => $product->quantity - $item->quantity]);
-            }
-        }
 
-        session()->forget('coupon');
-    }
 
-    protected function addToOrdersTables(User $user, NewCart $cart, ? SystemCoupon $coupon, array $fee )
-    {
-        try {
-            $order = Order::create([
-                'user_id' => $user->id,
-                'billing_discount' => $fee['discount'] ?? 0,
-                'billing_discount_code' => $coupon->code ?? 0,
-                'billing_subtotal' =>$fee['discount'] ?? 0,
-                'billing_total' => $fee['finalFee'] ?? 0,
-            ]);
-
-            foreach ($cart->getContent() as $item) {
-                $orderProduct = OrderProduct::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                ]);
-
-                // Add product variants to order if they exist
-                if ($item->cartProductVariants && $item->cartProductVariants->count() > 0) {
-                    $variantIds = $item->cartProductVariants->pluck('id')->toArray();
-                    $orderProduct->orderProductVariants()->attach($variantIds);
-                }
-            }
-
-            return $order;
-        } catch (Exception $e) {
-            Log::error('Shop order creation error: ' . $e->getMessage());
-            throw $e;
-        }
-    }
 
     
 

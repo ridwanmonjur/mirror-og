@@ -6,9 +6,17 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\NewCart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Services\CartService;
 
 class ShopService
 {
+    protected $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
     public function getProductsWithFilters(Request $request)
     {
         $categories = Category::all();
@@ -85,13 +93,7 @@ class ShopService
 
     public function getUserCart(int $userId)
     {
-        $cart = NewCart::where('user_id', $userId)->with(['items.product', 'items.cartProductVariants'])->first();
-        
-        if (!$cart) {
-            $cart = NewCart::create(['user_id' => $userId]);
-        }
-        
-        return $cart;
+        return $this->cartService->getUserCart($userId);
     }
 
     public function getCartData(int $userId)
@@ -113,26 +115,34 @@ class ShopService
         $cart = $this->getUserCart($userId);
         
         try {
+            if ($quantity <= 0) {
+                return ['success' => false, 'message' => 'Quantity must be greater than 0.'];
+            }
+
             if ($variantIds && is_array($variantIds)) {
                 foreach ($variantIds as $variantId) {
                     $variant = $product->productVariants()->find($variantId);
                     if (!$variant) {
                         return ['success' => false, 'message' => 'Selected variant not found.'];
                     }
+                    if ($variant->stock <= 0) {
+                        return ['success' => false, 'message' => "Product variant '{$variant->name}: {$variant->value}' is out of stock."];
+                    }
                     if ($variant->stock < $quantity) {
-                        return ['success' => false, 'message' => "Not enough stock available for variant {$variant->value}."];
+                        return ['success' => false, 'message' => "Insufficient stock for variant '{$variant->name}: {$variant->value}'. Available: {$variant->stock}, Requested: {$quantity}"];
                     }
                 }
             }
             
-            $cart->addItem($product->id, $quantity, $product->price, $variantIds);
+            $this->cartService->addItem($cart, $product->id, $quantity, $product->price, $variantIds);
             return ['success' => true, 'message' => 'Item was added to your cart!'];
         } catch (\Exception $e) {
+            Log::error($e);
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
-    public function updateCartItem(int $userId, int $productId, int $quantity, int $productQuantity)
+    public function updateCartItem(int $userId, int $productId, int $quantity, int $maxStock = null)
     {
         $cart = $this->getUserCart($userId);
         
@@ -144,20 +154,20 @@ class ShopService
             return ['success' => false, 'message' => 'Quantity must be between 1 and 20.'];
         }
 
-        if ($quantity > $productQuantity) {
+        if ($maxStock !== null && $quantity > $maxStock) {
             return ['success' => false, 'message' => 'We currently do not have enough items in stock.'];
         }
 
         $product = Product::find($productId);
         if ($product) {
-            $cart->updateItem($productId, $quantity, $product->price);
+            $this->cartService->updateItem($cart, $productId, $quantity, $product->price);
             return ['success' => true, 'message' => 'Quantity was updated successfully!'];
         }
         
         return ['success' => false, 'message' => 'Product not found'];
     }
 
-    public function updateCartItemById(int $userId, int $cartItemId, int $quantity, int $maxQuantity)
+    public function updateCartItemById(int $userId, int $cartItemId, int $quantity, int $maxStock)
     {
         $cart = $this->getUserCart($userId);
         
@@ -169,7 +179,7 @@ class ShopService
             return ['success' => false, 'message' => 'Quantity must be between 1 and 20.'];
         }
 
-        if ($quantity > $maxQuantity) {
+        if ($quantity > $maxStock) {
             return ['success' => false, 'message' => 'We currently do not have enough items in stock.'];
         }
 
@@ -183,7 +193,7 @@ class ShopService
             $cartItem->quantity = $quantity;
             $cartItem->subtotal = $quantity * $product->price;
             $cartItem->save();
-            $cart->updateTotal();
+            $this->cartService->updateTotal($cart);
             return ['success' => true, 'message' => 'Quantity was updated successfully!'];
         }
         
@@ -195,7 +205,7 @@ class ShopService
         $cart = $this->getUserCart($userId);
         
         if ($cart) {
-            $cart->removeItem($productId);
+            $this->cartService->removeItem($cart, $productId);
             return ['success' => true, 'message' => 'Item has been removed!'];
         }
         
@@ -208,7 +218,7 @@ class ShopService
         
         if ($cart) {
             $cart->items()->where('id', $cartItemId)->delete();
-            $cart->updateTotal();
+            $this->cartService->updateTotal($cart);
             return ['success' => true, 'message' => 'Item has been removed!'];
         }
         
