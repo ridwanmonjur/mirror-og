@@ -59,22 +59,9 @@ class CheckoutController extends Controller
                 'customer' => $user->stripe_customer_id,
             ]);
 
-            $walletStatusEnums = config('constants.DISCOUNT_STATUS');
-            $walletStatus = is_null($user_wallet) || $user_wallet?->usable_balance < 0 ? $walletStatusEnums['ABSENT'] : $walletStatusEnums['COMPLETE'];
-            $payment_amount_min = $pendingAfterWallet = 0.0;
-            
-            if ($walletStatus != $walletStatusEnums['ABSENT']) {
-                $payment_amount_min = $fee['finalFee'];
-                if ($user_wallet->usable_balance < $payment_amount_min) {
-                    $payment_amount_min = min($user_wallet->usable_balance, $request->total - config('constants.STRIPE.MINIMUM_RM'));
-
-                    $walletStatus = $walletStatusEnums['PARTIAL'];
-                    $pendingAfterWallet = $request->total - $payment_amount_min;
-                    if ($pendingAfterWallet < config('constants.STRIPE.MINIMUM_RM')) {
-                        $walletStatus = $walletStatusEnums['INVALID'];
-                    }
-                }
-            }
+            $has_wallet_balance = !is_null($user_wallet) && $user_wallet->usable_balance > 0;
+            $can_pay_full_amount = $has_wallet_balance && $user_wallet->usable_balance >= $request->total;
+            $wallet_shortfall = $has_wallet_balance ? max(0, $request->total - $user_wallet->usable_balance) : $request->total;
 
             $cart = $request->cart ?: $this->cartService->getUserCart(auth()->id());
             
@@ -93,9 +80,10 @@ class CheckoutController extends Controller
                 'prevForm' => $prevForm,
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
-                'payment_amount_min' => number_format($payment_amount_min),
-                'walletStatusEnums' => $walletStatusEnums,
-                'walletStatus' => $walletStatus,
+                'has_wallet_balance' => $has_wallet_balance,
+                'can_pay_full_amount' => $can_pay_full_amount,
+                'wallet_shortfall' => $wallet_shortfall,
+                'total_amount' => $request->total,
                 'paymentLowerMin' => config('constants.STRIPE.MINIMUM_RM'),
             ]);
         } catch (Exception $e) {

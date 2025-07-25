@@ -178,12 +178,6 @@ return [
     //         'cover' => true,
     //     ],
     // ],
-    'DISCOUNT_STATUS' => [
-        'ABSENT' => 1,
-        'INVALID' => 2,
-        'COMPLETE' => 3,
-        'PARTIAL' => 4
-    ],
     'USER_ACCESS' => [
         'IS_TEAM1' => 1,
         'IS_TEAM2' => 2,

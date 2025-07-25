@@ -1,5 +1,9 @@
 @php
     $random_int = rand(0, 999);
+    
+    function truncateText($text, $maxLength = 40) {
+        return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+    }
 @endphp
 <div class="position-relative d-block ">
 
@@ -67,7 +71,7 @@
                             class="object-fit-cover me-1 rounded-2 " width="30px" height="30px"
                             style="object-position: center;"    
                         >
-                        <span class="text-wrap d-inline-block  text-start pe-2"> {{ $joinEvent->eventName }} </span>
+                        <span class="text-wrap d-inline-block  text-start pe-2"> {{ truncateText($joinEvent->eventName) }} </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
@@ -78,7 +82,7 @@
                         src="{{ bldImg($joinEvent->user->userBanner) }}" width="35" height="35"
                         class="me-2 object-fit-cover rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center ">
-                        <small class="d-inline-block my-0 text-wrap ">{{ $joinEvent->user->name }}</small>
+                        <small class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->user->name) }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">

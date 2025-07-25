@@ -1,6 +1,10 @@
 @php
     $random_int = rand(0, 999);
     $isRoleParticipant = isset($user) && $user?->role == "PARTICIPANT";
+    
+    function truncateText($text, $maxLength = 40) {
+        return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+    }
 @endphp
 <div @class(["position-relative ", 
         "opacity-parent-until-hover" => $isRoleParticipant, 
@@ -97,7 +101,7 @@
                             class="object-fit-cover me-1 rounded-2" width="30px" height="30px"
                             style="object-position: center;"    
                         >
-                        <span class="text-wrap d-inline-block  text-start pe-2"> {{ $joinEvent->eventDetails->eventName }} </span>
+                        <span class="text-wrap d-inline-block  text-start pe-2"> {{ truncateText($joinEvent->eventDetails->eventName) }} </span>
                     </a>
                 </div>
                 <div onclick="goToUrl(event, this)"
@@ -108,7 +112,7 @@
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
                         class="object-fit-cover me-2 rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center ">
-                        <small class="d-inline-block my-0 text-wrap ">{{ $joinEvent->eventDetails->user->name }} </small>
+                        <small class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->eventDetails->user->name) }} </small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">

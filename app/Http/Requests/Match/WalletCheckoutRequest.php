@@ -95,16 +95,13 @@ class WalletCheckoutRequest extends FormRequest
             $userWallet = Wallet::retrieveOrCreateCache($user->id);
 
             if (!$userWallet ||  $userWallet->usable_balance < 0) {
-                $validator->errors()->add('wallet', "Your w!");
+                $validator->errors()->add('wallet', "Your wallet is empty!");
                 return;
             }
 
-            if ( $userWallet->usable_balance < $this->amount ) {
-                $is_complete_payment = false;
-                $this->wallet_to_decrement = min(
-                     $userWallet->usable_balance,
-                    ($total - $participantPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
-                );
+            if ($userWallet->usable_balance < $this->amount) {
+                $validator->errors()->add('wallet', "Your wallet does not have sufficient funds!");
+                return;
             }
             
             $pendingBeforeWallet = $this->total - $participantPaymentSum ;
@@ -113,7 +110,7 @@ class WalletCheckoutRequest extends FormRequest
             if ( $userWallet->usable_balance - $this->wallet_to_decrement < 0) {
                 $validator->errors()->add(
                     'amount',
-                    "Not enough money in your wallet!"
+                    "Not enough money in your wallet! You have RM " . number_format($userWallet->usable_balance, 2) . " but need RM " . number_format($this->wallet_to_decrement, 2) . ". Please load more money to complete this transaction."
                 );
 
                 return;

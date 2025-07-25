@@ -57,17 +57,17 @@ class PaymentProcessor {
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     let variablesDiv = document.getElementById('payment-variables');
     const paymentVars = {
-        paymentAmount: variablesDiv.dataset.paymentAmount,
-        totalFee: variablesDiv.dataset.totalFee,
-        userEmail: variablesDiv.dataset.userEmail,
-        userName: variablesDiv.dataset.userName,
-        stripeCustomerId: variablesDiv.dataset.stripeCustomerId,
-        cartTotal: variablesDiv.dataset.cartTotal,
-        couponCode: variablesDiv.dataset.couponCode,
-        stripeKey: variablesDiv.dataset.stripeKey,
-        stripeCardIntentUrl: variablesDiv.dataset.stripeCardIntentUrl,
-        checkoutTransitionUrl: variablesDiv.dataset.checkoutTransitionUrl
-    };
+        paymentAmount,
+        totalFee,
+        userEmail,
+        userName,
+        stripeCustomerId,
+        cartTotal,
+        couponCode,
+        stripeKey,
+        stripeCardIntentUrl,
+        checkoutTransitionUrl
+    }  = variablesDiv?.dataset ?? {} ;
 
     console.log({paymentVars});
 
@@ -236,7 +236,7 @@ class PaymentProcessor {
                 window.toastError(json.message)
             }
         } catch (error) {
-            // window.toastError(error.message);
+            window.toastError(error.message);
             console.error("Error initializing Stripe Card Payment:", error);
         }
     }
@@ -393,4 +393,6 @@ class PaymentProcessor {
         },
     };
 
-    initializeStripeCardPayment();
+    addOnLoad(()=> {
+        initializeStripeCardPayment();
+    });
