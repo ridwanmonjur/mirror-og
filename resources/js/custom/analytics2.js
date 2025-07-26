@@ -16,9 +16,9 @@ const db = initializeFirestore(app, {
     localCache: memoryLocalCache(),
 });
 
-async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId) {
+async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId, collectionName = 'globalCounts') {
     try {
-        const countsRef = doc(db, 'analytics', 'globalCounts');
+        const countsRef = doc(db, 'analytics', collectionName);
         
         // Check if document exists first
         const docSnap = await getDoc(countsRef);
@@ -182,7 +182,8 @@ window.trackEventCardClick = function(element) {
             eventData.esportTitle,
             eventData.location,
             eventData.eventName,
-            eventData.userId
+            eventData.userId,
+            'clickCounts'
         );
 
         console.log('Event card click tracked:', eventData);
@@ -215,7 +216,8 @@ window.trackEventViewFromDiv = function(element) {
             eventData.esportTitle,
             eventData.location,
             eventData.eventName,
-            eventData.userId
+            eventData.userId,
+            'viewCounts'
         );
 
         console.log('Event view tracked:', eventData);

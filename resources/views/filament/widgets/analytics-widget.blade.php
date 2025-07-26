@@ -29,6 +29,24 @@
             <div id="analytics-content" class="hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
+                    <!-- Click Counts -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Clicks</h3>
+                        <div id="click-counts-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-3" id="click-counts-total">Total: 0</div>
+                    </div>
+
+                    <!-- View Counts -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Page Views</h3>
+                        <div id="view-counts-list" class="space-y-2">
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-3" id="view-counts-total">Total: 0</div>
+                    </div>
+                    
                     <!-- Event Tiers -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Tiers</h3>
@@ -167,6 +185,22 @@
                             contentEl.classList.remove('hidden');
                         }
                         
+                        function combineCountObjects(obj1, obj2) {
+                            const combined = {};
+                            
+                            // Add all keys from obj1
+                            for (const [key, value] of Object.entries(obj1)) {
+                                combined[key] = value;
+                            }
+                            
+                            // Add all keys from obj2, combining counts if key exists
+                            for (const [key, value] of Object.entries(obj2)) {
+                                combined[key] = (combined[key] || 0) + value;
+                            }
+                            
+                            return combined;
+                        }
+                        
                         function createCountList(data, containerId, totalId, page = 1) {
                             const container = document.getElementById(containerId);
                             const totalEl = document.getElementById(totalId);
@@ -205,12 +239,12 @@
                             currentPage = page;
                             
                             try {
-                                // Get global counts
-                                const globalCounts = await window.getAnalyticsCounts();
-                                console.log('Global counts:', globalCounts);
+                                // Get analytics counts (now returns both click and view counts)
+                                const analyticsData = await window.getAnalyticsCounts();
+                                console.log('Analytics data:', analyticsData);
                                 
                                 // Always show content even if no data found
-                                const safeGlobalCounts = globalCounts || {
+                                const safeClickCounts = analyticsData?.clickCounts || {
                                     eventTiers: {},
                                     eventTypes: {},
                                     esportTitles: {},
@@ -219,31 +253,53 @@
                                     userIds: {}
                                 };
                                 
-                                // Update Event Tiers
-                                createCountList(safeGlobalCounts.eventTiers || {}, 'event-tiers-list', 'event-tiers-total', page);
+                                const safeViewCounts = analyticsData?.viewCounts || {
+                                    eventTiers: {},
+                                    eventTypes: {},
+                                    esportTitles: {},
+                                    locations: {},
+                                    eventNames: {},
+                                    userIds: {}
+                                };
                                 
-                                // Update Event Types
-                                createCountList(safeGlobalCounts.eventTypes || {}, 'event-types-list', 'event-types-total', page);
+                                // Update Click Counts
+                                createCountList(safeClickCounts.eventNames || {}, 'click-counts-list', 'click-counts-total', page);
                                 
-                                // Update Esport Titles
-                                createCountList(safeGlobalCounts.esportTitles || {}, 'esport-titles-list', 'esport-titles-total', page);
+                                // Update View Counts
+                                createCountList(safeViewCounts.eventNames || {}, 'view-counts-list', 'view-counts-total', page);
                                 
-                                // Update Locations
-                                createCountList(safeGlobalCounts.locations || {}, 'locations-list', 'locations-total', page);
+                                // Update Event Tiers (combine click and view data)
+                                const combinedEventTiers = combineCountObjects(safeClickCounts.eventTiers || {}, safeViewCounts.eventTiers || {});
+                                createCountList(combinedEventTiers, 'event-tiers-list', 'event-tiers-total', page);
                                 
-                                // Update Event Names
-                                createCountList(safeGlobalCounts.eventNames || {}, 'event-names-list', 'event-names-total', page);
+                                // Update Event Types (combine click and view data)
+                                const combinedEventTypes = combineCountObjects(safeClickCounts.eventTypes || {}, safeViewCounts.eventTypes || {});
+                                createCountList(combinedEventTypes, 'event-types-list', 'event-types-total', page);
                                 
-                                // Update Active Users
-                                const userIds = safeGlobalCounts.userIds || {};
-                                const activeUsersCount = Object.keys(userIds).length;
+                                // Update Esport Titles (combine click and view data)
+                                const combinedEsportTitles = combineCountObjects(safeClickCounts.esportTitles || {}, safeViewCounts.esportTitles || {});
+                                createCountList(combinedEsportTitles, 'esport-titles-list', 'esport-titles-total', page);
+                                
+                                // Update Locations (combine click and view data)
+                                const combinedLocations = combineCountObjects(safeClickCounts.locations || {}, safeViewCounts.locations || {});
+                                createCountList(combinedLocations, 'locations-list', 'locations-total', page);
+                                
+                                // Update Event Names (combine click and view data)
+                                const combinedEventNames = combineCountObjects(safeClickCounts.eventNames || {}, safeViewCounts.eventNames || {});
+                                createCountList(combinedEventNames, 'event-names-list', 'event-names-total', page);
+                                
+                                // Update Active Users (combine click and view user data)
+                                const clickUserIds = safeClickCounts.userIds || {};
+                                const viewUserIds = safeViewCounts.userIds || {};
+                                const combinedUserIds = combineCountObjects(clickUserIds, viewUserIds);
+                                const activeUsersCount = Object.keys(combinedUserIds).length;
                                 document.getElementById('active-users-count').textContent = activeUsersCount.toLocaleString();
                                 
                                 const topUsersList = document.getElementById('top-users-list');
                                 if (activeUsersCount === 0) {
                                     topUsersList.innerHTML = '<div class="text-xs text-gray-500">No users tracked</div>';
                                 } else {
-                                    const userEntries = Object.entries(userIds).sort(([,a], [,b]) => b - a).slice(0, 10);
+                                    const userEntries = Object.entries(combinedUserIds).sort(([,a], [,b]) => b - a).slice(0, 10);
                                     topUsersList.innerHTML = '';
                                     userEntries.forEach(([userId, count]) => {
                                         const div = document.createElement('div');
