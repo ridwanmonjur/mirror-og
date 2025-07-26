@@ -25,7 +25,7 @@
         style="background-color: rgba(255, 255, 255, 0.7);"
         
     >
-        <a class="d-block" onclick="window.trackEventCardClick(this)" 
+        <a class="d-block" onclick="window.trackEventCardClick(this, event)" 
             data-event-id="{{ $event['id'] }}" 
             data-event-name="{{ $event->eventName }}"
             @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif
@@ -181,7 +181,7 @@
                         @endif
                     @else
                         <div class="text-center mt-1">
-                            <button onclick="window.trackEventCardClick(this)" 
+                            <button onclick="window.trackEventCardClick(this, event)" 
                                 data-event-id="{{ $event['id'] }}" 
                                 data-event-name="{{ $event->eventName }}"
                                 @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif

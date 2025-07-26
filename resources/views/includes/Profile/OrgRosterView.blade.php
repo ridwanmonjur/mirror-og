@@ -53,7 +53,7 @@
             <div class="row mx-0 w-100" style="padding: 5px 10px;">
                 <div class="col-6 col-xl-5 d-flex justify-content-start d my-1 px-0">
                     <a class="d-flex w-100 justify-content-start align-items-center" 
-                        onclick="window.trackEventCardClick(this)" 
+                        onclick="window.trackEventCardClick(this, event)" 
                         data-event-id="{{ $joinEvent->id }}" 
                         data-event-name="{{ $joinEvent->eventName }}"
                         @if($joinEvent->tier?->eventTier) data-event-tier="{{ $joinEvent->tier->eventTier }}" @endif
