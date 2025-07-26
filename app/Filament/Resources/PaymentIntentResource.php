@@ -52,37 +52,31 @@ class PaymentIntentResource extends Resource
                 Tables\Columns\TextColumn::make('id'),
                 // TODO
                 Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('payment_intent_id')
                     ->searchable(),
                
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->formatStateUsing(fn ($state) => 'RM ' . number_format($state / 100, 2)),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             // ->filters([
             //     //
             // ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 

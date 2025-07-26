@@ -76,6 +76,7 @@ class AdminPanelProvider extends PanelProvider
                         NavigationGroup::make('Shop')
                             ->items([
                                 ...\App\Filament\Resources\ProductResource::getNavigationItems(),
+                                ...\App\Filament\Resources\CategoryResource::getNavigationItems(),
                             ]),
                         NavigationGroup::make('Analytics')
                             ->items([

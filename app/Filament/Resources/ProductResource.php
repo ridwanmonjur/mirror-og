@@ -48,7 +48,7 @@ class ProductResource extends Resource
                         Forms\Components\TextInput::make('price')
                             ->required()
                             ->numeric()
-                            ->prefix('$')
+                            ->prefix('RM ')
                             ->minValue(0)
                             ->step(0.01),
                         Forms\Components\Textarea::make('description')
@@ -105,10 +105,14 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->size(60)
+                    ->circular()
+                    ->extraImgAttributes([
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->defaultImageUrl(url('/assets/images/404q.png')),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('price')
-                    ->money('USD'),
+                    ->formatStateUsing(fn ($state) => 'RM ' . number_format($state, 2)),
                 Tables\Columns\IconColumn::make('featured')
                     ->boolean(),
                
