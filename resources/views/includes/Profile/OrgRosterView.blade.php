@@ -1,8 +1,10 @@
 @php
     $random_int = rand(0, 999);
     
-    function truncateText($text, $maxLength = 40) {
-        return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+    if (!function_exists('truncateText')) {
+        function truncateText($text, $maxLength = 40) {
+            return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+        }
     }
 @endphp
 <div class="position-relative d-block ">

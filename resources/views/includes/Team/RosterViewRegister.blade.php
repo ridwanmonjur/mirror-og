@@ -6,8 +6,10 @@
     $rosterUserIds = [];
     $votes = ['totalCount' => 0, 'stayCount' => 0, 'leaveCount' => 0];
     
-    function truncateText($text, $maxLength = 40) {
-        return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+     if (!function_exists('truncateText')) {
+        function truncateText($text, $maxLength = 40) {
+            return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+        }
     }
 @endphp
 <div class="col-12 col-lg-6 position-relative opacity-parent-until-hover d-block mb-3" 
