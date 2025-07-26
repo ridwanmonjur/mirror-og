@@ -1276,7 +1276,7 @@ function initializeAnalytics() {
   if (window.trackEventViewFromDiv) {
       const analyticsData = document.getElementById('analytics-data');
       console.log(analyticsData);
-      window.trackEventViewFromDiv(analyticsData);
+      if (analyticsData) window.trackEventViewFromDiv(analyticsData);
   }
 }
 
