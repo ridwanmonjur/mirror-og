@@ -5,6 +5,12 @@
     $currentUser = ['memberId' => null, 'vote_to_quit' => null, 'rosterId' => null];
     $rosterUserIds = [];
     $votes = ['totalCount' => 0, 'stayCount' => 0, 'leaveCount' => 0];
+    
+     if (!function_exists('truncateText')) {
+        function truncateText($text, $maxLength = 40) {
+            return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+        }
+    }
 @endphp
 <div class="col-12 col-lg-6 position-relative opacity-parent-until-hover d-block mb-3" 
     id="reg-member-id-{{$joinEvent->id}}"
@@ -47,7 +53,7 @@
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
         
     ]) >
-        <a onclick="window.trackEventCardClick(this)" 
+        <a onclick="window.trackEventCardClick(this, event)" 
             data-event-id="{{ $joinEvent->eventDetails->id }}" 
             data-event-name="{{ $joinEvent->eventDetails->eventName }}"
             @if($joinEvent->tier?->eventTier) data-event-tier="{{ $joinEvent->tier->eventTier }}" @endif
@@ -342,7 +348,7 @@
                             class="object-fit-cover me-2 rounded-2" width="30px" height="30px"
                              style="object-position:center;"    
                         >
-                        <span class="text-wrap  d-inline-block  pe-2 text-start"> {{ $joinEvent->eventDetails->eventName }}
+                        <span class="text-wrap  d-inline-block  pe-2 text-start"> {{ truncateText($joinEvent->eventDetails->eventName) }}
                         </span>
                     </a>
                 </div>
@@ -354,7 +360,7 @@
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
                         class="object-fit-cover me-2 rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center  ">
-                        <small class="d-inline-block my-0 text-wrap ">{{ $joinEvent->eventDetails->user->name }}</small>
+                        <small class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->eventDetails->user->name) }}</small>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">

@@ -65,7 +65,8 @@ class UserResource extends Resource
                                 TextInput::make('email')
                                     ->email()
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->disabled(fn (string $context): bool => $context === 'edit'),
                                 TextInput::make('password')
                                     ->password()
                                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
@@ -135,6 +136,7 @@ class UserResource extends Resource
                                     ->options($roleOptions)
                                     ->required()
                                     ->reactive()
+                                    ->disabled(fn (string $context): bool => $context === 'edit')
                                     ->afterStateUpdated(function ($state, callable $set, $livewire) {
                                         
                                         
@@ -233,7 +235,8 @@ class UserResource extends Resource
                                             ->maxLength(255)
                                             ->url(true),
                                         TextInput::make('organizer.stripe_customer_id')
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->disabled(),
                                     ])
                             ])
                             ->visible(fn (callable $get) => $get('role') === 'ORGANIZER'),
@@ -254,7 +257,7 @@ class UserResource extends Resource
                     ->circular()
                     ->defaultImageUrl(url('/assets/images/404q.png'))
                     ->extraImgAttributes([
-                            'class' => 'border-2 border-gray-300 dark:border-gray-600',
+                            'class' => 'border border-gray-300 dark:border-gray-600',
                         ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('name')

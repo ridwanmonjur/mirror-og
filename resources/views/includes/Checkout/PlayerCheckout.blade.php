@@ -12,29 +12,30 @@
                 @csrf
                     <div class="modal-content">
                         <div class="modal-body py-4 px-5">
-                            <h5 class="mt-4 mb-3 text-success">Pay using your remaining wallet funds!</h5>
+                            <h5 class="mt-4 mb-3 ">Pay using your remaining wallet funds!</h5>
                             <small> Avoid paying for this event by using funds from your wallet.</small>
                             <br><br>
-                            @if ($walletStatusEnums['ABSENT'] == $walletStatus || $walletStatusEnums['INVALID'] == $walletStatus)
+                            @if (!$has_wallet_balance)
                                 <br> <br>
-                                <p class="text-center text-red">Ooops, no wallet fund </p> 
+                                <p class="text-center text-red">Ooops, no wallet fund available.</p>
+                                <div class="text-center">
+                                    <a href="{{ route('wallet.dashboard') }}" class="btn btn-primary btn-sm">Load More Money</a>
+                                </div>
                             @else
                                 <p> 
-
-                                    You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> usable balance in your wallet.
-                                    @if ($walletStatusEnums['COMPLETE'] == $walletStatus )
-                                        <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your wallet. </span>
-                                        
-                                    @elseif ($walletStatusEnums['PARTIAL'] == $walletStatus )
-                                        @if ( $paymentLowerMin < $payment_amount_min )
-                                            <span> You can apply <span>RM {{$payment_amount_min}}</span> towards your fees. </span>
-                                        @endif
-                                        <br>
-                                        <span class="text-red"> Note: the minimum payment for a transaction is about 5 RM, depending on currency rates.</span>
+                                    You have <span class="" id="wallet_amount">RM {{number_format($user_wallet->usable_balance, 2)}}</span> usable balance in your wallet.
+                                    
+                                    @if ($can_pay_full_amount)
+                                        <br><span class="">You can pay the full remaining amount of RM {{number_format($remaining_amount, 2)}} with your wallet!</span>
+                                    @else
+                                        <br><span class="text-warning">You need RM {{number_format($wallet_shortfall, 2)}} more to complete this payment.</span>
+                                        <br><small class="text-muted">
+                                            <a href="{{ route('wallet.dashboard') }}" class="text-primary">Top up your wallet</a> or add coupons to reduce the amount.
+                                        </small>
                                     @endif
                                 </p>
                                 <div class="text-center mx-auto input-group mt-4 w-75">
-                                    <input type="hidden" id="amount" name="amount" value="{{ $payment_amount_min }}">
+                                    <input type="hidden" id="amount" name="amount" value="{{ $can_pay_full_amount ? $remaining_amount : 0 }}">
                                     <input type="hidden" id="teamId" name="teamId" value="{{ $teamId }}">
                                     <input type="hidden" id="member_id" name="member_id" value="{{ $prevForm['memberId'] }}">
                                     <input type="hidden" id="joinEventId" name="joinEventId" value="{{ $prevForm['joinEventId'] }}">
@@ -42,11 +43,10 @@
                                     <input type="hidden" id="coupon_code" name="coupon_code" value="{{ $prevForm['coupon_code'] }}">
                                 </div>
                                 <div class="mx-auto text-center">
-                                    @if ($paymentLowerMin <= $payment_amount_min)
+                                    @if ($can_pay_full_amount)
                                         <button 
                                             type="submit"
-                                            class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
-                                            payment
+                                            class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Pay RM {{number_format($remaining_amount, 2)}} with wallet
                                         </button>
                                     @endif
 
@@ -90,23 +90,24 @@
                         </div>
                         <div class="col-12 col-lg-6">
                             <div id="discount-element" class="mt-3 d-none">
-                                @if ($walletStatusEnums['ABSENT'] == $walletStatus) 
-                                    You have no discount to apply.
-                                @elseif ($walletStatusEnums['INVALID'] == $walletStatus)
-                                        You have RM {{$user_wallet->current_balance}} net balance and RM {{$user_wallet->usable_balance}} usable balance in your wallet to apply towards this event.
-                                        But this is not enough for the next transaction.
-                                @elseif ($user_wallet->usable_balance)
-                                    <span> 
-                                        
-                                        You can apply RM {{$user_wallet->usable_balance}} from your wallet to pay towards this event
+                                @if (!$has_wallet_balance) 
+                                    You have no wallet balance to apply.
+                                @elseif ($can_pay_full_amount)
+                                    <span class=""> 
+                                        You can pay the full remaining amount of RM {{number_format($remaining_amount, 2)}} with your wallet balance of RM {{number_format($user_wallet->usable_balance, 2)}}
                                     </span>
                                     <a 
                                          data-bs-toggle="modal"
                                         data-bs-target="#discountModal"
                                         class="my-0 btn btn-link py-0" style="color: #43A4D7 !important" type="button"
                                     > 
-                                        <u> Apply </u> 
+                                        <u> Use Wallet </u> 
                                     </a>
+                                @else
+                                    <span class="text-warning"> 
+                                        You have RM {{number_format($user_wallet->usable_balance, 2)}} but need RM {{number_format($wallet_shortfall, 2)}} more.
+                                    </span>
+                                    <a href="{{ route('wallet.dashboard') }}" class="btn btn-link btn-sm text-primary">Top up wallet</a>
                                 @endif
                             </div>
                             <div id="card-element" class="my-2"> </div>
@@ -292,7 +293,7 @@
             @endif
             
             @if (isset($couponStatus['success']) && $couponStatus['success'])
-                <div class="text-success mb-2">
+                <div class=" mb-2">
                     We have applied your coupon: {{$prevForm['coupon_code']}} successfully!
                 </div>
             @endif

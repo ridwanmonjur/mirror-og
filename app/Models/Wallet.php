@@ -78,7 +78,7 @@ class Wallet extends Model
         $cacheTtl = config('cache.ttl');
         
         return Cache::remember($cacheKey, $cacheTtl, function () use ($userId) {
-            return static::firstOrCreate(['user_id' => $userId]);
+            return static::firstOrCreate(['user_id' => $userId], ['usable_balance' => 0, 'current_balance' => 0]);
         });
     }
 

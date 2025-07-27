@@ -46,6 +46,7 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="analytics" content="enabled">
     <title>{{ $event->eventName }} | {{ $tier ?? 'Tournament' }} {{ $type ?? 'Event' }} - RM {{ $event->tier?->tierPrizePool ?? '0' }} Prize Pool | Driftwood GG</title>
         <!-- Essential Meta Tags -->
     <meta name="description" content="{{ Str::limit($event->eventDescription, 155) ?? 'Join ' . $event->eventName . ' - ' . ($event->tier?->tierPrizePool ? 'RM ' . $event->tier?->tierPrizePool . ' Prize Pool' : '') . ' | ' . $type . ' event starting ' . $combinedStr }}">
@@ -174,12 +175,18 @@
                         <div class="d-flex justify-content-center d-lg-none">
                             <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}"
                                 onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
-                                width="120" height="90">
+                                width="120" height="90"
+                            >
                         </div>
                         <a data-fslightbox="lightbox" data-href="{{ $eventBannerImg }}">
-                            <img   alt="{{ $event->eventName }}"  
-                                @class([' event-image rounded-banner  ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" src="{{ $eventBannerImg }}"
-                                alt=""
+                            <img   
+                                id="eventBannerImg"
+                                alt="{{ $event->eventName }}"  
+                                width="500"
+                                height="500"
+                                @class([' event-image rounded-banner  ms-0 cursor-pointer ', ' rounded-box-' . $eventTierLower]) 
+                                onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" 
+                                src="{{ $eventBannerImg }}"
                             >
                         </a>
 
@@ -399,7 +406,7 @@
 
                                     @if ($event->game)
                                         <span  class=" text-wrap"> 
-                                            {{ $event->game?->gameTitle ?? 'No Title' }}
+                                            {{ $event->game?->gameTitle . " (" . $event->game?->player_per_team .'v' . $event->game?->player_per_team . ")" ?? 'No Title' }}
                                         </span>
                                     @else
                                         <span>Not available</span>

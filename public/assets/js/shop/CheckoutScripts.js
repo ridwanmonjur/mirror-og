@@ -57,17 +57,17 @@ class PaymentProcessor {
     let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     let variablesDiv = document.getElementById('payment-variables');
     const paymentVars = {
-        paymentAmount: variablesDiv.dataset.paymentAmount,
-        totalFee: variablesDiv.dataset.totalFee,
-        userEmail: variablesDiv.dataset.userEmail,
-        userName: variablesDiv.dataset.userName,
-        stripeCustomerId: variablesDiv.dataset.stripeCustomerId,
-        cartTotal: variablesDiv.dataset.cartTotal,
-        couponCode: variablesDiv.dataset.couponCode,
-        stripeKey: variablesDiv.dataset.stripeKey,
-        stripeCardIntentUrl: variablesDiv.dataset.stripeCardIntentUrl,
-        checkoutTransitionUrl: variablesDiv.dataset.checkoutTransitionUrl
-    };
+        paymentAmount,
+        totalFee,
+        userEmail,
+        userName,
+        stripeCustomerId,
+        cartTotal,
+        couponCode,
+        stripeKey,
+        stripeCardIntentUrl,
+        checkoutTransitionUrl
+    }  = variablesDiv?.dataset ?? {} ;
 
     console.log({paymentVars});
 
@@ -216,27 +216,46 @@ class PaymentProcessor {
                 });
 
                 const paymentElement = elements.create("payment", paymentElementOptions);
-                const addressElement = elements.create('address', addressElementOptions);
+                const billingAddressElement = elements.create('address', addressElementOptions);
+                const shippingAddressElement = elements.create('address', {
+                    ...addressElementOptions,
+                    mode: 'shipping'
+                });
 
-                addressElement.on('change', (event) => {
+                billingAddressElement.on('change', (event) => {
+                    if (event.complete) {
+                        const address = event.value.address;
+                    }
+                })
+
+                shippingAddressElement.on('change', (event) => {
                     if (event.complete) {
                         const address = event.value.address;
                     }
                 })
 
                 paymentElement.mount("#card-element");
-                addressElement.mount("#address-element");
+                billingAddressElement.mount("#billing-address-element");
+                shippingAddressElement.mount("#shipping-address-element");
+                
+                window.billingAddressElementRef = billingAddressElement;
+                window.shippingAddressElementRef = shippingAddressElement;
                 let paymentIntentInput =  document.getElementById('payment_intent_id');
                 if (paymentIntentInput) paymentIntentInput.value = paymenntIntentId;
                 document.getElementById('discount-element')?.classList.remove('d-none');
                 document.getElementById('submit-button-element')?.classList.remove('d-none');
                 document.getElementById('payment-summary')?.classList.remove('d-none');
                 
+                // Show billing-shipping container and save payment info when spinner disappears
+                document.querySelector('.billing-shipping-container')?.classList.remove('d-none');
+                document.querySelector('.payment-method-container')?.classList.remove('d-none');
+                document.getElementById('save-payment-container')?.classList.remove('d-none');
+                
             } else {
                 window.toastError(json.message)
             }
         } catch (error) {
-            // window.toastError(error.message);
+            window.toastError(error.message);
             console.error("Error initializing Stripe Card Payment:", error);
         }
     }
@@ -281,28 +300,62 @@ class PaymentProcessor {
         submitButton.disabled = true;
         try {
             window.showLoading();
-            const addressElement = elements.getElement('address');
-            const { complete, value: addressValue } = await addressElement.getValue();
-
-             if (!complete) {
+            const billingAddressElement = document.querySelector('#billing-address-element iframe');
+            const shippingAddressElement = document.querySelector('#shipping-address-element iframe');
+            
+            let billingResult, shippingResult;
+            
+            try {
+                billingResult = await window.billingAddressElementRef.getValue();
+                shippingResult = await window.shippingAddressElementRef.getValue();
+            } catch (error) {
+                console.error('Error getting address values:', error);
                 window.closeLoading();
-                toastError("Please fill the complete address");
+                toastError("Error processing address information");
+                submitButton.disabled = false;
+                return;
+            }
+
+             if (!billingResult.complete) {
+                window.closeLoading();
+                toastError("Please fill the complete billing address");
+                submitButton.disabled = false;
+                return;
+            }
+
+            if (!shippingResult.complete) {
+                window.closeLoading();
+                toastError("Please fill the complete shipping address");
                 submitButton.disabled = false;
                 return;
             }
 
             const billingDetails = {
                 address: {
-                    city: addressValue.city,
-                    country: addressValue.country,
-                    line1: addressValue.line1,
-                    line2: addressValue.line2,
-                    postal_code: addressValue.postal_code,
-                    state: addressValue.state
+                    city: billingResult.value.city,
+                    country: billingResult.value.country,
+                    line1: billingResult.value.line1,
+                    line2: billingResult.value.line2,
+                    postal_code: billingResult.value.postal_code,
+                    state: billingResult.value.state
                 },
-                name: addressValue.name,
-                email: addressValue.email,
-                phone: addressValue.phone
+                name: billingResult.value.name,
+                email: billingResult.value.email,
+                phone: billingResult.value.phone
+            };
+
+            const shippingDetails = {
+                address: {
+                    city: shippingResult.value.city,
+                    country: shippingResult.value.country,
+                    line1: shippingResult.value.line1,
+                    line2: shippingResult.value.line2,
+                    postal_code: shippingResult.value.postal_code,
+                    state: shippingResult.value.state
+                },
+                name: shippingResult.value.name,
+                email: shippingResult.value.email,
+                phone: shippingResult.value.phone
             };
 
             const {
@@ -316,7 +369,8 @@ class PaymentProcessor {
                         ,
                     payment_method_data: {
                         billing_details: billingDetails
-                    }
+                    },
+                    shipping: shippingDetails
                 }
             });
 
@@ -393,4 +447,170 @@ class PaymentProcessor {
         },
     };
 
-    initializeStripeCardPayment();
+    function initializeBillingShippingToggle() {
+        const billingHeader = document.querySelector('.billing-header');
+        const shippingHeader = document.querySelector('.shipping-header');
+        const billingSection = document.querySelector('#billing-address-element');
+        const shippingSection = document.querySelector('#shipping-address-element');
+        const billingArrow = billingHeader?.querySelector('.arrow-icon');
+        const shippingArrow = shippingHeader?.querySelector('.arrow-icon');
+
+        // Set initial state - billing expanded by default
+        updateHeaderState(billingHeader, billingArrow, true);
+        updateHeaderState(shippingHeader, shippingArrow, false);
+
+        if (billingHeader && shippingHeader && billingSection && shippingSection) {
+            billingHeader.addEventListener('click', function() {
+                const isBillingExpanded = !billingSection.classList.contains('d-none');
+                const isShippingExpanded = !shippingSection.classList.contains('d-none');
+
+                // Always give click feedback
+                addTextInvisibilityFeedback(billingHeader);
+
+                if (!isBillingExpanded) {
+                    // Show billing, hide shipping
+                    billingSection.classList.remove('d-none');
+                    shippingSection.classList.add('d-none');
+                    updateHeaderState(billingHeader, billingArrow, true);
+                    updateHeaderState(shippingHeader, shippingArrow, false);
+                } else if (isShippingExpanded) {
+                    // Only collapse billing if shipping is expanded
+                    // Hide billing, show shipping
+                    billingSection.classList.add('d-none');
+                    shippingSection.classList.remove('d-none');
+                    updateHeaderState(billingHeader, billingArrow, false);
+                    updateHeaderState(shippingHeader, shippingArrow, true);
+                }
+                // If billing is expanded and shipping is collapsed, do nothing except feedback
+            });
+
+            shippingHeader.addEventListener('click', function() {
+                const isBillingExpanded = !billingSection.classList.contains('d-none');
+                const isShippingExpanded = !shippingSection.classList.contains('d-none');
+
+                // Always give click feedback
+                addTextInvisibilityFeedback(shippingHeader);
+
+                if (!isShippingExpanded) {
+                    // Show shipping, hide billing
+                    shippingSection.classList.remove('d-none');
+                    billingSection.classList.add('d-none');
+                    updateHeaderState(shippingHeader, shippingArrow, true);
+                    updateHeaderState(billingHeader, billingArrow, false);
+                } else if (isBillingExpanded) {
+                    // Only collapse shipping if billing is expanded
+                    // Hide shipping, show billing
+                    shippingSection.classList.add('d-none');
+                    billingSection.classList.remove('d-none');
+                    updateHeaderState(shippingHeader, shippingArrow, false);
+                    updateHeaderState(billingHeader, billingArrow, true);
+                }
+                // If shipping is expanded and billing is collapsed, do nothing except feedback
+            });
+        }
+    }
+
+    function updateHeaderState(header, arrow, isExpanded) {
+        if (!header || !arrow) return;
+
+        if (isExpanded) {
+            header.classList.add('text-primary', 'border-bottom', 'border-primary');
+            header.classList.remove('border-secondary');
+            header.style.borderBottom = '1px solid var(--bs-primary)';
+            arrow.classList.remove('arrow-collapsed');
+            arrow.style.color = '';
+        } else {
+            header.classList.remove('text-primary', 'border-bottom', 'border-primary');
+            header.classList.add('border-bottom', 'border-secondary');
+            header.style.borderBottom = '1px solid var(--bs-secondary)';
+            arrow.classList.add('arrow-collapsed');
+            arrow.style.color = '#6c757d';
+        }
+    }
+
+    function addClickFeedback(element) {
+        element.style.transform = 'scale(0.98)';
+        element.style.transition = 'transform 0.1s ease';
+        
+        setTimeout(() => {
+            element.style.transform = 'scale(1)';
+        }, 100);
+    }
+
+    function addTextInvisibilityFeedback(element) {
+        element.style.opacity = '0';
+        element.style.transition = 'opacity 0.85s ease';
+        
+        setTimeout(() => {
+            element.style.opacity = '1';
+        }, 150);
+    }
+
+    function initializePaymentMethodToggle() {
+        const walletHeader = document.querySelector('.wallet-payment-header');
+        const cardHeader = document.querySelector('.card-payment-header');
+        const walletSection = document.querySelector('#discount-element');
+        const cardSection = document.querySelector('#card-element');
+        const walletArrow = walletHeader?.querySelector('.arrow-icon');
+        const cardArrow = cardHeader?.querySelector('.arrow-icon');
+
+        // Set initial state - wallet expanded by default
+        updateHeaderState(walletHeader, walletArrow, true);
+        updateHeaderState(cardHeader, cardArrow, false);
+
+        if (walletHeader && cardHeader && walletSection && cardSection) {
+            walletHeader.addEventListener('click', function() {
+                const isWalletExpanded = !walletSection.classList.contains('d-none');
+                const isCardExpanded = !cardSection.classList.contains('d-none');
+
+                // Always give click feedback
+                addTextInvisibilityFeedback(walletHeader);
+
+                if (!isWalletExpanded) {
+                    // Show wallet, hide card
+                    walletSection.classList.remove('d-none');
+                    cardSection.classList.add('d-none');
+                    updateHeaderState(walletHeader, walletArrow, true);
+                    updateHeaderState(cardHeader, cardArrow, false);
+                } else if (isCardExpanded) {
+                    // Only collapse wallet if card is expanded
+                    // Hide wallet, show card
+                    walletSection.classList.add('d-none');
+                    cardSection.classList.remove('d-none');
+                    updateHeaderState(walletHeader, walletArrow, false);
+                    updateHeaderState(cardHeader, cardArrow, true);
+                }
+                // If wallet is expanded and card is collapsed, do nothing except feedback
+            });
+
+            cardHeader.addEventListener('click', function() {
+                const isWalletExpanded = !walletSection.classList.contains('d-none');
+                const isCardExpanded = !cardSection.classList.contains('d-none');
+
+                // Always give click feedback
+                addTextInvisibilityFeedback(cardHeader);
+
+                if (!isCardExpanded) {
+                    // Show card, hide wallet
+                    cardSection.classList.remove('d-none');
+                    walletSection.classList.add('d-none');
+                    updateHeaderState(cardHeader, cardArrow, true);
+                    updateHeaderState(walletHeader, walletArrow, false);
+                } else if (isWalletExpanded) {
+                    // Only collapse card if wallet is expanded
+                    // Hide card, show wallet
+                    cardSection.classList.add('d-none');
+                    walletSection.classList.remove('d-none');
+                    updateHeaderState(cardHeader, cardArrow, false);
+                    updateHeaderState(walletHeader, walletArrow, true);
+                }
+                // If card is expanded and wallet is collapsed, do nothing except feedback
+            });
+        }
+    }
+
+    addOnLoad(()=> {
+        initializeStripeCardPayment();
+        initializeBillingShippingToggle();
+        initializePaymentMethodToggle();
+    });

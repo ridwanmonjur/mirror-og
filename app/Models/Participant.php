@@ -14,7 +14,7 @@ class Participant extends Model
 
     protected $fillable = [
         'birthday', 'user_id', 'domain', 'age', 'bio', 'nickname', 'region',
-        'region_name', 'region_flag', 'games_data', 'isAgeVisible',
+        'region_name', 'region_flag', 'games_data', 'isAgeVisible', 'team_left_at',
     ];
 
     protected $casts = [

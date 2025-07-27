@@ -58,21 +58,10 @@ class ParticipantCheckoutController extends Controller
                 'customer' => $user->stripe_customer_id,
             ]);
 
-            $walletStatusEnums = config('constants.DISCOUNT_STATUS');
-            $walletStatus = is_null($user_wallet) || $user_wallet?->usable_balance < 0 ? $walletStatusEnums['ABSENT'] : $walletStatusEnums['COMPLETE'];
-            $payment_amount_min = $pendingAfterWallet = 0.0;
-            if ($walletStatus != $walletStatusEnums['ABSENT']) {
-                $payment_amount_min = $fee['finalFee'];
-                if ($user_wallet->usable_balance < $payment_amount_min) {
-                    $payment_amount_min = min($user_wallet->usable_balance, $request->total - $request->participantPaymentSum - config('constants.STRIPE.MINIMUM_RM'));
-
-                    $walletStatus = $walletStatusEnums['PARTIAL'];
-                    $pendingAfterWallet = $request->total - ($request->participantPaymentSum + $payment_amount_min);
-                    if ($pendingAfterWallet < config('constants.STRIPE.MINIMUM_RM')) {
-                        $walletStatus = $walletStatusEnums['INVALID'];
-                    }
-                }
-            }
+            $remaining_after_participant_payment = $request->total - $request->participantPaymentSum;
+            $has_wallet_balance = !is_null($user_wallet) && $user_wallet->usable_balance > 0;
+            $can_pay_full_amount = $has_wallet_balance && $user_wallet->usable_balance >= $remaining_after_participant_payment;
+            $wallet_shortfall = $has_wallet_balance ? max(0, $remaining_after_participant_payment - $user_wallet->usable_balance) : $remaining_after_participant_payment;
 
             return view('Participant.CheckoutEvent', [
                 'teamId' => $request->teamId,
@@ -88,9 +77,10 @@ class ParticipantCheckoutController extends Controller
                 'prevForm' => $prevForm,
                 'livePreview' => 1,
                 'paymentMethods' => $paymentMethods,
-                'payment_amount_min' => number_format($payment_amount_min),
-                'walletStatusEnums' => $walletStatusEnums,
-                'walletStatus' => $walletStatus,
+                'has_wallet_balance' => $has_wallet_balance,
+                'can_pay_full_amount' => $can_pay_full_amount,
+                'wallet_shortfall' => $wallet_shortfall,
+                'remaining_amount' => $remaining_after_participant_payment,
                 'paymentLowerMin' => config('constants.STRIPE.MINIMUM_RM'),
             ]);
         } catch (Exception $e) {

@@ -341,7 +341,9 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
         },
     };
 
-    initializeStripeCardPayment();
+    addOnLoad(()=> {
+        initializeStripeCardPayment();
+    });
 
     const paymentAccordion = document.getElementById('paymentAccordion');
 

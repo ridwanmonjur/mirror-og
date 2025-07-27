@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, doc, getDoc } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -27,20 +27,23 @@ class FilamentAnalyticsAPI {
 
     async fetchAnalyticsData(page = 1, limit = 10) {
         try {
-            const [globalCounts, socialCounts, formJoins] = await Promise.all([
-                this.getStatsDocument('globalCounts'),
+            const [clickCounts, viewCounts, socialCounts, formJoins] = await Promise.all([
+                this.getStatsDocument('clickCounts'),
+                this.getStatsDocument('viewCounts'),
                 this.getStatsDocument('socialCounts'),
                 this.getStatsDocument('formJoins')
             ]);
             
             const analyticsData = {
-                pageViews: this.processPageViewsData(globalCounts),
-                eventInteractions: this.processEventInteractionsData(globalCounts, page, limit),
+                pageViews: this.processPageViewsData(viewCounts),
+                eventInteractions: this.processEventInteractionsData(clickCounts, page, limit),
                 socialInteractions: this.processSocialInteractionsData(socialCounts),
                 formSubmissions: this.processFormSubmissionsData(formJoins),
-                topEvents: this.processTopEventsData(globalCounts, page, limit),
-                userEngagement: this.processUserEngagementData(globalCounts),
-                realTimeData: this.processRealTimeData(globalCounts)
+                topEvents: this.processTopEventsData(clickCounts, page, limit),
+                userEngagement: this.processUserEngagementData(clickCounts, viewCounts),
+                realTimeData: this.processRealTimeData(viewCounts),
+                clickCounts: clickCounts,
+                viewCounts: viewCounts
             };
             
             return analyticsData;
@@ -119,18 +122,45 @@ class FilamentAnalyticsAPI {
 
     async getStatsDocument(docName) {
         try {
-            const docRef = doc(db, 'stats', docName);
+            const docRef = doc(db, 'analytics', docName);
             const docSnap = await getDoc(docRef);
             
             if (docSnap.exists()) {
                 return docSnap.data();
             } else {
-                console.log(`No ${docName} document found`);
-                return null;
+                console.log(`No ${docName} document found, creating with default structure`);
+                
+                // Create document with default structure
+                let defaultData = {};
+                if (docName === 'clickCounts' || docName === 'viewCounts') {
+                    defaultData = {
+                        eventTiers: {},
+                        eventTypes: {},
+                        esportTitles: {},
+                        locations: {},
+                        eventNames: {},
+                        userIds: {},
+                        lastUpdated: serverTimestamp()
+                    };
+                } else if (docName === 'socialCounts') {
+                    defaultData = {
+                        actions: {},
+                        targetTypes: {},
+                        lastUpdated: serverTimestamp()
+                    };
+                } else if (docName === 'formJoins') {
+                    defaultData = {
+                        formNames: {},
+                        lastUpdated: serverTimestamp()
+                    };
+                }
+                
+                await setDoc(docRef, defaultData);
+                return defaultData;
             }
         } catch (error) {
             console.error(`Error fetching ${docName}:`, error);
-            return null;
+            return {};
         }
     }
     
@@ -236,11 +266,13 @@ class FilamentAnalyticsAPI {
         return topEvents;
     }
     
-    processUserEngagementData(globalCounts) {
-        if (!globalCounts) return this.getDefaultUserEngagementData();
+    processUserEngagementData(clickCounts, viewCounts) {
+        if (!clickCounts && !viewCounts) return this.getDefaultUserEngagementData();
         
-        const userIds = globalCounts.userIds || {};
-        const activeUsers = Object.keys(userIds).length;
+        const clickUserIds = clickCounts?.userIds || {};
+        const viewUserIds = viewCounts?.userIds || {};
+        const allUserIds = {...clickUserIds, ...viewUserIds};
+        const activeUsers = Object.keys(allUserIds).length;
         
         return {
             active_users: activeUsers,
@@ -292,8 +324,8 @@ class FilamentAnalyticsAPI {
     
     async getEventInteractionsPaginated(page = 1, limit = 10) {
         try {
-            const globalCounts = await this.getStatsDocument('globalCounts');
-            return this.processEventInteractionsData(globalCounts, page, limit);
+            const clickCounts = await this.getStatsDocument('clickCounts');
+            return this.processEventInteractionsData(clickCounts, page, limit);
         } catch (error) {
             console.error('Error fetching paginated event interactions:', error);
             return this.getDefaultEventInteractionsData();
@@ -302,8 +334,8 @@ class FilamentAnalyticsAPI {
     
     async getTopEventsPaginated(page = 1, limit = 10) {
         try {
-            const globalCounts = await this.getStatsDocument('globalCounts');
-            return this.processTopEventsData(globalCounts, page, limit);
+            const clickCounts = await this.getStatsDocument('clickCounts');
+            return this.processTopEventsData(clickCounts, page, limit);
         } catch (error) {
             console.error('Error fetching paginated top events:', error);
             return [];
@@ -335,18 +367,68 @@ window.initializeFilamentAnalytics = function() {
 
 window.getAnalyticsCounts = async function() {
     try {
-        const countsRef = doc(db, 'stats', 'globalCounts');
-        const countsSnap = await getDoc(countsRef);
+        const [clickCountsRef, viewCountsRef] = [
+            doc(db, 'analytics', 'clickCounts'),
+            doc(db, 'analytics', 'viewCounts')
+        ];
         
-        if (countsSnap.exists()) {
-            return countsSnap.data();
-        } else {
-            console.log('No counts document found');
-            return null;
+        const [clickSnap, viewSnap] = await Promise.all([
+            getDoc(clickCountsRef),
+            getDoc(viewCountsRef)
+        ]);
+        
+        const clickData = clickSnap.exists() ? clickSnap.data() : {
+            eventTiers: {},
+            eventTypes: {},
+            esportTitles: {},
+            locations: {},
+            eventNames: {},
+            userIds: {},
+            lastUpdated: serverTimestamp()
+        };
+        
+        const viewData = viewSnap.exists() ? viewSnap.data() : {
+            eventTiers: {},
+            eventTypes: {},
+            esportTitles: {},
+            locations: {},
+            eventNames: {},
+            userIds: {},
+            lastUpdated: serverTimestamp()
+        };
+        
+        if (!clickSnap.exists()) {
+            await setDoc(clickCountsRef, clickData);
         }
+        
+        if (!viewSnap.exists()) {
+            await setDoc(viewCountsRef, viewData);
+        }
+        
+        return {
+            clickCounts: clickData,
+            viewCounts: viewData
+        };
     } catch (error) {
         console.error('Error getting analytics counts:', error);
-        return null;
+        return {
+            clickCounts: {
+                eventTiers: {},
+                eventTypes: {},
+                esportTitles: {},
+                locations: {},
+                eventNames: {},
+                userIds: {}
+            },
+            viewCounts: {
+                eventTiers: {},
+                eventTypes: {},
+                esportTitles: {},
+                locations: {},
+                eventNames: {},
+                userIds: {}
+            }
+        };
     }
 };
 

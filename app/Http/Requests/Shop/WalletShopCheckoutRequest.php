@@ -91,11 +91,8 @@ class WalletShopCheckoutRequest extends FormRequest
             }
 
             if ($userWallet->usable_balance < $this->amount) {
-                $is_complete_payment = false;
-                $this->wallet_to_decrement = min(
-                    $userWallet->usable_balance,
-                    ($total - $this->cartPaymentSum) - config("constants.STRIPE.MINIMUM_RM")
-                );
+                $validator->errors()->add('wallet', "Your wallet does not have sufficient funds!");
+                return;
             }
             
             $pendingBeforeWallet = $this->total - $this->cartPaymentSum;
@@ -104,7 +101,7 @@ class WalletShopCheckoutRequest extends FormRequest
             if ($userWallet->usable_balance - $this->wallet_to_decrement < 0) {
                 $validator->errors()->add(
                     'amount',
-                    "Not enough money in your wallet!"
+                    "Not enough money in your wallet! You have RM " . number_format($userWallet->usable_balance, 2) . " but need RM " . number_format($this->wallet_to_decrement, 2) . ". Please load more money to complete this transaction."
                 );
                 return;
             }

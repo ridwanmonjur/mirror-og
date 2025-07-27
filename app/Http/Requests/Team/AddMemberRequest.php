@@ -88,6 +88,15 @@ class AddMemberRequest extends FormRequest
             $validator->errors()->add('team_limit', 'Too many members in the team');
             return;
         }
+
+        if ($this->user->participant && $this->user->participant->team_left_at) {
+            $timeSinceLeft = now()->diffInHours($this->user->participant->team_left_at);
+            if ($timeSinceLeft < 24) {
+                $hoursRemaining = 24 - $timeSinceLeft;
+                $validator->errors()->add('team_grace_period', "You must wait {$hoursRemaining} more hours before joining a new team after leaving your previous team.");
+                return;
+            }
+        }
     }
 
     public function getTeam()

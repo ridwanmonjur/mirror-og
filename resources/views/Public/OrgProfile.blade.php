@@ -5,6 +5,7 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="analytics" content="enabled">
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/alpine/organizer.js'])
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/player_profile.css') }}">

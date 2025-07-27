@@ -2,14 +2,14 @@
 .EventStatus-ERROR {
     background-color: #EF4444;
     color: white;
-    border: 1px solid transparent;
+    border: 1px solid #EF4444;
 }
 
 /* PENDING State */
 .EventStatus-PENDING {
     background-color: #EF4444;
     color: white;
-    border: 1px solid transparent;
+    border: 1px solid #EF4444;
 }
 
 
@@ -18,7 +18,7 @@
 .EventStatus-UPCOMING, .EventStatus-UPCOMING-HOME {
     background-color: #43A4D7;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #43A4D7;
 }
 
 .Color-UPCOMING {
@@ -26,7 +26,7 @@
 }
 
 .EventStatus-UPCOMING-HOME {
-    border: 2px solid rgb(199, 207, 188);
+    border: 2px solid #43A4D7;
 }
 
 .EventStatus-UPCOMING-HOME svg.ENDED {
@@ -39,14 +39,14 @@
 .EventStatus-LIVE {
     background-color: #43A4D7;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #43A4D7;
 }
 
 /* SCHEDULED State */
 .EventStatus-SCHEDULED {
     background-color: #43A4D7;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #43A4D7;
 }
 
 .Color-SCHEDULED {
@@ -57,7 +57,7 @@
 .EventStatus-ONGOING, .EventStatus-ONGOING-HOME {
     background-color: #FFFBFB;
     color: #2e4b59;
-    border: 1px solid black;
+    border: 2px solid #FFFBFB;
 }
 
 .EventStatus-ONGOING-HOME {
@@ -74,14 +74,14 @@
 .EventStatus-FAILED, .EventStatus-FAILED-HOME {
     background-color: #ee5959;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #ee5959;
 }
 
 /* PENDING State */
 .EventStatus-DRAFT, .EventStatus-DRAFT-HOME {
     background-color: #898787;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #898787;
 }
 
 
@@ -93,22 +93,22 @@
 /* DRAFT State */
 .EventStatus-DRAFT {
     background-color: #f9b82a;
-    color: white;
-    border: 1px solid transparent;
+    color: #ffffff;
+    border: 2px solid #f9b82a;
 }
 
 /* PREVIEW State */
 .EventStatus-PREVIEW {
     background-color: #f9b82a;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #f9b82a;
 }
 
 /* ENDED State */
 .EventStatus-ENDED, .EventStatus-ENDED-HOME {
     background-color: #A6A6A6;
     color: white;
-    border: 1px solid transparent;
+    border: 2px solid #A6A6A6;
 }
 
 .Color-ENDED {
@@ -116,6 +116,8 @@
 }
 
 .EventStatus-ENDED-HOME {
+    background-color: #A6A6A6;
+    color: black;
     border: 2px solid #A6A6A6;
 }
 

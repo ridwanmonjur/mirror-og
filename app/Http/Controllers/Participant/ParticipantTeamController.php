@@ -292,6 +292,10 @@ class ParticipantTeamController extends Controller
                 'status' => $status,
                 'actor' => 'user',
             ]);
+
+            if ($status === 'accepted' && $user->participant) {
+                $user->participant->update(['team_left_at' => null]);
+            }
     
             $successMessage = $status === 'accepted' 
                 ? 'You have joined the team!' 
@@ -349,8 +353,7 @@ class ParticipantTeamController extends Controller
     public function updateTeamMember(UpdateMemberRequest $request, $id)
     {
         $member = $request->getTeamMember();
-    
-        
+        $user = $request->attributes->get('user');
 
         if ($request->status === 'left') {
             $captain = TeamCaptain::where([
@@ -360,6 +363,11 @@ class ParticipantTeamController extends Controller
         
             if ($captain) {
                 $captain->delete();
+            }
+
+            $user = $request->attributes->get('user');
+            if ($user && $user->participant) {
+                $user->participant->update(['team_left_at' => now()]);
             }
 
             $member->delete();
@@ -436,7 +444,17 @@ class ParticipantTeamController extends Controller
     {
         try {
             $team = new Team();
-            $user_id = $request->attributes->get('user')->id;
+            $user = $request->attributes->get('user');
+            $user_id = $user->id;
+            
+            if ($user->participant && $user->participant->team_left_at) {
+                $timeSinceLeft = now()->diffInHours($user->participant->team_left_at);
+                if ($timeSinceLeft < 24) {
+                    $hoursRemaining = 24 - $timeSinceLeft;
+                    return back()->with('errorMessage', "You must wait {$hoursRemaining} more hours before creating a new team after leaving your previous team.");
+                }
+            }
+            
             $count = Team::whereHas('members', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id)->where('status', 'accepted');
             })->count('id');
@@ -449,6 +467,11 @@ class ParticipantTeamController extends Controller
 
                 $team = Team::validateAndSaveTeam($request, $team, $user_id);
                 TeamMember::bulkCreateTeanMembers($team->id, [$user_id], 'accepted');
+                
+                if ($user->participant) {
+                    $user->participant->update(['team_left_at' => null]);
+                }
+                
                 $teamMembers = $team->members;
 
                 TeamCaptain::insert([

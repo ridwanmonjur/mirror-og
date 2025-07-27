@@ -1273,23 +1273,28 @@ const validateDisputeCreation = async (data) => {
 };
 
 function initializeAnalytics() {
-  console.log("zzzzz");
-  if (window.analytics) {
+  if (window.trackEventViewFromDiv) {
       const analyticsData = document.getElementById('analytics-data');
-      window.window.trackEventViewFromDiv(analyticsData);
+      console.log(analyticsData);
+      if (analyticsData) window.trackEventViewFromDiv(analyticsData);
   }
 }
 
 
 window.onload = () => {
+  let eventBannerImg = document.getElementById('eventBannerImg');
+  if (eventBannerImg) {
+    eventBannerImg.removeAttribute('width');
+    eventBannerImg.removeAttribute('height');
+  }
+
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => {
-        // Remove existing tooltip if it exists
         const existingTooltip = window.bootstrap.Tooltip.getInstance(tooltipTriggerEl);
         if (existingTooltip) {
             existingTooltip.dispose();
         }
-        // Create new tooltip
+
         return new window.bootstrap.Tooltip(tooltipTriggerEl);
     });
     
