@@ -67,7 +67,12 @@ class CheckoutController extends Controller
             
             $numbers = $cart->getNumbers();
 
-            return view('shop.cartv2', [
+            // Check if any products in cart are physical
+            $hasPhysicalProducts = $cart->items()->with('product')->get()->contains(function ($item) {
+                return $item->product && $item->product->isPhysical;
+            });
+
+            return view('shop.checkout', [
                 'cart' => $cart,
                 'discount' => $numbers->get('discount'),
                 'newSubtotal' => $numbers->get('newSubtotal'),
@@ -85,6 +90,7 @@ class CheckoutController extends Controller
                 'wallet_shortfall' => $wallet_shortfall,
                 'total_amount' => $request->total,
                 'paymentLowerMin' => config('constants.STRIPE.MINIMUM_RM'),
+                'hasPhysicalProducts' => $hasPhysicalProducts,
             ]);
         } catch (Exception $e) {
             Log::error('Shop cart2 checkout error: ' . $e->getMessage());

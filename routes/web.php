@@ -156,6 +156,8 @@ Route::group(['prefix' => 'participant'], function () {
             // Event management
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
             Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
+            Route::get('/eventv2/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.eventv2.view');
+            
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
             Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');
