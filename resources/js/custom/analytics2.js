@@ -160,96 +160,120 @@ async function updateFormCounts(formName) {
     }
 }
 
-window.trackEventCardClick = function(element) {
-    console.log("Event card click tracked");
-    try {
-        const eventData = {
-            eventId: element.dataset.eventId,
-            eventName: element.dataset.eventName,
-            eventTier: element.dataset.eventTier,
-            eventType: element.dataset.eventType,
-            esportTitle: element.dataset.esportTitle,
-            location: element.dataset.location,
-            tierId: element.dataset.tierId,
-            typeId: element.dataset.typeId,
-            gameId: element.dataset.gameId,
-            userId: element.dataset.userId
-        };
-
-        updateAnalyticsCounts(
-            eventData.eventTier,
-            eventData.eventType,
-            eventData.esportTitle,
-            eventData.location,
-            eventData.eventName,
-            eventData.userId,
-            'clickCounts'
-        );
-
-        console.log('Event card click tracked:', eventData);
-
-    } catch (error) {
-        console.error('Error tracking event card click:', error);
+// Only add functions to window if analytics meta tag is present
+if (document.querySelector('meta[name="analytics"]')) {
+    window.trackEventCardClick = async function(element, event) {
+        console.log("Event card click tracked");
         
-    }
-};
-
-window.trackEventViewFromDiv = function(element) {
-    console.log("Event view tracked");
-    try {
-        const eventData = {
-            eventId: element.dataset.eventId,
-            eventName: element.dataset.eventName,
-            eventTier: element.dataset.eventTier,
-            eventType: element.dataset.eventType,
-            esportTitle: element.dataset.esportTitle,
-            location: element.dataset.location,
-            tierId: element.dataset.tierId,
-            typeId: element.dataset.typeId,
-            gameId: element.dataset.gameId,
-            userId: element.dataset.userId
-        };
-
-        updateAnalyticsCounts(
-            eventData.eventTier,
-            eventData.eventType,
-            eventData.esportTitle,
-            eventData.location,
-            eventData.eventName,
-            eventData.userId,
-            'viewCounts'
-        );
-
-        console.log('Event view tracked:', eventData);
-
-    } catch (error) {
-        console.error('Error tracking event view:', error);
+        // Prevent default navigation if this is a link
+        if (event) {
+            event.preventDefault();
+        }
         
-    }
-};
+        try {
+            const eventData = {
+                eventId: element.dataset.eventId,
+                eventName: element.dataset.eventName,
+                eventTier: element.dataset.eventTier,
+                eventType: element.dataset.eventType,
+                esportTitle: element.dataset.esportTitle,
+                location: element.dataset.location,
+                tierId: element.dataset.tierId,
+                typeId: element.dataset.typeId,
+                gameId: element.dataset.gameId,
+                userId: element.dataset.userId
+            };
 
-window.trackSocialInteraction = function(action, target, targetType = 'user') {
-    const eventData = {
-        event_category: 'social',
-        event_label: `${action}_${targetType}`,
-        social_action: action,
-        social_target: target,
-        social_type: targetType
-    };
-    
-    updateSocialCounts(action, targetType);
-};
+            console.log('Tracking event data:', eventData);
 
-window.trackFormSubmission = function(formName, additionalParams = {}) {
-    const eventData = {
-        event_category: 'form',
-        event_label: formName,
-        form_name: formName,
-        ...additionalParams
+            // Wait for analytics to be saved before allowing redirect
+            await Promise.all([
+                updateAnalyticsCounts(
+                    eventData.eventTier,
+                    eventData.eventType,
+                    eventData.esportTitle,
+                    eventData.location,
+                    eventData.eventName,
+                    eventData.userId,
+                    'clickCounts'
+                ),
+               
+            ]);
+
+            console.log('Event card click tracked successfully:', eventData);
+
+            // Now navigate to the link if it exists
+            if (element.href) {
+                window.location.href = element.href;
+            }
+
+        } catch (error) {
+            console.error('Error tracking event card click:', error);
+            
+            // Even if tracking fails, still navigate if it's a link
+            if (element.href) {
+                window.location.href = element.href;
+            }
+        }
     };
-    
-    updateFormCounts(formName);
-};
+
+    window.trackEventViewFromDiv = function(element) {
+        console.log("Event view tracked");
+        try {
+            const eventData = {
+                eventId: element.dataset.eventId,
+                eventName: element.dataset.eventName,
+                eventTier: element.dataset.eventTier,
+                eventType: element.dataset.eventType,
+                esportTitle: element.dataset.esportTitle,
+                location: element.dataset.location,
+                tierId: element.dataset.tierId,
+                typeId: element.dataset.typeId,
+                gameId: element.dataset.gameId,
+                userId: element.dataset.userId
+            };
+
+            updateAnalyticsCounts(
+                eventData.eventTier,
+                eventData.eventType,
+                eventData.esportTitle,
+                eventData.location,
+                eventData.eventName,
+                eventData.userId,
+                'viewCounts'
+            );
+
+            console.log('Event view tracked:', eventData);
+
+        } catch (error) {
+            console.error('Error tracking event view:', error);
+            
+        }
+    };
+
+    window.trackSocialInteraction = function(action, target, targetType = 'user') {
+        const eventData = {
+            event_category: 'social',
+            event_label: `${action}_${targetType}`,
+            social_action: action,
+            social_target: target,
+            social_type: targetType
+        };
+        
+        updateSocialCounts(action, targetType);
+    };
+
+    window.trackFormSubmission = function(formName, additionalParams = {}) {
+        const eventData = {
+            event_category: 'form',
+            event_label: formName,
+            form_name: formName,
+            ...additionalParams
+        };
+        
+        updateFormCounts(formName);
+    };
+}
 
 
 if (typeof module !== 'undefined' && module.exports) {

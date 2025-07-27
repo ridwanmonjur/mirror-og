@@ -46,6 +46,7 @@
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="analytics" content="enabled">
     <title>{{ $event->eventName }} | {{ $tier ?? 'Tournament' }} {{ $type ?? 'Event' }} - RM {{ $event->tier?->tierPrizePool ?? '0' }} Prize Pool | Driftwood GG</title>
         <!-- Essential Meta Tags -->
     <meta name="description" content="{{ Str::limit($event->eventDescription, 155) ?? 'Join ' . $event->eventName . ' - ' . ($event->tier?->tierPrizePool ? 'RM ' . $event->tier?->tierPrizePool . ' Prize Pool' : '') . ' | ' . $type . ' event starting ' . $combinedStr }}">
@@ -405,7 +406,7 @@
 
                                     @if ($event->game)
                                         <span  class=" text-wrap"> 
-                                            {{ $event->game?->gameTitle ?? 'No Title' }}
+                                            {{ $event->game?->gameTitle . " (" . $event->game?->player_per_team .'v' . $event->game?->player_per_team . ")" ?? 'No Title' }}
                                         </span>
                                     @else
                                         <span>Not available</span>
