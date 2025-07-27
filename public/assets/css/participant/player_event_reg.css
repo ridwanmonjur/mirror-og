@@ -190,12 +190,7 @@ input.largerCheckbox {
 }
 
 
-/* Style for the team name and logo */
 
-.team-info {
-    display: flex;
-    align-items: center;
-}
 
 #searchButton {
     width: 35%;

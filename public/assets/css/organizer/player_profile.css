@@ -188,10 +188,7 @@ a.custom-link:hover {
 }
 
 
-.team-info {
-    display: flex;
-    justify-content: space-around;
-}
+
 
 .achievement,
 .showcase {
