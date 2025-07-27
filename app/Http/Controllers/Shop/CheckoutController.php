@@ -67,7 +67,7 @@ class CheckoutController extends Controller
             
             $numbers = $cart->getNumbers();
 
-            return view('shop.cartv2', [
+            return view('shop.checkout', [
                 'cart' => $cart,
                 'discount' => $numbers->get('discount'),
                 'newSubtotal' => $numbers->get('newSubtotal'),
