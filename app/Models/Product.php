@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'slug', 'details', 'price', 'description', 
-        'image', 'images', 'featured'
+        'image', 'images', 'featured', 'isPhysical'
     ];
 
     protected $perPage = 12;

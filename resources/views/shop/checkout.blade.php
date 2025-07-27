@@ -76,6 +76,7 @@
         data-stripe-key="{{ config('services.stripe.key') }}"
         data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"
         data-checkout-transition-url="{{ route('shop.checkout.transition') }}"
+        data-has-physical-products="{{ $hasPhysicalProducts ? 'true' : 'false' }}"
     >    
     
     </div>

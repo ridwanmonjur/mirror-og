@@ -66,7 +66,8 @@ class PaymentProcessor {
         couponCode,
         stripeKey,
         stripeCardIntentUrl,
-        checkoutTransitionUrl
+        checkoutTransitionUrl,
+        hasPhysicalProducts
     }  = variablesDiv?.dataset ?? {} ;
 
     console.log({paymentVars});
@@ -217,10 +218,15 @@ class PaymentProcessor {
 
                 const paymentElement = elements.create("payment", paymentElementOptions);
                 const billingAddressElement = elements.create('address', addressElementOptions);
-                const shippingAddressElement = elements.create('address', {
-                    ...addressElementOptions,
-                    mode: 'shipping'
-                });
+                let shippingAddressElement = null;
+                
+                // Only create shipping element if there are physical products
+                if (paymentVars.hasPhysicalProducts === 'true') {
+                    shippingAddressElement = elements.create('address', {
+                        ...addressElementOptions,
+                        mode: 'shipping'
+                    });
+                }
 
                 billingAddressElement.on('change', (event) => {
                     if (event.complete) {
@@ -228,18 +234,23 @@ class PaymentProcessor {
                     }
                 })
 
-                shippingAddressElement.on('change', (event) => {
-                    if (event.complete) {
-                        const address = event.value.address;
-                    }
-                })
+                if (shippingAddressElement) {
+                    shippingAddressElement.on('change', (event) => {
+                        if (event.complete) {
+                            const address = event.value.address;
+                        }
+                    })
+                }
 
                 paymentElement.mount("#card-element");
                 billingAddressElement.mount("#billing-address-element");
-                shippingAddressElement.mount("#shipping-address-element");
+                
+                if (shippingAddressElement) {
+                    shippingAddressElement.mount("#shipping-address-element");
+                    window.shippingAddressElementRef = shippingAddressElement;
+                }
                 
                 window.billingAddressElementRef = billingAddressElement;
-                window.shippingAddressElementRef = shippingAddressElement;
                 let paymentIntentInput =  document.getElementById('payment_intent_id');
                 if (paymentIntentInput) paymentIntentInput.value = paymenntIntentId;
                 document.getElementById('discount-element')?.classList.remove('d-none');
@@ -307,7 +318,14 @@ class PaymentProcessor {
             
             try {
                 billingResult = await window.billingAddressElementRef.getValue();
-                shippingResult = await window.shippingAddressElementRef.getValue();
+                
+                // Only get shipping result if there are physical products
+                if (paymentVars.hasPhysicalProducts === 'true' && window.shippingAddressElementRef) {
+                    shippingResult = await window.shippingAddressElementRef.getValue();
+                } else {
+                    // For digital products, use billing address as shipping address
+                    shippingResult = billingResult;
+                }
             } catch (error) {
                 console.error('Error getting address values:', error);
                 window.closeLoading();
@@ -323,7 +341,8 @@ class PaymentProcessor {
                 return;
             }
 
-            if (!shippingResult.complete) {
+            // Only validate shipping address if there are physical products
+            if (paymentVars.hasPhysicalProducts === 'true' && !shippingResult.complete) {
                 window.closeLoading();
                 toastError("Please fill the complete shipping address");
                 submitButton.disabled = false;
@@ -358,20 +377,26 @@ class PaymentProcessor {
                 phone: shippingResult.value.phone
             };
 
+            const confirmParams = {
+                return_url: paymentVars['checkoutTransitionUrl'] 
+                    + `?savePayment=${savePaymentCheck.checked}` 
+                    // + `&saveDefault=${saveDefaultCheck.checked}`
+                    ,
+                payment_method_data: {
+                    billing_details: billingDetails
+                }
+            };
+
+            // Only include shipping if there are physical products
+            if (paymentVars.hasPhysicalProducts === 'true') {
+                confirmParams.shipping = shippingDetails;
+            }
+
             const {
                 error
             } = await stripe.confirmPayment({
                 elements,
-                confirmParams: {
-                    return_url: paymentVars['checkoutTransitionUrl'] 
-                        + `?savePayment=${savePaymentCheck.checked}` 
-                        // + `&saveDefault=${saveDefaultCheck.checked}`
-                        ,
-                    payment_method_data: {
-                        billing_details: billingDetails
-                    },
-                    shipping: shippingDetails
-                }
+                confirmParams
             });
 
             if (error) {
