@@ -14,6 +14,46 @@
             width: 50% !important;
             display: inline !important;
         }
+        
+        .clickable-header {
+            cursor: pointer;
+            padding: 10px 0;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            user-select: none;
+        }
+       
+        
+        .clickable-header h6 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .billing-shipping-container {
+            border-radius: 12px;
+            padding:  0px ;
+        }
+        
+        .billing-section,
+        .shipping-section {
+            position: relative;
+        }
+        
+        .address-section {
+            transition: all 0.3s ease;
+        }
+        
+        .arrow-icon {
+            transition: transform 0.3s ease, color 0.3s ease;
+            color: #6c757d;
+        }
+        
+        .text-primary .arrow-icon {
+            color: var(--bs-primary) !important;
+        }
+        
+        .arrow-collapsed {
+            transform: rotate(-180deg);
+        }
     </style>
 </head>
 

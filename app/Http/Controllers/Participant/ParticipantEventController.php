@@ -127,6 +127,17 @@ class ParticipantEventController extends Controller
 
     public function redirectToCreateTeamToJoinEvent(Request $request, $id)
     {
+        $user = $request->attributes->get('user');
+        
+        if ($user->participant && $user->participant->team_left_at) {
+            $timeSinceLeft = now()->diffInHours($user->participant->team_left_at);
+            if ($timeSinceLeft < 24) {
+                $hoursRemaining = 24 - $timeSinceLeft;
+                $errorMessage = "You must wait {$hoursRemaining} more hours before creating a new team after leaving your previous team.";
+                return view('Participant.CreateTeamToRegister', compact('id'))->with('errorMessage', $errorMessage);
+            }
+        }
+        
         return view('Participant.CreateTeamToRegister', compact('id'));
     }
 
@@ -233,6 +244,17 @@ class ParticipantEventController extends Controller
         try {
             $user = $request->attributes->get('user');
             $user_id = $user->id;
+            
+            if ($user->participant && $user->participant->team_left_at) {
+                $timeSinceLeft = now()->diffInHours($user->participant->team_left_at);
+                if ($timeSinceLeft < 24) {
+                    $hoursRemaining = 24 - $timeSinceLeft;
+                    $errorMessage = "You must wait {$hoursRemaining} more hours before creating a new team after leaving your previous team.";
+                    session()->flash('errorMessage', $errorMessage);
+                    return view('Participant.CreateTeamToRegister', ['id' => $id]);
+                }
+            }
+            
             [
                 'teamList' => $selectTeam,
                 'count' => $count,

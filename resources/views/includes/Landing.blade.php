@@ -25,7 +25,7 @@
         style="background-color: rgba(255, 255, 255, 0.7);"
         
     >
-        <a class="d-block" onclick="window.trackEventCardClick(this)" 
+        <a class="d-block" onclick="window.trackEventCardClick(this, event)" 
             data-event-id="{{ $event['id'] }}" 
             data-event-name="{{ $event->eventName }}"
             @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif
@@ -77,12 +77,14 @@
                         loading="lazy"  
                         alt="{{ $eventTierLowerImg }}"
                         class="pe-3 tierIcon mt-2"
-                        alt=""
+                        alt="{{ $event->tier?->tierIcon }}"
+                        onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                     >
                     <img 
                         src="{{ $bladeEventGameImage }}" 
                         class="logo2 mt-2 object-fit-cover gameIcon" 
                         alt="{{ $event->game?->gameIcon }}"
+                        onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                         loading="lazy"
                     >
                 </div>
@@ -179,7 +181,7 @@
                         @endif
                     @else
                         <div class="text-center mt-1">
-                            <button onclick="window.trackEventCardClick(this)" 
+                            <button onclick="window.trackEventCardClick(this, event)" 
                                 data-event-id="{{ $event['id'] }}" 
                                 data-event-name="{{ $event->eventName }}"
                                 @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif

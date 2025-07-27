@@ -13,37 +13,37 @@
                 @csrf
                     <div class="modal-content">
                         <div class="modal-body py-4 px-5">
-                            <h5 class="mt-4 mb-3 text-success">Pay using your remaining wallet funds!</h5>
+                            <h5 class="mt-4 mb-3 ">Pay using your remaining wallet funds!</h5>
                             <small> Avoid paying for this order by using funds from your wallet.</small>
                             <br><br>
-                            @if ($walletStatusEnums['ABSENT'] == $walletStatus || $walletStatusEnums['INVALID'] == $walletStatus)
+                            @if (!$has_wallet_balance)
                                 <br> <br>
-                                <p class="text-center text-red">Ooops, no wallet fund </p> 
+                                <p class="text-center text-red">Ooops, no wallet fund available.</p>
+                                <div class="text-center">
+                                    <a href="{{ route('wallet.dashboard') }}" class="btn btn-primary btn-sm">Load More Money</a>
+                                </div>
                             @else
                                 <p> 
-
-                                    You have <span class="text-success" id="wallet_amount">RM {{$user_wallet->usable_balance}}</span> usable balance in your wallet.
-                                    @if ($walletStatusEnums['COMPLETE'] == $walletStatus )
-                                        <span> You can complete payment of <span>RM {{$payment_amount_min}}</span> with your wallet. </span>
-                                        
-                                    @elseif ($walletStatusEnums['PARTIAL'] == $walletStatus )
-                                        @if ( $paymentLowerMin < $payment_amount_min )
-                                            <span> You can apply <span>RM {{$payment_amount_min}}</span> towards your order. </span>
-                                        @endif
-                                        <br>
-                                        <span class="text-red"> Note: the minimum payment for a transaction is about 5 RM, depending on currency rates.</span>
+                                    You have <span class="" id="wallet_amount">RM {{number_format($user_wallet->usable_balance, 2)}}</span> usable balance in your wallet.
+                                    
+                                    @if ($can_pay_full_amount)
+                                        <br><span class="">You can pay the full amount of RM {{number_format($total_amount, 2)}} with your wallet!</span>
+                                    @else
+                                        <br><span class="text-warning">You need RM {{number_format($wallet_shortfall, 2)}} more to complete this payment.</span>
+                                        <br><small class="text-muted">
+                                            <a href="{{ route('wallet.dashboard') }}" class="text-primary">Top up your wallet</a> or add coupons to reduce the amount.
+                                        </small>
                                     @endif
                                 </p>
                                 <div class="text-center mx-auto input-group mt-4 w-75">
-                                    <input type="hidden" id="amount" name="amount" value="{{ $payment_amount_min }}">
+                                    <input type="hidden" id="amount" name="amount" value="{{ $can_pay_full_amount ? $total_amount : 0 }}">
                                     <input type="hidden" id="coupon_code" name="coupon_code" value="{{ $prevForm['coupon_code'] ?? '' }}">
                                 </div>
                                 <div class="mx-auto text-center">
-                                    @if ($paymentLowerMin <= $payment_amount_min)
+                                    @if ($can_pay_full_amount)
                                         <button 
                                             type="submit"
-                                            class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Apply RM {{$payment_amount_min}} towards
-                                            payment
+                                            class="mt-2 ms-4 btn rounded-pill text-light px-4 py-2 btn-primary">Pay RM {{number_format($total_amount, 2)}} with wallet
                                         </button>
                                     @endif
 
@@ -61,7 +61,7 @@
     <div class="d-none d-lg-block px-3">
     </div>
     <div class="col-12 col-xl-8 px-3">
-        <h5 class="my-0 py-0">Payment Method</h5>
+        <h5 class="my-0 py-0 text-primary">Payment Method</h5>
         @if (session('errorCheckout'))
             <div class="text-red my-2">
                 {{ session('errorCheckout') }}
@@ -82,31 +82,71 @@
                     </div>
                     <div class="row w-100">
                         <div class="col-12 col-lg-6">
-                            <div id="address-element" class="my-2"> </div>
+                            <div class="billing-shipping-container d-none">
+                                <div class="billing-section">
+                                    <div class="billing-header clickable-header d-flex justify-content-between align-items-center text-primary border-bottom border-primary" data-section="billing">
+                                        <h6 class="mb-0">Billing Details</h6>
+                                        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </div>
+                                    <div id="billing-address-element" class="my-2 address-section" data-section="billing"> </div>
+                                </div>
+                                
+                                <div class="shipping-section mt-3">
+                                    <div class="shipping-header clickable-header d-flex justify-content-between align-items-center border-bottom border-secondary" data-section="shipping">
+                                        <h6 class="mb-0">Shipping Details</h6>
+                                        <svg class="arrow-icon arrow-collapsed" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #6c757d;">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </div>
+                                    <div id="shipping-address-element" class="mt-3 mb-0 address-section d-none" data-section="shipping"> </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <div id="discount-element" class="mt-3 d-none">
-                                @if ($walletStatusEnums['ABSENT'] == $walletStatus) 
-                                    You have no discount to apply.
-                                @elseif ($walletStatusEnums['INVALID'] == $walletStatus)
-                                        You have RM {{$user_wallet->current_balance}} net balance and RM {{$user_wallet->usable_balance}} usable balance in your wallet to apply towards this order.
-                                        But this is not enough for the next transaction.
-                                @elseif ($user_wallet->usable_balance)
-                                    <span> 
-                                        
-                                        You can apply RM {{$user_wallet->usable_balance}} from your wallet to pay towards this order
-                                    </span>
-                                    <a 
-                                         data-bs-toggle="modal"
-                                        data-bs-target="#discountModal"
-                                        class="my-0 btn btn-link py-0" style="color: #43A4D7 !important" type="button"
-                                    > 
-                                        <u> Apply </u> 
-                                    </a>
-                                @endif
+                            <div class="payment-method-container d-none">
+                                <div class="wallet-payment-section">
+                                    <div class="wallet-payment-header clickable-header d-flex justify-content-between align-items-center text-primary border-bottom border-primary" data-section="wallet">
+                                        <h6 class="mb-0">Pay Using Wallet</h6>
+                                        <svg class="arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </div>
+                                    <div id="discount-element" class="mt-3 payment-section" data-section="wallet">
+                                        @if (!$has_wallet_balance) 
+                                            You have no wallet balance to apply.
+                                        @elseif ($can_pay_full_amount)
+                                            <span class=""> 
+                                                You can pay the full amount of RM {{number_format($total_amount, 2)}} with your wallet balance of RM {{number_format($user_wallet->usable_balance, 2)}}
+                                            </span>
+                                            <a 
+                                                 data-bs-toggle="modal"
+                                                data-bs-target="#discountModal"
+                                                class="my-0 btn btn-link py-0" style="color: #43A4D7 !important" type="button"
+                                            > 
+                                                <u> Use Wallet </u> 
+                                            </a>
+                                        @else
+                                            <span class="text-warning"> 
+                                                You have RM {{number_format($user_wallet->usable_balance, 2)}} but need RM {{number_format($wallet_shortfall, 2)}} more.
+                                            </span>
+                                            <a href="{{ route('wallet.dashboard') }}" class="btn btn-link btn-sm text-primary">Top up wallet</a>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <div class="card-payment-section mt-3">
+                                    <div class="card-payment-header clickable-header d-flex justify-content-between align-items-center border-bottom border-secondary" data-section="card">
+                                        <h6 class="mb-0">Pay Using Card</h6>
+                                        <svg class="arrow-icon arrow-collapsed" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="color: #6c757d;">
+                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                    </div>
+                                    <div id="card-element" class="mt-3 mb-0 payment-section d-none" data-section="card"> </div>
+                                </div>
                             </div>
-                            <div id="card-element" class="my-2"> </div>
-                            <div class="my-4">
+                            <div class="my-4 d-none" id="save-payment-container">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="save-payment">
                                         <label class="form-check-label" for="save-payment">
@@ -127,7 +167,7 @@
         </div>
     </div>
     <div class="col-12 col-xl-4" id="payment-summary">
-        <h4>Payment Summary</h4>
+        <h4 class="text-primary">Payment Summary</h4>
         <br>
         <div> 
             <div><strong>Customer Details</strong></div>
@@ -180,7 +220,7 @@
             @endif
             
             @if (isset($couponStatus['success']) && $couponStatus['success'])
-                <div class="text-success mb-2">
+                <div class=" mb-2">
                     We have applied your coupon: {{$prevForm['coupon_code'] ?? ''}} successfully!
                 </div>
             @endif

@@ -1,4 +1,5 @@
 <head>
+    <meta name="analytics" content="enabled">
     @vite([
         'resources/sass/app.scss',
         'resources/js/app.js',

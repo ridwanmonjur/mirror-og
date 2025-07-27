@@ -91,25 +91,28 @@
         <div class="member-details user-select-none ">
             <div v-cloak v-show="errorMessage != null && isEditMode" class="text-red" v-text="errorMessage"> </div>
             <div v-cloak v-show="isEditMode" style="color: black;">
-                <input placeholder = "Enter your nickname..." style="width: 250px;" autocomplete="off"
-                    autocomplete="nope" class="form-control border-secondary player-profile__input d-inline"
-                    v-model="participant.nickname"
-                    :style="{ color: user.fontColor  }"
-    
-                >
-                <input type="file" id="image-upload" accept=".png, .jpg, .jpeg, image/png, image/jpeg" v-cloak
-                    v-show="isEditMode" class="d-none">
-                <br>
-                <span class="d-inline-flex flex-wrap justify-content-start align-items-center">
-                    <input 
-                        placeholder="Your name" 
-                        style="width: min(200px, 60vw);" 
+                <input 
+                        placeholder="Your username." 
+                        style="width: 250px;"
                         type="text"
                         autocomplete="off"
                         class="form-control border-secondary player-profile__input d-inline me-3" 
                         v-model="user.name"
                         :style="{ color: user.fontColor  }"
                     >
+                <input type="file" id="image-upload" accept=".png, .jpg, .jpeg, image/png, image/jpeg" v-cloak
+                    v-show="isEditMode" class="d-none">
+                <br>
+                <span class="d-inline-flex flex-wrap justify-content-start align-items-center">
+                    <input placeholder = "Enter your real name." 
+                        style="width: min(200px, 60vw);" 
+                         autocomplete="off"
+                        autocomplete="nope" class="form-control border-secondary player-profile__input me-3 d-inline"
+                        v-model="participant.nickname"
+                        :style="{ color: user.fontColor  }"
+    
+                    >
+                    
                     <input placeholder="Birthday" type="date" style="width: min(150px, 60vw);"
                         default="1999-05-05" id="birthdate"
                         class="form-control custom-date-input border-secondary player-profile__input d-inline me-2"

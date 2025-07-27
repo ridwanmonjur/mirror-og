@@ -75,8 +75,7 @@ class PTransactionsRelationManager extends RelationManager
                     ->description(fn ($record) => $record->history ? "RM " . number_format($record->history->amount, 2) : null)
                     ->placeholder('No history linked'),
                 
-                Tables\Columns\TextColumn::make('stripeTransaction.payment_id')
-                    ->label('Stripe Payment'),
+             
             ])
            
             

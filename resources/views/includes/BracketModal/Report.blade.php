@@ -17,14 +17,9 @@
                             
                             <small style="color: #757577;" class="mt-0 mb-2 py-0 w-75 mx-auto d-block text-center text-truncate ">
                                 @if ($event->eventName)
-                                    <span>{{$event->eventName}} <small>•</small> </span>
+                                    <span>{{$event->eventName}}  </span>
                                 @endif
-                                @if ($event->tier?->eventTier)
-                                    <span>{{$event->tier?->eventTier}} <small>•</small>  </span>
-                                @endif
-                                @if ($event->game)
-                                    <span>{{$event->game?->gameTitle}}  </span>
-                                @endif
+                               
                             </small> 
                             <template v-if="report.deadline && userLevelEnums['IS_PUBLIC'] != report.userLevel">
                                 <div class="my-0 py-0 ">

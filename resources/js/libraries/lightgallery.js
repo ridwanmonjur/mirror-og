@@ -55,7 +55,7 @@ class VanillaLightbox {
                 >
                     <div class="modal-content my-2 py-2" aria-hidden="true">
                         
-                        <div class="modal-body text-center p-0" aria-hidden="true">
+                        <div class="modal-body text-center p-0 pt-3" aria-hidden="true">
                             <img src="${src}" 
                                  class="fslightbox-source" 
                                  style=" 

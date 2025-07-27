@@ -175,8 +175,8 @@
                                             $decimal = $parts[1];
                                         @endphp
                                         
-                                        <div class="product-card__price ">
-                                            <span class="product-card__currency">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
+                                        <div class="product-card__price text-dark">
+                                            <span class="product-card__currency ">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
                                         </div>
                                         
                                         <div class="mb-0">
