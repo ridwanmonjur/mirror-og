@@ -35,7 +35,9 @@
                         <div id="click-counts-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="click-counts-total">Total: 0</div>
+                        <div class="analytics-total text-gray-700 dark:text-gray-300 flex justify-between" id="click-counts-total">
+                            <span>Total</span><span>0</span>
+                        </div>
                     </div>
 
                     <!-- View Counts -->
@@ -44,52 +46,239 @@
                         <div id="view-counts-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="view-counts-total">Total: 0</div>
+                        <div class="analytics-total text-gray-700 dark:text-gray-300 flex justify-between" id="view-counts-total">
+                            <span>Total</span><span>0</span>
+                        </div>
                     </div>
                     
                     <!-- Event Tiers -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Tiers</h3>
-                        <div id="event-tiers-list" class="space-y-2">
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        
+                        <!-- Tabs -->
+                        <div class="flex space-x-1 mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-tiers" data-type="combined">
+                                Combined
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-tiers" data-type="clicks">
+                                Clicks
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-tiers" data-type="views">
+                                Views
+                            </button>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="event-tiers-total">Total: 0</div>
+                        
+                        <!-- Content -->
+                        <div class="tab-content" data-tab="event-tiers">
+                            <div id="event-tiers-combined-list" class="space-y-2 tab-pane active" data-type="combined">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="event-tiers-clicks-list" class="space-y-2 tab-pane hidden" data-type="clicks">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="event-tiers-views-list" class="space-y-2 tab-pane hidden" data-type="views">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div id="event-tiers-combined-total" class="tab-total active analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="combined">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="event-tiers-clicks-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="clicks">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="event-tiers-views-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="views">
+                                <span>Total</span><span>0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Event Types -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Types</h3>
-                        <div id="event-types-list" class="space-y-2">
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        
+                        <!-- Tabs -->
+                        <div class="flex space-x-1 mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-types" data-type="combined">
+                                Combined
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-types" data-type="clicks">
+                                Clicks
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-types" data-type="views">
+                                Views
+                            </button>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="event-types-total">Total: 0</div>
+                        
+                        <!-- Content -->
+                        <div class="tab-content" data-tab="event-types">
+                            <div id="event-types-combined-list" class="space-y-2 tab-pane active" data-type="combined">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="event-types-clicks-list" class="space-y-2 tab-pane hidden" data-type="clicks">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="event-types-views-list" class="space-y-2 tab-pane hidden" data-type="views">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div id="event-types-combined-total" class="tab-total active analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="combined">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="event-types-clicks-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="clicks">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="event-types-views-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="views">
+                                <span>Total</span><span>0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Esport Titles -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Esport Titles</h3>
-                        <div id="esport-titles-list" class="space-y-2">
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        
+                        <!-- Tabs -->
+                        <div class="flex space-x-1 mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="esport-titles" data-type="combined">
+                                Combined
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="esport-titles" data-type="clicks">
+                                Clicks
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="esport-titles" data-type="views">
+                                Views
+                            </button>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="esport-titles-total">Total: 0</div>
+                        
+                        <!-- Content -->
+                        <div class="tab-content" data-tab="esport-titles">
+                            <div id="esport-titles-combined-list" class="space-y-2 tab-pane active" data-type="combined">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="esport-titles-clicks-list" class="space-y-2 tab-pane hidden" data-type="clicks">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="esport-titles-views-list" class="space-y-2 tab-pane hidden" data-type="views">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div id="esport-titles-combined-total" class="tab-total active analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="combined">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="esport-titles-clicks-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="clicks">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="esport-titles-views-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="views">
+                                <span>Total</span><span>0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Locations -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Locations</h3>
-                        <div id="locations-list" class="space-y-2">
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        
+                        <!-- Tabs -->
+                        <div class="flex space-x-1 mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="locations" data-type="combined">
+                                Combined
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="locations" data-type="clicks">
+                                Clicks
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="locations" data-type="views">
+                                Views
+                            </button>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="locations-total">Total: 0</div>
+                        
+                        <!-- Content -->
+                        <div class="tab-content" data-tab="locations">
+                            <div id="locations-combined-list" class="space-y-2 tab-pane active" data-type="combined">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="locations-clicks-list" class="space-y-2 tab-pane hidden" data-type="clicks">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="locations-views-list" class="space-y-2 tab-pane hidden" data-type="views">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div id="locations-combined-total" class="tab-total active analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="combined">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="locations-clicks-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="clicks">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="locations-views-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="views">
+                                <span>Total</span><span>0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Event Names -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Event Names</h3>
-                        <div id="event-names-list" class="space-y-2">
-                            <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                        
+                        <!-- Tabs -->
+                        <div class="flex space-x-1 mb-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-names" data-type="combined">
+                                Combined
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-names" data-type="clicks">
+                                Clicks
+                            </button>
+                            <button class="tab-btn flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors" 
+                                    data-tab="event-names" data-type="views">
+                                Views
+                            </button>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="event-names-total">Total: 0</div>
+                        
+                        <!-- Content -->
+                        <div class="tab-content" data-tab="event-names">
+                            <div id="event-names-combined-list" class="space-y-2 tab-pane active" data-type="combined">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="event-names-clicks-list" class="space-y-2 tab-pane hidden" data-type="clicks">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                            <div id="event-names-views-list" class="space-y-2 tab-pane hidden" data-type="views">
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div id="event-names-combined-total" class="tab-total active analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="combined">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="event-names-clicks-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="clicks">
+                                <span>Total</span><span>0</span>
+                            </div>
+                            <div id="event-names-views-total" class="tab-total hidden analytics-total text-gray-700 dark:text-gray-300 flex justify-between" data-type="views">
+                                <span>Total</span><span>0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Active Users -->
@@ -108,7 +297,9 @@
                         <div id="social-actions-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="social-actions-total">Total: 0</div>
+                        <div class="analytics-total text-gray-700 dark:text-gray-300 flex justify-between" id="social-actions-total">
+                            <span>Total</span><span>0</span>
+                        </div>
                     </div>
 
                     <!-- Social Target Types -->
@@ -117,7 +308,9 @@
                         <div id="social-targets-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="social-targets-total">Total: 0</div>
+                        <div class="analytics-total text-gray-700 dark:text-gray-300 flex justify-between" id="social-targets-total">
+                            <span>Total</span><span>0</span>
+                        </div>
                     </div>
 
                     <!-- Form Submissions -->
@@ -126,7 +319,9 @@
                         <div id="form-submissions-list" class="space-y-2">
                             <div class="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-3" id="form-submissions-total">Total: 0</div>
+                        <div class="analytics-total text-gray-700 dark:text-gray-300 flex justify-between" id="form-submissions-total">
+                            <span>Total</span><span>0</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -146,6 +341,48 @@
         </div>
 
         @push('scripts')
+            <style>
+                .tab-btn {
+                    background: transparent;
+                    color: rgb(107, 114, 128);
+                    border: none;
+                    cursor: pointer;
+                }
+                
+                .tab-btn.active {
+                    background: #43A4D7;
+                    color: white;
+                }
+                
+                .dark .tab-btn {
+                    color: rgb(156, 163, 175);
+                }
+                
+                .dark .tab-btn.active {
+                    background: #43A4D7;
+                    color: white;
+                }
+                
+                .tab-pane.hidden {
+                    display: none;
+                }
+                
+                .tab-total.hidden {
+                    display: none;
+                }
+                
+                .analytics-total {
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    border-top: 1px solid rgb(229, 231, 235);
+                    padding-top: 0.75rem;
+                    margin-top: 0.75rem;
+                }
+                
+                .dark .analytics-total {
+                    border-top-color: rgb(75, 85, 99);
+                }
+            </style>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const widgetId = '{{ $widgetId }}';
@@ -231,7 +468,12 @@
                                 container.appendChild(div);
                             });
                             
-                            totalEl.textContent = `Total: ${total.toLocaleString()}`;
+                            const totalSpan = totalEl.querySelector('span:last-child');
+                            if (totalSpan) {
+                                totalSpan.textContent = total.toLocaleString();
+                            } else {
+                                totalEl.textContent = `Total: ${total.toLocaleString()}`;
+                            }
                         }
                         
                         async function updateDashboard(page = 1) {
@@ -268,25 +510,35 @@
                                 // Update View Counts
                                 createCountList(safeViewCounts.eventNames || {}, 'view-counts-list', 'view-counts-total', page);
                                 
-                                // Update Event Tiers (combine click and view data)
+                                // Update Event Tiers - Separate and Combined
+                                createCountList(safeClickCounts.eventTiers || {}, 'event-tiers-clicks-list', 'event-tiers-clicks-total', page);
+                                createCountList(safeViewCounts.eventTiers || {}, 'event-tiers-views-list', 'event-tiers-views-total', page);
                                 const combinedEventTiers = combineCountObjects(safeClickCounts.eventTiers || {}, safeViewCounts.eventTiers || {});
-                                createCountList(combinedEventTiers, 'event-tiers-list', 'event-tiers-total', page);
+                                createCountList(combinedEventTiers, 'event-tiers-combined-list', 'event-tiers-combined-total', page);
                                 
-                                // Update Event Types (combine click and view data)
+                                // Update Event Types - Separate and Combined
+                                createCountList(safeClickCounts.eventTypes || {}, 'event-types-clicks-list', 'event-types-clicks-total', page);
+                                createCountList(safeViewCounts.eventTypes || {}, 'event-types-views-list', 'event-types-views-total', page);
                                 const combinedEventTypes = combineCountObjects(safeClickCounts.eventTypes || {}, safeViewCounts.eventTypes || {});
-                                createCountList(combinedEventTypes, 'event-types-list', 'event-types-total', page);
+                                createCountList(combinedEventTypes, 'event-types-combined-list', 'event-types-combined-total', page);
                                 
-                                // Update Esport Titles (combine click and view data)
+                                // Update Esport Titles - Separate and Combined
+                                createCountList(safeClickCounts.esportTitles || {}, 'esport-titles-clicks-list', 'esport-titles-clicks-total', page);
+                                createCountList(safeViewCounts.esportTitles || {}, 'esport-titles-views-list', 'esport-titles-views-total', page);
                                 const combinedEsportTitles = combineCountObjects(safeClickCounts.esportTitles || {}, safeViewCounts.esportTitles || {});
-                                createCountList(combinedEsportTitles, 'esport-titles-list', 'esport-titles-total', page);
+                                createCountList(combinedEsportTitles, 'esport-titles-combined-list', 'esport-titles-combined-total', page);
                                 
-                                // Update Locations (combine click and view data)
+                                // Update Locations - Separate and Combined
+                                createCountList(safeClickCounts.locations || {}, 'locations-clicks-list', 'locations-clicks-total', page);
+                                createCountList(safeViewCounts.locations || {}, 'locations-views-list', 'locations-views-total', page);
                                 const combinedLocations = combineCountObjects(safeClickCounts.locations || {}, safeViewCounts.locations || {});
-                                createCountList(combinedLocations, 'locations-list', 'locations-total', page);
+                                createCountList(combinedLocations, 'locations-combined-list', 'locations-combined-total', page);
                                 
-                                // Update Event Names (combine click and view data)
+                                // Update Event Names - Separate and Combined
+                                createCountList(safeClickCounts.eventNames || {}, 'event-names-clicks-list', 'event-names-clicks-total', page);
+                                createCountList(safeViewCounts.eventNames || {}, 'event-names-views-list', 'event-names-views-total', page);
                                 const combinedEventNames = combineCountObjects(safeClickCounts.eventNames || {}, safeViewCounts.eventNames || {});
-                                createCountList(combinedEventNames, 'event-names-list', 'event-names-total', page);
+                                createCountList(combinedEventNames, 'event-names-combined-list', 'event-names-combined-total', page);
                                 
                                 // Update Active Users (combine click and view user data)
                                 const clickUserIds = safeClickCounts.userIds || {};
@@ -349,6 +601,58 @@
                         
                         // Initial load
                         updateDashboard();
+                        
+                        // Initialize tab functionality
+                        initializeTabs();
+                    }
+                    
+                    function initializeTabs() {
+                        // Set default active tabs (combined)
+                        document.querySelectorAll('.tab-btn[data-type="combined"]').forEach(btn => {
+                            btn.classList.add('active');
+                        });
+                        
+                        // Add click event listeners to all tab buttons
+                        document.querySelectorAll('.tab-btn').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const tabGroup = this.dataset.tab;
+                                const type = this.dataset.type;
+                                
+                                // Remove active class from all buttons in this tab group
+                                document.querySelectorAll(`[data-tab="${tabGroup}"].tab-btn`).forEach(btn => {
+                                    btn.classList.remove('active');
+                                });
+                                
+                                // Add active class to clicked button
+                                this.classList.add('active');
+                                
+                                // Hide all tab panes in this group
+                                document.querySelectorAll(`[data-tab="${tabGroup}"] .tab-pane`).forEach(pane => {
+                                    pane.classList.add('hidden');
+                                    pane.classList.remove('active');
+                                });
+                                
+                                // Show selected tab pane
+                                const targetPane = document.querySelector(`[data-tab="${tabGroup}"] .tab-pane[data-type="${type}"]`);
+                                if (targetPane) {
+                                    targetPane.classList.remove('hidden');
+                                    targetPane.classList.add('active');
+                                }
+                                
+                                // Hide all totals in this group
+                                document.querySelectorAll(`.tab-total[data-type]`).forEach(total => {
+                                    if (total.id.includes(tabGroup)) {
+                                        total.classList.add('hidden');
+                                    }
+                                });
+                                
+                                // Show selected total
+                                const targetTotal = document.querySelector(`#${tabGroup}-${type}-total`);
+                                if (targetTotal) {
+                                    targetTotal.classList.remove('hidden');
+                                }
+                            });
+                        });
                     }
                     
                     waitForAnalytics();
