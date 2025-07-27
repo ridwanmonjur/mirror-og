@@ -152,17 +152,7 @@ input.largerCheckbox {
 
 
 
-.team-info {
-    display: flex;
-    align-items: center;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-}
 
-.team-info:hover {
-    cursor: pointer;
-    font-size: larger;    
-}
 
 
 #searchButton {
