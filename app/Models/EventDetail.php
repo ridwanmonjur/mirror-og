@@ -916,7 +916,20 @@ class EventDetail extends Model implements Feedable
                 $exists = self::where('slug', $eventDetail->slug)->exists();
             } while ($exists);
         } else {
-            $eventDetail->slug = Str::slug($eventDetail->eventName);
+            $baseEventName = $eventDetail->eventName;
+            $baseSlug = Str::slug($eventDetail->eventName);
+            $counter = 1;
+            
+            $eventDetail->eventName = $baseEventName;
+            $eventDetail->slug = $baseSlug;
+            
+            while (self::where('eventName', $eventDetail->eventName)
+                    ->orWhere('slug', $eventDetail->slug)
+                    ->exists()) {
+                $eventDetail->eventName = $baseEventName . ' ' . $counter;
+                $eventDetail->slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
         }
 
 
