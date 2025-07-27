@@ -13,6 +13,13 @@
 </head>
 
 <body>
+    @php
+    if (!function_exists('truncateText')) {
+        function truncateText($text, $maxLength = 34) {
+            return strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+        }
+    }
+    @endphp
     @include('googletagmanager::body')
     @include('includes.Navbar')
 
@@ -53,54 +60,71 @@
                             <div class="">
                                 <div class="row">
 
-                                    <div class="col-lg-6  my-2 flex-wrap d-flex justify-content-start align-items-start">
+                                    <div class="col-lg-6  my-2 flex-nowrap d-flex justify-content-start align-items-start">
                                         <div class="me-3">
-                                        @if ($item->product && $item->product->slug)
-                                            <a href="{{ route('shop.show', $item->product->slug) }}">
+                                            @if ($item->product && $item->product->slug)
+                                                <a href="{{ route('shop.show', $item->product->slug) }}">
+                                                    <img src="{{ asset('storage/' . $item->product->image) }}" 
+                                                        class="img_cartpage rounded-3 object-fit-cover border border-secondary"
+                                                        width="50" height="50"
+                                                        onerror="this.onerror=null;this.src='/assets/images/404q.png';"></a>
+                                            @else
                                                 <img src="{{ asset('storage/' . $item->product->image) }}" 
-                                                     class="img_cartpage rounded-3 object-fit-cover border border-secondary"
-                                                     width="50" height="50"
-                                                     onerror="this.onerror=null;this.src='/assets/images/404q.png';"></a>
-                                        @else
-                                            <img src="{{ asset('storage/' . $item->product->image) }}" 
-                                                 class="img_cartpage border rounded-3 border-secondary object-fit-cover"
-                                                 width="50" height="50"
-                                                 onerror="this.onerror=null;this.src='/assets/images/404q.png';">
-                                        @endif
+                                                    class="img_cartpage border rounded-3 border-secondary object-fit-cover"
+                                                    width="50" height="50"
+                                                    onerror="this.onerror=null;this.src='/assets/images/404q.png';">
+                                            @endif
                                         </div>
                                         <div>
                                     
-                                        @if ($item->product && $item->product->slug)
-                                            <a href="{{ route('shop.show', $item->product->slug) }}" class="cart_a text-dark fw-semibold fs-6 text-decoration-none">
-                                                {{ $item->product->name }}</a>
-                                        @else
-                                            <span class="cart_a">{{ $item->product->name ?? 'Product unavailable' }}</span>
-                                        @endif
-                                        <p class="my-2 text-muted fw-normal">
-                                           
-                                            @if($item->cartProductVariants)
-                                                @foreach($item->cartProductVariants as $key => $variant)
-                                                    <div class="mb-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-tag me-1" viewBox="0 0 16 16"><path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/><path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/></svg>
-                                                        <span class="fw-semibold">{{ ucfirst($variant['name']) }}:</span> {{ $variant['value'] }}
-                                                        <b class="ms-2 {{ $variant->stock > 0 ? 'text-success' : 'text-danger' }} fw-semibold">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-{{ $variant->stock > 0 ? 'check-circle' : 'x-circle' }} me-1" viewBox="0 0 16 16">
-                                                                {{-- @if($variant->stock > 0)
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                                                                @else
-                                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                                @endif --}}
-                                                            </svg>
-                                                            {{-- {{ $variant->stock > 0 ? ($variant->stock . ' in stock') : 'Out of stock' }} --}}
-                                                        </b>
-                                                    </div>
-                                                @endforeach
+                                            
+                                            @if ($item->product && $item->product->slug)
+                                                <a href="{{ route('shop.show', $item->product->slug) }}" class="cart_a text-dark d-block fw-semibold text-truncate fs-6 text-decoration-none">
+                                                    {{ truncateText($item->product->name, 30) }}</a>
                                             @else
-                                                <span class="text-muted">No variant selected</span>
-                                            @endif 
-                                        </p>
+                                                <span class="cart_a d-block fw-semibold text-truncate ">{{ truncateText($item->product->name ?? 'Product unavailable', 30) }}</span>
+                                            @endif
+                                            <p class="my-2 text-muted fw-normal">
+                                            
+                                                @if($item->cartProductVariants)
+                                                    @foreach($item->cartProductVariants as $key => $variant)
+                                                        <div class="mb-1 small">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-tag me-1" viewBox="0 0 16 16"><path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z"/><path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z"/></svg>
+                                                            <span class="fw-semibold">{{ ucfirst($variant['name']) }}:</span> {{ $variant['value'] }}
+                                                            <b class="ms-2 {{ $variant->stock > 0 ? 'text-success' : 'text-danger' }} fw-semibold">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-{{ $variant->stock > 0 ? 'check-circle' : 'x-circle' }} me-1" viewBox="0 0 16 16">
+                                                                    {{-- @if($variant->stock > 0)
+                                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                        <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                                                    @else
+                                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                                    @endif --}}
+                                                                </svg>
+                                                                {{-- {{ $variant->stock > 0 ? ($variant->stock . ' in stock') : 'Out of stock' }} --}}
+                                                            </b>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted">No variant selected</span>
+                                                @endif 
+                                                
+                                                @if($item->product->isPhysical)
+                                                    <div class="mb-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-box me-1" viewBox="0 0 16 16">
+                                                            <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.629 13.09A1 1 0 0 1 0 12.162V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+                                                        </svg>
+                                                        <span class="text-muted">Physical Product - Requires Shipping</span>
+                                                    </div>
+                                                @else
+                                                    <div class="mb-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-display me-1" viewBox="0 0 16 16">
+                                                            <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145Z"/>
+                                                        </svg>
+                                                        <span class="text-muted">Digital Product - Instant Access</span>
+                                                    </div>
+                                                @endif
+                                            </p>
                                         </div>
 
                                     </div> 
