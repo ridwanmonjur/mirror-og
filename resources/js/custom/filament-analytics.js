@@ -21,18 +21,46 @@ class FilamentAnalyticsAPI {
     constructor() {
         this.baseUrl = window.location.origin;
         this.isInitialized = true;
+        this.currentTimeFilter = 'all';
     }
 
 
 
-    async fetchAnalyticsData(page = 1, limit = 10) {
+    async fetchAnalyticsData(page = 1, limit = 10, timeFilter = null) {
         try {
-            const [clickCounts, viewCounts, socialCounts, formJoins] = await Promise.all([
-                this.getStatsDocument('clickCounts'),
-                this.getStatsDocument('viewCounts'),
-                this.getStatsDocument('socialCounts'),
-                this.getStatsDocument('formJoins')
-            ]);
+            if (timeFilter !== null) {
+                this.currentTimeFilter = timeFilter;
+            }
+            
+            // Use time-filtered data if available, otherwise fall back to basic method
+            let clickCounts, viewCounts, socialCounts, formJoins;
+            
+            if (window.getTimeFilteredAnalyticsCounts && this.currentTimeFilter !== 'all') {
+                const filteredData = await window.getTimeFilteredAnalyticsCounts(this.currentTimeFilter);
+                clickCounts = {
+                    ...filteredData.clickCounts,
+                    lastUpdated: new Date().toISOString()
+                };
+                viewCounts = {
+                    ...filteredData.viewCounts,
+                    lastUpdated: new Date().toISOString()
+                };
+                socialCounts = {
+                    ...filteredData.socialCounts,
+                    lastUpdated: new Date().toISOString()
+                };
+                formJoins = {
+                    ...filteredData.formCounts,
+                    lastUpdated: new Date().toISOString()
+                };
+            } else {
+                [clickCounts, viewCounts, socialCounts, formJoins] = await Promise.all([
+                    this.getStatsDocument('clickCounts'),
+                    this.getStatsDocument('viewCounts'),
+                    this.getStatsDocument('socialCounts'),
+                    this.getStatsDocument('formJoins')
+                ]);
+            }
             
             const analyticsData = {
                 pageViews: this.processPageViewsData(viewCounts),
@@ -318,13 +346,30 @@ class FilamentAnalyticsAPI {
         };
     }
 
-    async refreshData(page = 1, limit = 10) {
-        return await this.fetchAnalyticsData(page, limit);
+    async refreshData(page = 1, limit = 10, timeFilter = null) {
+        return await this.fetchAnalyticsData(page, limit, timeFilter);
     }
     
-    async getEventInteractionsPaginated(page = 1, limit = 10) {
+    setTimeFilter(timeFilter) {
+        this.currentTimeFilter = timeFilter;
+    }
+    
+    getTimeFilter() {
+        return this.currentTimeFilter;
+    }
+    
+    async getEventInteractionsPaginated(page = 1, limit = 10, timeFilter = null) {
         try {
-            const clickCounts = await this.getStatsDocument('clickCounts');
+            let clickCounts;
+            const filterToUse = timeFilter || this.currentTimeFilter;
+            
+            if (window.getTimeFilteredAnalyticsCounts && filterToUse !== 'all') {
+                const filteredData = await window.getTimeFilteredAnalyticsCounts(filterToUse);
+                clickCounts = filteredData.clickCounts;
+            } else {
+                clickCounts = await this.getStatsDocument('clickCounts');
+            }
+            
             return this.processEventInteractionsData(clickCounts, page, limit);
         } catch (error) {
             console.error('Error fetching paginated event interactions:', error);
@@ -332,9 +377,18 @@ class FilamentAnalyticsAPI {
         }
     }
     
-    async getTopEventsPaginated(page = 1, limit = 10) {
+    async getTopEventsPaginated(page = 1, limit = 10, timeFilter = null) {
         try {
-            const clickCounts = await this.getStatsDocument('clickCounts');
+            let clickCounts;
+            const filterToUse = timeFilter || this.currentTimeFilter;
+            
+            if (window.getTimeFilteredAnalyticsCounts && filterToUse !== 'all') {
+                const filteredData = await window.getTimeFilteredAnalyticsCounts(filterToUse);
+                clickCounts = filteredData.clickCounts;
+            } else {
+                clickCounts = await this.getStatsDocument('clickCounts');
+            }
+            
             return this.processTopEventsData(clickCounts, page, limit);
         } catch (error) {
             console.error('Error fetching paginated top events:', error);

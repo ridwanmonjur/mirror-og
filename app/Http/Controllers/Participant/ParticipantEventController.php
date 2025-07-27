@@ -52,7 +52,11 @@ class ParticipantEventController extends Controller
 
             $bracketData = $this->eventMatchService->generateBrackets($event, false, $existingJoint);
 
-            return view('Public.ViewEvent', [...$viewData, 'livePreview' => 0, ...$bracketData]);
+            // Check if this is the V2 route
+            $routeName = $request->route()->getName();
+            $viewName = ($routeName === 'participant.eventv2.view') ? 'Public.ViewEventV2' : 'Public.ViewEvent';
+            
+            return view($viewName, [...$viewData, 'livePreview' => 0, ...$bracketData]);
         } catch (Exception $e) {
             Log::error($e);
             return $this->showErrorParticipant($e->getMessage());

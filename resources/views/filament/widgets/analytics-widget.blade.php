@@ -4,6 +4,20 @@
             Analytics Dashboard
         </x-slot>
 
+        <div class="mb-4">
+            <div class="flex space-x-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1 w-fit">
+                <button class="time-filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors active" data-filter="1d">
+                    1d
+                </button>
+                <button class="time-filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-filter="1m">
+                    1m
+                </button>
+                <button class="time-filter-btn px-4 py-2 text-sm font-medium rounded-md transition-colors" data-filter="1y">
+                    1yr
+                </button>
+            </div>
+        </div>
+
         <div id="{{ $widgetId }}" class="analytics-widget">
             <!-- Loading State -->
             <div id="analytics-loading" class="flex justify-center items-center py-8">
@@ -382,6 +396,27 @@
                 .dark .analytics-total {
                     border-top-color: rgb(75, 85, 99);
                 }
+                
+                .time-filter-btn {
+                    background: transparent;
+                    color: rgb(107, 114, 128);
+                    border: none;
+                    cursor: pointer;
+                }
+                
+                .time-filter-btn.active {
+                    background: #43A4D7;
+                    color: white;
+                }
+                
+                .dark .time-filter-btn {
+                    color: rgb(156, 163, 175);
+                }
+                
+                .dark .time-filter-btn.active {
+                    background: #43A4D7;
+                    color: white;
+                }
             </style>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -481,8 +516,17 @@
                             currentPage = page;
                             
                             try {
-                                // Get analytics counts (now returns both click and view counts)
-                                const analyticsData = await window.getAnalyticsCounts();
+                                // Get current time filter
+                                const activeFilterBtn = document.querySelector('.time-filter-btn.active');
+                                const currentFilter = activeFilterBtn ? activeFilterBtn.dataset.filter : '1d';
+                                
+                                // Get analytics counts with time filter
+                                let analyticsData;
+                                if (window.filamentAnalytics && currentFilter !== 'all') {
+                                    analyticsData = await window.filamentAnalytics.fetchAnalyticsData(page, 5, currentFilter);
+                                } else {
+                                    analyticsData = await window.getAnalyticsCounts();
+                                }
                                 console.log('Analytics data:', analyticsData);
                                 
                                 // Always show content even if no data found
@@ -604,6 +648,9 @@
                         
                         // Initialize tab functionality
                         initializeTabs();
+                        
+                        // Initialize time filter functionality
+                        initializeTimeFilters();
                     }
                     
                     function initializeTabs() {
@@ -650,6 +697,32 @@
                                 const targetTotal = document.querySelector(`#${tabGroup}-${type}-total`);
                                 if (targetTotal) {
                                     targetTotal.classList.remove('hidden');
+                                }
+                            });
+                        });
+                    }
+                    
+                    function initializeTimeFilters() {
+                        // Set default active filter (1d)
+                        document.querySelector('.time-filter-btn[data-filter="1d"]').classList.add('active');
+                        
+                        // Add click event listeners to all time filter buttons
+                        document.querySelectorAll('.time-filter-btn').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const filter = this.dataset.filter;
+                                
+                                // Remove active class from all buttons
+                                document.querySelectorAll('.time-filter-btn').forEach(btn => {
+                                    btn.classList.remove('active');
+                                });
+                                
+                                // Add active class to clicked button
+                                this.classList.add('active');
+                                
+                                // Update analytics data with new filter
+                                if (window.filamentAnalytics) {
+                                    window.filamentAnalytics.setTimeFilter(filter);
+                                    updateDashboard(1);
                                 }
                             });
                         });
