@@ -359,31 +359,12 @@ class MiscController extends Controller
             abort(404, 'Invalid or expired download link');
         }
 
-        // Get export data from cache
-        $exportData = cache()->get("withdrawal_export_{$token}");
-        if (!$exportData) {
-            abort(404, 'Export data not found');
-        }
-
-        // Verify user matches
-        if ($tokenData->user_id !== $exportData['user_id']) {
-            abort(403, 'Unauthorized access');
-        }
-
-        // Query withdrawals within the date range
         $withdrawals = Withdrawal::with('user')->get();
 
-        if ($withdrawals->isEmpty()) {
-            abort(404, 'No withdrawal data found');
-        }
-
-        // Generate CSV content
-        $csvContent = $this->generateCsvContent($withdrawals, $exportData['include_bank_details']);
+        $csvContent = $this->generateCsvContent($withdrawals, true) ;
         
-        // Get password for ZIP encryption
         $password = WithdrawalPassword::first();
         
-        // Create temporary files
         $tempDir = storage_path('app/temp/withdrawals');
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
@@ -393,10 +374,8 @@ class MiscController extends Controller
         $csvPath = $tempDir . '/' . $csvFileName;
         $zipPath = $tempDir . '/withdrawals_export_' . date('Y-m-d_H-i-s') . '.zip';
 
-        // Write CSV file
         file_put_contents($csvPath, $csvContent);
 
-        // Create password-protected ZIP
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
             $zip->addFile($csvPath, $csvFileName);
@@ -407,14 +386,10 @@ class MiscController extends Controller
             $zip->setEncryptionName($csvFileName, ZipArchive::EM_AES_256);
             $zip->close();
 
-            // Clean up CSV file
             unlink($csvPath);
 
-            // Clean up token and cache data after successful download
             DB::table('2fa_links')->where('withdrawal_history_token', $token)->delete();
-            cache()->forget("withdrawal_export_{$token}");
 
-            // Download the ZIP file
             return Response::download($zipPath, basename($zipPath))->deleteFileAfterSend(true);
         } else {
             abort(500, 'Unable to create password-protected ZIP file');
