@@ -69,7 +69,7 @@
             <img 
                 id="eventBanner"
                 onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" @class([
-                'opacity-until-hover object-fit-cover border-0 w-100 h-100 ',
+                'opacity-until-hover object-fit-cover border border-secondary w-100 h-100 ',
             ])
                 style="border-radius: 20px; border-bottom-width: 2px; border-bottom-style: solid; height: 270px; "
                 src="{{ '/storage' . '/' . $joinEvent->eventDetails->eventBanner }}" width="100%" height="80%;"
@@ -108,7 +108,7 @@
                                         class="d-none-until-hover-parent my-1  list-unstyled members-hover"
                                     >
                                        
-                                        <img class="rounded-circle object-fit-cover random-color-circle me-2" width="25"
+                                        <img class="rounded-circle object-fit-cover random-color-circle me-2 border border-secondary" width="25"
                                             height="25" 
                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
                                             onerror="this.src='{{ asset('assets/images/404.png') }}'; this.onerror=null;"
@@ -277,7 +277,7 @@
                                                             @foreach ($joinEvent->roster as $roster)
                                                                     @if ($roster->vote_to_quit !== null)
                                                                         <img 
-                                                                            class="rounded-circle random-color-circle object-fit-cover"
+                                                                            class="rounded-circle random-color-circle object-fit-cover border border-secondary"
                                                                             width="25" 
                                                                             height="25" 
                                                                             src="{{ $roster->user->userBanner ? asset('storage/' . $roster->user->userBanner) : '/assets/images/404.png' }}" 
@@ -345,7 +345,7 @@
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                             src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-2 rounded-2" width="30px" height="30px"
+                            class="object-fit-cover me-2 rounded-2 border border-secondary" width="30px" height="30px"
                              style="object-position:center;"    
                         >
                         <span class="text-wrap  d-inline-block  pe-2 text-start"> {{ truncateText($joinEvent->eventDetails->eventName) }}
@@ -358,7 +358,7 @@
                     <img 
                         onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
-                        class="object-fit-cover me-2 rounded-circle rounded-circle2" >
+                        class="object-fit-cover me-2 rounded-circle rounded-circle2 border border-secondary" >
                     <div class="text-start d-inline-flex flex-column justify-content-center  ">
                         <small class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->eventDetails->user->name) }}</small>
                         <small

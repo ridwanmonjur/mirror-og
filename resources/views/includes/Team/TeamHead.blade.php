@@ -182,7 +182,7 @@
         <div v-cloak :class="{'upload-container my-2': true, }" >
             <label class="upload-label">
                 <div class="circle-container mt-1">
-                    <div class="uploaded-image motion-logo "
+                    <div class="uploaded-image motion-logo border border-secondary"
                         style="background-image: url({{ '/storage' . '/'. $selectTeam->teamBanner  }} ), url({{asset('assets/images/404.png')}}) ; object-fit:cover; {{$frameStyles}}"
                     ></div>
                     <div class="d-flex align-items-center justify-content-center upload-button pt-3">
@@ -493,7 +493,7 @@
                                 :style="{ color: '#43a4d7', backgroundColor: 'white', border: '1px solid #e7e7e7'  }"
                             >
                                 <div class="category-button d-inline-block text-ellipsis me-2">
-                                    <img class="object-fit-cover rounded rounded-2" v-bind:src="'/storage/' + element.gameIcon" width="30" height="30">
+                                    <img class="object-fit-cover rounded rounded-2 border border-secondary" v-bind:src="'/storage/' + element.gameIcon" width="30" height="30">
                                     <span>@{{ element?.gameTitle }}</span>
                                 </div>
                                 <span class="ms-2">
@@ -585,7 +585,7 @@
                 <div class="my-0 d-flex justify-content-center align-items-center" v-cloak  v-if="!isEditMode">
                     <span class="ms-2" >{{$selectTeam->teamDescription ?? 'Add a team description'}}</span>
                     @if ($selectTeam->country_flag)
-                        <span class="ms-2 mt-2 fs-5">{{$selectTeam->country_flag}}</span>
+                        <span class="ms-2  fs-5">{{$selectTeam->country_flag}}</span>
                         <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>  
                     @endif
                     <span class="ms-1  badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team
@@ -624,7 +624,7 @@
                                 v-bind:title="element.gameTitle"
                             >
                                 
-                                <img :class="{'border border-2 border-primary': element.id == defaultCategory }" class="object-fit-cover rounded-2" v-bind:src="'/storage/' + element.gameIcon" width="45" height="40">
+                                <img :class="{'border border-2 border-primary': element.id == defaultCategory }" class="object-fit-cover rounded-2 border border-secondary" v-bind:src="'/storage/' + element.gameIcon" width="45" height="40">
                                 <span class="position-absolute rounded-circle d-inline-block " style="right: 0%; top: -25%;  z-index: 50; width: 15px; height: 15px;" v-if="element.id == defaultCategory">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"  class="bi bi-check-circle-fill text-primary" viewBox="0 0 16 16">
                                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>

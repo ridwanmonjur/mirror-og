@@ -45,7 +45,9 @@
                 </div>
                 <div class="modal-body py-0">
                 </div>
+            <p class="my-2 text-primary text-center py-0">Note, you need a complete roster to attend this event! </p>
                 <div class="modal-footer border-0 mb-3">
+                    
                     <button type="button" class="btn mx-auto rounded-pill btn-primary text-white" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>

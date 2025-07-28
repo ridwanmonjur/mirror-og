@@ -46,6 +46,7 @@ function respondRosterApprove(joinEventId) {
     successSwal(`
         <h5 class="my-4">You have added this user to the roster!</h5>
         ${drawEventTable(eventDetails, followCounts)}
+        <p class="text-center text-muted mt-3">The user has been successfully added to your event roster. They can now participate in the upcoming tournament and will be notified of their acceptance. You can continue to manage your roster until registration is confirmed.</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -60,6 +61,7 @@ function respondRosterDisapprove(joinEventId) {
     successSwal(`
         <h5 class="my-4">You have removed this user from the roster!</h5>
         ${drawEventTable(eventDetails, followCounts)}
+        <p class="text-center text-muted mt-3">The selected user has been successfully removed from your event roster. This action has freed up a slot for other potential team members to join your tournament team. The roster can still be modified until registration is confirmed.</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -71,6 +73,7 @@ function voteYes(joinEventId) {
     successSwal(`
         <h5 class="my-4">Your event vote has been registered!</h5>
         ${drawEventTable(eventDetails, followCounts)}
+        <p class="text-center text-muted mt-3">Your vote to quit this event has been successfully registered and counted. The voting process will continue until all roster members have cast their votes, and the final decision will be determined by majority rule. You will be notified once all votes are collected.</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -82,14 +85,14 @@ function voteNo(joinEventId) {
     successSwal(`
         <h5 class="my-4">Your event vote has been registered!</h5>
         ${drawEventTable(eventDetails, followCounts)}
-        
+        <p class="text-center text-muted mt-3">Your vote to stay in this event has been successfully registered and counted. The voting process will continue until all roster members have cast their votes, and the final decision will be determined by majority rule. You will be notified once all votes are collected.</p>
     `, () => scrollSwal(joinEventId));
 }
 
 function captainApprove(joinEventId) {
     successSwal(`
         <p class="mt-4 mb-0 pb-0">You have assigned a new captain!</p>
-       
+        <p class="text-center text-muted mt-3">The new team captain has been successfully appointed. The captain role is essential for tournament coordination.</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -97,6 +100,7 @@ function captanRemove(joinEventId) {
  
     successSwal(`
         <p  class="mt-4 mb-0 pb-0">You have removed the captaincy successfully</p>
+        <p class="text-center text-muted mt-3">The captaincy has been successfully removed from the selected player. Please remember that a team captain must be appointed before your team can confirm registration for this event. Without a captain, you cannot proceed to tournament participation.</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -111,6 +115,7 @@ function confirmSuccess(successMessage, joinEventId) {
         ${drawEventTable(eventDetails, followCounts)}
         <p class="text-center text-primary my-4"> ${successMessage} </p>
         <p class="text-center"> The event starts on ${window.formatDateMySqlLuxon(eventDetails.startDate, eventDetails.startTime)} </p>
+        <p class="text-center text-muted mt-3">Your team is now ready for the upcoming tournament. Make sure all team members are prepared and available for the event start time. Check your notifications for any updates or additional instructions from the tournament organizers.</p>
     `, () => scrollSwal(joinEventId));
 }
 
@@ -215,7 +220,7 @@ function registrationManage(event) {
             showCancelButton: true,
             confirmButtonText: 'Okay, next',
             cancelButtonText: 'Cancel',
-            confirmButtonColor: "#43A4D7",
+            confirmButtonColor: "#43a4d7",
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -239,7 +244,7 @@ function registrationManage(event) {
             showCancelButton: true,
             confirmButtonText: 'Yes, confirm registration now',
             cancelButtonText: 'Wait, go back',
-            confirmButtonColor: "#43A4D7",
+            confirmButtonColor: "#43a4d7",
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -273,7 +278,7 @@ function registrationManage(event) {
             showCancelButton: true,
             confirmButtonText: 'Yes, confirm registration now',
             cancelButtonText: 'Wait, go back',
-            confirmButtonColor: "#43A4D7",
+            confirmButtonColor: "#43a4d7",
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -359,12 +364,7 @@ function submitConfirmCancelForm(event) {
             confirmButtonText: 'Yes, call a vote to quit',
             cancelButtonText: 'Cancel',
             confirmButtonColor: '#43a4d7',
-            cancelButtonColor: '#999',
-            customClass: {
-                popup: 'custom-popup-class',
-                confirmButton: 'custom-confirm-button',
-                cancelButton: 'custom-cancel-button'
-            }
+            cancelButtonColor: '#999'
         }).then((result) => {
             if (result.isConfirmed) {
                 submitForm();
@@ -382,7 +382,7 @@ function submitConfirmCancelForm(event) {
             showCancelButton: true,
             confirmButtonText: 'Okay, next',
             cancelButtonText: 'Cancel',
-            confirmButtonColor: "#43A4D7",
+            confirmButtonColor: "#43a4d7",
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -398,7 +398,9 @@ function submitConfirmCancelForm(event) {
                 } else {
                     Swal.fire ({
                         icon: 'error',
-                        title: 'Error, too late to register!'
+                        title: 'Registration Period Has Ended',
+                        text: 'Unfortunately, the registration deadline for this event has passed and new registrations are no longer being accepted. Please check our upcoming events page for other tournament opportunities where you can still register your team.',
+                        confirmButtonColor: '#43a4d7'
                     })
                 }
             }
@@ -420,7 +422,7 @@ function submitConfirmCancelForm(event) {
             showCancelButton: true,
             confirmButtonText: 'Yes, confirm registration now',
             cancelButtonText: 'Wait, go back',
-            confirmButtonColor: "#43A4D7",
+            confirmButtonColor: "#43a4d7",
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -449,7 +451,7 @@ function submitConfirmCancelForm(event) {
             showCancelButton: true,
             confirmButtonText: 'Yes, confirm registration now',
             cancelButtonText: 'Wait, go back',
-            confirmButtonColor: "#43A4D7",
+            confirmButtonColor: "#43a4d7",
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -670,8 +672,9 @@ addOnLoad(()=> {
             scrollSwal(savedId);
             Swal.fire({
                 icon: 'error',
-                text: errorMessage,
-                timer: 1500,
+                title: 'Operation Failed',
+                text: `An error occurred while processing your request: ${errorMessage}. Please try again or contact our support team if the issue persists. Make sure you have a stable internet connection and all required information is provided correctly.`,
+                timer: 3000,
                 showConfirmButton: false
             });
         } else {
@@ -780,12 +783,13 @@ function voteForEvent(event) {
         html: `
             <h5 class="mt-2"> Have you confirmed your decision in this vote? </h5>
             ${drawEventTable(eventDetails, followCounts)}
+            <p class="text-center text-muted mt-3">Please take a moment to consider your decision carefully. Your vote will be final and cannot be changed once submitted. This decision will affect your entire team's participation in the tournament.</p>
         `,
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
-        confirmButtonColor: "#43A4D7",
+        confirmButtonColor: "#43a4d7",
     }).then((result) => {
         if (result.isConfirmed) {
             fetchData(url,
@@ -861,7 +865,7 @@ function approveMemberAction(event) {
         'Yes, join the roster!'   
         : 'Yes, add this member!',
         denyButtonText: 'No',
-        confirmButtonColor: "#43A4D7",
+        confirmButtonColor: "#43a4d7",
     }).then((result) => {
         if (result.isConfirmed) {
             fetchData(url,
@@ -936,7 +940,7 @@ async function disapproveMemberAction(event) {
             : 'Yes, remove this member!'
         ,
         denyButtonText: 'No',
-        confirmButtonColor: "#43A4D7",
+        confirmButtonColor: "#43a4d7",
     }).then((result) => {
         if (result.isConfirmed) {
 
@@ -1008,12 +1012,13 @@ async function capatainMemberAction(event) {
             ${drawEventTable(eventDetails, followCounts)}
             ${captainMainFormHtml}
             ${body}
+            <p class="text-center text-muted mt-3">The team captain plays a crucial role in tournament management and serves as the primary point of contact for event organizers. Choose someone who will be available and responsive throughout the tournament duration.</p>
         `,
         showDenyButton: true,
         showCancelButton: false,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
-        confirmButtonColor: "#43A4D7",
+        confirmButtonColor: "#43a4d7",
     }).then((result) => {
         if (result.isConfirmed) {
             fetchData(url,
@@ -1054,19 +1059,19 @@ function drawEventTable(eventDetails, followCounts) {
 
     innerHTML+=`
         <div class="mx-3 py-2 px-3 text-start w-75 mx-auto mt-3 mb-3 border-${eventDetails.tier.eventTier} " >
-            <div>
+            <div class="d-flex justify-content-start align-items-center">
                 <img 
                     onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                     src="${eventDetails?.game?.gameIcon ? '/storage/' + eventDetails.game.gameIcon : '/assets/images/404.png'}"
-                    class="object-fit-cover rounded-circle me-1" width="30" height="30"
+                    class="object-fit-cover border border-primary rounded-circle me-1" width="30" height="30"
                 >
                 <p class=" d-inline my-0 ms-2"> ${eventDetails.eventName}</p>
             </div>
-            <div class="d-flex pt-2 justify-content-start">
+            <div class="d-flex pt-2 justify-content-start align-items-center">
                 <img onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
                     src="${eventDetails?.user?.userBanner ? '/storage/' + eventDetails.user.userBanner : '/assets/images/404.png'}"
                     width="30"
-                    height="30" class="me-1 object-fit-cover  rounded-circle random-color-circle"
+                    height="30" class="me-1 object-fit-cover border border-ligh rounded-circle random-color-circle"
                 >
                 <div class="ms-2">
                     <small class="d-block py-0 my-0">
