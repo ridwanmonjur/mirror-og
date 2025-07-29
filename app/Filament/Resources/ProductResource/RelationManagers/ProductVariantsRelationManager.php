@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProductResource\RelationManagers;
 
+use App\Filament\Traits\HandlesFilamentExceptions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -13,6 +14,8 @@ use Illuminate\Contracts\Pagination\CursorPaginator;
 
 class ProductVariantsRelationManager extends RelationManager
 {
+    use HandlesFilamentExceptions;
+
     protected static string $relationship = 'productVariants';
     
     protected static ?string $recordTitleAttribute = 'name';
