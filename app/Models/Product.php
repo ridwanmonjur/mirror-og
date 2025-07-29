@@ -14,6 +14,12 @@ class Product extends Model
         'image', 'images', 'featured', 'isPhysical'
     ];
 
+    protected $casts = [
+        'images' => 'array',
+        'featured' => 'boolean',
+        'isPhysical' => 'boolean',
+    ];
+
     protected $perPage = 12;
 
 
