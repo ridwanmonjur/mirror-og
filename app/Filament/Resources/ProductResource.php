@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Filament\Traits\HandlesFilamentExceptions;
 use App\Models\Product;
 use App\Models\Category;
 use Filament\Forms;
@@ -17,6 +18,8 @@ use Illuminate\Support\Str;
 
 class ProductResource extends Resource
 {
+    use HandlesFilamentExceptions;
+
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
