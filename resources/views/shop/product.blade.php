@@ -63,7 +63,7 @@
                         <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
                             @if ($product->images)
                                 <div class="carousel-inner">
-                                    @foreach (json_decode($product->images, true) as $index => $image)
+                                    @foreach ((is_array($product->images) ? $product->images : json_decode($product->images, true)) as $index => $image)
                                         <div
                                             class="carousel-item  border border-light {{ $index === 0 ? 'active' : '' }}">
                                             <img src="{{ asset('storage/' . $image) }}"
