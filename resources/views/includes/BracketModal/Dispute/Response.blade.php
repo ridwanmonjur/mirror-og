@@ -4,29 +4,29 @@
             <div class="ps-5 ps-5 text-start">
                 <h5 class="text-start my-3"> Counter Explanation (Optional) </h5>
                 <p class="my-0"> Responding Team </p>
-                <img v-bind:src="'/storage/' + report.teams[dispute[reportUI.matchNumber]?.response_teamNumber]?.banner"
+                <img v-bind:src="'/storage/' + report.teams[dispute?.response_teamNumber]?.banner"
                     alt="Team Banner" width="50" height="50"
                     onerror="this.src='{{ asset('assets/images/404.svg') }}';"
                     class="mb-1 border border-2 popover-content-img rounded-circle object-fit-cover">
                 <p class="text-primary">
-                    <span v-text="report.teams[dispute[reportUI.matchNumber]?.response_teamNumber]?.name">
+                    <span v-text="report.teams[dispute?.response_teamNumber]?.name">
                     </span>
-                    <span v-show="reportUI.teamNumber == dispute[reportUI.matchNumber]?.response_teamNumber">(Your
+                    <span v-show="reportUI.teamNumber == dispute?.response_teamNumber">(Your
                         Team)
                     </span>
                 </p>
 
-                <p class="my-0" v-html="dispute[reportUI.matchNumber]?.response_explanation">
+                <p class="my-0" v-html="dispute?.response_explanation">
                 </p>
                 <p class="text-primary" style="white-space: pre-wrap;"
-                    v-html="dispute[reportUI.matchNumber]?.dispute_description">
+                    v-html="dispute?.dispute_description">
                 </p>
                 <div class="mb-2">
-                    <template v-if="dispute[reportUI.matchNumber]?.response_image_videos && dispute[reportUI.matchNumber]?.response_image_videos[0]">
+                    <template v-if="dispute?.response_image_videos && dispute?.response_image_videos[0]">
                         <div>
                             <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
 
-                            <template v-for="imgVideo in dispute[reportUI.matchNumber]?.response_image_videos"
+                            <template v-for="imgVideo in dispute?.response_image_videos"
                                 :key="imgVideo">
                                 <div>
                                     <template v-if="imgVideo.startsWith('media/img')">

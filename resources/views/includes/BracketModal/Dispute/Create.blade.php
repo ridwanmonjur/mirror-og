@@ -2,7 +2,7 @@
     <form method="POST" v-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
         <input type="hidden" name="action" value="create">
         <input type="hidden" name="event_id" value="{{ $event->id }}">
-        <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.matchNumber]?.id">
+        <input type="hidden" name="dispute_teamId" v-bind:value="report.teams?.id">
         <input type="hidden" name="dispute_teamNumber" v-bind:value="reportUI.teamNumber">
         <input type="hidden" name="report_id" v-bind:value="report.id">
         <input type="hidden" name="dispute_userId" value="{{ $user?->id }}">

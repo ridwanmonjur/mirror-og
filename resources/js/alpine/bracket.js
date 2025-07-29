@@ -6,89 +6,9 @@ import {
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
-import tippy from 'tippy.js';
-import { initialBracketData, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
+import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
+import { addAllTippy, addDotsToContainer, addTippyToClass } from "../custom/tippy";
 
-window.specialTippy = [];
-window.popoverIdToPopover = window.activePopovers || {};
-window.ourIdToPopoverId = window.ourIdToPopoverId || {};
-
-function getPopover(element) {
-  let popverId = window.ourIdToPopoverId[element];
-  if (popverId) {
-    let popover = window.popoverIdToPopover[popverId];
-    return popover;
-  }
-
-  return null;
-}
-
-window.hideAll = () => {
-  for (let element of window.specialTippy) {
-    let popover = getPopover(element);
-    popover.hide();
-  }
-}
-
-window.showAll = () => {
-  for (let element of window.specialTippy) {
-    let popover = getPopover(element);
-    popover?.show();
-  }
-}
-
-function createTippy(parent, html, trigger, options) {
-    return tippy(parent, {
-        content: html,
-        allowHTML: true,
-        placement: 'top',
-        trigger,
-        triggerTarget: parent,
-        // hideOnClick: false,
-        // trigger: 'click',
-        interactive: true,
-        hideOnClick: false,
-        delay: [50, 0],
-        theme: 'light',
-        zIndex: 9999,
-        appendTo: document.body,
-        ...options,        
-    });
-}
-
-window.addPopoverWithIdAndHtml = function (parent, html, trigger="click", options = {}, ourId = null) {
-    if (!parent || !html) return null;
-
-    if (ourId) {
-        
-        let popoverId = window.ourIdToPopoverId[ourId];
-        if (popoverId) {
-          if (popoverId in window.popoverIdToPopover) {
-                window.popoverIdToPopover[popoverId].destroy();
-                const { [popoverId]: removed, ...rest } = window.popoverIdToPopover;
-                window.popoverIdToPopover = rest;
-            }
-        }
-    }
-    
-    const tippyInstance = createTippy(
-        parent, 
-        html, 
-        trigger, 
-        { ...options }
-    );
-
-    window.ourIdToPopoverId[ourId] = tippyInstance.id;
-    window.popoverIdToPopover[tippyInstance.id] = tippyInstance;
-        
-    return tippyInstance;
-}
-
-window.addPopoverWithIdAndChild = function (parent, child, trigger="click", options = {}, ourId) {
-    if (!parent || !child || !child.innerHTML) return null;
-    
-    return window.addPopoverWithIdAndHtml(parent, child.innerHTML, trigger, options, ourId);
-}
 
 const eventId = document.getElementById('eventId')?.value;
 
@@ -180,125 +100,9 @@ const db = initializeFirestore(app, {
   localCache: memoryLocalCache(),
 });
 
-
-const parentElements = document.querySelectorAll(".first-item .popover-parent");
-parentElements?.forEach(parent => {
-  const contentElement = parent.querySelector(".popover-content");
-  const parentElement = parent.querySelector(".popover-button");
-  if (contentElement) {
-    window.addPopover(parentElement, contentElement, 'mouseenter', {
-      interactive: false
-    });
-  }
-});
-
-
-function addAllTippy() {
-  const parentSecondElements = document.querySelectorAll(".middle-item");
-
-  parentSecondElements?.forEach(parent => {
-    let dataset = parent.dataset;
-    let {stage_name: stageName, inner_stage_name: innerStageName} = dataset;
-    const triggers = parent.querySelectorAll(".popover-button");
-    triggers.forEach((trigger) => {
-      let triggerPositionId = trigger.dataset.position;
-      let triggerParentsPositionIds = previousValues[triggerPositionId];
-      if (triggerParentsPositionIds && Array.isArray(triggerParentsPositionIds)) {
-        let classNamesJoined = triggerParentsPositionIds.join(".");
-        let triggerClassName = '.popover-middle-content.' + classNamesJoined;
-        let contentElement = document.querySelector(triggerClassName);
-        if (contentElement) {
-       
-          if (contentElement.classList.contains('warning') && !(
-            stageName == 'L' && ['e1', 'e3', 'e5'].includes(innerStageName)
-          )) {
-            let {
-              diffDate, position
-            } = contentElement.dataset;
-
-            if (triggerParentsPositionIds.includes(position)) {
-              let tippyId = position + '+' + triggerPositionId;
-              let popover = window.addPopoverWithIdAndHtml(trigger, generateWarningHtml(diffDate, triggerPositionId), 'manual', {
-                  onShow(instance) {
-                    const tippyBox = instance.popper;
-                    tippyBox.addEventListener('click', () => {
-                      instance.hide();
-                  });
-                  }
-                }, tippyId);
-              window.specialTippy = [...window.specialTippy, tippyId] 
-            }
-          }
-
-          window.addPopoverWithIdAndChild(trigger, contentElement, 'mouseenter', {
-            interactive: false
-          }, classNamesJoined + '/' + triggerPositionId);
-        }
-      }
-    })
-  });
-}
-
-
-function addTippyToClass(classAndPositionList) {
-  for (let classX of classAndPositionList) {
-    let [triggerClass, prevClass] = classX;
-    const triggers = document.querySelectorAll(`.popover-button.data-position-${triggerClass}`);
-    triggers.forEach((trigger) => {
-      let triggerClassName = '.popover-middle-content.' + prevClass;
-      let contentElement = document.querySelector(triggerClassName);
-      window.addPopoverWithIdAndHtml(trigger, contentElement, 'mouseenter', {
-        interactive: false
-      }, prevClass + '/' + triggerClassName);
-    });
-  }
-}
-window.addTippyToClass = addTippyToClass;
-
-function addDotsToContainer(key, value) {
-
-  let parent = document.querySelector(`.${key}.popover-middle-content`);
-  let table = document.querySelector(`.${key}.tournament-bracket__table`);
-  let dottedScoreContainer = parent?.querySelectorAll('.dotted-score-container');
-  let dottedScoreBox = parent?.querySelectorAll('.dotted-score-box');
-  let statusBox = parent?.querySelectorAll('.status-box');
-  let dottedScoreTable = table?.querySelectorAll('.dotted-score-box');
-  dottedScoreContainer?.forEach((element, index) => {
-    element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-      if (value.realWinners[dottedElementIndex]) {
-        if (value.realWinners[dottedElementIndex] == index) {
-          dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
-          dottedElement.classList.add("bg-success");
-        } else {
-          dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
-          dottedElement.classList.add("bg-red");
-        }
-      } else {
-        dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
-        dottedElement.classList.add('bg-secondary');
-      }
-    })
-  });
-
-  dottedScoreBox?.forEach((element, index) => {
-    element.innerHTML = value['score'][index];
-  });
-
-  dottedScoreTable?.forEach((element, index) => {
-    element.innerHTML = value['score'][index];
-  });
-
-  statusBox?.forEach((element, index) => {
-    if ('completeMatchStatus' in value) {
-      element.innerHTML = value['completeMatchStatus'];
-    }
-  });
-
-}
-
 async function getAllMatchStatusesData() {
-  const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
-  const allMatchStatusesQ = query(allMatchStatusesCollectionRef);
+  const matchesCRef = collection(db, `event/${eventId}/brackets`);
+  const allMatchStatusesQ = query(matchesCRef);
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;
@@ -355,8 +159,6 @@ async function getAllMatchStatusesData() {
     } else {
       window.showAll();
     }
-
- 
 
     await window.closeLoading();
     let isLoading = localStorage.getItem('isLoading');
@@ -466,19 +268,120 @@ function CountDown (options) {
   };
 }
 
+let totalMatches = 3;
+const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value ?? '[]');
+const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums' ).value ?? '[]');
+
 const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
-let initialData = initialBracketData(userTeamId);
+let {
+  _reportStore,
+  _authStore,
+  _disputeStore,
+  _initialBracket
+} = generateInitialBracket(userTeamId, disputeLevelEnums, userLevelEnums, totalMatches);
+
+let reportStore = reactive(_reportStore);
+let authStore = reactive(_authStore);
+let disputeStore = reactive(_disputeStore);
+
 
 function BracketData() {
 
-  const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums' ?? '[]').value);
-  const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums' ?? '[]').value);
+ 
   
   return {
-    ...initialData,
     userLevelEnums,
     disputeLevelEnums,
-   
+    ..._initialBracket,
+
+    async init() {
+      console.log(">>>init>>>");
+      if (hiddenUserId) {
+        const { user, claims } = await initializeFirebaseAuth();
+        this.firebaseUser = user;
+        this.userClaims = claims;
+        this.isInitialized = true;
+
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            user.getIdTokenResult().then(idTokenResult => {
+              this.firebaseUser = { ...user, ...idTokenResult.claims };
+            });
+          } else {
+            this.firebaseUser = null;
+            this.userClaims = null;
+          }
+        });
+      }
+
+      window.addEventListener('changeReport', (event) => {
+        window.showLoading();
+        let newReport = {}, newReportUI = {};
+        let eventUpdate = event?.detail ?? null;
+        clearSelection();
+        this.reportUI.statusText = '';
+        if (this.subscribeToMatchStatusesSnapshot)
+          this.subscribeToMatchStatusesSnapshot();
+        if (this.subscribeToCurrentReportDisputesSnapshot)
+          this.subscribeToCurrentReportDisputesSnapshot();
+
+        let teamNumber = eventUpdate?.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
+          (eventUpdate.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
+
+        let otherTeamNumber = teamNumber === 0 ? 1 : 0;
+        if (!eventUpdate) {
+          newReport = {
+            ..._initialBracket.report,
+          };
+
+          newReportUI = {
+            ..._initialBracket.reportUI,
+          }
+        } else {
+          resetDotsToContainer();
+
+          newReportUI = {
+            ..._initialBracket.reportUI,
+            teamNumber,
+            otherTeamNumber,
+          }
+
+          newReport = {
+            ..._initialBracket.report,
+            position: eventUpdate.position ?? _initialBracket.report.position,
+            userLevel: eventUpdate.user_level ?? _initialBracket.report.userLevel,
+            deadline: eventUpdate.deadline ?? null,
+            teams: [
+              {
+                ..._initialBracket.report.teams[0],
+                winners: _initialBracket.report.teams[0].winners,
+                id: eventUpdate.team1_id,
+                position: eventUpdate.team1_position,
+                banner: eventUpdate.team1_teamBanner,
+                name: eventUpdate.team1_teamName ?? '-'
+              },
+              {
+                ..._initialBracket.report.teams[0],
+                winners: _initialBracket.report.teams[1].winners,
+                id: eventUpdate.team2_id,
+                position: eventUpdate.team2_position,
+                banner: eventUpdate.team2_teamBanner,
+                name: eventUpdate.team2_teamName ?? '-'
+              }
+            ],
+          };
+        }
+
+        this.makeCurrentReportSnapshot(eventUpdate.classNamesWithoutPrecedingDot, newReport, newReportUI);
+      });
+
+      // Swal.close();
+    },
+
+    destroy() {
+      if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
+    },
+
     async onSubmitSelectTeamToWin() {
       let teamNumber = this.reportUI.teamNumber;
       let otherTeamNumber = this.reportUI.otherTeamNumber;
@@ -628,9 +531,9 @@ function BracketData() {
       };
 
       await updateDoc(disputeRef, updateData);
-      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
+      const matchesCRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-      const reportRef = doc(allMatchStatusesCollectionRef, customDocId);
+      const reportRef = doc(matchesCRef, customDocId);
 
       try {
         let newRealWinners = [...this.report.realWinners];
@@ -671,9 +574,9 @@ function BracketData() {
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
     async saveReport(tempState) {
-      const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
+      const matchesCRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-      const docRef = doc(allMatchStatusesCollectionRef, customDocId);
+      const docRef = doc(matchesCRef, customDocId);
 
       try {
         let firestoreDoc = {
@@ -708,7 +611,7 @@ function BracketData() {
       document.querySelector(`.${classToHide}`).classList.toggle("d-none");
     },
     showImageModal(imgPath, mediaType) {
-      const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
+      const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
       const imagePreview = document.getElementById('imagePreview');
       const videoPreview = document.getElementById('videoPreview');
       const videoSource = document.getElementById('videoSource');
@@ -728,7 +631,8 @@ function BracketData() {
     },
 
     selectTeamToWin(event, index) {
-      this.clearSelection();
+      clearSelection();
+      this.reportUI.statusText = '';
       let selectedButton = event.currentTarget;
       if (selectedButton) {
         selectedButton.style.backgroundColor = '#43A4D7';
@@ -744,25 +648,7 @@ function BracketData() {
 
     },
 
-    clearSelection() {
-      let selectionButtons = document.querySelectorAll('.selectedButton');
-      selectionButtons.forEach((selectedButton) => {
-        if (selectedButton) {
-          selectedButton.style.backgroundColor = 'white';
-          selectedButton.style.color = 'black';
-          selectedButton = null;
-        }
-
-        const selectTeamSubmitButton = document.querySelector('.selectTeamSubmitButton');
-        selectTeamSubmitButton.style.backgroundColor = '#white';
-        selectTeamSubmitButton.style.color = 'black';
-
-        document.getElementById('selectedTeamIndex').value = null;
-
-        this.reportUI.statusText = '';
-
-      });
-    },
+    
 
     changeMatchNumber(increment) {
       let newNo = Number(this.reportUI.matchNumber) + Number(increment);
@@ -795,108 +681,11 @@ function BracketData() {
       };
     },
     
-    resetDotsToContainer() {
-      let parent = document.getElementById('reportModal');
-      let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
-      dottedScoreContainer.forEach((element) => {
-        element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-          dottedElement.classList.remove('bg-success', 'bg-red');
-          dottedElement.classList.add('bg-secondary');
-          if (dottedElementIndex == 2) {
-            dottedElement.classList.add('d-none');
-          }
-        });
-      });
-    },
     
-    async init() {
-      console.log(">>>init>>>");
-      if (hiddenUserId) {
-        const { user, claims } = await initializeFirebaseAuth();
-        this.firebaseUser = user;
-        this.userClaims = claims;
-        this.isInitialized = true;
+    
+    
 
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            user.getIdTokenResult().then(idTokenResult => {
-              this.firebaseUser = { ...user, ...idTokenResult.claims };
-            });
-          } else {
-            this.firebaseUser = null;
-            this.userClaims = null;
-          }
-        });
-      }
-
-      window.addEventListener('changeReport', (event) => {
-        window.showLoading();
-        let newReport = {}, newReportUI = {};
-        let eventUpdate = event?.detail ?? null;
-        this.clearSelection();
-        if (this.subscribeToMatchStatusesSnapshot)
-          this.subscribeToMatchStatusesSnapshot();
-        if (this.subscribeToCurrentReportDisputesSnapshot)
-          this.subscribeToCurrentReportDisputesSnapshot();
-
-        let teamNumber = eventUpdate?.user_level == this.userLevelEnums['IS_TEAM1'] ? 0 :
-          (eventUpdate.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
-
-        let otherTeamNumber = teamNumber === 0 ? 1 : 0;
-        if (!eventUpdate) {
-          newReport = {
-            ...initialData.report,
-          };
-
-          newReportUI = {
-            ...initialData.reportUI,
-          }
-        } else {
-          this.resetDotsToContainer();
-
-          newReportUI = {
-            ...initialData.reportUI,
-            teamNumber,
-            otherTeamNumber,
-          }
-
-          newReport = {
-            ...initialData.report,
-            position: eventUpdate.position ?? initialData.report.position,
-            userLevel: eventUpdate.user_level ?? initialData.report.userLevel,
-            deadline: eventUpdate.deadline ?? null,
-            teams: [
-              {
-                ...initialData.report.teams[0],
-                winners: initialData.report.teams[0].winners,
-                id: eventUpdate.team1_id,
-                position: eventUpdate.team1_position,
-                banner: eventUpdate.team1_teamBanner,
-                name: eventUpdate.team1_teamName ?? '-'
-              },
-              {
-                ...initialData.report.teams[0],
-                winners: initialData.report.teams[1].winners,
-                id: eventUpdate.team2_id,
-                position: eventUpdate.team2_position,
-                banner: eventUpdate.team2_teamBanner,
-                name: eventUpdate.team2_teamName ?? '-'
-              }
-            ],
-          };
-        }
-
-
-        this.getCurrentReportSnapshot(eventUpdate.classNamesWithoutPrecedingDot, newReport, newReportUI);
-      });
-
-      // Swal.close();
-    },
-    destroy() {
-      if (this.subscribeToMatchStatusesSnapshot) this.subscribeToMatchStatusesSnapshot();
-    },
-
-    getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot) {
+    makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot) {
       const disputesRef = collection(db, `/event/${eventId}/disputes`);
       const disputeQuery = query(
         disputesRef,
@@ -929,7 +718,8 @@ function BracketData() {
       window.closeLoading()
     },
 
-    getCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
+    makeCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
+    
       const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
       let initialLoad = true;
 
@@ -967,9 +757,12 @@ function BracketData() {
               })
             })
 
-            this.getCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
+            this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
             initialLoad = false;
           } else {
+            console.log({newReport, newReportUI});
+            console.log({newReport, newReportUI});
+            console.log({newReport, newReportUI});
             this.report = { ...newReport };
             this.reportUI = { ...newReportUI }
             this.dispute = [null, null, null];
@@ -1029,9 +822,9 @@ function BracketData() {
             let newDisputeId = `${this.report.teams[0].position}.`+`${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
-            const allMatchStatusesCollectionRef = collection(db, `event/${eventId}/brackets`);
+            const matchesCRef = collection(db, `event/${eventId}/brackets`);
             const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-            const reportRef = doc(allMatchStatusesCollectionRef, customDocId);
+            const reportRef = doc(matchesCRef, customDocId);
             let disputeResolved = [...this.report.disputeResolved];
             disputeResolved[this.reportUI.matchNumber] = false;
             let updatedRemaining = {
@@ -1087,6 +880,10 @@ function BracketData() {
       });
     
         if (result.isConfirmed) {
+          const matchesCRef = collection(db, `event/${eventId}/brackets`);
+
+          const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
+          const reportRef = doc(matchesCRef, customDocId);
           let { files } = await fileStore.uploadToServer('response');
 
           const disputeRef = doc(db, `event/${eventId}/disputes`, id);
@@ -1110,9 +907,7 @@ function BracketData() {
 
           await updateDoc(reportRef, updatedRemaining);
           
-        } else {
-          handleCancelResponse();
-        }
+        } 
       }
     
   };

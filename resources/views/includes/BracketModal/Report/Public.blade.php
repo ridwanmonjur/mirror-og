@@ -1,7 +1,7 @@
 <div>
     <template v-if="report">
         <div class="my-0 py-0">
-            <template v-if="report.realWinners[reportUI.matchNumber]">
+            <template v-if="report.realWinners">
                 @include('includes.BracketModal.Report.RealWinners')
             </template>
             <template v-else>

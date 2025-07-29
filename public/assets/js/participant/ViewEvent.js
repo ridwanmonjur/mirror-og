@@ -294,7 +294,8 @@ function reportModalShow(event) {
     });
     window.dispatchEvent(alpineEvent);
     const modalElement = document.getElementById('reportModal');
-    let modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    if (!modalElement) return;
+    let modal = window.bootstrap.Modal.getOrCreateInstance(modalElement);
     if (modal) {
         modal.show();
     } 

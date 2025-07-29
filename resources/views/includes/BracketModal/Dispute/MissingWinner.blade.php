@@ -39,9 +39,9 @@
                     <div class="ps-5 ps-5 text-start">
                         <form method="POST" v-on:submit="resolveDisputeForm(event)">
                             <input type="hidden" name="action" value="resolve">
-                            <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber]?.id">
+                            <input type="hidden" name="id" v-bind:value="dispute?.id">
                             <input type="hidden" name="match_number"
-                                v-bind:value="dispute[reportUI.matchNumber]?.match_number">
+                                v-bind:value="dispute?.match_number">
 
                             <input type="hidden" name="resolution_winner" id="resolution_winner_input">
                             <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">

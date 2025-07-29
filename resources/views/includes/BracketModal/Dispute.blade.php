@@ -82,16 +82,16 @@
                 </div>
                
 
-                <template v-if="dispute[reportUI.matchNumber]">
+                <template v-if="dispute">
                     <div>
                          @include('includes.BracketModal.Dispute.Claim')
-                        <template v-if="dispute[reportUI.matchNumber]?.response_teamId">
+                        <template v-if="dispute?.response_teamId">
                             @include('includes.BracketModal.Dispute.Response')
                         </template>
-                        <template v-if="!dispute[reportUI.matchNumber]?.response_teamId && userLevelEnums['IS_ORGANIZER'] != report.userLevel">
+                        <template v-if="!dispute?.response_teamId && userLevelEnums['IS_ORGANIZER'] != report.userLevel">
                             <div class="row">
                                 <template
-                                    v-if="reportUI.teamNumber == dispute[reportUI.matchNumber]?.dispute_teamNumber">
+                                    v-if="reportUI.teamNumber == dispute?.dispute_teamNumber">
                                     <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                         <div
                                             class="row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
@@ -107,7 +107,7 @@
                                     </div>
                                 </template>
                                 <template
-                                    v-if="reportUI.teamNumber != dispute[reportUI.matchNumber]?.dispute_teamNumber && !dispute[reportUI.matchNumber]?.resolution_winner">
+                                    v-if="reportUI.teamNumber != dispute?.dispute_teamNumber && !dispute?.resolution_winner">
                                     <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                                         <div class="response_decision row  bg-light justify-content-start border border-3 border rounded px-2 py-2">
                                             <div class="mt-3 d-flex align-items-center py-3 pb-4 justify-content-around flex-column">
@@ -115,9 +115,9 @@
                                                     Submit Counter Evidence
                                                 </button>
                                                 <form method="POST" v-on:submit="resolveDisputeForm(event)" id="resolveForm">
-                                                    <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber]?.match_number">
+                                                    <input type="hidden" name="match_number" v-bind:value="dispute?.match_number">
                                                     <input type="hidden" name="action" value="resolve">
-                                                    <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber]?.id">
+                                                    <input type="hidden" name="id" v-bind:value="dispute?.id">
                                                     <input type="hidden" name="resolution_winner" v-bind:value="reportUI.otherTeamNumber">
                                                     <input type="hidden" name="resolution_resolved_by" v-bind:value="disputeLevelEnums['RESPONDER']">
                                                     <button type="submit" style="width: 250px;" class="btn d-inline-block btn-light border px-2 mb-2 py-2 border-dark rounded-pill text-dark"
@@ -138,8 +138,8 @@
                                                 <input type="hidden" name="action" value="respond">
                                                 <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.teamNumber]?.id">
                                                 <input type="hidden" name="response_teamNumber" v-bind:value="reportUI.teamNumber">
-                                                <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber]?.match_number">
-                                                <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber]?.id">
+                                                <input type="hidden" name="match_number" v-bind:value="dispute?.match_number">
+                                                <input type="hidden" name="id" v-bind:value="dispute?.id">
                                                 <input type="hidden" name="response_userId" value="{{$user?->id}}">
 
                                                 <h5 class="text-start my-3"> Dispute Description (optional) </h5>
@@ -183,7 +183,7 @@
                             </div>
                         </template> 
                         
-                        <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
+                        <template v-if="dispute?.resolution_winner">
                             @include('includes.BracketModal.Dispute.Winner')
                         </template> 
                          <template v-else> 
@@ -197,12 +197,12 @@
                             </button>
                         </div>
                         <br>
-                        <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner && reportUI.teamNumber == dispute[reportUI.matchNumber]?.dispute_teamNumber">
+                        <template v-if="!dispute?.resolution_winner && reportUI.teamNumber == dispute?.dispute_teamNumber">
                             <div class="text-center">
                                 <form method="POST" v-on:submit="resolveDisputeForm(event)">
                                     <input type="hidden" name="action" value="resolve">
-                                    <input type="hidden" name="id" v-bind:value="dispute[reportUI.matchNumber]?.id">
-                                    <input type="hidden" name="match_number" v-bind:value="dispute[reportUI.matchNumber]?.match_number">
+                                    <input type="hidden" name="id" v-bind:value="dispute?.id">
+                                    <input type="hidden" name="match_number" v-bind:value="dispute?.match_number">
                                     <input type="hidden" name="already_winner" v-bind:value="reportUI.otherTeamNumber">
                                     <input type="hidden" name="resolution_resolved_by" v-bind:value="disputeLevelEnums['DISPUTEE']">
                                     <button type="submit"

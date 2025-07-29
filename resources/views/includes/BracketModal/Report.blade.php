@@ -95,7 +95,7 @@
                             <div class="col-8 col-lg-10 px-0">
                                 <p>
                                     Game <span v-text="reportUI.matchNumber+1"> </span>
-                                    <span v-bind:class="'fw-bold Color-'+ report.completeMatchStatus + ' '"  v-text="report.matchStatus[reportUI.matchNumber]"></span> 
+                                    <span v-bind:class="'fw-bold Color-'+ report.completeMatchStatus + ' '"  v-text="report.matchStatus"></span> 
                                 </p>
                                 <template v-if="userLevelEnums['IS_TEAM1'] === report.userLevel 
                                     || userLevelEnums['IS_TEAM2'] === report.userLevel"
