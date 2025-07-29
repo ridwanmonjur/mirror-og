@@ -127,17 +127,17 @@ function rosterCountCaptainHtmlGenerater(roster, rosterCaptainId, rosterMap, eve
     }, 0);
     return `
         <div class="roster-container">
-            <div class="my-3 text-start">Current roster (${count}/${eventDetails?.game?.player_per_team || getData('maxRosterSize')})</div>
+            <div class="my-3 text-start">Roster Maximum: ${eventDetails?.game?.player_per_team || getData('maxRosterSize')} players</div>
             ${roster.map(player =>  {
 
-                if (!rosterMap[player.user.id])  return '';
+                // if (!rosterMap[player.user.id])  return '';
 
                 return `<div class="d-flex align-items-center gap-2 my-2">
                     <img
-                        width="20"
-                        height="20"
+                        width="25"
+                        height="25"
                         onerror="this.onerror = null; this.src= '/assets/images/404q.png';"
-                        class="rounded-circle random-color-circle"
+                        class="rounded-circle border border-secondary random-color-circle"
                         src="${player?.user?.userBanner ? '/storage/' + player.user.userBanner : '/assets/images/404.png'}"
                     >
                     <small>

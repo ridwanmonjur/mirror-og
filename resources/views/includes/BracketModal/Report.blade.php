@@ -5,7 +5,7 @@
                 <div class="{{ ' popover-report text-center  p-0 ' . 'Team1' . ' ' . 'Team2' }}"
                 >
 
-                    <div class=" popover-box bg-white border-2 border  row justify-content-start border border-dark border px-0 py-0"
+                    <div class="px-2 popover-box bg-white border-2 border  row justify-content-start border border-dark border px-0 py-0"
                     >
                         <div class="text-center  mt-4">
                              <h5 class="text-uppercase py-0 mt-0 mb-0 text-primary">

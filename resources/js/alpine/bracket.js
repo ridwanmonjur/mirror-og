@@ -6,7 +6,7 @@ import {
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
-import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
+import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "../custom/brackets";
 import { addAllTippy, addDotsToContainer, addTippyToClass } from "../custom/tippy";
 
 
@@ -274,28 +274,23 @@ const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums'
 
 const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
 let {
-  _reportStore,
-  _authStore,
-  _disputeStore,
+  reportStore,
+  disputeStore,
   _initialBracket
 } = generateInitialBracket(userTeamId, disputeLevelEnums, userLevelEnums, totalMatches);
 
-let reportStore = reactive(_reportStore);
-let authStore = reactive(_authStore);
-let disputeStore = reactive(_disputeStore);
+let _reportStore = {...reportStore};
+let _disputeStore = {...disputeStore};
 
 
 function BracketData() {
-
- 
-  
   return {
     userLevelEnums,
     disputeLevelEnums,
     ..._initialBracket,
-
     async init() {
       console.log(">>>init>>>");
+
       if (hiddenUserId) {
         const { user, claims } = await initializeFirebaseAuth();
         this.firebaseUser = user;
@@ -316,7 +311,7 @@ function BracketData() {
 
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
-        let newReport = {}, newReportUI = {};
+        let newReport = {}, newReportUI = {}, newReportStore = {}, newDisputeStore = {};
         let eventUpdate = event?.detail ?? null;
         clearSelection();
         this.reportUI.statusText = '';
@@ -329,7 +324,7 @@ function BracketData() {
           (eventUpdate.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
 
         let otherTeamNumber = teamNumber === 0 ? 1 : 0;
-        if (!eventUpdate) {
+        if (!eventUpdate || !this.firebaseUser ) {
           newReport = {
             ..._initialBracket.report,
           };
@@ -337,6 +332,7 @@ function BracketData() {
           newReportUI = {
             ..._initialBracket.reportUI,
           }
+
         } else {
           resetDotsToContainer();
 
@@ -372,7 +368,12 @@ function BracketData() {
           };
         }
 
-        this.makeCurrentReportSnapshot(eventUpdate.classNamesWithoutPrecedingDot, newReport, newReportUI);
+
+        this.makeCurrentReportSnapshot(
+          eventUpdate.classNamesWithoutPrecedingDot, 
+          newReport, 
+          newReportUI
+        );
       });
 
       // Swal.close();
@@ -387,7 +388,7 @@ function BracketData() {
       let otherTeamNumber = this.reportUI.otherTeamNumber;
       let matchNumber = this.reportUI.matchNumber;
       let selectedTeamIndex = document.getElementById('selectedTeamIndex').value;
-      let update = createReportTemp(this.report);
+      let update = createReportTemp(this.report, reportStore.list);
 
       const result = await showSwal({
         title: 'Choosing the winner',
@@ -430,22 +431,24 @@ function BracketData() {
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
             validateData['my_team_id'] = this.report.teams[teamNumber].id;
             update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
-            let otherTeamWinner = this.report.teams[otherTeamNumber].winners[matchNumber];
+            let otherTeamWinner = this.report.teams[otherTeamNumber].winners;
             if (otherTeamWinner) {
               if (otherTeamWinner === selectedTeamIndex) {
                 update.realWinners[matchNumber] = selectedTeamIndex;
               }
             }
+
             update.score = calcScores(update);        
           }
   
-          await this.saveReport(update);
+          await this.writeReportDB(update);
 
         } catch (error) {
           window.toastError("Problem updating data");
         }
       }
     },
+
     async onChangeTeamToWin() {
       const result = await showSwal({
         title: 'Changing the winner',
@@ -455,9 +458,9 @@ function BracketData() {
      
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
-        let update = createReportTemp(this.report);
+        let update = createReportTemp(this.report, reportStore.list);
         if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
-          let otherIndex = this.report.realWinners[matchNumber] === "1" ? "0" : "1";
+          let otherIndex = this.report.realWinners === "1" ? "0" : "1";
           update.organizerWinners[matchNumber] = otherIndex;
           update.realWinners[matchNumber] = otherIndex;
           update.score = calcScores(update);
@@ -466,7 +469,7 @@ function BracketData() {
         if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
           let teamNumber = this.reportUI.teamNumber;
           let otherTeamNumber = this.reportUI.otherTeamNumber;
-          let otherIndex = this.report.teams[otherTeamNumber].winners[matchNumber];
+          let otherIndex = this.report.teams[otherTeamNumber].winners;
           if (otherIndex) {
             update.teams[teamNumber].winners[matchNumber] = otherIndex;
             update.realWinners[matchNumber] = otherIndex;
@@ -474,7 +477,7 @@ function BracketData() {
           update.score = calcScores(update);
         }
 
-        await this.saveReport(update);
+        await this.writeReportDB(update);
       }
     },
     
@@ -488,12 +491,12 @@ function BracketData() {
 
       if (result.isConfirmed) {
         let matchNumber = this.reportUI.matchNumber;
-        let update = createReportTemp(this.report);
+        let update = createReportTemp(this.report, reportStore.list);
         update.organizerWinners[matchNumber] = null;
         update.realWinners[matchNumber] = null;
         update.score = calcScores(update);
 
-        await this.saveReport(update);
+        await this.writeReportDB(update);
       }
     },
 
@@ -565,6 +568,7 @@ function BracketData() {
         console.error("Error adding document: ", error);
       }
     },
+
     async decideResolution(event, teamNumber) {
       let button = event.currentTarget;
       document.querySelectorAll(".selectedDisputeResolveButton").forEach((value) => { value.classList.remove('bg-primary', 'text-light'); }
@@ -573,7 +577,8 @@ function BracketData() {
       button.classList.add('bg-primary', 'text-light');
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
-    async saveReport(tempState) {
+
+    async writeReportDB(tempState) {
       const matchesCRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(matchesCRef, customDocId);
@@ -581,11 +586,9 @@ function BracketData() {
       try {
         let firestoreDoc = {
           score: [tempState?.score[0] ?? "0", tempState?.score[1] ?? "0"],
-          matchStatus: [...tempState.matchStatus],
-          realWinners: tempState.realWinners,
-          organizerWinners: tempState.organizerWinners,
-          team1Winners: tempState.teams[0]?.winners,
-          team2Winners: tempState.teams[1]?.winners,
+      
+          realWinners: [...tempState.realWinners],
+          organizerWinners: [...tempState.organizerWinners],
           team1Id: tempState.teams[0].id,
           team2Id: tempState.teams[1].id,
           position: tempState.position,
@@ -593,11 +596,15 @@ function BracketData() {
           randomWinners: [...tempState.randomWinners],
           defaultWinners: [...tempState.defaultWinners],
           disqualified: tempState.disqualified,
-          disputeResolved: [...tempState.disputeResolved]
+          disputeResolved: [...tempState.disputeResolved],
+          team1Winners: [...tempState.teams[0]?.winners],
+          team2Winners: [...tempState.teams[1]?.winners],
+          matchStatus: [...tempState.matchStatus],
         };
 
         await setDoc(docRef, firestoreDoc);
-        this.report = updateReportFromFirestore(this.report, firestoreDoc);
+        reportStore.setListFromTemp(tempState);
+        this.report = updateReportFromFirestore(this.report, firestoreDoc, this.reportUI.matchNumber);
 
         if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
           this.setDisabled(this.reportUI);
@@ -606,10 +613,12 @@ function BracketData() {
         console.error("Error adding document: ", error);
       }
     },
+
     toggleResponseForm(classToShow, classToHide) {
       document.querySelector(`.${classToShow}`).classList.toggle("d-none");
       document.querySelector(`.${classToHide}`).classList.toggle("d-none");
     },
+    
     showImageModal(imgPath, mediaType) {
       const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById('imageModal'));
       const imagePreview = document.getElementById('imagePreview');
@@ -648,8 +657,6 @@ function BracketData() {
 
     },
 
-    
-
     changeMatchNumber(increment) {
       let newNo = Number(this.reportUI.matchNumber) + Number(increment);
       let demoNo = newNo + 1;
@@ -661,30 +668,19 @@ function BracketData() {
           `Select a winner for Game ${demoNo}`
       };
 
+      this.report = { ...reportStore.makeCurrentReport(this.report, newNo) };
+      
     },
-    
-    getDisabled() {
-      return this.reportUI.disabled[this.reportUI.matchNumber];
-    },
+  
     
     setDisabled(reportUI = {}) {
-      let disabledList = [false, false, false];
-
-      disabledList[1] =
-        this.report.teams[this.reportUI.teamNumber]?.winners[0] === null;
-      disabledList[2] =
-        this.report.teams[this.reportUI.teamNumber]?.winners[1] === null;
-
+      let disabled = this.report.teams[this.reportUI.teamNumber]?.winners === null;
       this.reportUI = {
         ...reportUI,
-        disabled: [...disabledList]
+        disabled
       };
     },
     
-    
-    
-    
-
     makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot) {
       const disputesRef = collection(db, `/event/${eventId}/disputes`);
       const disputeQuery = query(
@@ -708,9 +704,9 @@ function BracketData() {
             }
           });
 
-          console.log({allDisputes});
+          disputeStore.setList(allDisputes);
 
-          this.dispute = [...allDisputes];
+          this.dispute = allDisputes[this.reportUI.matchNumber];
         }
       );
 
@@ -729,7 +725,10 @@ function BracketData() {
           if (reportSnapshot.exists()) {
             let data = reportSnapshot.data();
             data['id'] = reportSnapshot.id;
-            this.report = updateReportFromFirestore(newReport, data)
+
+            reportStore.updateReportFromFirestore(data);
+            this.report = updateReportFromFirestore(newReport, data, 0)
+            
             if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) {
               if (!initialLoad) {
                 let matchNumber = this.reportUI.matchNumber;
@@ -739,33 +738,15 @@ function BracketData() {
               this.setDisabled(newReportUI);
             }
 
-            let dottedScoreContainer = document.querySelectorAll('#reportModal .dotted-score-container');
-            dottedScoreContainer.forEach((element, index) => {
-              element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-                if (this.report.realWinners[dottedElementIndex]) {
-                  if (this.report.realWinners[dottedElementIndex] == index) {
-                    dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
-                    dottedElement.classList.add("bg-success");
-                  } else {
-                    dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
-                    dottedElement.classList.add("bg-red");
-                  }
-                } else {
-                  dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
-                  dottedElement.classList.add('bg-secondary');
-                }
-              })
-            })
-
+            updateCurrentReportDots(reportStore.list);
             this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
             initialLoad = false;
+            window.closeLoading();
           } else {
-            console.log({newReport, newReportUI});
-            console.log({newReport, newReportUI});
-            console.log({newReport, newReportUI});
+            reportStore.setList(_reportStore.list);
             this.report = { ...newReport };
             this.reportUI = { ...newReportUI }
-            this.dispute = [null, null, null];
+            this.dispute = null;
             window.closeLoading();
             initialLoad = false;
           }
@@ -774,6 +755,7 @@ function BracketData() {
 
       this.subscribeToCurrentReportSnapshot = subscribeToCurrentReportSnapshot;
     },
+
     async submitDisputeForm(event) {
       event.preventDefault();
       const form = event.target;

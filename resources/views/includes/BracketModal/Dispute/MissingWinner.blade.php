@@ -48,7 +48,7 @@
                             <p class="text-primary text-center"> The dispute will be resolved in favor of (Choose): </p>
                             <div class="d-flex justify-content-center flex-column mt-2">
                                 <button type="button" v-on:click="decideResolution(event, 0)"
-                                    v-bind:disabled="getDisabled()"
+                                    v-bind:disabled="reportUI.disabled"
                                     class="selectedButton selectedDisputeResolveButton ps-0 btn mb-2 mt-2 rounded-pill mx-auto py-0 border border-dark text-start">
                                     <img v-bind:src="'/storage/' + report.teams[0]?.banner" alt="Team Banner"
                                         width="35" height="35"
@@ -57,7 +57,7 @@
                                     <small class="ms-2 py-0" v-text="report.teams[0]?.name"></small>
                                 </button>
                                 <button type="button" v-on:click="decideResolution(event, 1)"
-                                    v-bind:disabled="getDisabled()"
+                                    v-bind:disabled="reportUI.disabled"
                                     class="selectedButton selectedDisputeResolveButton ps-0 btn  rounded-pill mx-auto py-0 mt-2 border border-dark text-start">
                                     <img v-bind:src="'/storage/' + report.teams[1]?.banner" alt="Team Banner"
                                         width="35" height="35"
