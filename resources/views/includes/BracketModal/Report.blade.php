@@ -8,7 +8,7 @@
                     <div class="px-2 popover-box bg-white border-2 border  row justify-content-start border border-dark border px-0 py-0"
                     >
                         <div class="text-center  mt-4">
-                            <h5 style="color: #757577;" class="mt-0 mb-2 py-0 w-75 mx-auto d-block text-center text-truncate ">
+                            <h5 style="color: #757577;" class="my-0 py-0 w-75 mx-auto d-block text-center text-truncate ">
                                 @if ($event->eventName)
                                     <span>{{$event->eventName}}  </span>
                                 @endif
