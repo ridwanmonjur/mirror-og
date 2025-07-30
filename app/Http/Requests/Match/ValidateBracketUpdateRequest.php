@@ -31,7 +31,7 @@ class ValidateBracketUpdateRequest extends FormRequest
         ])->first();
 
         if (!$match) {
-            $this->failureMessage = 'Match not found in tournament bracket!';
+            $this->failureMessage = 'Match not found in tournament bracket! Are you editing in the right place?';
             return false;
         }
 

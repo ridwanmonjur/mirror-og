@@ -361,13 +361,13 @@
                                             <span class="fs-7"> Click to confirm your registration.</span>
                                         </a>
                                     @elseif  ($existingJoint->join_status == "confirmed")
-                                        <a class="mt-2 fs-7 text-success fw-bold" href="{{route('participant.register.manage',
+                                        <a class="mt-2 fs-7 d-block text-success fw-bold" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
                                             )}}"><span class="fs-7">Click to manage your registration.</span>
                                         </a>
 
                                     @elseif  ($existingJoint->join_status == "canceled")
-                                        <a class="mt-2 fw-bold" href="{{route('participant.register.manage',
+                                        <a class="mt-2 fw-bold d-block" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
                                             )}}"><span class="fs-7">Your registration is canceled. Click to view.</span>
                                         </a>

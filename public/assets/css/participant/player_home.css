@@ -314,13 +314,14 @@ main {
     border-radius: 40px 40px 0px 0px;
 }
 
-
-
-
-
 .event:hover {
     transform: scale(1.02);
 }
+
+.event:active {
+    scale: 0.96;
+}
+
 .event:hover .cover {
     animation: grayscale 2s ease-in-out;
 }

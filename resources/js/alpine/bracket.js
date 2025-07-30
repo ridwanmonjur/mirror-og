@@ -485,7 +485,7 @@ function BracketData() {
       const result = await showSwal({
         title: 'Remove the winner',
         html: `Are you sure you want to remove the winner?`,
-        confirmButtonText: 'Change Declaration',
+        confirmButtonText: 'Yes, Remove Winner',
       });
 
 
