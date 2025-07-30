@@ -100,8 +100,10 @@ let reportStore = {
 let disputeStore = {
   list: Array(totalMatches).fill(null),
 
-  makeCurrentReport(matchNumber) {
-    return this.list[matchNumber]
+  makeCurrentDispute(matchNumber) {
+    return this.list[matchNumber] ? {
+      ...this.list[matchNumber]
+    } : null;
   },
 
   setList(list) {

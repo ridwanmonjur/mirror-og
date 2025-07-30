@@ -284,11 +284,6 @@ let {
 let _reportStore = {...reportStore};
 let _disputeStore = {...disputeStore};
 
-
-
-
-
-
 const validateDisputeCreation = async (data) => {
   const errors = [];
 
@@ -350,7 +345,21 @@ window.onload = () => {
     });
     
   createApp({
-    BracketData: () => BracketData(userLevelEnums, disputeLevelEnums, _initialBracket, reportStore, disputeStore, _reportStore, hiddenUserId, initializeFirebaseAuth, auth, eventId, db, fileStore, validateDisputeCreation),
+    BracketData: () => BracketData(
+      userLevelEnums, 
+      disputeLevelEnums, 
+      _initialBracket, 
+      reportStore, 
+      disputeStore, 
+      _reportStore, 
+      hiddenUserId, 
+      initializeFirebaseAuth, 
+      auth, 
+      eventId, 
+      db, 
+      fileStore, 
+      validateDisputeCreation
+    ),
     UploadData: (type) => UploadData(type, fileStore),
     CountDown
   }).mount('#Bracket');

@@ -33,6 +33,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
 
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
+        
         let newReport = {}, newReportUI = {}, newReportStore = {}, newDisputeStore = {};
         let eventUpdate = event?.detail ?? null;
         clearSelection();
@@ -79,7 +80,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
                 name: eventUpdate.team1_teamName ?? '-'
               },
               {
-                ..._initialBracket.report.teams[0],
+                ..._initialBracket.report.teams[1],
                 winners: _initialBracket.report.teams[1].winners,
                 id: eventUpdate.team2_id,
                 position: eventUpdate.team2_position,
@@ -91,7 +92,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
         }
 
 
-        this.makeCurrentReportSnapshot(
+        this.setReportSnapshot(
           eventUpdate.classNamesWithoutPrecedingDot, 
           newReport, 
           newReportUI
@@ -119,39 +120,13 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
       });
 
       if (result.isConfirmed) {
-        let validateData = {
-          'team1_id' : this.report.teams[0].id,
-          'team1_position': this.report.teams[0].position,
-          'team2_id' : this.report.teams[1].id,
-          'team2_position': this.report.teams[1].position,
-          'willCheckDeadline': this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']        
-        };
-
-        try {
-          const csrfToken5 = document.querySelector('meta[name="csrf-token"]').content;
-          let response = await fetch(`/api/event/${eventId}/brackets`, {
-            method: 'POST',
-            body: JSON.stringify(validateData),
-            headers: {
-              'X-CSRF-TOKEN': csrfToken5,
-              'Content-Type': 'application/json',
-            }
-          });
-
-          response = await response.json(); 
-          if (!response.success) {
-            window.toastError(response.message || 'An error has occurred!');
-            return;
-          }
-
           if (this.report.userLevel === this.userLevelEnums['IS_ORGANIZER']) {
             update.organizerWinners[matchNumber] = selectedTeamIndex;
             update.realWinners[matchNumber] = selectedTeamIndex;
             update.score = calcScores(update);     
           }
-  
+
           if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
-            validateData['my_team_id'] = this.report.teams[teamNumber].id;
             update.teams[teamNumber].winners[matchNumber] = selectedTeamIndex;
             let otherTeamWinner = this.report.teams[otherTeamNumber].winners;
             if (otherTeamWinner) {
@@ -162,12 +137,8 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
 
             update.score = calcScores(update);        
           }
-  
-          await this.writeReportDB(update);
 
-        } catch (error) {
-          window.toastError("Problem updating data");
-        }
+          await this.writeReportDB(update);
       }
     },
 
@@ -188,7 +159,10 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
           update.score = calcScores(update);
         }
 
-        if (this.report.userLevel === this.userLevelEnums['IS_TEAM1'] || this.report.userLevel === this.userLevelEnums['IS_TEAM2']) {
+        if (
+          this.report.userLevel === this.userLevelEnums['IS_TEAM1'] 
+          || this.report.userLevel === this.userLevelEnums['IS_TEAM2']
+        ) {
           let teamNumber = this.reportUI.teamNumber;
           let otherTeamNumber = this.reportUI.otherTeamNumber;
           let otherIndex = this.report.teams[otherTeamNumber].winners;
@@ -256,36 +230,20 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
       };
 
       await updateDoc(disputeRef, updateData);
-      const matchesCRef = collection(db, `event/${eventId}/brackets`);
-      const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-      const reportRef = doc(matchesCRef, customDocId);
 
       try {
-        let newRealWinners = [...this.report.realWinners];
-        let matchStatusNew = [...this.report.matchStatus];
-        let disputeResolved = [...this.report.disputeResolved];
-        disputeResolved[this.reportUI.matchNumber] = true;
+        let tempReport = createReportTemp(this.report, reportStore.list);
+        tempReport['disputeResolved'][this.reportUI.matchNumber] = true;
         if (match_number != 2) {
-          matchStatusNew[Number(this.reportUI.matchNumber)+1] = "ONGOING";
+          tempReport['matchStatus'][Number(this.reportUI.matchNumber)+1] = "ONGOING";
         }
-        newRealWinners[this.reportUI.matchNumber] = resolution_winner;
-        
-        let updatedRemaining = {
-          matchStatus: matchStatusNew,
-          completeMatchStatus: match_number == 2 ? "ENDED": "ONGOING",
-          realWinners: newRealWinners,
-          disputeResolved,
-        };
 
-        updatedRemaining['score'] = calcScores(updatedRemaining);
-        await updateDoc(reportRef, updatedRemaining);        
-        if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-          this.setDisabled({...this.reportUI, matchNumber: Number(match_number)});
-        }  else {
-          this.reportUI = {
-            ...this.reportUI, matchNumber: Number(match_number)
-          }
-        }
+        tempReport['realWinners'][this.reportUI.matchNumber] = resolution_winner;
+        
+        tempReport['completeMatchStatus']  = match_number == 2 ? "ENDED": "ONGOING",
+        tempReport['score'] = calcScores(tempReport);
+        this.writeReportDB(tempReport);       
+      
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -301,6 +259,35 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
     },
 
     async writeReportDB(tempState) {
+      let validateData = {
+        'team1_id' : this.report.teams[0].id,
+        'team1_position': this.report.teams[0].position,
+        'team2_id' : this.report.teams[1].id,
+        'team2_position': this.report.teams[1].position,
+        'willCheckDeadline': this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']        
+      };
+
+      try {
+        const csrfToken5 = document.querySelector('meta[name="csrf-token"]').content;
+        let response = await fetch(`/api/event/${eventId}/brackets`, {
+          method: 'POST',
+          body: JSON.stringify(validateData),
+          headers: {
+            'X-CSRF-TOKEN': csrfToken5,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        response = await response.json(); 
+        if (!response.success) {
+          window.toastError(response.message || 'An error has occurred!');
+          return;
+        }
+      } catch (error) {
+        window.toastError("Problem updating data");
+        return;
+      }
+
       const matchesCRef = collection(db, `event/${eventId}/brackets`);
       const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
       const docRef = doc(matchesCRef, customDocId);
@@ -325,12 +312,8 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
         };
 
         await setDoc(docRef, firestoreDoc);
-        reportStore.setListFromTemp(tempState);
-        this.report = updateReportFromFirestore(this.report, firestoreDoc, this.reportUI.matchNumber);
+        
 
-        if (this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER']) {
-          this.setDisabled(this.reportUI);
-        } 
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -390,16 +373,16 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
           `Select a winner for Game ${demoNo}`
       };
 
-      this.report = { ...reportStore.makeCurrentReport(this.report, newNo) };
+      this.report = reportStore.makeCurrentReport(this.report, newNo) ;
+      this.dispute = disputeStore.makeCurrentDispute(newNo)
       
     },
   
     
     setDisabled(reportUI = {}) {
-      let disabled = this.report.teams[this.reportUI.teamNumber]?.winners === null;
       this.reportUI = {
         ...reportUI,
-        disabled
+        disabled: this.report.teams[this.reportUI.teamNumber]?.winners === null
       };
     },
     
@@ -436,7 +419,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
       window.closeLoading()
     },
 
-    makeCurrentReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
+    setReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
     
       const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
       let initialLoad = true;
@@ -449,29 +432,27 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
             data['id'] = reportSnapshot.id;
 
             reportStore.updateReportFromFirestore(data);
-            this.report = updateReportFromFirestore(newReport, data, 0)
-            
-            if (this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']) {
-              if (!initialLoad) {
-                let matchNumber = this.reportUI.matchNumber;
-                newReportUI['matchNumber'] = matchNumber;
-              }
-
-              this.setDisabled(newReportUI);
+            if (!initialLoad) { 
+              newReportUI.matchNumber = this.reportUI.matchNumber;
             }
+            
+            let matchNumber = newReportUI.matchNumber;
+            this.report = updateReportFromFirestore(newReport, data, matchNumber)
+
+            this.setDisabled(newReportUI);
 
             updateCurrentReportDots(reportStore.list);
             this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
-            initialLoad = false;
-            window.closeLoading();
+           
           } else {
             reportStore.setList(_reportStore.list);
             this.report = { ...newReport };
-            this.reportUI = { ...newReportUI }
+            this.setDisabled(newReportUI);
             this.dispute = null;
-            window.closeLoading();
-            initialLoad = false;
           }
+
+          initialLoad = false;
+          window.closeLoading();
         }
       );
 
@@ -526,17 +507,10 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
             let newDisputeId = `${this.report.teams[0].position}.`+`${this.report.teams[1].position}.${this.reportUI.matchNumber}`;
             const disputesRef = doc(db, `event/${eventId}/disputes`, newDisputeId);
             await setDoc(disputesRef, disputeDto);
-            const matchesCRef = collection(db, `event/${eventId}/brackets`);
-            const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-            const reportRef = doc(matchesCRef, customDocId);
-            let disputeResolved = [...this.report.disputeResolved];
-            disputeResolved[this.reportUI.matchNumber] = false;
-            let updatedRemaining = {
-              disputeResolved
-            };
-
-            await updateDoc(reportRef, updatedRemaining);
-            this.setDisabled({...this.reportUI});
+            let tempReport = createReportTemp(this.report, reportStore.list);
+            tempReport['disputeResolved'][this.reportUI.matchNumber] = false;           
+            tempReport['score'] = calcScores(tempReport);
+            this.writeReportDB(tempReport);        
 
             window.Toast.fire({
               icon: 'success',
@@ -603,13 +577,11 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
           };
 
           await updateDoc(disputeRef, updateData);
-          let disputeResolved = [...this.report.disputeResolved];
-          disputeResolved[this.reportUI.matchNumber] = false;
-          let updatedRemaining = {
-            disputeResolved
-          };
 
-          await updateDoc(reportRef, updatedRemaining);
+          let tempReport = createReportTemp(this.report, reportStore.list);
+          tempReport['disputeResolved'][this.reportUI.matchNumber] = false;
+          tempReport['score'] = calcScores(tempReport);
+          this.writeReportDB(tempReport);       
           
         } 
       }
