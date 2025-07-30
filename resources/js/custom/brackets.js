@@ -358,10 +358,16 @@ function clearSelection() {
     }
 
     const selectTeamSubmitButton = document.querySelector('.selectTeamSubmitButton');
-    selectTeamSubmitButton.style.backgroundColor = '#white';
-    selectTeamSubmitButton.style.color = 'black';
+    if (selectTeamSubmitButton) {
+      selectTeamSubmitButton.style.backgroundColor = '#white';
+      selectTeamSubmitButton.style.color = 'black';
+    }
+   
+    let selectedTeamIndexElem = document.getElementById('selectedTeamIndex');
+    if (selectedTeamIndexElem) {
+      selectedTeamIndexElem.value = null;
+    }
 
-    document.getElementById('selectedTeamIndex').value = null;
 
   });
 }
