@@ -291,7 +291,7 @@ class FirebaseController extends Controller
             ->get();
 
         $brackets = $this->firestoreService->generateBrackets($ogBrackets, $event['id']);
-        return view('admin.brackets', compact('brackets', 'event', 'teams'));
+        return view('filament.pages.brackets', compact('brackets', 'event', 'teams'));
     }
 
     public function showDisputes(Request $request, $eventId)
@@ -340,6 +340,6 @@ class FirebaseController extends Controller
         $disputeRoles = array_flip($DISPUTTE_ENUMS);
 
         // dd($users);
-        return view('admin.reports', compact('disputes', 'event', 'teams', 'users', 'disputeRoles', 'setup'));
+        return view('filament.pages.reports', compact('disputes', 'event', 'teams', 'users', 'disputeRoles', 'setup'));
     }
 }
