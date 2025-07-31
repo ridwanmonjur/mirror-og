@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 class HandlePostTooLarge
 {
     /**
-     * Maximum allowed post size in bytes (20MB)
+     * Maximum allowed post size in bytes (8MB)
      */
-    protected const MAX_POST_SIZE = 20 * 1024 * 1024; // 20MB
+    protected const MAX_POST_SIZE = 8 * 1024 * 1024; // 8MB
 
     /**
      * Handle an incoming request and catch PostTooLargeException
@@ -26,20 +26,20 @@ class HandlePostTooLarge
                 'url' => $request->url(),
                 'method' => $request->method(),
                 'content_length' => $request->header('Content-Length'),
-                'max_post_size' => '20MB',
+                'max_post_size' => '8MB',
                 'user_agent' => $request->header('User-Agent')
             ]);
 
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => 'File too large. Please reduce file size and try again.',
-                    'error' => 'The uploaded file exceeds the maximum allowed size of 20MB.',
-                    'max_size' => '20MB'
+                    'error' => 'The uploaded file exceeds the maximum allowed size of 8MB.',
+                    'max_size' => '8MB'
                 ], 413);
             }
 
             return back()->withErrors([
-                'file' => 'The uploaded file is too large. Maximum size allowed is 20MB.'
+                'file' => 'The uploaded file is too large. Maximum size allowed is 8MB.'
             ])->withInput();
         }
 
@@ -50,7 +50,7 @@ class HandlePostTooLarge
                 'url' => $request->url(),
                 'method' => $request->method(),
                 'content_length' => $request->header('Content-Length'),
-                'max_post_size' => '20MB',
+                'max_post_size' => '8MB',
                 'user_agent' => $request->header('User-Agent'),
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
@@ -59,13 +59,13 @@ class HandlePostTooLarge
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => 'File too large. Please reduce file size and try again.',
-                    'error' => 'The uploaded file exceeds the maximum allowed size of 20MB.',
-                    'max_size' => '20MB'
+                    'error' => 'The uploaded file exceeds the maximum allowed size of 8MB.',
+                    'max_size' => '8MB'
                 ], 413);
             }
 
             return back()->withErrors([
-                'file' => 'The uploaded file is too large. Maximum size allowed is 20MB.'
+                'file' => 'The uploaded file is too large. Maximum size allowed is 8MB.'
             ])->withInput();
         }
     }

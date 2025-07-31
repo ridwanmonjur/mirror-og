@@ -11,8 +11,13 @@ export default function UploadData (type, fileStore) {
       const validFiles = [];
       
       for (const file of newFiles) {
-        if (!(file.type.startsWith('image/') || file.type.startsWith('video/'))) {
-          window.toastError("Only images and videos are supported");
+        // if (!(file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+        //   window.toastError("Only images and videos are supported");
+        //   continue;
+        // }
+
+        if (!(file.type.startsWith('image/') )) {
+          window.toastError("Only images are supported");
           continue;
         }
         validFiles.push(file);

@@ -6,6 +6,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "./brackets";
 import firebaseService from "../services/firebase.js";
 
+let initialLoad = true;
+
 export default function BracketData(fileStore) {
   const { auth, db } = firebaseService.getServices();
   const hiddenUserId = document.getElementById('hidden_user_id')?.value;
@@ -88,7 +90,6 @@ export default function BracketData(fileStore) {
 
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
-        
         let newReport = {}, newReportUI = {};
         let eventUpdate = event?.detail ?? null;
         clearSelection();
@@ -146,6 +147,7 @@ export default function BracketData(fileStore) {
           };
         }
 
+        this.reportUI = { ...newReportUI };
 
         this.setReportSnapshot(
           eventUpdate.classNamesWithoutPrecedingDot, 
@@ -468,6 +470,10 @@ export default function BracketData(fileStore) {
     
     setDisabled(reportUI = {}) {
       let currentNumber = Number(this.reportUI.matchNumber);
+      console.log({currentNumber});
+      console.log({currentNumber});
+      console.log({currentNumber});
+
       let isDisabled = currentNumber != 0;
       if (isDisabled) {
         isDisabled = isDisabled && this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'] &&
@@ -476,6 +482,10 @@ export default function BracketData(fileStore) {
             reportStore.list.teams[this.reportUI.teamNumber]?.winners[currentNumber-1] == null
           );
       }
+
+      console.log({isDisabled});
+      console.log({isDisabled});
+      console.log({isDisabled});
         
 
       this.reportUI = {
@@ -523,21 +533,17 @@ export default function BracketData(fileStore) {
     setReportSnapshot(classNamesWithoutPrecedingDot, newReport, newReportUI) {
     
       const currentReportRef = doc(db, `event/${eventId}/brackets`, classNamesWithoutPrecedingDot);
-      let initialLoad = true;
 
       let subscribeToCurrentReportSnapshot = onSnapshot(
         currentReportRef,
         async (reportSnapshot) => {
+          
           if (reportSnapshot.exists()) {
             let data = reportSnapshot.data();
             data['id'] = reportSnapshot.id;
 
-            reportStore.updateListFromFirestore(data);
-            if (initialLoad) { 
-              newReportUI.matchNumber = 0;
-            } else {
-              newReportUI.matchNumber = this.reportUI.matchNumber;
-            }
+            reportStore.updateListFromFirestore(data);           
+            newReportUI.matchNumber = this.reportUI.matchNumber;
             
             let matchNumber = newReportUI.matchNumber;
             this.report = updateReportFromFirestore(newReport, data, matchNumber);
@@ -546,6 +552,10 @@ export default function BracketData(fileStore) {
             this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
            
           } else {
+             
+            newReportUI.matchNumber = 0;
+             
+
             reportStore.setList(_reportStore.list);
             this.report = { ...newReport };
             this.setDisabled(newReportUI);

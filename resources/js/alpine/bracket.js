@@ -185,19 +185,19 @@ const fileStore = reactive({
         }
       });
 
-      // if (uploadResponse.status === 413) {
-      //   const errorData = await uploadResponse.json().catch(() => ({}));
-      //   console.error('File too large error:', errorData);
-      //   window.toastError(errorData.message || "File too large. Please reduce file size and try again.");
-      //   return null;
-      // }
+      if (uploadResponse.status === 413) {
+        const errorData = await uploadResponse.json().catch(() => ({}));
+        console.error('File too large error:', errorData);
+        window.toastError(errorData.message || "File too large. Please reduce file size and try again.");
+        return null;
+      }
 
-      // if (!uploadResponse.ok) {
-      //   const errorData = await uploadResponse.json().catch(() => ({}));
-      //   console.error('Upload error:', errorData);
-      //   window.toastError(errorData.message || `Request failed with status ${uploadResponse.status}`);
-      //   return null;
-      // }
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json().catch(() => ({}));
+        console.error('Upload error:', errorData);
+        window.toastError(errorData.message || `Request failed with status ${uploadResponse.status}`);
+        return null;
+      }
 
       uploadResponse = await uploadResponse.json();
 
