@@ -248,8 +248,3 @@ Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
 
 
 
-
-Route::get('/search', [ShopController::class, 'search'])->name('search');
-
-Route::get('/search-algolia', [ShopController::class, 'searchAlgolia'])->name('search-algolia');
-

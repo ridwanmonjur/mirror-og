@@ -40,20 +40,5 @@ class ShopController extends Controller
         return view('shop.product')->with($data);
     }
 
-    public function search(Request $request)
-    {
-        $request->validate([
-            'query' => 'required|min:3',
-        ]);
-
-        $query = $request->input('query');
-        $products = $this->shopService->searchProducts($query);
-
-        return view('shop.search-results')->with('products', $products);
-    }
-
-    public function searchAlgolia(Request $request)
-    {
-        return view('shop.search-results-algolia');
-    }
+   
 }

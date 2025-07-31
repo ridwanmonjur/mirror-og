@@ -32,8 +32,7 @@
                                             <p class="text-success mt-2">
                                                 <span
                                                     v-text="report.teams[dispute?.dispute_teamNumber]?.name">
-                                                </span> has conceded the dispute. Winner is to be decided by the
-                                                organizer.
+                                                </span> (the disputee) has conceded the dispute.
                                             </p>
                                         </div>
                                     </template>
