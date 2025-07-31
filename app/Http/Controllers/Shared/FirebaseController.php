@@ -214,7 +214,7 @@ class FirebaseController extends Controller
 
         $disputeSpecs = [
             'W11.W12.0' => [
-                'dispute_image_videos' => ['media/img/bskyGLaPbr8503Oz8yvC1uUDJiPhFv8JyTk6HJmf.jpg'],
+                'dispute_image_videos' => ['media/img/dispute_evidence_3.jpg'],
                 'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
                 'dispute_teamId' => '24',
                 'dispute_teamNumber' => '0',

@@ -30,25 +30,15 @@ class ValidateBracketUpdateRequest extends FormRequest
             'event_details_id' => $this->id
         ])->first();
 
+        // dd($match);
+
         if (!$match) {
-            $this->failureMessage = 'Match not found in tournament bracket! Are you editing in the right place?';
+            $this->failureMessage = 'The match is not found in tournament bracket! Are you editing in the right place?';
             return false;
         }
 
 
-        if ($this->willCheckDeadline) {
-            $bracketDeadline = BracketDeadline::where('stage', $match->stage_name)
-                ->where('inner_stage', $match->inner_stage_name)
-                ->where('event_details_id', $this->id)
-                ->whereDate('start_date', '<=', $now)
-                ->whereDate('end_date', '>=', $now)
-                ->first();
-
-            if (!$bracketDeadline) {
-                $this->failureMessage = 'Match is not within deadlines!';
-                return false;
-            }
-        }
+       
        
         if ($user->role == "ORGANIZER") {
             $event = EventDetail::where('id', $this->id)
@@ -61,6 +51,20 @@ class ValidateBracketUpdateRequest extends FormRequest
                 return false;
             }
         } elseif ($user->role == "PARTICIPANT") {
+            if ($this->willCheckDeadline) {
+                $bracketDeadline = BracketDeadline::where('stage', $match->stage_name)
+                    ->where('inner_stage', $match->inner_stage_name)
+                    ->where('event_details_id', $this->id)
+                    ->whereDate('start_date', '<=', $now)
+                    ->whereDate('end_date', '>=', $now)
+                    ->first();
+    
+                if (!$bracketDeadline) {
+                    $this->failureMessage = 'Match is not within reporting timeframe!';
+                    return false;
+                }
+            }
+
             if (!$this->my_team_id) {
                 $this->failureMessage = 'No valid team ID provided';
                 return false;

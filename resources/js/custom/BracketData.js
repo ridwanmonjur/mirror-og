@@ -34,7 +34,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
       window.addEventListener('changeReport', (event) => {
         window.showLoading();
         
-        let newReport = {}, newReportUI = {}, newReportStore = {}, newDisputeStore = {};
+        let newReport = {}, newReportUI = {};
         let eventUpdate = event?.detail ?? null;
         clearSelection();
         this.reportUI.statusText = '';
@@ -242,7 +242,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
         
         tempReport['completeMatchStatus']  = match_number == 2 ? "ENDED": "ONGOING",
         tempReport['score'] = calcScores(tempReport);
-        this.writeReportDB(tempReport);       
+        this.writeReportDB(tempReport, false);       
       
       } catch (error) {
         console.error("Error adding document: ", error);
@@ -258,13 +258,14 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
       document.getElementById('resolution_winner_input').value = teamNumber;
     },
 
-    async writeReportDB(tempState) {
+    async writeReportDB(tempState, willCheckDeadline=true) {
       let validateData = {
         'team1_id' : this.report.teams[0].id,
         'team1_position': this.report.teams[0].position,
         'team2_id' : this.report.teams[1].id,
         'team2_position': this.report.teams[1].position,
-        'willCheckDeadline': this.report.userLevel != this.userLevelEnums['IS_ORGANIZER']        
+        'my_team_id': this.report.teams[this.reportUI.teamNumber].id,
+         willCheckDeadline
       };
 
       try {
@@ -363,12 +364,22 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
     },
 
     changeMatchNumber(increment) {
+
+    
       let newNo = Number(this.reportUI.matchNumber) + Number(increment);
+
+      let isDisabled = 
+        newNo != 0 &&
+        this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'] &&
+        reportStore.list.realWinners[newNo-1] == null &&
+        reportStore.list.teams[this.reportUI.teamNumber]?.winners[newNo] === null;
+
       let demoNo = newNo + 1;
       this.reportUI = {
         ...this.reportUI,
         matchNumber: newNo,
-        statusText: this.reportUI.disabled[newNo] ?
+        disabled: isDisabled,
+        statusText: isDisabled ?
           'Selection is not yet available.' :
           `Select a winner for Game ${demoNo}`
       };
@@ -380,9 +391,19 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
   
     
     setDisabled(reportUI = {}) {
+      let currentNumber = Number(this.reportUI.matchNumber);
+      let isDisabled = 
+        this.reportUI.matchNumber != 0 &&
+        this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'] &&
+          reportStore.list.realWinners[currentNumber-1] == null &&
+          reportStore.list.teams[this.reportUI.teamNumber]?.winners[currentNumber-1] === null;
+
       this.reportUI = {
         ...reportUI,
-        disabled: this.report.teams[this.reportUI.teamNumber]?.winners === null
+        statusText: isDisabled ?
+          'Selection is not yet available.' :
+          `Select a winner for Game ${currentNumber+1}`,
+        disabled: isDisabled
       };
     },
     
@@ -438,9 +459,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
             
             let matchNumber = newReportUI.matchNumber;
             this.report = updateReportFromFirestore(newReport, data, matchNumber)
-
             this.setDisabled(newReportUI);
-
             updateCurrentReportDots(reportStore.list);
             this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
            
@@ -510,7 +529,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
             let tempReport = createReportTemp(this.report, reportStore.list);
             tempReport['disputeResolved'][this.reportUI.matchNumber] = false;           
             tempReport['score'] = calcScores(tempReport);
-            this.writeReportDB(tempReport);        
+            this.writeReportDB(tempReport, false);        
 
             window.Toast.fire({
               icon: 'success',
@@ -581,7 +600,7 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
           let tempReport = createReportTemp(this.report, reportStore.list);
           tempReport['disputeResolved'][this.reportUI.matchNumber] = false;
           tempReport['score'] = calcScores(tempReport);
-          this.writeReportDB(tempReport);       
+          this.writeReportDB(tempReport, false);       
           
         } 
       }
