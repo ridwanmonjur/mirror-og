@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('cart_items', function (Blueprint $table) {
             if (Schema::hasColumn('cart_items', 'variant_id')) {
-                $table->dropForeign(['variant_id']);
                 $table->dropColumn('variant_id');
             }
         });
