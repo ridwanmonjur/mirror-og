@@ -34,9 +34,9 @@ trait HandlesFilamentExceptions
             ->iconColor('danger');
         
         // Add technical details if in debug mode
-        if (config('app.debug')) {
+        // if (config('app.debug')) {
             $notification->body($userMessage . "<br><br><b>Technical Details:</b><br> " . $e->getMessage());
-        }
+        // }
         
         $notification->send();
         

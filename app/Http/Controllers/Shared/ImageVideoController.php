@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Support\Facades\Log;
 
 class ImageVideoController extends Controller
 {
@@ -26,7 +27,28 @@ class ImageVideoController extends Controller
                 ],
                 201,
             );
+        } catch (\Illuminate\Http\Exceptions\PostTooLargeException $e) {
+            Log::error('PostTooLargeException in media upload', [
+                'error' => $e->getMessage(),
+                'content_length' => $request->header('Content-Length'),
+                'max_post_size' => ini_get('post_max_size'),
+                'max_upload_size' => ini_get('upload_max_filesize'),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json(
+                [
+                    'message' => 'File too large. Please reduce file size and try again.',
+                    'error' => 'The uploaded file exceeds the maximum allowed size.',
+                ],
+                413,
+            );
         } catch (\Exception $e) {
+            Log::error('Media upload failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json(
                 [
                     'message' => 'Upload failed',

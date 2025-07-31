@@ -214,7 +214,7 @@ class FirebaseController extends Controller
 
         $disputeSpecs = [
             'W11.W12.0' => [
-                'dispute_image_videos' => ['media/img/bskyGLaPbr8503Oz8yvC1uUDJiPhFv8JyTk6HJmf.jpg'],
+                'dispute_image_videos' => ['media/img/dispute_evidence_3.jpg'],
                 'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
                 'dispute_teamId' => '24',
                 'dispute_teamNumber' => '0',
@@ -291,7 +291,7 @@ class FirebaseController extends Controller
             ->get();
 
         $brackets = $this->firestoreService->generateBrackets($ogBrackets, $event['id']);
-        return view('admin.brackets', compact('brackets', 'event', 'teams'));
+        return view('filament.pages.brackets', compact('brackets', 'event', 'teams'));
     }
 
     public function showDisputes(Request $request, $eventId)
@@ -340,6 +340,6 @@ class FirebaseController extends Controller
         $disputeRoles = array_flip($DISPUTTE_ENUMS);
 
         // dd($users);
-        return view('admin.reports', compact('disputes', 'event', 'teams', 'users', 'disputeRoles', 'setup'));
+        return view('filament.pages.reports', compact('disputes', 'event', 'teams', 'users', 'disputeRoles', 'setup'));
     }
 }

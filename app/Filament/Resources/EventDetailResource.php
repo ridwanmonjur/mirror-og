@@ -187,7 +187,7 @@ class EventDetailResource extends Resource
                     ->label('Brackets')
                     ->icon('heroicon-m-squares-2x2') 
                     ->url(function (EventDetail $record) {
-                        return route('admin.brackets.index', $record->id) ;
+                        return route('filament.pages.brackets.index', $record->id) ;
                     })
                 ->openUrlInNewTab(),
             ])

@@ -276,7 +276,7 @@
                                     <div>
                                         <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                                             src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                                            class="object-fit-cover rounded-2 me-1" width="30" height="30"
+                                            class="object-fit-cover border border-secondary rounded-2 me-1" width="30" height="30"
                                         >
                                         <p class=" d-inline my-0 ms-2"> {{ $joinEvent->eventDetails->eventName }} </p>
                                     </div>

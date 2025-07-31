@@ -2,7 +2,7 @@
     <form method="POST" v-on:submit="submitDisputeForm(event)" id="createForm" enctype="multipart/form-data">
         <input type="hidden" name="action" value="create">
         <input type="hidden" name="event_id" value="{{ $event->id }}">
-        <input type="hidden" name="dispute_teamId" v-bind:value="report.teams[reportUI.matchNumber]?.id">
+        <input type="hidden" name="dispute_teamId" v-bind:value="report.teams?.id">
         <input type="hidden" name="dispute_teamNumber" v-bind:value="reportUI.teamNumber">
         <input type="hidden" name="report_id" v-bind:value="report.id">
         <input type="hidden" name="dispute_userId" value="{{ $user?->id }}">
@@ -59,15 +59,18 @@
                     <h5 class="text-start my-3"> Image/Video Evidence <span class="text-red">*</span>
                     </h5>
                     <div class="ps-5 pe-5 text-start">
-                        <div class="upload-container ps-5 pe-5" v-scope="UploadData('claim')"
-                            id="claimId" @vue:mounted="init()">
+                        <div class="upload-container ps-5 pe-5" 
+                            v-scope="UploadData('claim')"
+                            id="claimId" 
+                            @vue:mounted="init2()"
+                        >
                             <div class="d-flex justify-content-start">
                                 <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>
                                 <div class="plus-button" v-on:click="clickInput()">+</div>
                             </div>
                             <input type="file" class="file-input" multiple accept="image/*,video/*"
                                 v-on:change="handleFiles(event)">
-                        </div>
+                        </div> 
                     </div>
                 </div>
             </div>

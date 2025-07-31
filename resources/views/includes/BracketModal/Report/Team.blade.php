@@ -1,24 +1,24 @@
 <div>
     @include('includes.BracketModal.Report.ExistingChoicesTeam')
-    <template v-if="report.realWinners[reportUI.matchNumber]">
+    <template v-if="report.realWinners">
         <div>
-            <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
+            <template v-if="dispute?.resolution_winner">
                 <div>
                     <template
-                        v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by == dispute[reportUI.matchNumber]?.dispute_teamNumber">
+                        v-if="dispute?.resolution_resolved_by == dispute?.dispute_teamNumber">
                         <div class="mt-2">
                             <p class="text-success mt-2">
-                                <span v-text="report.teams[dispute[reportUI.matchNumber]?.dispute_teamNumber]?.name">
+                                <span v-text="report.teams[dispute?.dispute_teamNumber]?.name">
                                 </span> has conceded the dispute. Winner is to be decided by the organizer.
                             </p>
                         </div>
                     </template>
                     <template
-                        v-if="dispute[reportUI.matchNumber]?.resolution_resolved_by != dispute[reportUI.matchNumber]?.dispute_teamNumber">
+                        v-if="dispute?.resolution_resolved_by != dispute?.dispute_teamNumber">
                         <div class="mt-2">
                             <p class="text-success mt-2">
                                 The dispute has been resolved in favor of
-                                <span v-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner]?.name">
+                                <span v-text="report.teams[dispute?.resolution_winner]?.name">
                                 </span>
                             </p>
                         </div>
@@ -30,7 +30,7 @@
                                 data-bs-target="#disputeModal" data-bs-dismiss="modal"> Show dispute </button>
                         </div>
                     </div>
-                    <template v-if="!report.realWinners[reportUI.matchNumber]">
+                    <template v-if="!report.realWinners">
                         @include('includes.BracketModal.Report.PendingWinners')
                     </template>
                 </div>
@@ -46,12 +46,12 @@
             <template v-else>
                 <div>
                     <template
-                        v-if="report.teams[0].winners[reportUI.matchNumber] && 
-                            report.teams[1].winners[reportUI.matchNumber]">
+                        v-if="report.teams[0].winners && 
+                            report.teams[1].winners">
                         <div>
                             <template
-                                v-if="report.teams[0].winners[reportUI.matchNumber] != report.teams[1].winners[reportUI.matchNumber]
-                                    && !dispute[reportUI.matchNumber]    
+                                v-if="report.teams[0].winners != report.teams[1].winners
+                                    && !dispute    
                                 ">
                                 <div class="mt-3">
                                     <div class="d-flex justify-content-center">
@@ -72,7 +72,7 @@
                                 </div>
                             </template>
                             <template
-                                v-if="dispute[reportUI.matchNumber] && !dispute[reportUI.matchNumber]?.resolution_winner">
+                                v-if="dispute && !dispute?.resolution_winner">
                                 <div>
                                     <p class="text-red mt-2">
                                         The results of this match are disputed.
@@ -98,7 +98,7 @@
                     </template>
                     
                     <template
-                        v-if="report.teams[reportUI.teamNumber]?.winners[reportUI.matchNumber]">
+                        v-if="report.teams[reportUI.teamNumber]?.winners">
                         <div class="mt-2">
                             @include('includes.BracketModal.Report.PendingWinners')
                         </div>

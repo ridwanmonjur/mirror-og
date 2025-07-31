@@ -8,17 +8,17 @@
     <template v-else>
         <div class="d-block">
             <template
-                v-if="!report.realWinners[reportUI.matchNumber] && !report.disqualified && !dispute[reportUI.matchNumber]">
+                v-if="!report.realWinners && !report.disqualified && !dispute">
                 <div>
                     <div>
                         <template
-                            v-if="report.teams[0].winners[reportUI.matchNumber] &&
-                        report.teams[1].winners[reportUI.matchNumber]">
+                            v-if="report.teams[0].winners &&
+                        report.teams[1].winners">
                             <div>
                                 <template
-                                    v-if="(report.teams[0].winners[reportUI.matchNumber] !=
-                                    report.teams[1].winners[reportUI.matchNumber])
-                                    && !dispute[reportUI.matchNumber]?.resolution_winner
+                                    v-if="(report.teams[0].winners !=
+                                    report.teams[1].winners)
+                                    && !dispute?.resolution_winner
                                 ">
                                     <div>
                                         <p class="text-red">
@@ -33,16 +33,16 @@
                     @include('includes.BracketModal.Report.PickWinners')
                 </div>
             </template>
-            <template v-if="dispute[reportUI.matchNumber]">
+            <template v-if="dispute">
                 <div>
-                    <template v-if="dispute[reportUI.matchNumber]?.resolution_winner">
+                    <template v-if="dispute?.resolution_winner">
                         <div>
 
 
                             <p class="text-success mt-2">
                                 The dispute has been resolved in favor of
                                 <span class="text-primary"
-                                    v-text="report.teams[dispute[reportUI.matchNumber]?.resolution_winner]?.name"> </span>
+                                    v-text="report.teams[dispute?.resolution_winner]?.name"> </span>
                             </p>
                             <div class="mt-2">
                                 <div class="d-flex justify-content-center">
@@ -51,14 +51,14 @@
                                         onclick="document.getElementById('reportModal')?.click();"> Show dispute </button>
                                 </div>
                             </div>
-                            <template v-if="report.realWinners[reportUI.matchNumber]">
+                            <template v-if="report.realWinners">
                                 <div>
                                     @include('includes.BracketModal.Report.RealWinners')
                                 </div>
                             </template>
                         </div>
                     </template>
-                    <template v-if="!dispute[reportUI.matchNumber]?.resolution_winner">
+                    <template v-if="!dispute?.resolution_winner">
                         <div>
                             <p class="text-red mt-2">
                                 The results of this match are disputed.
@@ -75,7 +75,7 @@
                     </template>
                 </div>
             </template>
-            <template v-if="!dispute[reportUI.matchNumber] && report.realWinners[reportUI.matchNumber]">
+            <template v-if="!dispute && report.realWinners">
                 <div>
                     @include('includes.BracketModal.Report.RealWinners')
                     <div class="d-flex justify-content-center">

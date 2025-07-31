@@ -158,10 +158,11 @@ class ParticipantEventController extends Controller
 
             $isAlreadyMember = TeamMember::isAlreadyMember($teamId, $userId);
             $isPartOfRoster = JoinEvent::isPartOfRoster($id, $userId);
-            $joinTeamButNotRoster = JoinEvent::where('event_details_id', $id)->where('team_id', $teamId)->first();
+            $joinTeamButNotRoster = JoinEvent::where('event_details_id', $id)
+                ->where('team_id', $teamId)->first();
 
             if ($joinTeamButNotRoster) {
-                $errorMessage = 'You have already joined this event with your team before!';
+                $errorMessage = 'You have already joined this event with this particular team before! Join with a new team or re-join your roster!';
                 return redirect()
                     ->route('participant.register.manage', ['id' => $teamId])
                     ->with('errorMessage', $errorMessage)

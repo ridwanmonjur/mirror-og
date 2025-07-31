@@ -361,13 +361,13 @@
                                             <span class="fs-7"> Click to confirm your registration.</span>
                                         </a>
                                     @elseif  ($existingJoint->join_status == "confirmed")
-                                        <a class="mt-2 fs-7 text-success fw-bold" href="{{route('participant.register.manage',
+                                        <a class="mt-2 fs-7 d-block text-success fw-bold" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
                                             )}}"><span class="fs-7">Click to manage your registration.</span>
                                         </a>
 
                                     @elseif  ($existingJoint->join_status == "canceled")
-                                        <a class="mt-2 fw-bold" href="{{route('participant.register.manage',
+                                        <a class="mt-2 fw-bold d-block" href="{{route('participant.register.manage',
                                         ['id' => $existingJoint->team_id, 'scroll' => $existingJoint->id]
                                             )}}"><span class="fs-7">Your registration is canceled. Click to view.</span>
                                         </a>
@@ -474,7 +474,11 @@
                                         <line x1="12" y1="16" x2="12" y2="12"></line>
                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                     </svg>
-                                    <span >{{ $type ?? 'Not available' }}</span>
+                                    <span >{{ $type ?? 'Not available' }} 
+                                        @if ($event?->game->games_per_match)
+                                            (Best of {{$event->game->games_per_match}})
+                                        @endif
+                                    </span>
                                 </div>
                                 <div class="d-flex justify-content-start align-items-center pb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -512,7 +516,9 @@
                 </div>
 
                 <div id="Bracket" v-scope="BracketData()"
-                        class="tabcontent " >
+                    @vue:mounted="init()"
+                    class="tabcontent " 
+                >
                     @include('includes.Public.BracketReport')
                 </div>
 

@@ -20,7 +20,7 @@
     @include('googletagmanager::body')
         @include('includes.Navbar')
  
-    <main id="Bracket"  v-scope="BracketData()" class="position-relative">
+    <main id="Bracket"  v-scope="BracketData()" @vue:mounted="init()" @vue:unmounted="destroy();" class="position-relative">
         <input type="hidden" id="eventId" value="{{$event->id}}">
         <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
         <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
