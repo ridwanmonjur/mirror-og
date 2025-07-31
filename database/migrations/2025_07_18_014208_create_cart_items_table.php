@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cart_items', function (Blueprint $table) {
+        if (!Schema::hasTable('cart_items')) {
+            Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cart_id');
             $table->unsignedInteger('product_id');
@@ -23,7 +24,8 @@ return new class extends Migration
             $table->foreign('cart_id')->references('id')->on('final_carts')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             // Foreign key for variant_id will be added in a later migration when product_variants table exists
-        });
+            });
+        }
     }
 
     /**

@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_variants', function (Blueprint $table) {
+        if (!Schema::hasTable('product_variants')) {
+            Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('product_id');
             $table->string('name');
@@ -21,18 +22,23 @@ return new class extends Migration
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->index(['product_id', 'name']);
-        });
+            });
+        }
 
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('quantity');
-        });
+        if (Schema::hasTable('products')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->dropColumn('quantity');
+            });
+        }
 
-        Schema::table('cart_items', function (Blueprint $table) {
-            if (!Schema::hasColumn('cart_items', 'variant_id')) {
-                $table->unsignedBigInteger('variant_id')->nullable()->after('product_id');
-                $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
-            }
-        });
+        if (Schema::hasTable('cart_items')) {
+            Schema::table('cart_items', function (Blueprint $table) {
+                if (!Schema::hasColumn('cart_items', 'variant_id')) {
+                    $table->unsignedBigInteger('variant_id')->nullable()->after('product_id');
+                    $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
+                }
+            });
+        }
     }
 
     /**
