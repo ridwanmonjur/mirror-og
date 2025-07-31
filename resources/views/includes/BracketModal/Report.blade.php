@@ -14,7 +14,7 @@
                                 @endif
                             </h5> 
                              <p class="py-0 mt-0 mb-0 text-muted">
-                                <b> Match Results: <span  v-text="report.position"></span></b>     
+                                <b> Match Results: <span  v-text="report.position == 'F' ? 'FINAL' : report.position"></span></b>     
                             </p>
                             <p class="my-0 py-0">
                                 <span v-bind:class="'my-0 p-0  text-uppercase Color-'+ report.completeMatchStatus + ' '" v-text="report.completeMatchStatus"> </span>

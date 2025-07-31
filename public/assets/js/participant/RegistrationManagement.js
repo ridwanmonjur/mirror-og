@@ -673,7 +673,7 @@ addOnLoad(()=> {
             Swal.fire({
                 icon: 'error',
                 title: 'Operation Failed',
-                text: `An error occurred while processing your request: ${errorMessage}. Please try again or contact our support team if the issue persists. Make sure you have a stable internet connection and all required information is provided correctly.`,
+                text: `An error occurred while processing your request: ${errorMessage} Please try again or contact our support team if the issue persists. `,
                 timer: 3000,
                 showConfirmButton: false
             });

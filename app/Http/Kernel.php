@@ -22,7 +22,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\HandlePostTooLarge::class,
+        // \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class, // Replaced by HandlePostTooLarge
         \App\Http\Middleware\TrimStrings::class,
         \App\Http\Middleware\ErrorHandlerMiddleware::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
