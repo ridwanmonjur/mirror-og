@@ -185,11 +185,11 @@ return [
         'IS_ORGANIZER' => 4,
     ],
     'DISPUTE' => [
-        'ORGANIZER' => 1,
-        'DISPUTEE' => 2,
-        'RESPONDER' => 3,
-        'TIME' => 4,
-        'RANDOM' => 5
+        'ORGANIZER' => 3,
+        'DISPUTEE' => 4,
+        'RESPONDER' => 5,
+        'TIME' => 6,
+        'RANDOM' => 7
     ],
     'QUEUE_TRIES' => 3,
     'STRIPE' => [

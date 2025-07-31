@@ -137,7 +137,7 @@ class BetaController extends Controller
     {
         $users = DB::table('interested_user')->orderBy('id', 'desc')->simplePaginate(50);
 
-        return view('admin.SendBetaUser', compact('users'));
+        return view('filament.pages.SendBetaUser', compact('users'));
     }
 
     public function postOnboardBeta(Request $request)

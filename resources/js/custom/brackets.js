@@ -1,66 +1,180 @@
-import {
-  initializeFirestore, memoryLocalCache, setDoc, serverTimestamp,
-  addDoc, onSnapshot, updateDoc,  doc, query, collection, collectionGroup, getDocs, getDoc, where, or
-} from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 
-const initialBracketData = (userTeamId) => ({
-  firebaseUser: null,
-  disputeLevelEnums: {
-    'ORGANIZER': 1,
-    'DISPUTEE': 2,
-    'RESPONDER': 3,
-    'TIME': 4,
-    'RANDOM': 5
-  },
-  subscribeToMatchStatusesSnapshot: null,
-  subscribeToCurrentReportSnapshot: null,
-  subscribeToCurrentReportDisputesSnapshot: null,
-  reportUI: {
-    matchNumber: 0,
-    userTeamId,
-    teamNumber: 0,
-    otherTeamNumber: 1,
-    disabled: [false, false, false],
-    statusText: 'Select a winner for Game 1'
-  },
-  report: {
-    id: null,
-    organizerWinners: [null, null, null],
-    randomWinners: [null, null, null],
-    defaultWinners: [null, null, null],
-    disqualified: false,
-    disputeResolved: [null, null, null],
-    realWinners: [null, null, null],
-    userLevel: userLevelEnums['IS_PUBLIC'],
-    completeMatchStatus: 'UPCOMING',
-    matchStatus: ['UPCOMING', 'UPCOMING', 'UPCOMING'],
-    deadline: null,
+export const cloneArrays = (obj, keys) => 
+  Object.fromEntries(keys.map(key => [key, [...obj[key]]]));
+
+const generateInitialBracket = (userTeamId, disputeLevelEnums, userLevelEnums, totalMatches) => {
+  
+let reportStore = {
+  list: {
+    organizerWinners: Array(totalMatches).fill(null),
+    randomWinners: Array(totalMatches).fill(null),
+    defaultWinners: Array(totalMatches).fill(null),
+    disputeResolved: Array(totalMatches).fill(null),
+    realWinners: Array(totalMatches).fill(null),
+    matchStatus: Array(totalMatches).fill('UPCOMING'),
     teams: [
       {
-        winners: [null, null, null],
-        id: null,
-        position: "",
-        banner: "",
-        name: "No team chosen yet",
-        score: 0,
+        winners: Array(totalMatches).fill(null),
       },
       {
-        id: null,
-        position: "",
-        banner: "",
-        name: "No team chosen yet",
-        winners: [null, null, null],
-        score: 0,
+        winners: Array(totalMatches).fill(null),
       }
     ],
-    position: ""
   },
-  dispute: [
-    null,
-    null,
-    null
-  ],
-});
+
+  setList(list) {
+    this.list = list;
+  },
+
+
+  makeCurrentReport(report, matchNumber ) {
+    return {
+      ...report,
+      organizerWinners: this.list.organizerWinners[matchNumber],
+      randomWinners: this.list.randomWinners[matchNumber],
+      defaultWinners: this.list.defaultWinners[matchNumber],
+      disputeResolved: this.list.disputeResolved[matchNumber],
+      realWinners: this.list.realWinners[matchNumber],
+      matchStatus: this.list.matchStatus[matchNumber],
+      teams: [
+        {
+          ...report.teams[0],
+          winners: this.list.teams[0].winners[matchNumber],
+        },
+        {
+          ...report.teams[1],
+          winners: this.list.teams[1].winners[matchNumber],
+        }
+      ],
+    }
+  },
+
+ updateListFromFirestore(sourceData) {
+    this.list = {
+      ...cloneArrays(sourceData, [
+        'organizerWinners', 'matchStatus', 'realWinners', 
+        'randomWinners', 'defaultWinners', 'disputeResolved'
+      ]),
+      teams: [
+        { winners: [...sourceData.team1Winners] },
+        { winners: [...sourceData.team2Winners] }
+      ]
+    };
+  },
+
+  setListFromTemp(tempState) {
+    this.list = { 
+      ...tempState, 
+      teams: [
+        { winners: [...tempState.teams[0].winners] },
+        { winners: [...tempState.teams[1].winners] }
+      ]
+    };
+   },
+  
+  makeReportListFromTemp(tempState, position) {
+      const { teams, ...rest } = tempState;
+      
+      ['organizerWinners', 'randomWinners', 'defaultWinners', 'disputeResolved', 'realWinners', 'matchStatus']
+        .forEach(key => {
+          if (rest[key] !== undefined) {
+            this.list[key][position] = rest[key];
+          }
+        });
+      
+      if (teams?.[0]?.winners !== undefined) {
+        this.list.teams[0].winners[position] = teams[0].winners;
+      }
+      if (teams?.[1]?.winners !== undefined) {
+        this.list.teams[1].winners[position] = teams[1].winners;
+      }
+    }
+  
+  
+};
+
+let disputeStore = {
+  list: Array(totalMatches).fill(null),
+
+  makeCurrentDispute(matchNumber) {
+    return this.list[matchNumber] ? {
+      ...this.list[matchNumber]
+    } : null;
+  },
+
+  setList(list) {
+    this.list = list;
+  }
+};
+
+  let _initialBracket = {
+      firebaseUser: null,
+      disputeLevelEnums,
+      subscribeToMatchStatusesSnapshot: null,
+      subscribeToCurrentReportDisputesSnapshot: null,
+      reportUI: {
+        matchNumber: 0,
+        userTeamId,
+        teamNumber: 0,
+        otherTeamNumber: 1,
+        disabled: false,
+        statusText: 'Select a winner for Game 1'
+      },
+      report: {
+        id: null,
+        organizerWinners: null,
+        randomWinners: null,
+        defaultWinners: null,
+        disqualified: false,
+        disputeResolved: null,
+        realWinners: null,
+        userLevel: userLevelEnums['IS_PUBLIC'],
+        completeMatchStatus: 'UPCOMING',
+        matchStatus: 'UPCOMING',
+        deadline: null,
+        teams: [
+          {
+            winners: null,
+            id: null,
+            position: "",
+            banner: "",
+            name: "No team chosen yet",
+            score: 0,
+          },
+          {
+            id: null,
+            position: "",
+            banner: "",
+            name: "No team chosen yet",
+            winners:  null,
+            score: 0,
+          }
+        ],
+        position: ""
+      },
+      dispute: null,
+    };
+  return {
+     _initialBracket,
+     reportStore,
+     disputeStore,
+  };
+}
+
+function resetDotsToContainer() {
+  let parent = document.getElementById('reportModal');
+  let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
+  dottedScoreContainer.forEach((element) => {
+    element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
+      dottedElement.classList.remove('bg-success', 'bg-red');
+      dottedElement.classList.add('bg-secondary');
+      if (dottedElementIndex == 2) {
+        dottedElement.classList.add('d-none');
+      }
+    });
+  });
+}
 
 function calcScores(update) {
   let score1 = update.realWinners?.reduce((acc, value) => acc + (value == "0" ? 1 : 0), 0);
@@ -68,18 +182,27 @@ function calcScores(update) {
   return [score1, score2];
 }
 
-function createReportTemp(report) {
+function createReportTemp(report, reportList) {
   let update = {
-    organizerWinners: [...report.organizerWinners],
-    matchStatus: [...report.matchStatus],
-    realWinners: [...report.realWinners],
-    teams: [...report.teams],
+    organizerWinners: [...reportList.organizerWinners],
+    matchStatus: [...reportList.matchStatus],
+    realWinners: [...reportList.realWinners],
+    teams: [
+      {
+        ...report.teams[0],
+        winners: [...reportList.teams[0].winners],
+      },
+      {
+        ...report.teams[1],
+        winners: [...reportList.teams[1].winners],
+      }
+    ],
     position: report.position,
     completeMatchStatus: report.completeMatchStatus,
-    randomWinners: [...report.randomWinners],
-    defaultWinners: [...report.defaultWinners],
+    randomWinners: [...reportList.randomWinners],
+    defaultWinners: [...reportList.defaultWinners],
     disqualified: report.disqualified,
-    disputeResolved: [...report.disputeResolved],
+    disputeResolved: [...reportList.disputeResolved],
   }
 
   return update;
@@ -136,30 +259,30 @@ function generateWarningHtml(diffDate, newPositionId) {
     `;
 }
 
-function updateReportFromFirestore(baseReport, sourceData) {
+function updateReportFromFirestore(baseReport, sourceData, matchNumber) {
   const score = sourceData.score || [0, 0];
 
   return {
     ...baseReport,
-    organizerWinners: sourceData.organizerWinners,
+    organizerWinners: sourceData.organizerWinners[matchNumber],
     id: sourceData.id || sourceData.reportSnapshot?.id,
-    matchStatus: sourceData.matchStatus,
+    matchStatus: sourceData.matchStatus[matchNumber],
     completeMatchStatus: sourceData.completeMatchStatus,
-    realWinners: sourceData.realWinners,
-    randomWinners: sourceData.randomWinners,
-    defaultWinners: sourceData.defaultWinners,
+    realWinners: sourceData.realWinners[matchNumber],
+    randomWinners: sourceData.randomWinners[matchNumber],
+    defaultWinners: sourceData.defaultWinners[matchNumber],
     disqualified: sourceData.disqualified,
-    disputeResolved: sourceData.disputeResolved,
+    disputeResolved: sourceData.disputeResolved[matchNumber],
     teams: [
       {
         ...baseReport.teams[0],
         score: score[0],
-        winners: sourceData.team1Winners
+        winners: sourceData.team1Winners[matchNumber]
       },
       {
         ...baseReport.teams[1],
         score: score[1],
-        winners: sourceData.team2Winners
+        winners: sourceData.team2Winners[matchNumber]
       }
     ]
   };
@@ -224,10 +347,52 @@ async function showSwal(options = {}) {
   }
 }
 
+function clearSelection() {
+  let selectionButtons = document.querySelectorAll('.selectedButton');
+  selectionButtons.forEach((selectedButton) => {
+    if (selectedButton) {
+      selectedButton.style.backgroundColor = 'white';
+      selectedButton.style.color = 'black';
+      selectedButton = null;
+    }
 
+    const selectTeamSubmitButton = document.querySelector('.selectTeamSubmitButton');
+    if (selectTeamSubmitButton) {
+      selectTeamSubmitButton.style.backgroundColor = '#white';
+      selectTeamSubmitButton.style.color = 'black';
+    }
+   
+    let selectedTeamIndexElem = document.getElementById('selectedTeamIndex');
+    if (selectedTeamIndexElem) {
+      selectedTeamIndexElem.value = null;
+    }
+
+
+  });
+}
+
+function updateCurrentReportDots(reportStore) {
+  let dottedScoreContainer = document.querySelectorAll('#reportModal .dotted-score-container');
+    dottedScoreContainer.forEach((element, index) => {
+      element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
+        if (reportStore.realWinners[dottedElementIndex]) {
+          if (reportStore.realWinners[dottedElementIndex] == index) {
+            dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
+            dottedElement.classList.add("bg-success");
+          } else {
+            dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
+            dottedElement.classList.add("bg-red");
+          }
+        } else {
+          dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
+          dottedElement.classList.add('bg-secondary');
+        }
+      })
+    })
+}
 
 export {
-  initialBracketData,
+  generateInitialBracket,
   calcScores,
   createReportTemp,
   updateReportFromFirestore,
@@ -235,5 +400,8 @@ export {
   diffDateWithNow,
   generateWarningHtml,
   createDisputeDto,
-  showSwal
+  showSwal,
+  resetDotsToContainer,
+  clearSelection,
+  updateCurrentReportDots
 };

@@ -2,6 +2,7 @@
     $isTeam1 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM1'];
     $isTeam2 = $bracket['user_level'] === $USER_ACCESS['IS_TEAM2'];
     $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
+    // DD($winner);
 @endphp
 <div class="tournament-bracket tournament-bracket--rounded col-12 col-xl-6 d-inline-flex align-items-start">
     <div class="tournament-bracket__round  tournament-bracket__round--gold w-100-mobile">
@@ -59,7 +60,7 @@
             <div class="tournament-bracket__item tournament final">
                 <div class="tournament-bracket__match middle-item tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
                      data-bracket="{{ json_encode($winner) }}" data-stage_name="{{ $stageName }}"
-                    data-inner_stage_name="w" data-order="{{ $order }}"
+                    data-inner_stage_name="W" data-order="{{ $order }}"
                 >
                     <x-brackets.bracket-table :bracket="$winner"  :isFirst="false" />
                     <div class="text-center mx-auto popover-parent tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"

@@ -35,7 +35,6 @@ Route::get('/', [MiscController::class, 'showLandingPage'])->name('public.landin
 // Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Public.About')->name('public.about.view');
 Route::view('/contact', 'Public.Contact')->name('public.contact.view');
-Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
 
 // Forget, reset password
 Route::view('/forget-password', view: 'Auth.ForgetPassword')->name('user.forget.view');
@@ -103,9 +102,9 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => ['auth', 'prevent-back-history']], function () {
         Route::redirect('/profile', '/admin', 301)->name('admin.profile.view');
-        Route::get('/brackets/{eventId}', [FirebaseController::class, 'showBrackets'])->name('admin.brackets.index');
+        Route::get('/brackets/{eventId}', [FirebaseController::class, 'showBrackets'])->name('filament.pages.brackets.index');
         Route::get('/disputes/{eventId}', [FirebaseController::class, 'showDisputes']);
-        Route::post('/brackets/{eventId}', [FirebaseController::class, 'storeBrackets'])->name('admin.brackets.store');
+        Route::post('/brackets/{eventId}', [FirebaseController::class, 'storeBrackets'])->name('filament.pages.brackets.store');
         Route::group(['middleware' => 'check-permission:admin'], function () {
             Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
             Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');
@@ -239,7 +238,6 @@ Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
         Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
         Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
 
-
         Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
     });
 });
@@ -247,9 +245,4 @@ Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
 
 
 
-
-
-Route::get('/search', [ShopController::class, 'search'])->name('search');
-
-Route::get('/search-algolia', [ShopController::class, 'searchAlgolia'])->name('search-algolia');
 
