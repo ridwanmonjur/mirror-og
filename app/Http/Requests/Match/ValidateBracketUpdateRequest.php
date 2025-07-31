@@ -59,10 +59,10 @@ class ValidateBracketUpdateRequest extends FormRequest
                     ->whereDate('end_date', '>=', $now)
                     ->first();
     
-                // if (!$bracketDeadline) {
-                //     $this->failureMessage = 'Match is not within reporting timeframe!';
-                //     return false;
-                // }
+                if (!$bracketDeadline) {
+                    $this->failureMessage = 'Match is not within reporting timeframe!';
+                    return false;
+                }
             }
 
             if (!$this->my_team_id) {

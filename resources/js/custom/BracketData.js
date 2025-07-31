@@ -103,7 +103,7 @@ export default function BracketData(fileStore) {
           (eventUpdate.user_level == this.userLevelEnums['IS_TEAM2'] ? 1 : 0);
 
         let otherTeamNumber = teamNumber === 0 ? 1 : 0;
-        if (!eventUpdate || !this.firebaseUser ) {
+        if (!eventUpdate) {
           newReport = {
             ..._initialBracket.report,
           };
