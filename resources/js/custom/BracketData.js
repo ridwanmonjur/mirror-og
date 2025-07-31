@@ -1,11 +1,62 @@
 import { 
-  initializeFirestore, memoryLocalCache, setDoc, serverTimestamp,
+  setDoc, serverTimestamp,
   addDoc, onSnapshot, updateDoc, doc, query, collection, collectionGroup, getDocs, getDoc, where, or
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "./brackets";
+import firebaseService from "../services/firebase.js";
 
-export default function BracketData(userLevelEnums, disputeLevelEnums, _initialBracket, reportStore, disputeStore, _reportStore, hiddenUserId, initializeFirebaseAuth, auth, eventId, db, fileStore, validateDisputeCreation) {
+export default function BracketData(fileStore) {
+  const { auth, db } = firebaseService.getServices();
+  const hiddenUserId = document.getElementById('hidden_user_id')?.value;
+  const eventId = document.getElementById('eventId')?.value;
+  const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value ?? '[]');
+  const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums').value ?? '[]');
+  const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
+  
+  let totalMatches = 3;
+  const {
+    reportStore,
+    disputeStore,
+    _initialBracket
+  } = generateInitialBracket(userTeamId, disputeLevelEnums, userLevelEnums, totalMatches);
+  
+  let _reportStore = {...reportStore};
+  
+  const validateDisputeCreation = async (data) => {
+    const errors = [];
+
+    const requiredFields = [
+      'report_id',
+      'match_number',
+      'event_id',
+      'dispute_userId',
+      'dispute_teamId',
+      'dispute_teamNumber',
+      'dispute_reason'
+    ];
+
+    for (const field of requiredFields) {
+      if (!data[field]) {
+        errors.push(`${field} is required`);
+      }
+    }
+
+    const uniqueQuery = query(
+      collection(db, 'disputes'),
+      where('event_id', '==', data.event_id),
+      where('match_number', '==', data.match_number),
+      where('report_id', '==', data.report_id)
+    );
+
+    const existingDisputes = await getDocs(uniqueQuery);
+    if (!existingDisputes.empty) {
+      errors.push('A dispute with this event, match number, and report already exists');
+    }
+
+    return errors;
+  };
+
   return {
     userLevelEnums,
     disputeLevelEnums,
@@ -14,21 +65,25 @@ export default function BracketData(userLevelEnums, disputeLevelEnums, _initialB
       console.log(">>>init>>>");
 
       if (hiddenUserId) {
-        const { user, claims } = await initializeFirebaseAuth();
-        this.firebaseUser = user;
-        this.userClaims = claims;
-        this.isInitialized = true;
+        try {
+          const { user, claims } = await firebaseService.initializeAuth();
+          this.firebaseUser = user;
+          this.userClaims = claims;
+          this.isInitialized = true;
 
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            user.getIdTokenResult().then(idTokenResult => {
-              this.firebaseUser = { ...user, ...idTokenResult.claims };
-            });
-          } else {
-            this.firebaseUser = null;
-            this.userClaims = null;
-          }
-        });
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              user.getIdTokenResult().then(idTokenResult => {
+                this.firebaseUser = { ...user, ...idTokenResult.claims };
+              });
+            } else {
+              this.firebaseUser = null;
+              this.userClaims = null;
+            }
+          });
+        } catch (error) {
+          console.error('Firebase initialization failed:', error);
+        }
       }
 
       window.addEventListener('changeReport', (event) => {

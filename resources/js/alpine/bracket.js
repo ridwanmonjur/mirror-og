@@ -1,18 +1,17 @@
-import { initializeApp } from "firebase/app";
 import {
-  initializeFirestore, memoryLocalCache, setDoc, serverTimestamp,
+  setDoc, serverTimestamp,
   addDoc, onSnapshot, updateDoc,  doc, query, collection, collectionGroup, getDocs, getDoc, where, or
 } from "firebase/firestore";
-// import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
-import { getAuth, signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { createApp, reactive } from "petite-vue";
-import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "../custom/brackets";
+import { updateAllCountdowns, diffDateWithNow } from "../custom/brackets";
 import { addAllTippy, addDotsToContainer, addTippyToClass } from "../custom/tippy";
 import BracketData from "../custom/BracketData";
 import UploadData from "../custom/UploadData";
+import firebaseService from "../services/firebase.js";
 
 
 const eventId = document.getElementById('eventId')?.value;
+const { db } = firebaseService.initialize();
 
 window.updateReportDispute = async (reportId, team1Id, team2Id) => {
   const reportRef = doc(db, `event/${eventId}/brackets`, reportId);
@@ -55,52 +54,6 @@ window.updateReportDispute = async (reportId, team1Id, team2Id) => {
   await Promise.all(updatePromises);
   return querySnapshot.size;
 }
-
-let hiddenUserId = document.getElementById('hidden_user_id')?.value;
-async function initializeFirebaseAuth() {
-  try {
-    const response = await fetch('/api/user/firebase-token');
-    if (!response.ok) {
-      throw new Error('Failed to get Firebase token');
-    }
-
-    let currentUser = null;
-    const { token } = await response.json();
-
-    const userCredential = await signInWithCustomToken(auth, token);
-    currentUser = userCredential.user;
-
-    const idTokenResult = await currentUser.getIdTokenResult();
-    const { role, teamId, userId } = idTokenResult.claims;
-
-    return {
-      user: currentUser,
-      claims: { role, teamId, userId }
-    };
-  } catch (error) {
-    console.error('Firebase authentication failed:', error);
-    throw error;
-  }
-}
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_MESSAGE_SENDER_ID,
-  appId: import.meta.env.VITE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-let auth = null;
-if (hiddenUserId) {
-  auth = getAuth(app);
-}
-
-const db = initializeFirestore(app, {
-  localCache: memoryLocalCache(),
-});
 
 async function getAllMatchStatusesData() {
   const matchesCRef = collection(db, `event/${eventId}/brackets`);
@@ -270,53 +223,6 @@ function CountDown (options) {
   };
 }
 
-let totalMatches = 3;
-const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value ?? '[]');
-const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums' ).value ?? '[]');
-
-const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
-let {
-  reportStore,
-  disputeStore,
-  _initialBracket
-} = generateInitialBracket(userTeamId, disputeLevelEnums, userLevelEnums, totalMatches);
-
-let _reportStore = {...reportStore};
-let _disputeStore = {...disputeStore};
-
-const validateDisputeCreation = async (data) => {
-  const errors = [];
-
-  const requiredFields = [
-    'report_id',
-    'match_number',
-    'event_id',
-    'dispute_userId',
-    'dispute_teamId',
-    'dispute_teamNumber',
-    'dispute_reason'
-  ];
-
-  for (const field of requiredFields) {
-    if (!data[field]) {
-      errors.push(`${field} is required`);
-    }
-  }
-
-  const uniqueQuery = query(
-    collection(db, 'disputes'),
-    where('event_id', '==', data.event_id),
-    where('match_number', '==', data.match_number),
-    where('report_id', '==', data.report_id)
-  );
-
-  const existingDisputes = await getDocs(uniqueQuery);
-  if (!existingDisputes.empty) {
-    errors.push('A dispute with this event, match number, and report already exists');
-  }
-
-  return errors;
-};
 
 function initializeAnalytics() {
   if (window.trackEventViewFromDiv) {
@@ -345,21 +251,7 @@ window.onload = () => {
     });
     
   createApp({
-    BracketData: () => BracketData(
-      userLevelEnums, 
-      disputeLevelEnums, 
-      _initialBracket, 
-      reportStore, 
-      disputeStore, 
-      _reportStore, 
-      hiddenUserId, 
-      initializeFirebaseAuth, 
-      auth, 
-      eventId, 
-      db, 
-      fileStore, 
-      validateDisputeCreation
-    ),
+    BracketData: () => BracketData(fileStore),
     UploadData: (type) => UploadData(type, fileStore),
     CountDown
   }).mount('#Bracket');
