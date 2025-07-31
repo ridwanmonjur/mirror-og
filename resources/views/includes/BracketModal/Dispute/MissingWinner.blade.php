@@ -44,7 +44,7 @@
                                 v-bind:value="dispute?.match_number">
 
                             <input type="hidden" name="resolution_winner" id="resolution_winner_input">
-                            <input type="hidden" name="resolution_resolved_by" value="disputeLevelEnums['ORGANIZER']">
+                            <input type="hidden" name="resolution_resolved_by" v-bind:value="disputeLevelEnums['ORGANIZER']">
                             <p class="text-primary text-center"> The dispute will be resolved in favor of (Choose): </p>
                             <div class="d-flex justify-content-center flex-column mt-2">
                                 <button type="button" v-on:click="decideResolution(event, 0)"

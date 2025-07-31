@@ -474,7 +474,11 @@
                                         <line x1="12" y1="16" x2="12" y2="12"></line>
                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                     </svg>
-                                    <span >{{ $type ?? 'Not available' }}</span>
+                                    <span >{{ $type ?? 'Not available' }} 
+                                        @if ($event?->game->games_per_match)
+                                            (Best of {{$event->game->games_per_match}})
+                                        @endif
+                                    </span>
                                 </div>
                                 <div class="d-flex justify-content-start align-items-center pb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"

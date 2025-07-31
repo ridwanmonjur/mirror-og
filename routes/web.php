@@ -35,7 +35,6 @@ Route::get('/', [MiscController::class, 'showLandingPage'])->name('public.landin
 // Route::view('/closedbeta', 'Public.ClosedBeta')->name('public.closedBeta.view');
 Route::view('/about', 'Public.About')->name('public.about.view');
 Route::view('/contact', 'Public.Contact')->name('public.contact.view');
-Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook'])->name('stripe.webhook');
 
 // Forget, reset password
 Route::view('/forget-password', view: 'Auth.ForgetPassword')->name('user.forget.view');
@@ -238,7 +237,6 @@ Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
         Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.index');
         Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
         Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
-
 
         Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
     });

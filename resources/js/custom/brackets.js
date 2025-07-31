@@ -1,7 +1,4 @@
-import {
-  initializeFirestore, memoryLocalCache, setDoc, serverTimestamp,
-  addDoc, onSnapshot, updateDoc,  doc, query, collection, collectionGroup, getDocs, getDoc, where, or
-} from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 
 export const cloneArrays = (obj, keys) => 
   Object.fromEntries(keys.map(key => [key, [...obj[key]]]));

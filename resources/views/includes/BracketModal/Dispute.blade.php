@@ -197,7 +197,7 @@
                             </button>
                         </div>
                         <br>
-                        <template v-if="!dispute?.resolution_winner && reportUI.teamNumber == dispute?.dispute_teamNumber">
+                        <template v-if="userLevelEnums['IS_ORGANIZER'] != report.userLevel && !dispute?.resolution_winner && reportUI.teamNumber == dispute?.dispute_teamNumber">
                             <div class="text-center">
                                 <form method="POST" v-on:submit="resolveDisputeForm(event)">
                                     <input type="hidden" name="action" value="resolve">

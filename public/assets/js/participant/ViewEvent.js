@@ -335,7 +335,6 @@ submitBtnElement?.addEventListener('click', function(event) {
             if (data.success) {
               
                 let isUpperBracketFirstRound = false;
-                let isFinalBracket = false;
                 let {team1, match, team2} = data.data;
                 let currentMatch = null;
                 let currentMatchMobile = null;
@@ -351,9 +350,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                     isUpperBracketFirstRound = true;
                 }
 
-                if (match.stage_name == "fin" ) {
-                    isFinalBracket = true;
-                }
+               
 
                 let currentDataset = JSON.parse(currentMatch.dataset.bracket);
             
@@ -396,8 +393,8 @@ submitBtnElement?.addEventListener('click', function(event) {
                     smalls = currentMatch.querySelectorAll(`small.replace_me_with_image`);
                 }
 
-                imgsMobile = currentMatchMobile.querySelectorAll(`.tournament-bracket__pos img.team`);
-                smallsMobile = currentMatchMobile.querySelectorAll(`.tournament-bracket__pos small.filler`);
+                imgsMobile = currentMatchMobile?.querySelectorAll(`.tournament-bracket__pos img.team`) ?? [];
+                smallsMobile = currentMatchMobile?.querySelectorAll(`.tournament-bracket__pos small.filler`) ?? [];
 
                 let imgsMap = {}, smallsMap = {};
                 imgs.forEach((img, index)=> {
