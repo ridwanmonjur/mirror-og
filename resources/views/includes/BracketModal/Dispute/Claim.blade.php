@@ -24,20 +24,20 @@
                 <div class="mb-2">
                     <template v-if="dispute?.dispute_image_videos && dispute?.dispute_image_videos[0]">
                         <div>
-                            <p class="my-0">Image/ Video Evidence: <span class="text-red">*<span></p>
-                            <div class="d-flex justify-content-start">
+                            <p class="mt-0 mb-2">Image/ Video Evidence: <span class="text-red">*<span></p>
+                            <div class="d-flex justify-content-start flex-wrap">
                                 <template v-for="imgVideo in dispute?.dispute_image_videos"
                                     :key="imgVideo">
                                     <div class="cursor-pointer">
                                         <template v-if="imgVideo.startsWith('media/img')">
                                             <img v-bind:src="'/storage/' + imgVideo"
-                                                class="object-fit-cover border border-secondary me-2"
+                                                class="object-fit-cover rounded rounded-4 border border-secondary me-3"
                                                 v-on:click="showImageModal(imgVideo, 'image')" height="100px" width="100px" />
                                         </template>
 
                                         <template v-else>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                class="me-3"
+                                                class="me-3 rounded-4"
                                                 v-on:click="showImageModal(imgVideo, 'video')"
                                                 width="60"
                                                 height="60"

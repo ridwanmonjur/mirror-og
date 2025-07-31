@@ -157,6 +157,14 @@ const fileStore = reactive({
     }
   },
 
+  clearAllFiles(fileType) {
+    if (fileType === 'claim') {
+      this.disputeClaimFiles = [];
+    } else if (fileType === 'response') {
+      this.disputeResponseFiles = [];
+    }
+  },
+
   async uploadToServer(fileType) {
     try {
       const createFormData = new FormData();
@@ -177,15 +185,32 @@ const fileStore = reactive({
         }
       });
 
+      // if (uploadResponse.status === 413) {
+      //   const errorData = await uploadResponse.json().catch(() => ({}));
+      //   console.error('File too large error:', errorData);
+      //   window.toastError(errorData.message || "File too large. Please reduce file size and try again.");
+      //   return null;
+      // }
+
+      // if (!uploadResponse.ok) {
+      //   const errorData = await uploadResponse.json().catch(() => ({}));
+      //   console.error('Upload error:', errorData);
+      //   window.toastError(errorData.message || `Request failed with status ${uploadResponse.status}`);
+      //   return null;
+      // }
+
       uploadResponse = await uploadResponse.json();
 
       if (uploadResponse.files) {
         return uploadResponse;
       } else {
-        window.toastError("Uploading to server failed");
+        // window.toastError(uploadResponse.message);
+        return null;
       }
     } catch (error) {
-      window.toastError("Uploading to server failed");
+      console.error('Upload error:', error);
+      window.toastError("Request failed. Please try again.");
+      return null;
     }
   },
 });
@@ -196,7 +221,7 @@ function CountDown (options) {
     dateText: null,
     intervalId: null,
     
-    init() {
+    init3() {
       if (this.$refs.foo) {
         const el = this.$refs.foo;
         this.targetDate = el.dataset.diffDate;
@@ -255,6 +280,8 @@ window.onload = () => {
     UploadData: (type) => UploadData(type, fileStore),
     CountDown
   }).mount('#Bracket');
+
+  
 
   const modalIds = ['updateModal', 'reportModal', 'disputeModal'];
   let isModalOpening = false;

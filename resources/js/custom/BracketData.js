@@ -63,7 +63,7 @@ export default function BracketData(fileStore) {
     ..._initialBracket,
     async init() {
       console.log(">>>init>>>");
-
+      this.clearUploadData();
       if (hiddenUserId) {
         try {
           const { user, claims } = await firebaseService.initializeAuth();
@@ -441,12 +441,14 @@ export default function BracketData(fileStore) {
     changeMatchNumber(increment) {
       clearSelection();
       let newNo = Number(this.reportUI.matchNumber) + Number(increment);
-
-      let isDisabled = 
-        newNo != 0 &&
-        this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'] &&
-        reportStore.list.realWinners[newNo-1] == null &&
-        reportStore.list.teams[this.reportUI.teamNumber]?.winners[newNo] === null;
+      this.clearUploadData();
+      let isDisabled = newNo != 0; 
+      if (isDisabled) {
+        isDisabled = isDisabled &&
+          this.report.userLevel != this.userLevelEnums['IS_ORGANIZER'] &&
+          reportStore.list.realWinners[newNo-1] == null &&
+          reportStore.list.teams[this.reportUI.teamNumber]?.winners[newNo-1] == null;
+      }
 
       let demoNo = newNo + 1;
       this.reportUI = {
@@ -466,11 +468,15 @@ export default function BracketData(fileStore) {
     
     setDisabled(reportUI = {}) {
       let currentNumber = Number(this.reportUI.matchNumber);
-      let isDisabled = 
-        this.reportUI.matchNumber != 0 &&
-        this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'] &&
-          reportStore.list.realWinners[currentNumber-1] == null &&
-          reportStore.list.teams[this.reportUI.teamNumber]?.winners[currentNumber-1] === null;
+      let isDisabled = currentNumber != 0;
+      if (isDisabled) {
+        isDisabled = isDisabled && this.report.userLevel !== this.userLevelEnums['IS_ORGANIZER'] &&
+          (
+            reportStore.list.realWinners[currentNumber-1] == null &&
+            reportStore.list.teams[this.reportUI.teamNumber]?.winners[currentNumber-1] == null
+          );
+      }
+        
 
       this.reportUI = {
         ...reportUI,
@@ -526,13 +532,15 @@ export default function BracketData(fileStore) {
             let data = reportSnapshot.data();
             data['id'] = reportSnapshot.id;
 
-            reportStore.updateReportFromFirestore(data);
-            if (!initialLoad) { 
+            reportStore.updateListFromFirestore(data);
+            if (initialLoad) { 
+              newReportUI.matchNumber = 0;
+            } else {
               newReportUI.matchNumber = this.reportUI.matchNumber;
             }
             
             let matchNumber = newReportUI.matchNumber;
-            this.report = updateReportFromFirestore(newReport, data, matchNumber)
+            this.report = updateReportFromFirestore(newReport, data, matchNumber);
             this.setDisabled(newReportUI);
             updateCurrentReportDots(reportStore.list);
             this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
@@ -593,7 +601,12 @@ export default function BracketData(fileStore) {
       
         if (result.isConfirmed) {
           try {
-            let { files } = await fileStore.uploadToServer('claim');
+            const uploadResult = await fileStore.uploadToServer('claim');
+            if (!uploadResult) {
+              console.error('File upload failed, cannot proceed with dispute');
+              return;
+            }
+            let { files } = uploadResult;
       
             let disputeDto = createDisputeDto(newFormObject, files);
             validateDisputeCreation(disputeDto);
@@ -651,11 +664,12 @@ export default function BracketData(fileStore) {
       });
     
         if (result.isConfirmed) {
-          const matchesCRef = collection(db, `event/${eventId}/brackets`);
-
-          const customDocId = `${this.report.teams[0].position}.${this.report.teams[1].position}`;
-          const reportRef = doc(matchesCRef, customDocId);
-          let { files } = await fileStore.uploadToServer('response');
+          const uploadResult = await fileStore.uploadToServer('response');
+          if (!uploadResult) {
+            console.error('File upload failed, cannot proceed with dispute response');
+            return;
+          }
+          let { files } = uploadResult;
 
           const disputeRef = doc(db, `event/${eventId}/disputes`, id);
 
@@ -677,7 +691,11 @@ export default function BracketData(fileStore) {
           this.writeReportDB(tempReport, false);       
           
         } 
-      }
+      },
+
+    clearUploadData() {
+      window.dispatchEvent(new CustomEvent('clearUploadData'));
+    }
     
   };
 

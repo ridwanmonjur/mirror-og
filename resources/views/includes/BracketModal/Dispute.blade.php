@@ -153,8 +153,9 @@
                                                 </div>
                                                 <p class="my-0 text-start ps-5 pe-5 ">Image/ Video Evidence: <span class="text-red">*<span> </p>
                                                 <div class="ps-5 pe-5 text-start">
-                                                <div class="upload-container ps-5 pe-5" v-scope="UploadData('response')" id="responseId"
-                                                    @vue:mounted="init()"
+                                                <div class="upload-container ps-5 pe-5" 
+                                                    v-scope="UploadData('response')" id="responseId"
+                                                    @vue:mounted="init2()"
                                                 >
                                                     <div class="d-flex justify-content-start">
                                                         <div class="upload-area me-2 d-flex justify-content-between" id="uploadArea"></div>

@@ -516,7 +516,9 @@
                 </div>
 
                 <div id="Bracket" v-scope="BracketData()"
-                        class="tabcontent " >
+                    @vue:mounted="init()"
+                    class="tabcontent " 
+                >
                     @include('includes.Public.BracketReport')
                 </div>
 

@@ -8,15 +8,38 @@ export default function UploadData (type, fileStore) {
       if (!event.target?.files) return;
 
       const newFiles = Array.from(event.target?.files);
-      newFiles?.forEach(file => {
+      const validFiles = [];
+      
+      for (const file of newFiles) {
         if (!(file.type.startsWith('image/') || file.type.startsWith('video/'))) {
           window.toastError("Only images and videos are supported");
-          return;
+          continue;
         }
-      });
+        validFiles.push(file);
+      }
 
+      if (validFiles.length === 0) return;
+
+      const maxSizeInMB = 20;
+      const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+      const oversizedFiles = [];
       
-      fileStore.addFiles(newFiles, type);
+      for (const file of validFiles) {
+        if (file.size > maxSizeInBytes) {
+          oversizedFiles.push({
+            name: file.name,
+            size: (file.size / (1024 * 1024)).toFixed(2) + ' MB'
+          });
+        }
+      }
+      
+      if (oversizedFiles.length > 0) {
+        const fileList = oversizedFiles.map(f => `${f.name} (${f.size})`).join(', ');
+        window.toastError(`The following files are too large (max ${maxSizeInMB}MB): ${fileList}`);
+        return;
+      }
+
+      fileStore.addFiles(validFiles, type);
       
       const uploadArea = document.querySelector(`#${type}Id #uploadArea`);
 
@@ -111,6 +134,27 @@ export default function UploadData (type, fileStore) {
 
       return Array.from(uploadArea.querySelectorAll('.preview-item img'))
         .map(img => img.src);
+    },
+
+    clearAllValues() {
+      fileStore.clearAllFiles(type);
+      
+      const uploadArea = document.querySelector(`#${type}Id #uploadArea`);
+      if (uploadArea) {
+        const previewItems = uploadArea.querySelectorAll('.preview-item');
+        previewItems.forEach(item => item.remove());
+      }
+      
+      const fileInput = document.querySelector(`#${type}Id .file-input`);
+      if (fileInput) {
+        fileInput.value = '';
+      }
+    },
+
+    init2() {
+      window.addEventListener('clearUploadData', () => {
+        this.clearAllValues();
+      });
     }
   };
 }

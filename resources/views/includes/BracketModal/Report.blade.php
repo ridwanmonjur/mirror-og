@@ -26,7 +26,10 @@
                                     <template v-if="!report.deadline.has_started">
                                         <div class="text-center small text-primary my-0">
                                             Reporting available in: 
-                                            <span class="text-center" v-scope="CountDown({targetDate: report.deadline.diff_date}) " @vue:mounted="init()" @vue:unmounted="stopTimer()">
+                                            <span class="text-center" v-scope="CountDown({targetDate: report.deadline.diff_date}) " 
+                                                @vue:mounted="init3()" 
+                                                @vue:unmounted="stopTimer()"
+                                            >
                                                 <span class="text-center" v-text="dateText"> </span>
                                             </span>
                                         </div>
@@ -34,7 +37,11 @@
                                     <template v-if="report.deadline.has_started && !report.deadline.has_ended">
                                         <div class="text-center text-red small  my-0">
                                             Time left to report:
-                                            <span class="text-center" v-scope="CountDown({targetDate: report.deadline.diff_date}) " @vue:mounted="init()" @vue:unmounted="stopTimer()">
+                                            <span class="text-center" 
+                                                v-scope="CountDown({targetDate: report.deadline.diff_date}) " 
+                                                @vue:mounted="init3()" 
+                                                @vue:unmounted="stopTimer()"
+                                            >
                                                 <span class="text-center" v-text="dateText"> </span>
                                             </span>
                                         </div>

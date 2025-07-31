@@ -50,7 +50,7 @@ let reportStore = {
     }
   },
 
-  updateReportFromFirestore(sourceData) {
+ updateListFromFirestore(sourceData) {
     this.list = {
       ...cloneArrays(sourceData, [
         'organizerWinners', 'matchStatus', 'realWinners', 
