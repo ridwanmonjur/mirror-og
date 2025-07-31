@@ -162,6 +162,11 @@ export default function BracketData(fileStore) {
     },
 
     async onSubmitSelectTeamToWin() {
+      if (this.reportUI.disabled) {
+        window.toastError("Cannot report scores on this match yet.");
+        return;
+      }
+
       let teamNumber = this.reportUI.teamNumber;
       let otherTeamNumber = this.reportUI.otherTeamNumber;
       let matchNumber = this.reportUI.matchNumber;
@@ -198,6 +203,11 @@ export default function BracketData(fileStore) {
     },
 
     async onChangeTeamToWin() {
+      if (this.reportUI.disabled) {
+        window.toastError("Cannot report scores on this match yet.");
+        return;
+      }
+
       const result = await showSwal({
         title: 'Changing the winner',
         html: `Are you sure you want to change the winner?`,
@@ -233,6 +243,11 @@ export default function BracketData(fileStore) {
     },
     
     async onRemoveTeamToWin() {
+      if (this.reportUI.disabled) {
+        window.toastError("Cannot report scores on this match yet.");
+        return;
+      }
+
       const result = await showSwal({
         title: 'Remove the winner',
         html: `Are you sure you want to remove the winner?`,
@@ -401,6 +416,11 @@ export default function BracketData(fileStore) {
     },
 
     selectTeamToWin(event, index) {
+      if (this.reportUI.disabled) {
+        window.toastError("Cannot report scores on this match yet.");
+        return;
+      }
+
       clearSelection();
       this.reportUI.statusText = '';
       let selectedButton = event.currentTarget;
@@ -419,8 +439,7 @@ export default function BracketData(fileStore) {
     },
 
     changeMatchNumber(increment) {
-
-    
+      clearSelection();
       let newNo = Number(this.reportUI.matchNumber) + Number(increment);
 
       let isDisabled = 
