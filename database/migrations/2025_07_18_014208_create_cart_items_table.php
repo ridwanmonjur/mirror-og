@@ -22,7 +22,7 @@ return new class extends Migration
             
             $table->foreign('cart_id')->references('id')->on('final_carts')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
+            // Foreign key for variant_id will be added in a later migration when product_variants table exists
         });
     }
 
