@@ -27,7 +27,9 @@ return new class extends Migration
 
         if (Schema::hasTable('products')) {
             Schema::table('products', function (Blueprint $table) {
-                $table->dropColumn('quantity');
+                if (Schema::hasColumn('products', 'quantity')) {
+                    $table->dropColumn('quantity');
+                }
             });
         }
 
@@ -46,15 +48,26 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->integer('quantity')->nullable();
-        });
+        // First, drop the foreign key constraint and column from cart_items
+        if (Schema::hasTable('cart_items')) {
+            Schema::table('cart_items', function (Blueprint $table) {
+                if (Schema::hasColumn('cart_items', 'variant_id')) {
+                    $table->dropForeign(['variant_id']);
+                    $table->dropColumn('variant_id');
+                }
+            });
+        }
 
+        // Then drop the product_variants table
         Schema::dropIfExists('product_variants');
 
-        Schema::table('cart_items', function (Blueprint $table) {
-            $table->dropForeign(['variant_id']);
-            $table->dropColumn('variant_id');
-        });
+        // Finally, add back the quantity column to products
+        if (Schema::hasTable('products')) {
+            Schema::table('products', function (Blueprint $table) {
+                if (!Schema::hasColumn('products', 'quantity')) {
+                    $table->integer('quantity')->nullable();
+                }
+            });
+        }
     }
 };

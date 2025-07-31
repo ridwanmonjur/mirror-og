@@ -14,7 +14,7 @@ return new class extends Migration
         if (!Schema::hasTable('order_item_product_variants')) {
             Schema::create('order_item_product_variants', function (Blueprint $table) {
                 $table->id();
-                $table->unsignedBigInteger('order_product_id');
+                $table->unsignedInteger('order_product_id');
                 $table->unsignedBigInteger('variant_id');
                 $table->timestamps();
                 

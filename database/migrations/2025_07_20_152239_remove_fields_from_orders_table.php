@@ -55,18 +55,42 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('billing_email')->nullable();
-            $table->string('billing_name')->nullable();
-            $table->string('billing_address')->nullable();
-            $table->string('billing_phone')->nullable();
-            $table->string('billing_name_on_card')->nullable();
-            $table->integer('billing_tax');
-            $table->string('billing_city')->nullable();
-            $table->string('billing_province')->nullable();
-            $table->string('billing_postalcode')->nullable();
-            $table->string('payment_gateway')->default('stripe');
-            $table->string('error')->nullable();
-        });
+        if (Schema::hasTable('orders')) {
+            Schema::table('orders', function (Blueprint $table) {
+                if (!Schema::hasColumn('orders', 'billing_email')) {
+                    $table->string('billing_email')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_name')) {
+                    $table->string('billing_name')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_address')) {
+                    $table->string('billing_address')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_phone')) {
+                    $table->string('billing_phone')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_name_on_card')) {
+                    $table->string('billing_name_on_card')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_tax')) {
+                    $table->integer('billing_tax');
+                }
+                if (!Schema::hasColumn('orders', 'billing_city')) {
+                    $table->string('billing_city')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_province')) {
+                    $table->string('billing_province')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'billing_postalcode')) {
+                    $table->string('billing_postalcode')->nullable();
+                }
+                if (!Schema::hasColumn('orders', 'payment_gateway')) {
+                    $table->string('payment_gateway')->default('stripe');
+                }
+                if (!Schema::hasColumn('orders', 'error')) {
+                    $table->string('error')->nullable();
+                }
+            });
+        }
     }
 };

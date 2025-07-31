@@ -12,14 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('participant_coupons', function (Blueprint $table) {
-            if (!Schema::hasColumn('participant_coupons', 'for_type')) {
-                $table->enum('for_type', ['organizer', 'participant'])->default('participant');
-            }
-            if (!Schema::hasColumn('participant_coupons', 'redeemable_count')) {
-                $table->integer('redeemable_count')->default(10);
-            }
-        });
+        if (Schema::hasTable('participant_coupons')) {
+            Schema::table('participant_coupons', function (Blueprint $table) {
+                if (!Schema::hasColumn('participant_coupons', 'for_type')) {
+                    $table->enum('for_type', ['organizer', 'participant'])->default('participant');
+                }
+                if (!Schema::hasColumn('participant_coupons', 'redeemable_count')) {
+                    $table->integer('redeemable_count')->default(10);
+                }
+            });
+        }
 
         if (Schema::hasTable('participant_coupons') && !Schema::hasTable('system_coupons')) {
             Schema::rename('participant_coupons', 'system_coupons');
@@ -28,7 +30,7 @@ return new class extends Migration
         $eventCreateCoupons = DB::table('event_create_coupon')->get();
 
         foreach ($eventCreateCoupons as $coupon) {
-            DB::table('system_coupons')->insert([
+            DB::table('system_coupons')->upsert([
                 'code' => $coupon->coupon,
                 'amount' => $coupon->amount,
                 'description' => $coupon->name,
@@ -40,7 +42,7 @@ return new class extends Migration
                 'for_type' => 'organizer',
                 'redeemable_count' => 0,
                 'discount_type' => $coupon->type ?? 'percent',
-            ]);
+            ], ['code'], ['amount', 'description', 'is_active', 'is_public', 'expires_at', 'for_type', 'redeemable_count', 'discount_type']);
         }
 
       
@@ -51,14 +53,16 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('participant_coupons', function (Blueprint $table) {
-            if (Schema::hasColumn('participant_coupons', 'for_type')) {
-                $table->dropColumn('for_type');
-            }
-            if (Schema::hasColumn('participant_coupons', 'redeemable_count')) {
-                $table->dropColumn('redeemable_count');
-            }
-        });
+        if (Schema::hasTable('participant_coupons')) {
+            Schema::table('participant_coupons', function (Blueprint $table) {
+                if (Schema::hasColumn('participant_coupons', 'for_type')) {
+                    $table->dropColumn('for_type');
+                }
+                if (Schema::hasColumn('participant_coupons', 'redeemable_count')) {
+                    $table->dropColumn('redeemable_count');
+                }
+            });
+        }
 
         if (!Schema::hasTable('participant_coupons') && Schema::hasTable('system_coupons')) {
             Schema::rename('system_coupons', 'participant_coupons');
