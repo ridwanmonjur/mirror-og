@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('participants', function (Blueprint $table) {
-            if (!Schema::hasColumn('participants', 'team_left_at')) {
-                $table->timestamp('team_left_at')->nullable();
-            }
-        });
+        if (Schema::hasTable('participants')) {
+            Schema::table('participants', function (Blueprint $table) {
+                if (!Schema::hasColumn('participants', 'team_left_at')) {
+                    $table->timestamp('team_left_at')->nullable();
+                }
+            });
+        }
     }
 
     /**

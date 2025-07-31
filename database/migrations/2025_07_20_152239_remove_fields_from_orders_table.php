@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
+        if (Schema::hasTable('orders')) {
+            Schema::table('orders', function (Blueprint $table) {
             if (Schema::hasColumn('orders', 'billing_address')) {
                 $table->dropColumn('billing_address');
             }
@@ -45,7 +46,8 @@ return new class extends Migration
             if (Schema::hasColumn('orders', 'error')) {
                 $table->dropColumn('error');
             }
-        });
+            });
+        }
     }
 
     /**
