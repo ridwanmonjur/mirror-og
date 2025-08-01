@@ -40,32 +40,32 @@ class ParticipantFollow extends Model
             DB::raw('COALESCE ( og_follows.id, p_follows.id ) as logged_follow_status'),
             'blocks.id as logged_block_status',
         ])
-        ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
-            $join->on(function ($q) use ($loggedUserId) {
-                $q->on('logged_user_friends.user2_id', '=', 'users.id')
-                  ->where('logged_user_friends.user1_id', '=', $loggedUserId)
-                  ->orWhere(function ($query) use ($loggedUserId) {
-                      $query->on('logged_user_friends.user1_id', '=', 'users.id')
-                            ->where('logged_user_friends.user2_id', '=', $loggedUserId);
-                  });
+            ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
+                $join->on(function ($q) use ($loggedUserId) {
+                    $q->on('logged_user_friends.user2_id', '=', 'users.id')
+                        ->where('logged_user_friends.user1_id', '=', $loggedUserId)
+                        ->orWhere(function ($query) use ($loggedUserId) {
+                            $query->on('logged_user_friends.user1_id', '=', 'users.id')
+                                ->where('logged_user_friends.user2_id', '=', $loggedUserId);
+                        });
+                });
+            })
+            ->leftJoin('blocks', function ($join) use ($loggedUserId) {
+                $join->on('blocks.blocked_user_id', '=', 'users.id')
+                    ->where('blocks.user_id', '=', $loggedUserId);
+            })
+            ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
+                $join->on('og_follows.organizer_user_id', '=', 'users.id')
+                    ->where('og_follows.participant_user_id', '=', $loggedUserId)
+                    ->where('users.role', '=', 'ORGANIZER')
+                    ->select(['og_follows.organizer_user_id', 'og_follows.participant_user_id', 'og_follows.id']);
+            })
+            ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
+                $join->on('p_follows.participant_followee', '=', 'users.id')
+                    ->where('p_follows.participant_follower', '=', $loggedUserId)
+                    ->where('users.role', '=', 'PARTICIPANT')
+                    ->select(['p_follows.organizer_user_id', 'p_follows.participant_user_id', 'p_follows.id']);
             });
-        })
-        ->leftJoin('blocks', function ($join) use ($loggedUserId) {
-            $join->on('blocks.blocked_user_id', '=', 'users.id')
-                 ->where('blocks.user_id', '=', $loggedUserId);
-        })
-        ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
-            $join->on('og_follows.organizer_user_id', '=', 'users.id')
-                ->where('og_follows.participant_user_id', '=', $loggedUserId)
-                ->where('users.role', '=', 'ORGANIZER')
-                ->select(['og_follows.organizer_user_id', 'og_follows.participant_user_id', 'og_follows.id']);
-        })
-        ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
-            $join->on('p_follows.participant_followee', '=', 'users.id')
-                ->where('p_follows.participant_follower', '=', $loggedUserId)
-                ->where('users.role', '=', 'PARTICIPANT')
-                ->select(['p_follows.organizer_user_id', 'p_follows.participant_user_id', 'p_follows.id']);
-        });
     }
 
     public static function checkFollow(int|string $follower, int|string $followee): ?self
@@ -100,7 +100,7 @@ class ParticipantFollow extends Model
             })
             ->leftJoin('participants', function ($join) {
                 $join->on('participants.user_id', '=', 'users.id')
-                     ->where('users.role', '=', 'PARTICIPANT');
+                    ->where('users.role', '=', 'PARTICIPANT');
             });
 
         self::addLoggedUserInfo($followQuery, $loggedUseId);
@@ -149,7 +149,7 @@ class ParticipantFollow extends Model
             })
             ->leftJoin('participants', function ($join) {
                 $join->on('participants.user_id', '=', 'users.id')
-                     ->where('users.role', '=', 'PARTICIPANT');
+                    ->where('users.role', '=', 'PARTICIPANT');
             });
 
         return [$organizerFollowers, $participantFollowers];

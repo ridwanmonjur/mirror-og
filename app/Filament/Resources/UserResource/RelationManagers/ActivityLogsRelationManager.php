@@ -52,10 +52,10 @@ class ActivityLogsRelationManager extends RelationManager
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-     'class' => 'border border-gray-300 dark:border-gray-600',
- ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')

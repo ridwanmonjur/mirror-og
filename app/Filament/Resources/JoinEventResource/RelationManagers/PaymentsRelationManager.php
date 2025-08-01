@@ -27,46 +27,46 @@ class PaymentsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('team_members_id')
-                ->label('Team Member')
-                ->options(function (RelationManager $livewire): array {
-                    // Get the parent record (JoinEvent)
-                    $joinEvent = $livewire->ownerRecord;
+                    ->label('Team Member')
+                    ->options(function (RelationManager $livewire): array {
+                        // Get the parent record (JoinEvent)
+                        $joinEvent = $livewire->ownerRecord;
 
-                    // Get the team_id from the parent JoinEvent
-                    $teamId = $joinEvent->team_id;
+                        // Get the team_id from the parent JoinEvent
+                        $teamId = $joinEvent->team_id;
 
-                    if (! $teamId) {
-                        return [];
-                    }
-
-                    // Get all team members for this team with their user names
-                    return \App\Models\TeamMember::query()
-                        ->where('team_members.team_id', $teamId)
-                        ->join('roster_members', 'roster_members.team_member_id', '=', DB::raw($teamId))
-                        ->with('user')
-                        ->get()
-                        ->mapWithKeys(function ($member) {
-                            // Only include members who have a related user with a name
-                            if ($member->user && $member->user->name) {
-                                return [$member->id => $member->user->name];
-                            }
-
+                        if (! $teamId) {
                             return [];
-                        })
-                        ->toArray();
-                })
-                ->searchable()
-                ->required()
-                ->reactive()
-                ->afterStateUpdated(function ($state, callable $set) {
-                    if ($state) {
-                        // Find the user_id related to the selected team member
-                        $teamMember = \App\Models\TeamMember::find($state);
-                        if ($teamMember && $teamMember->user_id) {
-                            $set('user_id', $teamMember->user_id);
                         }
-                    }
-                }),
+
+                        // Get all team members for this team with their user names
+                        return \App\Models\TeamMember::query()
+                            ->where('team_members.team_id', $teamId)
+                            ->join('roster_members', 'roster_members.team_member_id', '=', DB::raw($teamId))
+                            ->with('user')
+                            ->get()
+                            ->mapWithKeys(function ($member) {
+                                // Only include members who have a related user with a name
+                                if ($member->user && $member->user->name) {
+                                    return [$member->id => $member->user->name];
+                                }
+
+                                return [];
+                            })
+                            ->toArray();
+                    })
+                    ->searchable()
+                    ->required()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            // Find the user_id related to the selected team member
+                            $teamMember = \App\Models\TeamMember::find($state);
+                            if ($teamMember && $teamMember->user_id) {
+                                $set('user_id', $teamMember->user_id);
+                            }
+                        }
+                    }),
 
                 // Hidden field for user_id, will be set automatically based on team_members_id
                 Forms\Components\Hidden::make('user_id')
@@ -86,8 +86,8 @@ class PaymentsRelationManager extends RelationManager
 
                             return [$transaction->id => $displayValue];
                         })
-                        ->prepend('N/A', '')
-                        ->toArray();
+                            ->prepend('N/A', '')
+                            ->toArray();
                     })
                     ->searchable()
                     ->preload(false)

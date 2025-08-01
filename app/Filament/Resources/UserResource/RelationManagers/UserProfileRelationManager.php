@@ -88,10 +88,10 @@ class UserProfileRelationManager extends RelationManager
                     ->label('Background Color'),
                 Tables\Columns\ImageColumn::make('backgroundBanner')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-     'class' => 'border border-gray-300 dark:border-gray-600',
- ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\ViewColumn::make('backgroundGradient')
                     ->label('Gradient')

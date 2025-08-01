@@ -35,8 +35,8 @@ class EventCategoryResource extends Resource
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
-                        ->content('Please create the object first, then edit to upload an image.')
-                        ->visible(fn (string $context): bool => $context === 'create'),
+                            ->content('Please create the object first, then edit to upload an image.')
+                            ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('gameIcon')
                             ->image()
                             ->directory('images/event_details')
@@ -111,10 +111,10 @@ class EventCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\ImageColumn::make('gameIcon')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-     'class' => 'border border-gray-300 dark:border-gray-600',
- ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),

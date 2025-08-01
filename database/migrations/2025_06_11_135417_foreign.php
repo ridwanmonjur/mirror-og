@@ -47,22 +47,22 @@ return new class extends Migration
             $table->unsignedBigInteger('history_id')->nullable();
 
             $table->foreign('history_id')
-                  ->references('id')
-                  ->on('transaction_history')
-                  ->onDelete('set null')
-                  ->onUpdate('restrict');
+                ->references('id')
+                ->on('transaction_history')
+                ->onDelete('set null')
+                ->onUpdate('restrict');
 
             $table->foreign('team_members_id')
-                  ->references('id')
-                  ->on('team_members')
-                  ->onDelete('set null')
-                  ->onUpdate('restrict');
+                ->references('id')
+                ->on('team_members')
+                ->onDelete('set null')
+                ->onUpdate('restrict');
 
             $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('set null')
-                  ->onUpdate('restrict');
+                ->references('id')
+                ->on('users')
+                ->onDelete('set null')
+                ->onUpdate('restrict');
 
         });
 
@@ -120,26 +120,26 @@ return new class extends Migration
             // Recreate original foreign keys with CASCADE
             if (Schema::hasColumn('participant_payments', 'history_id')) {
                 $table->foreign('history_id')
-                      ->references('id')
-                      ->on('transaction_history')
-                      ->onDelete('cascade')
-                      ->onUpdate('restrict');
+                    ->references('id')
+                    ->on('transaction_history')
+                    ->onDelete('cascade')
+                    ->onUpdate('restrict');
             }
 
             if (Schema::hasColumn('participant_payments', 'team_members_id')) {
                 $table->foreign('team_members_id')
-                      ->references('id')
-                      ->on('team_members')
-                      ->onDelete('cascade')
-                      ->onUpdate('restrict');
+                    ->references('id')
+                    ->on('team_members')
+                    ->onDelete('cascade')
+                    ->onUpdate('restrict');
             }
 
             if (Schema::hasColumn('participant_payments', 'user_id')) {
                 $table->foreign('user_id')
-                      ->references('id')
-                      ->on('users')
-                      ->onDelete('cascade')
-                      ->onUpdate('restrict');
+                    ->references('id')
+                    ->on('users')
+                    ->onDelete('cascade')
+                    ->onUpdate('restrict');
             }
         });
 

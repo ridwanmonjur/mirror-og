@@ -46,7 +46,7 @@ class TeamFollow extends Model
             ->join('users', 'team_follows.user_id', '=', 'users.id')
             ->leftJoin('participants', function ($join) {
                 $join->on('participants.user_id', '=', 'users.id')
-                     ->where('users.role', '=', 'PARTICIPANT');
+                    ->where('users.role', '=', 'PARTICIPANT');
             })
 
             ->when(trim($search), function ($q) use ($search) {
@@ -64,28 +64,28 @@ class TeamFollow extends Model
                 'blocks.id as logged_block_status',
 
             ])
-            ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
-                $join->on(function ($q) use ($loggedUserId) {
-                    $q->on('logged_user_friends.user2_id', '=', 'users.id')
-                      ->where('logged_user_friends.user1_id', '=', $loggedUserId)
-                      ->orWhere(function ($query) use ($loggedUserId) {
-                          $query->on('logged_user_friends.user1_id', '=', 'users.id')
-                                ->where('logged_user_friends.user2_id', '=', $loggedUserId);
-                      });
+                ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
+                    $join->on(function ($q) use ($loggedUserId) {
+                        $q->on('logged_user_friends.user2_id', '=', 'users.id')
+                            ->where('logged_user_friends.user1_id', '=', $loggedUserId)
+                            ->orWhere(function ($query) use ($loggedUserId) {
+                                $query->on('logged_user_friends.user1_id', '=', 'users.id')
+                                    ->where('logged_user_friends.user2_id', '=', $loggedUserId);
+                            });
+                    });
+                })
+                ->leftJoin('blocks', function ($join) use ($loggedUserId) {
+                    $join->on('blocks.blocked_user_id', '=', 'users.id')
+                        ->where('blocks.user_id', $loggedUserId);
+                })
+                ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
+                    $join->on('og_follows.organizer_user_id', '=', 'users.id')
+                        ->where('og_follows.participant_user_id', $loggedUserId);
+                })
+                ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
+                    $join->on('p_follows.participant_followee', '=', 'users.id')
+                        ->where('p_follows.participant_follower', $loggedUserId);
                 });
-            })
-            ->leftJoin('blocks', function ($join) use ($loggedUserId) {
-                $join->on('blocks.blocked_user_id', '=', 'users.id')
-                    ->where('blocks.user_id', $loggedUserId);
-            })
-            ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
-                $join->on('og_follows.organizer_user_id', '=', 'users.id')
-                    ->where('og_follows.participant_user_id', $loggedUserId);
-            })
-            ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
-                $join->on('p_follows.participant_followee', '=', 'users.id')
-                    ->where('p_follows.participant_follower', $loggedUserId);
-            });
         }
 
         return $teamQuery->simplePaginate($perPage, ['*'], 'team_followers_page', $page);

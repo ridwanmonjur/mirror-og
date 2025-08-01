@@ -27,19 +27,19 @@ class DiscountsRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Section::make()
-                ->schema([
-                    Forms\Components\TextInput::make('usable_balance')
-                        ->required()
-                        ->numeric()
-                        ->prefix('RM ')
-                        ->label('Usable Balance'),
-                    Forms\Components\TextInput::make('current_balance')
-                        ->required()
-                        ->numeric()
-                        ->prefix('RM ')
-                        ->label('Current Balance'),
-                ])
-                ->columnSpan('full'),
+                    ->schema([
+                        Forms\Components\TextInput::make('usable_balance')
+                            ->required()
+                            ->numeric()
+                            ->prefix('RM ')
+                            ->label('Usable Balance'),
+                        Forms\Components\TextInput::make('current_balance')
+                            ->required()
+                            ->numeric()
+                            ->prefix('RM ')
+                            ->label('Current Balance'),
+                    ])
+                    ->columnSpan('full'),
             ]);
     }
 
@@ -59,15 +59,14 @@ class DiscountsRelationManager extends RelationManager
 
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => ! $this->getOwnerRecord()->wallet()->exists())
+                    ->visible(fn () => ! $this->getOwnerRecord()->wallet()->exists())
                     // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
                     ->createAnother(false)
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['user_id'] = $this->getOwnerRecord()->id;
 
-                ->mutateFormDataUsing(function (array $data): array {
-                    $data['user_id'] = $this->getOwnerRecord()->id;
-
-                    return $data;
-                }),
+                        return $data;
+                    }),
 
             ])
             ->actions([

@@ -40,14 +40,14 @@ class AdminPanelProvider extends PanelProvider
                     )
                     ->groups([
                         NavigationGroup::make('Users & Teams')
-                        ->items([
-                            ...\App\Filament\Resources\UserResource::getNavigationItems(),
-                            // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
-                            ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
-                            ...\App\Filament\Resources\WithdrawalPasswordResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TeamResource::getNavigationItems(),
-                        ]),
+                            ->items([
+                                ...\App\Filament\Resources\UserResource::getNavigationItems(),
+                                // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
+                                ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
+                                ...\App\Filament\Resources\WithdrawalPasswordResource::getNavigationItems(),
+                                ...\App\Filament\Resources\TeamResource::getNavigationItems(),
+                            ]),
                         NavigationGroup::make('Social')
                             ->items([
                                 ...\App\Filament\Resources\BlocksResource::getNavigationItems(),

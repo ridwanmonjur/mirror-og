@@ -49,14 +49,14 @@ class WithdrawalPasswordResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('password')
-                ->label('Password of CSV File')
-                ->required()
-                ->minLength(6)
-                ->maxLength(50)
-                ->password()
-                ->revealable()
-                ->helperText('Password must be at least 6 characters long')
-                ->columnSpanFull(),
+                    ->label('Password of CSV File')
+                    ->required()
+                    ->minLength(6)
+                    ->maxLength(50)
+                    ->password()
+                    ->revealable()
+                    ->helperText('Password must be at least 6 characters long')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -65,8 +65,8 @@ class WithdrawalPasswordResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('password')
-                ->label('Password of CSV File Generated')
-                ->formatStateUsing(fn (string $state): string => str_repeat('•', strlen($state))),
+                    ->label('Password of CSV File Generated')
+                    ->formatStateUsing(fn (string $state): string => str_repeat('•', strlen($state))),
             ])
 
             ->actions([

@@ -187,7 +187,7 @@ class EventDetailResource extends Resource
                     ->url(function (EventDetail $record) {
                         return route('filament.pages.brackets.index', $record->id);
                     })
-                ->openUrlInNewTab(),
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

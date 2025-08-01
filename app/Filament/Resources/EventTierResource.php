@@ -34,8 +34,8 @@ class EventTierResource extends Resource
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
-                        ->content('Please create the object first, then edit to upload an image.')
-                        ->visible(fn (string $context): bool => $context === 'create'),
+                            ->content('Please create the object first, then edit to upload an image.')
+                            ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('tierIcon')
                             ->image()
                             ->directory('images/event_details')
@@ -120,10 +120,10 @@ class EventTierResource extends Resource
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('tierIcon')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-     'class' => 'border border-gray-300 dark:border-gray-600',
- ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('tierTeamSlot'),
                 Tables\Columns\TextColumn::make('tierPrizePool'),

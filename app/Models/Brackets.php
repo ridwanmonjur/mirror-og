@@ -52,7 +52,7 @@ class Brackets extends Model
             foreach ($bracketDeadlines as $deadline) {
                 $query->orWhere(function ($query) use ($deadline) {
                     $query->where('stage_name', $deadline->stage)
-                          ->where('inner_stage_name', $deadline->inner_stage);
+                        ->where('inner_stage_name', $deadline->inner_stage);
                 });
             }
         });

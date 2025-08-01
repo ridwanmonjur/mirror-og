@@ -27,19 +27,19 @@ class ReportResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('reporter_id')
-                ->relationship('reporter', 'name')
-                ->searchable()
-                ->optionsLimit(10)
-                ->searchDebounce(500)
-                ->required()
-                ->live()
-                ->rules([
-                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                        if ($value && $value == $get('reported_user_id')) {
-                            $fail('A user cannot report themselves. Please select different users.');
-                        }
-                    },
-                ]),
+                    ->relationship('reporter', 'name')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('reported_user_id')) {
+                                $fail('A user cannot report themselves. Please select different users.');
+                            }
+                        },
+                    ]),
 
                 Forms\Components\Select::make('reported_user_id')
                     ->relationship('reportedUser', 'name')

@@ -89,7 +89,7 @@ class SettingsService
         $token = generateToken();
 
         $existingUser = User::where('email', $request['newEmail'])
-                ->first();
+            ->first();
 
         if ($existingUser) {
             throw new Exception('An existing user has this email!');

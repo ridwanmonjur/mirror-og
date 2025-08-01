@@ -167,7 +167,7 @@ class AccessUserTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-         ->assertJsonStructure(['success', 'message']);
+            ->assertJsonStructure(['success', 'message']);
         $this->get('/logout');
         $this->assertGuest();
 
@@ -183,7 +183,7 @@ class AccessUserTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-         ->assertJsonStructure(['success', 'message']);
+            ->assertJsonStructure(['success', 'message']);
         $this->get('/logout');
         $this->assertGuest();
     }

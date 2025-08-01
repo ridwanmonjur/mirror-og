@@ -71,10 +71,10 @@ class EventMatchService
         $event->load([
             'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
                 $query->select('id', 'team_id', 'join_events_id', 'user_id')
-                      ->whereIn('join_events_id', $joinEventIds)
-                      ->with(['user' => function ($query) {
-                          $query->select('id', 'name', 'userBanner');
-                      }]);
+                    ->whereIn('join_events_id', $joinEventIds)
+                    ->with(['user' => function ($query) {
+                        $query->select('id', 'name', 'userBanner');
+                    }]);
             },
             'matches',
         ]);

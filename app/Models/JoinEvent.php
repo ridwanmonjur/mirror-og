@@ -141,15 +141,15 @@ class JoinEvent extends Model
     public static function getPlayerJoinEventsWinCountForTeamList(array $teamIdList, $userProfileId): array
     {
         $joins = DB::table('event_join_results')
-        ->whereIn('join_events_id', function ($q) use ($teamIdList, $userProfileId) {
-            $q->select('join_events.id')
-                ->from('join_events')
-                ->where('join_status', '<>', 'canceled')
-                ->join('roster_members', 'join_events.id', '=', 'roster_members.join_events_id')
-                ->where('roster_members.user_id', $userProfileId)
-                ->whereIn('join_events.team_id', $teamIdList);
-        })
-        ->get();
+            ->whereIn('join_events_id', function ($q) use ($teamIdList, $userProfileId) {
+                $q->select('join_events.id')
+                    ->from('join_events')
+                    ->where('join_status', '<>', 'canceled')
+                    ->join('roster_members', 'join_events.id', '=', 'roster_members.join_events_id')
+                    ->where('roster_members.user_id', $userProfileId)
+                    ->whereIn('join_events.team_id', $teamIdList);
+            })
+            ->get();
 
         $sumPositionOne = $streak = $maxStreak = 0;
 

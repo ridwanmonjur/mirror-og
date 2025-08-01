@@ -697,10 +697,10 @@ class EventDetail extends Model implements Feedable
             ->with(['tier', 'type', 'game', 'signup'])
             ->with(['user' => function ($q) {
                 $q->select('id', 'name')
-                ->with(['organizer' => function ($innerQ) {
-                    $innerQ->select(['id', 'user_id']);
-                }])
-                ->withCount('follows');
+                    ->with(['organizer' => function ($innerQ) {
+                        $innerQ->select(['id', 'user_id']);
+                    }])
+                    ->withCount('follows');
             }])
             ->withCount(
                 ['joinEvents' => function ($q) {
@@ -923,8 +923,8 @@ class EventDetail extends Model implements Feedable
             $eventDetail->slug = $baseSlug;
 
             while (self::where('eventName', $eventDetail->eventName)
-                    ->orWhere('slug', $eventDetail->slug)
-                    ->exists()) {
+                ->orWhere('slug', $eventDetail->slug)
+                ->exists()) {
                 $eventDetail->eventName = $baseEventName.' '.$counter;
                 $eventDetail->slug = $baseSlug.'-'.$counter;
                 $counter++;

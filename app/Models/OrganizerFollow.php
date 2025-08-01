@@ -84,7 +84,7 @@ class OrganizerFollow extends Model
             ->join('users', 'organizer_follows.participant_user_id', '=', 'users.id')
             ->leftJoin('participants', function ($join) {
                 $join->on('participants.user_id', '=', 'users.id')
-                     ->where('users.role', '=', 'PARTICIPANT');
+                    ->where('users.role', '=', 'PARTICIPANT');
             })
             ->when(trim($search), function ($q) use ($search) {
                 $q->where('users.name', 'LIKE', '%'.trim($search).'%');
@@ -101,22 +101,22 @@ class OrganizerFollow extends Model
                 'blocks.id as logged_block_status',
 
             ])
-            ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
-                $join->on('logged_user_friends.user2_id', '=', 'users.id')
-                    ->where('logged_user_friends.user1_id', $loggedUserId);
-            })
-            ->leftJoin('blocks', function ($join) use ($loggedUserId) {
-                $join->on('blocks.blocked_user_id', '=', 'users.id')
-                     ->where('blocks.user_id', '=', $loggedUserId);
-            })
-            ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
-                $join->on('og_follows.organizer_user_id', '=', 'users.id')
-                    ->where('og_follows.participant_user_id', $loggedUserId);
-            })
-            ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
-                $join->on('p_follows.participant_followee', '=', 'users.id')
-                    ->where('p_follows.participant_follower', $loggedUserId);
-            });
+                ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
+                    $join->on('logged_user_friends.user2_id', '=', 'users.id')
+                        ->where('logged_user_friends.user1_id', $loggedUserId);
+                })
+                ->leftJoin('blocks', function ($join) use ($loggedUserId) {
+                    $join->on('blocks.blocked_user_id', '=', 'users.id')
+                        ->where('blocks.user_id', '=', $loggedUserId);
+                })
+                ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
+                    $join->on('og_follows.organizer_user_id', '=', 'users.id')
+                        ->where('og_follows.participant_user_id', $loggedUserId);
+                })
+                ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
+                    $join->on('p_follows.participant_followee', '=', 'users.id')
+                        ->where('p_follows.participant_follower', $loggedUserId);
+                });
         }
 
         return $ogQuery->simplePaginate($perPage, ['*'], 'org_followers_page', $page);

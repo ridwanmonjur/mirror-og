@@ -89,7 +89,7 @@ class Team extends Model
         if (! empty($searchTerm)) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('teamName', 'LIKE', "%{$searchTerm}%")
-                  ->orWhere('country_name', 'LIKE', "%{$searchTerm}%");
+                    ->orWhere('country_name', 'LIKE', "%{$searchTerm}%");
             });
         }
 
@@ -159,7 +159,7 @@ class Team extends Model
                     $query->select(['id', 'name', 'email', 'userBanner']);
                 }]);
         }])
-        ->findOrFail($teamId);
+            ->findOrFail($teamId);
     }
 
     public static function getFilteredUserTeams(array $filters, int|string $user_id): array

@@ -88,8 +88,8 @@ class UserResource extends Resource
                                     ->icon('heroicon-o-photo')
                                     ->schema([
                                         Forms\Components\Placeholder::make('create_notice')
-                                        ->content('Please save the user first, then edit to upload a banner image.')
-                                        ->visible(fn (string $context): bool => $context === 'create'),
+                                            ->content('Please save the user first, then edit to upload a banner image.')
+                                            ->visible(fn (string $context): bool => $context === 'create'),
                                         FileUpload::make('userBanner')
                                             ->image()
                                             ->directory('images/user')

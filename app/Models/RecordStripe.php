@@ -49,9 +49,9 @@ class RecordStripe extends Model
 
                 if ($existingCard) {
                     DB::table('saved_cards')
-                    ->where('user_id', $userId)
-                    ->where('fingerprint', $paymentMethod->card->fingerprint)
-                    ->update(['is_default' => true]);
+                        ->where('user_id', $userId)
+                        ->where('fingerprint', $paymentMethod->card->fingerprint)
+                        ->update(['is_default' => true]);
                 }
             }
 

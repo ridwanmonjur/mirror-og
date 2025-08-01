@@ -46,9 +46,9 @@ class TeamCaptainRelationManager extends RelationManager
             // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => ! $this->getOwnerRecord()->user()->exists())
+                    ->visible(fn () => ! $this->getOwnerRecord()->user()->exists())
                 // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                ->createAnother(false),
+                    ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

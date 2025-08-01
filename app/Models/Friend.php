@@ -57,17 +57,17 @@ class Friend extends Model
             'other_user.role as role',
 
         ])
-        ->where(function ($query) use ($userId) {
-            $query->where('friends.user1_id', $userId)
-                  ->orWhere('friends.user2_id', $userId);
-        })
-        ->where('friends.status', 'accepted')
-        ->join('users as other_user', function ($join) use ($userId) {
-            $join->on('other_user.id', '=', DB::raw("CASE 
+            ->where(function ($query) use ($userId) {
+                $query->where('friends.user1_id', $userId)
+                    ->orWhere('friends.user2_id', $userId);
+            })
+            ->where('friends.status', 'accepted')
+            ->join('users as other_user', function ($join) use ($userId) {
+                $join->on('other_user.id', '=', DB::raw("CASE 
                WHEN friends.user1_id = {$userId} THEN friends.user2_id 
                ELSE friends.user1_id 
            END"));
-        });
+            });
 
         $query->when(trim($search), function ($q) use ($search) {
             $q->where('other_user.name', 'LIKE', '%'.$search.'%');
@@ -82,30 +82,29 @@ class Friend extends Model
                 'blocks.id as logged_block_status',
 
             ])
-
-            ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
-                $join->on(function ($q) use ($loggedUserId) {
-                    $q->on('logged_user_friends.user2_id', '=', 'other_user.id')
-                      ->where('logged_user_friends.user1_id', '=', $loggedUserId)
-                      ->orWhere(function ($query) use ($loggedUserId) {
-                          $query->on('logged_user_friends.user1_id', '=', 'other_user.id')
-                                ->where('logged_user_friends.user2_id', '=', $loggedUserId);
-                      });
+                ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
+                    $join->on(function ($q) use ($loggedUserId) {
+                        $q->on('logged_user_friends.user2_id', '=', 'other_user.id')
+                            ->where('logged_user_friends.user1_id', '=', $loggedUserId)
+                            ->orWhere(function ($query) use ($loggedUserId) {
+                                $query->on('logged_user_friends.user1_id', '=', 'other_user.id')
+                                    ->where('logged_user_friends.user2_id', '=', $loggedUserId);
+                            });
+                    });
+                })
+                ->leftJoin('blocks', function ($join) use ($loggedUserId) {
+                    $join->on('blocks.blocked_user_id', '=', 'other_user.id')
+                        ->where('blocks.user_id', $loggedUserId);
+                })
+                ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = other_user.id) as logged_block_status', [$loggedUserId])
+                ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
+                    $join->on('og_follows.organizer_user_id', '=', 'other_user.id')
+                        ->where('og_follows.participant_user_id', $loggedUserId);
+                })
+                ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
+                    $join->on('p_follows.participant_followee', '=', 'other_user.id')
+                        ->where('p_follows.participant_follower', $loggedUserId);
                 });
-            })
-           ->leftJoin('blocks', function ($join) use ($loggedUserId) {
-               $join->on('blocks.blocked_user_id', '=', 'other_user.id')
-                   ->where('blocks.user_id', $loggedUserId);
-           })
-           ->selectRaw('EXISTS(SELECT 1 FROM reports WHERE reporter_id = ? AND reported_user_id = other_user.id) as logged_block_status', [$loggedUserId])
-           ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
-               $join->on('og_follows.organizer_user_id', '=', 'other_user.id')
-                   ->where('og_follows.participant_user_id', $loggedUserId);
-           })
-           ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
-               $join->on('p_follows.participant_followee', '=', 'other_user.id')
-                   ->where('p_follows.participant_follower', $loggedUserId);
-           });
         }
 
         return $query->simplePaginate($perPage, ['*'], 'friends_page', $page);

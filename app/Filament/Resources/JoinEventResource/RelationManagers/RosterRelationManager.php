@@ -26,16 +26,16 @@ class RosterRelationManager extends RelationManager
         return $form->schema([
 
             Forms\Components\Select::make('team_id')
-            ->label('Team')
-            ->options(Team::pluck('teamName', 'id'))
-            ->searchable()
-            ->reactive()
-            ->afterStateUpdated(function ($state, callable $set) {
-                // Reset user selection when team changes
-                $set('user_id', null);
-                $set('team_member_id', null);
-            })
-            ->required(),
+                ->label('Team')
+                ->options(Team::pluck('teamName', 'id'))
+                ->searchable()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set) {
+                    // Reset user selection when team changes
+                    $set('user_id', null);
+                    $set('team_member_id', null);
+                })
+                ->required(),
 
             Forms\Components\Select::make('user_id')
                 ->label('User')

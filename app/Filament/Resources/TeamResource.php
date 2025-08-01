@@ -144,8 +144,8 @@ class TeamResource extends Resource
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
-                        ->content('Please create the object first, then edit to upload an image.')
-                        ->visible(fn (string $context): bool => $context === 'create'),
+                            ->content('Please create the object first, then edit to upload an image.')
+                            ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('teamBanner')
                             ->image()
                             ->directory('images/team')
@@ -237,7 +237,7 @@ class TeamResource extends Resource
                     ->numeric(),
 
                 Tables\Columns\TextColumn::make('country_name')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')

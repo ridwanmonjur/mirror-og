@@ -36,12 +36,12 @@ class AuthConrollerTest extends TestCase
         $response = $this->getJson('/countries');
 
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'success',
-                     'data' => [
-                         '*' => ['name', 'emoji_flag', 'id'],
-                     ],
-                 ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => ['name', 'emoji_flag', 'id'],
+                ],
+            ]);
 
         $response->assertJson(['success' => true]);
 
