@@ -98,7 +98,7 @@ class FirestoreService
     }
 
     /**
-     * Create or overwrite multiple reports with specified IDs and customizable values
+     * Create or overwrite multiple reports with specified IDs and customizable values using BulkWriter
      *
      * @param  string  $baseId  Base ID prefix for reports
      * @param  int  $count  Number of reports to create
@@ -117,8 +117,8 @@ class FirestoreService
         try {
             $firestoreDB = $this->firestore->database();
 
-            $batch = $firestoreDB->batch();
-            $docRefs = [];
+            $bulkWriter = $firestoreDB->bulkWriter();
+            $promises = [];
 
             for ($i = 0; $i < $count; $i++) {
                 $reportId = $specificIds[$i];
@@ -149,22 +149,22 @@ class FirestoreService
                     ->document((string) $eventId)
                     ->collection('brackets')
                     ->document($reportId);
-                $batch->set($docRef, $reportData, ['merge' => false]);
+                
+                $bulkWriter->set($docRef, $reportData, ['merge' => false]);
 
-                $docRefs[$reportId] = $docRef;
                 $results[] = [
                     'statusReport' => 'pending',
                     'reportId' => $reportId,
                 ];
             }
 
-            // Add debug logging before commit
-            error_log('FirestoreService: About to commit batch with '.count($docRefs).' documents');
+            // Add debug logging before close
+            error_log('FirestoreService: About to close BulkWriter with '.count($results).' documents');
 
-            // Commit the batch
-            $batch->commit();
+            // Close the bulk writer to flush all writes
+            $bulkWriter->close();
 
-            // Update results to success after commit
+            // Update results to success after close
             foreach ($results as &$result) {
                 $result['statusReport'] = 'success';
                 $result['messageReport'] = 'Report created or overwritten successfully';
@@ -172,31 +172,21 @@ class FirestoreService
 
             return [
                 'statusReport' => 'success',
-                'messageReport' => 'Batch operation completed - all reports created or overwritten',
+                'messageReport' => 'BulkWriter operation completed - all reports created or overwritten',
                 'resultsReport' => $results,
             ];
         } catch (\Exception $e) {
-            error_log('FirestoreService batch commit error: '.$e->getMessage());
+            error_log('FirestoreService BulkWriter error: '.$e->getMessage());
             error_log('Error trace: '.$e->getTraceAsString());
 
-            // If batch fails due to recursion or other issues, try individual writes
-            if (strpos($e->getMessage(), 'recursion') !== false ||
-                strpos($e->getMessage(), 'call stack') !== false) {
-                error_log('FirestoreService: Falling back to individual writes due to recursion error');
-
-                return $this->createIndividualReports($eventId, $count, $customValuesArray, $specificIds);
-            }
-
-            return [
-                'statusReport' => 'error',
-                'messageReport' => $e->getMessage(),
-                'resultsReport' => $results,
-            ];
+            // If BulkWriter fails, try individual writes as fallback
+            error_log('FirestoreService: Falling back to individual writes due to BulkWriter error');
+            return $this->createIndividualReports($eventId, $count, $customValuesArray, $specificIds);
         }
     }
 
     /**
-     * Create or overwrite multiple dispute documents with specified IDs
+     * Create or overwrite multiple dispute documents with specified IDs using BulkWriter
      *
      * @param  string|int  $eventId  Event ID
      * @param  int  $count  Number of disputes to create
@@ -215,8 +205,7 @@ class FirestoreService
         try {
             $firestoreDB = $this->firestore->database();
 
-            $batch = $firestoreDB->batch();
-            $docRefs = [];
+            $bulkWriter = $firestoreDB->bulkWriter();
 
             for ($i = 0; $i < $count; $i++) {
                 $disputeId = $specificIds[$i];
@@ -249,19 +238,21 @@ class FirestoreService
                     ->collection('disputes')
                     ->document($disputeId);
 
-                $batch->set($docRef, $disputeData, ['merge' => false]); // Ensure complete overwrite
+                $bulkWriter->set($docRef, $disputeData, ['merge' => false]);
 
-                $docRefs[$disputeId] = $docRef;
                 $results[] = [
                     'statusDispute' => 'pending',
                     'disputeId' => $disputeId,
                 ];
             }
 
-            // Commit the batch
-            $batch->commit();
+            // Add debug logging before close
+            error_log('FirestoreService: About to close BulkWriter for disputes with '.count($results).' documents');
 
-            // Update results to success after commit
+            // Close the bulk writer to flush all writes
+            $bulkWriter->close();
+
+            // Update results to success after close
             foreach ($results as &$result) {
                 $result['statusDispute'] = 'success';
                 $result['messageDispute'] = 'Dispute created or overwritten successfully';
@@ -269,10 +260,13 @@ class FirestoreService
 
             return [
                 'statusDispute' => 'success',
-                'messageDispute' => 'Batch operation completed - all disputes created or overwritten',
+                'messageDispute' => 'BulkWriter operation completed - all disputes created or overwritten',
                 'resultsDispute' => $results,
             ];
         } catch (\Exception $e) {
+            error_log('FirestoreService BulkWriter disputes error: '.$e->getMessage());
+            error_log('Error trace: '.$e->getTraceAsString());
+
             return [
                 'statusDispute' => 'error',
                 'messageDispute' => $e->getMessage(),
