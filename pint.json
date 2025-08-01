@@ -1,0 +1,12 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "align_multiline_comment": false,
+        "no_unused_imports": false,
+        "ordered_imports": false,
+        "binary_operator_spaces": false,
+        "method_chaining_indentation": false,
+        "blank_line_after_opening_tag": false,
+        "single_line_after_imports": false
+    }
+}
