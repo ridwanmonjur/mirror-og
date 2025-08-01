@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\NewCart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\CartService;

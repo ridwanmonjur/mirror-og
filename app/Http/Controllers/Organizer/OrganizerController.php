@@ -9,7 +9,6 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
 use App\Models\OrganizerFollow;
-use App\Models\Team;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;

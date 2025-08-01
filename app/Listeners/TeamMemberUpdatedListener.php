@@ -7,7 +7,6 @@ use App\Models\ActivityLogs;
 use App\Models\NotifcationsUser;
 use App\Models\TeamMember;
 use App\Models\User;
-use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;

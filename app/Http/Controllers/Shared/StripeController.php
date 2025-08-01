@@ -7,7 +7,6 @@ use App\Http\Requests\User\RedeemCouponRequest;
 use App\Http\Requests\User\SavePaymentMethodRequest;
 use App\Http\Requests\User\TransactionHistoryRequest;
 use App\Http\Requests\User\WithdrawalRequest as UserWithdrawalRequest;
-use App\Http\Resources\TransactionHistoryResource;
 use App\Models\SystemCoupon;
 use App\Models\PaymentIntent;
 use App\Models\RecordStripe;

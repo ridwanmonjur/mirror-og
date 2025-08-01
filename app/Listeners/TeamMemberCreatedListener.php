@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\TeamMemberCreated;
 use App\Models\NotifcationsUser;
-use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

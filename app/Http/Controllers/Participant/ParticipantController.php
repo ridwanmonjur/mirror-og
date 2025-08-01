@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Participant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\FriendRequest;
-use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\UpdateParticipantsRequest;
 use App\Models\ActivityLogs;
 use App\Models\CountryRegion;
@@ -12,19 +10,15 @@ use App\Models\EventInvitation;
 use App\Models\EventJoinResults;
 use App\Models\Friend;
 use App\Models\JoinEvent;
-use App\Models\Like;
 use App\Models\OrganizerFollow;
 use App\Models\Participant;
 use App\Models\ParticipantFollow;
 use App\Models\Team;
-use App\Models\TeamMember;
 use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Io238\ISOCountries\Models\Country;
+
 
 class ParticipantController extends Controller
 {

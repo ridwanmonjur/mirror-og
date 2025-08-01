@@ -3,13 +3,8 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\FriendRequest;
 use App\Http\Requests\User\FriendUpdateRequest;
-use App\Http\Requests\User\LikeRequest;
 use App\Http\Requests\User\OrganizerFollowRequest;
-use App\Jobs\HandleFollowsFriends;
-use App\Models\ActivityLogs;
-use App\Models\EventInvitation;
 use App\Models\Friend;
 use App\Models\OrganizerFollow;
 use App\Models\TeamFollow;

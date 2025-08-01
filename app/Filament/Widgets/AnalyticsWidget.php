@@ -3,8 +3,6 @@
 namespace App\Filament\Widgets;
 
 use Filament\Widgets\Widget;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class AnalyticsWidget extends Widget
 {

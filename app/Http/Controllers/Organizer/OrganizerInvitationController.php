@@ -8,7 +8,6 @@ use App\Models\EventInvitation;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OrganizerInvitationController extends Controller
 {

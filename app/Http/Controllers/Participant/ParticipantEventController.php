@@ -20,12 +20,9 @@ use ErrorException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Session;
 use App\Services\EventMatchService;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Match\ParticipantViewEventRequest;
 

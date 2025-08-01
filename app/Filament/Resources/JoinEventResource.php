@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\JoinEventResource\Pages;
-use App\Filament\Resources\JoinEventResource\RelationManagers;
 use App\Models\JoinEvent;
 use Filament\Forms;
 use Filament\Forms\Form;

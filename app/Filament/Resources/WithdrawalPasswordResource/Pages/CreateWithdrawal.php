@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\WithdrawalPasswordResource\Pages;
 
 use App\Filament\Resources\WithdrawalPasswordResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateWithdrawal extends CreateRecord

@@ -8,7 +8,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Traits\HandlesFilamentExceptions;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 

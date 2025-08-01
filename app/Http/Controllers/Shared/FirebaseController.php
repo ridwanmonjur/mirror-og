@@ -3,18 +3,14 @@
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brackets;
 use App\Models\EventDetail;
-use App\Models\JoinEvent;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\Firebase;
 use App\Services\FirestoreService;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Contract\Auth;
 use Kreait\Firebase\Contract\Firestore;
 

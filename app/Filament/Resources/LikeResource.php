@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LikeResource\Pages;
-use App\Filament\Resources\LikeResource\RelationManagers;
 use App\Models\Like;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Traits\HandlesFilamentExceptions;
 
 class LikeResource extends Resource

@@ -13,7 +13,6 @@ use App\Models\EventCategory;
 use App\Models\EventJoinResults;
 use App\Models\JoinEvent;
 use App\Models\OrganizerFollow;
-use App\Models\RosterCaptain;
 use App\Models\Team;
 use App\Models\TeamCaptain;
 use App\Models\TeamMember;
@@ -24,7 +23,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Io238\ISOCountries\Models\Country;
 
 class ParticipantTeamController extends Controller
 {

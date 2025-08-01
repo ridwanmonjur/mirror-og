@@ -11,7 +11,6 @@ use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
 use App\Models\SystemCoupon;
-use App\Models\UserCoupon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;

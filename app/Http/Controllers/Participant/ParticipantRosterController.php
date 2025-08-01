@@ -8,7 +8,6 @@ use App\Http\Requests\Team\DisapproveMemberRequest;
 use App\Http\Requests\Team\VoteToStayRequest;
 use App\Jobs\HandleEventJoinConfirm;
 use App\Models\JoinEvent;
-use App\Models\RosterCaptain;
 use App\Models\RosterMember;
 use App\Models\Team;
 use App\Models\TeamMember;

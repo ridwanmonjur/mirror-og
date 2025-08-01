@@ -6,16 +6,11 @@ use App\Jobs\HandleFollowsFriends;
 use App\Models\ActivityLogs;
 use App\Models\Friend;
 use App\Models\OrganizerFollow;
-use Illuminate\Support\Str;
-use App\Models\Organizer;
-use App\Models\Participant;
 use App\Models\ParticipantFollow;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class SocialService
 {

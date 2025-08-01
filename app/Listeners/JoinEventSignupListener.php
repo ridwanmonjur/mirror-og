@@ -4,9 +4,7 @@ namespace App\Listeners;
 
 use App\Events\JoinEventSignuped;
 use App\Mail\EventSignupMail;
-use App\Models\ActivityLogs;
 use App\Models\NotifcationsUser;
-use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

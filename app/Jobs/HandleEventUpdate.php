@@ -6,7 +6,6 @@ use App\Mail\EventRescheduledMail;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\NotifcationsUser;
-use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
 use Illuminate\Bus\Queueable;

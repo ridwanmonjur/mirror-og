@@ -12,7 +12,6 @@ use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
 use App\Models\TransactionHistory;
-use App\Models\User;
 use App\Models\Wallet;
 use App\Services\SettingsService;
 use Exception;

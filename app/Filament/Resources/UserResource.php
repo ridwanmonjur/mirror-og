@@ -23,8 +23,6 @@ use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Traits\HandlesFilamentExceptions;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class UserResource extends Resource
 {

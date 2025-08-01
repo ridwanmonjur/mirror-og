@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class OrdersController extends Controller
 {

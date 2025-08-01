@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Shared;
 use App\Http\Controllers\Controller;
 use App\Models\ImageVideo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;

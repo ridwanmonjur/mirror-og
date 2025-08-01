@@ -6,18 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\EmailValidationRequest;
 use App\Mail\SendBetaWelcomeMail;
 use App\Mail\VerifyInterestedUserMail;
-use App\Models\InterestedUser;
 use App\Models\Participant;
 use App\Models\User;
-use App\Services\AuthService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class BetaController extends Controller
 {
