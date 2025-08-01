@@ -1,6 +1,6 @@
 import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, setDoc,  addDoc, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, setDoc,  addDoc, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
 
@@ -16,7 +16,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = initializeFirestore(app, {
-    localCache: memoryLocalCache(),
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+    })
 });
 
 let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');

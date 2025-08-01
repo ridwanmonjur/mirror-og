@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, setDoc, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence, updateDoc, increment, serverTimestamp, getDoc } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, setDoc,  doc, updateDoc, increment, serverTimestamp, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,7 +13,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = initializeFirestore(app, {
-    localCache: memoryLocalCache(),
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+    })
 });
 
 async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId, collectionName = 'globalCounts') {

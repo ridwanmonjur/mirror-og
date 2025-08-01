@@ -1,6 +1,6 @@
 import {
-  setDoc, serverTimestamp,
-  addDoc, onSnapshot, updateDoc,  doc, query, collection, collectionGroup, getDocs, getDoc, where, or
+  serverTimestamp,
+  onSnapshot, updateDoc,  doc, query, collection,  getDocs, getDoc, where
 } from "firebase/firestore";
 import { createApp, reactive } from "petite-vue";
 import { updateAllCountdowns, diffDateWithNow } from "../custom/brackets";

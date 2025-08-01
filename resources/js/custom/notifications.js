@@ -289,7 +289,7 @@ function PageNotificationComponent () {
                 this.loadFirstPage(tabName);
             } catch (error) {
                 console.error(error);
-                toastError('Failed to load notifications');
+                window.toastError('Failed to load notifications');
             }
         },
        
