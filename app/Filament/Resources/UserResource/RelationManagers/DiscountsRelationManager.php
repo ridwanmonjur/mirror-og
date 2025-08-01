@@ -22,8 +22,6 @@ class DiscountsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'amount';
 
-     
-
     public function form(Form $form): Form
     {
         return $form
@@ -33,12 +31,12 @@ class DiscountsRelationManager extends RelationManager
                     Forms\Components\TextInput::make('usable_balance')
                         ->required()
                         ->numeric()
-                        ->prefix('RM ')                   
+                        ->prefix('RM ')
                         ->label('Usable Balance'),
                     Forms\Components\TextInput::make('current_balance')
                         ->required()
                         ->numeric()
-                        ->prefix('RM ')                   
+                        ->prefix('RM ')
                         ->label('Current Balance'),
                 ])
                 ->columnSpan('full'),
@@ -50,26 +48,27 @@ class DiscountsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('usable_balance')
-                    ->prefix('RM ')     
+                    ->prefix('RM ')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('current_balance')
-                    ->prefix('RM ')     
+                    ->prefix('RM ')
                     ->sortable(),
-              
+
             ])
-            
+
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => !$this->getOwnerRecord()->wallet()->exists())
+                ->visible(fn () => ! $this->getOwnerRecord()->wallet()->exists())
                     // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
                     ->createAnother(false)
 
                 ->mutateFormDataUsing(function (array $data): array {
                     $data['user_id'] = $this->getOwnerRecord()->id;
+
                     return $data;
-                })
-                
+                }),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

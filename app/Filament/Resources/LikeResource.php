@@ -17,6 +17,7 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class LikeResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = Like::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-heart';
@@ -26,13 +27,13 @@ class LikeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name', 
-                    fn ($query) => $query->where('role', 'PARTICIPANT') 
+                    ->relationship('user', 'name',
+                        fn ($query) => $query->where('role', 'PARTICIPANT')
                     ),
                 Forms\Components\Select::make('event_id')
                     ->relationship('event', 'eventName',
-                    fn ($query) => $query->whereNotNull('eventName') 
-                ),
+                        fn ($query) => $query->whereNotNull('eventName')
+                    ),
             ]);
     }
 

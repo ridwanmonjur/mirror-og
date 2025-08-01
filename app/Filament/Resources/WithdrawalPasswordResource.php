@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 
-
 class WithdrawalPasswordResource extends Resource
 {
     use HandlesFilamentExceptions;
@@ -27,7 +26,6 @@ class WithdrawalPasswordResource extends Resource
     protected static ?string $label = 'Withdrawal History';
 
     protected static ?string $pluralLabel = 'Withdrawal History';
-
 
     protected static ?string $navigationLabel = 'Withdrawal History';
 
@@ -42,10 +40,9 @@ class WithdrawalPasswordResource extends Resource
         if (static::$hasRecords === null) {
             static::$hasRecords = WithdrawalPassword::query()->exists();
         }
+
         return static::$hasRecords;
     }
-
-   
 
     public static function form(Form $form): Form
     {
@@ -71,15 +68,15 @@ class WithdrawalPasswordResource extends Resource
                 ->label('Password of CSV File Generated')
                 ->formatStateUsing(fn (string $state): string => str_repeat('•', strlen($state))),
             ])
-            
+
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
             ])
-            
+
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->visible(fn () => !static::hasRecords())
+                    ->visible(fn () => ! static::hasRecords())
                     ->label('Create Password')
                     ->tooltip('Create the first password')
                     ->after(function () {
@@ -87,7 +84,7 @@ class WithdrawalPasswordResource extends Resource
                         static::$hasRecords = null;
                     }),
             ])
-            
+
             ->persistFiltersInSession();
     }
 
@@ -106,7 +103,7 @@ class WithdrawalPasswordResource extends Resource
 
     public static function canCreate(): bool
     {
-        return !static::hasRecords();
+        return ! static::hasRecords();
     }
 
     public static function getPages(): array

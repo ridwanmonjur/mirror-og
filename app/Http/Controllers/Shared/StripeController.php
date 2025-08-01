@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
@@ -39,7 +38,7 @@ class StripeController extends Controller
             $customer = $paymentIntentStripe = null;
             $paymentIntentStatus = 'created';
             $customerStatus = 'created';
-            $isParticipant = $request->role === "PARTICIPANT";
+            $isParticipant = $request->role === 'PARTICIPANT';
             $isManualCaptureMethod = false;
             if ($isParticipant) {
                 $eventType = $request['metadata']['eventType'];
@@ -55,7 +54,7 @@ class StripeController extends Controller
             if ($isEmptyStripeCustomerId) {
                 $customer = $this->stripeClient->createStripeCustomer([
                     'email' => $request->email,
-                    'name' => $request->name
+                    'name' => $request->name,
                 ]);
             } else {
                 try {
@@ -66,7 +65,7 @@ class StripeController extends Controller
                     $customer = $this->stripeClient->createStripeCustomer(
                         [
                             'email' => $request->email,
-                            'name' => $request->name
+                            'name' => $request->name,
                         ]
                     );
                 }
@@ -99,7 +98,6 @@ class StripeController extends Controller
 
             PaymentIntent::insert($paymentIntentDBBody);
 
-
             $responseData = [
                 'success' => 'true',
                 'message' => 'Payment intent creation successful',
@@ -108,7 +106,7 @@ class StripeController extends Controller
                     'customer_status' => $customerStatus,
                     'payment_status' => $paymentIntentStatus,
                     'customer' => $customer,
-                    'payment_intent' => $paymentIntentStripe
+                    'payment_intent' => $paymentIntentStripe,
                 ],
             ];
 
@@ -122,6 +120,7 @@ class StripeController extends Controller
             return response()->json($responseData);
         } catch (Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => 'false',
                 'retrieved' => $isEmptyStripeCustomerId,
@@ -131,24 +130,24 @@ class StripeController extends Controller
                     'customer_status' => $customerStatus,
                     'payment_status' => $paymentIntentStatus,
                     'customer' => $customer,
-                    'payment_intent' => $paymentIntentStripe
+                    'payment_intent' => $paymentIntentStripe,
                 ],
             ]);
         }
     }
 
     /**
- * Show the bank details form
- */
-public function showPaymentMethodForm(Request $request)
-{
-    $user = $request->get('user');
-    $wallet = Wallet::retrieveOrCreateCache($user->id);
+     * Show the bank details form
+     */
+    public function showPaymentMethodForm(Request $request)
+    {
+        $user = $request->get('user');
+        $wallet = Wallet::retrieveOrCreateCache($user->id);
 
-    return view('Users.PaymentMethod', [
-        'wallet' => $wallet,
-    ]);
-}
+        return view('Users.PaymentMethod', [
+            'wallet' => $wallet,
+        ]);
+    }
 
     /**
      * Save the payment method after successful setup
@@ -160,7 +159,7 @@ public function showPaymentMethodForm(Request $request)
 
         try {
             $wallet = Wallet::retrieveOrCreateCache($user->id);
-            
+
             $wallet->update([
                 'bank_name' => $validatedData['bank_name'],
                 'account_number' => $validatedData['account_number'],
@@ -170,19 +169,16 @@ public function showPaymentMethodForm(Request $request)
                 'bank_details_updated_at' => now(),
             ]);
 
-        
             return redirect()->route('wallet.dashboard')
                 ->with('success', 'Bank account details saved successfully! You can now make withdrawals.');
-                
+
         } catch (Exception $e) {
-        
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to save bank details. Please try again.');
         }
     }
-
-    
 
     /**
      * Show the wallet dashboard
@@ -197,7 +193,7 @@ public function showPaymentMethodForm(Request $request)
         $transactions = [
             'data' => $transactionsDemo,
             'has_more' => false,
-            'next_cursor' => null
+            'next_cursor' => null,
         ];
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
@@ -214,17 +210,16 @@ public function showPaymentMethodForm(Request $request)
             ->get()
             ->toArray();
 
-        
         // dd($coupons);
 
         return view('Users.Dashboard', [
             'wallet' => $wallet,
             'demoCoupons' => $demoCoupons,
-            'transactions' => $transactions
+            'transactions' => $transactions,
         ]);
     }
 
-     /**
+    /**
      * Show the wallet dashboard
      */
     public function showTransactions(TransactionHistoryRequest $request)
@@ -233,17 +228,17 @@ public function showPaymentMethodForm(Request $request)
 
         if ($request->expectsJson()) {
             return response()->json(TransactionHistory::getTransactionHistory($request, $user));
-         }
+        }
 
-        $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
+        $transactions = TransactionHistory::getTransactionHistory(new TransactionHistoryRequest, $user);
 
         $wallet = Wallet::retrieveOrCreateCache($user->id);
-        
+
         return view('Users.Transaction', [
             'wallet' => $wallet,
-            'transactions' => $transactions
+            'transactions' => $transactions,
         ]);
-        
+
     }
 
     public function showCoupons(Request $request)
@@ -260,7 +255,6 @@ public function showPaymentMethodForm(Request $request)
             $emptyCode = null;
         }
 
-
         $coupons = SystemCoupon::where('is_public', true)
             ->where('for_type', 'participant')
             ->orWhereHas('userCoupons', function ($query) use ($user) {
@@ -273,14 +267,13 @@ public function showPaymentMethodForm(Request $request)
             ->get()
             ->toArray();
 
-
         $wallet = Wallet::retrieveOrCreateCache($user->id);
-        
+
         return view('Users.Coupon', [
             'wallet' => $wallet,
             'coupons' => $coupons,
             'code' => $code,
-            'emptyCode' => $emptyCode
+            'emptyCode' => $emptyCode,
         ]);
     }
 
@@ -307,13 +300,13 @@ public function showPaymentMethodForm(Request $request)
 
             TransactionHistory::create([
                 'name' => "Wallet Funds Withdrawal: RM {$withdrawalAmount}",
-                'type' => "Withdrawal request",
+                'type' => 'Withdrawal request',
                 'link' => null,
                 'amount' => $withdrawalAmount,
                 'summary' => "{$wallet->bank_name} **** {$wallet->bank_last4}",
                 'isPositive' => false,
                 'date' => now(),
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
 
             DB::commit();
@@ -323,13 +316,13 @@ public function showPaymentMethodForm(Request $request)
                 'message' => 'Withdrawal request submitted successfully. Your funds will be credited to your bank account within 7 business days.',
             ], 201);
 
-        }   catch (Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to process withdrawal request. Please try again or contact support.',
-                'error' => $e->getMessage() 
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -345,20 +338,20 @@ public function showPaymentMethodForm(Request $request)
             ->sum('amount');
         $wallet = Wallet::retrieveOrCreateCache($user->id);
 
-
         if ($dailyTotal + $request->topup_amount > 1000) {
             return $this->showErrorParticipant('Transaction exceeds RM1000 limit.');
         }
 
         $amount = $request->topup_amount;
+
         return view('Users.TopupStripe', [
             'amount' => $amount,
-            'wallet' => $wallet
+            'wallet' => $wallet,
         ]);
     }
 
-
-    public function topupCallback(Request $request){
+    public function topupCallback(Request $request)
+    {
         try {
             DB::beginTransaction();
             $user = $request->get('user');
@@ -373,7 +366,7 @@ public function showPaymentMethodForm(Request $request)
                 if ($paymentIntent['amount'] > 0) {
                     $wallet = Wallet::retrieveOrCreateCache($user->id);
                     $amount = $paymentIntent['amount'] / 100;
-                    $cardBrand = ucfirst($paymentMethod->card->brand); 
+                    $cardBrand = ucfirst($paymentMethod->card->brand);
                     $cardLast4 = $paymentMethod->card->last4;
                     $wallet->update([
                         'usable_balance' => $wallet->usable_balance + $amount,
@@ -388,35 +381,38 @@ public function showPaymentMethodForm(Request $request)
 
                     TransactionHistory::create([
                         'name' => "Wallet Fund Purchase: RM {$amount}",
-                        'type' => "Funds Purchase",
+                        'type' => 'Funds Purchase',
                         'link' => null,
                         'amount' => $amount,
                         'summary' => "{$cardBrand} **** {$cardLast4}",
                         'date' => now(),
-                        'user_id' => $user->id
+                        'user_id' => $user->id,
                     ]);
 
                     RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
-                   
+
                     DB::commit();
-                    return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM ' . number_format($amount, 2) . ' to your wallet.');
+
+                    return redirect()->route('wallet.dashboard')->with('success', 'Successfully added RM '.number_format($amount, 2).' to your wallet.');
 
                 }
             }
 
             DB::rollback();
-            return $this->showErrorGeneral("Could not find payment information!");
+
+            return $this->showErrorGeneral('Could not find payment information!');
 
         } catch (ModelNotFoundException|UnauthorizedException $e) {
             DB::rollback();
+
             return $this->showErrorGeneral($e->getMessage());
         } catch (Exception $e) {
             DB::rollback();
+
             return $this->showErrorGeneral($e->getMessage());
 
         }
     }
-
 
     public function redeemCoupon(RedeemCouponRequest $request)
     {
@@ -427,13 +423,13 @@ public function showPaymentMethodForm(Request $request)
             $userCoupon = $request->getUserCoupon();
             $wallet = Wallet::retrieveOrCreateCache($user->id);
             $newBalance = $wallet->usable_balance + $coupon->amount;
-            
+
             $wallet->update([
                 'usable_balance' => $newBalance,
                 'current_balance' => $newBalance,
             ]);
 
-            if (!$userCoupon) {
+            if (! $userCoupon) {
                 $userCoupon = UserCoupon::create([
                     'user_id' => $user->id,
                     'coupon_id' => $coupon->id,
@@ -445,34 +441,36 @@ public function showPaymentMethodForm(Request $request)
             $userCoupon->update([
                 'redeemed_at' => now(),
             ]);
-            
+
             $userCoupon->increment('redeemable_count');
 
             TransactionHistory::create([
                 'name' => "Wallet Coupon Registration: RM {$coupon->amount}",
-                'type' => "Coupon Registration",
+                'type' => 'Coupon Registration',
                 'link' => null,
                 'amount' => $coupon->amount,
                 'summary' => "Coupon  {$coupon->code}",
                 'date' => now(),
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
             DB::commit();
-            
+
             $extraMessage = '';
             if ($userCoupon->redeemable_amount-1 > 0) {
                 $extraMessage = "You can still redeem it {$userCoupon->redeemable_amount} more times";
             }
+
             return response()->json([
                 'success' => true,
                 'message' => "Coupon redeemed successfully!{$extraMessage}",
             ], 200);
-    
+
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while redeeming the coupon. Please try again later.'
+                'message' => 'An error occurred while redeeming the coupon. Please try again later.',
             ], 500);
         }
     }

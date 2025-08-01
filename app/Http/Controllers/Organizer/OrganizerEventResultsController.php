@@ -224,7 +224,7 @@ class OrganizerEventResultsController extends Controller
     {
         $event = EventDetail::with(['type'])->findOrFail($id);
 
-        if (!$event->type->eventType) {
+        if (! $event->type->eventType) {
             return $this->showErrorOrganizer("Event with id: {$id} cannot be of this type: {$event->type->eventType}");
         }
 
@@ -251,9 +251,9 @@ class OrganizerEventResultsController extends Controller
         try {
             $validatedData = $request->validated();
 
-            $match = isset($validatedData['id']) ? Brackets::findOrFail($validatedData['id']) : new Brackets();
+            $match = isset($validatedData['id']) ? Brackets::findOrFail($validatedData['id']) : new Brackets;
 
-            if (!$match->id) {
+            if (! $match->id) {
                 Brackets::where([
                     'team1_position' => $match->team1_position,
                     'team2_position' => $match->team2_position,
@@ -325,7 +325,7 @@ class OrganizerEventResultsController extends Controller
                 [
                     'success' => false,
                     'data' => null,
-                    'message' => 'An error occurred: ' . $e->getMessage(),
+                    'message' => 'An error occurred: '.$e->getMessage(),
                 ],
                 500,
             );

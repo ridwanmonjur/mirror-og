@@ -15,6 +15,7 @@ use Illuminate\Contracts\Pagination\CursorPaginator;
 class TierSignupRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
+
     protected static string $relationship = 'tierSignups';
 
     public function form(Form $form): Form

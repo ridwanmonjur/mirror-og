@@ -38,7 +38,7 @@ class OrganizerCheckoutController extends Controller
             $isUserSameAsAuth = true;
             $fee = null;
 
-            if (!is_null($event->payment_transaction_id)) {
+            if (! is_null($event->payment_transaction_id)) {
                 return view('Organizer.CheckoutEventSuccess', [
                     'event' => $event,
                     'isUser' => $isUserSameAsAuth,
@@ -51,9 +51,9 @@ class OrganizerCheckoutController extends Controller
             $paymentMethods = $this->stripeClient->retrieveAllStripePaymentsByCustomer([
                 'customer' => $user->stripe_customer_id,
             ]);
-            
+
             $prevForm = [
-                'coupon_code' => $request->coupon_code
+                'coupon_code' => $request->coupon_code,
             ];
 
             [$fee, $isCouponApplied, $error, $coupon] = SystemCoupon::loadCoupon($request->coupon_code, $event->tier?->tierPrizePool, 0.2, 'organizer');
@@ -65,6 +65,7 @@ class OrganizerCheckoutController extends Controller
 
                 $coupon->validateAndIncrementCoupon();
                 DB::commit();
+
                 return view('Organizer.CheckoutEventSuccess', [
                     'event' => $event,
                     'isUser' => true,
@@ -75,7 +76,7 @@ class OrganizerCheckoutController extends Controller
                 DB::commit();
                 $coupon->validateAndIncrementCoupon();
                 session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon_code}! Note, the minimum stripe payment must be RM 5.0");
-            } elseif (!is_null($error)) {
+            } elseif (! is_null($error)) {
                 throw new Exception($error);
             }
 
@@ -89,11 +90,13 @@ class OrganizerCheckoutController extends Controller
                 'prevForm' => $prevForm,
                 'paymentMethods' => $paymentMethods,
             ]);
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             DB::rollBack();
+
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             DB::rollBack();
+
             return $this->showErrorOrganizer($e->getMessage());
         }
     }
@@ -112,7 +115,6 @@ class OrganizerCheckoutController extends Controller
                 $paymentMethodId = $paymentIntent['payment_method'];
                 $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
 
-
                 if ($paymentIntent->status === 'requires_capture') {
                     $paymentIntent->capture();
                 }
@@ -120,12 +122,12 @@ class OrganizerCheckoutController extends Controller
                 if ($paymentIntent['amount'] > 0 && $paymentIntent['amount_received'] === $paymentIntent['amount'] && $paymentIntent['metadata']['eventId'] === $id) {
                     $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id, null, 'joinEvents');
                     $prizeFinal = SystemCoupon::getIncrementedFee($event->tier?->tierPrizePool);
-                    
+
                     $couponCode = $paymentIntent['metadata']['coupon_code'] ?? null;
                     if ($couponCode) {
                         $this->validateAndIncrementCoupon($couponCode, $user->id);
                     }
-                    
+
                     $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
                     $historyId = TransactionHistory::insertGetId([
                         'name' => "$event->eventName",
@@ -135,9 +137,9 @@ class OrganizerCheckoutController extends Controller
                         'amount' => $transaction->payment_amount,
                         'summary' => 'Entry Fee',
                         'date'=> DB::raw('NOW()'),
-                        'user_id' => $user->id
+                        'user_id' => $user->id,
                     ]);
-    
+
                     $paymentId = OrganizerPayment::insertGetId([
                         'payment_amount' => $transaction->payment_amount,
                         'discount_amount' => $prizeFinal - $transaction->payment_amount,
@@ -145,7 +147,7 @@ class OrganizerCheckoutController extends Controller
                         'history_id' => $historyId,
                         'payment_id' => $transaction->id,
                     ]);
-    
+
                     $event->payment_transaction_id = $paymentId;
                     $event->save();
 
@@ -159,10 +161,11 @@ class OrganizerCheckoutController extends Controller
                         $event->createStatusUpdateTask();
                         $event->createDeadlinesTask();
                     } catch (Exception $e) {
-                        throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
+                        throw new Exception('Failed to queue event task creation: '.$e->getMessage());
                     }
 
                     DB::commit();
+
                     return view('Organizer.CheckoutEventSuccess', [
                         'event' => $event,
                         'isUser' => true,
@@ -170,14 +173,17 @@ class OrganizerCheckoutController extends Controller
                 }
             }
             DB::rollback();
+
             return redirect()
                 ->route('organizer.checkout.view', ['id' => $id])
                 ->with('errorCheckout', 'Your payment has failed unfortunately!');
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             DB::rollback();
+
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()
                 ->route('organizer.checkout.view', ['id' => $id])
                 ->with('errorCheckout', $e->getMessage());
@@ -186,7 +192,7 @@ class OrganizerCheckoutController extends Controller
 
     private function validateAndIncrementCoupon($couponCode, $userId)
     {
-        if (!$couponCode) {
+        if (! $couponCode) {
             return;
         }
 
@@ -194,24 +200,24 @@ class OrganizerCheckoutController extends Controller
             ->where('is_active', true)
             ->first();
 
-        if (!$systemCoupon) {
+        if (! $systemCoupon) {
             throw new Exception('Invalid coupon code.');
         }
 
-        if (!$systemCoupon->is_public) {
+        if (! $systemCoupon->is_public) {
             $userCoupon = UserCoupon::where('user_id', $userId)
                 ->where('coupon_id', $systemCoupon->id)
                 ->first();
 
-            if (!$userCoupon) {
+            if (! $userCoupon) {
                 throw new Exception('You do not have access to this coupon.');
             }
         } else {
             $userCoupon = UserCoupon::firstOrCreate([
                 'user_id' => $userId,
-                'coupon_id' => $systemCoupon->id
+                'coupon_id' => $systemCoupon->id,
             ], [
-                'redeemable_count' => 0
+                'redeemable_count' => 0,
             ]);
         }
 

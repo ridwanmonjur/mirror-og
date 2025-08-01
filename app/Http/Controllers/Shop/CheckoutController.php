@@ -27,6 +27,7 @@ use Illuminate\View\View;
 class CheckoutController extends Controller
 {
     private $stripeClient;
+
     private $cartService;
 
     public function __construct(StripeConnection $stripeClient, CartService $cartService)
@@ -40,16 +41,17 @@ class CheckoutController extends Controller
         try {
             $user = $request->user();
             $prevForm = $request->prevForm;
-            
+
             if ($request->paymentDone) {
-                $message = "100% discount achieved through coupon.";
+                $message = '100% discount achieved through coupon.';
                 session()->flash('successMessage', $message);
+
                 return redirect()
                     ->route('confirmation.index')
                     ->with('successMessage', $message);
             }
 
-            $fee = $request->fee; 
+            $fee = $request->fee;
             $user = $request->user();
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
 
@@ -59,12 +61,12 @@ class CheckoutController extends Controller
                 'customer' => $user->stripe_customer_id,
             ]);
 
-            $has_wallet_balance = !is_null($user_wallet) && $user_wallet->usable_balance > 0;
+            $has_wallet_balance = ! is_null($user_wallet) && $user_wallet->usable_balance > 0;
             $can_pay_full_amount = $has_wallet_balance && $user_wallet->usable_balance >= $request->total;
             $wallet_shortfall = $has_wallet_balance ? max(0, $request->total - $user_wallet->usable_balance) : $request->total;
 
             $cart = $request->cart ?: $this->cartService->getUserCart(auth()->id());
-            
+
             $numbers = $cart->getNumbers();
 
             // Check if any products in cart are physical
@@ -93,8 +95,9 @@ class CheckoutController extends Controller
                 'hasPhysicalProducts' => $hasPhysicalProducts,
             ]);
         } catch (Exception $e) {
-            Log::error('Shop cart2 checkout error: ' . $e->getMessage());
+            Log::error('Shop cart2 checkout error: '.$e->getMessage());
             session()->flash('errorMessage', $e->getMessage());
+
             return back()->with('errorMessage', $e->getMessage());
         }
     }
@@ -116,7 +119,7 @@ class CheckoutController extends Controller
             ]);
 
             $transaction = new TransactionHistory([
-                'name' => "Shop Order",
+                'name' => 'Shop Order',
                 'type' => 'Shop Order Payment',
                 'link' => route('shop.index'),
                 'amount' => $request->wallet_to_decrement,
@@ -136,19 +139,18 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            $message = $isCompletePayment ? 'Wallet payment applied successfully.' : "Partial payment via wallet applied.";
+            $message = $isCompletePayment ? 'Wallet payment applied successfully.' : 'Partial payment via wallet applied.';
 
             return redirect()
                 ->route('confirmation.index')
                 ->with('successMessage', $message);
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Shop wallet checkout error: ' . $e);
+            Log::error('Shop wallet checkout error: '.$e);
 
             return $this->showErrorParticipant($e->getMessage());
         }
     }
-
 
     public function showCheckoutTransition(Request $request)
     {
@@ -157,7 +159,7 @@ class CheckoutController extends Controller
         try {
             $user = auth()->user();
             $status = $request->get('redirect_status');
-            
+
             if (($status === 'succeeded' || $status === 'requires_capture') && $request->has('payment_intent_client_secret')) {
                 $intentId = $request->get('payment_intent');
                 $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($intentId);
@@ -167,7 +169,7 @@ class CheckoutController extends Controller
                 $paymentDone = (float) $paymentIntent['amount'] / 100;
 
                 if ($paymentIntent['amount'] > 0 && ($paymentIntent['amount_capturable'] === $paymentIntent['amount'] || $paymentIntent['amount_received'] === $paymentIntent['amount'])) {
-                    
+
                     $couponCode = $paymentIntent['metadata']['couponCode'] ?? null;
                     $coupon = null;
                     if ($couponCode) {
@@ -175,19 +177,19 @@ class CheckoutController extends Controller
                         $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
                     } else {
                         $coupon = null;
-                        $fee = SystemCoupon::emptyOrgCoupon([],  $paymentDone);
+                        $fee = SystemCoupon::emptyOrgCoupon([], $paymentDone);
                     }
 
                     $transaction = RecordStripe::createTransaction(
-                        $paymentIntent, 
-                        $paymentMethod, 
-                        $user->id, 
-                        $request->query('saveDefault'), 
+                        $paymentIntent,
+                        $paymentMethod,
+                        $user->id,
+                        $request->query('saveDefault'),
                         $request->query('savePayment')
                     );
 
                     $history = new TransactionHistory([
-                        'name' => "Shop Order",
+                        'name' => 'Shop Order',
                         'type' => 'Shop Order Payment',
                         'link' => route('shop.index'),
                         'amount' => $paymentDone,
@@ -213,21 +215,17 @@ class CheckoutController extends Controller
             }
 
             DB::rollBack();
+
             return $this->showErrorParticipant('Your payment has failed unfortunately!');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error('Shop checkout transition error: ' . $e);
-            
+            Log::error('Shop checkout transition error: '.$e);
+
             return $this->showErrorParticipant('Your payment has failed unfortunately!');
         }
     }
 
-
-
-
-    
-
-    public function thankyou(): View | RedirectResponse
+    public function thankyou(): View|RedirectResponse
     {
         return view('shop.thankyou');
     }

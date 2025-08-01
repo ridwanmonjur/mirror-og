@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('bracket_deadlines')) {
+        if (! Schema::hasTable('bracket_deadlines')) {
             Schema::create('bracket_deadlines', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('event_details_id')->unique();
                 $table->json('deadlines');
-                
+
                 $table->foreign('event_details_id')
                     ->references('id')
                     ->on('event_details')
                     ->onDelete('cascade');
             });
         }
-        
+
     }
 
     /**

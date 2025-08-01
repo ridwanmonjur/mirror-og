@@ -16,6 +16,7 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class BlocksResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = Blocks::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-no-symbol';
@@ -35,7 +36,7 @@ class BlocksResource extends Resource
                             if ($value && $value == $get('blocked_user_id')) {
                                 $fail('A user cannot block themselves. Please select different users.');
                             }
-                        }
+                        },
                     ])
                     ->relationship('user', 'name'),
 
@@ -51,10 +52,10 @@ class BlocksResource extends Resource
                             if ($value && $value == $get('user_id')) {
                                 $fail('A user cannot block themselves. Please select different users.');
                             }
-                        }
+                        },
                     ])
-                    ->relationship('blockedUser', 'name')
-                            ]);
+                    ->relationship('blockedUser', 'name'),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -70,7 +71,7 @@ class BlocksResource extends Resource
                     ->label('Blocked User')
                     ->searchable()
                     ->numeric(),
-                    
+
                 // Tables\Columns\TextColumn::make('user_name')
                 //     ->label('User')
                 //     ->getStateUsing(fn ($record) => $record->user->name),
@@ -78,14 +79,14 @@ class BlocksResource extends Resource
                 //     ->label('Blocked User')
                 //     ->getStateUsing(fn ($record) => $record->blockedUser->name),
                 Tables\Columns\TextColumn::make('created_at')
-                    
+
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    
+
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->actions([

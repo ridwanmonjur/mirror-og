@@ -16,6 +16,7 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class EventTypeResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = EventType::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
@@ -39,7 +40,7 @@ class EventTypeResource extends Resource
 
                 Tables\Columns\TextColumn::make('eventType'),
                 // Tables\Columns\TextColumn::make('eventDefinitions')
-                    // ->searchable(),
+                // ->searchable(),
             ])
             // ->filters([
             //     //

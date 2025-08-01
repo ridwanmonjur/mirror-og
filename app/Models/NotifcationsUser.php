@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\DB;
 class NotifcationsUser extends Model
 {
     use HasFactory;
+
     protected $table = 'notifications2';
+
     protected $fillable = [
         'user_id',
         'type',
@@ -17,13 +19,13 @@ class NotifcationsUser extends Model
         'html',
         'link',
         'is_read',
-        'img_src'
+        'img_src',
     ];
 
     protected $casts = [
         'is_read' => 'boolean',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
 
     public function user()
@@ -54,7 +56,7 @@ class NotifcationsUser extends Model
     {
         DB::transaction(function () use ($notifications) {
             self::insert($notifications);
-            
+
             $counterUpdates = collect($notifications)
                 ->groupBy('user_id')
                 ->map(function ($userNotifications) {
@@ -66,15 +68,15 @@ class NotifcationsUser extends Model
                             return $counts->sum();
                         });
                 });
-            
+
             foreach ($counterUpdates as $userId => $types) {
                 NotificationCounter::firstOrCreate(['user_id' => $userId]);
-                
+
                 foreach ($types as $type => $count) {
-                    if (is_string($type) && is_numeric($count)) {  
+                    if (is_string($type) && is_numeric($count)) {
                         DB::table('notification_counters')
                             ->where('user_id', $userId)
-                            ->increment("{$type}_count", (int)$count);
+                            ->increment("{$type}_count", (int) $count);
                     }
                 }
             }
@@ -91,10 +93,9 @@ class NotifcationsUser extends Model
             if ($updated > 0) {
                 NotificationCounter::where('user_id', $this->user_id)
                     ->lockForUpdate()
-                    ->decrement($this->type . '_count');
+                    ->decrement($this->type.'_count');
             }
-            
+
         }, 3);
     }
-     
 }

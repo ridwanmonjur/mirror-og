@@ -17,7 +17,6 @@
 // {
 //     protected static ?string $model = AwardResults::class;
 
-
 //     public static function form(Form $form): Form
 //     {
 //         return $form
@@ -31,7 +30,7 @@
 //                     ->required()
 //                     ->searchable()
 //                     ->preload(),
-              
+
 //                 Forms\Components\Select::make('team_id')
 //                     ->label('Team')
 //                     ->relationship('team', 'teamName')

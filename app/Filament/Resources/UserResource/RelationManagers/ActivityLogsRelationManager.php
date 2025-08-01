@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 class ActivityLogsRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
-    
+
     protected static string $relationship = 'activities';
 
     public function form(Form $form): Form
@@ -54,8 +54,8 @@ class ActivityLogsRelationManager extends RelationManager
                     ->circular()
 ->defaultImageUrl(url('/assets/images/404q.png'))
  ->extraImgAttributes([
-        'class' => 'border border-gray-300 dark:border-gray-600',
-    ])
+     'class' => 'border border-gray-300 dark:border-gray-600',
+ ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('object_type')
                     ->label('Object Type')
@@ -67,7 +67,7 @@ class ActivityLogsRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('log'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->sortable(),
             ])

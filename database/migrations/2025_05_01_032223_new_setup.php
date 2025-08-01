@@ -27,12 +27,12 @@ return new class extends Migration
             $table->string('team2_position')->nullable();
             $table->string('winner_next_position')->nullable();
             $table->string('loser_next_position')->nullable();
-            
+
             $table->foreign('event_tier_id')
                 ->references('id')
                 ->on('event_tier')
                 ->onDelete('cascade');
-                
+
             $table->index(['event_tier_id']);
         });
 
@@ -55,22 +55,22 @@ return new class extends Migration
     private function seedBracketsSetupData()
     {
         $eventTiers = EventTier::all();
-        $bracketDataService = new BracketDataService();
+        $bracketDataService = new BracketDataService;
 
         foreach ($eventTiers as $eventTier) {
             $teamNumber = $eventTier->tierTeamSlot;
-            
-            if (!$teamNumber) {
+
+            if (! $teamNumber) {
                 continue;
             }
-            
+
             $brackets = $bracketDataService->produceBrackets(
                 $teamNumber,
-                true,  
-                null,  
-                null   
+                true,
+                null,
+                null
             );
-            
+
             foreach ($brackets as $stage_name => $rounds) {
                 foreach ($rounds as $inner_stage_name => $matches) {
                     foreach ($matches as $order => $match) {
@@ -82,7 +82,7 @@ return new class extends Migration
                             'loser_next_position' => $match['loser_next_position'],
                             'order' => $order,
                             'stage_name' => $stage_name,
-                            'inner_stage_name' => $inner_stage_name
+                            'inner_stage_name' => $inner_stage_name,
                         ]);
                     }
                 }

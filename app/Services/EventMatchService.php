@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\Achievements;
@@ -12,8 +13,8 @@ use App\Models\Brackets;
 use App\Models\OrganizerFollow;
 use App\Models\User;
 
-class EventMatchService {
-
+class EventMatchService
+{
     private $bracketDataService;
 
     public function __construct(BracketDataService $bracketDataService)
@@ -21,13 +22,14 @@ class EventMatchService {
         $this->bracketDataService = $bracketDataService;
     }
 
-    public function createBrackets (EventDetail $event) {
+    public function createBrackets(EventDetail $event)
+    {
         // dd($event);
-        if (!isset($event->matches[0]) && $event?->tier?->tierTeamSlot) {
+        if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot) {
             $bracketList = $this->bracketDataService->produceBrackets(
-                $event->tier->tierTeamSlot, 
+                $event->tier->tierTeamSlot,
                 false,
-                null, 
+                null,
                 null
             );
 
@@ -52,16 +54,15 @@ class EventMatchService {
                 }
             }
 
-
             Brackets::insert($matches);
         }
     }
 
-    public function generateBrackets(EventDetail $event, 
-        bool $willFixBracketsAsOrganizer, 
-        JoinEvent | null $existingJoint,
+    public function generateBrackets(EventDetail $event,
+        bool $willFixBracketsAsOrganizer,
+        ?JoinEvent $existingJoint,
     ): array {
-       
+
         $USER_ENUMS = config('constants.USER_ACCESS');
         $DISPUTTE_ENUMS = config('constants.DISPUTE');
 
@@ -72,8 +73,8 @@ class EventMatchService {
                 $query->select('id', 'team_id', 'join_events_id', 'user_id')
                       ->whereIn('join_events_id', $joinEventIds)
                       ->with(['user' => function ($query) {
-                            $query->select('id', 'name', 'userBanner');
-                        }]);
+                          $query->select('id', 'name', 'userBanner');
+                      }]);
             },
             'matches',
         ]);
@@ -95,77 +96,78 @@ class EventMatchService {
             $matchTeamIds->push($match->team1_id, $match->team2_id);
         });
 
-        $matchesUpperCount = intval($event->tier?->tierTeamSlot); 
-        if (!$matchesUpperCount) $previousValues = [];
-        else {
+        $matchesUpperCount = intval($event->tier?->tierTeamSlot);
+        if (! $matchesUpperCount) {
+            $previousValues = [];
+        } else {
             $previousValues = $this->bracketDataService::PREV_VALUES[$matchesUpperCount];
-        } 
-       
+        }
+
         $bracketList = $this->bracketDataService->produceBrackets(
-            $matchesUpperCount, 
+            $matchesUpperCount,
             $willFixBracketsAsOrganizer,
-            $USER_ENUMS, 
+            $USER_ENUMS,
             $deadlines
         );
 
-
-            $bracketList = $event->matches?->reduce(function ($bracketList, $match) use (
-                $existingJoint, 
-                $willFixBracketsAsOrganizer,
-                $USER_ENUMS,
-            ) {
-                $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
-                $user_level = null;
-                if ($existingJoint) {
-                    if ($match->team1_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM1']; }
-                    elseif ($match->team2_id === $existingJoint->team_id) { $user_level = $USER_ENUMS['IS_TEAM2']; }
-                    else { $user_level = $USER_ENUMS['IS_PUBLIC']; }
+        $bracketList = $event->matches?->reduce(function ($bracketList, $match) use (
+            $existingJoint,
+            $willFixBracketsAsOrganizer,
+            $USER_ENUMS,
+        ) {
+            $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
+            $user_level = null;
+            if ($existingJoint) {
+                if ($match->team1_id === $existingJoint->team_id) {
+                    $user_level = $USER_ENUMS['IS_TEAM1'];
+                } elseif ($match->team2_id === $existingJoint->team_id) {
+                    $user_level = $USER_ENUMS['IS_TEAM2'];
                 } else {
-                    $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] :  $USER_ENUMS['IS_PUBLIC'];
+                    $user_level = $USER_ENUMS['IS_PUBLIC'];
                 }
-            
-                $existingData = data_get($bracketList, $path, []);
-                
-                $updatedProperties = [
-                    'id' => $match->id,
-                    'event_details_id' => $match->event_details_id,
-                    'team1_id' => $match->team1_id,
-                    'team2_id' => $match->team2_id,
-                    'team1_teamBanner' => $match->team1?->teamBanner,
-                    'team2_teamBanner' => $match->team2?->teamBanner,
-                    'team1_teamName' => $match->team1?->teamName,
-                    'team2_teamName' => $match->team2?->teamName,
-                    'team1_roster' => $match->team1?->roster,
-                    'team2_roster' => $match->team2?->roster,
-                    'team1_position' => $match->team1_position,
-                    'team2_position' => $match->team2_position,
-                    'team1_name' => $match->team1->name ?? null,
-                    'team2_name' => $match->team2->name ?? null,
-                    'user_level' => $user_level,
-                ];
+            } else {
+                $user_level = $willFixBracketsAsOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : $USER_ENUMS['IS_PUBLIC'];
+            }
 
-                
-                $mergedData = array_merge($existingData, $updatedProperties);
-                
-                return data_set($bracketList, $path, $mergedData);
-            }, $bracketList);
-         
-        
-        
+            $existingData = data_get($bracketList, $path, []);
+
+            $updatedProperties = [
+                'id' => $match->id,
+                'event_details_id' => $match->event_details_id,
+                'team1_id' => $match->team1_id,
+                'team2_id' => $match->team2_id,
+                'team1_teamBanner' => $match->team1?->teamBanner,
+                'team2_teamBanner' => $match->team2?->teamBanner,
+                'team1_teamName' => $match->team1?->teamName,
+                'team2_teamName' => $match->team2?->teamName,
+                'team1_roster' => $match->team1?->roster,
+                'team2_roster' => $match->team2?->roster,
+                'team1_position' => $match->team1_position,
+                'team2_position' => $match->team2_position,
+                'team1_name' => $match->team1->name ?? null,
+                'team2_name' => $match->team2->name ?? null,
+                'user_level' => $user_level,
+            ];
+
+            $mergedData = array_merge($existingData, $updatedProperties);
+
+            return data_set($bracketList, $path, $mergedData);
+        }, $bracketList);
+
         return [
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
             'bracketList' => $bracketList,
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues,
-            'DISPUTE_ACCESS' => $DISPUTTE_ENUMS
+            'DISPUTE_ACCESS' => $DISPUTTE_ENUMS,
         ];
     }
 
     public function getEventViewData(EventDetail $event, ?User $user, ?JoinEvent $existingJoint): array
     {
         $userId = $user?->id;
-        
+
         $viewData = [
             'event' => $event,
             'awardAndTeamList' => AwardResults::getTeamAwardResults($event->id),
@@ -175,7 +177,7 @@ class EventMatchService {
             'likesCount' => Like::getLikesCount($event->id),
             'user' => $user,
             'existingJoint' => $existingJoint,
-            'maxRosterSize' => $event->game?->player_per_team ?? config("constants.ROSTER_SIZE")  
+            'maxRosterSize' => $event->game?->player_per_team ?? config('constants.ROSTER_SIZE'),
         ];
 
         if ($user) {
@@ -185,6 +187,4 @@ class EventMatchService {
 
         return $viewData;
     }
-
-
 }

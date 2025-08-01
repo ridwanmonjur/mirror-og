@@ -43,8 +43,6 @@ final class EventDetailFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
@@ -77,14 +75,14 @@ final class EventDetailFactory extends Factory
      */
     public function seed($eventIndex, $options = [
         'eventTier' => 'Dolphin',
-        'eventName' => 'Test Brackets'
+        'eventName' => 'Test Brackets',
     ])
     {
-       
+
         $user = User::updateOrCreate([
-            'email' => "org1@driftwood.gg",
-        ],[
-            'name' => "Org1",
+            'email' => 'org1@driftwood.gg',
+        ], [
+            'name' => 'Org1',
             'email_verified_at' => now(),
             'password' => bcrypt('123456'),
             'remember_token' => \Illuminate\Support\Str::random(10),
@@ -93,19 +91,19 @@ final class EventDetailFactory extends Factory
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        
+
         Organizer::updateOrCreate([
             'user_id' => $user->id,
         ],
-        [
-            'companyName' => 'Company X',
-            'companyDescription' => 'Company X Desc',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            [
+                'companyName' => 'Company X',
+                'companyDescription' => 'Company X Desc',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
         $eventCategory = EventCategory::where('gameTitle', 'Dota 2')->first();
-        if (!$eventCategory) {
+        if (! $eventCategory) {
             $eventCategory = EventCategory::create([
                 'gameTitle' => 'Dota 2',
                 'gameIcon' => 'images/event_details/dota2.png',
@@ -143,7 +141,7 @@ final class EventDetailFactory extends Factory
 
         foreach ($eventTiers as $tierData) {
             $existingTier = EventTier::where('eventTier', $tierData['eventTier'])->first();
-            if (!$existingTier) {
+            if (! $existingTier) {
                 EventTier::create($tierData);
             }
         }
@@ -161,14 +159,14 @@ final class EventDetailFactory extends Factory
 
         foreach ($eventTypes as $typeData) {
             $existingType = EventType::where('eventType', $typeData['eventType'])->first();
-            if (!$existingType) {
+            if (! $existingType) {
                 EventType::create($typeData);
             }
         }
 
         Log::info($eventTypes);
 
-        return $this->createSampleEvents($user, $options['eventTier'], 'Tournament', $eventIndex, 
+        return $this->createSampleEvents($user, $options['eventTier'], 'Tournament', $eventIndex,
             $options['eventName']);
     }
 
@@ -178,28 +176,27 @@ final class EventDetailFactory extends Factory
         $tier = EventTier::where('eventTier', $eventTier)->first();
         $type = EventType::where('eventType', $eventType)->first();
 
-        if (!$category || !$eventTier || !$eventType) {
+        if (! $category || ! $eventTier || ! $eventType) {
             return;
         }
 
-
         for ($i = 0; $i < 2; $i++) {
-            
+
             $startDate = fake()->dateTimeBetween('now', '+2 days')->format('Y-m-d');
-            $endDate = date('Y-m-d', strtotime($startDate . ' +2 days'));
+            $endDate = date('Y-m-d', strtotime($startDate.' +2 days'));
 
             $paymentTransaction = \App\Models\OrganizerPayment::factory()->create();
 
             $event = EventDetail::updateOrCreate([
                 'eventName' => $eventName,
-            ],[
+            ], [
                 'startDate' => $startDate,
                 'endDate' => $endDate,
                 'startTime' => fake()->time('H:i:s'),
                 'endTime' => fake()->time('H:i:s'),
                 'eventDescription' => 'Join us for this exciting event!',
                 'eventBanner' => 'images/event_details/banner1.png',
-                'eventTags' => $category->gameTitle . ',esports,gaming,competition',
+                'eventTags' => $category->gameTitle.',esports,gaming,competition',
                 'status' => 'SCHEDULED',
                 'sub_action_private' => 'public',
                 'venue' => 'MY',
@@ -216,9 +213,8 @@ final class EventDetailFactory extends Factory
             $event->createDeadlinesTask();
         }
 
-      
+        Log::info($user);
 
-        Log::info($user); 
         return [
             'organizer' => $user,
             'event' => $event,

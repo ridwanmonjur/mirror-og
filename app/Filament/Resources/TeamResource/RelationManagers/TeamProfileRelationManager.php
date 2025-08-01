@@ -15,7 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
 class TeamProfileRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
+
     protected static string $relationship = 'profile';
+
     protected static bool $hasAssociatedRecord = true;
 
     public function form(Form $form): Form
@@ -27,7 +29,7 @@ class TeamProfileRelationManager extends RelationManager
                     ->rgba(),
                 Forms\Components\FileUpload::make('backgroundBanner')
                     ->image()
-                    ->directory('images/team') 
+                    ->directory('images/team')
                     ->maxSize(5120)
                     ->deleteUploadedFileUsing(function ($file, $livewire) {
                         if ($file && Storage::disk('public')->exists($file)) {
@@ -36,12 +38,12 @@ class TeamProfileRelationManager extends RelationManager
 
                         $owner = $livewire->getOwnerRecord();
                         $record = $owner->profile;
-                        
+
                         if ($record) {
                             $record->backgroundBanner = null;
                             $record->save();
                         }
-                        
+
                         return null;
                     })
                     ->visible(fn (string $context): bool => $context === 'edit')
@@ -50,18 +52,19 @@ class TeamProfileRelationManager extends RelationManager
                         $record = $owner->profile;
                         $oldBanner = $record->backgroundBanner;
 
-                        $newFilename = 'backgroundBanner-' . time() . '.' . $file->getClientOriginalExtension();
+                        $newFilename = 'backgroundBanner-'.time().'.'.$file->getClientOriginalExtension();
                         $directory = 'images/team';
-                        
+
                         $path = $file->storeAs($directory, $newFilename, 'public');
                         $record->backgroundBanner = $path;
                         $record->save();
                         if ($oldBanner && $oldBanner !== $state) {
                             $record->destroyTeanBanner($oldBanner);
                         }
+
                         return $path;
                     }),
-                
+
                 Forms\Components\TextInput::make('backgroundGradient')
                     ->label('Background Gradient'),
                 Forms\Components\TextInput::make('follower_count')
@@ -88,8 +91,8 @@ class TeamProfileRelationManager extends RelationManager
                     ->circular()
 ->defaultImageUrl(url('/assets/images/404q.png'))
  ->extraImgAttributes([
-        'class' => 'border border-gray-300 dark:border-gray-600',
-    ])
+     'class' => 'border border-gray-300 dark:border-gray-600',
+ ])
                     ->size(60),
                 Tables\Columns\ViewColumn::make('backgroundGradient')
                     ->label('Gradient')
@@ -108,10 +111,9 @@ class TeamProfileRelationManager extends RelationManager
             // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->visible(fn () => !$this->getOwnerRecord()->profile()->exists())
+                    ->visible(fn () => ! $this->getOwnerRecord()->profile()->exists())
                     // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                    ->createAnother(false)
-,
+                    ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

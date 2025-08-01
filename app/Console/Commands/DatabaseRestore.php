@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class DatabaseRestore extends Command
 {
     protected $signature = 'tasks:restore-db {--path=database/backups/backup.sql : Path to the backup file}';
+
     protected $description = 'Restore the database from a SQL file';
 
     public function handle()
@@ -15,8 +16,9 @@ class DatabaseRestore extends Command
         try {
             $path = $this->option('path');
 
-            if (!file_exists($path)) {
+            if (! file_exists($path)) {
                 $this->error("Backup file does not exist: {$path}");
+
                 return 1;
             }
 
@@ -28,7 +30,7 @@ class DatabaseRestore extends Command
             $host = config("database.connections.{$connection}.host");
 
             // Create the command
-            $command = "mysql -h {$host} -u {$username} " . ($password ? "-p{$password}" : '') . " {$database} < {$path}";
+            $command = "mysql -h {$host} -u {$username} ".($password ? "-p{$password}" : '')." {$database} < {$path}";
 
             // Execute the command
             exec($command, $output, $returnVar);

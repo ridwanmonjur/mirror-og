@@ -11,12 +11,14 @@ use Illuminate\Contracts\Validation\Validator;
 class AddMemberRequest extends FormRequest
 {
     protected $team;
+
     protected $user;
+
     protected $existingMember;
 
     public function authorize()
     {
-        return true; 
+        return true;
     }
 
     public function rules()
@@ -28,11 +30,11 @@ class AddMemberRequest extends FormRequest
     {
         $this->team = Team::find($this->route('id'));
         $this->user = $this->attributes->get('user');
-        
+
         if ($this->team && $this->user) {
             $this->existingMember = TeamMember::where([
                 'user_id' => $this->user->id,
-                'team_id' => $this->team->id
+                'team_id' => $this->team->id,
             ])->first();
         }
     }
@@ -46,23 +48,27 @@ class AddMemberRequest extends FormRequest
 
     protected function validateAll($validator)
     {
-        if (!$this->team) {
+        if (! $this->team) {
             $validator->errors()->add('team', 'Team not found');
+
             return;
         }
 
-        if (!$this->user) {
+        if (! $this->user) {
             $validator->errors()->add('user', 'User not found');
+
             return;
         }
 
         if ($this->team->status === 'private') {
             $validator->errors()->add('team_private', "It's a private team with only invites allowing new members");
+
             return;
         }
 
         if ($this->existingMember) {
             $validator->errors()->add('duplicate_request', 'You have requested before!');
+
             return;
         }
 
@@ -73,9 +79,9 @@ class AddMemberRequest extends FormRequest
 
         if ($count >= 5) {
             $validator->errors()->add('team_limit', "You are already a member of $count teams!");
+
             return;
         }
-
 
         $tempMember = new TeamMember([
             'user_id' => $this->user->id,
@@ -86,6 +92,7 @@ class AddMemberRequest extends FormRequest
 
         if ($tempMember->countTeamMembers() >= 10) {
             $validator->errors()->add('team_limit', 'Too many members in the team');
+
             return;
         }
 
@@ -94,6 +101,7 @@ class AddMemberRequest extends FormRequest
             if ($timeSinceLeft < 24) {
                 $hoursRemaining = 24 - $timeSinceLeft;
                 $validator->errors()->add('team_grace_period', "You must wait {$hoursRemaining} more hours before joining a new team after leaving your previous team.");
+
                 return;
             }
         }
@@ -104,12 +112,10 @@ class AddMemberRequest extends FormRequest
         return $this->team;
     }
 
-   
-
     public function getStatusByTeamType()
     {
-        if (!$this->team) {
-            return 'pending'; 
+        if (! $this->team) {
+            return 'pending';
         }
 
         return $this->team->status == 'open' ? 'accepted' : 'pending';
@@ -126,7 +132,7 @@ class AddMemberRequest extends FormRequest
                 response()->json([
                     'success' => false,
                     'message' => $firstError,
-                    'errors' => $errors
+                    'errors' => $errors,
                 ], 422)
             );
         }

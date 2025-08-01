@@ -7,7 +7,6 @@ use App\Http\Resources\TransactionHistoryResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 class TransactionHistory extends Model
 {
     use HasFactory;
@@ -32,7 +31,7 @@ class TransactionHistory extends Model
         'summary',
         'isPositive',
         'date',
-        'user_id'
+        'user_id',
     ];
 
     protected $appends = [
@@ -40,8 +39,7 @@ class TransactionHistory extends Model
         'formatted_time',
     ];
 
-
-     /**
+    /**
      * Get the formatted date in [21 May 2025] format.
      */
     public function getFormattedDateAttribute()
@@ -62,8 +60,6 @@ class TransactionHistory extends Model
         return $this->asDateTime($value)->tz('Asia/Kuala_Lumpur');
     }
 
-   
-
     /**
      * The attributes that should be cast.
      *
@@ -75,46 +71,45 @@ class TransactionHistory extends Model
         'date' => 'datetime',
     ];
 
-
     /**
- * Cursor pagination scope for efficient pagination.
- */
-/**
- * Get cursor paginated results with metadata.
- */
-public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): array
-{
+     * Cursor pagination scope for efficient pagination.
+     */
+    /**
+     * Get cursor paginated results with metadata.
+     */
+    public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): array
+    {
 
-    $query->orderBy('id', 'desc')->limit($perPage + 1);
-    
-    if ($cursor) {
-        $operator = '<' ;
-        $query->where('id', $operator, $cursor);
+        $query->orderBy('id', 'desc')->limit($perPage + 1);
+
+        if ($cursor) {
+            $operator = '<';
+            $query->where('id', $operator, $cursor);
+        }
+
+        $results = $query->get();
+
+        $hasMore = $results->count() > $perPage;
+        if ($hasMore) {
+            $results->pop();
+        }
+
+        $nextCursor = $hasMore && $results->isNotEmpty()
+            ? $results->last()->{'id'}
+            : null;
+
+        return [
+            'data' => $results,
+            'has_more' => $hasMore,
+            'next_cursor' => $nextCursor,
+            'per_page' => $perPage,
+        ];
     }
-    
-    $results = $query->get();
 
-    
-    $hasMore = $results->count() > $perPage;
-    if ($hasMore) {
-        $results->pop();
-    }
-    
-    $nextCursor = $hasMore && $results->isNotEmpty() 
-        ? $results->last()->{'id'} 
-        : null;
-        
-    return [
-        'data' => $results,
-        'has_more' => $hasMore,
-        'next_cursor' => $nextCursor,
-        'per_page' => $perPage,
-    ];
-}
+    public $timestamps = null;
 
-    public $timestamps = NULL;
-
-    public static function getTransactionHistory(TransactionHistoryRequest $request, $user) {
+    public static function getTransactionHistory(TransactionHistoryRequest $request, $user)
+    {
         $fields = [
             'name',
             'type',
@@ -124,7 +119,7 @@ public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): arr
             'isPositive',
             'date',
             'user_id',
-            'id'
+            'id',
         ];
 
         $query = TransactionHistory::where('user_id', $user->id)
@@ -144,5 +139,4 @@ public function scopeCursorPaginated($query, $perPage = 15, $cursor = null): arr
     {
         return $this->belongsTo(User::class);
     }
-
 }

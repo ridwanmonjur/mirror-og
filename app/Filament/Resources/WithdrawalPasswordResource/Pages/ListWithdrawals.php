@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\WithdrawalCsvExportMail;
 
-
 class ListWithdrawals extends ListRecords
 {
     protected static string $resource = WithdrawalPasswordResource::class;
@@ -30,7 +29,7 @@ class ListWithdrawals extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            
+
             Action::make('export_csv')
                 ->label('Export CSV')
                 ->icon('heroicon-o-document-arrow-down')
@@ -45,8 +44,7 @@ class ListWithdrawals extends ListRecords
                         ->timezone('Asia/Kuala_Lumpur')
                         ->required()
                         ->after('date_from'),
-                   
-                    
+
                 ])
                 ->action(function (array $data) {
                     return $this->exportWithdrawals($data);
@@ -71,17 +69,18 @@ class ListWithdrawals extends ListRecords
                 ->body('No withdrawal records found for the selected date range.')
                 ->warning()
                 ->send();
+
             return;
         }
 
         $token = Str::random(10);
-        
+
         DB::table('2fa_links')->insert([
             'user_id' => $user->id,
             'withdrawal_history_token' => $token,
             'expires_at' => now()->addHours(24),
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
         ]);
 
         // Store export data in session/cache for retrieval
@@ -89,9 +88,9 @@ class ListWithdrawals extends ListRecords
             'date_from' => $dateFrom,
             'date_to' => $dateTo,
             'include_bank_details' => $includeBankDetails,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ];
-        
+
         cache()->put("withdrawal_export_{$token}", $exportData, now()->addHours(24));
 
         // Generate download link
@@ -143,7 +142,6 @@ class ListWithdrawals extends ListRecords
             $wallet = Wallet::retrieveOrCreateCache($withdrawals[0]->user_id);
         }
 
-
         foreach ($withdrawals as $withdrawal) {
             $row = [
                 $withdrawal->id,
@@ -178,13 +176,8 @@ class ListWithdrawals extends ListRecords
         return $csvContent;
     }
 
-
     protected function paginateTableQuery(Builder $query): CursorPaginator
     {
         return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
-
-   
-
-    
 }

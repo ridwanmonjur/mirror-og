@@ -16,16 +16,17 @@ class RedeemCouponRequest extends FormRequest
         return true;
     }
 
-    private ?SystemCoupon $coupon ;
+    private ?SystemCoupon $coupon;
 
-    private ?UserCoupon $userCoupon ;
+    private ?UserCoupon $userCoupon;
 
-
-    public function getCoupon () : SystemCoupon {
+    public function getCoupon(): SystemCoupon
+    {
         return $this->coupon;
     }
 
-    public function getUserCoupon () : UserCoupon {
+    public function getUserCoupon(): UserCoupon
+    {
         return $this->userCoupon;
     }
 
@@ -37,66 +38,68 @@ class RedeemCouponRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     $this->validateCoupon($value, $fail);
-                }
+                },
             ],
         ];
     }
 
     protected function validateCoupon($code, $fail)
     {
-        if (!$code) return;
+        if (! $code) {
+            return;
+        }
         $user = $this->get('user');
         $couponQ = SystemCoupon::where('code', $code);
 
-        if ($user->role == "ORGANIZER") {
+        if ($user->role == 'ORGANIZER') {
             $coupon = $couponQ->where('for_type', 'organizer')->first();
         } else {
             $coupon = $couponQ->where('for_type', 'participant')->first();
         }
 
-        if (!$coupon) {
+        if (! $coupon) {
             $fail("No such coupon exists: $code.");
+
             return;
         }
 
         $this->coupon = $coupon;
 
-
-        if (!$coupon->is_active) {
+        if (! $coupon->is_active) {
             $fail('This coupon is currently inactive.');
+
             return;
         }
 
         if ($coupon->expires_at && $coupon->expires_at < now()) {
             $fail('This coupon has expired.');
+
             return;
         }
 
-        
         $userCoupon = UserCoupon::where('user_id', $user->id)
             ->where('coupon_id', $coupon->id)
             ->first();
 
         $this->userCoupon = $userCoupon;
 
-        if (!$userCoupon) {
-            if (!$coupon->is_public) {
+        if (! $userCoupon) {
+            if (! $coupon->is_public) {
                 $fail('This coupon is not available for your account.');
+
                 return;
             }
-            
+
         }
 
         if ($userCoupon->redeemable_count >= $coupon->redeemable_count) {
             $fail('You have already redeemed this coupon too many times.');
+
             return;
         }
 
-        
-        
     }
 
-   
     public function messages(): array
     {
         return [
@@ -107,11 +110,10 @@ class RedeemCouponRequest extends FormRequest
         ];
     }
 
-  
     protected function failedValidation(Validator $validator)
     {
         $error = $validator->errors()->first();
-        
+
         if ($this->expectsJson()) {
             throw new HttpResponseException(
                 response()->json([
@@ -121,7 +123,7 @@ class RedeemCouponRequest extends FormRequest
             );
         }
         session()->flash('errorMessageCoupon', $error);
-        
+
         throw new HttpResponseException(
             redirect()->back()->with('errorMessageCoupon', $error)
                 ->withInput(['coupon_code' => $this->coupon_code])

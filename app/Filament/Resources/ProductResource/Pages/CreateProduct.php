@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 class CreateProduct extends CreateRecord
 {
     use HandlesFilamentExceptions;
-    
+
     protected static string $resource = ProductResource::class;
-    
-   
 }

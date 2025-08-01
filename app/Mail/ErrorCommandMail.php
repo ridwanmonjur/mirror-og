@@ -14,9 +14,13 @@ class ErrorCommandMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $className;
+
     public string $errorMessage;
+
     public string $errorDate;
+
     public string $errorTime;
+
     public string $stackTrace;
 
     /**

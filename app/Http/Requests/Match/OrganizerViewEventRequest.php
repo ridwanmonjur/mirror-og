@@ -14,9 +14,11 @@ use Illuminate\Validation\UnauthorizedException;
 class OrganizerViewEventRequest extends FormRequest
 {
     protected ?EventDetail $event = null;
+
     protected ?JoinEvent $existingJoint = null;
+
     protected ?User $user = null;
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,7 +27,8 @@ class OrganizerViewEventRequest extends FormRequest
         return true;
     }
 
-    public function withValidator($validator) {
+    public function withValidator($validator)
+    {
         $eventId = $this->route('event');
         $user = $this->user();
         $this->user = $user;
@@ -43,6 +46,7 @@ class OrganizerViewEventRequest extends FormRequest
             $this->existingJoint = null;
         } catch (Exception $e) {
             $validator->errors()->add('event', "Event not found by ID: {$eventId}");
+
             return;
         }
 
@@ -70,9 +74,9 @@ class OrganizerViewEventRequest extends FormRequest
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
         $error = $validator->errors()->first();
-    
+
         throw new \Illuminate\Validation\ValidationException($validator, response()->view('Participant.Error', [
-            'error' => $error
+            'error' => $error,
         ]));
     }
 }

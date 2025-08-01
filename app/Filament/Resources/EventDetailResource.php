@@ -17,6 +17,7 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class EventDetailResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = EventDetail::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
@@ -56,7 +57,7 @@ class EventDetailResource extends Resource
                     ->timezone('Asia/Kuala_Lumpur')
                     ->displayFormat('g:i A') // Native 12-hour format
                     ->format('H:i'), // Store as 24-hour
-            
+
                 Forms\Components\TimePicker::make('startTime')
                     ->required()
                     ->seconds(false)
@@ -65,7 +66,7 @@ class EventDetailResource extends Resource
                     ->label('Start Time')
                     ->displayFormat('g:i A') // Native 12-hour format
                     ->format('H:i:s'),
-                
+
                 Forms\Components\TimePicker::make('endTime')
                     ->required()
                     ->seconds(false)
@@ -86,18 +87,18 @@ class EventDetailResource extends Resource
                             ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('eventBanner')
                             ->image()
-                            ->directory('images/events') 
+                            ->directory('images/events')
                             ->maxSize(5120)
                             ->deleteUploadedFileUsing(function ($file, $livewire) {
                                 if ($file && Storage::disk('public')->exists($file)) {
                                     Storage::disk('public')->delete($file);
                                 }
-                                
+
                                 if ($livewire->record) {
                                     $livewire->record->eventBanner = null;
                                     $livewire->record->save();
                                 }
-                                
+
                                 return null;
                             })
                             ->visible(fn (string $context): bool => $context === 'edit')
@@ -105,39 +106,39 @@ class EventDetailResource extends Resource
                                 // Custom file naming logic here
                                 $oldBanner = $livewire->record->userBanner;
 
-                                $newFilename = 'eventBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                $newFilename = 'eventBanner-'.time().'-'.auth()->id().'.'.$file->getClientOriginalExtension();
                                 $directory = 'images/events';
-                                
+
                                 $path = $file->storeAs($directory, $newFilename, 'public');
                                 $livewire->record->eventBanner = $path;
                                 $livewire->record->save();
                                 if ($oldBanner && $oldBanner !== $state) {
                                     $livewire->record->destroyTeanBanner($oldBanner);
                                 }
+
                                 return $path;
-                    }),
-                ]),
-                
+                            }),
+                    ]),
+
                 Forms\Components\TextInput::make('eventTags')
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('status')
                     ->maxLength(255),
 
-
                 Forms\Components\Select::make('venue')
                     ->label('Region')
                     ->options($countries)
                     ->reactive()
                     ->placeholder('Select a region'),
-             
+
                 Forms\Components\Select::make('user_id')
                     ->optionsLimit(10)
                     ->searchDebounce(500)
                     ->label('Organizer')
                     ->searchable()
-                    ->relationship('user', 'name', 
-                    fn ($query) => $query->where('role', 'ORGANIZER') )
+                    ->relationship('user', 'name',
+                        fn ($query) => $query->where('role', 'ORGANIZER'))
                     ->required(),
 
                 Forms\Components\Select::make('event_type_id')
@@ -154,9 +155,6 @@ class EventDetailResource extends Resource
             ]);
     }
 
-
-    
-
     public static function table(Table $table): Table
     {
         return $table
@@ -166,8 +164,8 @@ class EventDetailResource extends Resource
                     ->circular()
                     ->defaultImageUrl(url('/assets/images/404q.png'))
                     ->extraImgAttributes([
-                            'class' => 'border border-gray-300 dark:border-gray-600',
-                        ])
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('eventName')
                     ->searchable(),
@@ -180,14 +178,14 @@ class EventDetailResource extends Resource
                     ->dateTime('h:i A') // 12-hour format with AM/PM
                     ->toggleable(),
             ])
-          
+
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('Brackets')
                     ->label('Brackets')
-                    ->icon('heroicon-m-squares-2x2') 
+                    ->icon('heroicon-m-squares-2x2')
                     ->url(function (EventDetail $record) {
-                        return route('filament.pages.brackets.index', $record->id) ;
+                        return route('filament.pages.brackets.index', $record->id);
                     })
                 ->openUrlInNewTab(),
             ])
@@ -203,7 +201,7 @@ class EventDetailResource extends Resource
         return [
             RelationManagers\SignupRelationManager::class,
             RelationManagers\PTransactionsRelationManager::class,
-            RelationManagers\EventInvitationsRelationManager::class
+            RelationManagers\EventInvitationsRelationManager::class,
         ];
     }
 

@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
             'admin@driftwood.gg',
             'leigh@driftwood.gg',
             config('services.mail_address'),
-            'justforus@driftwood.gg'
+            'justforus@driftwood.gg',
         ];
 
         Gate::define('viewPulse', function (?User $user) use ($allowedEmails) {

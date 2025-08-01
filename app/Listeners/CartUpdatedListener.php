@@ -28,7 +28,7 @@ class CartUpdatedListener
     public function handle($event)
     {
         $coupon = session()->get('coupon');
-        
+
         if ($coupon && isset($coupon['name'])) {
             $couponName = $coupon['name'];
             $couponModel = Coupon::where('code', $couponName)->first();

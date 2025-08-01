@@ -21,7 +21,7 @@ class Participant extends Model
         'games_data' => 'array',
     ];
 
-    public function getRegionDetails(): ? CountryRegion
+    public function getRegionDetails(): ?CountryRegion
     {
         return CountryRegion::select(['name', 'id', 'emoji_flag',   'sort_order', 'type'])
             ->find($this->region);

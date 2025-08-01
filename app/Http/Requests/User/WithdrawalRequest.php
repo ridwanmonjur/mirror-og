@@ -13,9 +13,11 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class WithdrawalRequest extends FormRequest
 {
     private Wallet $wallet;
+
     private bool $bankAccountMissing = false;
 
-    public function getWallet(): Wallet {
+    public function getWallet(): Wallet
+    {
         return $this->wallet;
     }
 
@@ -36,28 +38,31 @@ class WithdrawalRequest extends FormRequest
             'topup_amount' => [
                 'required',
                 'numeric',
-                'min:' . Withdrawal::MIN_AMOUNT,
-                'max:' . Withdrawal::MAX_TRANSACTION_AMOUNT,
+                'min:'.Withdrawal::MIN_AMOUNT,
+                'max:'.Withdrawal::MAX_TRANSACTION_AMOUNT,
                 'regex:/^\d+(\.\d{1,2})?$/',
                 function ($attribute, $value, $fail) {
                     $user = auth()->user();
-                    $userWallet = Wallet::retrieveOrCreateCache($user->id);      
-                    $this->wallet = $userWallet;              
-                    
-                    if (!$userWallet || !$userWallet?->has_bank_account) {
+                    $userWallet = Wallet::retrieveOrCreateCache($user->id);
+                    $this->wallet = $userWallet;
+
+                    if (! $userWallet || ! $userWallet?->has_bank_account) {
                         $this->bankAccountMissing = true;
                         $fail('BANK_ACCOUNT_REQUIRED'); // This will be handled in failedValidation
+
                         return;
                     }
-                    
+
                     if ($userWallet && $value > $userWallet->usable_balance) {
                         $fail('Insufficient wallet balance for this withdrawal.');
+
                         return;
                     }
-                    
-                    if (!Withdrawal::checkDailyLimit($user->id, $value)) {
+
+                    if (! Withdrawal::checkDailyLimit($user->id, $value)) {
                         $remainingLimit = Withdrawal::getRemainingDailyLimit($user->id);
-                        $fail("Daily withdrawal limit exceeded. You can withdraw up to RM " . number_format($remainingLimit, 2) . " more today.");
+                        $fail('Daily withdrawal limit exceeded. You can withdraw up to RM '.number_format($remainingLimit, 2).' more today.');
+
                         return;
                     }
                 },
@@ -78,7 +83,7 @@ class WithdrawalRequest extends FormRequest
                     'error' => 'BANK_ACCOUNT_REQUIRED',
                     'message' => 'You must have a linked bank account to request a withdrawal of your funds.',
                     'link' => route('wallet.payment-method'),
-                    'action_required' => true
+                    'action_required' => true,
                 ], 422)
             );
         }
@@ -95,8 +100,8 @@ class WithdrawalRequest extends FormRequest
         return [
             'topup_amount.required' => 'Please enter a withdrawal amount.',
             'topup_amount.numeric' => 'The withdrawal amount must be a valid number.',
-            'topup_amount.min' => 'The minimum withdrawal amount is RM ' . number_format(Withdrawal::MIN_AMOUNT, 2) . '.',
-            'topup_amount.max' => 'The maximum withdrawal amount per transaction is RM ' . number_format(Withdrawal::MAX_TRANSACTION_AMOUNT, 2) . '.',
+            'topup_amount.min' => 'The minimum withdrawal amount is RM '.number_format(Withdrawal::MIN_AMOUNT, 2).'.',
+            'topup_amount.max' => 'The maximum withdrawal amount per transaction is RM '.number_format(Withdrawal::MAX_TRANSACTION_AMOUNT, 2).'.',
             'topup_amount.regex' => 'The withdrawal amount can have at most 2 decimal places.',
         ];
     }

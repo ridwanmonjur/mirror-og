@@ -34,6 +34,7 @@ class DeadlineTasks extends Command
     protected $description = 'Respond tasks in the database';
 
     protected $bracketDataService;
+
     protected $taskIdParent;
 
     public function __construct(BracketDataService $bracketDataService)
@@ -60,7 +61,7 @@ class DeadlineTasks extends Command
             $orgTaskIds = [];
 
             if ($type === 0) {
-                $tasks = Task::where('taskable_type', "Deadline")
+                $tasks = Task::where('taskable_type', 'Deadline')
                     ->where('action_time', '>=', $now->copy()->subMinutes(5))
                     ->where('action_time', '<=', $now->copy()->addMinutes(29))
                     ->get();
@@ -68,7 +69,7 @@ class DeadlineTasks extends Command
                 $eventIdInt = (int) $eventId;
                 $deadlines = BracketDeadline::where('event_details_id', $eventIdInt)->get();
                 $deadlinesPast = $deadlines->pluck('id');
-                $tasks = Task::where('taskable_id', $deadlinesPast)->where('taskable_type', "Deadline")->get();
+                $tasks = Task::where('taskable_id', $deadlinesPast)->where('taskable_type', 'Deadline')->get();
             }
 
             foreach ($tasks as $task) {

@@ -12,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 class UpdateSettingsRequest extends FormRequest
 {
     private $matchingAction;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -33,10 +34,10 @@ class UpdateSettingsRequest extends FormRequest
                     ->first(function ($config) use ($value) {
                         return $config['key'] == $value;
                     });
-                
+
                 $this->matchingAction = $matchingAction;
 
-                if (!$matchingAction) {
+                if (! $matchingAction) {
                     $fail("Invalid settings action key: {$value}");
                 }
             }],
@@ -52,14 +53,13 @@ class UpdateSettingsRequest extends FormRequest
      *
      * @throws SettingsException
      */
-   
 
     /**
      * Get matching action configuration
      */
     public function getMatchingAction(): array
     {
-        
+
         return $this->matchingAction;
     }
 
@@ -73,15 +73,14 @@ class UpdateSettingsRequest extends FormRequest
         ];
     }
 
-
     protected function failedValidation(Validator $validator)
     {
-        
+
         $error = $validator->errors()->first();
-    
-        throw new ValidationException($validator, response()->json( [
+
+        throw new ValidationException($validator, response()->json([
             'message' => $error,
-            'success'=> false
+            'success'=> false,
         ], 422));
     }
 }

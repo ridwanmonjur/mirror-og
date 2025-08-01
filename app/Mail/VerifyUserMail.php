@@ -11,13 +11,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-
 class VerifyUserMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $user;
+
     public $token;
 
     /**

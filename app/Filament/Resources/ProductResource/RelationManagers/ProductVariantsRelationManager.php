@@ -17,7 +17,7 @@ class ProductVariantsRelationManager extends RelationManager
     use HandlesFilamentExceptions;
 
     protected static string $relationship = 'productVariants';
-    
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public function form(Form $form): Form

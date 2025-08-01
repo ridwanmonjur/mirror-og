@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-     /**
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -16,7 +16,7 @@ return new class extends Migration
                 $table->dropColumn('eventDefinition');
             }
 
-            if (!Schema::hasColumn('event_details', 'willNotify')) {
+            if (! Schema::hasColumn('event_details', 'willNotify')) {
                 $table->boolean('willNotify')->default(true);
             }
         });
@@ -28,7 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('event_details', function (Blueprint $table) {
-            if (!Schema::hasColumn('event_details', 'eventDefinition')) {
+            if (! Schema::hasColumn('event_details', 'eventDefinition')) {
                 $table->text('eventDefinition')->nullable();
             }
 

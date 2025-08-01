@@ -29,17 +29,17 @@ use Illuminate\Support\Facades\DB;
 class UserResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationLabel = 'Users';
 
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
-
     public static function form(Form $form): Form
     {
         $countries = [];
-        
+
         foreach (CountryRegion::getAllCached() as $country) {
             $countries[$country->id] = $country->name;
         }
@@ -50,15 +50,13 @@ class UserResource extends Resource
             'ORGANIZER' => 'Organizer',
         ];
 
-     
-
         return $form
             ->schema([
                 Tabs::make('User Management')
                     ->tabs([
                         Tabs\Tab::make('User Information')
                             ->schema([
-                                
+
                                 TextInput::make('name')
                                     ->required()
                                     ->maxLength(255),
@@ -94,85 +92,84 @@ class UserResource extends Resource
                                         ->visible(fn (string $context): bool => $context === 'create'),
                                         FileUpload::make('userBanner')
                                             ->image()
-                                            ->directory('images/user') 
+                                            ->directory('images/user')
                                             ->maxSize(5120)
                                             ->visible(fn (string $context): bool => $context === 'edit')
                                             ->deleteUploadedFileUsing(function ($file, $livewire) {
                                                 if ($file && Storage::disk('public')->exists($file)) {
                                                     Storage::disk('public')->delete($file);
                                                 }
-                                                
+
                                                 if ($livewire->record) {
                                                     $livewire->record->userBanner = null;
                                                     $livewire->record->save();
                                                 }
-                                                
+
                                                 return null;
                                             })
                                             ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
                                                 // Generate new filename regardless of creation or edit
-                                                    $newFilename = 'userBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
-                                                    $directory = 'images/user';
-                                                    $path = $file->storeAs($directory, $newFilename, 'public');
-                                                    
-                                                    // For edit mode, handle the existing record
-                                                    if ($livewire->record) {
-                                                        $oldBanner = $livewire->record->userBanner;
-                                                        $livewire->record->userBanner = $path;
-                                                        $livewire->record->save();
-                                                        
-                                                        if ($oldBanner && $oldBanner !== $state) {
-                                                            $livewire->record->destroyUserBanner($oldBanner);
-                                                        }
+                                                $newFilename = 'userBanner-'.time().'-'.auth()->id().'.'.$file->getClientOriginalExtension();
+                                                $directory = 'images/user';
+                                                $path = $file->storeAs($directory, $newFilename, 'public');
+
+                                                // For edit mode, handle the existing record
+                                                if ($livewire->record) {
+                                                    $oldBanner = $livewire->record->userBanner;
+                                                    $livewire->record->userBanner = $path;
+                                                    $livewire->record->save();
+
+                                                    if ($oldBanner && $oldBanner !== $state) {
+                                                        $livewire->record->destroyUserBanner($oldBanner);
                                                     }
-                                                    
-                                                    // Always return the path so it can be stored in the form data
-                                                    return $path;
+                                                }
+
+                                                // Always return the path so it can be stored in the form data
+                                                return $path;
 
                                             }),
-                                ]),
-                                
+                                    ]),
+
                                 Select::make('role')
                                     ->options($roleOptions)
                                     ->required()
                                     ->reactive()
                                     ->disabled(fn (string $context): bool => $context === 'edit')
                                     ->afterStateUpdated(function ($state, callable $set, $livewire) {
-                                        
-                                        
+
                                         if ($state === 'ADMIN') {
                                             if ($livewire->record && $livewire->record->participant) {
                                                 $livewire->record->participant->delete();
                                                 $livewire->record->refresh();
                                             }
-                                            
+
                                             if ($livewire->record && $livewire->record->organizer) {
                                                 $livewire->record->organizer->delete();
                                                 $livewire->record->refresh();
                                             }
-                                            
+
                                             $set('participant.nickname', null);
                                             $set('organizer.companyName', null);
-                                        } else if ($state === 'PARTICIPANT') {
+                                        } elseif ($state === 'PARTICIPANT') {
                                             if ($livewire->record && $livewire->record->organizer) {
                                                 $livewire->record->organizer->delete();
                                                 $livewire->record->refresh();
                                             }
-                                            
+
                                             // Clear organizer form fields
                                             $set('organizer.companyName', null);
-                                        } else if ($state === 'ORGANIZER') {
+                                        } elseif ($state === 'ORGANIZER') {
                                             if ($livewire->record && $livewire->record->participant) {
                                                 $livewire->record->participant->delete();
                                                 $livewire->record->refresh();
                                             }
-                                            
+
                                             // Clear participant form fields
                                             $set('participant.nickname', null);
                                         }
-                                    })
+                                    }),
                             ]),
-                            
+
                         Tabs\Tab::make('Participant Profile')
                             ->schema([
                                 Section::make('Participant Details')
@@ -205,11 +202,11 @@ class UserResource extends Resource
                                             ->placeholder('Select a country'),
                                         Forms\Components\Hidden::make('participant.region_name'),
                                         Forms\Components\Hidden::make('participant.region_flag'),
-                                        Toggle::make('participant.isAgeVisible')->default(true)
-                                    ])
+                                        Toggle::make('participant.isAgeVisible')->default(true),
+                                    ]),
                             ])
                             ->visible(fn (callable $get) => $get('role') === 'PARTICIPANT'),
-                            
+
                         Tabs\Tab::make('Organizer Profile')
                             ->schema([
                                 Section::make('Organizer Details')
@@ -237,28 +234,25 @@ class UserResource extends Resource
                                         TextInput::make('organizer.stripe_customer_id')
                                             ->maxLength(255)
                                             ->disabled(),
-                                    ])
+                                    ]),
                             ])
                             ->visible(fn (callable $get) => $get('role') === 'ORGANIZER'),
                     ]),
             ]);
     }
 
-   
-
-
     public static function table(Table $table): Table
     {
         return $table
-        
+
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\ImageColumn::make('userBanner')
                     ->circular()
                     ->defaultImageUrl(url('/assets/images/404q.png'))
                     ->extraImgAttributes([
-                            'class' => 'border border-gray-300 dark:border-gray-600',
-                        ])
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -269,7 +263,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->searchable()
                     ->sortable(),
-               
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->sortable()
@@ -294,14 +288,12 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);
-            // ->bulkActions([
-            //     Tables\Actions\BulkActionGroup::make([
-            //         Tables\Actions\DeleteBulkAction::make(),
-            //     ]),
-            // ]);
+        // ->bulkActions([
+        //     Tables\Actions\BulkActionGroup::make([
+        //         Tables\Actions\DeleteBulkAction::make(),
+        //     ]),
+        // ]);
     }
-
-    
 
     public static function getRelations(): array
     {
@@ -311,9 +303,8 @@ class UserResource extends Resource
             // RelationManagers\ActivityLogsRelationManager::class,
             RelationManagers\NotificationCountRelationManager::class,
             RelationManagers\NotificationListRelationManager::class,
-            
-            RelationManagers\DiscountsRelationManager::class,
 
+            RelationManagers\DiscountsRelationManager::class,
 
         ];
     }

@@ -21,8 +21,9 @@ class TeamMember extends Model
         'created' => TeamMemberCreated::class,
     ];
 
-    public function updatedAtDiffForHumans() {
-        return $this->updated_at ? Carbon::parse($this->updated_at)->diffForHumans(): '';
+    public function updatedAtDiffForHumans()
+    {
+        return $this->updated_at ? Carbon::parse($this->updated_at)->diffForHumans() : '';
     }
 
     protected $table = 'team_members';
@@ -42,7 +43,7 @@ class TeamMember extends Model
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
-    public static function isAlreadyMember(int| string $teamId, int| string $userId)
+    public static function isAlreadyMember(int|string $teamId, int|string $userId)
     {
         return self::where('team_id', $teamId)
             ->where('user_id', $userId)
@@ -56,9 +57,9 @@ class TeamMember extends Model
             ->get();
     }
 
-    public static function getProcessedTeamMembers(string| int $id): array
+    public static function getProcessedTeamMembers(string|int $id): array
     {
-        $acceptedMembers = collect(); 
+        $acceptedMembers = collect();
         $pendingMembers = collect();
         $rejectedMembers = collect();
         $leftMembers = collect();
@@ -101,7 +102,7 @@ class TeamMember extends Model
         ];
     }
 
-    public static function bulkCreateTeanMembers(string| int $teamId, array $userIds, string $status): bool
+    public static function bulkCreateTeanMembers(string|int $teamId, array $userIds, string $status): bool
     {
         $data = [];
 
@@ -116,7 +117,8 @@ class TeamMember extends Model
         return self::insert($data);
     }
 
-    public function countTeamMembers() {
+    public function countTeamMembers()
+    {
         return $this->where('team_id', $this->team_id)
             ->where('status', 'accepted')
             ->count('id');

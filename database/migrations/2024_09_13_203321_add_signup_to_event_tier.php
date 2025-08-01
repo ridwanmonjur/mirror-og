@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_signup_dates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId( 'event_id')->constrained('event_details')->onDelete('cascade');
+            $table->foreignId('event_id')->constrained('event_details')->onDelete('cascade');
             $table->dateTime('signup_open');
             $table->dateTime('normal_signup_start_advanced_close');
             $table->dateTime('signup_close');

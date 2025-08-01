@@ -17,7 +17,6 @@
 // {
 //     protected static ?string $model = Achievements::class;
 
-
 //     public static function form(Form $form): Form
 //     {
 //         return $form

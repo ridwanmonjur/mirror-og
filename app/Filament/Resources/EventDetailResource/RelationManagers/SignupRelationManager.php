@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 class SignupRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
+
     protected static string $relationship = 'signup';
 
     public function form(Form $form): Form
@@ -22,20 +23,20 @@ class SignupRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\DateTimePicker::make('signup_open')
-                    ->seconds(false)   
-                    ->native(false) 
+                    ->seconds(false)
+                    ->native(false)
                     ->displayFormat('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->required(),
                 Forms\Components\DateTimePicker::make('normal_signup_start_advanced_close')
                     ->seconds(false)
-                    ->native(false) 
+                    ->native(false)
                     ->displayFormat('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->required(),
                 Forms\Components\DateTimePicker::make('signup_close')
                     ->seconds(false)
-                    ->native(false) 
+                    ->native(false)
                     ->displayFormat('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->required(),
@@ -54,7 +55,7 @@ class SignupRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('normal_signup_start_advanced_close')
                     ->label('Normal Start/Advanced Close')
                     ->dateTime('Y-m-d h:i A')
-                    
+
                     ->timezone('Asia/Kuala_Lumpur')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('signup_close')

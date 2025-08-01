@@ -9,18 +9,20 @@ use Illuminate\Support\Facades\DB;
 class NotificationCounter extends Model
 {
     use HasFactory;
+
     protected $table = 'notification_counters';
+
     protected $fillable = [
         'user_id',
         'social_count',
         'teams_count',
-        'event_count'
+        'event_count',
     ];
 
     protected $casts = [
         'social_count' => 'integer',
         'teams_count' => 'integer',
-        'event_count' => 'integer'
+        'event_count' => 'integer',
     ];
 
     public function user()
@@ -32,11 +34,11 @@ class NotificationCounter extends Model
     {
         return DB::transaction(function () use ($type) {
             $columnName = "{$type}_count";
-            
+
             return self::where('id', $this->id)
                 ->where($columnName, '>', 0)
                 ->lockForUpdate()
-                ->update([$columnName => DB::raw($columnName . ' - 1')]);
+                ->update([$columnName => DB::raw($columnName.' - 1')]);
         }, 3);
     }
 
@@ -44,10 +46,10 @@ class NotificationCounter extends Model
     {
         return DB::transaction(function () use ($type) {
             $columnName = "{$type}_count";
-            
+
             return self::where('id', $this->id)
                 ->lockForUpdate()
-                ->update([$columnName => DB::raw($columnName . ' + 1')]);
+                ->update([$columnName => DB::raw($columnName.' + 1')]);
         }, 3);
     }
 
@@ -60,7 +62,7 @@ class NotificationCounter extends Model
             ->update([
                 'social_count' => DB::raw('CASE WHEN social_count < 1 THEN 0 ELSE social_count END'),
                 'teams_count' => DB::raw('CASE WHEN teams_count < 1 THEN 0 ELSE teams_count END'),
-                'event_count' => DB::raw('CASE WHEN event_count < 1 THEN 0 ELSE event_count END')
+                'event_count' => DB::raw('CASE WHEN event_count < 1 THEN 0 ELSE event_count END'),
             ]);
     }
 }

@@ -36,7 +36,7 @@ class EventInvitation extends Model
         return $this->belongsTo(EventDetail::class, 'event_id');
     }
 
-    public static function getParticipants(Request $request, int| string $teamId): Builder
+    public static function getParticipants(Request $request, int|string $teamId): Builder
     {
         return self::query()
             ->where('role', 'PARTICIPANT')

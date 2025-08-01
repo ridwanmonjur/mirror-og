@@ -18,6 +18,7 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class EventCategoryResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = EventCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
@@ -28,7 +29,7 @@ class EventCategoryResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('gameTitle')
                     ->maxLength(255),
-               
+
                 Forms\Components\Section::make('Event Category')
                     ->description('Image upload is only available when editing an existing category ')
                     ->icon('heroicon-o-photo')
@@ -38,52 +39,52 @@ class EventCategoryResource extends Resource
                         ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('gameIcon')
                             ->image()
-                            ->directory('images/event_details') 
+                            ->directory('images/event_details')
                             ->maxSize(5120)
                             ->visible(fn (string $context): bool => $context === 'edit')
                             ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
                                 // Generate new filename
-                                $newFilename = 'event_details-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                $newFilename = 'event_details-'.time().'-'.auth()->id().'.'.$file->getClientOriginalExtension();
                                 $directory = 'images/event_details';
                                 $path = $file->storeAs($directory, $newFilename, 'public');
-                                
+
                                 // Access record from table modal
                                 $recordId = $livewire->mountedTableActionRecord;
                                 if ($recordId) {
                                     // Replace 'EventCategory' with your actual model class
                                     $record = \App\Models\EventCategory::find($recordId);
-                                    
+
                                     if ($record) {
                                         $oldBanner = $record->gameIcon;
                                         $record->gameIcon = $path;
                                         $record->save();
-                                        
+
                                         if ($oldBanner && $oldBanner !== $state) {
                                             Storage::disk('public')->delete($oldBanner);
                                         }
                                     }
                                 }
-                                
+
                                 return $path;
                             })
                             ->deleteUploadedFileUsing(function ($file, callable $set, $livewire) {
                                 if ($file && Storage::disk('public')->exists($file)) {
                                     Storage::disk('public')->delete($file);
                                 }
-                                
+
                                 $recordId = $livewire->mountedTableActionRecord;
                                 if ($recordId) {
                                     $record = \App\Models\EventCategory::find($recordId);
-                                    
+
                                     if ($record) { // Add null check for safety
                                         $record->gameIcon = null;
                                         $record->save();
                                     }
                                 }
-                                
+
                                 return null;
-                            })
-                ]),
+                            }),
+                    ]),
                 Forms\Components\TextInput::make('eventDefinitions')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('player_per_team')
@@ -112,8 +113,8 @@ class EventCategoryResource extends Resource
                     ->circular()
 ->defaultImageUrl(url('/assets/images/404q.png'))
  ->extraImgAttributes([
-        'class' => 'border border-gray-300 dark:border-gray-600',
-    ])
+     'class' => 'border border-gray-300 dark:border-gray-600',
+ ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
@@ -126,11 +127,11 @@ class EventCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->sortable()
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -146,8 +147,8 @@ class EventCategoryResource extends Resource
                     ->after(function () {
                         EventCategory::clearCache();
                     }),
-                ]);
-            
+            ]);
+
     }
 
     public static function getRelations(): array

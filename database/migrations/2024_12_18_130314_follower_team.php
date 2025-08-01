@@ -36,7 +36,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('team_follows');
         Schema::table('team_profile', function (Blueprint $table) {
-            if ( Schema::hasColumn('team_profile', 'follower_count')) {
+            if (Schema::hasColumn('team_profile', 'follower_count')) {
                 $table->dropColumn('follower_count');
             }
         });

@@ -19,18 +19,15 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
 use Illuminate\Validation\UnauthorizedException;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
-
 
 class EventDetail extends Model implements Feedable
 {
     use HasFactory;
 
     protected $perPage = 6;
-
 
     public function toFeedItem(): FeedItem
     {
@@ -40,7 +37,7 @@ class EventDetail extends Model implements Feedable
             ->summary(Str::limit($this->eventDescription ?? '', 155))
             ->updated($this->updated_at)
             ->link(route('public.event.view', [
-                'id' => $this->id
+                'id' => $this->id,
             ]))
             ->authorName($this->user->name ?? 'Anonymous');
     }
@@ -55,6 +52,7 @@ class EventDetail extends Model implements Feedable
     }
 
     protected $table = 'event_details';
+
     protected $fillable = [
         'eventName',
         'startDate',
@@ -74,7 +72,7 @@ class EventDetail extends Model implements Feedable
         'event_tier_id',
         'event_category_id',
         'payment_transaction_id',
-        'willNotify'
+        'willNotify',
     ];
 
     protected $guarded = [];
@@ -97,7 +95,6 @@ class EventDetail extends Model implements Feedable
     {
         return $this->belongsTo(EventTier::class, 'event_tier_id');
     }
-
 
     public function type(): BelongsTo
     {
@@ -134,7 +131,7 @@ class EventDetail extends Model implements Feedable
         return $this->hasMany(BracketDeadline::class, 'event_details_id');
     }
 
-    public static function destroyEventBanner(string| null $file): void
+    public static function destroyEventBanner(?string $file): void
     {
         $fileNameInitial = str_replace('images/events/', '', $file);
         $fileNameFinal = "images/events/{$fileNameInitial}";
@@ -191,10 +188,9 @@ class EventDetail extends Model implements Feedable
     {
         $now = now();
 
-
         $status = $this->statusResolved();
         Task::where('taskable_id', $this->id)
-            ->where('taskable_type', "EventDetail")
+            ->where('taskable_type', 'EventDetail')
             ->whereIn('task_name', ['started', 'ended', 'live'])
             ->delete();
 
@@ -202,28 +198,28 @@ class EventDetail extends Model implements Feedable
             $tasksData = [
                 [
                     'taskable_id' => $this->id,
-                    'taskable_type' => "EventDetail",                    
+                    'taskable_type' => 'EventDetail',
                     'task_name' => 'started',
-                    'action_time' => $this->startDate . ' ' . $this->startTime,
+                    'action_time' => $this->startDate.' '.$this->startTime,
                     'created_at' => $now,
                 ],
                 [
                     'taskable_id' => $this->id,
-                    'taskable_type' => "EventDetail",  
+                    'taskable_type' => 'EventDetail',
                     'task_name' => 'ended',
-                    'action_time' => $this->endDate . ' ' . $this->endTime,
+                    'action_time' => $this->endDate.' '.$this->endTime,
                     'created_at' => $now,
                 ],
             ];
 
             if ($this->sub_action_public_date) {
-                $tasksData[] = 
+                $tasksData[] =
                 [
                     'task_name' => 'live',
-                    'action_time' => $this->sub_action_public_date . ' ' . $this->sub_action_public_time,
+                    'action_time' => $this->sub_action_public_date.' '.$this->sub_action_public_time,
                     'created_at' => $now,
                     'taskable_id' => $this->id,
-                    'taskable_type' => "EventDetail",  
+                    'taskable_type' => 'EventDetail',
                 ];
             }
 
@@ -232,37 +228,38 @@ class EventDetail extends Model implements Feedable
         }
     }
 
-    public function createRegistrationTask(): void {
+    public function createRegistrationTask(): void
+    {
         if ($this->event_tier_id && $this->event_type_id) {
             $signupValues = DB::table('event_tier_type_signup_dates')
                 ->where('tier_id', $this->event_tier_id)
                 ->where('type_id', $this->event_type_id)
                 ->first();
 
-            if (!$signupValues) {
+            if (! $signupValues) {
                 DB::table('event_tier_type_signup_dates')->insert([
                     'tier_id' => $this->event_tier_id,
                     'type_id' => $this->event_type_id,
                     'signup_open' => 800, // Default: 28 days before event
                     'signup_close' => 1,  // Default: 3 days before event
-                    'normal_signup_start_advanced_close' => 7 // Default: 7 days before event
+                    'normal_signup_start_advanced_close' => 7, // Default: 7 days before event
                 ]);
-                
+
                 $signupValues = DB::table('event_tier_type_signup_dates')
                     ->where('tier_id', $this->event_tier_id)
                     ->where('type_id', $this->event_type_id)
                     ->first();
             }
-                
-            $startDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
-            
+
+            $startDateTime = Carbon::parse($this->startDate.' '.$this->startTime);
+
             $insertData = [
                 'event_id' => $this->id,
                 'signup_open' => $startDateTime->copy()->subDays($signupValues->signup_open),
                 'signup_close' => $startDateTime->copy()->subDays($signupValues->signup_close),
-                'normal_signup_start_advanced_close' =>  $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close)
+                'normal_signup_start_advanced_close' =>  $startDateTime->copy()->subDays($signupValues->normal_signup_start_advanced_close),
             ];
-            
+
             DB::table('event_signup_dates')->updateOrInsert(
                 ['event_id' => $this->id],
                 $insertData
@@ -270,13 +267,13 @@ class EventDetail extends Model implements Feedable
 
             Task::where([
                 'taskable_id' => $this->id,
-                'taskable_type' => "EventDetail",                    
+                'taskable_type' => 'EventDetail',
                 'task_name' => 'reg_over',
             ])->delete();
-            
+
             Task::create([
                 'taskable_id' => $this->id,
-                'taskable_type' => "EventDetail",                    
+                'taskable_type' => 'EventDetail',
                 'task_name' => 'reg_over',
                 'action_time' => $insertData['signup_close'],
             ]);
@@ -286,25 +283,25 @@ class EventDetail extends Model implements Feedable
     public function createDeadlinesTask(): void
     {
         $deadlineSetup = BracketDeadlineSetup::where('tier_id', $this->event_tier_id)->first();
-            
-        if (!$deadlineSetup) {
-            return; 
+
+        if (! $deadlineSetup) {
+            return;
         }
 
         $deadlines = BracketDeadline::where('event_details_id', $this->id)->get();
-        $deadlinesPast = $deadlines->pluck("id");
-        
+        $deadlinesPast = $deadlines->pluck('id');
+
         Task::whereIn('taskable_id', $deadlinesPast)
-            ->where('taskable_type', "Deadline")
+            ->where('taskable_type', 'Deadline')
             ->delete();
-        
+
         BracketDeadline::whereIn('id', $deadlinesPast)->delete();
-        
+
         $deadlineConfig = $deadlineSetup->deadline_config;
-        
-        $baseDateTime = Carbon::parse($this->startDate . ' ' . $this->startTime);
+
+        $baseDateTime = Carbon::parse($this->startDate.' '.$this->startTime);
         $now = now();
-        
+
         $deadlinesToCreate = [];
         $tasksToCreate = [];
 
@@ -314,7 +311,7 @@ class EventDetail extends Model implements Feedable
                 $endDays = $times['end'];
                 $startReport = $baseDateTime->copy()->addDays($startDays)->toDateTimeString();
                 $endReport = $baseDateTime->copy()->addDays($endDays)->toDateTimeString();
-                
+
                 $deadlinesToCreate[] = [
                     'event_details_id' => $this->id,
                     'stage' => $stage,
@@ -325,16 +322,16 @@ class EventDetail extends Model implements Feedable
                 ];
             }
         }
-        
+
         BracketDeadline::insert($deadlinesToCreate);
-        
+
         $createdDeadlines = BracketDeadline::where('event_details_id', $this->id)
             ->where('created_at', $now)
             ->get()
             ->keyBy(function ($deadline) {
-                return $deadline->stage . '_' . $deadline->inner_stage;
+                return $deadline->stage.'_'.$deadline->inner_stage;
             });
-        
+
         foreach ($deadlineConfig as $stage => $innerStages) {
             foreach ($innerStages as $innerStage => $times) {
                 $startDays = $times['start'];
@@ -343,28 +340,28 @@ class EventDetail extends Model implements Feedable
                 $endReport = $baseDateTime->copy()->addDays($endDays)->toDateTimeString();
                 $orgReport = $baseDateTime->copy()->addDays($endDays)
                     ->addHours(12)->toDateTimeString();
-                
-                $deadlineKey = $stage . '_' . $innerStage;
+
+                $deadlineKey = $stage.'_'.$innerStage;
                 $deadline = $createdDeadlines[$deadlineKey];
-                
-                $tasksToCreate = [...$tasksToCreate, 
+
+                $tasksToCreate = [...$tasksToCreate,
                     [
                         'taskable_id' => $deadline->id,
-                        'taskable_type' => "Deadline",
+                        'taskable_type' => 'Deadline',
                         'task_name' => 'start_report',
                         'action_time' => $startReport,
                         'created_at' => $now,
-                    ], 
+                    ],
                     [
                         'taskable_id' => $deadline->id,
-                        'taskable_type' => "Deadline",
+                        'taskable_type' => 'Deadline',
                         'task_name' => 'end_report',
                         'action_time' => $endReport,
                         'created_at' => $now,
                     ],
                     [
                         'taskable_id' => $deadline->id,
-                        'taskable_type' => "Deadline",
+                        'taskable_type' => 'Deadline',
                         'task_name' => 'org_report',
                         'action_time' => $orgReport,
                         'created_at' => $now,
@@ -372,18 +369,18 @@ class EventDetail extends Model implements Feedable
                 ];
             }
         }
-        
+
         Task::insert($tasksToCreate);
     }
 
     public function statusResolved(): string
     {
-        
-        if (in_array($this->status, ['DRAFT', 'ENDED', 'FAILED', 'PENDING' ])) {
+
+        if (in_array($this->status, ['DRAFT', 'ENDED', 'FAILED', 'PENDING'])) {
             return $this->status;
         }
 
-        if (in_array($this->status, [ 'PREVEW'])) {
+        if (in_array($this->status, ['PREVEW'])) {
             return 'DRAFT';
         }
         if (is_null($this->payment_transaction_id) || $this->status === 'PENDING') {
@@ -400,7 +397,7 @@ class EventDetail extends Model implements Feedable
             $this->endDate,
             $this->endTime
         );
-        
+
         $carbonStartDateTime = $this->getDateTz(
             $this->startDate,
             $this->startTime
@@ -430,14 +427,14 @@ class EventDetail extends Model implements Feedable
 
     public function getFormattedStartDate()
     {
-        return Carbon::parse($this->startDate . ' ' . $this->startTime)->diffForHumans();
+        return Carbon::parse($this->startDate.' '.$this->startTime)->diffForHumans();
     }
 
     public function getRegistrationStatus(): string
     {
         $signupDates = $this->signup;
 
-        if (!$signupDates) {
+        if (! $signupDates) {
             return config('constants.SIGNUP_STATUS.CLOSED');
         }
 
@@ -446,28 +443,30 @@ class EventDetail extends Model implements Feedable
             return config('constants.SIGNUP_STATUS.EARLY');
         } elseif ($now->between($signupDates->normal_signup_start_advanced_close, $signupDates->signup_close)) {
             return config('constants.SIGNUP_STATUS.NORMAL');
-        } 
-        // elseif ($now->lt($signupDates->signup_open)) { 
+        }
+        // elseif ($now->lt($signupDates->signup_open)) {
         //     return config('constants.SIGNUP_STATUS.TOO_EARLY');
-        // } 
+        // }
         else {
             return config('constants.SIGNUP_STATUS.NORMAL');
         }
     }
 
-    public function stripSec(string| null $time): string| null
+    public function stripSec(?string $time): ?string
     {
         if ($time === null) {
             return null;
         }
         if (substr_count($time, ':') === 2) {
             $time = explode(':', $time);
+
             return $time[0].':'.$time[1];
         }
+
         return $time;
     }
 
-    public function storeTimeMy(string|null $date, string|null $time): ?Carbon
+    public function storeTimeMy(?string $date, ?string $time): ?Carbon
     {
         if ($date === null || $time === null) {
             return null;
@@ -475,13 +474,13 @@ class EventDetail extends Model implements Feedable
 
         try {
             $dateTime = Carbon::createFromFormat(
-                'Y-m-d H:i', 
-                $date . ' ' . $this->stripSec($time),
-                'Asia/Kuala_Lumpur'  
+                'Y-m-d H:i',
+                $date.' '.$this->stripSec($time),
+                'Asia/Kuala_Lumpur'
             );
-            
+
             return $dateTime->utc();
-            
+
         } catch (Exception $e) {
             return null;
         }
@@ -495,14 +494,14 @@ class EventDetail extends Model implements Feedable
             $this->startDate = $startStuff?->format('Y-m-d');
             $this->startTime = $startStuff?->format('H:i');
         }
-        
+
         // Convert end datetime
         if ($this->endDate && $this->endTime) {
             $endStuff = $this->formatTimeMy($this->endDate, $this->endTime);
             $this->endDate = $endStuff?->format('Y-m-d');
             $this->endTime = $endStuff?->format('H:i');
         }
-        
+
         // Convert live/public datetime
         if ($this->sub_action_public_date && $this->sub_action_public_time) {
             $liveStuff = $this->formatTimeMy($this->sub_action_public_date, $this->sub_action_public_time);
@@ -511,16 +510,16 @@ class EventDetail extends Model implements Feedable
         }
     }
 
-    public function getDateTz(string|null $date, string|null $time, string $timezone = 'UTC'): ?Carbon
+    public function getDateTz(?string $date, ?string $time, string $timezone = 'UTC'): ?Carbon
     {
         if ($date === null || $time === null) {
             return null;
         }
-        
+
         try {
             return Carbon::createFromFormat(
-                'Y-m-d H:i', 
-                $date . ' ' . $this->stripSec($time),
+                'Y-m-d H:i',
+                $date.' '.$this->stripSec($time),
                 $timezone
             )->utc();
         } catch (Exception $e) {
@@ -528,12 +527,27 @@ class EventDetail extends Model implements Feedable
         }
     }
 
-    function startDatesStr($startDate, $startTime)
+    public function startDatesStr($startDate, $startTime)
     {
-    $startTime = $this->stripSec($startTime);
-    if ($startDate !== null && $startTime !== null) {
-        $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC');
-        if (!$carbonDateTimeUtc) {
+        $startTime = $this->stripSec($startTime);
+        if ($startDate !== null && $startTime !== null) {
+            $carbonDateTimeUtc = Carbon::createFromFormat('Y-m-d H:i', $startDate.' '.$startTime, 'UTC');
+            if (! $carbonDateTimeUtc) {
+                $datePart = 'Date is not set';
+                $timePart = 'Time is not set';
+                $dayStr = '';
+                $dateStr = 'Please enter date and time';
+                $combinedStr = 'Date/time is not set';
+            }
+
+            $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
+            $datePart = $carbonDateTimeMalaysia->format('d M y');
+            $timePart = $carbonDateTimeMalaysia->format('g:i A');
+            $dayStr = $carbonDateTimeMalaysia->englishDayOfWeek;
+            $dateStr = $datePart.' '.$timePart;
+            $combinedStr = $datePart.' ('.$dayStr.')';
+
+        } else {
             $datePart = 'Date is not set';
             $timePart = 'Time is not set';
             $dayStr = '';
@@ -541,32 +555,16 @@ class EventDetail extends Model implements Feedable
             $combinedStr = 'Date/time is not set';
         }
 
-        $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
-        $datePart = $carbonDateTimeMalaysia->format('d M y');
-        $timePart = $carbonDateTimeMalaysia->format('g:i A');
-        $dayStr = $carbonDateTimeMalaysia->englishDayOfWeek;
-        $dateStr = $datePart.' '.$timePart;
-        $combinedStr = $datePart.' ('.$dayStr.')';
-        
-    } else {
-        $datePart = 'Date is not set';
-        $timePart = 'Time is not set';
-        $dayStr = '';
-        $dateStr = 'Please enter date and time';
-        $combinedStr = 'Date/time is not set';
+        return [
+            'datePart' => $datePart,
+            'dateStr' => $dateStr,
+            'timePart' => $timePart,
+            'dayStr' => $dayStr,
+            'combinedStr' => $combinedStr,
+        ];
     }
 
-    return [
-        'datePart' => $datePart,
-        'dateStr' => $dateStr,
-        'timePart' => $timePart,
-        'dayStr' => $dayStr,
-        'combinedStr' => $combinedStr,
-    ];
-}
-
-
-    function startDatesReadable(bool $willShowCountDown = false): array
+    public function startDatesReadable(bool $willShowCountDown = false): array
     {
         // Use Malaysia timezone for current time
         $now = new DateTime('now', new DateTimeZone('Asia/Kuala_Lumpur'));
@@ -582,23 +580,23 @@ class EventDetail extends Model implements Feedable
                 $carbonDateTimeMalaysia = $carbonDateTimeUtc->setTimezone('Asia/Kuala_Lumpur');
                 $formattedDate = $carbonDateTimeMalaysia->format('d M y');
                 $formattedTime = $carbonDateTimeMalaysia->format('g:i A');
-                
+
                 if ($willShowCountDown) {
                     $nowCarbon = Carbon::now('Asia/Kuala_Lumpur');
                     $diff = $nowCarbon->diff($carbonDateTimeMalaysia);
                     if ($diff->days > 0) {
-                        $startsIn = $diff->days . 'd ';
+                        $startsIn = $diff->days.'d ';
                     }
                     if ($startsIn) {
-                        $startsIn .= $diff->h . 'h';
+                        $startsIn .= $diff->h.'h';
                     } else {
-                        $startsIn = $diff->h . 'h';
+                        $startsIn = $diff->h.'h';
                     }
-                    
-                } 
-            } 
+
+                }
+            }
         }
-        
+
         return [
             'fmtStartDt' => $formattedDate,
             'fmtStartT' => $formattedTime,
@@ -606,7 +604,6 @@ class EventDetail extends Model implements Feedable
         ];
     }
 
- 
     public static function filterEvents(Request $request)
     {
         $eventListQuery = self::query();
@@ -662,6 +659,7 @@ class EventDetail extends Model implements Feedable
             if (empty($search)) {
                 return $query;
             }
+
             return $query->where(function ($q) use ($search) {
                 return $q
                     ->orWhere('eventDescription', 'LIKE', "%{$search}%")
@@ -676,7 +674,8 @@ class EventDetail extends Model implements Feedable
         return $eventListQuery;
     }
 
-    public static function landingPageQuery(Request $request, $currentDateTime) {
+    public static function landingPageQuery(Request $request, $currentDateTime)
+    {
         return self::whereNotIn('status', ['DRAFT', 'ENDED', 'FAILED', 'PENDING', 'PREVIEW'])
             ->whereNotNull('payment_transaction_id')
             ->where('sub_action_private', '<>', 'private')
@@ -696,7 +695,7 @@ class EventDetail extends Model implements Feedable
                     ->orWhere('eventTags', 'LIKE', "%{$search}%");
             })
             ->with(['tier', 'type', 'game', 'signup'])
-            ->with(['user' => function($q) {
+            ->with(['user' => function ($q) {
                 $q->select('id', 'name')
                 ->with(['organizer' => function ($innerQ) {
                     $innerQ->select(['id', 'user_id']);
@@ -704,9 +703,9 @@ class EventDetail extends Model implements Feedable
                 ->withCount('follows');
             }])
             ->withCount(
-            ['joinEvents' => function ($q) {
-                $q->where('join_status', 'confirmed');
-            }])
+                ['joinEvents' => function ($q) {
+                    $q->where('join_status', 'confirmed');
+                }])
             ->orderBy('startDate', 'asc');
     }
 
@@ -740,7 +739,7 @@ class EventDetail extends Model implements Feedable
                     $search = trim($filter['venue'][0]);
                     $query->where('venue', $search);
                 }
-                
+
             }
             if (array_key_exists('eventTier[]', $filter)) {
                 if (isset($filter['eventTier[]'][0])) {
@@ -766,7 +765,7 @@ class EventDetail extends Model implements Feedable
                 if (isset($dates[0]) && isset($dates[1]) && $dates[0] !== '' && $dates[1] !== '') {
                     $dates[0] = Carbon::createFromFormat('d/m/Y', $dates[0], 'Asia/Kuala_Lumpur')->format('Y-m-d');
                     $dates[1] = Carbon::createFromFormat('d/m/Y', $dates[1], 'Asia/Kuala_Lumpur')->format('Y-m-d');
-                    
+
                     $query->whereBetween('created_at', [$dates[0], $dates[1]]);
                 }
             }
@@ -777,7 +776,7 @@ class EventDetail extends Model implements Feedable
         return $eventListQuery;
     }
 
-    private function formatTimeMy(string|null $date, string|null $time): ?Carbon
+    private function formatTimeMy(?string $date, ?string $time): ?Carbon
     {
         if ($date === null || $time === null) {
             return null;
@@ -785,9 +784,9 @@ class EventDetail extends Model implements Feedable
 
         try {
             return Carbon::createFromFormat(
-                'Y-m-d H:i', 
-                $date . ' ' . $this->stripSec($time),
-            )->setTimezone('Asia/Kuala_Lumpur')   ;
+                'Y-m-d H:i',
+                $date.' '.$this->stripSec($time),
+            )->setTimezone('Asia/Kuala_Lumpur');
 
         } catch (Exception $e) {
             return null;
@@ -843,9 +842,9 @@ class EventDetail extends Model implements Feedable
         }
 
         if ($endDate && $endTime) {
-            $carbonEndDateTime = $eventDetail->storeTimeMy( $endDate, $endTime);
+            $carbonEndDateTime = $eventDetail->storeTimeMy($endDate, $endTime);
             if ($isEditMode) {
-                $eventEndDateTime = $eventDetail->getDateTz( $eventDetail->endDate, $eventDetail->endTime);
+                $eventEndDateTime = $eventDetail->getDateTz($eventDetail->endDate, $eventDetail->endTime);
                 $isTimeSame = $isTimeSame && $carbonEndDateTime->eq($eventEndDateTime);
             }
             if ($startDate && $startTime && $carbonEndDateTime > $carbonStartDateTime) {
@@ -857,7 +856,7 @@ class EventDetail extends Model implements Feedable
             } elseif (! $isDraftMode) {
                 $startTimeFormatted = $carbonStartDateTime->format('Y-m-d H:i');
                 $endTimeFormatted = $carbonEndDateTime->format('Y-m-d H:i');
-                
+
                 throw new TimeGreaterException(
                     "End date and time ({$endTimeFormatted}) must be greater than start date and time ({$startTimeFormatted})."
                 );
@@ -889,7 +888,7 @@ class EventDetail extends Model implements Feedable
             }
 
             if ($request->launch_schedule === 'schedule' && $launch_date && $launch_time) {
-                $carbonPublishedDateTime = $eventDetail->storeTimeMy( $launch_date, $launch_time);;
+                $carbonPublishedDateTime = $eventDetail->storeTimeMy($launch_date, $launch_time);
                 // @phpstan-ignore-next-line
                 if ($launch_date && $launch_time && $carbonPublishedDateTime < $carbonStartDateTime && $carbonPublishedDateTime < $carbonEndDateTime) {
                     $eventDetail->status = 'SCHEDULED';
@@ -910,38 +909,37 @@ class EventDetail extends Model implements Feedable
         $eventDetail->status = $eventDetail->statusResolved();
         $eventDetail->willNotify = true;
 
-        if (!isset($request->eventName)){
+        if (! isset($request->eventName)) {
             do {
-                $eventDetail->slug = 'event-' .str_pad(random_int(1000, 99999), 9, '0', STR_PAD_LEFT);
+                $eventDetail->slug = 'event-'.str_pad(random_int(1000, 99999), 9, '0', STR_PAD_LEFT);
                 $exists = self::where('slug', $eventDetail->slug)->exists();
             } while ($exists);
         } else {
             $baseEventName = $eventDetail->eventName;
             $baseSlug = Str::slug($eventDetail->eventName);
             $counter = 1;
-            
+
             $eventDetail->eventName = $baseEventName;
             $eventDetail->slug = $baseSlug;
-            
+
             while (self::where('eventName', $eventDetail->eventName)
                     ->orWhere('slug', $eventDetail->slug)
                     ->exists()) {
-                $eventDetail->eventName = $baseEventName . ' ' . $counter;
-                $eventDetail->slug = $baseSlug . '-' . $counter;
+                $eventDetail->eventName = $baseEventName.' '.$counter;
+                $eventDetail->slug = $baseSlug.'-'.$counter;
                 $counter++;
             }
         }
-
 
         return [$eventDetail, $isTimeSame];
     }
 
     public static function findEventWithRelationsAndThrowError(
-        string| int | null $userId,
-        string| int $id,
-        array| null $where = null,
-        string | array| null $relations = null,
-        string | null | array $relationCount = null
+        string|int|null $userId,
+        string|int $id,
+        ?array $where = null,
+        string|array|null $relations = null,
+        string|null|array $relationCount = null
     ): EventDetail {
         $relations ??= ['type', 'tier', 'game'];
         $eventQuery = self::with($relations);
@@ -962,11 +960,11 @@ class EventDetail extends Model implements Feedable
         if ($userId && $event->user_id !== $userId) {
             throw new UnauthorizedException('You cannot view an event of another organizer!');
         }
-        
+
         return $event;
     }
 
-    public static function findEventAndThrowError(string| int $eventId, string| int $userId): EventDetail
+    public static function findEventAndThrowError(string|int $eventId, string|int $userId): EventDetail
     {
         $event = self::find($eventId);
 
@@ -976,6 +974,7 @@ class EventDetail extends Model implements Feedable
         if ($event->user_id !== $userId) {
             throw new UnauthorizedException('You cannot view an event of another organizer!');
         }
+
         return $event;
     }
 
@@ -995,7 +994,7 @@ class EventDetail extends Model implements Feedable
 
     public function scopeWithEventTierAndFilteredMatches($query, $bracketDeadlines)
     {
-        return $query->with(['tier', 'matches' => function($query) use ($bracketDeadlines) {
+        return $query->with(['tier', 'matches' => function ($query) use ($bracketDeadlines) {
             $query->filterByDeadlines($bracketDeadlines);
         }]);
     }

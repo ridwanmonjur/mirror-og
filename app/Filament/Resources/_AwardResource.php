@@ -18,7 +18,6 @@
 // {
 //     protected static ?string $model = Award::class;
 
-
 //     public static function form(Form $form): Form
 //     {
 //         return $form
@@ -76,7 +75,7 @@
 //     {
 //         return [
 //             'index' => Pages\ListAwards::route('/'),
-          
+
 //         ];
 //     }
 // }

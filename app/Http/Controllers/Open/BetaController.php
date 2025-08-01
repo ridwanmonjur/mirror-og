@@ -29,7 +29,7 @@ class BetaController extends Controller
 
             $user = DB::table(table: 'interested_user')->where('email', $email)->first();
 
-            if (!$user) {
+            if (! $user) {
                 $token = generateToken();
 
                 DB::table('interested_user')->insert([
@@ -115,7 +115,7 @@ class BetaController extends Controller
     public function verifyInterestedUser($token)
     {
         $user = DB::table(table: 'interested_user')->where('email_verified_token', $token)->first();
-        if (!$user) {
+        if (! $user) {
             return view('Public.Verify')->with('error', 'Invalid verification token.');
         }
 
@@ -186,7 +186,7 @@ class BetaController extends Controller
                 $user = new User([
                     'email' => $email,
                     'password' => Hash::make($password),
-                    'name' => generateToken(2) . $username . generateToken(2),
+                    'name' => generateToken(2).$username.generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
                     'email_verified_at' => now(),

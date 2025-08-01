@@ -14,16 +14,16 @@ return new class extends Migration
     {
         if (Schema::hasTable('participant_coupons')) {
             Schema::table('participant_coupons', function (Blueprint $table) {
-                if (!Schema::hasColumn('participant_coupons', 'for_type')) {
+                if (! Schema::hasColumn('participant_coupons', 'for_type')) {
                     $table->enum('for_type', ['organizer', 'participant'])->default('participant');
                 }
-                if (!Schema::hasColumn('participant_coupons', 'redeemable_count')) {
+                if (! Schema::hasColumn('participant_coupons', 'redeemable_count')) {
                     $table->integer('redeemable_count')->default(10);
                 }
             });
         }
 
-        if (Schema::hasTable('participant_coupons') && !Schema::hasTable('system_coupons')) {
+        if (Schema::hasTable('participant_coupons') && ! Schema::hasTable('system_coupons')) {
             Schema::rename('participant_coupons', 'system_coupons');
         }
 
@@ -36,16 +36,15 @@ return new class extends Migration
                 'description' => $coupon->name,
                 'is_active' => $coupon->isEnforced ? 1 : 0,
                 'is_public' => 1, // Default to public
-                'expires_at' => $coupon->endDate && $coupon->endTime ? 
-                    $coupon->endDate . ' ' . $coupon->endTime : 
-                    ($coupon->endDate ? $coupon->endDate . ' 23:59:59' : null),
+                'expires_at' => $coupon->endDate && $coupon->endTime ?
+                    $coupon->endDate.' '.$coupon->endTime :
+                    ($coupon->endDate ? $coupon->endDate.' 23:59:59' : null),
                 'for_type' => 'organizer',
                 'redeemable_count' => 0,
                 'discount_type' => $coupon->type ?? 'percent',
             ], ['code'], ['amount', 'description', 'is_active', 'is_public', 'expires_at', 'for_type', 'redeemable_count', 'discount_type']);
         }
 
-      
     }
 
     /**
@@ -64,7 +63,7 @@ return new class extends Migration
             });
         }
 
-        if (!Schema::hasTable('participant_coupons') && Schema::hasTable('system_coupons')) {
+        if (! Schema::hasTable('participant_coupons') && Schema::hasTable('system_coupons')) {
             Schema::rename('system_coupons', 'participant_coupons');
         }
 
@@ -74,6 +73,5 @@ return new class extends Migration
                 ->delete();
         }
 
-      
     }
 };

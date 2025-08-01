@@ -22,38 +22,37 @@ class FriendUpdateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
-     public function rules()
-     {
-         return [
+    public function rules()
+    {
+        return [
             'deleteUserId' => 'sometimes|exists:users,id',
             'addUserId' => 'sometimes',
             'updateUserId' => 'sometimes',
-            'updateStatus' => 'sometimes|in:left,accepted,rejected,pending'
-         ];
-     }
+            'updateStatus' => 'sometimes|in:left,accepted,rejected,pending',
+        ];
+    }
 
     public function withValidator($validator)
     {
-       
-            $validator->after(function ($validator) {
+
+        $validator->after(function ($validator) {
             $user = $this->attributes->get('user');
 
             if (isset($this->updateStatus) && isset($this->updateUserId)) {
                 $friend = Friend::checkFriendship($this->updateUserId, $user->id);
                 $status = $this->updateStatus;
-                
+
                 $isPermitted = $status === 'left';
-                if (!$isPermitted && in_array($status, ['accepted', 'rejected'])) {
+                if (! $isPermitted && in_array($status, ['accepted', 'rejected'])) {
                     $isPermitted = ($friend->status === 'pending' && $user->id !== $friend->actor_id) ||
                         ($friend->status === 'left' && $user->id === $friend->actor_id) ||
                         ($friend->status === 'rejected' && $user->id === $friend->actor_id);
                 }
 
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     $validator->errors()->add(
-                        'errorMessage', 
-                        "This request is not allowed."
+                        'errorMessage',
+                        'This request is not allowed.'
                     );
                 }
             }
@@ -63,12 +62,12 @@ class FriendUpdateRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        
+
         $error = $validator->errors()->first();
-    
-        throw new ValidationException($validator, response()->json( [
+
+        throw new ValidationException($validator, response()->json([
             'message' => $error,
-            'success'=> false
+            'success'=> false,
         ], 422));
     }
 }

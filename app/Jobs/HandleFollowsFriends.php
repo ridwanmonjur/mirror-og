@@ -31,9 +31,9 @@ class FollowOrgStrategy
             HTML,
             'link' => route('public.participant.view', $participant->id),
             'img_src' => $participant->userBanner,
-            'created_at' => DB::raw('NOW()')
+            'created_at' => DB::raw('NOW()'),
         ]);
-       
+
         NotifcationsUser::create([
             'user_id' => $participant->id,
             'type' => 'social',
@@ -47,12 +47,10 @@ class FollowOrgStrategy
             HTML,
             'link' => route('public.organizer.view', $organizer->id),
             'img_src' => $organizer->userBanner,
-            'created_at' => DB::raw('NOW()')
+            'created_at' => DB::raw('NOW()'),
         ]);
     }
 }
-
-
 
 class FollowParticipantStrategy
 {
@@ -72,9 +70,9 @@ class FollowParticipantStrategy
             HTML,
             'link' => route('public.participant.view', $user->id),
             'img_src' => $user->userBanner,
-            'created_at' => DB::raw('NOW()')
+            'created_at' => DB::raw('NOW()'),
         ]);
-       
+
         NotifcationsUser::create([
             'user_id' => $user->id,
             'type' => 'social',
@@ -87,11 +85,10 @@ class FollowParticipantStrategy
                 </span>
             HTML,
             'link' => route('public.organizer.view', $followee->id),
-            'img_src' => $followee->userBanner
+            'img_src' => $followee->userBanner,
         ]);
     }
 }
-
 
 class UnfollowOrgStrategy
 {
@@ -118,7 +115,7 @@ class NewFriendStrategy
             HTML,
             'link' => route('public.participant.view', $user->id),
             'img_src' => $user->userBanner,
-            'created_at' => DB::raw('NOW()')
+            'created_at' => DB::raw('NOW()'),
         ]);
     }
 }
@@ -129,7 +126,7 @@ class UpdateFriendStrategy
     {
         ['user' => $user, 'otherUser' => $otherUser, 'status' => $status] = $parameters;
 
-        if ($status == "accepted") {
+        if ($status == 'accepted') {
             NotifcationsUser::create([
                 'user_id' => $otherUser->id,
                 'type' => 'social',
@@ -141,7 +138,7 @@ class UpdateFriendStrategy
                 HTML,
                 'link' => route('public.participant.view', $user->id),
                 'img_src' => $user->userBanner,
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ]);
 
             NotifcationsUser::create([
@@ -156,18 +153,17 @@ class UpdateFriendStrategy
                 HTML,
                 'link' => route('public.participant.view', $otherUser->id),
                 'img_src' => $otherUser->userBanner,
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ]);
         }
 
-       
     }
 }
 
 class FollowTeamStrategy
 {
     public function handle($parameters)
-    {   
+    {
         ['user' => $user, 'team' => $selectTeam, 'isFollow' => $isFollow] = $parameters;
 
         if ($isFollow) {
@@ -188,7 +184,7 @@ class FollowTeamStrategy
                     'link' =>  route('public.team.view', ['id' => $selectTeam->id]),
                     'icon_type' => 'follow',
                     'html' => $html,
-                    'created_at' => DB::raw('NOW()')
+                    'created_at' => DB::raw('NOW()'),
                 ];
             }
 
@@ -204,7 +200,7 @@ class FollowTeamStrategy
                 HTML,
                 'link' => route('public.team.view', $selectTeam->id),
                 'icon_type' => 'follow',
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ]);
         }
 
@@ -234,7 +230,7 @@ class HandleFollowsFriends implements ShouldQueue
         if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
-        $strategy = new $strategyClass();
+        $strategy = new $strategyClass;
         $strategy->handle($this->parameters);
     }
 }

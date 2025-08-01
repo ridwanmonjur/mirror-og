@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('organizers', function (Blueprint $table) {
-           $table->dropUnique(['companyName']);
-       });
+        Schema::table('organizers', function (Blueprint $table) {
+            $table->dropUnique(['companyName']);
+        });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-       Schema::table('organizers', function (Blueprint $table) {
-           $table->unique('companyName');
-       });
+        Schema::table('organizers', function (Blueprint $table) {
+            $table->unique('companyName');
+        });
     }
 };

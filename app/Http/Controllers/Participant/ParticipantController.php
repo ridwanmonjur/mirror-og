@@ -118,7 +118,7 @@ class ParticipantController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Error updating participant: ' . $e->getMessage(),
+                    'message' => 'Error updating participant: '.$e->getMessage(),
                     'success' => false,
                 ],
                 400,

@@ -14,14 +14,16 @@ use Illuminate\Database\Eloquent\Builder;
 class UserProfileRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
+
     protected static string $relationship = 'profile';
+
     protected static bool $hasAssociatedRecord = true;
 
     protected function paginateTableQuery(Builder $query): CursorPaginator
     {
         return $query->cursorPaginate(($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage());
     }
-    
+
     public function form(Form $form): Form
     {
         return $form
@@ -31,7 +33,7 @@ class UserProfileRelationManager extends RelationManager
                     ->rgba(),
                 Forms\Components\FileUpload::make('backgroundBanner')
                     ->image()
-                    ->directory('images/user') 
+                    ->directory('images/user')
                     ->maxSize(5120)
                     ->deleteUploadedFileUsing(function ($file, $livewire) {
                         if ($file && Storage::disk('public')->exists($file)) {
@@ -40,12 +42,12 @@ class UserProfileRelationManager extends RelationManager
 
                         $owner = $livewire->getOwnerRecord();
                         $record = $owner->profile;
-                        
+
                         if ($record) {
                             $record->backgroundBanner = null;
                             $record->save();
                         }
-                        
+
                         return null;
                     })
                     ->visible(fn (string $context): bool => $context === 'edit')
@@ -54,20 +56,21 @@ class UserProfileRelationManager extends RelationManager
                         $record = $owner->profile;
                         $oldBanner = $record->backgroundBanner;
 
-                        $newFilename = 'backgroundBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                        $newFilename = 'backgroundBanner-'.time().'-'.auth()->id().'.'.$file->getClientOriginalExtension();
                         $directory = 'images/user';
-                        
+
                         $path = $file->storeAs($directory, $newFilename, 'public');
                         $record->backgroundBanner = $path;
                         $record->save();
                         if ($oldBanner && $oldBanner !== $state) {
                             $record->destroyUserBanner($oldBanner);
                         }
+
                         return $path;
                     }),
                 Forms\Components\TextInput::make('backgroundGradient')
                     ->label('Background Gradient'),
-                    
+
                 Forms\Components\ColorPicker::make('fontColor')
                     ->label('Font Color')
                     ->rgba(),
@@ -87,8 +90,8 @@ class UserProfileRelationManager extends RelationManager
                     ->circular()
 ->defaultImageUrl(url('/assets/images/404q.png'))
  ->extraImgAttributes([
-        'class' => 'border border-gray-300 dark:border-gray-600',
-    ])
+     'class' => 'border border-gray-300 dark:border-gray-600',
+ ])
                     ->size(60),
                 Tables\Columns\ViewColumn::make('backgroundGradient')
                     ->label('Gradient')
@@ -105,10 +108,9 @@ class UserProfileRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->visible(fn () => !$this->getOwnerRecord()->profile()->exists())
+                    ->visible(fn () => ! $this->getOwnerRecord()->profile()->exists())
                     // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                    ->createAnother(false)
-,
+                    ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

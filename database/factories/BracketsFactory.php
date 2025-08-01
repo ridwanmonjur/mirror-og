@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use App\Models\EventDetail;
@@ -12,7 +13,7 @@ class BracketsFactory extends Factory
 {
     protected $model = Brackets::class;
 
-     /**
+    /**
      * The event match service instance.
      *
      * @var EventMatchService
@@ -22,11 +23,10 @@ class BracketsFactory extends Factory
     public function __construct()
     {
         parent::__construct();
-        
+
         // Resolve the service from the container
         $this->eventMatchService = App::make(EventMatchService::class);
     }
-
 
     public function definition(): array
     {
@@ -54,12 +54,13 @@ class BracketsFactory extends Factory
                 'participantPayment' => [
                     'register_time' => null,
                     'type' => 'wallet',
-                ]
-            ]
-        ]
-    ]) {
+                ],
+            ],
+        ],
+    ])
+    {
 
-        $joinEventFactory = new JoinEventFactory();
+        $joinEventFactory = new JoinEventFactory;
         $result = $joinEventFactory->seed($options);
 
         $events = collect($result['events']);
@@ -73,41 +74,40 @@ class BracketsFactory extends Factory
         foreach ($events as $detail) {
             $this->eventMatchService->createBrackets($detail);
             $this->updateBracketTeams(
-                $detail->id, 
-                'U', 
+                $detail->id,
+                'U',
                 ['e1', 'e3', 'e5', 'p2'],
                 $teams
             );
-            
+
             // 2. Update L, e2, e4 brackets
             $this->updateBracketTeams(
-                $detail->id, 
-                'L', 
+                $detail->id,
+                'L',
                 ['e2', 'e4', 'p2'],
                 $teams
             );
         }
-        
 
         return [
             'eventIds' => $eventIds,
             'result' => $result,
             'organizers' => $organizerEmail,
-            'participants' => $partcipantEmails
+            'participants' => $partcipantEmails,
         ];
     }
 
-     /**
+    /**
      * Update bracket team IDs for specific criteria
      *
-     * @param int $eventId Event ID
-     * @param string $stageName Stage name (U, L, F, W)
-     * @param array $innerStageNames Array of inner stage names to update
-     * @param array $teams Array of team models to use for assignment
+     * @param  int  $eventId  Event ID
+     * @param  string  $stageName  Stage name (U, L, F, W)
+     * @param  array  $innerStageNames  Array of inner stage names to update
+     * @param  array  $teams  Array of team models to use for assignment
      */
     private function updateBracketTeams(
-        int $eventId, 
-        string $stageName, 
+        int $eventId,
+        string $stageName,
         array $innerStageNames,
         array $teams
     ): void {
@@ -115,17 +115,17 @@ class BracketsFactory extends Factory
             ->where('stage_name', $stageName)
             ->whereIn('inner_stage_name', $innerStageNames)
             ->get();
-        
+
         $teamCount = count($teams);
         $teamIndex = 0;
-        
+
         foreach ($brackets as $bracket) {
             $bracket->team1_id = $teams[$teamIndex % $teamCount]->id;
             $teamIndex++;
-            
+
             $bracket->team2_id = $teams[$teamIndex % $teamCount]->id;
             $teamIndex++;
-            
+
             $bracket->save();
         }
     }

@@ -10,16 +10,17 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 
-
 class ResetPasswordMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
-    
-    public $image;
-    public $token;
-    public $userName;
 
+    public $tries = 3;
+
+    public $image;
+
+    public $token;
+
+    public $userName;
 
     public function __construct(string $image, string $token, string $userName)
     {
@@ -27,7 +28,6 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
         $this->token = $token;
         $this->userName = $userName;
     }
-
 
     /**
      * Get the message envelope.
@@ -47,7 +47,7 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
         return $this->view('Email.reset')->with([
             'token' => $this->token,
             'image' => $this->image,
-            'userName' => $this->userName
+            'userName' => $this->userName,
         ]);
     }
 

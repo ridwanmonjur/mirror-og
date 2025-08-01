@@ -16,8 +16,8 @@ return new class extends Migration
         if (Schema::hasTable('matches')) {
             Schema::rename('matches', 'brackets');
         }
-        
-        if (!Schema::hasTable('bracket_deadline_setup')) {
+
+        if (! Schema::hasTable('bracket_deadline_setup')) {
 
             Schema::create('bracket_deadline_setup', function (Blueprint $table) {
                 $table->id();
@@ -29,10 +29,10 @@ return new class extends Migration
                     ->onDelete('cascade');
             });
         }
-        
+
         Artisan::call('db:seed', [
             '--class' => 'Database\\Seeders\\BracketDeadlineSetupSeeder',
-            '--force' => true
+            '--force' => true,
         ]);
     }
 
@@ -42,11 +42,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('bracket_deadline_setup');
-        
+
         if (Schema::hasTable('brackets')) {
             Schema::rename('brackets', 'matches');
         }
     }
-    
-   
 };

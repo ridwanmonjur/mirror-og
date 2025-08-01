@@ -44,8 +44,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch events',
@@ -67,8 +68,8 @@ class AnalyticsController extends Controller
             ]);
 
             $allowedDimensions = ['events', 'games', 'tiers', 'esports', 'locations', 'types'];
-            
-            if (!in_array($dimension, $allowedDimensions)) {
+
+            if (! in_array($dimension, $allowedDimensions)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid dimension',
@@ -92,8 +93,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch events by dimension',
@@ -131,8 +133,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch event details',
@@ -167,8 +170,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch summary',
@@ -230,19 +234,20 @@ class AnalyticsController extends Controller
     {
         try {
             $result = $this->analyticsService->testConnection();
-            
+
             return response()->json([
                 'success' => $result['success'],
                 'data' => $result,
             ], $result['success'] ? 200 : 500);
-            
+
         } catch (\Exception $e) {
             Log::error('Connection test failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Connection test failed',
@@ -250,6 +255,7 @@ class AnalyticsController extends Controller
             ], 500);
         }
     }
+
     public function getAllTiersHit(Request $request): JsonResponse
     {
         try {
@@ -272,8 +278,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch tiers hit',
@@ -308,8 +315,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch tier analytics',
@@ -317,6 +325,7 @@ class AnalyticsController extends Controller
             ], 500);
         }
     }
+
     public function getDashboard(Request $request): JsonResponse
     {
         try {
@@ -345,8 +354,9 @@ class AnalyticsController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
             ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch dashboard data',

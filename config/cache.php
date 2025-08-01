@@ -18,7 +18,7 @@ return [
     'default' => env('CACHE_DRIVER', 'file'),
     'ttl' => 3600,
     'keys' => [
-        'user_team_follows' => 'user%s:team', 
+        'user_team_follows' => 'user%s:team',
         'user_team_member' => 'user%s:team%s:member',
         'team_member_count' => 'team:member_count',
         'wallet' => 'wallet%s:user_id',

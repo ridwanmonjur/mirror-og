@@ -11,13 +11,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-
 class VerifyUserMailChange extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $user;
+
     public $token;
 
     public $newEmail;
@@ -44,7 +45,7 @@ class VerifyUserMailChange extends Mailable implements ShouldQueue
         return $this->view('Email.verifyEmailChange')->with([
             'token' => $this->token,
             'user' => $this->user,
-            'newEmai' => $this->newEmail
+            'newEmai' => $this->newEmail,
         ]);
     }
 }

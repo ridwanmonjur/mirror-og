@@ -34,7 +34,7 @@ class AuthController extends Controller
         $role = $this->authService->putRoleInSessionBasedOnRoute($request->url());
         Session::put('role', $role);
         Session::save();
-        
+
         return Socialite::driver('google')->redirect();
     }
 
@@ -47,6 +47,7 @@ class AuthController extends Controller
 
         return $this->authService->handleUserRedirection($finduser, $error, $role);
     }
+
     public function storeUser(Request $request)
     {
         $validatedData = [];
@@ -59,8 +60,8 @@ class AuthController extends Controller
 
         extract($this->authService->determineUserRole($request));
 
-        $redirectErrorRoute = $role . '.signup.view';
-        $redirectSuccessRoute = $role . '.signin.view';
+        $redirectErrorRoute = $role.'.signup.view';
+        $redirectSuccessRoute = $role.'.signin.view';
 
         DB::beginTransaction();
         $validatedData = $request->validate($validationRules);
@@ -90,7 +91,7 @@ class AuthController extends Controller
             return redirect()
                 ->route($redirectSuccessRoute)
                 ->with([
-                    'success' => $roleFirstCapital . ' account created and verification email sent. Please verify email now!',
+                    'success' => $roleFirstCapital.' account created and verification email sent. Please verify email now!',
                     'email' => $user->email,
                     'verify' => true,
                     'successEmail' => $user->email,
@@ -105,7 +106,7 @@ class AuthController extends Controller
             return redirect()->route($redirectErrorRoute)->with('error', 'An error occurred while processing your request.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error($th->getMessage() . PHP_EOL . $th->getTraceAsString());
+            Log::error($th->getMessage().PHP_EOL.$th->getTraceAsString());
 
             return redirect()->route($redirectErrorRoute)->with('error', $th->getMessage());
         }
@@ -124,8 +125,9 @@ class AuthController extends Controller
 
             if (Auth::attempt($validatedData, $request->has('remember-me'))) {
                 $user = User::where('email', $request->email)->first();
-                if (!$user->email_verified_at) {
+                if (! $user->email_verified_at) {
                     Auth::logout();
+
                     return response()->json([
                         'success' => false,
                         'message' => 'Email not verified. Please verify email first!',
@@ -143,7 +145,7 @@ class AuthController extends Controller
                 return response()->json(
                     [
                         'message' => "Account signed in successfully as {$role}!",
-                        'route' => route($role . '.home.view'),
+                        'route' => route($role.'.home.view'),
                         'token' => null,
                         'success' => true,
                     ],

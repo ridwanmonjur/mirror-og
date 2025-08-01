@@ -22,7 +22,7 @@ class TeamCaptainRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\Select::make('team_member_id')
-                    ->relationship('user', 'name', 
+                    ->relationship('user', 'name',
                         fn (Builder $query) => $query->where('role', 'PARTICIPANT')
                     )
                     ->label('Captain')
@@ -46,7 +46,7 @@ class TeamCaptainRelationManager extends RelationManager
             // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => !$this->getOwnerRecord()->user()->exists())
+                ->visible(fn () => ! $this->getOwnerRecord()->user()->exists())
                 // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
                 ->createAnother(false),
             ])

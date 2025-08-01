@@ -21,7 +21,9 @@ use Kreait\Firebase\Contract\Firestore;
 class FirebaseController extends Controller
 {
     private $auth;
+
     private $firestore;
+
     private FirestoreService $firestoreService;
 
     public function __construct(Auth $auth, Firestore $firestore, FirestoreService $firestoreService)
@@ -117,7 +119,7 @@ class FirebaseController extends Controller
                 $message = 'User blocked successfully';
                 $isBlocked = true;
 
-                if (!$user->hasBlocked($authenticatedUser)) {
+                if (! $user->hasBlocked($authenticatedUser)) {
                     $roomCollectionRef = $this->firestore->database()->collection('room');
 
                     $query1 = $roomCollectionRef->where('user1', '==', (string) $user->id)->where('user2', '==', (string) $authenticatedUser->id);
@@ -262,7 +264,7 @@ class FirebaseController extends Controller
             ->where('id', $eventId)
             ->firstOrFail()
             ->toArray();
-        if (!$event['tier']) {
+        if (! $event['tier']) {
             return $this->showErrorParticipant('Event Tier has not been chosen for this event!');
         }
 
@@ -291,6 +293,7 @@ class FirebaseController extends Controller
             ->get();
 
         $brackets = $this->firestoreService->generateBrackets($ogBrackets, $event['id']);
+
         return view('filament.pages.brackets', compact('brackets', 'event', 'teams'));
     }
 
@@ -300,7 +303,7 @@ class FirebaseController extends Controller
             ->where('id', $eventId)
             ->first()
             ->toArray();
-        if (!$event['tier']) {
+        if (! $event['tier']) {
             return $this->showErrorParticipant('Event Tier has not been chosen for this event!');
         }
 
@@ -323,7 +326,7 @@ class FirebaseController extends Controller
                 return $item->team1_position != 'F';
             })
             ->map(function ($item) {
-                return $item->team1_position . '.' . $item->team2_position;
+                return $item->team1_position.'.'.$item->team2_position;
             })
             ->toArray();
 

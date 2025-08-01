@@ -20,7 +20,7 @@
 //     public function form(Form $form): Form
 //     {
 //         return $form->schema([
-            
+
 //             Forms\Components\Select::make('team_id')
 //             ->label('Team')
 //             ->options(Team::pluck('teamName', 'id'))
@@ -32,16 +32,16 @@
 //                 $set('team_member_id', null);
 //             })
 //             ->required(),
-        
+
 //         Forms\Components\Select::make('user_id')
 //             ->label('User')
 //             ->options(function (callable $get) {
 //                 $teamId = $get('team_id');
-                
+
 //                 if (!$teamId) {
 //                     return [];
 //                 }
-                
+
 //                 // Get only users who are team members of this team
 //                 return TeamMember::where('team_id', $teamId)
 //                     ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -56,7 +56,7 @@
 //                     $teamMember = TeamMember::where('user_id', $state)
 //                         ->where('team_id', $get('team_id'))
 //                         ->first();
-                        
+
 //                     if ($teamMember) {
 //                         $set('team_member_id', $teamMember->id);
 //                     }
@@ -64,7 +64,7 @@
 //             })
 //             ->helperText(fn (callable $get) => $get('team_id') ? 'Select a user from this team' : 'Please select a team first')
 //             ->required(),
-        
+
 //             Forms\Components\Hidden::make('team_member_id')->required(),
 
 //             Forms\Components\Toggle::make('vote_to_quit')->label('Vote to Quit')->default(false),

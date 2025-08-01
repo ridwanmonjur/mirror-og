@@ -44,16 +44,16 @@ class TeamFollow extends Model
 
         $teamQuery = self::select($select)->where('team_follows.team_id', $teamId)
             ->join('users', 'team_follows.user_id', '=', 'users.id')
-            ->leftJoin('participants', function($join) {
+            ->leftJoin('participants', function ($join) {
                 $join->on('participants.user_id', '=', 'users.id')
                      ->where('users.role', '=', 'PARTICIPANT');
             })
 
             ->when(trim($search), function ($q) use ($search) {
-                $q->where('users.name', 'LIKE', "%" . trim($search) . "%");
+                $q->where('users.name', 'LIKE', '%'.trim($search).'%');
             });
-        
-        if($teamQuery) {
+
+        if ($teamQuery) {
             $teamQuery->addSelect([
                 'logged_user_friends.actor_id as logged_friendship_actor',
                 'logged_user_friends.id as friend_id',
@@ -62,32 +62,32 @@ class TeamFollow extends Model
                 DB::raw('p_follows.id as p_follow_status'),
                 DB::raw('COALESCE ( og_follows.id, p_follows.id ) as logged_follow_status'),
                 'blocks.id as logged_block_status',
-                
+
             ])
-            ->leftJoin('friends as logged_user_friends', function($join) use ($loggedUserId) {
-                $join->on(function($q) use ($loggedUserId) {
+            ->leftJoin('friends as logged_user_friends', function ($join) use ($loggedUserId) {
+                $join->on(function ($q) use ($loggedUserId) {
                     $q->on('logged_user_friends.user2_id', '=', 'users.id')
                       ->where('logged_user_friends.user1_id', '=', $loggedUserId)
-                      ->orWhere(function($query) use ($loggedUserId) {
+                      ->orWhere(function ($query) use ($loggedUserId) {
                           $query->on('logged_user_friends.user1_id', '=', 'users.id')
                                 ->where('logged_user_friends.user2_id', '=', $loggedUserId);
                       });
                 });
             })
-            ->leftJoin('blocks', function($join) use ($loggedUserId) {
+            ->leftJoin('blocks', function ($join) use ($loggedUserId) {
                 $join->on('blocks.blocked_user_id', '=', 'users.id')
                     ->where('blocks.user_id', $loggedUserId);
             })
-            ->leftJoin('organizer_follows as og_follows', function($join) use ($loggedUserId) {
+            ->leftJoin('organizer_follows as og_follows', function ($join) use ($loggedUserId) {
                 $join->on('og_follows.organizer_user_id', '=', 'users.id')
                     ->where('og_follows.participant_user_id', $loggedUserId);
             })
-            ->leftJoin('participant_follows as p_follows', function($join) use ($loggedUserId) {
+            ->leftJoin('participant_follows as p_follows', function ($join) use ($loggedUserId) {
                 $join->on('p_follows.participant_followee', '=', 'users.id')
                     ->where('p_follows.participant_follower', $loggedUserId);
             });
         }
-        
+
         return $teamQuery->simplePaginate($perPage, ['*'], 'team_followers_page', $page);
     }
 }

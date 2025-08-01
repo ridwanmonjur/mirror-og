@@ -82,14 +82,13 @@ class UpdateOrganizersRequest extends FormRequest
             'organizer.facebook_link.string' => 'Facebook Link must be a valid URL.',
             'organizer.twitter_link.string' => 'Twitter Link must be a valid URL.',
             'file.size' => 'The file is too large, over 3 MB in size',
-            
 
         ];
     }
 
     private function isEmptyOrNotSet($array, $key): bool
     {
-        return !isset($array[$key]) || empty($array[$key]);
+        return ! isset($array[$key]) || empty($array[$key]);
     }
 
     protected function prepareForValidation()
@@ -107,28 +106,29 @@ class UpdateOrganizersRequest extends FormRequest
             $socialDomains = [
                 'instagram_link' => 'instagram.com',
                 'facebook_link' => 'facebook.com',
-                'twitter_link' => ['twitter.com', 'x.com']
+                'twitter_link' => ['twitter.com', 'x.com'],
             ];
 
             foreach ($links as $link) {
                 $url = rtrim(trim($organizerData[$link]), '/');
                 if (empty($url)) {
                     $organizerData[$link] = null;
+
                     continue;
                 }
 
-                $isValidStructure = fn($url) => preg_match('/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/', parse_url($url, PHP_URL_HOST) ?? '');
-                $normalizeUrl = fn($url) => rtrim($url, '/');
-                $getDomain = fn($url) => strtolower(parse_url($url, PHP_URL_HOST) ?? '');
+                $isValidStructure = fn ($url) => preg_match('/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/', parse_url($url, PHP_URL_HOST) ?? '');
+                $normalizeUrl = fn ($url) => rtrim($url, '/');
+                $getDomain = fn ($url) => strtolower(parse_url($url, PHP_URL_HOST) ?? '');
 
-                if (!filter_var($url, FILTER_VALIDATE_URL) || !$isValidStructure($url)) {
-                    $modifiedUrl = 'https://' . preg_replace('#^(https?://)?(www\.)?#', '', $url);
+                if (! filter_var($url, FILTER_VALIDATE_URL) || ! $isValidStructure($url)) {
+                    $modifiedUrl = 'https://'.preg_replace('#^(https?://)?(www\.)?#', '', $url);
 
                     if (filter_var($modifiedUrl, FILTER_VALIDATE_URL) && $isValidStructure($modifiedUrl)) {
                         $url = $modifiedUrl;
                     } else {
                         throw ValidationException::withMessages([
-                            "organizer.{$link}.string" => ["The url '{$url}' is invalid. Please enter a valid URL."]
+                            "organizer.{$link}.string" => ["The url '{$url}' is invalid. Please enter a valid URL."],
                         ]);
                     }
                 }
@@ -136,11 +136,11 @@ class UpdateOrganizersRequest extends FormRequest
                 // Check for specific social media domains
                 if (isset($socialDomains[$link])) {
                     $domain = preg_replace('/^www\./', '', $getDomain($url));
-                    $expectedDomains = (array)$socialDomains[$link];
+                    $expectedDomains = (array) $socialDomains[$link];
 
-                    if (!in_array($domain, $expectedDomains)) {
+                    if (! in_array($domain, $expectedDomains)) {
                         throw ValidationException::withMessages([
-                            "organizer.{$link}.string" => ["Please provide a valid domain '$socialDomains[$link]' for your link, '$url'."]
+                            "organizer.{$link}.string" => ["Please provide a valid domain '$socialDomains[$link]' for your link, '$url'."],
                         ]);
                     }
                 }
@@ -158,10 +158,10 @@ class UpdateOrganizersRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $error = $validator->errors()->first();
-    
-        throw new ValidationException($validator, response()->json( [
+
+        throw new ValidationException($validator, response()->json([
             'message' => $error,
-            'success'=> false
+            'success'=> false,
         ], 422));
     }
 }

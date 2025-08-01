@@ -11,73 +11,72 @@
 
 // class SigninTest extends DuskTestCase
 // {
-    // public function test_user_can_register_with_valid_data()
-    // {
-    //     $userPost = [
-    //         'username' => 'Test Signup Participant',
-    //         'email' => 'Participant@driftwood.gg',
-    //         'password' => 'password123',
-    //         'confirmPassword' => "password123"
-    //     ];
-        
-    //     $headers = [
-    //         'Accept' => 'application/json',
-    //     ];
+// public function test_user_can_register_with_valid_data()
+// {
+//     $userPost = [
+//         'username' => 'Test Signup Participant',
+//         'email' => 'Participant@driftwood.gg',
+//         'password' => 'password123',
+//         'confirmPassword' => "password123"
+//     ];
 
-    //     $response = $this->post('/participant/signup', $userPost, [
-    //         'headers' => $headers
-    //     ]);
-    
-    //     $response->assertSessionHas('success', 'Participant account created and verification email sent. Please verify email now!');
-    //     $response->assertSessionHas('email', $userPost['email']);
-        
-    //     $this->assertDatabaseHas('users', [
-    //         'email' => $userPost['email']
-    //     ]);
+//     $headers = [
+//         'Accept' => 'application/json',
+//     ];
 
+//     $response = $this->post('/participant/signup', $userPost, [
+//         'headers' => $headers
+//     ]);
 
-    //     // $this->assertDatabaseHas('participants', [
-    //     //     'user_id' => $user->get
-    //     // ]);
+//     $response->assertSessionHas('success', 'Participant account created and verification email sent. Please verify email now!');
+//     $response->assertSessionHas('email', $userPost['email']);
 
-    //     $userPost = [
-    //         'username' => 'Test Signup Organizer',
-    //         'email' => 'organizer@driftwood.gg',
-    //         'password' => 'password123',
-    //         'companyDescription' => 'zzzzzzzzzzzzzzzzzzzzzzzzzzz',
-    //         'companyName' => 'companyZZZZZZZZZZZZZZZZZZZ',
-    //         'confirmPassword' => "password123"
-    //     ];
+//     $this->assertDatabaseHas('users', [
+//         'email' => $userPost['email']
+//     ]);
 
-    //     $this->post('/organizer/signup', $userPost, [
-    //         'headers' => $headers
-    //     ]);
-        
-    //     // $response->assertSessionHas('success', 'Participant account created and verification email sent. Please verify email now!');
-    //     $response->assertSessionHas('email', $userPost['email']);
+//     // $this->assertDatabaseHas('participants', [
+//     //     'user_id' => $user->get
+//     // ]);
 
-    //     // $user = User::where(
-    //     //     'email', $userPost['email'],
-    //     // )->first();
+//     $userPost = [
+//         'username' => 'Test Signup Organizer',
+//         'email' => 'organizer@driftwood.gg',
+//         'password' => 'password123',
+//         'companyDescription' => 'zzzzzzzzzzzzzzzzzzzzzzzzzzz',
+//         'companyName' => 'companyZZZZZZZZZZZZZZZZZZZ',
+//         'confirmPassword' => "password123"
+//     ];
 
-    //     // $this->assertEquals('ORGANIZER', $user->role);
+//     $this->post('/organizer/signup', $userPost, [
+//         'headers' => $headers
+//     ]);
 
-    //     // $this->assertDatabaseHas('organizers', [
-    //     //     'user_id' => $user->id
-    //     // ]);
+//     // $response->assertSessionHas('success', 'Participant account created and verification email sent. Please verify email now!');
+//     $response->assertSessionHas('email', $userPost['email']);
 
-    // }
+//     // $user = User::where(
+//     //     'email', $userPost['email'],
+//     // )->first();
 
-    // public function test_user_cannot_register_with_invalid_data()
-    // {
-    //     $response = $this->post('/participant/signup', [
-    //         'name' => '',
-    //         'email' => 'invalid-email',
-    //         'password' => 'short',
-    //         'confirmPassword' => 'nomatch',
-    //     ]);
+//     // $this->assertEquals('ORGANIZER', $user->role);
 
-    //     $response->assertSessionHasErrors('password');
-    //     $this->assertGuest();
-    // }
-// } 
+//     // $this->assertDatabaseHas('organizers', [
+//     //     'user_id' => $user->id
+//     // ]);
+
+// }
+
+// public function test_user_cannot_register_with_invalid_data()
+// {
+//     $response = $this->post('/participant/signup', [
+//         'name' => '',
+//         'email' => 'invalid-email',
+//         'password' => 'short',
+//         'confirmPassword' => 'nomatch',
+//     ]);
+
+//     $response->assertSessionHasErrors('password');
+//     $this->assertGuest();
+// }
+// }

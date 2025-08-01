@@ -11,12 +11,10 @@ use App\Jobs\HandleFollowsFriends;
 use App\Models\ActivityLogs;
 use App\Models\EventInvitation;
 use App\Models\Friend;
-
 use App\Models\OrganizerFollow;
 use App\Models\TeamFollow;
 use App\Models\ParticipantFollow;
 use App\Models\Report;
-
 use App\Models\User;
 use App\Services\SocialService;
 use Illuminate\Support\Facades\Log;
@@ -36,6 +34,7 @@ class SocialController extends Controller
             return response()->json($result, 201);
         } catch (Exception $e) {
             Log::error($e->getMessage());
+
             return response()->json(
                 [
                     'success' => false,
@@ -61,6 +60,7 @@ class SocialController extends Controller
             }
 
             session()->flash($result['type'], $result['message']);
+
             return back();
         } catch (Exception $e) {
             if ($request->expectsJson()) {
@@ -199,7 +199,7 @@ class SocialController extends Controller
         );
     }
 
-    function getReports(Request $request, $id)
+    public function getReports(Request $request, $id)
     {
         $user = User::findOrFail($id);
 

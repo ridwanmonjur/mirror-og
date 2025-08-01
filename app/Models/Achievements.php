@@ -10,14 +10,13 @@ use Illuminate\Support\Facades\DB;
 class Achievements extends Model
 {
     use HasFactory;
+
     protected $table = 'achievements';
 
     /**
-     * @param string|int $id
-     *
      * @return \Illuminate\Support\Collection<int, \App\Models\JoinEvent>
      */
-    public static function getTeamAchievements(string| int $id): Collection
+    public static function getTeamAchievements(string|int $id): Collection
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)

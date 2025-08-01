@@ -23,7 +23,7 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $data = $this->shopService->getProductsWithFilters($request);
-        
+
         return view('shop.shop')->with($data);
     }
 
@@ -36,9 +36,7 @@ class ShopController extends Controller
     public function show($slug)
     {
         $data = $this->shopService->getProductDetails($slug);
-        
+
         return view('shop.product')->with($data);
     }
-
-   
 }

@@ -15,7 +15,7 @@
 //         $this->addIndexIfNotExists('users', 'email', 'users_email_index');
 //         $this->addIndexIfNotExists('users', ['first_name', 'last_name'], 'users_name_index');
 //         $this->addUniqueIndexIfNotExists('users', 'username', 'users_username_unique');
-        
+
 //         // Multiple tables with their indexes
 //         $indexes = [
 //             'posts' => [
@@ -39,7 +39,7 @@
 //         foreach ($indexes as $tableName => $tableIndexes) {
 //             foreach ($tableIndexes as $indexData) {
 //                 $type = $indexData['type'] ?? 'index';
-                
+
 //                 switch ($type) {
 //                     case 'unique':
 //                         $this->addUniqueIndexIfNotExists($tableName, $indexData['columns'], $indexData['name']);
@@ -64,7 +64,7 @@
 //         $this->dropIndexIfExists('users', 'users_email_index');
 //         $this->dropIndexIfExists('users', 'users_name_index');
 //         $this->dropUniqueIndexIfExists('users', 'users_username_unique');
-        
+
 //         // Drop indexes from multiple tables
 //         $indexesToDrop = [
 //             'posts' => [

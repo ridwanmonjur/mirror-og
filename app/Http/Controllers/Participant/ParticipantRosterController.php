@@ -106,9 +106,10 @@ class ParticipantRosterController extends Controller
                 );
             }
 
-            $message = !$request->vote_to_quit ? 'Voted to stay in the event' : 'Voted to leave the event';
+            $message = ! $request->vote_to_quit ? 'Voted to stay in the event' : 'Voted to leave the event';
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => $message,
@@ -116,6 +117,7 @@ class ParticipantRosterController extends Controller
             ]);
         } catch (Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -210,6 +212,7 @@ class ParticipantRosterController extends Controller
 
             $joinEvent->roster_captain_id = $request->roster_captain_id;
             $joinEvent->save();
+
             return response()->json(['success' => true, 'message' => 'Roster captain created']);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);

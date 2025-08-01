@@ -15,21 +15,21 @@ return new class extends Migration
     public function up(): void
     {
         // Add slug to users table
-        if (!Schema::hasColumn('users', 'slug')) {
+        if (! Schema::hasColumn('users', 'slug')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->string('slug')->nullable()->unique()->after('name');
             });
         }
 
         // Add slug to eventDetails table
-        if (!Schema::hasColumn('event_details', 'slug')) {
+        if (! Schema::hasColumn('event_details', 'slug')) {
             Schema::table('event_details', function (Blueprint $table) {
                 $table->string('slug')->nullable()->unique()->after('eventName');
             });
         }
 
         // Add slug to teamName table
-        if (!Schema::hasColumn('teams', 'slug')) {
+        if (! Schema::hasColumn('teams', 'slug')) {
             Schema::table('teams', function (Blueprint $table) {
                 $table->string('slug')->nullable()->unique()->after('teamName');
             });
@@ -65,18 +65,18 @@ return new class extends Migration
     private function generateSlugs($table, $nameColumn)
     {
         $records = DB::table($table)->whereNotNull($nameColumn)->get();
-        
+
         foreach ($records as $record) {
             $baseSlug = Str::slug($record->$nameColumn);
             $slug = $baseSlug;
             $count = 1;
-            
+
             // Ensure unique slug
             while (DB::table($table)->where('slug', $slug)->where('id', '!=', $record->id)->exists()) {
-                $slug = $baseSlug . '-' . $count;
+                $slug = $baseSlug.'-'.$count;
                 $count++;
             }
-            
+
             DB::table($table)
                 ->where('id', $record->id)
                 ->update(['slug' => $slug]);

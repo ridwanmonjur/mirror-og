@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         if (Schema::hasTable('interested_user')) {
-            if (!Schema::hasColumn('interested_user', 'pass_text')) {
+            if (! Schema::hasColumn('interested_user', 'pass_text')) {
                 Schema::table('interested_user', function (Blueprint $table) {
                     $table->string('pass_text')->nullable();
                 });
             }
         }
     }
-    
+
     /**
      * Reverse the migrations.
      */

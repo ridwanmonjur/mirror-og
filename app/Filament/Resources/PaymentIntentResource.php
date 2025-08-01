@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PaymentIntentResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = PaymentIntent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
@@ -28,7 +29,7 @@ class PaymentIntentResource extends Resource
                     ->searchable()
                     ->optionsLimit(10)
                     ->searchDebounce(500)
-                    ->relationship('user', 'name') 
+                    ->relationship('user', 'name')
                     ->required(),
                 Forms\Components\TextInput::make('payment_intent_id')
                     ->required()
@@ -55,11 +56,11 @@ class PaymentIntentResource extends Resource
                     ->numeric(),
                 Tables\Columns\TextColumn::make('payment_intent_id')
                     ->searchable(),
-               
+
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
-                    ->formatStateUsing(fn ($state) => 'RM ' . number_format($state / 100, 2)),
+                    ->formatStateUsing(fn ($state) => 'RM '.number_format($state / 100, 2)),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')

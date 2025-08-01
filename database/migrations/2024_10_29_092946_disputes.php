@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('disputes', function (Blueprint $table) {
@@ -52,8 +53,8 @@ return new class extends Migration {
             $table->id();
             $table->morphs('imageable');
             $table->foreignId('image_video_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['dispute', 'response']); 
-                // To distinguish between dispute and response media
+            $table->enum('type', ['dispute', 'response']);
+            // To distinguish between dispute and response media
             $table->timestamps();
         });
 
@@ -67,7 +68,7 @@ return new class extends Migration {
         Schema::dropIfExists('dispute_image_video');
         Schema::dropIfExists('image_videos');
 
-        if (!Schema::hasTable('videos')) {
+        if (! Schema::hasTable('videos')) {
             Schema::create('videos', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');

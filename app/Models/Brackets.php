@@ -46,17 +46,15 @@ class Brackets extends Model
         'result',
     ];
 
-
     public function scopeFilterByDeadlines($query, $bracketDeadlines)
     {
-        return $query->where(function($query) use ($bracketDeadlines) {
+        return $query->where(function ($query) use ($bracketDeadlines) {
             foreach ($bracketDeadlines as $deadline) {
-                $query->orWhere(function($query) use ($deadline) {
+                $query->orWhere(function ($query) use ($deadline) {
                     $query->where('stage_name', $deadline->stage)
                           ->where('inner_stage_name', $deadline->inner_stage);
                 });
             }
         });
     }
-
 }

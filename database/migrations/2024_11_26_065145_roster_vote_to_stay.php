@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('roster_members', function (Blueprint $table) {
-            if (!Schema::hasColumn('roster_members', 'vote_to_quit')) {
+            if (! Schema::hasColumn('roster_members', 'vote_to_quit')) {
                 $table->boolean('vote_to_quit')->nullable();
             }
         });
 
         Schema::table('join_events', function (Blueprint $table) {
-            if (!Schema::hasColumn('join_events', 'vote_ongoing')) {
+            if (! Schema::hasColumn('join_events', 'vote_ongoing')) {
                 $table->boolean('vote_ongoing')->nullable();
             }
 
-            if (!Schema::hasColumn('join_events', 'roster_captain_id')) {
+            if (! Schema::hasColumn('join_events', 'roster_captain_id')) {
                 $table->unsignedBigInteger('roster_captain_id')->nullable();
                 $table->foreign('roster_captain_id')
                     ->references('id')
@@ -30,7 +30,7 @@ return new class extends Migration
                     ->onDelete('set null');
             }
 
-            if (!Schema::hasColumn('join_events', 'vote_starter_id')) {
+            if (! Schema::hasColumn('join_events', 'vote_starter_id')) {
                 $table->unsignedBigInteger('vote_starter_id')->nullable();
                 $table->foreign('vote_starter_id')
                     ->references('id')
@@ -60,7 +60,7 @@ return new class extends Migration
                 $table->dropColumn('vote_starter_id');
             }
         });
-    
+
         Schema::table('roster_members', function (Blueprint $table) {
             if (Schema::hasColumn('roster_members', 'vote_to_quit')) {
                 $table->dropColumn('vote_to_quit');

@@ -12,14 +12,14 @@ use Illuminate\Queue\InteractsWithQueue;
 class EventJoinMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $body;
 
     /**
      * Create a new message instance.
      *
-     * @param array $body
      * @return void
      */
     public function __construct(array $body)
@@ -32,7 +32,6 @@ class EventJoinMail extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    
     public function build()
     {
         return $this->replyTo(config('services.mail_address'))
@@ -42,7 +41,7 @@ class EventJoinMail extends Mailable implements ShouldQueue
                 'team' => $this->body['team'],
                 'actionName' => $this->body['links'][0]['name'],
                 'actionUrl' => $this->body['links'][0]['url'],
-                'text' => $this->body['text'],  
+                'text' => $this->body['text'],
             ]);
     }
 }

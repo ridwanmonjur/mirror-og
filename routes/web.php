@@ -23,7 +23,6 @@ use App\Http\Controllers\Shop\OrdersController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CouponsController;
-
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -155,7 +154,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
             Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
             Route::get('/eventv2/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.eventv2.view');
-            
+
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
             Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');
@@ -219,11 +218,7 @@ Route::group(['prefix' => 'organizer'], function () {
     });
 });
 
-
-
-
-
-Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
+Route::middleware(['auth',  'prevent-back-history'])->group(function () {
     Route::group(['middleware' => ['check-permission:participant|organizer']], function () {
         Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -239,8 +234,3 @@ Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
         Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
     });
 });
-
-
-
-
-

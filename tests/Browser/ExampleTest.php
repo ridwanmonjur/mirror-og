@@ -9,11 +9,10 @@ use Tests\DuskTestCase;
 
 class ExampleTest extends DuskTestCase
 {
-
     /**
      * A basic browser test example.
      */
-    public function testBasicExample(): void
+    public function test_basic_example(): void
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
@@ -30,19 +29,16 @@ class ExampleTest extends DuskTestCase
     //         'email_verified_at' => now(),
     //     ]);
 
-        
-
     //     $this->browse(function ($browser) {
     //         $browser->visit('/login')
     //             ->assertSee('Login')
     //             ->type('email', 'participant@driftwood.gg')
     //             ->type('password', 'password123')
     //             ->assertChecked('remember')->press('Login')
-    //             ->assertPathIs('/participant/home')  
+    //             ->assertPathIs('/participant/home')
     //             ->assertSee("What's happening?");
     //     });
 
-        
     // }
 
     // public function test_user_can_view_registration_form()

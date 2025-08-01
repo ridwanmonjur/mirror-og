@@ -60,8 +60,8 @@ class UpdateParticipantsRequest extends FormRequest
             'participant.nickname.max' => 'The nickname may not be greater than 255 characters.',
             'participant.region.array' => 'The region must be a json string.',
             'participant.domain.regex' => 'The domain format is invalid. It must be a valid domain name.',
-            'file.size' => 'The file is too large, over 3 MB in size'
-          
+            'file.size' => 'The file is too large, over 3 MB in size',
+
         ];
     }
 

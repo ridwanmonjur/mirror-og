@@ -17,6 +17,7 @@ class CartService
         $cart->total = $cart->items()->sum('subtotal');
         $cart->cachedCount = $cart->items()->sum('quantity');
         $cart->save();
+
         return $cart->total;
     }
 
@@ -32,11 +33,11 @@ class CartService
         }
 
         $existingItem = null;
-        
+
         if ($variantIds && is_array($variantIds)) {
             sort($variantIds);
             $variantIdsCount = count($variantIds);
-            
+
             $existingItem = $cart->items()
                 ->where('product_id', $productId)
                 ->whereHas('cartProductVariants', function ($query) use ($variantIds) {
@@ -52,7 +53,7 @@ class CartService
                 ->whereDoesntHave('cartProductVariants')
                 ->first();
         }
-        
+
         if ($existingItem) {
             $newQuantity = $existingItem->quantity + $quantity;
             if ($newQuantity > 20) {
@@ -68,22 +69,23 @@ class CartService
             $cartItem = $cart->items()->create([
                 'product_id' => $productId,
                 'quantity' => $quantity,
-                'subtotal' => $quantity * $price
+                'subtotal' => $quantity * $price,
             ]);
-            
+
             if ($variantIds && is_array($variantIds)) {
                 $cartItem->cartProductVariants()->attach($variantIds);
             }
         }
-        
+
         $this->updateTotal($cart);
+
         return $cart;
     }
 
     public function updateItem(NewCart $cart, $productId, $quantity, $price)
     {
         $item = $cart->items()->where('product_id', $productId)->first();
-        
+
         if ($item) {
             $item->quantity = $quantity;
             $item->subtotal = $quantity * $price;
@@ -91,7 +93,7 @@ class CartService
             $this->updateTotal($cart);
             $cart->load(['items.product']);
         }
-        
+
         return $cart;
     }
 
@@ -99,6 +101,7 @@ class CartService
     {
         $cart->items()->where('product_id', $productId)->delete();
         $this->updateTotal($cart);
+
         return $cart;
     }
 
@@ -106,6 +109,7 @@ class CartService
     {
         $cart->items()->delete();
         $this->updateTotal($cart);
+
         return $cart;
     }
 
@@ -119,18 +123,17 @@ class CartService
                     }
                 }
             }
-            
+
             $cart->items()->delete();
             $this->updateTotal($cart);
+
             return $cart;
         } catch (Exception $e) {
-            Log::error('Error clearing cart and decreasing stock: ' . $e->getMessage());
+            Log::error('Error clearing cart and decreasing stock: '.$e->getMessage());
             throw $e;
         }
     }
 
-
-    
     public function validateStock(NewCart $cart)
     {
         try {
@@ -144,11 +147,12 @@ class CartService
                             throw new Exception("Insufficient stock for '{$item->product_id}' with attribute '{$variant->name}: {$variant->value}'. Available: {$variant->stock}, Requested: {$item->quantity}");
                         }
                     }
-                } 
+                }
             }
+
             return true;
         } catch (Exception $e) {
-            Log::error('Cart stock validation error: ' . $e->getMessage());
+            Log::error('Cart stock validation error: '.$e->getMessage());
             throw $e;
         }
     }
@@ -179,7 +183,7 @@ class CartService
 
             return $order;
         } catch (Exception $e) {
-            Log::error('Shop order creation error: ' . $e->getMessage());
+            Log::error('Shop order creation error: '.$e->getMessage());
             throw $e;
         }
     }

@@ -19,11 +19,10 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class TransactionHistoryResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = TransactionHistory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    
 
     public static function table(Table $table): Table
     {
@@ -109,7 +108,7 @@ class TransactionHistoryResource extends Resource
                         return User::find($value)?->name;
                     })
                     ->default(function () {
-                        
+
                         // Set default to current authenticated user if available
                         $user = User::select(['id', 'role'])
                             ->where('role', 'PARTICIPANT')

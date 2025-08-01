@@ -29,6 +29,7 @@ use Illuminate\Support\Str;
 class InterestedUserResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = InterestedUser::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
@@ -47,7 +48,7 @@ class InterestedUserResource extends Resource
                     ->maxLength(255),
                 DateTimePicker::make('email_verified_at')
                     ->label('Email Verified At')
-                    ->displayFormat('Y-m-d h:i A') 
+                    ->displayFormat('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->seconds(false)
                     ->native(false)
@@ -140,10 +141,10 @@ class InterestedUserResource extends Resource
             // Process existing users
             foreach ($existingUsers as $user) {
                 $password = Str::random(8);
-                
+
                 // Find the corresponding interested user
                 $interestedUser = $interestedUsers->firstWhere('email', $user->email);
-                
+
                 if ($interestedUser) {
                     DB::table('interested_user')
                         ->where('email', $user->email)
@@ -167,7 +168,7 @@ class InterestedUserResource extends Resource
                 $username = explode('@', $email)[0];
                 $username = strlen($username) > 5 ? substr($username, 0, 5) : $username;
                 $password = Str::random(8);
-                
+
                 DB::table('interested_user')
                     ->where('email', $email)
                     ->update([
@@ -178,7 +179,7 @@ class InterestedUserResource extends Resource
                 $user = User::create([
                     'email' => $email,
                     'password' => Hash::make($password),
-                    'name' => Str::random(2) . $username . Str::random(2),
+                    'name' => Str::random(2).$username.Str::random(2),
                     'role' => 'PARTICIPANT',
                     'email_verified_at' => now(),
                 ]);
@@ -193,7 +194,7 @@ class InterestedUserResource extends Resource
             Notification::make()
                 ->title('Beta invites sent successfully!')
                 ->success()
-                ->body('Created or updated ' . count($interestedUserEmails) . ' users')
+                ->body('Created or updated '.count($interestedUserEmails).' users')
                 ->send();
 
         } catch (\Exception $e) {

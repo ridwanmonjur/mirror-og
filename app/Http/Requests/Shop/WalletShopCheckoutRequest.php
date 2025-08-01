@@ -18,15 +18,20 @@ class WalletShopCheckoutRequest extends FormRequest
     }
 
     public float $total;
+
     public float $wallet_to_decrement;
+
     public float $cartPaymentSum = 0;
+
     public $cart; // Cache the cart instance
+
     public array $fee;
+
     public array $couponDetails = [
         'error' => null,
         'success' => null,
         'coupon' => null,
-        'fee' => null
+        'fee' => null,
     ];
 
     public function rules(): array
@@ -41,43 +46,45 @@ class WalletShopCheckoutRequest extends FormRequest
         $validator->after(function ($validator) {
             $user = $this->attributes->get('user');
             $userId = $user->id;
-            
-            if (!$this->cart) {
+
+            if (! $this->cart) {
                 $this->cart = NewCart::getUserCart($userId);
             }
             $cart = $this->cart;
 
             $is_complete_payment = true;
-            
+
             if ($cart->getCount() == 0) {
-                $validator->errors()->add('cart', "Your cart is empty!");
+                $validator->errors()->add('cart', 'Your cart is empty!');
+
                 return;
             }
 
             foreach ($cart->getContent() as $item) {
                 $product = Product::find($item->product_id);
-                if (!$product) {
-                    $validator->errors()->add('products', "Some items in your cart are no longer available.");
+                if (! $product) {
+                    $validator->errors()->add('products', 'Some items in your cart are no longer available.');
+
                     return;
                 }
             }
 
             // load coupon
             [$fee, $isCouponApplied, $error, $coupon] = SystemCoupon::loadCoupon(
-                $this->input('coupon_code'), 
-                $this->input('amount'), 
-                0.0, 
-                'shop', 
+                $this->input('coupon_code'),
+                $this->input('amount'),
+                0.0,
+                'shop',
                 $user->id
             );
-            
+
             $this->couponDetails = [
                 'success' => $isCouponApplied,
                 'error' => $error,
                 'coupon' => $coupon,
-                'fee' => $fee
+                'fee' => $fee,
             ];
-            
+
             $this->wallet_to_decrement = $fee['finalFee'];
 
             $total = (float) $cart->getNumbers()->get('newTotal');
@@ -85,28 +92,31 @@ class WalletShopCheckoutRequest extends FormRequest
 
             $userWallet = Wallet::retrieveOrCreateCache($user->id);
 
-            if (!$userWallet || $userWallet->usable_balance < 0) {
-                $validator->errors()->add('wallet', "Your wallet is not available!");
+            if (! $userWallet || $userWallet->usable_balance < 0) {
+                $validator->errors()->add('wallet', 'Your wallet is not available!');
+
                 return;
             }
 
             if ($userWallet->usable_balance < $this->amount) {
-                $validator->errors()->add('wallet', "Your wallet does not have sufficient funds!");
+                $validator->errors()->add('wallet', 'Your wallet does not have sufficient funds!');
+
                 return;
             }
-            
+
             $pendingBeforeWallet = $this->total - $this->cartPaymentSum;
             $pendingAfterWallet = $pendingBeforeWallet - $this->wallet_to_decrement;
 
             if ($userWallet->usable_balance - $this->wallet_to_decrement < 0) {
                 $validator->errors()->add(
                     'amount',
-                    "Not enough money in your wallet! You have RM " . number_format($userWallet->usable_balance, 2) . " but need RM " . number_format($this->wallet_to_decrement, 2) . ". Please load more money to complete this transaction."
+                    'Not enough money in your wallet! You have RM '.number_format($userWallet->usable_balance, 2).' but need RM '.number_format($this->wallet_to_decrement, 2).'. Please load more money to complete this transaction.'
                 );
+
                 return;
             }
 
-            if ($pendingAfterWallet <= config("constants.STRIPE.ZERO")) {
+            if ($pendingAfterWallet <= config('constants.STRIPE.ZERO')) {
                 $is_complete_payment = true;
             } else {
                 $is_complete_payment = false;
@@ -117,29 +127,32 @@ class WalletShopCheckoutRequest extends FormRequest
                     'amount',
                     "You've already paid for this order!"
                 );
+
                 return;
             }
 
             if ($pendingAfterWallet < -0.1) {
                 $validator->errors()->add(
                     'amount',
-                    "Have you already made another payment in another device/tab?"
+                    'Have you already made another payment in another device/tab?'
                 );
+
                 return;
             }
 
             if ($this->wallet_to_decrement < 0) {
-                $validator->errors()->add('wallet', "After adjusting for the next transaction, we cannot apply this payment with your wallet!");
-                return;    
+                $validator->errors()->add('wallet', 'After adjusting for the next transaction, we cannot apply this payment with your wallet!');
+
+                return;
             }
-          
+
             $stripe_after_wallet = $this->amount - $this->wallet_to_decrement;
 
             $this->attributes->add([
                 'user_wallet' => $userWallet,
                 'stripe_after_wallet' => $stripe_after_wallet,
                 'complete_payment' => $is_complete_payment,
-                'pending_total_after_wallet' => $pendingAfterWallet
+                'pending_total_after_wallet' => $pendingAfterWallet,
             ]);
         });
     }

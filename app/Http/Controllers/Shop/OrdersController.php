@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
-
 class OrdersController extends Controller
 {
     /**
@@ -20,18 +19,14 @@ class OrdersController extends Controller
     {
         $user = $request->attributes->get('user');
 
-
         $orders = $user->orders()->with([
-            'products', 
-            'orderProducts.product', 
-            'orderProducts.orderProductVariants'
-        ])->orderby('id','desc')->simplePaginate(); // fix n + 1 issues
+            'products',
+            'orderProducts.product',
+            'orderProducts.orderProductVariants',
+        ])->orderby('id', 'desc')->simplePaginate(); // fix n + 1 issues
 
         return view('shop.my-orders')->with('orders', $orders);
     }
-
-   
-    
 
     /**
      * Show the form for editing the specified resource.
@@ -47,7 +42,6 @@ class OrdersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

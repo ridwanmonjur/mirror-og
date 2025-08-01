@@ -11,16 +11,16 @@ class UserCoupon extends Model
         'user_id',
         'coupon_id',
         'redeemed_at',
-        'redeemable_count'
+        'redeemable_count',
     ];
 
-    protected $table = "user_coupons";
+    protected $table = 'user_coupons';
 
     protected $casts = [
-        'redeemed_at' => 'datetime'
+        'redeemed_at' => 'datetime',
     ];
 
-    public $timestamps = NULL;
+    public $timestamps = null;
 
     /**
      * Get the user who redeemed the coupon.

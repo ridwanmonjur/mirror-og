@@ -17,14 +17,13 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-
 class Team extends Model
 {
     use HasFactory;
 
     protected $table = 'teams';
 
-    protected $fillable = ['teamName', 'teamBanner', 'creator_id', 'teamDescription', 
+    protected $fillable = ['teamName', 'teamBanner', 'creator_id', 'teamDescription',
         'country', 'country_name', 'country_flag', 'member_limit',
         'default_category_id',  'all_categories', 'status',
     ];
@@ -77,18 +76,18 @@ class Team extends Model
     public function scopePaginatedSearch(Builder $query, ?string $searchTerm = null, ?string $cursor = null, int $limit = 5): Builder
     {
         $query->select([
-            'id', 
-            'teamName', 
-            'creator_id', 
-            'teamDescription', 
-            'teamBanner', 
-            'country', 
+            'id',
+            'teamName',
+            'creator_id',
+            'teamDescription',
+            'teamBanner',
+            'country',
             'country_name',
-            'country_flag'
+            'country_flag',
         ]);
 
-        if (!empty($searchTerm)) {
-            $query->where(function($q) use ($searchTerm) {
+        if (! empty($searchTerm)) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('teamName', 'LIKE', "%{$searchTerm}%")
                   ->orWhere('country_name', 'LIKE', "%{$searchTerm}%");
             });
@@ -100,12 +99,11 @@ class Team extends Model
 
         return $query->orderBy('id', 'asc')->limit($limit);
     }
-   
 
     public function findTeamFollowerByUserId(int $userId)
     {
-        $cacheKey = sprintf( config('cache.keys.user_team_follows'), $userId);
-        
+        $cacheKey = sprintf(config('cache.keys.user_team_follows'), $userId);
+
         return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () use ($userId) {
             return DB::table('team_follows')
                 ->where('team_id', $this->id)
@@ -117,41 +115,43 @@ class Team extends Model
     public function findTeamMemberByUserId(int $userId)
     {
         // $cacheKey = sprintf(config('cache.keys.user_team_member'), $userId, $this->id);
-        
+
         // return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () use ($userId) {
-            return TeamMember::where('team_id', $this->id)
-                ->where('user_id', $userId)
-                ->first();
+        return TeamMember::where('team_id', $this->id)
+            ->where('user_id', $userId)
+            ->first();
         // });
     }
 
-    function getMembersAndTeamCount() {
+    public function getMembersAndTeamCount()
+    {
         // $cacheKey = sprintf(config('cache.keys.team_member_count'), $this->id);
-    
-        // return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () {
-            $this->loadCount([
-                'members as accepted_count' => function ($query) {
-                    $query->where('status', 'accepted');
-                },
-                // 'members as left_count' => function ($query) {
-                //     $query->where('status', 'left');
-                // },
-            ]);
 
-            return [
-                'accepted' => $this->accepted_count,
-                // 'left_plus_accepted' => $this->accepted_count + $this->left_count,
-            ];
+        // return Cache::remember($cacheKey, now()->addSeconds(config('cache.ttl')), function () {
+        $this->loadCount([
+            'members as accepted_count' => function ($query) {
+                $query->where('status', 'accepted');
+            },
+            // 'members as left_count' => function ($query) {
+            //     $query->where('status', 'left');
+            // },
+        ]);
+
+        return [
+            'accepted' => $this->accepted_count,
+            // 'left_plus_accepted' => $this->accepted_count + $this->left_count,
+        ];
         // });
     }
 
-    public function createdAtHumaReadable() {
+    public function createdAtHumaReadable()
+    {
         return Carbon::parse($this->created_at)
             ->setTimezone('Asia/Kuala_Lumpur')
             ->format('d M Y');
     }
 
-    public static function getTeamAndMembersByTeamId(int| string $teamId): ?self
+    public static function getTeamAndMembersByTeamId(int|string $teamId): ?self
     {
         return self::with(['members' => function ($query) {
             $query->where('status', 'accepted')
@@ -169,23 +169,23 @@ class Team extends Model
             $query->where('user_id', $user_id);
         });
 
-        if (!empty($filters['status']) && is_array($filters['status'])) {
-            $statusFilter = array_filter($filters['status'], fn($val) => $val != 0);
-            if (!empty($statusFilter)) {
+        if (! empty($filters['status']) && is_array($filters['status'])) {
+            $statusFilter = array_filter($filters['status'], fn ($val) => $val != 0);
+            if (! empty($statusFilter)) {
                 $teamQuery->whereIn('status', $statusFilter);
             }
         }
 
-        if (!empty($filters['search']) && trim($filters['search']) !== '') {
+        if (! empty($filters['search']) && trim($filters['search']) !== '') {
             $search = trim($filters['search']);
             $teamQuery->where('teamName', 'LIKE', "%{$search}%");
         }
-        
-        if (!empty($filters['region']) && trim($filters['region']) !== '') {
+
+        if (! empty($filters['region']) && trim($filters['region']) !== '') {
             $teamQuery->where('country_name', $filters['region']);
         }
 
-        if (!empty($filters['sortKey']) && trim($filters['sortKey']) !== '') {
+        if (! empty($filters['sortKey']) && trim($filters['sortKey']) !== '') {
             $sortKeyOg = trim($filters['sortKey']);
             $sortKeyMap = ['name' => 'teamName', 'created_at' => 'created_at', 'recent' => 'updated_at'];
             $sortKey = $sortKeyMap[$sortKeyOg];
@@ -195,18 +195,17 @@ class Team extends Model
                     $sortType = 'asc';
                 }
 
-                $teamQuery->orderBy ($sortKey, $sortType);
+                $teamQuery->orderBy($sortKey, $sortType);
             }
         }
-        
-        if (!empty($filters['esports_title']) && trim($filters['esports_title']) !== '') {
-            $teamQuery->where('all_categories', 'like', '%' . $filters['esports_title'] . '%');
+
+        if (! empty($filters['esports_title']) && trim($filters['esports_title']) !== '') {
+            $teamQuery->where('all_categories', 'like', '%'.$filters['esports_title'].'%');
         }
-        
-        if (!empty($filters['created_at']) && trim($filters['created_at']) !== '') {
+
+        if (! empty($filters['created_at']) && trim($filters['created_at']) !== '') {
             $teamQuery->whereDate('created_at', '>', $filters['created_at']);
         }
-        
 
         $teamList0g = $teamQuery->simplePaginate(4);
         $teamList =  $teamList0g->items();
@@ -226,7 +225,7 @@ class Team extends Model
             'links' => [
                 'next_page_url' => $next_page_url,
                 'has_more' => $has_more,
-                'prev_page_url' => $prev_page_url
+                'prev_page_url' => $prev_page_url,
             ],
             'teamIdList' => $teamIdList,
             'membersCount' => $membersCount,
@@ -234,8 +233,7 @@ class Team extends Model
         ];
     }
 
-
-    public static function getUserTeamListAndPluckIds(int| string $user_id): array
+    public static function getUserTeamListAndPluckIds(int|string $user_id): array
     {
         $teamList = self::join('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where('team_members.user_id', $user_id)
@@ -245,13 +243,13 @@ class Team extends Model
                     $q->where('status', 'accepted');
                 },
             ])
-            ->select('teams.*', 'team_members.id as member_id', 
-                'team_members.actor as member_actor', 
-                'team_members.updated_at as member_updated', 
+            ->select('teams.*', 'team_members.id as member_id',
+                'team_members.actor as member_actor',
+                'team_members.updated_at as member_updated',
                 'team_members.status as member_status'
-                )
+            )
             ->get();
-        
+
         $count = count($teamList);
 
         $teamIdList = $teamList->pluck('id')->toArray();
@@ -263,7 +261,7 @@ class Team extends Model
                 'count' => $count,
                 'membersCount' =>  $teamIdList
                 ? self::getTeamMembersCountForEachTeam($teamIdList)
-                : 0
+                : 0,
             ];
         }
 
@@ -271,7 +269,7 @@ class Team extends Model
             'teamList' => null,
             'teamIdList' => null,
             'membersCount' =>  0,
-            'count' => 0
+            'count' => 0,
         ];
     }
 
@@ -285,11 +283,11 @@ class Team extends Model
             })
             ->with(['members' => function ($query) {
                 $query->where('status', 'accepted');
-                },
+            },
             ])
             ->withCount(['members' => function ($query) {
                 $query->where('status', 'accepted');
-                },
+            },
             ])
             ->get();
 
@@ -427,10 +425,10 @@ class Team extends Model
                             $q->select('id');
                         },
                         ]);
-                    },
+                },
                 ]
             )->first();
-                
+
         $memberUserIds = $team
             ->members
             ->pluck('user.id')
@@ -441,11 +439,11 @@ class Team extends Model
 
     protected function generateUrl($path)
     {
-        return config('app.url') . '/' . $path;
+        return config('app.url').'/'.$path;
     }
 
-    public static function validateAndSaveTeam($request, $team, $user_id) 
-    {     
+    public static function validateAndSaveTeam($request, $team, $user_id)
+    {
         $customMessages = [
             'teamName.unique' => 'Please give a unique name for your team.',
             'teamName.required' => 'Please give your team a name',
@@ -456,16 +454,17 @@ class Team extends Model
         $request->validate([
             'teamName' => 'required|string|unique:teams|max:25',
         ], $customMessages);
-        
+
         $team->teamName = $request->input('teamName');
         $team->slug = Str::slug($team->teamName);
         $team->creator_id = $user_id;
         $team->save();
-        
+
         return $team;
     }
 
-    public function processTeamRegistration($userId, $eventId): int {
+    public function processTeamRegistration($userId, $eventId): int
+    {
         $participant = Participant::where('user_id', $userId)
             ->select(['id', 'user_id'])
             ->firstOrFail();
@@ -478,33 +477,34 @@ class Team extends Model
         ]);
 
         RosterMember::userJoinEventRoster($joinEvent->id, $this->members, $this->id, $userId);
+
         return $joinEvent->id;
     }
 
-
     public function uploadTeamBanner($request)
     {
-       $oldBanner = $this->teamBanner;
-       $newBannerPath = null;
-       
-       try {
+        $oldBanner = $this->teamBanner;
+        $newBannerPath = null;
+
+        try {
 
             $requestData = json_decode($request->getContent(), true);
-            if (!isset($requestData['file'])) {
+            if (! isset($requestData['file'])) {
                 $this->destroyTeanBanner($oldBanner);
                 $this->teamBanner = null;
                 $this->save();
+
                 return null;
             }
 
             $fileData = $requestData['file'];
             $fileContent = base64_decode($fileData['content']);
-            
+
             $fileNameInitial = 'teamBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
             $fileName = "images/team/{$fileNameInitial}";
             $storagePath = storage_path('app/public/'.$fileName);
-            
-            if (!file_exists(dirname($storagePath))) {
+
+            if (! file_exists(dirname($storagePath))) {
                 mkdir(dirname($storagePath), 0755, true);
             }
 
@@ -513,21 +513,22 @@ class Team extends Model
             }
 
             $newBannerPath = $fileName;
-        
+
             $this->teamBanner = $fileName;
             $this->save();
             $this->destroyTeanBanner($oldBanner);
+
             return $fileName;
-    
-       } catch (\Exception $e) {
+
+        } catch (\Exception $e) {
             if ($newBannerPath && file_exists(storage_path('app/public/'.$newBannerPath))) {
                 unlink(storage_path('app/public/'.$newBannerPath));
             }
-            
+
             $this->teamBanner = $oldBanner;
             $this->save();
-            throw $e; 
-       }
+            throw $e;
+        }
     }
 
     public function destroyTeanBanner($fileName)
@@ -542,7 +543,8 @@ class Team extends Model
         }
     }
 
-    public function slugify () {
+    public function slugify()
+    {
         $this->slug = Str::slug($this->teamName);
     }
 }

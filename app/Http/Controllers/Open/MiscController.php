@@ -26,7 +26,7 @@ class MiscController extends Controller
 {
     public function countryList()
     {
-     
+
         $countries = CountryRegion::getAllCached();
 
         return response()->json(['success' => true, 'data' => $countries], 200);
@@ -50,20 +50,20 @@ class MiscController extends Controller
         ];
 
         $baseUrl = $request->getSchemeAndHttpHost();
-        $basePath = '/deadlineTasks' .'/' . $id ;
+        $basePath = '/deadlineTasks'.'/'.$id;
 
         $helpUrls = [
-            'start' => $baseUrl . $basePath . '/start',
-            'end' => $baseUrl . $basePath . '/end',
-            'org' => $baseUrl . $basePath . '/reg',
+            'start' => $baseUrl.$basePath.'/start',
+            'end' => $baseUrl.$basePath.'/end',
+            'org' => $baseUrl.$basePath.'/reg',
         ];
 
-        if (!array_key_exists($taskType, $typeMap)) {
+        if (! array_key_exists($taskType, $typeMap)) {
             return response()->json(
                 [
                     'status' => 'error',
                     'message' => 'Invalid type. Must be start, end, or org',
-                    'helpUrls' => $helpUrls
+                    'helpUrls' => $helpUrls,
                 ],
                 400,
             );
@@ -78,7 +78,7 @@ class MiscController extends Controller
 
         return response()->json([
             'status' => $exitCode === 0 ? 'success' : 'failed',
-            'message' => ucfirst($taskType) . ' tasks executed',
+            'message' => ucfirst($taskType).' tasks executed',
         ]);
     }
 
@@ -107,24 +107,24 @@ class MiscController extends Controller
         ];
 
         $baseUrl = $request->getSchemeAndHttpHost();
-        $basePath = '/respondTasks' .'/' . $eventId ;
+        $basePath = '/respondTasks'.'/'.$eventId;
 
         $helpUrls = [
-            'start' => $baseUrl . $basePath . '/start',
-            'live' => $baseUrl . $basePath . '/live',
-            'end' => $baseUrl . $basePath . '/end',
-            'reg' => $baseUrl . $basePath . '/reg',
-            'resetStart' => $baseUrl . $basePath . '/resetStart',
-            'all' => $baseUrl . $basePath . '/all',
+            'start' => $baseUrl.$basePath.'/start',
+            'live' => $baseUrl.$basePath.'/live',
+            'end' => $baseUrl.$basePath.'/end',
+            'reg' => $baseUrl.$basePath.'/reg',
+            'resetStart' => $baseUrl.$basePath.'/resetStart',
+            'all' => $baseUrl.$basePath.'/all',
         ];
 
-        if (!isset($typeMap[$taskType])) {
+        if (! isset($typeMap[$taskType])) {
             return response()->json(
                 [
                     'status' => 'error',
                     'message' => 'Invalid event type',
                     'help' => $messageMap,
-                    'helpUrls' => $helpUrls
+                    'helpUrls' => $helpUrls,
                 ],
                 400,
             );
@@ -142,67 +142,66 @@ class MiscController extends Controller
         return response()->json([
             'status' => $exitCode === 0 ? 'success' : 'failed',
             'message' => $messageMap[$taskType],
-            'helpUrls' => $helpUrls
+            'helpUrls' => $helpUrls,
         ]);
     }
 
-    public function seedJoins(Request $request): JsonResponse {
+    public function seedJoins(Request $request): JsonResponse
+    {
         $validator = Validator::make($request->all(), [
             'join_status' => 'required|in:pending,confirmed,canceled',
             'payment_status' => 'required|in:pending,completed,waived',
             'register_time' => 'required|in:early,normal,closed',
             'type' => 'required|in:wallet,stripe',
-            ], [
-                // Custom error messages for enum validations
-                'join_status.required' => 'Join status must be one of: pending, confirmed, canceled.',
-                'join_status.in' => 'Join status must be one of: pending, confirmed, canceled.',
+        ], [
+            // Custom error messages for enum validations
+            'join_status.required' => 'Join status must be one of: pending, confirmed, canceled.',
+            'join_status.in' => 'Join status must be one of: pending, confirmed, canceled.',
 
-                'payment_status.in' => 'Payment status must be one of: pending, completed, waived.',
-                'payment_status.required' => 'Payment status must be one of: pending, completed, waived.',
+            'payment_status.in' => 'Payment status must be one of: pending, completed, waived.',
+            'payment_status.required' => 'Payment status must be one of: pending, completed, waived.',
 
-                'register_time.in' => 'Register time must be one of: early, normal, closed.',
-                'register_time.required' => 'Register time must be one of: early, normal, closed.',
+            'register_time.in' => 'Register time must be one of: early, normal, closed.',
+            'register_time.required' => 'Register time must be one of: early, normal, closed.',
 
-                'type.in' => 'Type must be one of: wallet, stripe.',
-                'type.required' => 'Type must be one of: wallet, stripe.',
+            'type.in' => 'Type must be one of: wallet, stripe.',
+            'type.required' => 'Type must be one of: wallet, stripe.',
 
-            ]
+        ]
         );
-
 
         if ($validator->fails()) {
             $baseUrl = $request->getSchemeAndHttpHost();
             $basePath = '/seed/joins';
 
             $exampleUrls = [
-                $baseUrl . $basePath . '?join_status=pending&payment_status=pending&register_time=early&type=wallet',
-                $baseUrl . $basePath . '?join_status=confirmed&payment_status=completed&register_time=normal&type=stripe',
-                $baseUrl . $basePath . '?join_status=canceled&payment_status=waived&register_time=closed&type=wallet',
-                $baseUrl . $basePath . '?join_status=pending&payment_status=completed&register_time=early&type=stripe',
-                $baseUrl . $basePath . '?join_status=confirmed&payment_status=pending&register_time=normal&type=wallet',
-                $baseUrl . $basePath . '?join_status=canceled&payment_status=completed&register_time=closed&type=stripe',
-                $baseUrl . $basePath . '?join_status=pending&payment_status=waived&register_time=normal&type=wallet',
-                $baseUrl . $basePath . '?join_status=confirmed&payment_status=waived&register_time=early&type=stripe',
-                $baseUrl . $basePath . '?join_status=canceled&payment_status=pending&register_time=early&type=wallet',
-                $baseUrl . $basePath . '?join_status=confirmed&payment_status=completed&register_time=closed&type=stripe',
+                $baseUrl.$basePath.'?join_status=pending&payment_status=pending&register_time=early&type=wallet',
+                $baseUrl.$basePath.'?join_status=confirmed&payment_status=completed&register_time=normal&type=stripe',
+                $baseUrl.$basePath.'?join_status=canceled&payment_status=waived&register_time=closed&type=wallet',
+                $baseUrl.$basePath.'?join_status=pending&payment_status=completed&register_time=early&type=stripe',
+                $baseUrl.$basePath.'?join_status=confirmed&payment_status=pending&register_time=normal&type=wallet',
+                $baseUrl.$basePath.'?join_status=canceled&payment_status=completed&register_time=closed&type=stripe',
+                $baseUrl.$basePath.'?join_status=pending&payment_status=waived&register_time=normal&type=wallet',
+                $baseUrl.$basePath.'?join_status=confirmed&payment_status=waived&register_time=early&type=stripe',
+                $baseUrl.$basePath.'?join_status=canceled&payment_status=pending&register_time=early&type=wallet',
+                $baseUrl.$basePath.'?join_status=confirmed&payment_status=completed&register_time=closed&type=stripe',
             ];
+
             return response()->json(
                 [
                     'status' => 'error',
                     'message' => 'Invalid URL',
                     'exampleUrls' => $exampleUrls,
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ],
                 400,
             );
 
         }
 
-
-
         $validated = $validator->validated();
-        $factory = new JoinEventFactory();
-        $key = strToUpper($validated['register_time']);
+        $factory = new JoinEventFactory;
+        $key = strtoupper($validated['register_time']);
         $register_time = config("constants.SIGNUP_STATUS.{$key}");
 
         // dd($register_time);
@@ -219,8 +218,8 @@ class MiscController extends Controller
                 'participantPayment' => [
                     'register_time' => $register_time,
                     'type' => $validated['type'],
-                ]
-            ]
+                ],
+            ],
         ];
 
         $seed = $factory->seed($options);
@@ -255,12 +254,11 @@ class MiscController extends Controller
                     'events' => $events,
                     'participants' => $participants,
                     'organizer' => $organizer,
-                    'eventId' => $eventId
+                    'eventId' => $eventId,
                 ],
             ],
             200,
         );
-
 
     }
 
@@ -283,7 +281,7 @@ class MiscController extends Controller
     public function seedBrackets(Request $request, $tier): JsonResponse
     {
         try {
-            $factory = new BracketsFactory();
+            $factory = new BracketsFactory;
             $seed = $factory->seed([
                 'event' => [
                     'eventTier' => $tier,
@@ -296,8 +294,8 @@ class MiscController extends Controller
                     'participantPayment' => [
                         'register_time' => config('constants.SIGNUP_STATUS.EARLY'),
                         'type' => 'wallet',
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
             [
@@ -305,6 +303,7 @@ class MiscController extends Controller
                 'participants' => $participants,
                 'organizers' => $organizers,
             ] = $seed;
+
             return response()->json(
                 [
                     'success' => true,
@@ -355,29 +354,29 @@ class MiscController extends Controller
             ->where('expires_at', '>', now())
             ->first();
 
-        if (!$tokenData) {
+        if (! $tokenData) {
             abort(404, 'Invalid or expired download link');
         }
 
         $withdrawals = Withdrawal::with('user')->get();
 
-        $csvContent = $this->generateCsvContent($withdrawals, true) ;
-        
+        $csvContent = $this->generateCsvContent($withdrawals, true);
+
         $password = WithdrawalPassword::first();
-        
+
         $tempDir = storage_path('app/temp/withdrawals');
-        if (!is_dir($tempDir)) {
+        if (! is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
 
-        $csvFileName = 'withdrawals_' . date('Y-m-d_H-i-s') . '.csv';
-        $csvPath = $tempDir . '/' . $csvFileName;
-        $zipPath = $tempDir . '/withdrawals_export_' . date('Y-m-d_H-i-s') . '.zip';
+        $csvFileName = 'withdrawals_'.date('Y-m-d_H-i-s').'.csv';
+        $csvPath = $tempDir.'/'.$csvFileName;
+        $zipPath = $tempDir.'/withdrawals_export_'.date('Y-m-d_H-i-s').'.zip';
 
         file_put_contents($csvPath, $csvContent);
 
-        $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
             $zip->addFile($csvPath, $csvFileName);
             if ($password) {
                 $zip->setPassword($password->password);

@@ -21,6 +21,7 @@ class RespondTasks extends Command
     use PrinterLoggerTrait, RespondTaksTrait;
 
     protected $stripeService;
+
     protected $taskIdParent;
 
     public function __construct(StripeConnection $stripeService)
@@ -66,13 +67,13 @@ class RespondTasks extends Command
             $regOverTaskIds = [];
 
             if ($type === 0) {
-                $tasks = Task::where('taskable_type', "EventDetail")
+                $tasks = Task::where('taskable_type', 'EventDetail')
                     ->where('action_time', '>=', $now->copy()->subMinutes(5))
                     ->where('action_time', '<=', $now->copy()->addMinutes(29))
                     ->get();
             } else {
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', "EventDetail")->get();
+                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
             }
 
             if ($type == 5) {
@@ -138,7 +139,7 @@ class RespondTasks extends Command
                         if ($event) {
                             $shouldCancel = $this->checkAndCancelEvent($event);
 
-                            if (!$shouldCancel) {
+                            if (! $shouldCancel) {
                                 $paidEvents = JoinEvent::where('event_details_id', $event->id)
                                     ->where('payment_status', 'completed')
                                     ->whereNot('join_status', 'confirmed')
@@ -197,7 +198,7 @@ class RespondTasks extends Command
 
                         $event = EventDetail::where('id', $eventId)->with('tier')->first();
 
-                        if (!$event) {
+                        if (! $event) {
                             throw new Exception('Event not found after status update');
                         }
 
@@ -218,7 +219,7 @@ class RespondTasks extends Command
                             'event_id' => $eventId,
                             'event_name' => $event->eventName ?? 'Unknown',
                             'participants_count' => $endedEvents->count(),
-                            'has_prizes' => !empty($prizeDetails),
+                            'has_prizes' => ! empty($prizeDetails),
                         ]);
                     } catch (Exception $e) {
                         $failedEvents++;
@@ -253,7 +254,7 @@ class RespondTasks extends Command
                     'total_events' => $totalEvents,
                     'processed_successfully' => $processedEvents,
                     'failed_events' => $failedEvents,
-                    'success_rate' => $totalEvents > 0 ? round(($processedEvents / $totalEvents) * 100, 2) . '%' : '0%',
+                    'success_rate' => $totalEvents > 0 ? round(($processedEvents / $totalEvents) * 100, 2).'%' : '0%',
                 ]);
             }
 

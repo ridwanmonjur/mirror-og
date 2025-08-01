@@ -34,7 +34,7 @@ class AuthResetAndVerifyController extends Controller
 
         $tokenData = DB::table('password_reset_tokens')->where('token', $request->token)->first();
 
-        if (!$tokenData) {
+        if (! $tokenData) {
             return back()->with(['error' => 'Invalid token or email address.']);
         }
 
@@ -69,7 +69,7 @@ class AuthResetAndVerifyController extends Controller
         $email = $request->email;
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return back()->with(['error' => 'User not found with this email.']);
         }
 
@@ -84,8 +84,8 @@ class AuthResetAndVerifyController extends Controller
     {
         $user = User::where('email_verified_token', $token)->first();
         $role = $user->role;
-        $route = strtolower($role) . '.signin.view';
-        if (!$user) {
+        $route = strtolower($role).'.signin.view';
+        if (! $user) {
             return redirect()->route($route)->with('error', 'Invalid verification token.');
         }
 
@@ -104,7 +104,7 @@ class AuthResetAndVerifyController extends Controller
     {
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->back()->with('error', 'User not found with this email address.');
         }
 
@@ -117,6 +117,7 @@ class AuthResetAndVerifyController extends Controller
         $user->save();
 
         Mail::to($user->email)->queue(new VerifyUserMail($user, $token));
+
         return redirect()->back()->with('success', 'Verification email has been sent. Please check your inbox.')->with('successEmail', $user->email);
     }
 }
