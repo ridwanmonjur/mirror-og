@@ -122,7 +122,6 @@ Route::group(['prefix' => 'participant'], function () {
 
     // Social login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('participant.google.login');
-    Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('participant.steam.login');
 
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
@@ -184,7 +183,6 @@ Route::group(['prefix' => 'organizer'], function () {
 
     // Social login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('organizer.google.login');
-    Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('organizer.steam.login');
 
     // General organizer functions
     Route::group(['middleware' => 'auth'], function () {

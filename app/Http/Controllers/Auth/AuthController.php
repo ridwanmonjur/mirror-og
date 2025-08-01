@@ -29,38 +29,24 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function handleGoogleCallback(Request $request)
-    {
-        $state = decrypt(request('state'));
-        $role = $state['role'];
-        $user = Socialite::driver('google')->stateless()->user();
-
-        ['finduser' => $finduser, 'error' => $error] = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
-        Session::forget('role');
-
-        return $this->authService->handleUserRedirection($finduser, $error, $role);
-    }
-
-    
-
-    // Steam login
-    public function redirectToSteam(Request $request)
-    {
-        Session::put('role', $this->authService->putRoleInSessionBasedOnRoute($request->url()));
-        Session::save();
-        return Socialite::driver('steam')->redirect();
-    }
-
     public function redirectToGoogle(Request $request)
     {
         $role = $this->authService->putRoleInSessionBasedOnRoute($request->url());
         Session::put('role', $role);
         Session::save();
-        return Socialite::driver('google')
-            ->with(['state' => encrypt(['role' => $role])])
-            ->redirect();
+        
+        return Socialite::driver('google')->redirect();
     }
 
+    public function handleGoogleCallback(Request $request)
+    {
+        $role = Session::get('role');
+        $user = Socialite::driver('google')->user();
+        ['finduser' => $finduser, 'error' => $error] = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
+        Session::forget('role');
+
+        return $this->authService->handleUserRedirection($finduser, $error, $role);
+    }
     public function storeUser(Request $request)
     {
         $validatedData = [];
