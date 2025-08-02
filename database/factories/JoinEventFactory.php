@@ -47,6 +47,7 @@ final class JoinEventFactory extends Factory
         'event' => [
             'eventTier' => 'Dolphin',
             'eventName' => 'Test Brackets',
+            'eventType' => 'Tournament'
         ],
         'joinEvent' => [
             'join_status' => 'confirmed',

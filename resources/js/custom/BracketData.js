@@ -516,6 +516,7 @@ export default function BracketData(fileStore) {
                 ...data, id
               };
             }
+
           });
 
           disputeStore.setList(allDisputes);
@@ -523,6 +524,7 @@ export default function BracketData(fileStore) {
           this.dispute = allDisputes[this.reportUI.matchNumber];
         }
       );
+      
 
       this.subscribeToCurrentReportDisputesSnapshot = subscribeToCurrentReportDisputesSnapshot;
       window.closeLoading()

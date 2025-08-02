@@ -93,7 +93,7 @@
                     <span>{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? '0' }}</span>
                 </button>
             </div>
-            <div class="league_name mt-4 mb-2">
+            <div class="league_name mt-3 mb-2">
                 <p 
                     class="{{ 'text-truncate w-100  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier?->eventTier }}">{{ $event->eventName ?? 'Choose a name' }}</p>
                 <div class="small d-inline-flex  px-0 ms-0 pb-2 text-truncate w-100" >

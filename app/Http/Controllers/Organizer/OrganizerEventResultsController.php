@@ -236,7 +236,11 @@ class OrganizerEventResultsController extends Controller
             },
         ]);
 
-        $bracket = $this->eventMatchService->generateBrackets($event, true, null);
+        $bracket = $this->eventMatchService->generateBrackets(
+            $event,
+             true, 
+             null
+        );
 
         return view('Organizer.Brackets', [
             'id' => $id,

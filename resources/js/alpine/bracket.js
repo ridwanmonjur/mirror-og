@@ -105,8 +105,6 @@ async function getAllMatchStatusesData() {
       addTippyToClass(modifiedClassList);
     }
 
-    newDataList = {}, modifiedDataList = {};
-    newClassList = [], modifiedClassList = [];
     let tabLoading = document.querySelector('button#tabLoading');
     if (tabLoading) {
       

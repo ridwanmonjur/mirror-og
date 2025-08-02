@@ -15,26 +15,25 @@ use App\Models\User;
 
 class EventMatchService
 {
-    private $bracketDataService;
-
-    public function __construct(BracketDataService $bracketDataService)
-    {
-        $this->bracketDataService = $bracketDataService;
-    }
 
     public function createBrackets(EventDetail $event)
     {
         // dd($event);
         if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot) {
-            $bracketList = $this->bracketDataService->produceBrackets(
+            // dd($event->type->eventType);
+            $dataService = DataServiceFactory::create($event->type->eventType);
+            $bracketList = $dataService->produceBrackets(
                 $event->tier->tierTeamSlot,
                 false,
                 null,
-                null
+                null,
+                'all'
             );
+
 
             $now = now();
             $matches = [];
+
             foreach ($bracketList as $stage_name => $stage_element) {
                 foreach ($stage_element as $inner_stage_name => $inner_stage_element) {
                     foreach ($inner_stage_element as $order => $element) {
@@ -61,6 +60,7 @@ class EventMatchService
     public function generateBrackets(EventDetail $event,
         bool $willFixBracketsAsOrganizer,
         ?JoinEvent $existingJoint,
+        ?int $page = 1
     ): array {
 
         $USER_ENUMS = config('constants.USER_ACCESS');
@@ -97,20 +97,34 @@ class EventMatchService
         });
 
         $matchesUpperCount = intval($event->tier?->tierTeamSlot);
+        $dataService = DataServiceFactory::create($event->type->eventType);
+        
         if (! $matchesUpperCount) {
             $previousValues = [];
         } else {
-            $previousValues = $this->bracketDataService::PREV_VALUES[$matchesUpperCount];
+            $prevValues = $dataService->getPrevValues();
+            $previousValues = $prevValues[$matchesUpperCount] ?? [];
         }
 
-        $bracketList = $this->bracketDataService->produceBrackets(
+        $bracketList = $dataService->produceBrackets(
             $matchesUpperCount,
             $willFixBracketsAsOrganizer,
             $USER_ENUMS,
-            $deadlines
+            null,
+            $page
         );
 
-        $bracketList = $event->matches?->reduce(function ($bracketList, $match) use (
+
+
+        if (isset($bracketList['roundNames'])) {
+            $matchesToProcess = $event->matches()
+                ?->whereIn('stage_name', $bracketList['roundNames'])
+                ->get() ?? [];
+        } else {
+            $matchesToProcess = $event->matches;
+        }
+
+        $bracketList = $matchesToProcess?->reduce(function ($bracketList, $match, $index) use (
             $existingJoint,
             $willFixBracketsAsOrganizer,
             $USER_ENUMS,
@@ -154,6 +168,8 @@ class EventMatchService
             return data_set($bracketList, $path, $mergedData);
         }, $bracketList);
 
+        // dd($bracketList, $matchesToProcess);
+
         return [
             'teamList' => $teamList,
             'matchesUpperCount' => $matchesUpperCount,
@@ -161,6 +177,7 @@ class EventMatchService
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues,
             'DISPUTE_ACCESS' => $DISPUTTE_ENUMS,
+            'pagination' => $dataService->getPagination()
         ];
     }
 

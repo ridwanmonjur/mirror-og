@@ -23,12 +23,12 @@
             class="cursor-pointer position-absolute w-100 h-100 object-fit-cover me-2" alt="Team View"
             style="z-index: 99;"
             data-position="{{$position1}}" 
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
         >
     @else 
         <small 
             data-position="{{$position1}}" 
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
             class="cursor-pointer ms-1 position-absolute  cursor-pointer me-3 py-2 replace_me_with_image" style="z-index: 99;"
         >&nbsp;&nbsp;???</small>
      @endif

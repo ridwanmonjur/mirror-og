@@ -22,13 +22,13 @@
         </template>
         <template v-else>
             <span class="d-block">
-                <template v-if="report.deadline.has_started && !report.deadline.has_ended">
+                <template v-if="report.deadline.has_started && !report.deadline?.has_ended">
                     <i class="d-block text-secondary">
                         Waiting for the other team to declare the winner for Game
                         <span v-text="reportUI.matchNumber+1"> </span>
                     </i>
                 </template>
-                <template v-if="report.deadline.has_ended">
+                <template v-if="report.deadline?.has_ended">
                     <i class="d-block text-secondary">
                         Opponent didn't report any results.
                     </i>
@@ -49,7 +49,7 @@
 </template>
 <template v-else>
     <span class="d-block fst-italic fs-7">
-        <template v-if="report.deadline.has_ended">
+        <template v-if="report.deadline?.has_ended">
             <span class="d-block">
                 <span>No winner declared by either team. 
                     <template v-if="report.organizerWinners">

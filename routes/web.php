@@ -51,7 +51,7 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
-Route::get('/seed/event/{tier}', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/event/{tier}/{type}', [MiscController::class, 'seedBrackets']);
 Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
 Route::get('/deadlineTasks/{id}/{taskType}', [MiscController::class, 'deadlineTasks']);

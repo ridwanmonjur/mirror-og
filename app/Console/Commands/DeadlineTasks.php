@@ -103,7 +103,7 @@ class DeadlineTasks extends Command
                 $endDetails = EventDetail::whereIn('id', $endTaskIds)->withEventTierAndFilteredMatches($endBracketDeadlines)->get();
                 foreach ($endDetails as $detail) {
                     try {
-                        $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
+                        $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
                         $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id);
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
@@ -116,7 +116,7 @@ class DeadlineTasks extends Command
                 $orgDetails = EventDetail::whereIn('id', $orgTaskIds)->withEventTierAndFilteredMatches($orgBracketDeadlines)->get();
                 foreach ($orgDetails as $detail) {
                     try {
-                        $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null);
+                        $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
                         $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id);
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);

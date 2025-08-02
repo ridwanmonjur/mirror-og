@@ -47,6 +47,7 @@ class BracketsFactory extends Factory
     public function seed($options = [
         'event' => [
             'eventTier' => 'Dolphin',
+            'eventType' => 'Tournament',
             'eventName' => 'Test Brackets',
             'joinEvent' => [
                 'join_status' => 'confirmed',
@@ -61,6 +62,7 @@ class BracketsFactory extends Factory
     {
 
         $joinEventFactory = new JoinEventFactory;
+        // dd($options);
         $result = $joinEventFactory->seed($options);
 
         $events = collect($result['events']);

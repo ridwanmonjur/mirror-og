@@ -76,9 +76,10 @@ final class EventDetailFactory extends Factory
     public function seed($eventIndex, $options = [
         'eventTier' => 'Dolphin',
         'eventName' => 'Test Brackets',
+        'eventType' => 'Tournament'
     ])
     {
-
+        // dd($options);
         $user = User::updateOrCreate([
             'email' => 'org1@driftwood.gg',
         ], [
@@ -166,7 +167,7 @@ final class EventDetailFactory extends Factory
 
         Log::info($eventTypes);
 
-        return $this->createSampleEvents($user, $options['eventTier'], 'Tournament', $eventIndex,
+        return $this->createSampleEvents($user, $options['eventTier'], $options['eventType'], $eventIndex,
             $options['eventName']);
     }
 
@@ -175,7 +176,7 @@ final class EventDetailFactory extends Factory
         $category = EventCategory::where('gameTitle', 'Dota 2')->first();
         $tier = EventTier::where('eventTier', $eventTier)->first();
         $type = EventType::where('eventType', $eventType)->first();
-
+        // dd($type);
         if (! $category || ! $eventTier || ! $eventType) {
             return;
         }

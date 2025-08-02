@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class BracketDataService
+class BracketDataService implements DataServiceInterface
 {
     public function generateDefaultValues(
         bool $isOrganizer,
@@ -20,6 +20,16 @@ class BracketDataService
             'team2_roster' => null,
             'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : $USER_ENUMS['IS_PUBLIC'],
         ];
+    }
+
+    public function getPrevValues(): array
+    {
+        return self::PREV_VALUES;
+    }
+
+    public function getPagination(): ?array
+    {
+        return null;
     }
 
     const PREV_VALUES = [
@@ -236,7 +246,8 @@ class BracketDataService
         int $teamNumber,
         bool $isOrganizer,
         ?array $USER_ENUMS,
-        ?array $deadlines
+        $deadlines,
+        $page
     ) {
         $defaultValues = $USER_ENUMS ?
             $this->generateDefaultValues($isOrganizer, $USER_ENUMS)
