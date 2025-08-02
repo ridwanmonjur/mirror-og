@@ -7,7 +7,6 @@ use App\Models\ActivityLogs;
 use App\Models\NotifcationsUser;
 use App\Models\TeamMember;
 use App\Models\User;
-use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,18 +19,19 @@ use Throwable;
 class TeamMemberUpdatedListener implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
-    
+
+    public $tries = 3;
+
     public $teamMember;
 
     public function handle(TeamMemberUpdated $event)
     {
         $event->teamMember->load([
-            'team:id,teamName,teamBanner,creator_id',  
+            'team:id,teamName,teamBanner,creator_id',
             'user:id,name,userBanner',
-            'team.members' => function($query) {
+            'team.members' => function ($query) {
                 $query->where('status', 'accepted');  // Fixed relationship and where clause
-            }            
+            },
         ]);
 
         $userNotification = '';
@@ -119,9 +119,8 @@ class TeamMemberUpdatedListener implements ShouldQueue
                     </span>
                 HTML;
 
-
                 if ($event->teamMember->actor == 'team') {
-                    
+
                     $userNotification = <<<HTML
                         <span class="notification-gray">
                             You have been removed from the team, 
@@ -129,7 +128,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                                 {$selectTeam->teamName}</button>.
                         </span>
                         HTML;
-                    
+
                     $teamNotification = <<<HTML
                     <span class="notification-gray">
                         The user, 
@@ -171,7 +170,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                             has rejected your request to join this team!
                         </span>
                         HTML;
-                    
+
                     $teamNotification = <<<HTML
                         <span class="notification-gray">
                             <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}" alt="Team View">
@@ -222,8 +221,10 @@ class TeamMemberUpdatedListener implements ShouldQueue
 
         $memberNotification = [];
         foreach ($selectTeam->members as $member) {
-            if ($member->user->id == $user->id) continue;
-            $route = $member->user->id == $selectTeam->creator_id ? $routeCreator: $routeMember;
+            if ($member->user->id == $user->id) {
+                continue;
+            }
+            $route = $member->user->id == $selectTeam->creator_id ? $routeCreator : $routeMember;
 
             $memberNotification[] = [
                 'user_id' => $member->user->id,
@@ -231,7 +232,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
                 'html' => $teamNotification,
                 'link' => $route,
                 'img_src' => $user->userBanner,
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ];
         }
 
@@ -241,13 +242,12 @@ class TeamMemberUpdatedListener implements ShouldQueue
             'html' => $userNotification,
             'link' => route('public.team.view', $selectTeam->id),
             'img_src' => $selectTeam->teamBanner,
-            'created_at' => DB::raw('NOW()')
+            'created_at' => DB::raw('NOW()'),
         ];
 
         NotifcationsUser::insertWithCount([...$memberNotification, $userNotification]);
     }
 
-    
     public function failed(TeamMemberUpdated $event, Throwable $exception): void
     {
         // Log the error with proper context
@@ -259,7 +259,7 @@ class TeamMemberUpdatedListener implements ShouldQueue
             'status' => $event->teamMember->status ?? null,
             'stack_trace' => $exception->getTraceAsString(),
             'file' => $exception->getFile(),
-            'line' => $exception->getLine()
+            'line' => $exception->getLine(),
         ]);
     }
 }

@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('product_variants')) {
+        if (! Schema::hasTable('product_variants')) {
             Schema::create('product_variants', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('product_id');
-            $table->string('name');
-            $table->string('value');
-            $table->integer('stock')->default(0);
-            $table->timestamps();
+                $table->id();
+                $table->unsignedInteger('product_id');
+                $table->string('name');
+                $table->string('value');
+                $table->integer('stock')->default(0);
+                $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->index(['product_id', 'name']);
+                $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+                $table->index(['product_id', 'name']);
             });
         }
 
@@ -35,7 +35,7 @@ return new class extends Migration
 
         if (Schema::hasTable('cart_items')) {
             Schema::table('cart_items', function (Blueprint $table) {
-                if (!Schema::hasColumn('cart_items', 'variant_id')) {
+                if (! Schema::hasColumn('cart_items', 'variant_id')) {
                     $table->unsignedBigInteger('variant_id')->nullable()->after('product_id');
                     $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
                 }
@@ -64,7 +64,7 @@ return new class extends Migration
         // Finally, add back the quantity column to products
         if (Schema::hasTable('products')) {
             Schema::table('products', function (Blueprint $table) {
-                if (!Schema::hasColumn('products', 'quantity')) {
+                if (! Schema::hasColumn('products', 'quantity')) {
                     $table->integer('quantity')->nullable();
                 }
             });

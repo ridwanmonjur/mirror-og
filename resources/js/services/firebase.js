@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 
 class FirebaseService {
@@ -36,7 +36,9 @@ class FirebaseService {
     }
 
     this.db = initializeFirestore(this.app, {
-      localCache: memoryLocalCache(),
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+      })
     });
 
     this.isInitialized = true;

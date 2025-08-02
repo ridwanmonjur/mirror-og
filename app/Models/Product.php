@@ -10,8 +10,8 @@ class Product extends Model
     use Searchable;
 
     protected $fillable = [
-        'name', 'slug', 'details', 'price', 'description', 
-        'image', 'images', 'featured', 'isPhysical'
+        'name', 'slug', 'details', 'price', 'description',
+        'image', 'images', 'featured', 'isPhysical',
     ];
 
     protected $casts = [
@@ -21,7 +21,6 @@ class Product extends Model
     ];
 
     protected $perPage = 12;
-
 
     public function categories()
     {
@@ -48,10 +47,9 @@ class Product extends Model
 
         return array_merge($array, $extraFields);
     }
-    
+
     public function shouldBeSearchable()
     {
         return true;
     }
-
 }

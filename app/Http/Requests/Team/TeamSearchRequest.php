@@ -67,7 +67,7 @@ class TeamSearchRequest extends FormRequest
     public function searchParams()
     {
         $validated = $this->validated();
-        
+
         return [
             'query' => $validated['q'] ?? '',
             'cursor' => $validated['cursor'] ?? null,

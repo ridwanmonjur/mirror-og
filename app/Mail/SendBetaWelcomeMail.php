@@ -11,13 +11,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
+class SendBetaWelcomeMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $user;
+
     public $passText;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public function __construct(User $user, string $passText)
     {
@@ -25,7 +27,6 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
         $this->passText = $passText;
     }
 
-    
     /**
      * Get the message envelope.
      */
@@ -47,5 +48,4 @@ class SendBetaWelcomeMail extends Mailable  implements ShouldQueue
             'username' => $this->user->name,
         ]);
     }
-
 }

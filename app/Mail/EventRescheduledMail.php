@@ -12,14 +12,14 @@ use Illuminate\Queue\InteractsWithQueue;
 class EventRescheduledMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $body;
 
     /**
      * Create a new message instance.
      *
-     * @param array $body
      * @return void
      */
     public function __construct(array $body)
@@ -32,16 +32,15 @@ class EventRescheduledMail extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    
     public function build()
     {
         return $this->replyTo(config('services.mail_address'))
-            ->subject("Your event has been rescheduled!")
+            ->subject('Your event has been rescheduled!')
             ->view('Email.event-rescheduled')
             ->with([
                 'actionName' => 'View this event!',
                 'actionUrl' => $this->body['link'],
-                'text' => $this->body['text'],  
+                'text' => $this->body['text'],
             ]);
     }
 }

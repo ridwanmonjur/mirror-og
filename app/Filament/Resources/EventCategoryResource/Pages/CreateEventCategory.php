@@ -4,7 +4,6 @@ namespace App\Filament\Resources\EventCategoryResource\Pages;
 
 use App\Filament\Resources\EventCategoryResource;
 use App\Models\EventCategory;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateEventCategory extends CreateRecord

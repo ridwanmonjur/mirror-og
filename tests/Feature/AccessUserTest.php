@@ -10,11 +10,9 @@ use Tests\TestCase;
 
 class AccessUserTest extends TestCase
 {
-   
     protected function setUp(): void
     {
         parent::setUp();
-      
 
     }
 
@@ -44,13 +42,13 @@ class AccessUserTest extends TestCase
         User::createOrFirst([
             'email' => 'test2@driftwood.gg',
             'password' => bcrypt('password123'),
-            'role' => 'ORGANIZER'
+            'role' => 'ORGANIZER',
         ]);
 
         User::createOrFirst([
             'email' => 'test3@driftwood.gg',
             'password' => bcrypt('password123'),
-            'role' => 'PARTICIPANT'
+            'role' => 'PARTICIPANT',
         ]);
 
         $response = $this->post('/participant/signin', [
@@ -92,7 +90,6 @@ class AccessUserTest extends TestCase
             ]);
     }
 
-  
     public function test_unverified_email_returns_error()
     {
         $user = User::factory()->create([
@@ -156,13 +153,12 @@ class AccessUserTest extends TestCase
             ]);
     }
 
-
     public function test_user_can_login_with_correct_credentials()
     {
         $user = User::createOrFirst([
             'email' => 'test4@driftwood.gg',
             'password' => bcrypt('password123'),
-            'role' => 'ORGANIZER'
+            'role' => 'ORGANIZER',
         ]);
 
         $response = $this->post('/organizer/signin', [
@@ -171,14 +167,14 @@ class AccessUserTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-         ->assertJsonStructure(['success', 'message']);
+            ->assertJsonStructure(['success', 'message']);
         $this->get('/logout');
         $this->assertGuest();
 
         $user = User::createOrFirst([
             'email' => 'test5@driftwood.gg',
             'password' => bcrypt('password123'),
-            'role' => 'PARTICIPANT'
+            'role' => 'PARTICIPANT',
         ]);
 
         $response = $this->post('/participant/signin', [
@@ -187,7 +183,7 @@ class AccessUserTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-         ->assertJsonStructure(['success', 'message']);
+            ->assertJsonStructure(['success', 'message']);
         $this->get('/logout');
         $this->assertGuest();
     }

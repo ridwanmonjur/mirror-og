@@ -18,7 +18,7 @@ class EventCategory extends Model
         'eventTags',
         'user_id',
         'player_per_team',
-        'games_per_match'
+        'games_per_match',
     ];
 
     protected $table = 'event_categories';
@@ -33,7 +33,8 @@ class EventCategory extends Model
     }
 
     const CACHE_KEY = 'event_categories';
-    const CACHE_DURATION = 36000; 
+
+    const CACHE_DURATION = 36000;
 
     /**
      * Get all event categories from cache

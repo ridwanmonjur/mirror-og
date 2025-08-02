@@ -9,13 +9,13 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Traits\HandlesFilamentExceptions;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 
 class TeamFollowRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
+
     protected static string $relationship = 'followers';
 
     // You might need to adjust the relationship name according to how it's defined in your Team model
@@ -47,7 +47,7 @@ class TeamFollowRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->sortable()
                     ->label('Followed At')
                     ->timezone('Asia/Kuala_Lumpur')

@@ -9,7 +9,7 @@ class DisapproveMemberRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; 
+        return true;
     }
 
     public function rules()
@@ -18,7 +18,7 @@ class DisapproveMemberRequest extends FormRequest
             'user_id' => 'required',
             'join_events_id' => function ($attribute, $value, $fail) {
                 $joinEvent = JoinEvent::find($value);
-                if (!$joinEvent) {
+                if (! $joinEvent) {
                     $fail('The selected join event is missing.');
                 }
 

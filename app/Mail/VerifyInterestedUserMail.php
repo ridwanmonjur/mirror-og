@@ -10,13 +10,14 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 
-
 class VerifyInterestedUserMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $email;
+
     public $token;
 
     /**
@@ -37,6 +38,7 @@ class VerifyInterestedUserMail extends Mailable implements ShouldQueue
             subject: "Confirm your Email for Driftwood's Closed Beta!",
         );
     }
+
     public function build()
     {
         return $this->view('Email.verifyInterestedUser')->with([

@@ -35,7 +35,7 @@ return new class extends Migration
                 $table->string('link')->nullable();
                 $table->boolean('is_read')->default(false);
                 $table->timestamps();  // This will create both created_at and updated_at
-                
+
                 // Add indexes for common queries
                 $table->index(['user_id', 'is_read']);
                 $table->index(['created_at']);

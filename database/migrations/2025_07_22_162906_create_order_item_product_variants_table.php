@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('order_item_product_variants')) {
+        if (! Schema::hasTable('order_item_product_variants')) {
             Schema::create('order_item_product_variants', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedInteger('order_product_id');
                 $table->unsignedBigInteger('variant_id');
                 $table->timestamps();
-                
+
                 $table->foreign('order_product_id')->references('id')->on('order_product')->onDelete('cascade');
                 $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
-                
+
                 $table->unique(['order_product_id', 'variant_id']);
             });
         }

@@ -6,7 +6,6 @@ use App\Mail\EventRescheduledMail;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\NotifcationsUser;
-use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -17,7 +16,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-
 
 class HandleEventUpdate implements ShouldQueue
 {
@@ -40,7 +38,7 @@ class HandleEventUpdate implements ShouldQueue
                 ->with(['roster', 'roster.user'])
                 ->first();
             Log::info($joinEvent);
-            
+
             $memberMail = [];
             $this->eventDetail->load(['user', 'signup']);
 
@@ -72,12 +70,11 @@ class HandleEventUpdate implements ShouldQueue
                 </span>
                 HTML;
 
-
             if ($joinEvent) {
-                
+
                 DB::beginTransaction();
                 try {
-                  
+
                     $notificationMap = [
                         'member' => [
                             'type' => 'event',
@@ -85,23 +82,22 @@ class HandleEventUpdate implements ShouldQueue
                             'icon_type' => 'schedule',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
-                            'created_at' => DB::raw('NOW()')
-                        ], 
+                            'created_at' => DB::raw('NOW()'),
+                        ],
                         'organizer' => [
                             'type' => 'event',
                             'link' =>  route('public.event.view', ['id' => $this->eventDetail->id]),
                             'icon_type' => 'schedule',
                             'html' => $memberHtml,
                             'mail' => $memberEmail,
-                            'created_at' => DB::raw('NOW()')
-                        ]
+                            'created_at' => DB::raw('NOW()'),
+                        ],
                     ];
 
                     $participantEmail = new EventRescheduledMail([
                         'text' => $notificationMap['member']['mail'],
                         'link' =>  $notificationMap['member']['link'],
                     ]);
-
 
                     $memberNotification =  [];
                     foreach ($joinEvent->roster as $member) {
@@ -111,23 +107,22 @@ class HandleEventUpdate implements ShouldQueue
                             'link' =>  $notificationMap['member']['link'],
                             'icon_type' => $notificationMap['member']['icon_type'],
                             'html' => $notificationMap['member']['html'],
-                            'created_at' => DB::raw('NOW()')
+                            'created_at' => DB::raw('NOW()'),
                         ];
 
                         if ($member->user->email) {
                             $memberMail[] = $member->user->email;
-                        } 
+                        }
                     }
 
                     Mail::to($memberMail)->send($participantEmail);
 
-                    
                     NotifcationsUser::insertWithCount($memberNotification);
 
                     DB::commit();
                 } catch (Exception $e) {
                     DB::rollBack();
-                    Log::error($e->getMessage() . $e->getTraceAsString());
+                    Log::error($e->getMessage().$e->getTraceAsString());
                 }
             } else {
                 $notificationMap = [
@@ -137,8 +132,8 @@ class HandleEventUpdate implements ShouldQueue
                         'icon_type' => 'schedule',
                         'html' => $memberHtml,
                         'mail' => $memberEmail,
-                        'created_at' => DB::raw('NOW()')
-                    ]
+                        'created_at' => DB::raw('NOW()'),
+                    ],
                 ];
 
                 $organizerEmail = new EventRescheduledMail([
@@ -146,25 +141,26 @@ class HandleEventUpdate implements ShouldQueue
                     'link' =>  $notificationMap['organizer']['link'],
                 ]);
 
-                if ($this->eventDetail->user->email) Mail::to($this->eventDetail->user->email)->send($organizerEmail);
-                
+                if ($this->eventDetail->user->email) {
+                    Mail::to($this->eventDetail->user->email)->send($organizerEmail);
+                }
+
                 $organizerNotification = [
                     'user_id' => $joinEvent->eventDetails->user_id,
                     'type' => $notificationMap['organizer']['type'],
                     'link' =>  $notificationMap['organizer']['link'],
                     'icon_type' => $notificationMap['organizer']['icon_type'],
                     'html' => $notificationMap['organizer']['html'],
-                    'created_at' => DB::raw('NOW()')
+                    'created_at' => DB::raw('NOW()'),
                 ];
-                
 
                 NotifcationsUser::insertWithCount([
-                    $organizerNotification
+                    $organizerNotification,
                 ]);
-                
+
             }
         } catch (Exception $e) {
-            Log::error($e->getMessage() . $e->getTraceAsString());
+            Log::error($e->getMessage().$e->getTraceAsString());
         }
     }
 }

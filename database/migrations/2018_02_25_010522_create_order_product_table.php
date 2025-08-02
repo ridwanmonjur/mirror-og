@@ -17,7 +17,7 @@ class CreateOrderProductTable extends Migration
             $table->increments('id');
             $table->integer('order_id')->unsigned()->nullable();
             $table->foreign('order_id')->references('id')
-                  ->on('orders')->onUpdate('cascade')->onDelete('set null');
+                ->on('orders')->onUpdate('cascade')->onDelete('set null');
 
             $table->integer('product_id')->unsigned()->nullable();
             $table->foreign('product_id')->references('id')

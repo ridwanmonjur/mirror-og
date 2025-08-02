@@ -1,12 +1,10 @@
 import { 
   setDoc, serverTimestamp,
-  addDoc, onSnapshot, updateDoc, doc, query, collection, collectionGroup, getDocs, getDoc, where, or
+  onSnapshot, updateDoc, doc, query, collection,  getDocs,  where
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "./brackets";
 import firebaseService from "../services/firebase.js";
-
-let initialLoad = true;
 
 export default function BracketData(fileStore) {
   const { auth, db } = firebaseService.getServices();
@@ -518,6 +516,7 @@ export default function BracketData(fileStore) {
                 ...data, id
               };
             }
+
           });
 
           disputeStore.setList(allDisputes);
@@ -525,6 +524,7 @@ export default function BracketData(fileStore) {
           this.dispute = allDisputes[this.reportUI.matchNumber];
         }
       );
+      
 
       this.subscribeToCurrentReportDisputesSnapshot = subscribeToCurrentReportDisputesSnapshot;
       window.closeLoading()
@@ -562,7 +562,6 @@ export default function BracketData(fileStore) {
             this.dispute = null;
           }
 
-          initialLoad = false;
           window.closeLoading();
         }
       );

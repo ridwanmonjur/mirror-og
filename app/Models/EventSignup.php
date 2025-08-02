@@ -9,17 +9,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class EventSignup extends Model
 {
     use HasFactory;
-    protected $table = 'event_signup_dates';
 
+    protected $table = 'event_signup_dates';
 
     protected $fillable = [
         'event_id',
         'signup_open',
         'normal_signup_start_advanced_close',
-        'signup_close'
+        'signup_close',
     ];
 
-    public $timestamps = NULL;
+    public $timestamps = null;
 
     /**
      * Get the event details that this signup belongs to

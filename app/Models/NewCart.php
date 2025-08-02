@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class NewCart extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'final_carts';
-    
+
     protected $fillable = [
-        'user_id', 'total'
+        'user_id', 'total',
     ];
 
     protected $casts = [
-        'total' => 'decimal:2'
+        'total' => 'decimal:2',
     ];
 
     public $cachedCount = null;
@@ -41,6 +41,7 @@ class NewCart extends Model
         if ($this->cachedCount === null) {
             $this->cachedCount = $this->items()->sum('quantity');
         }
+
         return $this->cachedCount;
     }
 
@@ -59,8 +60,9 @@ class NewCart extends Model
         if ($this->relationLoaded('items')) {
             return $this->items;
         }
-        
+
         $this->load(['items.product', 'items.cartProductVariants']);
+
         return $this->items;
     }
 
@@ -68,7 +70,7 @@ class NewCart extends Model
     {
         $discount = session()->get('coupon')['discount'] ?? 0;
         $code = session()->get('coupon')['name'] ?? null;
-        
+
         $cartSubtotal = $this->getSubTotal();
         $newSubtotal = ($cartSubtotal - $discount);
         if ($newSubtotal < 0) {

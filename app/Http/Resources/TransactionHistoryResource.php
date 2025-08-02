@@ -28,6 +28,4 @@ class TransactionHistoryResource extends JsonResource
             'formatted_date_time' => $this->formatted_date_time,
         ];
     }
-
-    
 }

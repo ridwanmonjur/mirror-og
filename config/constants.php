@@ -1,7 +1,7 @@
 <?php
 
 return [
-    
+
     // 'eWalletLogos' => [
     //     [
     //         'src' => 'boost-pay-ewallet-logo.png',
@@ -189,12 +189,12 @@ return [
         'DISPUTEE' => 4,
         'RESPONDER' => 5,
         'TIME' => 6,
-        'RANDOM' => 7
+        'RANDOM' => 7,
     ],
     'QUEUE_TRIES' => 3,
     'STRIPE' => [
         'ZER0' => 0.05,
-        'MINIMUM_RM' => 5.0
+        'MINIMUM_RM' => 5.0,
     ],
     'ROSTER_SIZE' => 5,
     'SIGNUP_STATUS' => [
@@ -208,6 +208,6 @@ return [
         'CHANGE_EMAIL' => ['key' => 1, 'action' => 'changeEmail'],
         'CHANGE_RECOVERY_EMAIL' => ['key' => 2, 'action' => 'changeRecoveryEmail'],
         'CHANGE_PASSWORD' => ['key' => 3, 'action' => 'changePassword'],
-        'COMPARE_PASSWORD' => ['key' => 4, 'action' => 'comparePassword']
-    ]
+        'COMPARE_PASSWORD' => ['key' => 4, 'action' => 'comparePassword'],
+    ],
 ];

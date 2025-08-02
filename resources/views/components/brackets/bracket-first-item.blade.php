@@ -4,12 +4,12 @@
     $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
 @endphp
 <div class="tournament-bracket__item tournament  d-none-until-hover2-parent">
-    <div class="tournament-bracket__match tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
+    <div class="tournament-bracket__match table-report tournament first-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }}"
         tabindex="0"
         data-item-type="first" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
     >
-        <x-brackets.bracket-table :bracket="$bracket" :isFirst="false" />
+        <x-brackets.bracket-table :bracket="$bracket" :isLeague="false" />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen user-select-none position-relative  ">
 
             <x-brackets.bracket-first-item-popover 
@@ -45,14 +45,14 @@
                 :isOrg="$isOrg"
             />
 
-            <x-brackets.bracket-table :bracket="$bracket"  :isFirst="false" />
+            <x-brackets.bracket-table :bracket="$bracket"  :isLeague="false" />
 
             <small class="position-absolute winner-label ">
                 @if($bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'])
                     <span class="d-none-until-hover2" 
                         
                     >
-                        <svg data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}" style="z-index: 999;" onclick="updateModalShow(event); "  xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        <svg data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}" style="z-index: 999;" onclick="previousMatchUpdateShow(event); "  xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                             fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" >
                             <path
                                 d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />

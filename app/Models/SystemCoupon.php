@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class SystemCoupon extends Model
 {
-    protected $table = "system_coupons";
+    protected $table = 'system_coupons';
 
     protected $fillable = [
         'code',
@@ -21,7 +21,7 @@ class SystemCoupon extends Model
         'expires_at',
         'for_type',
         'redeemable_count',
-        'discount_type'
+        'discount_type',
     ];
 
     protected $casts = [
@@ -29,7 +29,7 @@ class SystemCoupon extends Model
         'is_public' => 'boolean',
         'expires_at' => 'datetime',
         'amount' => 'integer',
-        'redeemable_count' => 'integer'
+        'redeemable_count' => 'integer',
     ];
 
     public $timestamps = false;
@@ -40,7 +40,7 @@ class SystemCoupon extends Model
 
     public function getExpiresAtHumanAttribute()
     {
-        return $this->expires_at ? 'Exp: ' . $this->expires_at->format('d M Y') : 'NO EXPIRY';
+        return $this->expires_at ? 'Exp: '.$this->expires_at->format('d M Y') : 'NO EXPIRY';
     }
 
     /**
@@ -57,22 +57,23 @@ class SystemCoupon extends Model
      */
     public function isValid()
     {
-        return $this->is_active && 
+        return $this->is_active &&
                ($this->expires_at === null || $this->expires_at > now());
     }
-
 
     public function userCoupons(): HasMany
     {
         return $this->hasMany(UserCoupon::class, 'coupon_id');
     }
 
-    public static function getIncrementedFee( string| null $eventPrizePool, $incrementPercent = 0.2) {
+    public static function getIncrementedFee(?string $eventPrizePool, $incrementPercent = 0.2)
+    {
         $entryFee = $eventPrizePool !== null ? (float) $eventPrizePool : 0.0;
+
         return $entryFee + ($entryFee * $incrementPercent);
     }
 
-    public static function emptyOrgCoupon(array $fee, string| null $eventPrizePool, float $incrementPercent = 0.2): array
+    public static function emptyOrgCoupon(array $fee, ?string $eventPrizePool, float $incrementPercent = 0.2): array
     {
         $fee['discountFee'] = 0;
         $fee['entryFee'] = $eventPrizePool !== null ? (float) $eventPrizePool : 0.0;
@@ -82,9 +83,7 @@ class SystemCoupon extends Model
         return $fee;
     }
 
-    
-
-    public static function loadCoupon(string| null $couponName, string| null $eventPrizePool, float $incrementPercent = 0.2, string $role = 'organizer', $userId = null): array
+    public static function loadCoupon(?string $couponName, ?string $eventPrizePool, float $incrementPercent = 0.2, string $role = 'organizer', $userId = null): array
     {
         $fee = [];
 
@@ -121,28 +120,30 @@ class SystemCoupon extends Model
                     ->where('coupon_id', $coupon->id)
                     ->first();
 
-                if (!$userCoupon && !$coupon->is_public) {
+                if (! $userCoupon && ! $coupon->is_public) {
                     $fee = self::emptyOrgCoupon($fee, $eventPrizePool, $incrementPercent);
+
                     return [
                         $fee,
                         false,
                         'This coupon is not available for your account.',
-                        null
+                        null,
                     ];
                 }
 
                 if ($userCoupon && $userCoupon->redeemable_count >= $coupon->redeemable_count) {
                     $fee = self::emptyOrgCoupon($fee, $eventPrizePool, $incrementPercent);
+
                     return [
                         $fee,
                         false,
                         'You have already redeemed this coupon too many times.',
-                        null
+                        null,
                     ];
                 }
             }
 
-            $fee['entryFee'] = (float) $eventPrizePool ;
+            $fee['entryFee'] = (float) $eventPrizePool;
             $fee['totalFee'] = self::getIncrementedFee($fee['entryFee'], $incrementPercent);
             $fee['discountFee'] = $fee['discountType'] === 'percent' ?
                 $coupon->amount / 100 * $fee['totalFee'] : $coupon->amount;
@@ -157,7 +158,7 @@ class SystemCoupon extends Model
                 $fee,
                 true,
                 null,
-                null
+                null,
             ];
         }
         $fee = self::emptyOrgCoupon($fee, $eventPrizePool, $incrementPercent);
@@ -166,11 +167,12 @@ class SystemCoupon extends Model
             $fee,
             'isApplied' => false,
             'error' => 'Your coupon has already expired or is not available right now!',
-            $coupon
+            $coupon,
         ];
     }
 
-    public function orgFullCheckout(EventDetail $event, User $user, int $amount) {
+    public function orgFullCheckout(EventDetail $event, User $user, int $amount)
+    {
         $historyId = TransactionHistory::insertGetId([
             'name' => "$event->eventName: Full Discount",
             'type' => 'Entry Fee',
@@ -178,7 +180,7 @@ class SystemCoupon extends Model
             'amount' => 0,
             'summary' => 'Complete Discount',
             'date'=> DB::raw('NOW()'),
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $paymentId = OrganizerPayment::insertGetId([
@@ -195,7 +197,7 @@ class SystemCoupon extends Model
     public static function participantPay($event, $user, $fee, $status, $joinEvent, $memberId)
     {
         $isEarly = $status == config('constants.SIGNUP_STATUS.EARLY');
-        
+
         if ($isEarly) {
             $history = new TransactionHistory([
                 'name' => "{$event->eventName}",
@@ -234,25 +236,23 @@ class SystemCoupon extends Model
         ]);
     }
 
-    
-
     public function validateAndIncrementCoupon($userId)
     {
 
-        if (!$this->is_public) {
+        if (! $this->is_public) {
             $userCoupon = UserCoupon::where('user_id', $userId)
                 ->where('coupon_id', $this->id)
                 ->first();
 
-            if (!$userCoupon) {
+            if (! $userCoupon) {
                 throw new Exception('You do not have access to this coupon.');
             }
         } else {
             $userCoupon = UserCoupon::firstOrCreate([
                 'user_id' => $userId,
-                'coupon_id' => $this->id
+                'coupon_id' => $this->id,
             ], [
-                'redeemable_count' => 0
+                'redeemable_count' => 0,
             ]);
         }
 

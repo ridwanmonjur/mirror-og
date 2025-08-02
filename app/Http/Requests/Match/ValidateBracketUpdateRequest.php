@@ -27,30 +27,29 @@ class ValidateBracketUpdateRequest extends FormRequest
             'team1_position' => $this->team1_position,
             'team2_id' => $this->team2_id,
             'team2_position' => $this->team2_position,
-            'event_details_id' => $this->id
+            'event_details_id' => $this->id,
         ])->first();
 
         // dd($match);
 
-        if (!$match) {
+        if (! $match) {
             $this->failureMessage = 'The match is not found in tournament bracket! Are you editing in the right place?';
+
             return false;
         }
 
-
-       
-       
-        if ($user->role == "ORGANIZER") {
+        if ($user->role == 'ORGANIZER') {
             $event = EventDetail::where('id', $this->id)
                 ->where('user_id', $user->id)
                 ->select(['id', 'user_id'])
                 ->first();
 
-            if (!$event || $event->user_id != $user->id) {
+            if (! $event || $event->user_id != $user->id) {
                 $this->failureMessage = 'This is not your event!';
+
                 return false;
             }
-        } elseif ($user->role == "PARTICIPANT") {
+        } elseif ($user->role == 'PARTICIPANT') {
             if ($this->willCheckDeadline) {
                 $bracketDeadline = BracketDeadline::where('stage', $match->stage_name)
                     ->where('inner_stage', $match->inner_stage_name)
@@ -58,31 +57,35 @@ class ValidateBracketUpdateRequest extends FormRequest
                     ->whereDate('start_date', '<=', $now)
                     ->whereDate('end_date', '>=', $now)
                     ->first();
-    
-                if (!$bracketDeadline) {
+
+                if (! $bracketDeadline) {
                     $this->failureMessage = 'Match is not within reporting timeframe!';
+
                     return false;
                 }
             }
 
-            if (!$this->my_team_id) {
+            if (! $this->my_team_id) {
                 $this->failureMessage = 'No valid team ID provided';
+
                 return false;
             }
 
             $teamMember = TeamMember::where([
-                'user_id' => $user->id, 
+                'user_id' => $user->id,
                 'team_id' => $this->my_team_id,
-                'status' => 'accepted'
-            ])->first(); 
-            
-            if (!$teamMember) {
+                'status' => 'accepted',
+            ])->first();
+
+            if (! $teamMember) {
                 $this->failureMessage = 'You are not a member of this team';
+
                 return false;
             }
-            
+
         } else {
             $this->failureMessage = 'No valid user role';
+
             return false;
         }
 
@@ -118,7 +121,7 @@ class ValidateBracketUpdateRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'message' => $this->failureMessage ?: 'You are not authorized to perform this action',
-                'success' => false
+                'success' => false,
             ], JsonResponse::HTTP_FORBIDDEN)
         );
     }

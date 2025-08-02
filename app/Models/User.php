@@ -23,7 +23,6 @@ class User extends Authenticatable implements FilamentUser
 
     protected $perPage = 5;
 
-
     public function canAccessPanel($panel): bool
     {
         return $this->role == 'ADMIN';
@@ -31,18 +30,20 @@ class User extends Authenticatable implements FilamentUser
 
     public $timestamps = false;
 
-    public function createdAtDiffForHumans() {
+    public function createdAtDiffForHumans()
+    {
         return Carbon::parse($this->created_at)->diffForHumans();
     }
 
-    public function updatedAtDiffForHumans() {
+    public function updatedAtDiffForHumans()
+    {
         return Carbon::parse($this->updated_at)->diffForHumans();
     }
 
-    public function createdIsoFormat() {
+    public function createdIsoFormat()
+    {
         return Carbon::parse($this->created_at)->tz('Asia/Kuala_Lumpur')->isoFormat('Do MMMM YYYY');
     }
-    
 
     /**
      * The attributes that are mass assignable.
@@ -51,7 +52,7 @@ class User extends Authenticatable implements FilamentUser
      */
     protected $fillable = [
         'name', 'email', 'demo_email', 'password', 'role', 'mobile_no', 'created_at', 'updated_at',
-        'email_verified_at',  'email_verified_token', 'recovery_email'
+        'email_verified_at',  'email_verified_token', 'recovery_email',
     ];
 
     /**
@@ -70,7 +71,6 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-   
 
     public function address(): HasOne
     {
@@ -117,10 +117,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(TeamMember::class, 'user_id');
     }
 
-
     public function follows(): HasMany
     {
-        return $this->hasMany(OrganizerFollow::class,  'organizer_user_id');
+        return $this->hasMany(OrganizerFollow::class, 'organizer_user_id');
     }
 
     public function activities(): MorphMany
@@ -245,24 +244,25 @@ class User extends Authenticatable implements FilamentUser
     {
         $oldBanner = $this->userBanner;
         $newBannerPath = null;
-        
+
         try {
             $requestData = json_decode($request->getContent(), true);
-            if (!isset($requestData['file'])) {
+            if (! isset($requestData['file'])) {
                 $this->userBanner = null;
                 $this->save();
                 $this->destroyUserBanner($oldBanner);
+
                 return null;
             }
 
             $fileData = $requestData['file'];
             $fileContent = base64_decode($fileData['content']);
-            
+
             $fileNameInitial = 'userBanner-'.time().'.'.pathinfo($fileData['filename'], PATHINFO_EXTENSION);
             $fileName = "images/user/{$fileNameInitial}";
             $storagePath = storage_path('app/public/'.$fileName);
-            
-            if (!file_exists(dirname($storagePath))) {
+
+            if (! file_exists(dirname($storagePath))) {
                 mkdir(dirname($storagePath), 0755, true);
             }
 
@@ -271,7 +271,7 @@ class User extends Authenticatable implements FilamentUser
             }
 
             $newBannerPath = $fileName;
-            
+
             $this->userBanner = $fileName;
             $this->save();
 
@@ -283,14 +283,14 @@ class User extends Authenticatable implements FilamentUser
             if ($newBannerPath && file_exists(storage_path('app/public/'.$newBannerPath))) {
                 unlink(storage_path('app/public/'.$newBannerPath));
             }
-            
+
             $this->userBanner = $oldBanner;
             $this->save();
-            throw $e; 
+            throw $e;
         }
     }
 
-    public function uploadBackgroundBanner(Request $request, UserProfile | TeamProfile $profile): ?string
+    public function uploadBackgroundBanner(Request $request, UserProfile|TeamProfile $profile): ?string
     {
         $file = $request->file('backgroundBanner');
         $fileNameInitial = 'userBanner-'.time().'.'.$file->getClientOriginalExtension();
@@ -304,7 +304,7 @@ class User extends Authenticatable implements FilamentUser
         return asset('storage/'.$fileName);
     }
 
-    public function destroyUserBanner(string| null $fileName): void
+    public function destroyUserBanner(?string $fileName): void
     {
         if ($fileName) {
             if (Storage::disk('public')->exists($fileName)) {
@@ -314,7 +314,8 @@ class User extends Authenticatable implements FilamentUser
         }
     }
 
-    public function slugify () {
+    public function slugify()
+    {
         $this->slug = Str::slug($this->name);
     }
 

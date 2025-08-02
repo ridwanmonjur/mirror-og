@@ -16,10 +16,10 @@ class BracketDeadlinesSeeder extends Seeder
 
     public function __construct(
         EventMatchService $eventMatchService
-    )
-    {
+    ) {
         $this->eventMatchService = $eventMatchService;
     }
+
     /**
      * Run the database seeds.
      */
@@ -30,12 +30,11 @@ class BracketDeadlinesSeeder extends Seeder
             ->whereNotNull('event_tier_id')
             ->whereNotIn('status', ['DRAFT', 'PENDING', 'PREVIEW'])
             ->get();
-        
+
         foreach ($eventDetails as $detail) {
             $detail->createDeadlinesTask();
         }
-        
+
         $this->command->info('Bracket deadlines have been created successfully!');
     }
-
 }

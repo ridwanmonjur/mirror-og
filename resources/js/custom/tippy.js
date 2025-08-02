@@ -2,7 +2,7 @@ import tippy from 'tippy.js';
 import { generateWarningHtml } from './brackets';
 
 
-window.specialTippy = [];
+let specialTippy = [];
 window.popoverIdToPopover = window.activePopovers || {};
 window.ourIdToPopoverId = window.ourIdToPopoverId || {};
 
@@ -17,14 +17,14 @@ function getPopover(element) {
 }
 
 window.hideAll = () => {
-  for (let element of window.specialTippy) {
+  for (let element of specialTippy) {
     let popover = getPopover(element);
     popover.hide();
   }
 }
 
 window.showAll = () => {
-  for (let element of window.specialTippy) {
+  for (let element of specialTippy) {
     let popover = getPopover(element);
     popover?.show();
   }
@@ -129,7 +129,7 @@ function addAllTippy() {
                   });
                   }
                 }, tippyId);
-              window.specialTippy = [...window.specialTippy, tippyId] 
+              specialTippy = [...specialTippy, tippyId] 
             }
           }
 
@@ -144,29 +144,38 @@ function addAllTippy() {
 
 
 function addTippyToClass(classAndPositionList) {
+  console.log({classAndPositionList});
+  console.log({classAndPositionList});
   for (let classX of classAndPositionList) {
     let [triggerClass, prevClass] = classX;
-    const triggers = document.querySelectorAll(`.popover-button.data-position-${triggerClass}`);
-    triggers.forEach((trigger) => {
-      let triggerClassName = '.popover-middle-content.' + prevClass;
+    const triggers = document.querySelectorAll(`.popover-button.data-position-${prevClass}`);
+    console.log({triggers, triggerClass, prevClass});
+    triggers?.forEach((trigger) => {
+      let triggerClassName = '.popover-middle-content.' + triggerClass;
       let contentElement = document.querySelector(triggerClassName);
+      console.log({tippy: specialTippy});
       window.addPopoverWithIdAndHtml(trigger, contentElement, 'mouseenter', {
         interactive: false
       }, prevClass + '/' + triggerClassName);
     });
+    console.log({tippy: specialTippy});
   }
 }
 
 window.addTippyToClass = addTippyToClass;
 
 function addDotsToContainer(key, value) {
-
+  console.log({key, value});
+  console.log({key, value});
+  console.log({key, value});
   let parent = document.querySelector(`.${key}.popover-middle-content`);
   let table = document.querySelector(`.${key}.tournament-bracket__table`);
   let dottedScoreContainer = parent?.querySelectorAll('.dotted-score-container');
   let dottedScoreBox = parent?.querySelectorAll('.dotted-score-box');
   let statusBox = parent?.querySelectorAll('.status-box');
   let dottedScoreTable = table?.querySelectorAll('.dotted-score-box');
+  console.log({table, dottedScoreTable});
+
   dottedScoreContainer?.forEach((element, index) => {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
       if (value.realWinners[dottedElementIndex]) {
@@ -189,6 +198,7 @@ function addDotsToContainer(key, value) {
   });
 
   dottedScoreTable?.forEach((element, index) => {
+    console.log({element});
     element.innerHTML = value['score'][index];
   });
 

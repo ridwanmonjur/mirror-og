@@ -9,7 +9,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Traits\HandlesFilamentExceptions;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 
@@ -18,8 +17,8 @@ class UserCouponRelationManager extends RelationManager
     use HandlesFilamentExceptions;
 
     protected static string $relationship = 'userCoupons';
-    protected static ?string $title = 'Coupons';
 
+    protected static ?string $title = 'Coupons';
 
     public function getDisplayNameAttribute(): string
     {
@@ -40,10 +39,10 @@ class UserCouponRelationManager extends RelationManager
                     ->options(function () {
                         $coupon = $this->getOwnerRecord();
                         $role = $coupon->for_type === 'organizer' ? 'ORGANIZER' : 'PARTICIPANT';
+
                         return User::where('role', $role)->pluck('name', 'id');
                     })
                     ->required(),
-                
 
                 Forms\Components\TextInput::make('redeemable_count')
                     ->default(1)
@@ -57,8 +56,8 @@ class UserCouponRelationManager extends RelationManager
                     ->seconds(false)
                     ->timezone('Asia/Kuala_Lumpur')
                     ->default(now()),
-                ]
-        );
+            ]
+            );
     }
 
     public function table(Table $table): Table
@@ -68,25 +67,23 @@ class UserCouponRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User'),
-                
+
                 Tables\Columns\TextColumn::make('user.email')
                     ->label('Email'),
 
                 Tables\Columns\TextColumn::make('redeemable_count')
                     ->label('Redeem Count'),
 
-                    
-                
                 Tables\Columns\TextColumn::make('redeemed_at')
                     ->label('Redeemed At')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->timezone('Asia/Kuala_Lumpur'),
-                
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Record Created')
-                    ->dateTime('M d, Y — h:i A') 
+                    ->dateTime('M d, Y — h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             // ->filters([
             //     //

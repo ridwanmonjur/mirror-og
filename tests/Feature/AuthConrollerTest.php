@@ -17,7 +17,7 @@ class AuthConrollerTest extends TestCase
             [
                 'name' => 'Test User',
                 'password' => Hash::make('password'),
-                'role' => 'ORGANIZER'
+                'role' => 'ORGANIZER',
             ]
         );
 
@@ -33,15 +33,15 @@ class AuthConrollerTest extends TestCase
     public function test_country_list()
     {
 
-        $response = $this->getJson('/countries', );
+        $response = $this->getJson('/countries');
 
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'success',
-                     'data' => [
-                         '*' => ['name', 'emoji_flag', 'id']
-                     ]
-                 ]);
+            ->assertJsonStructure([
+                'success',
+                'data' => [
+                    '*' => ['name', 'emoji_flag', 'id'],
+                ],
+            ]);
 
         $response->assertJson(['success' => true]);
 

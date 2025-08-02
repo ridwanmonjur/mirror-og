@@ -22,7 +22,6 @@ class JoinEventSignuped
 
     public EventDetail $event;
 
-
     /**
      * Create a new event instance.
      */

@@ -1,28 +1,25 @@
 <?php
+
 namespace App\Services;
 
 use App\Jobs\HandleFollowsFriends;
 use App\Models\ActivityLogs;
 use App\Models\Friend;
 use App\Models\OrganizerFollow;
-use Illuminate\Support\Str;
-use App\Models\Organizer;
-use App\Models\Participant;
 use App\Models\ParticipantFollow;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
-class SocialService {
+class SocialService
+{
     public function handleOrganizerFollowsAndActivityLogs(User $participant, User $organizer): array
     {
         $existingFollow = OrganizerFollow::where('participant_user_id', $participant->id)
             ->where('organizer_user_id', $organizer->id)
             ->first();
-        
+
         if ($existingFollow) {
             $existingFollow->delete();
             $message = 'Successfully Unfollowed the organizer';
@@ -52,7 +49,7 @@ class SocialService {
                 'log' => $isFollowing ? sprintf(
                     $this->generateFollowLogHtml($organizer, 'organizer', 'organizer'),
                     $organizer->name
-                ) : null
+                ) : null,
             ]));
         }
 
@@ -70,8 +67,7 @@ class SocialService {
                 $friend = Friend::checkFriendship($validatedData['deleteUserId'], $user->id);
                 $friend?->deleteOrFail();
                 $result = ['type' => 'successMessage', 'message' => 'Your request has been deleted.'];
-            }
-            elseif (isset($validatedData['addUserId'])) {
+            } elseif (isset($validatedData['addUserId'])) {
                 if ($user->id == $validatedData['addUserId']) {
                     throw new Exception('You are befriending yourself!');
                 }
@@ -91,22 +87,21 @@ class SocialService {
 
                 dispatch(new HandleFollowsFriends('NewFriend', [
                     'user' => $user,
-                    'otherUser' => $addUser,                    
+                    'otherUser' => $addUser,
                 ]));
 
                 $result = ['type' => 'successMessage', 'message' => 'Successfully created a friendship'];
-            }
-            else {
+            } else {
                 $updateUser = User::where('id', $validatedData['updateUserId'])
                     ->select(['id', 'userBanner', 'name'])
                     ->firstOrFail();
-                    
+
                 $friend = Friend::checkFriendship($validatedData['updateUserId'], $user->id);
                 $status = $validatedData['updateStatus'];
-                
+
                 $friend->update([
                     'actor_id' => $user->id,
-                    'status' => $status
+                    'status' => $status,
                 ]);
 
                 // Handle activity logs for status changes
@@ -119,7 +114,6 @@ class SocialService {
                         'action' => 'friend',
                     ])->delete();
 
-
                 } elseif ($status === 'accepted') {
                     ActivityLogs::createActivityLogs([
                         'subject_type' => User::class,
@@ -129,14 +123,14 @@ class SocialService {
                         'action' => 'friend',
                         'log' => [
                             $this->generateFriendLogHtml($updateUser, $updateUser),
-                            $this->generateFriendLogHtml($user, $user)
+                            $this->generateFriendLogHtml($user, $user),
                         ],
                     ]);
 
                     dispatch(new HandleFollowsFriends('UpdateFriend', [
                         'user' => $user,
                         'otherUser' => $updateUser,
-                        'status' => $status
+                        'status' => $status,
                     ]));
                 }
 
@@ -149,6 +143,7 @@ class SocialService {
             }
 
             DB::commit();
+
             return $result;
 
         } catch (Exception $e) {
@@ -198,16 +193,16 @@ class SocialService {
 
     public function handleParticipantFollow(Request $request)
     {
-        $PARTICIPANT_FOLLOW_ACTION = "participant_follow";
+        $PARTICIPANT_FOLLOW_ACTION = 'participant_follow';
 
         $user = $request->attributes->get('user');
         $userId = $user->id;
         $participantId = $request->participant_id;
         if ($userId == $participantId) {
-            throw new \ErrorException("A participant cannot follow himself!");
+            throw new \ErrorException('A participant cannot follow himself!');
         }
         $existingFollow = ParticipantFollow::checkFollow($user->id, $participantId);
-        
+
         if ($existingFollow) {
             ActivityLogs::findActivityLog([
                 'subject_id' => $user->id,
@@ -215,15 +210,15 @@ class SocialService {
                 'object_id' => $existingFollow->id,
                 'action' => $PARTICIPANT_FOLLOW_ACTION,
             ])->delete();
-           
+
             $existingFollow->delete();
 
             return [
                 'success' => true,
-                'message' => "Successfully unfollowed the participant",
+                'message' => 'Successfully unfollowed the participant',
                 'isFollowing' => false,
             ];
-        } 
+        }
 
         DB::beginTransaction();
         try {
@@ -243,7 +238,7 @@ class SocialService {
                 'object_id' => $follow->id,
                 'action' => $PARTICIPANT_FOLLOW_ACTION,
                 'log' =>  $this->generateFollowLogHtml($updateUser, 'participant', 'player'),
-            ]); 
+            ]);
 
             dispatch(new HandleFollowsFriends('FollowParticipant', [
                 'followee' => $updateUser,
@@ -254,17 +249,17 @@ class SocialService {
 
             return [
                 'success' => true,
-                'message' => "Successfully followed the participant",
+                'message' => 'Successfully followed the participant',
                 'isFollowing' => true,
             ];
 
         } catch (Exception $e) {
             DB::rollBack();
+
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ];
         }
     }
-
 }

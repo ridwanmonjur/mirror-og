@@ -19,16 +19,16 @@ class CompleteProductSeeder extends Seeder
     {
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         // Clear existing data
         ProductVariant::truncate();
         DB::table('category_product')->truncate();
         Product::truncate();
         Category::truncate();
-        
+
         // Re-enable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-        
+
         // Create categories and products with variants
         $this->createElectronicsProducts();
         $this->createClothingProducts();
@@ -41,7 +41,7 @@ class CompleteProductSeeder extends Seeder
     {
         $category = Category::create([
             'name' => 'Electronics',
-            'slug' => 'electronics'
+            'slug' => 'electronics',
         ]);
 
         // iPhone 15
@@ -51,10 +51,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Latest iPhone with advanced camera system',
             'price' => 2999,
             'description' => 'iPhone 15 with advanced camera system, A17 chip, and all-day battery life.',
-            'featured' => true
+            'featured' => true,
         ]);
         $iphone->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $iphone->id, 'name' => 'storage', 'value' => '128GB', 'stock' => 15]);
         ProductVariant::create(['product_id' => $iphone->id, 'name' => 'storage', 'value' => '256GB', 'stock' => 12]);
         ProductVariant::create(['product_id' => $iphone->id, 'name' => 'storage', 'value' => '512GB', 'stock' => 8]);
@@ -69,10 +69,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Professional laptop with M3 chip',
             'price' => 7999,
             'description' => 'MacBook Pro with M3 chip, 14-inch display, perfect for developers and creators.',
-            'featured' => true
+            'featured' => true,
         ]);
         $macbook->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $macbook->id, 'name' => 'memory', 'value' => '16GB', 'stock' => 10]);
         ProductVariant::create(['product_id' => $macbook->id, 'name' => 'memory', 'value' => '32GB', 'stock' => 8]);
         ProductVariant::create(['product_id' => $macbook->id, 'name' => 'storage', 'value' => '512GB', 'stock' => 12]);
@@ -85,10 +85,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Premium noise-cancelling headphones',
             'price' => 899,
             'description' => 'High-quality wireless headphones with active noise cancellation and 30-hour battery life.',
-            'featured' => false
+            'featured' => false,
         ]);
         $headphones->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $headphones->id, 'name' => 'color', 'value' => 'Black', 'stock' => 25]);
         ProductVariant::create(['product_id' => $headphones->id, 'name' => 'color', 'value' => 'White', 'stock' => 20]);
         ProductVariant::create(['product_id' => $headphones->id, 'name' => 'color', 'value' => 'Silver', 'stock' => 15]);
@@ -98,7 +98,7 @@ class CompleteProductSeeder extends Seeder
     {
         $category = Category::create([
             'name' => 'Clothing',
-            'slug' => 'clothing'
+            'slug' => 'clothing',
         ]);
 
         // T-Shirt
@@ -108,10 +108,10 @@ class CompleteProductSeeder extends Seeder
             'details' => '100% organic cotton comfortable fit',
             'price' => 89,
             'description' => 'Soft, comfortable t-shirt made from 100% organic cotton. Perfect for everyday wear.',
-            'featured' => true
+            'featured' => true,
         ]);
         $tshirt->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $tshirt->id, 'name' => 'size', 'value' => 'S', 'stock' => 30]);
         ProductVariant::create(['product_id' => $tshirt->id, 'name' => 'size', 'value' => 'M', 'stock' => 35]);
         ProductVariant::create(['product_id' => $tshirt->id, 'name' => 'size', 'value' => 'L', 'stock' => 40]);
@@ -127,10 +127,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Straight fit denim jeans',
             'price' => 249,
             'description' => 'Classic straight-fit jeans made from premium denim. Comfortable and durable.',
-            'featured' => false
+            'featured' => false,
         ]);
         $jeans->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $jeans->id, 'name' => 'size', 'value' => '30', 'stock' => 15]);
         ProductVariant::create(['product_id' => $jeans->id, 'name' => 'size', 'value' => '32', 'stock' => 20]);
         ProductVariant::create(['product_id' => $jeans->id, 'name' => 'size', 'value' => '34', 'stock' => 18]);
@@ -143,7 +143,7 @@ class CompleteProductSeeder extends Seeder
     {
         $category = Category::create([
             'name' => 'Home & Garden',
-            'slug' => 'home-garden'
+            'slug' => 'home-garden',
         ]);
 
         // Coffee Maker
@@ -153,10 +153,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'WiFi-enabled programmable coffee maker',
             'price' => 599,
             'description' => 'Smart coffee maker with WiFi connectivity, programmable brewing, and smartphone app control.',
-            'featured' => true
+            'featured' => true,
         ]);
         $coffeeMaker->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $coffeeMaker->id, 'name' => 'capacity', 'value' => '8-cup', 'stock' => 15]);
         ProductVariant::create(['product_id' => $coffeeMaker->id, 'name' => 'capacity', 'value' => '12-cup', 'stock' => 12]);
         ProductVariant::create(['product_id' => $coffeeMaker->id, 'name' => 'color', 'value' => 'Black', 'stock' => 20]);
@@ -169,10 +169,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Premium velvet throw pillow',
             'price' => 129,
             'description' => 'Luxurious velvet throw pillow with down filling. Perfect accent for any room.',
-            'featured' => false
+            'featured' => false,
         ]);
         $pillow->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $pillow->id, 'name' => 'size', 'value' => '16x16', 'stock' => 25]);
         ProductVariant::create(['product_id' => $pillow->id, 'name' => 'size', 'value' => '18x18', 'stock' => 20]);
         ProductVariant::create(['product_id' => $pillow->id, 'name' => 'size', 'value' => '20x20', 'stock' => 15]);
@@ -185,7 +185,7 @@ class CompleteProductSeeder extends Seeder
     {
         $category = Category::create([
             'name' => 'Books',
-            'slug' => 'books'
+            'slug' => 'books',
         ]);
 
         // Programming Book
@@ -195,10 +195,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Complete guide to Laravel framework',
             'price' => 159,
             'description' => 'Comprehensive guide to Laravel development with practical examples and best practices.',
-            'featured' => true
+            'featured' => true,
         ]);
         $programmingBook->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $programmingBook->id, 'name' => 'format', 'value' => 'Paperback', 'stock' => 50]);
         ProductVariant::create(['product_id' => $programmingBook->id, 'name' => 'format', 'value' => 'Hardcover', 'stock' => 30]);
         ProductVariant::create(['product_id' => $programmingBook->id, 'name' => 'format', 'value' => 'eBook', 'stock' => 100]);
@@ -210,10 +210,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Fiction novel about modern work culture',
             'price' => 79,
             'description' => 'An engaging novel exploring the world of remote work and digital entrepreneurship.',
-            'featured' => false
+            'featured' => false,
         ]);
         $novel->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $novel->id, 'name' => 'format', 'value' => 'Paperback', 'stock' => 40]);
         ProductVariant::create(['product_id' => $novel->id, 'name' => 'format', 'value' => 'eBook', 'stock' => 80]);
     }
@@ -222,7 +222,7 @@ class CompleteProductSeeder extends Seeder
     {
         $category = Category::create([
             'name' => 'Sports & Fitness',
-            'slug' => 'sports-fitness'
+            'slug' => 'sports-fitness',
         ]);
 
         // Running Shoes
@@ -232,10 +232,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'High-performance running shoes',
             'price' => 399,
             'description' => 'Professional-grade running shoes with advanced cushioning and breathable mesh upper.',
-            'featured' => true
+            'featured' => true,
         ]);
         $runningShoes->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $runningShoes->id, 'name' => 'size', 'value' => '7', 'stock' => 12]);
         ProductVariant::create(['product_id' => $runningShoes->id, 'name' => 'size', 'value' => '8', 'stock' => 15]);
         ProductVariant::create(['product_id' => $runningShoes->id, 'name' => 'size', 'value' => '9', 'stock' => 18]);
@@ -252,10 +252,10 @@ class CompleteProductSeeder extends Seeder
             'details' => 'Non-slip eco-friendly yoga mat',
             'price' => 189,
             'description' => 'High-quality eco-friendly yoga mat with excellent grip and cushioning for all types of yoga practice.',
-            'featured' => false
+            'featured' => false,
         ]);
         $yogaMat->categories()->attach($category->id);
-        
+
         ProductVariant::create(['product_id' => $yogaMat->id, 'name' => 'thickness', 'value' => '4mm', 'stock' => 20]);
         ProductVariant::create(['product_id' => $yogaMat->id, 'name' => 'thickness', 'value' => '6mm', 'stock' => 25]);
         ProductVariant::create(['product_id' => $yogaMat->id, 'name' => 'thickness', 'value' => '8mm', 'stock' => 15]);

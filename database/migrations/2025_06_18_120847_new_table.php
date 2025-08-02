@@ -13,7 +13,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('team_profile')) {
             Schema::table('team_profile', function (Blueprint $table) {
-                
+
                 if (Schema::hasColumns('team_profile', ['default_category_id', 'all_categories'])) {
                     $table->dropColumn(['default_category_id', 'all_categories']);
                 }
@@ -21,20 +21,20 @@ return new class extends Migration
         }
 
         Schema::table('teams', function (Blueprint $table) {
-            if (!Schema::hasColumns('teams', ['default_category_id'])) {
+            if (! Schema::hasColumns('teams', ['default_category_id'])) {
                 $table->unsignedBigInteger('default_category_id')->nullable();
             }
 
-            if (!Schema::hasColumns('teams', ['all_categories'])) {
+            if (! Schema::hasColumns('teams', ['all_categories'])) {
                 $table->text('all_categories')->nullable();
             }
 
-            if (!Schema::hasColumns('teams', ['status'])) {
+            if (! Schema::hasColumns('teams', ['status'])) {
                 $table->enum('status', ['public', 'private', 'open'])->default('open');
             }
 
-            if (!Schema::hasColumns('teams', ['member_limit'])) {
-                $table->integer('member_limit', )->default(10);
+            if (! Schema::hasColumns('teams', ['member_limit'])) {
+                $table->integer('member_limit')->default(10);
             }
         });
 
@@ -68,11 +68,10 @@ return new class extends Migration
                 }
 
                 if (Schema::hasColumns('teams', ['member_limit'])) {
-                    $table->dropColumn('member_limit' );
+                    $table->dropColumn('member_limit');
                 }
             });
         }
-
 
     }
 };

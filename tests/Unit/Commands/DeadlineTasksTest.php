@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use App\Models\Brackets;
@@ -16,7 +17,7 @@ use Tests\TestCase;
 //     protected function setUp(): void
 //     {
 //         parent::setUp();
-        
+
 //         UserFactory::deleteRelatedTables();
 //         TeamFactory::deleteRelatedTables();
 
@@ -56,7 +57,7 @@ use Tests\TestCase;
 //         $user = \App\Models\User::factory()->create();
 //         $team1 = \App\Models\Team::factory()->create();
 //         $team2 = \App\Models\Team::factory()->create();
-    
+
 //         // Create event details connected to that user
 //         $eventDetail = \App\Models\EventDetail::factory()->create([
 //             'user_id' => $user->id

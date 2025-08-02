@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\NotificationCounter;
@@ -10,10 +11,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
-class AuthService {
-    
+class AuthService
+{
     public function createUser(array $validatedData, string $roleCapital): User
     {
         $user = new User([
@@ -54,25 +54,26 @@ class AuthService {
         throw new \InvalidArgumentException('Invalid registration path');
     }
 
-    public function putRoleInSessionBasedOnRoute($url): ?string {
+    public function putRoleInSessionBasedOnRoute($url): ?string
+    {
         if (strpos($url, 'organizer') !== false) {
-           return "ORGANIZER";
+            return 'ORGANIZER';
         } elseif (strpos($url, 'participant') !== false) {
-            return "PARTICIPANT";
+            return 'PARTICIPANT';
         } else {
-            return "ADMIN";
+            return 'ADMIN';
         }
     }
 
-    public function handleUserRedirection(?User $user, ?string $error = null, ?string $role)
+    public function handleUserRedirection(?User $user, ?string $error, ?string $role)
     {
         $role = strtolower($role);
 
         if ($error) {
-            return redirect()->route("$role.signin.view")->with("error", $error);
+            return redirect()->route("$role.signin.view")->with('error', $error);
         }
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route("$role.signin.view")->with('key', 'User does not exist!');
         }
 
@@ -82,7 +83,6 @@ class AuthService {
 
         return redirect()->route('organizer.home.view');
     }
-  
 
     public function registerOrLoginUserForSocialAuth($user, $type, $role)
     {
@@ -95,9 +95,9 @@ class AuthService {
 
         if ($finduser) {
             if ($finduser->role != $role) {
-                return ['finduser' => null, 'error' =>  sprintf("Only %ss can sign in with this route.", strtolower($role))];
+                return ['finduser' => null, 'error' =>  sprintf('Only %ss can sign in with this route.', strtolower($role))];
             }
-          
+
             Auth::login($finduser);
 
             return ['finduser' => $finduser, 'error' => null];
@@ -120,16 +120,16 @@ class AuthService {
         }
 
         DB::beginTransaction();
-        
-        try{
-            $uniqueName = $user->name . '_' . date('mdHi');
+
+        try {
+            $uniqueName = $user->name.'_'.date('mdHi');
 
             $newUser = User::create([
-               'name' => $uniqueName,
-               'email' => $user->email,
-               'password' => Str::random(13),
-               'role' => strtoupper($role),
-               'created_at' => DB::raw('NOW()'),
+                'name' => $uniqueName,
+                'email' => $user->email,
+                'password' => Str::random(13),
+                'role' => strtoupper($role),
+                'created_at' => DB::raw('NOW()'),
             ]);
 
             NotificationCounter::create(['user_id' => $newUser->id]);

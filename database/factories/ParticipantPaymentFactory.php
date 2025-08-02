@@ -13,17 +13,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 final class ParticipantPaymentFactory extends Factory
 {
     /**
-    * The name of the factory's corresponding model.
-    *
-    * @var string
-    */
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = ParticipantPayment::class;
 
     /**
-    * Define the model's default state.
-    *
-    * @return array
-    */
+     * Define the model's default state.
+     */
     public function definition(): array
     {
         return [
@@ -33,7 +31,7 @@ final class ParticipantPaymentFactory extends Factory
             'payment_id' => \App\Models\RecordStripe::factory(),
             'payment_amount' => fake()->optional()->word,
             'members_id' => \App\Models\TeamMember::factory(),
-            'type' => 'discount'
+            'type' => 'discount',
         ];
     }
 }

@@ -12,14 +12,14 @@ use Illuminate\Queue\InteractsWithQueue;
 class VoteStartMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $body;
 
     /**
      * Create a new message instance.
      *
-     * @param array $body
      * @return void
      */
     public function __construct(array $body)
@@ -32,17 +32,16 @@ class VoteStartMail extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    
     public function build()
     {
         return $this->replyTo(config('services.mail_address'))
-            ->subject("A vote on event participation has started.")
+            ->subject('A vote on event participation has started.')
             ->view('Email.vote-started')
             ->with([
                 'team' => $this->body['team'],
                 'actionName' => 'See vote details',
                 'actionUrl' => $this->body['link'],
-                'text' => $this->body['text'],  
+                'text' => $this->body['text'],
             ]);
     }
 }

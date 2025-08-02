@@ -34,7 +34,7 @@
                                             </span>
                                         </div>
                                     </template>
-                                    <template v-if="report.deadline.has_started && !report.deadline.has_ended">
+                                    <template v-if="report.deadline?.has_started && !report.deadline?.has_ended">
                                         <div class="text-center text-red small  my-0">
                                             Time left to report:
                                             <span class="text-center" 

@@ -50,7 +50,7 @@ return [
              *
              */
 
-            'credentials' => ['file' => env('FIREBASE_CREDENTIALS' )],
+            'credentials' => ['file' => env('FIREBASE_CREDENTIALS')],
             /*
              * ------------------------------------------------------------------------
              * Firebase Auth Component

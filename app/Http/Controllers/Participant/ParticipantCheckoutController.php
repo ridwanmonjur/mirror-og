@@ -7,12 +7,10 @@ use App\Http\Requests\Match\ShowCheckoutRequest;
 use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Wallet;
-
 use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
 use App\Models\SystemCoupon;
-use App\Models\UserCoupon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
@@ -22,7 +20,6 @@ use Illuminate\Validation\UnauthorizedException;
 use Illuminate\View\View;
 use App\Http\Requests\Match\WalletCheckoutRequest;
 use App\Models\TransactionHistory;
-
 
 class ParticipantCheckoutController extends Controller
 {
@@ -39,16 +36,17 @@ class ParticipantCheckoutController extends Controller
             $user = $request->attributes->get('user');
             $prevForm = $request->prevForm;
             if ($request->paymentDone) {
-                $message = "100% discount achieved through coupon.";
+                $message = '100% discount achieved through coupon.';
                 session()->flash('successMessage', $message);
+
                 return redirect()
                     ->route('participant.register.manage', ['id' => $prevForm['id'], 'scroll' => $request->joinEventId])
                     ->with('successMessage', $message)
                     ->with('scroll', $request->joinEventId);
-    
+
             }
 
-            $fee = $request->fee; 
+            $fee = $request->fee;
             $user = $request->attributes->get('user');
             $user->stripe_customer_id = $user->organizer()->value('stripe_customer_id');
 
@@ -59,7 +57,7 @@ class ParticipantCheckoutController extends Controller
             ]);
 
             $remaining_after_participant_payment = $request->total - $request->participantPaymentSum;
-            $has_wallet_balance = !is_null($user_wallet) && $user_wallet->usable_balance > 0;
+            $has_wallet_balance = ! is_null($user_wallet) && $user_wallet->usable_balance > 0;
             $can_pay_full_amount = $has_wallet_balance && $user_wallet->usable_balance >= $remaining_after_participant_payment;
             $wallet_shortfall = $has_wallet_balance ? max(0, $remaining_after_participant_payment - $user_wallet->usable_balance) : $remaining_after_participant_payment;
 
@@ -85,6 +83,7 @@ class ParticipantCheckoutController extends Controller
             ]);
         } catch (Exception $e) {
             session()->flash('errorMessage', $e->getMessage());
+
             return back()->with('errorMessage', $e->getMessage())->with('scroll', $request->joinEventId);
         }
     }
@@ -149,11 +148,11 @@ class ParticipantCheckoutController extends Controller
                 'type' => 'wallet',
             ]);
 
-            [ 'coupon' => $coupon ] = $request->couponDetails;
+            ['coupon' => $coupon] = $request->couponDetails;
             $coupon?->validateAndIncrementCoupon();
 
             if ($isCompletePayment) {
-                if ($pending_total_after_wallet <= config("constants.STRIPE.ZERO")) {
+                if ($pending_total_after_wallet <= config('constants.STRIPE.ZERO')) {
                     $joinEvent = $request->joinEvent;
                     $joinEvent->completePayment($regStatus);
                 }
@@ -198,7 +197,6 @@ class ParticipantCheckoutController extends Controller
                 $paymentMethodId = $paymentIntent['payment_method'];
                 $paymentMethod = $this->stripeClient->retrievePaymentMethod($paymentMethodId);
 
-               
                 $paymentDone = (float) $paymentIntent['amount'] / 100;
 
                 if ($paymentIntent['amount'] > 0 && ($paymentIntent['amount_capturable'] === $paymentIntent['amount'] || $paymentIntent['amount_received'] === $paymentIntent['amount'])) {
@@ -265,7 +263,7 @@ class ParticipantCheckoutController extends Controller
                         'type' => 'stripe',
                     ]);
 
-                    if ($total - ($participantPaymentSum + $paymentDone) < config("constants.STRIPE.ZERO")) {
+                    if ($total - ($participantPaymentSum + $paymentDone) < config('constants.STRIPE.ZERO')) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->register_time = $regStatus;
                         $joinEvent->save();
@@ -277,7 +275,7 @@ class ParticipantCheckoutController extends Controller
                         ->with('successMessage', 'Your payment has succeeded!')
                         ->with('scroll', $paymentIntent['metadata']['joinEventId']);
                 }
-            } 
+            }
 
             if ($request->has('payment_intent')) {
                 try {
@@ -287,23 +285,23 @@ class ParticipantCheckoutController extends Controller
                         'requires_payment_method',
                         'requires_confirmation',
                         'requires_action',
-                        'processing'
+                        'processing',
                     ];
 
                     if (in_array($paymentIntent['status'], $cancelableStatuses)) {
                         $this->stripeClient->cancelPaymentIntent($intentId, [
-                            'cancellation_reason' => 'abandoned'
+                            'cancellation_reason' => 'abandoned',
                         ]);
                     }
                 } catch (Exception $e) {
                     return $this->showErrorParticipant($e->getMessage());
                 }
             }
-            
+
             DB::rollBack();
 
             return $this->showErrorParticipant('Your payment has failed unfortunately!');
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             DB::rollBack();
 
             return $this->showErrorParticipant($e->getMessage());
@@ -313,6 +311,4 @@ class ParticipantCheckoutController extends Controller
             return $this->showErrorParticipant($e->getMessage());
         }
     }
-
-    
 }

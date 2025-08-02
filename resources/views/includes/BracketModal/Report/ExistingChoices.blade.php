@@ -33,7 +33,7 @@
 </template>
 <template v-else>
     <span class="d-block fst-italic fs-7">
-        <template v-if="report.deadline.has_ended">
+        <template v-if="report.deadline?.has_ended">
             <span class="d-inline-block">
                 <span>No winner declared by either team. 
                     <template v-if="report.organizerWinners && report.organizerWinners">

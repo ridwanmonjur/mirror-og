@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
-                  ->onUpdate('cascade')->onDelete('set null');
+                ->onUpdate('cascade')->onDelete('set null');
             $table->string('billing_email')->nullable();
             $table->string('billing_name')->nullable();
             $table->string('billing_address')->nullable();

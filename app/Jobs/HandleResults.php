@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Mail;
 
 class ChangePositionStrategy
 {
-
     public function ordinalPrefix($number)
     {
         $number = intval($number);
@@ -56,7 +55,7 @@ class ChangePositionStrategy
             $event = EventDetail::where(['id' => $eventId])->select(['id', 'eventName'])->firstOrFail();
 
             $positionString = $this->ordinalPrefix($parameters['position']);
-            
+
             $foundLogs = ActivityLogs::findActivityLog($parameters)->get();
             $notificationLog = <<<HTML
                 <span>
@@ -88,7 +87,7 @@ class ChangePositionStrategy
             HTML;
 
             if (isset($foundLogs[0])) {
-                if ($parameters['position'] > 0 ) { 
+                if ($parameters['position'] > 0) {
                     foreach ($foundLogs as $foundLog) {
                         $foundLog->update([
                             'log' => $activityLog,
@@ -97,10 +96,10 @@ class ChangePositionStrategy
                 } else {
                     foreach ($foundLogs as $foundLog) {
                         $foundLog->delete();
-                    } 
+                    }
                 }
             } else {
-                if ($parameters['position'] > 0 ) { 
+                if ($parameters['position'] > 0) {
                     $parameters['log'] = $activityLog;
                     ActivityLogs::createActivityLogs($parameters);
                 }
@@ -109,19 +108,19 @@ class ChangePositionStrategy
             $memberMailable = new EventResultMail([
                 'team' => $team,
                 'text' => $notificationLog,
-                'link' => route('public.team.view', ['id' => $team->id]) . '#Positions'                
+                'link' => route('public.team.view', ['id' => $team->id]).'#Positions',
             ]);
 
             foreach ($joinEvent->roster as $member) {
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'teams',
-                    'link' =>  route('public.team.view', ['id' => $team->id]) . '#Positions',
+                    'link' =>  route('public.team.view', ['id' => $team->id]).'#Positions',
                     'icon_type' => 'trophy',
                     'html' => $notificationLog,
-                    'created_at' => DB::raw('NOW()')
+                    'created_at' => DB::raw('NOW()'),
                 ];
-    
+
                 if ($member->user->email) {
                     $memberMail[] = $member->user->email;
                 }
@@ -130,7 +129,7 @@ class ChangePositionStrategy
             NotifcationsUser::insertWithCount($memberNotification);
 
         } catch (Exception $e) {
-            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
         }
     }
 }
@@ -179,12 +178,12 @@ class AddAwardStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                    ],
+                ],
                 ],
             ];
 
         } catch (Exception $e) {
-            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
         }
     }
 }
@@ -198,7 +197,7 @@ class AddAchievementStrategy
                 'teamId' => $teamId,
                 'image' => $image,
             ] = $parameters;
-            
+
             $notificationLog = <<<HTML
                 <span>
                 <span class="notification-gray"> You achieved {$parameters['achievement']} in the team, 
@@ -222,14 +221,12 @@ class AddAchievementStrategy
                 'links' => [[
                     'url' => route('public.event.view', ['id' => $parameters['eventId']]),
                     'name' => 'View event',
-                    ],
+                ],
                 ],
             ];
 
-
-
         } catch (Exception $e) {
-            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
         }
     }
 }
@@ -241,7 +238,7 @@ class DeleteAwardStrategy
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
         } catch (Exception $e) {
-            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
         }
     }
 }
@@ -253,7 +250,7 @@ class DeleteAchievementStrategy
         try {
             ActivityLogs::findActivityLog($parameters)->delete();
         } catch (Exception $e) {
-            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
         }
     }
 }
@@ -280,7 +277,7 @@ class HandleResults implements ShouldQueue
         if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
-        $strategy = new $strategyClass();
+        $strategy = new $strategyClass;
         $strategy->handle($this->parameters);
     }
 }

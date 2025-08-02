@@ -6,14 +6,11 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Filament\Traits\HandlesFilamentExceptions;
 use App\Models\Product;
-use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class ProductResource extends Resource
@@ -23,9 +20,9 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
-    
+
     protected static ?string $navigationLabel = 'Products';
-    
+
     protected static ?string $navigationGroup = 'Shop Management';
 
     public static function form(Form $form): Form
@@ -38,8 +35,7 @@ class ProductResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn (string $context, $state, callable $set) => 
-                                $context === 'create' ? $set('slug', Str::slug($state)) : null
+                            ->afterStateUpdated(fn (string $context, $state, callable $set) => $context === 'create' ? $set('slug', Str::slug($state)) : null
                             ),
                         Forms\Components\TextInput::make('slug')
                             ->required()
@@ -68,7 +64,7 @@ class ProductResource extends Resource
                             ->helperText('Whether this is a physical product that requires shipping'),
                     ])
                     ->columns(2),
-                
+
                 Forms\Components\Section::make('Media')
                     ->schema([
                         Forms\Components\FileUpload::make('image')
@@ -89,7 +85,7 @@ class ProductResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columns(1),
-                    
+
                 Forms\Components\Section::make('Categories')
                     ->schema([
                         Forms\Components\Select::make('categories')
@@ -119,13 +115,13 @@ class ProductResource extends Resource
                     ->defaultImageUrl(url('/assets/images/404q.png')),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('price')
-                    ->formatStateUsing(fn ($state) => 'RM ' . number_format($state, 2)),
+                    ->formatStateUsing(fn ($state) => 'RM '.number_format($state, 2)),
                 Tables\Columns\IconColumn::make('featured')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('isPhysical')
                     ->label('Product Type')
                     ->formatStateUsing(fn ($state) => new \Illuminate\Support\HtmlString(
-                        $state 
+                        $state
                             ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box text-primary" viewBox="0 0 16 16">
                                 <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.629 13.09A1 1 0 0 1 0 12.162V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
                                </svg> <span class="ms-1">Physical</span>'
@@ -134,7 +130,7 @@ class ProductResource extends Resource
                                </svg> <span class="ms-1">Digital</span>'
                     ))
                     ->html(),
-               
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')

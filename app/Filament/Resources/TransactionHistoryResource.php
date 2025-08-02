@@ -3,11 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionHistoryResource\Pages;
-use App\Filament\Resources\TransactionHistoryResource\RelationManagers;
 use App\Models\TransactionHistory;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,11 +16,10 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class TransactionHistoryResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = TransactionHistory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    
 
     public static function table(Table $table): Table
     {
@@ -109,7 +105,7 @@ class TransactionHistoryResource extends Resource
                         return User::find($value)?->name;
                     })
                     ->default(function () {
-                        
+
                         // Set default to current authenticated user if available
                         $user = User::select(['id', 'role'])
                             ->where('role', 'PARTICIPANT')

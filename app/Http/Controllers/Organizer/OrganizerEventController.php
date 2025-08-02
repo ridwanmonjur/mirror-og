@@ -13,14 +13,12 @@ use App\Models\EventTier;
 use App\Models\EventType;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
-use App\Models\Team;
 use App\Models\User;
 use App\Services\EventMatchService;
 use App\Services\PaymentService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -33,6 +31,7 @@ use App\Jobs\CreateUpdateEventTask;
 class OrganizerEventController extends Controller
 {
     private $paymentService;
+
     private $eventMatchService;
 
     public function __construct(PaymentService $paymentService, EventMatchService $eventMatchService)
@@ -50,6 +49,7 @@ class OrganizerEventController extends Controller
 
             return redirect($intendedUrl);
         }
+
         return view('Organizer.Home');
     }
 
@@ -143,7 +143,7 @@ class OrganizerEventController extends Controller
             $event = EventDetail::findEventWithRelationsAndThrowError($userId, $id);
 
             $isUserSameAsAuth = true;
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event can't be retieved with id: {$id}");
@@ -170,6 +170,7 @@ class OrganizerEventController extends Controller
             return view('Public.ViewEvent', [...$viewData, 'livePreview' => $request->query('live') === 'true' ? 1 : 0, ...$bracketData]);
         } catch (Exception $e) {
             Log::error($e);
+
             return $this->showErrorParticipant($e->getMessage());
         }
     }
@@ -178,36 +179,38 @@ class OrganizerEventController extends Controller
     {
         try {
             DB::beginTransaction();
-            $eventDetail = new EventDetail();
+            $eventDetail = new EventDetail;
             [$eventDetail] = EventDetail::storeLogic($eventDetail, $request);
             $eventDetail->user_id = $request->get('user')->id;
             $eventDetail->save();
             try {
             } catch (Exception $e) {
-                throw new Exception('Failed to create signup tables: ' . $e->getMessage());
+                throw new Exception('Failed to create signup tables: '.$e->getMessage());
             }
 
             try {
                 CreateUpdateEventTask::dispatch($eventDetail);
             } catch (Exception $e) {
-                throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
+                throw new Exception('Failed to queue event task creation: '.$e->getMessage());
             }
 
             DB::commit();
             if ($request->livePreview === 'true') {
-                return redirect('organizer/event/' . $eventDetail->id . '?live=true');
+                return redirect('organizer/event/'.$eventDetail->id.'?live=true');
             }
 
             if ($request->goToCheckoutPage === 'yes') {
-                return redirect('organizer/event/' . $eventDetail->id . '/checkout');
+                return redirect('organizer/event/'.$eventDetail->id.'/checkout');
             }
 
-            return redirect('organizer/event/' . $eventDetail->id . '/success');
-        } catch (TimeGreaterException | EventChangeException $e) {
+            return redirect('organizer/event/'.$eventDetail->id.'/success');
+        } catch (TimeGreaterException|EventChangeException $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -239,7 +242,7 @@ class OrganizerEventController extends Controller
                 'eventTypeList' => $eventTypeList,
                 'editMode' => 1,
             ]);
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
             return $this->showErrorOrganizer($e->getMessage());
         } catch (Exception $e) {
             return $this->showErrorOrganizer("Event not found for id: {$id}");
@@ -261,31 +264,35 @@ class OrganizerEventController extends Controller
                 [$eventDetail, $isTimeSame] = EventDetail::storeLogic($eventDetail, $request);
                 $eventDetail->user_id = $request->get('user')->id;
                 $eventDetail->save();
-                if (!$isTimeSame) {
+                if (! $isTimeSame) {
                     dispatch(new HandleEventUpdate($eventDetail));
                 }
                 try {
                     CreateUpdateEventTask::dispatch($eventDetail);
                 } catch (Exception $e) {
-                    throw new Exception('Failed to queue event task creation: ' . $e->getMessage());
+                    throw new Exception('Failed to queue event task creation: '.$e->getMessage());
                 }
 
                 DB::commit();
                 if ($request->livePreview === 'true') {
-                    return redirect('organizer/event/' . $eventId . '/live');
+                    return redirect('organizer/event/'.$eventId.'/live');
                 }
                 if ($request->goToCheckoutPage === 'yes') {
-                    return redirect('organizer/event/' . $eventId . '/checkout');
+                    return redirect('organizer/event/'.$eventId.'/checkout');
                 }
-                return redirect('organizer/event/' . $eventId . '/success');
+
+                return redirect('organizer/event/'.$eventId.'/success');
             }
+
             return $this->showErrorOrganizer("Event not found for id: {$id}");
-        } catch (TimeGreaterException | EventChangeException $e) {
+        } catch (TimeGreaterException|EventChangeException $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->with('error', $e->getMessage() . ' ' . $e->getTraceAsString());
+
+            return back()->with('error', $e->getMessage().' '.$e->getTraceAsString());
         }
     }
 
@@ -293,6 +300,7 @@ class OrganizerEventController extends Controller
     {
         $event = EventDetail::findOrFail($id);
         $event->update(['willNotify' => $request->notify]);
+
         return response()->json(['success' => true, 'message' => 'Notification settings updated successfully']);
     }
 
@@ -326,15 +334,15 @@ class OrganizerEventController extends Controller
                 'success' => true,
                 'message' => 'Event deleted successfully',
             ]);
-        } catch (ModelNotFoundException | UnauthorizedException $e) {
-            Log::error('Failed to delete event: ' . $e->getMessage());
+        } catch (ModelNotFoundException|UnauthorizedException $e) {
+            Log::error('Failed to delete event: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
         } catch (Exception $e) {
-            Log::error('General exception in event deletion: ' . $e->getMessage());
+            Log::error('General exception in event deletion: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,

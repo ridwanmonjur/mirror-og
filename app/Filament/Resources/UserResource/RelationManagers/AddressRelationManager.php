@@ -34,7 +34,7 @@ class AddressRelationManager extends RelationManager
                     ->maxLength(255)
                     ->label('Address Line 2'),
                 Forms\Components\TextInput::make('country')
-                    ->required()
+                    ->required(),
                 // user_id will be automatically handled by Filament
                 // since this is a relation manager
             ]);
@@ -52,7 +52,7 @@ class AddressRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('city')
                     ->searchable(),
-              
+
                 Tables\Columns\TextColumn::make('country')
                     ->searchable(),
             ])
@@ -61,9 +61,9 @@ class AddressRelationManager extends RelationManager
             // ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->visible(fn () => !$this->getOwnerRecord()->address()->exists())
+                    ->visible(fn () => ! $this->getOwnerRecord()->address()->exists())
                     // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                    ->createAnother(false)
+                    ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

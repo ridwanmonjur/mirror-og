@@ -10,11 +10,11 @@ class ProductVariant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id', 'name', 'value', 'stock'
+        'product_id', 'name', 'value', 'stock',
     ];
 
     protected $casts = [
-        'stock' => 'integer'
+        'stock' => 'integer',
     ];
 
     public function product()

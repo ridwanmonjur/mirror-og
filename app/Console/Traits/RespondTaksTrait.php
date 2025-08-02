@@ -14,7 +14,6 @@ use App\Models\SystemCoupon;
 use App\Models\UserCoupon;
 use Illuminate\Support\Facades\DB;
 use Exception;
-
 use App\Models\RecordStripe;
 use App\Models\StripeConnection;
 use App\Models\Task;
@@ -29,6 +28,7 @@ use Illuminate\Support\Facades\Mail;
 trait RespondTaksTrait
 {
     protected $stripeService;
+
     protected $childTaskId;
 
     protected function initializeTrait(StripeConnection $stripeService, $taskId)
@@ -58,17 +58,20 @@ trait RespondTaksTrait
                     $event->update(['status' => 'FAILED']);
                     $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
                     $deadlinesPast = $deadlines->pluck('id');
-                    Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', "Deadline")->delete();
-                    Task::where('taskable_id', $event->id)->where('taskable_type', "EventDetail")->delete();
+                    Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', 'Deadline')->delete();
+                    Task::where('taskable_id', $event->id)->where('taskable_type', 'EventDetail')->delete();
                     BracketDeadline::where('event_details_id', $event->id)->delete();
                     Log::info("Event successfully cancelled and cleaned up. Event ID: {$event->id}");
                 }
+
                 return true;
             }
             Log::info("Event does not need cancellation. Event ID: {$event->id}");
+
             return false;
         } catch (Exception $e) {
-            Log::error("Error in checkAndCancelEvent for Event ID {$event->id}: " . $e->getMessage());
+            Log::error("Error in checkAndCancelEvent for Event ID {$event->id}: ".$e->getMessage());
+
             return false;
         }
     }
@@ -77,11 +80,11 @@ trait RespondTaksTrait
     {
         try {
             foreach ($joinEvents as $join) {
-                
+
                 DB::beginTransaction();
                 try {
                     foreach ($join->payments as $participantPay) {
-                        
+
                         try {
                             if ($join->register_time == config('constants.SIGNUP_STATUS.NORMAL')) {
                                 if ($participantPay->transaction && $participantPay->type == 'stripe') {
@@ -97,7 +100,7 @@ trait RespondTaksTrait
                                 } elseif ($participantPay->type == 'wallet') {
                                     $wallet = Wallet::retrieveOrCreateCache($participantPay->user_id);
 
-                                    if (!$wallet->exists) {
+                                    if (! $wallet->exists) {
                                         $wallet->usable_balance = 0;
                                         $wallet->current_balance = 0;
                                         $wallet->save();
@@ -119,7 +122,7 @@ trait RespondTaksTrait
                                     $wallet = Wallet::retrieveOrCreateCache($participantPay->user_id);
                                     Log::info($wallet);
 
-                                    if (!$wallet->exists) {
+                                    if (! $wallet->exists) {
                                         $wallet->usable_balance = 0;
                                         $wallet->current_balance = 0;
                                         $wallet->save();
@@ -146,7 +149,7 @@ trait RespondTaksTrait
                                         ->where('code', "Refund RM {$participantPay->payment_amount}")
                                         ->first();
 
-                                    if (!$existingCoupon) {
+                                    if (! $existingCoupon) {
                                         $systemCoupon = new SystemCoupon([
                                             'code' => "Refund RM {$participantPay->payment_amount}",
                                             'amount' => $participantPay->payment_amount,
@@ -165,7 +168,7 @@ trait RespondTaksTrait
 
                                     $existingUserCoupon = UserCoupon::where('user_id', $participantPay->user_id)->where('coupon_id', $systemCoupon->id)->first();
 
-                                    if (!$existingUserCoupon) {
+                                    if (! $existingUserCoupon) {
                                         $newUserCoupon = new UserCoupon([
                                             'user_id' => $participantPay->user_id,
                                             'coupon_id' => $systemCoupon->id,
@@ -181,7 +184,7 @@ trait RespondTaksTrait
                                 }
                             }
                         } catch (Exception $e) {
-                            
+
                             Log::error("Error in releaseFunds for JOIN ID {$join->id}: && PAY ID {$participantPay->id}");
                             $this->logError($this->childTaskId, $e);
                             throw $e;
@@ -189,7 +192,7 @@ trait RespondTaksTrait
                     }
                     DB::commit();
                 } catch (Exception $e) {
-                    
+
                     DB::rollback();
                     Log::error("Error in releaseFunds for Join Event ID {$join->id}");
                     $this->logError($this->childTaskId, $e);
@@ -198,6 +201,7 @@ trait RespondTaksTrait
             }
         } catch (Exception $e) {
             $this->logError($this->childTaskId, $e);
+
             return [
                 'released_payments' => 0,
                 'created_discounts' => 0,
@@ -209,15 +213,15 @@ trait RespondTaksTrait
     public function capturePayments($event, $joinEvents)
     {
         $joins = $joinEvents->where('register_time', config('constants.SIGNUP_STATUS.NORMAL'));
-        Log::info('<<< PaymentData : ' . $joinEvents);
-        Log::info('<<< startedEvents : ' . $event);
+        Log::info('<<< PaymentData : '.$joinEvents);
+        Log::info('<<< startedEvents : '.$event);
 
         foreach ($joins as $join) {
-            
+
             DB::beginTransaction();
             try {
                 foreach ($join->payments as $participantPay) {
-                    
+
                     try {
                         if ($participantPay->payment_id && $participantPay->type == 'stripe') {
                             // stripe capture hold
@@ -267,7 +271,7 @@ trait RespondTaksTrait
         $playerNotif = [];
         $orgNotif = [];
         foreach ($joinList as $join) {
-            
+
             try {
                 $memberHtml = <<<HTML
                 <span class="notification-gray">
@@ -292,7 +296,7 @@ trait RespondTaksTrait
                     'created_at' => DB::raw('NOW()'),
                 ];
 
-                if (!isset($orgNotif[$join->eventDetails->user_id])) {
+                if (! isset($orgNotif[$join->eventDetails->user_id])) {
                     $orgNotif[$join->eventDetails->user_id] = [
                         'type' => 'event',
                         'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
@@ -320,7 +324,7 @@ trait RespondTaksTrait
         $playerNotif = [];
         $orgNotif = [];
         foreach ($joinList as $join) {
-            
+
             try {
                 $memberHtml = <<<HTML
                 <span class="notification-gray">
@@ -347,7 +351,7 @@ trait RespondTaksTrait
                     'created_at' => DB::raw('NOW()'),
                 ];
 
-                if (!isset($orgNotif[$join->eventDetails->user_id])) {
+                if (! isset($orgNotif[$join->eventDetails->user_id])) {
                     $orgNotif[$join->eventDetails->user_id] = [
                         'type' => 'event',
                         'link' => route('public.event.view', ['id' => $join->eventDetails->id]),
@@ -373,109 +377,109 @@ trait RespondTaksTrait
     public function handleEventTypes($notificationMap, $joinList)
     {
         try {
-        [$playerNotif, $orgNotif] = $notificationMap;
+            [$playerNotif, $orgNotif] = $notificationMap;
 
-        if (!empty($joinList)) {
-            DB::beginTransaction(); //
-            try {
-                $memberNotification = $organizerNotification = [];
-                foreach ($joinList as $join) {
-                    
-                    try {
-                        if (!isset($playerNotif[$join->id])) {
-                            continue;
-                        }
+            if (! empty($joinList)) {
+                DB::beginTransaction(); //
+                try {
+                    $memberNotification = $organizerNotification = [];
+                    foreach ($joinList as $join) {
 
-                        $memberMailClass = 'App\\Mail\\' . $playerNotif[$join->id]['mailClass'];
-
-                        if (!class_exists($memberMailClass)) {
-                            throw new \InvalidArgumentException("Strategy class {$memberMailClass} does not exist.");
-                        }
-
-                        $memberMailInvocation = new $memberMailClass([
-                            'text' => $playerNotif[$join->id]['mail'],
-                            'link' => $playerNotif[$join->id]['link'],
-                            'subject' => $playerNotif[$join->id]['subject'],
-                        ]);
-
-                        $memberEmails = collect($join->roster)
-                            ->map(function ($member) {
-                                return $member->user && $member->user->email ? $member->user->email : null;
-                            })
-                            ->filter()
-                            ->all();
-
-                        foreach ($join->roster as $member) {
-                            
-                            try {
-                                $memberNotification[] = [
-                                    'user_id' => $member->user->id,
-                                    'type' => $playerNotif[$join->id]['type'],
-                                    'link' => $playerNotif[$join->id]['link'],
-                                    'icon_type' => $playerNotif[$join->id]['icon_type'],
-                                    'html' => $playerNotif[$join->id]['html'],
-                                    'created_at' => DB::raw('NOW()'),
-                                ];
-
-                                if ($member->user->email) {
-                                    $memberEmails[] = $member->user->email;
-                                }
-                            } catch (Exception $e) {
-                                $this->logError($this->childTaskId, $e);
-                                throw $e;
+                        try {
+                            if (! isset($playerNotif[$join->id])) {
+                                continue;
                             }
-                        }
 
-                        if (!empty($memberEmails)) {
-                            Mail::to($memberEmails)->send($memberMailInvocation);
+                            $memberMailClass = 'App\\Mail\\'.$playerNotif[$join->id]['mailClass'];
+
+                            if (! class_exists($memberMailClass)) {
+                                throw new \InvalidArgumentException("Strategy class {$memberMailClass} does not exist.");
+                            }
+
+                            $memberMailInvocation = new $memberMailClass([
+                                'text' => $playerNotif[$join->id]['mail'],
+                                'link' => $playerNotif[$join->id]['link'],
+                                'subject' => $playerNotif[$join->id]['subject'],
+                            ]);
+
+                            $memberEmails = collect($join->roster)
+                                ->map(function ($member) {
+                                    return $member->user && $member->user->email ? $member->user->email : null;
+                                })
+                                ->filter()
+                                ->all();
+
+                            foreach ($join->roster as $member) {
+
+                                try {
+                                    $memberNotification[] = [
+                                        'user_id' => $member->user->id,
+                                        'type' => $playerNotif[$join->id]['type'],
+                                        'link' => $playerNotif[$join->id]['link'],
+                                        'icon_type' => $playerNotif[$join->id]['icon_type'],
+                                        'html' => $playerNotif[$join->id]['html'],
+                                        'created_at' => DB::raw('NOW()'),
+                                    ];
+
+                                    if ($member->user->email) {
+                                        $memberEmails[] = $member->user->email;
+                                    }
+                                } catch (Exception $e) {
+                                    $this->logError($this->childTaskId, $e);
+                                    throw $e;
+                                }
+                            }
+
+                            if (! empty($memberEmails)) {
+                                Mail::to($memberEmails)->send($memberMailInvocation);
+                            }
+                        } catch (Exception $e) {
+                            $this->logError($this->childTaskId, $e);
                         }
-                    } catch (Exception $e) {
-                        $this->logError($this->childTaskId, $e);
                     }
-                }
 
-                foreach ($orgNotif as $notification2) {
-                    
-                    try {
-                        $organizerNotification[] = [
-                            'user_id' => $notification2['user_id'],
-                            'type' => $notification2['type'],
-                            'link' => $notification2['link'],
-                            'icon_type' => $notification2['icon_type'],
-                            'html' => $notification2['html'],
-                            'created_at' => DB::raw('NOW()'),
-                        ];
+                    foreach ($orgNotif as $notification2) {
 
-                        $orgMailClass = 'App\\Mail\\' . $notification2['mailClass'];
+                        try {
+                            $organizerNotification[] = [
+                                'user_id' => $notification2['user_id'],
+                                'type' => $notification2['type'],
+                                'link' => $notification2['link'],
+                                'icon_type' => $notification2['icon_type'],
+                                'html' => $notification2['html'],
+                                'created_at' => DB::raw('NOW()'),
+                            ];
 
-                        if (!class_exists($orgMailClass)) {
-                            throw new \InvalidArgumentException("Strategy class {$orgMailClass} does not exist.");
+                            $orgMailClass = 'App\\Mail\\'.$notification2['mailClass'];
+
+                            if (! class_exists($orgMailClass)) {
+                                throw new \InvalidArgumentException("Strategy class {$orgMailClass} does not exist.");
+                            }
+
+                            $orgMailInvocation = new $orgMailClass([
+                                'text' => $notification2['mail'],
+                                'link' => $notification2['link'],
+                                'subject' => $notification2['subject'],
+                            ]);
+
+                            $user = $notification2['user'];
+                            if ($user && $user->email) {
+                                Mail::to($user->email)->send($orgMailInvocation);
+                            }
+                        } catch (Exception $e) {
+                            $this->logError($this->childTaskId, $e);
+                            throw $e;
                         }
-
-                        $orgMailInvocation = new $orgMailClass([
-                            'text' => $notification2['mail'],
-                            'link' => $notification2['link'],
-                            'subject' => $notification2['subject'],
-                        ]);
-
-                        $user = $notification2['user'];
-                        if ($user && $user->email) {
-                            Mail::to($user->email)->send($orgMailInvocation);
-                        }
-                    } catch (Exception $e) {
-                        $this->logError($this->childTaskId, $e);
-                        throw $e;
                     }
-                }
 
-                NotifcationsUser::insertWithCount([...$memberNotification, ...$organizerNotification]);
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack(); 
-                $this->logError($this->childTaskId, $e);
-                throw $e;
+                    NotifcationsUser::insertWithCount([...$memberNotification, ...$organizerNotification]);
+                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    $this->logError($this->childTaskId, $e);
+                    throw $e;
+                }
             }
-        }
         } catch (Exception $e) {
             $this->logError($this->childTaskId, $e);
         }
@@ -486,18 +490,18 @@ trait RespondTaksTrait
         $number = intval($number);
 
         if ($number % 100 >= 11 && $number % 100 <= 13) {
-            return $number . 'th';
+            return $number.'th';
         }
 
         switch ($number % 10) {
             case 1:
-                return $number . 'st';
+                return $number.'st';
             case 2:
-                return $number . 'nd';
+                return $number.'nd';
             case 3:
-                return $number . 'rd';
+                return $number.'rd';
             default:
-                return $number . 'th';
+                return $number.'th';
         }
     }
 
@@ -509,9 +513,9 @@ trait RespondTaksTrait
         $transactionWalletCount = 0;
         $errorCount = 0;
 
-        if (!empty($joinList)) {
+        if (! empty($joinList)) {
             foreach ($joinList as $join) {
-                
+
                 DB::beginTransaction();
                 try {
                     if (isset($memberIdMap[$join->id]) && isset($memberIdMap[$join->id]) && isset($memberIdMap[$join->id][0]) && isset($logMap[$join->id])) {
@@ -532,7 +536,7 @@ trait RespondTaksTrait
 
                     if (isset($prizeDetails[$join->id])) {
                         foreach ($join->roster as $member) {
-                            
+
                             $transactionHistory[] = [
                                 'user_id' => $member->user->id,
                                 'name' => "Prize Money: RM {$prizeDetails[$join->id]}",
@@ -545,23 +549,23 @@ trait RespondTaksTrait
 
                             $walletData[] = [
                                 'user_id' => $member->user->id,
-                                'usable_balance' => DB::raw('COALESCE(usable_balance, 0) + ' . $prizeDetails[$join->id]),
-                                'current_balance' => DB::raw('COALESCE(current_balance, 0) + ' . $prizeDetails[$join->id]),
+                                'usable_balance' => DB::raw('COALESCE(usable_balance, 0) + '.$prizeDetails[$join->id]),
+                                'current_balance' => DB::raw('COALESCE(current_balance, 0) + '.$prizeDetails[$join->id]),
                             ];
                         }
                     }
 
-                    if (!empty($transactionHistory)) {
+                    if (! empty($transactionHistory)) {
                         TransactionHistory::insert($transactionHistory);
                     }
 
-                    if (!empty($walletData)) {
+                    if (! empty($walletData)) {
                         Wallet::upsert($walletData, ['user_id'], ['usable_balance', 'current_balance']);
                     }
 
                     $processedCount++;
 
-                    if (!empty($transactionHistory) || !empty($walletData)) {
+                    if (! empty($transactionHistory) || ! empty($walletData)) {
                         $transactionWalletCount++;
                     }
                     DB::commit();
@@ -582,6 +586,7 @@ trait RespondTaksTrait
             Log::info('No joins to process for prize distribution');
         }
     }
+
     private function getPrizeFromPositionTIer(string|int $position, EventTier $tier)
     {
         $tierPrize = $tier->prizes()
@@ -599,7 +604,7 @@ trait RespondTaksTrait
         $prize = [];
         $logs = [];
         foreach ($joinList as $join) {
-            
+
             try {
                 if ($join->position?->position) {
                     $position = $join->position->position;
@@ -701,7 +706,7 @@ trait RespondTaksTrait
                     'created_at' => DB::raw('NOW()'),
                 ];
 
-                if (!isset($orgNotif[$join->eventDetails->user_id])) {
+                if (! isset($orgNotif[$join->eventDetails->user_id])) {
                     $orgNotif[$join->eventDetails->user_id] = [
                         'type' => 'event',
                         'link' => route('public.event.view', ['id' => $join->eventDetails->id]),

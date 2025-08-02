@@ -9,71 +9,70 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-
 use App\Filament\Traits\HandlesFilamentExceptions;
 
 class FriendResource extends Resource
 {
     use HandlesFilamentExceptions;
-    protected static ?string $model = Friend::class;
-    
-    protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $model = Friend::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function form(Form $form): Form
     {
         return $form
-        ->schema([
-            Forms\Components\Select::make('user1_id')
-                ->relationship('user1', 'name', 
-                    fn ($query) => $query->where('role', 'PARTICIPANT') 
-                )
-                ->label('User 1')
-                ->rules([
-                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                        if ($value && $value == $get('user2_id')) {
-                            $fail('User 1 and User 2 must be different.');
-                        }
-                    }
-                ])
-                ->required(),
-                
-            Forms\Components\Select::make('user2_id')
-                ->label('User 2')    
-                ->required()
-                ->rules([
-                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                        if ($value && $value == $get('user1_id')) {
-                            $fail('User 1 and User 2 must be different.');
-                        }
-                    }
-                ])
-                ->relationship('user2', 'name', 
-                    fn ($query) => $query->where('role', 'PARTICIPANT') 
-                ),
-               
-            Forms\Components\Select::make('actor_id')
-                ->required()
-                ->rules([
-                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                        $user1 = $get('user1_id');
-                        $user2 = $get('user2_id');
-                        if ($value != $user1 && $value != $user2) {
-                            $fail('Actor must be either User 1 or User 2.');
-                        }
-                    }
-                ])
-                ->relationship('actor', 'name'),
-                
-            Forms\Components\Select::make('status')
-                ->required()
-                ->options([
-                    'pending' => 'Pending',
-                    'accepted' => 'Accepted', 
-                    'rejected' => 'Rejected',
-                    'left' => 'Left'
-                ]),
-        ]);
+            ->schema([
+                Forms\Components\Select::make('user1_id')
+                    ->relationship('user1', 'name',
+                        fn ($query) => $query->where('role', 'PARTICIPANT')
+                    )
+                    ->label('User 1')
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('user2_id')) {
+                                $fail('User 1 and User 2 must be different.');
+                            }
+                        },
+                    ])
+                    ->required(),
+
+                Forms\Components\Select::make('user2_id')
+                    ->label('User 2')
+                    ->required()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('user1_id')) {
+                                $fail('User 1 and User 2 must be different.');
+                            }
+                        },
+                    ])
+                    ->relationship('user2', 'name',
+                        fn ($query) => $query->where('role', 'PARTICIPANT')
+                    ),
+
+                Forms\Components\Select::make('actor_id')
+                    ->required()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            $user1 = $get('user1_id');
+                            $user2 = $get('user2_id');
+                            if ($value != $user1 && $value != $user2) {
+                                $fail('Actor must be either User 1 or User 2.');
+                            }
+                        },
+                    ])
+                    ->relationship('actor', 'name'),
+
+                Forms\Components\Select::make('status')
+                    ->required()
+                    ->options([
+                        'pending' => 'Pending',
+                        'accepted' => 'Accepted',
+                        'rejected' => 'Rejected',
+                        'left' => 'Left',
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -102,7 +101,7 @@ class FriendResource extends Resource
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status'),
-                
+
             ])
             // ->filters([
             //     //

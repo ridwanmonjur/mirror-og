@@ -12,6 +12,7 @@ class Wallet extends Model
     use HasFactory;
 
     protected $table = 'user_wallet';
+
     protected $fillable = [
         'usable_balance',
         'current_balance',
@@ -26,7 +27,7 @@ class Wallet extends Model
         'bank_details_updated_at',
     ];
 
-    public $timestamps = NULL;
+    public $timestamps = null;
 
     public function user(): BelongsTo
     {
@@ -57,10 +58,10 @@ class Wallet extends Model
         $cacheKey = sprintf(config('cache.keys.wallet'), $this->user_id);
         $cacheTtl = config('cache.ttl');
         Cache::put($cacheKey, $this, $cacheTtl);
-        
+
         return $this;
     }
-    
+
     /**
      * Clear - Remove from cache only
      */
@@ -68,15 +69,15 @@ class Wallet extends Model
     {
         $cacheKey = sprintf(config('cache.keys.wallet'), $this->user_id);
         Cache::forget($cacheKey);
-        
+
         return $this;
     }
-    
+
     public static function retrieveOrCreateCache($userId)
     {
         $cacheKey = sprintf(config('cache.keys.wallet'), $userId);
         $cacheTtl = config('cache.ttl');
-        
+
         return Cache::remember($cacheKey, $cacheTtl, function () use ($userId) {
             return static::firstOrCreate(['user_id' => $userId], ['usable_balance' => 0, 'current_balance' => 0]);
         });
@@ -87,11 +88,9 @@ class Wallet extends Model
         static::saved(function ($wallet) {
             $wallet->putCache();
         });
-        
+
         static::deleted(function ($wallet) {
             $wallet->clearCache();
         });
     }
-
-
 }

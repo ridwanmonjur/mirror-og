@@ -40,11 +40,11 @@ class MatchUpsertRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $errors = $validator->errors();
-        
+
         $response = new JsonResponse([
             'message' => 'The given data was invalid.',
             'errors' => $this->transformErrors($errors),
-            'status_code' => 422
+            'status_code' => 422,
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
 
         throw new HttpResponseException($response);

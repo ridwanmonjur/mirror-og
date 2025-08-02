@@ -20,15 +20,15 @@ return new class extends Migration
         });
 
         Schema::table('all_payment_transactions', function (Blueprint $table) {
-            if (!Schema::hasColumn('all_payment_transactions', 'coupon_amount')) {
+            if (! Schema::hasColumn('all_payment_transactions', 'coupon_amount')) {
                 $table->double('coupon_amount')->nullable();
             }
 
-            if (!Schema::hasColumn('all_payment_transactions', 'payment_amount')) {
+            if (! Schema::hasColumn('all_payment_transactions', 'payment_amount')) {
                 $table->double('payment_amount');
             }
-        
-            if (!Schema::hasColumn('all_payment_transactions', 'released_amount')) {
+
+            if (! Schema::hasColumn('all_payment_transactions', 'released_amount')) {
                 $table->double('released_amount')->nullable();
             }
 
@@ -63,7 +63,7 @@ return new class extends Migration
             $this->dropColumnIfExists($table, $tableName, 'released_amount');
             $this->dropColumnIfExists($table, $tableName, 'payment_amount');
 
-            if (!Schema::hasColumn('all_payment_transactions', 'user_discount_id')) {
+            if (! Schema::hasColumn('all_payment_transactions', 'user_discount_id')) {
                 $table->unsignedBigInteger('user_discount_id')->nullable();
                 $table->foreign('user_discount_id')->references('id')->on('user_discounts')->onDelete('set null');
             }

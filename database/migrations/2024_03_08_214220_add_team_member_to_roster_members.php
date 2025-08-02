@@ -31,7 +31,7 @@ return new class extends Migration
             if (Schema::hasColumn('roster_members', 'team_member_id')) {
                 $table->dropConstrainedForeignId('team_member_id');
             }
-            
+
             if (Schema::hasColumn('roster_members', 'team_id')) {
                 $table->dropConstrainedForeignId('team_id');
             }

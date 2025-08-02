@@ -11,13 +11,13 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Traits\HandlesFilamentExceptions;
 
-
 class OrganizerFollowResource extends Resource
 {
     use HandlesFilamentExceptions;
-    protected static ?string $model = OrganizerFollow::class;
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
+    protected static ?string $model = OrganizerFollow::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
     public static function form(Form $form): Form
     {
@@ -25,14 +25,14 @@ class OrganizerFollowResource extends Resource
             ->schema([
                 Forms\Components\Select::make('participant_user_id')
                     ->relationship('participantUser', 'name',
-                    fn ($query) => $query->where('role', 'PARTICIPANT')  
+                        fn ($query) => $query->where('role', 'PARTICIPANT')
                     )
                     ->required(),
                 Forms\Components\Select::make('organizer_user_id')
                     ->required()
                     ->relationship('organizer', 'name',
-                    fn ($query) => $query->where('role', 'ORGANIZER')             
-                ),
+                        fn ($query) => $query->where('role', 'ORGANIZER')
+                    ),
             ]);
     }
 

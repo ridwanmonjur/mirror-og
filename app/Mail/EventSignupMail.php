@@ -12,14 +12,14 @@ use Illuminate\Queue\InteractsWithQueue;
 class EventSignupMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $body;
 
     /**
      * Create a new message instance.
      *
-     * @param array $body
      * @return void
      */
     public function __construct(array $body)
@@ -32,17 +32,16 @@ class EventSignupMail extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    
     public function build()
     {
         return $this->replyTo(config('services.mail_address'))
-            ->subject("The team has completed signup!")
+            ->subject('The team has completed signup!')
             ->view('Email.event-signuped')
             ->with([
                 'team' => $this->body['team'],
                 'actionName' => 'Login and complete registration!',
                 'actionUrl' => $this->body['link'],
-                'text' => $this->body['text'],  
+                'text' => $this->body['text'],
             ]);
     }
 }

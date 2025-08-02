@@ -18,17 +18,17 @@ class PaymentService
         $this->stripeClient = $stripeClient;
     }
 
-    public function refundPaymentsForEvents(string| int $joinEventId, float $percentCapture): array
+    public function refundPaymentsForEvents(string|int $joinEventId, float $percentCapture): array
     {
         $paymentData = DB::table('join_events')
-            ->where('join_events.id',  $joinEventId )
+            ->where('join_events.id', $joinEventId)
             ->join('participant_payments', 'join_events.id', '=', 'participant_payments.join_events_id')
             ->join('stripe_transactions', 'stripe_transactions.id', '=', 'participant_payments.payment_id')
-            ->select('stripe_transactions.payment_id', 'stripe_transactions.id', 'stripe_transactions.payment_amount',  
+            ->select('stripe_transactions.payment_id', 'stripe_transactions.id', 'stripe_transactions.payment_amount',
                 'stripe_transactions.payment_status', 'participant_payments.user_id')
             ->get()
             ->toArray();
-        
+
         $updatedPayments = [];
         $summedDiscounts = [];
         $updatedDiscounts = [];
@@ -40,61 +40,60 @@ class PaymentService
                     'user_id' => $userId,
                     'payment_id' => $item->payment_id,
                     'couponed_amount' => 0,
-                    'released_amount' => 0
+                    'released_amount' => 0,
                 ];
-                
+
                 $capturedAmount = $item->payment_amount * $percentCapture;
                 $refundedAmount = $item->payment_amount - $capturedAmount;
-                
+
                 $isRequiresCapture = $item->payment_status === 'requires_capture';
-                
+
                 if ($isRequiresCapture) {
                     $paymentIntent = $this->stripeClient->retrieveStripePaymentByPaymentId($item->payment_id);
-                    if ($paymentIntent->status !== "requires_capture") {
+                    if ($paymentIntent->status !== 'requires_capture') {
                         continue;
                     }
-                
+
                     $updatedPayments[$index]['payment_status'] = 'released';
                     $updatedPayments[$index]['released_amount'] = $refundedAmount;
-                
+
                     $percentCapture != 0
                         ? $paymentIntent->capture(['amount_to_capture' => $item['payment_amount'] * 100 * $percentCapture])
                         : $paymentIntent->cancel();
-                
+
                     $discountKey = 'released_amount';
                 } else {
                     $updatedPayments[$index]['payment_status'] = 'couponed';
                     $updatedPayments[$index]['couponed_amount'] = $refundedAmount;
-                    
+
                     $discountKey = 'couponed_amount';
 
                     $updatedDiscounts[] = [
                         'user_id' => $userId,
-                        'amount' => $refundedAmount
+                        'amount' => $refundedAmount,
                     ];
                 }
 
-                if (!isset($summedDiscounts[$userId])) {
+                if (! isset($summedDiscounts[$userId])) {
                     $summedDiscounts[$userId] = [];
                 }
 
-                if (!isset($summedDiscounts[$userId])) {
+                if (! isset($summedDiscounts[$userId])) {
                     $summedDiscounts[$userId] = [
-                        $discountKey => $refundedAmount
+                        $discountKey => $refundedAmount,
                     ];
-                } else if (!isset($summedDiscounts[$userId][$discountKey])){
+                } elseif (! isset($summedDiscounts[$userId][$discountKey])) {
                     $summedDiscounts[$userId][$discountKey] = $refundedAmount;
                 } else {
-                    $summedDiscounts[$userId][$discountKey] = 
+                    $summedDiscounts[$userId][$discountKey] =
                         $summedDiscounts[$userId][$discountKey] +  $refundedAmount;
                 }
             } catch (Exception $e) {
-                Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
             }
         }
 
-
-        if (!empty($updatedPayments)) {
+        if (! empty($updatedPayments)) {
             DB::beginTransaction();
             try {
                 foreach ($updatedPayments as $payment) {
@@ -104,11 +103,11 @@ class PaymentService
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
             }
         }
 
-        if (!empty($updatedDiscounts)) {
+        if (! empty($updatedDiscounts)) {
             DB::beginTransaction();
             try {
 
@@ -119,17 +118,17 @@ class PaymentService
 
                     if ($userWallet) {
                         $userWallet->update(['usable_balance' => $userWallet->usable_balance + $amount]);
-                    } 
+                    }
                 }
                 DB::commit();
             } catch (Exception $e) {
                 DB::rollBack();
-                Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
             }
         }
 
         $paymentData = DB::table('join_events')
-            ->where('id', $joinEventId)     
+            ->where('id', $joinEventId)
             ->update(['join_status' => 'canceled']);
 
         return $summedDiscounts;

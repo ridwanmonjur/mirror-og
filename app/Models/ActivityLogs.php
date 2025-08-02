@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class ActivityLogs extends Model
 {
     use HasFactory;
+
     protected $fillable = ['action', 'subject_id', 'subject_type',
-        'object_id', 'object_type', 'log', 
+        'object_id', 'object_type', 'log',
     ];
 
-    
     protected $table = 'activity_logs';
 
     public function subject(): MorphTo
@@ -49,7 +49,7 @@ class ActivityLogs extends Model
     public static function createActivityLogs(array $parameters): void
     {
         $data = [];
-        $isLogArray = is_array($parameters['log']); 
+        $isLogArray = is_array($parameters['log']);
         foreach ($parameters['subject_id'] as $index => $subjectId) {
             $data[] = [
                 'subject_type' => $parameters['subject_type'],
@@ -57,7 +57,7 @@ class ActivityLogs extends Model
                 'subject_id' => $subjectId,
                 'object_id' => $parameters['object_id'],
                 'action' => $parameters['action'],
-                'log' => $isLogArray? $parameters['log'][$index] : $parameters['log'],
+                'log' => $isLogArray ? $parameters['log'][$index] : $parameters['log'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -69,18 +69,18 @@ class ActivityLogs extends Model
     public static function retrievePaginatedActivityLogs($userId, $duration, $perPage, $page)
     {
         $activityLogsQuery = ActivityLogs::where('subject_id', $userId);
-            if ($duration == 'new') {
-                $activityLogsQuery->whereDate('created_at', operator: Carbon::today());
-            } elseif ($duration == 'recent') {
-                $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
-            } else {
-                $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
-            }
-    
-            $activityLogs = $activityLogsQuery
-                ->orderBy('id', 'desc')
-                ->simplePaginate($perPage, ['*'], 'page', $page);
-                
+        if ($duration == 'new') {
+            $activityLogsQuery->whereDate('created_at', operator: Carbon::today());
+        } elseif ($duration == 'recent') {
+            $activityLogsQuery->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::today()]);
+        } else {
+            $activityLogsQuery->whereDate('created_at', '<', Carbon::now()->subWeek()->startOfWeek());
+        }
+
+        $activityLogs = $activityLogsQuery
+            ->orderBy('id', 'desc')
+            ->simplePaginate($perPage, ['*'], 'page', $page);
+
         return $activityLogs;
     }
 }

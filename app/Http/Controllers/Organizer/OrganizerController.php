@@ -9,7 +9,6 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Organizer;
 use App\Models\OrganizerFollow;
-use App\Models\Team;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -66,7 +65,7 @@ class OrganizerController extends Controller
         try {
             DB::transaction(function () use ($user, $validatedData) {
                 if (isset($validatedData['address'])) {
-                    $address = isset($validatedData['address']['id']) ? Address::findOrFail($validatedData['address']['id']) : new Address();
+                    $address = isset($validatedData['address']['id']) ? Address::findOrFail($validatedData['address']['id']) : new Address;
 
                     $address->fill($validatedData['address']);
                     $address->user_id = $user->id;
@@ -81,7 +80,7 @@ class OrganizerController extends Controller
                 $userProfile->slugify();
                 $userProfile->save();
 
-                $organizer = isset($validatedData['organizer']['id']) ? Organizer::findOrFail($validatedData['organizer']['id']) : new Organizer();
+                $organizer = isset($validatedData['organizer']['id']) ? Organizer::findOrFail($validatedData['organizer']['id']) : new Organizer;
 
                 $organizer->user_id = $user->id;
                 $organizer->fill($validatedData['organizer']);
@@ -115,7 +114,7 @@ class OrganizerController extends Controller
 
             return response()->json(
                 [
-                    'message' => 'Error updating organizer: ' . $e->getMessage(),
+                    'message' => 'Error updating organizer: '.$e->getMessage(),
                     'success' => false,
                 ],
                 400,
@@ -139,7 +138,7 @@ class OrganizerController extends Controller
                 ->count();
             $beforeLastYearEventsCount = EventDetail::whereYear('created_at', '<=', now()->year - 1)
                 ->where('user_id', $userProfile->id)
-                ->whereNotIn('status', ['DRAFT' . 'PENDING'])
+                ->whereNotIn('status', ['DRAFT'.'PENDING'])
                 ->count();
 
             $teamsCount = JoinEvent::where('join_status', 'confirmed')

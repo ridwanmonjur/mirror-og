@@ -18,12 +18,12 @@ class ParticipantFollowResource extends Resource
     protected static ?string $model = ParticipantFollow::class;
 
     use HandlesFilamentExceptions;
+
     protected static ?string $navigationLabel = 'Participant Follows';
 
     protected static ?string $navigationGroup = 'User Management';
 
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
-
 
     protected static ?int $navigationSort = 3;
 
@@ -42,7 +42,7 @@ class ParticipantFollowResource extends Resource
                             if ($value && $value == $get('participant_followee')) {
                                 $fail('A user cannot follow themselves. Please select different users for Follower and Followee.');
                             }
-                        }
+                        },
                     ])
                     ->relationship('followerUser', 'name'),
 
@@ -57,7 +57,7 @@ class ParticipantFollowResource extends Resource
                             if ($value && $value == $get('participant_follower')) {
                                 $fail('A user cannot follow themselves. Please select different users for Follower and Followee.');
                             }
-                        }
+                        },
                     ])
                     ->relationship('followeeUser', 'name'),
             ]);
@@ -67,25 +67,23 @@ class ParticipantFollowResource extends Resource
     {
         return $table
             ->columns([
-                
-                
+
                 Tables\Columns\TextColumn::make('followerUser.name')
                     ->label('Follower Name')
                     ->sortable()
                     ->searchable(),
-                
-                
+
                 Tables\Columns\TextColumn::make('followeeUser.name')
                     ->label('Followee Name')
                     ->sortable()
                     ->searchable(),
-                
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
@@ -93,7 +91,7 @@ class ParticipantFollowResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

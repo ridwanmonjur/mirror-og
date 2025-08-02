@@ -21,10 +21,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('tasks:respond')->everyThirtyMinutes()->withoutOverlapping();
         $schedule->command('tasks:weekly')->weeklyOn(1, '00:00')->withoutOverlapping(); // Monday
         $schedule->command('tasks:weekly')->weeklyOn(4, '00:00')->withoutOverlapping(); // Thursday
-        
+
         // */5 * * * * /usr/bin/php /home/u472033366/domains/oceansgaming.gg/public_html/artisan schedule:run >> /dev/null 2>&1
         // */5 * * * * /usr/bin/php /home/u472033366/domains/driftwood.gg/public_html/artisan schedule:run >> /dev/null 2>&1
-
 
     }
 

@@ -11,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 class TeamMemberUpdated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $tries = 3; 
+
+    public $tries = 3;
 
     public $teamMember;
 

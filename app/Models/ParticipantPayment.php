@@ -11,8 +11,9 @@ class ParticipantPayment extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
-    
+
     protected $table = 'participant_payments';
+
     protected $fillable = [
         'team_members_id',
         'user_id',
@@ -21,7 +22,7 @@ class ParticipantPayment extends Model
         'payment_id',
         'register_time',
         'history_id',
-        'type'
+        'type',
     ];
 
     public function members(): BelongsTo

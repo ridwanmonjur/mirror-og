@@ -12,7 +12,7 @@ return new class extends Migration
             // Drop existing foreign keys
             $table->dropForeign(['user_id']);
             $table->dropForeign(['join_events_id']);
-            
+
             // Add cascade foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('join_events_id')->references('id')->on('join_events')->onDelete('cascade');
@@ -25,7 +25,7 @@ return new class extends Migration
             // Drop cascade foreign keys
             $table->dropForeign(['user_id']);
             $table->dropForeign(['join_events_id']);
-            
+
             // Recreate regular foreign keys
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('join_events_id')->references('id')->on('join_events');

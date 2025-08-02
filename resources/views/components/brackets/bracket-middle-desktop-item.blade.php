@@ -22,12 +22,12 @@
             onerror="this.src='{{ asset('assets/images/404.svg') }}';"
             class="cursor-pointer position-absolute w-100 h-100 object-fit-cover z-99 me-2" alt="Team View"
             data-position="{{$position1}}" 
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
         >
     @else 
         <small 
             data-position="{{$position1}}" 
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
             class="cursor-pointer ms-1 user-select-none position-absolute  replace_me_with_image" style="z-index: 99;"
         >{{$position1}}</small>
      @endif
@@ -49,14 +49,14 @@
             onerror="this.src='{{ asset('assets/images/404.svg') }}';"
             class="cursor-pointer position-absolute w-100 h-100 z-99 d-none-when-hover object-fit-cover me-2" alt="Team View"
             data-position="{{$position2}}" 
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
         >
         
     @else 
         <small class="cursor-pointer ms-1 user-select-none position-absolute replace_me_with_image" 
             style="z-index: 99;"
             data-position="{{$position2}}" 
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
         >{{$position2}}</small>
      @endif
     <span></span>

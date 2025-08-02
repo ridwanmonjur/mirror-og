@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 
 trait PrinterLoggerTrait
 {
-    private function logEntry(string $commandName, string $commandType, string $cronExpression = '0 0 * * *', Carbon $today): int
+    private function logEntry(string $commandName, string $commandType, string $cronExpression, Carbon $today): int
     {
         return DB::table('monitored_scheduled_tasks')->insertGetId([
             'name' => $commandName,
@@ -35,7 +35,7 @@ trait PrinterLoggerTrait
 
     private function logError(?int $id, Exception $e): void
     {
-        Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        Log::error($e->getMessage().PHP_EOL.$e->getTraceAsString());
         if ($id) {
             DB::table('monitored_scheduled_task_log_items')->insert([
                 'monitored_scheduled_task_id' => $id,
@@ -49,14 +49,14 @@ trait PrinterLoggerTrait
         $fullClassName = get_class($this);
         $className = class_basename($fullClassName);
 
-        Log::error("[$className] " . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        Log::error("[$className] ".$e->getMessage().PHP_EOL.$e->getTraceAsString());
 
         try {
             $today = now()->toDateString();
 
             $this->trackDailyErrorAndNotify($className, $today, $e);
         } catch (Exception $dbException) {
-            Log::error('Failed to log error to database: ' . $dbException->getMessage());
+            Log::error('Failed to log error to database: '.$dbException->getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ trait PrinterLoggerTrait
             if ($errorRecord) {
                 DB::table('daily_command_errors')->where('id', $errorRecord->id)->increment('error_count');
 
-                Log::info("Error count incremented for $className on $today. Total: " . ($errorRecord->error_count + 1));
+                Log::info("Error count incremented for $className on $today. Total: ".($errorRecord->error_count + 1));
             } else {
                 DB::table('daily_command_errors')->insert([
                     'class_name' => $className,
@@ -88,7 +88,7 @@ trait PrinterLoggerTrait
                     ->update(['email_sent' => true]);
             }
         } catch (Exception $trackingException) {
-            Log::error('Failed to track daily error count: ' . $trackingException->getMessage());
+            Log::error('Failed to track daily error count: '.$trackingException->getMessage());
         }
     }
 
@@ -101,14 +101,14 @@ trait PrinterLoggerTrait
 
             Mail::to($adminEmail)->send($errorMail);
         } catch (Exception $mailException) {
-            Log::error('Failed to send error notification email: ' . $mailException->getMessage());
+            Log::error('Failed to send error notification email: '.$mailException->getMessage());
         }
     }
 
     /**
      * Get daily error statistics for a specific date
      */
-    private function getDailyErrorStats(string $date = null): array
+    private function getDailyErrorStats(?string $date = null): array
     {
         $date = $date ?? now()->toDateString();
 
@@ -120,7 +120,7 @@ trait PrinterLoggerTrait
      */
     private function getCommandErrorStats(string $className, int $days = 7): array
     {
-        return  DB::table('daily_command_errors')
+        return DB::table('daily_command_errors')
             ->select('error_date', 'error_count', 'email_sent')
             ->where('class_name', $className)
             ->where('error_date', '>=', now()->subDays($days)->toDateString())

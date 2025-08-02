@@ -17,7 +17,6 @@
 // {
 //     protected static ?string $model = Task::class;
 
-
 //     public static function form(Form $form): Form
 //     {
 //         return $form
@@ -27,7 +26,7 @@
 //                     ->numeric(),
 //                 Forms\Components\TextInput::make('task_name')
 //                     ->required(),
-            
+
 //                 Forms\Components\DateTimePicker::make('action_time')
 //                     ->required(),
 //             ]);
@@ -42,7 +41,7 @@
 //                     ->numeric()
 //                     ->sortable(),
 //                 Tables\Columns\TextColumn::make('task_name'),
-              
+
 //                 Tables\Columns\TextColumn::make('action_time')
 //                     ->dateTime()
 //                     ->sortable(),

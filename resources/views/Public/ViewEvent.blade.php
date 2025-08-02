@@ -41,7 +41,9 @@
     ])));
 
 @endphp
-
+@php
+    // dd($bracketList);
+@endphp 
 <head>
     @include('googletagmanager::head')
     <meta charset="UTF-8">
@@ -519,7 +521,13 @@
                     @vue:mounted="init()"
                     class="tabcontent " 
                 >
-                    @include('includes.Public.BracketReport')
+                    @if ($event->type && $event->type->eventType == 'Tournament')
+                        @include('includes.Public.BracketReport')
+                    @elseif ($event->type && $event->type->eventType == 'League')
+                        @include('includes.Public.LeagueReport')
+                    @else
+                        @include('includes.Public.BracketReport')
+                    @endif
                 </div>
 
                 <div id="Teams" class="tabcontent" >

@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('cart_items', function (Blueprint $table) {
-            if (!Schema::hasColumn('cart_items', 'variant_id')) {
+            if (! Schema::hasColumn('cart_items', 'variant_id')) {
                 $table->unsignedBigInteger('variant_id')->nullable();
                 $table->foreign('variant_id')->references('id')->on('product_variants')->onDelete('cascade');
             }

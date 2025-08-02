@@ -20,11 +20,12 @@ class UserFactory extends Factory
      */
     protected $model = User::class;
 
-    public static function deleteRelatedTables() {
-  
+    public static function deleteRelatedTables()
+    {
+
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         // Truncate tables
         DB::table('users')->truncate();
         DB::table('organizers')->truncate();
@@ -121,7 +122,7 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'role' => 'ORGANIZER',
-                'name' => $this->faker->company() . ' Admin',
+                'name' => $this->faker->company().' Admin',
             ];
         });
     }
@@ -136,7 +137,7 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'role' => 'PARTICIPANT',
-                'name' => 'p_' . $this->faker->userName(),
+                'name' => 'p_'.$this->faker->userName(),
             ];
         });
     }
@@ -165,7 +166,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'stripe_customer_id' => 'cus_' . Str::random(14),
+                'stripe_customer_id' => 'cus_'.Str::random(14),
             ];
         });
     }
@@ -197,7 +198,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'userBanner' => 'images/user/userBanner-' . now()->timestamp . '.jpg',
+                'userBanner' => 'images/user/userBanner-'.now()->timestamp.'.jpg',
             ];
         });
     }

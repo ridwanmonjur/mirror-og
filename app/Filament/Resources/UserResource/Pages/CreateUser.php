@@ -10,7 +10,6 @@ use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 
-
 class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
@@ -47,7 +46,7 @@ class CreateUser extends CreateRecord
                 'error' => $e->getMessage(),
                 'data' => $data,
                 'sql' => $e->getSql(),
-                'bindings' => $e->getBindings()
+                'bindings' => $e->getBindings(),
             ]);
 
             // Handle specific database errors
@@ -57,7 +56,7 @@ class CreateUser extends CreateRecord
                     ->body('This email address is already registered. Please use a different email.')
                     ->danger()
                     ->send();
-                
+
                 $this->halt(); // Prevents the form from closing
             }
 
@@ -67,15 +66,16 @@ class CreateUser extends CreateRecord
                 ->body('Unable to create user. Please try again or contact support if the problem persists.')
                 ->danger()
                 ->send();
-            
+
             $this->halt();
+
             return $user;
 
         } catch (\Exception $e) {
             // Log unexpected errors
             Log::error('Unexpected error during user creation', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             Notification::make()
@@ -83,8 +83,9 @@ class CreateUser extends CreateRecord
                 ->body('An unexpected error occurred. Please try again.')
                 ->danger()
                 ->send();
-            
+
             $this->halt();
+
             return $user;
         }
     }

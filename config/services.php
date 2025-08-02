@@ -21,9 +21,8 @@ return [
         'scheme' => 'https',
     ],
 
-    'firebase' => env('FIREBASE_CREDENTIALS' ),
+    'firebase' => env('FIREBASE_CREDENTIALS'),
     'mail_address' => config('services.mail_address'),
-
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
@@ -58,7 +57,7 @@ return [
         'redirect' => env('STEAM_REDIRECT_URL'),
         'allowed_hosts' => [
             'driftwood.gg',
-            'oceansgaming.gg'
+            'oceansgaming.gg',
         ],
     ],
 

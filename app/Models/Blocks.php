@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-
 class Blocks extends Model
 {
     use HasFactory;
@@ -20,7 +18,6 @@ class Blocks extends Model
         'blocked_user_id',
     ];
 
-  
     /**
      * Get the user who blocked another user.
      */

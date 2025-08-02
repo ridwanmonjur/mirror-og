@@ -11,16 +11,15 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
 
 class EventTierResource extends Resource
 {
     use HandlesFilamentExceptions;
-    protected static ?string $model = EventTier::class;
-    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
+    protected static ?string $model = EventTier::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
     public static function form(Form $form): Form
     {
@@ -33,48 +32,47 @@ class EventTierResource extends Resource
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
-                        ->content('Please create the object first, then edit to upload an image.')
-                        ->visible(fn (string $context): bool => $context === 'create'),
+                            ->content('Please create the object first, then edit to upload an image.')
+                            ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('tierIcon')
                             ->image()
-                            ->directory('images/event_details') 
+                            ->directory('images/event_details')
                             ->maxSize(5120)
                             ->visible(fn (string $context): bool => $context === 'edit')
                             ->deleteUploadedFileUsing(function ($file, $livewire) {
                                 if ($file && Storage::disk('public')->exists($file)) {
                                     Storage::disk('public')->delete($file);
                                 }
-                                
+
                                 if ($livewire->record) {
                                     $livewire->record->tierIcon = null;
                                     $livewire->record->save();
                                 }
-                                
+
                                 return null;
                             })
                             ->saveUploadedFileUsing(function ($state, $file, callable $set, $livewire) {
                                 // Generate new filename regardless of creation or edit
-                                    $newFilename = 'event_details-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
-                                    $directory = 'images/event_details';
-                                    $path = $file->storeAs($directory, $newFilename, 'public');
-                                    
-                                    
-                                    if ($livewire->record) {
-                                        $oldBanner = $livewire->record->tierIcon;
-                                        $livewire->record->tierIcon = $path;
-                                        $livewire->record->save();
-                                        
-                                        if ($oldBanner && $oldBanner !== $state) {
-                                            Storage::disk('public')->delete($oldBanner);
-                                        }
+                                $newFilename = 'event_details-'.time().'-'.auth()->id().'.'.$file->getClientOriginalExtension();
+                                $directory = 'images/event_details';
+                                $path = $file->storeAs($directory, $newFilename, 'public');
+
+                                if ($livewire->record) {
+                                    $oldBanner = $livewire->record->tierIcon;
+                                    $livewire->record->tierIcon = $path;
+                                    $livewire->record->save();
+
+                                    if ($oldBanner && $oldBanner !== $state) {
+                                        Storage::disk('public')->delete($oldBanner);
                                     }
-                                    
-                                    // Always return the path so it can be stored in the form data
-                                    return $path;
+                                }
+
+                                // Always return the path so it can be stored in the form data
+                                return $path;
 
                             }),
-                ]),
-              
+                    ]),
+
                 Forms\Components\TextInput::make('tierTeamSlot')
                     ->numeric()
                     ->rules(['integer', 'min:1'])
@@ -104,7 +102,7 @@ class EventTierResource extends Resource
                     ->modalDescription('⚠️ IMPORTANT: You must configure registration open, close & early deadline durations for all event types. Without it, registration & event updates will not progress smoothly.')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Got it'),
-                
+
                 Tables\Actions\Action::make('second_setup_guide')
                     ->label('Must Configure Prize for Each Position')
                     ->icon('heroicon-m-information-circle')
@@ -120,10 +118,10 @@ class EventTierResource extends Resource
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('tierIcon')
                     ->circular()
-->defaultImageUrl(url('/assets/images/404q.png'))
- ->extraImgAttributes([
-        'class' => 'border border-gray-300 dark:border-gray-600',
-    ])
+                    ->defaultImageUrl(url('/assets/images/404q.png'))
+                    ->extraImgAttributes([
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('tierTeamSlot'),
                 Tables\Columns\TextColumn::make('tierPrizePool'),

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
-use Io238\ISOCountries\Models\Country;
 
 class Participant extends Model
 {
@@ -21,7 +20,7 @@ class Participant extends Model
         'games_data' => 'array',
     ];
 
-    public function getRegionDetails(): ? CountryRegion
+    public function getRegionDetails(): ?CountryRegion
     {
         return CountryRegion::select(['name', 'id', 'emoji_flag',   'sort_order', 'type'])
             ->find($this->region);

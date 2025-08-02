@@ -9,14 +9,13 @@ class Task extends Model
 {
     protected $table = 'tasks';
 
-    protected $fillable = 
+    protected $fillable =
         ['id',	'task_name',	'action_time',	'created_at',	'taskable_type',	'taskable_id'];
 
-
     public $timestamps = false;
+
     public function taskable(): MorphTo
     {
         return $this->morphTo;
     }
-
 }

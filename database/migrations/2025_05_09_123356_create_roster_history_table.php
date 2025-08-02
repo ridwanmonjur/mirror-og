@@ -21,7 +21,7 @@ class CreateRosterHistoryTable extends Migration
             $table->unsignedBigInteger('team_id')->nullable();
             $table->boolean('vote_to_quit')->default(false);
             $table->timestamps();
-            
+
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('join_events_id')->references('id')->on('join_events');
         });

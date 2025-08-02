@@ -12,18 +12,24 @@ use Illuminate\Support\Facades\DB;
 class ShowCheckoutRequest extends FormRequest
 {
     public ?EventDetail $event;
+
     public float $total;
+
     public array $prevForm;
+
     public float $participantPaymentSum;
+
     public string|int $id;
 
     public bool $isEarly;
 
     public array $fee;
+
     public bool $paymentDone = false;
+
     public array $couponStatus = [
         'error' => null,
-        'success' => null
+        'success' => null,
     ];
 
     public function authorize(): bool
@@ -60,10 +66,8 @@ class ShowCheckoutRequest extends FormRequest
             'joinEventId' => $this->input('joinEventId'),
             'event_details_id' => $this->input('id'),
             'memberId' => $this->input('memberId'),
-            'coupon_code' => $this->input('coupon_code') ?? null
-         ];
-
-
+            'coupon_code' => $this->input('coupon_code') ?? null,
+        ];
 
         $this->prevForm = $prevForm;
 
@@ -74,9 +78,9 @@ class ShowCheckoutRequest extends FormRequest
             'team_id' => $this->input('teamId'),
         ])->exists();
 
-        if (!$rosterMember) {
+        if (! $rosterMember) {
             $validator->errors()->add(
-                'roster', 
+                'roster',
                 "You are a member of {$this->input('teamName')}, but not a member of this event's roster."
             );
 
@@ -89,59 +93,63 @@ class ShowCheckoutRequest extends FormRequest
         $user = $this->user();
 
         $joinEvent = JoinEvent::where('id', $this->input('joinEventId'))->first();
-        if (!$joinEvent) {
+        if (! $joinEvent) {
             $validator->errors()->add(
-                'join', 
+                'join',
                 "No team has joined with id: {$this->id}!"
             );
+
             return;
         }
 
         $event = EventDetail::with([
-                'tier', 'user', 'user.organizer', 'game', 'type',
-                'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'
-            ])
+            'tier', 'user', 'user.organizer', 'game', 'type',
+            'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close',
+        ])
             ->where('id', $this->id)->first();
-        if (!$event) {
+        if (! $event) {
             $validator->errors()->add(
-                'event', 
+                'event',
                 "Event with id: {$this->id} can't be found!"
             );
+
             return;
         }
 
         $this->event = $event;
-        
 
         $status = $event->getRegistrationStatus();
         if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
-            $validator->errors()->add('time', "Regisration time is now over!");
-            return;
-        }
-        
-        if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
-            $validator->errors()->add('time', "Regisration time has not yet started!");
+            $validator->errors()->add('time', 'Regisration time is now over!');
+
             return;
         }
 
-        if (!$event->tier) {
+        if ($status == config('constants.SIGNUP_STATUS.TOO_EARLY')) {
+            $validator->errors()->add('time', 'Regisration time has not yet started!');
+
+            return;
+        }
+
+        if (! $event->tier) {
             $validator->errors()->add(
-                'tier', 
+                'tier',
                 "Event with id: {$this->id} has no event tier chosen"
             );
+
             return;
         }
 
         $this->isEarly = $status == config('constants.SIGNUP_STATUS.EARLY');
-        $total =  $this->isEarly ? (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;        
+        $total =  $this->isEarly ? (float) $event->tier->earlyEntryFee : (float) $event->tier->tierEntryFee;
         $this->total = $total;
-        $paymentOptionLower = config("constants.STRIPE.MINIMUM_RM");
+        $paymentOptionLower = config('constants.STRIPE.MINIMUM_RM');
         $paymentOptionHigher = $total - $paymentOptionLower;
         $user = $this->user();
         [$fee, $isCouponApplied, $error, $coupon] = SystemCoupon::loadCoupon($this->input('coupon_code'), $this->input('amount'), 0.0, 'participant', $user->id);
         $this->couponStatus = [
             'success' => $isCouponApplied,
-            'error' => $error
+            'error' => $error,
         ];
 
         $this->fee = $fee;
@@ -154,19 +162,19 @@ class ShowCheckoutRequest extends FormRequest
         $pending = $total - $soFarPaid;
         $this->participantPaymentSum = $participantPaymentSum;
 
-        if ($fee['finalFee'] <=  config("constants.STRIPE.ZERO")) {
-            if (!$isCouponApplied) {
+        if ($fee['finalFee'] <=  config('constants.STRIPE.ZERO')) {
+            if (! $isCouponApplied) {
                 $validator->errors()->add(
                     'amount',
                     "You have tried to pay RM {$fee['finalFee']}. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower."
                 );
-    
+
                 return;
             }
 
             DB::beginTransaction();
             SystemCoupon::participantPay($event, $user, $fee, $status, $joinEvent, $this->input('memberId'));
-            if ($pending <= config("constants.STRIPE.ZERO")) {
+            if ($pending <= config('constants.STRIPE.ZERO')) {
                 $joinEvent->completePayment($status);
             }
 
@@ -174,9 +182,8 @@ class ShowCheckoutRequest extends FormRequest
             $coupon?->validateAndIncrementCoupon($user->id);
             DB::commit();
 
-            return;    
+            return;
         }
-
 
         if ($fee['finalFee'] < $paymentOptionLower) {
             $validator->errors()->add(
@@ -187,8 +194,8 @@ class ShowCheckoutRequest extends FormRequest
             return;
         }
 
-        if ($pending > config("constants.STRIPE.ZERO") && $soFarPaid > $paymentOptionHigher) {
-            $minimum = ($total - $participantPaymentSum) - $paymentOptionLower ;
+        if ($pending > config('constants.STRIPE.ZERO') && $soFarPaid > $paymentOptionHigher) {
+            $minimum = ($total - $participantPaymentSum) - $paymentOptionLower;
             $validator->errors()->add(
                 'amount',
                 "You have tried to pay RM {$fee['fianlFee']}. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower and lower than RM $minimum."
@@ -197,8 +204,8 @@ class ShowCheckoutRequest extends FormRequest
             return;
         }
 
-        $pendingBeforePayment = $this->total - $participantPaymentSum ;
-        if ($pendingBeforePayment < config("constants.STRIPE.ZERO")) {
+        $pendingBeforePayment = $this->total - $participantPaymentSum;
+        if ($pendingBeforePayment < config('constants.STRIPE.ZERO')) {
             $validator->errors()->add(
                 'amount',
                 "You've already paid for this event!"
@@ -212,8 +219,7 @@ class ShowCheckoutRequest extends FormRequest
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
         throw new \Illuminate\Validation\ValidationException($validator, redirect()
-            ->route('participant.register.manage', ['id' => $this->teamId])            
+            ->route('participant.register.manage', ['id' => $this->teamId])
             ->with('errorMessage', $validator->errors()->first()));
     }
-
 }

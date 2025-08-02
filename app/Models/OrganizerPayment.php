@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OrganizerPayment extends Model
 {
     use HasFactory;
+
     protected $table = 'organizer_payments';
+
     public $timestamps = false;
 
     protected $fillable = [

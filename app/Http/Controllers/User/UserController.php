@@ -12,7 +12,6 @@ use App\Models\TeamProfile;
 use App\Models\UserProfile;
 use App\Models\NotifcationsUser;
 use App\Models\TransactionHistory;
-use App\Models\User;
 use App\Models\Wallet;
 use App\Services\SettingsService;
 use Exception;
@@ -24,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     private $stripeClient;
+
     private $settingsService;
 
     public function __construct(StripeConnection $stripeClient, SettingsService $settingsService)
@@ -36,7 +36,7 @@ class UserController extends Controller
     {
         ['success' => $success, 'message' => $message, 'route' => $route] = $this->settingsService->changeMailAction($token, $newEmail);
 
-        if (!$success) {
+        if (! $success) {
             return $this->showErrorGeneral($message);
         }
 
@@ -55,6 +55,7 @@ class UserController extends Controller
             })
             ->orderBy('id', 'desc')
             ->simplePaginate($perPage, ['*'], 'notification_page', $pageNumber);
+
         return response()->json([
             'data' => [$type => $page->items()],
             'hasMore' => $page->hasMorePages(),
@@ -67,7 +68,7 @@ class UserController extends Controller
         $user = $request->attributes->get('user');
 
         $notification = NotifcationsUser::where('user_id', $user->id)->findOrFail($id);
-        if (!$notification->is_read) {
+        if (! $notification->is_read) {
             $notification->markAsRead();
         }
 
@@ -96,10 +97,11 @@ class UserController extends Controller
                         has texted you.
                     </span>
                 HTML
-            ,
+                ,
             ];
 
             NotifcationsUser::insertWithCount([$notification]);
+
             return response()->json(['success' => true, 'message' => 'Succeeded'], 201);
         } catch (Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -156,7 +158,7 @@ class UserController extends Controller
         $isShowNextAccordion = $isShowSecondInnerAccordion || $isShowFirstInnerAccordion;
         $limit_methods = $request->input('methods_limit', 10); // 10
         $limit_history = $request->input('history_limit', 10); // 100
-        $transactions = TransactionHistory::getTransactionHistory( new TransactionHistoryRequest(), $user);
+        $transactions = TransactionHistory::getTransactionHistory(new TransactionHistoryRequest, $user);
         // dd($transactions);
 
         if ($user->stripe_customer_id) {
@@ -165,7 +167,7 @@ class UserController extends Controller
                     ->where('user_id', $user->id)
                     ->orderBy('created_at', 'desc')
                     ->limit($limit_methods + 1);
-            
+
                 $paymentMethods = $paymentMethodsQuery->get();
                 $hasMorePayments = isset($paymentMethods[$limit_methods]);
 
@@ -173,39 +175,37 @@ class UserController extends Controller
                 //     ->where('user_id', $user->id)
                 //     ->orderBy('created_at', 'desc')
                 //     ->limit($limit_history + 1);
-                
+
                 // $paymentHistory = $paymentHistoryQuery->get();
                 $hasMoreHistory = isset($paymentHistory[$limit_history]);
             } catch (Exception $e) {
-                $paymentMethods = new Collection();
+                $paymentMethods = new Collection;
                 // $paymentHistory = new Collection();
                 $hasMorePayments
-                    // = $hasMoreHistory 
+                    // = $hasMoreHistory
                     = false;
             }
         } else {
-            $paymentMethods = new Collection();
+            $paymentMethods = new Collection;
             // $paymentHistory = new Collection();
-            $hasMorePayments 
-                // = $hasMoreHistory 
+            $hasMorePayments
+                // = $hasMoreHistory
                 = false;
         }
 
         $settingsAction = config('constants.SETTINGS_ROUTE_ACTION');
-        return view('Users.Settings', compact('user', 'paymentMethods',  'settingsAction', 
-                'limit_methods', 'limit_history', 'hasMorePayments', 
-                // 'hasMoreHistory', 'paymentHistory',
-                'wallet', 'transactions',
-                'isShowFirstInnerAccordion', 'isShowSecondInnerAccordion', 'isShowNextAccordion'
-            )
+
+        return view('Users.Settings', compact('user', 'paymentMethods', 'settingsAction',
+            'limit_methods', 'limit_history', 'hasMorePayments',
+            // 'hasMoreHistory', 'paymentHistory',
+            'wallet', 'transactions',
+            'isShowFirstInnerAccordion', 'isShowSecondInnerAccordion', 'isShowNextAccordion'
+        )
         );
     }
 
     /**
      * Unlink user's bank account
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function unlinkBankAccount(Request $request): JsonResponse
     {
@@ -213,7 +213,7 @@ class UserController extends Controller
             $user = $request->get('user');
             $wallet = Wallet::retrieveOrCreateCache($user->id);
 
-            if (!$wallet->has_bank_account) {
+            if (! $wallet->has_bank_account) {
                 return response()->json(
                     [
                         'success' => false,
