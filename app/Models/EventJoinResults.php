@@ -11,16 +11,19 @@ use Illuminate\Support\Facades\DB;
 class EventJoinResults extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
+
     protected $table = 'event_join_results';
+
     protected $fillable = ['join_events_id', 'position', 'prize_sum'];
 
-    public  function joinEvent() : BelongsTo {
+    public function joinEvent(): BelongsTo
+    {
         return $this->belongsTo(EventDetail::class, 'event_id');
     }
 
-    
-    public static function getEventJoinResults(int| string $id): Collection
+    public static function getEventJoinResults(int|string $id): Collection
     {
         return DB::table('join_events')
             ->where('join_events.event_details_id', '=', $id)
@@ -40,7 +43,7 @@ class EventJoinResults extends Model
     public static function getEventJoinListResults(array $idList): Collection
     {
         return DB::table('join_events')
-            ->whereIn('join_events.id',  $idList)
+            ->whereIn('join_events.id', $idList)
             ->join('event_details', 'join_events.event_details_id', '=', 'event_details.id')
             // ->where('join_status', 'confirmed')
             ->leftJoin('teams', 'join_events.team_id', '=', 'teams.id')

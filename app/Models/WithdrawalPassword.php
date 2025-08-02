@@ -10,5 +10,5 @@ class WithdrawalPassword extends Model
 
     public $fillable = ['password'];
 
-    public $timestamps = NULL;
+    public $timestamps = null;
 }

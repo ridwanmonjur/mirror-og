@@ -51,7 +51,7 @@
                     . 'data-position-'. $position }}" 
             alt="Team View"
             data-position="{{$position}}"
-            onclick="reportModalShow(event);" 
+            onclick="previousMatchReportShow(event);" 
         >
     @else 
         <span data-position="{{$position}}" class="replace_me_with_image  popover-button" style="z-index: 99;"></span>

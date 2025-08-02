@@ -11,14 +11,14 @@ class BracketDeadlineSetup extends Model
     use HasFactory;
 
     protected $table = 'bracket_deadline_setup';
-    
+
     public $timestamps = false;
-    
+
     protected $fillable = [
         'tier_id',
         'deadline_config',
     ];
-    
+
     /**
      * The attributes that should be cast.
      *
@@ -27,7 +27,7 @@ class BracketDeadlineSetup extends Model
     protected $casts = [
         'deadline_config' => 'array',
     ];
-    
+
     /**
      * Get the event tier that owns this bracket deadline setup.
      */
@@ -35,5 +35,4 @@ class BracketDeadlineSetup extends Model
     {
         return $this->belongsTo(EventTier::class, 'tier_id', 'id');
     }
-    
 }

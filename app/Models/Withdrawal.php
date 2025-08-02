@@ -24,14 +24,20 @@ class Withdrawal extends Model
 
     // Status constants
     const STATUS_PENDING = 'pending';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_REJECTED = 'rejected';
+
     const STATUS_COMPLETED = 'completed';
 
     // Business rules constants
     const MIN_AMOUNT = 5.00;
+
     const MAX_DAILY_AMOUNT = 5000.00;
+
     const MAX_TRANSACTION_AMOUNT = 5000.00;
+
     const PROCESSING_DAYS = 7;
 
     public function user(): BelongsTo
@@ -58,7 +64,7 @@ class Withdrawal extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return 'RM ' . number_format($this->withdrawal, 2);
+        return 'RM '.number_format($this->withdrawal, 2);
     }
 
     public static function checkDailyLimit($userId, $amount): bool
@@ -81,5 +87,5 @@ class Withdrawal extends Model
         return max(0, self::MAX_DAILY_AMOUNT - $todayTotal);
     }
 
-    public $timestamps = NULL;
+    public $timestamps = null;
 }

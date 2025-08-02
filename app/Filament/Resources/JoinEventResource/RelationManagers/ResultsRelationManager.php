@@ -16,9 +16,9 @@ class ResultsRelationManager extends RelationManager
     use HandlesFilamentExceptions;
 
     protected static string $relationship = 'results';
-    
+
     protected static ?string $recordTitleAttribute = 'position';
-    
+
     protected static ?string $title = 'Results';
 
     public function form(Form $form): Form
@@ -56,9 +56,9 @@ class ResultsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->visible(fn () => !$this->getOwnerRecord()->results()->exists())
+                    ->visible(fn () => ! $this->getOwnerRecord()->results()->exists())
                 // ->successRedirectUrl(fn () => $this->getParentResource()::getUrl('index'))
-                ->createAnother(false)
+                    ->createAnother(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

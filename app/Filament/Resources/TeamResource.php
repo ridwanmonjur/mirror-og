@@ -12,13 +12,13 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Traits\HandlesFilamentExceptions;
 
 class TeamResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = Team::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -48,13 +48,13 @@ class TeamResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('creator_id')
                     ->required()
-                    ->label("Creator")
+                    ->label('Creator')
                     ->searchable()
                     ->optionsLimit(10)
                     ->searchDebounce(500)
-                    ->relationship('user', 'name', 
-                    fn ($query) => $query->where('role', 'PARTICIPANT') 
-                ),
+                    ->relationship('user', 'name',
+                        fn ($query) => $query->where('role', 'PARTICIPANT')
+                    ),
                 Forms\Components\TextInput::make('teamDescription')
                     ->maxLength(255),
 
@@ -71,7 +71,7 @@ class TeamResource extends Resource
                         if ($record && $record->all_categories) {
                             $gameIds = [];
                             preg_match_all('/\|(\d+)\|/', $record->all_categories, $matches);
-                            if (!empty($matches[1])) {
+                            if (! empty($matches[1])) {
                                 $gameIds = array_map('intval', $matches[1]);
                             }
                             $component->state($gameIds);
@@ -81,8 +81,8 @@ class TeamResource extends Resource
                         // Store selected games and clear default game if it's not in the selected games
                         $selectedGames = is_array($state) ? $state : [];
                         $currentDefault = $get('default_category_id');
-                        
-                        if ($currentDefault && !in_array($currentDefault, $selectedGames)) {
+
+                        if ($currentDefault && ! in_array($currentDefault, $selectedGames)) {
                             $set('default_category_id', null);
                         }
                     })
@@ -93,11 +93,11 @@ class TeamResource extends Resource
                     ->options(function (callable $get) use ($games) {
                         $selectedGames = $get('all_categories_array');
                         $selectedGames = is_array($selectedGames) ? $selectedGames : [];
-                        
+
                         if (empty($selectedGames)) {
                             return [];
                         }
-                        
+
                         // Only show games that are selected in all_categories_array
                         return array_intersect_key($games, array_flip($selectedGames));
                     })
@@ -113,9 +113,10 @@ class TeamResource extends Resource
                     ->dehydrateStateUsing(function ($state, $get) {
                         // Convert array back to pipe-separated string when saving
                         $selectedGames = $get('all_categories_array');
-                        if (is_array($selectedGames) && !empty($selectedGames)) {
-                            return '|' . implode('|', $selectedGames) . '|';
+                        if (is_array($selectedGames) && ! empty($selectedGames)) {
+                            return '|'.implode('|', $selectedGames).'|';
                         }
+
                         return null;
                     }),
 
@@ -142,22 +143,22 @@ class TeamResource extends Resource
                     ->icon('heroicon-o-photo')
                     ->schema([
                         Forms\Components\Placeholder::make('create_notice')
-                        ->content('Please create the object first, then edit to upload an image.')
-                        ->visible(fn (string $context): bool => $context === 'create'),
+                            ->content('Please create the object first, then edit to upload an image.')
+                            ->visible(fn (string $context): bool => $context === 'create'),
                         Forms\Components\FileUpload::make('teamBanner')
                             ->image()
-                            ->directory('images/team') 
+                            ->directory('images/team')
                             ->maxSize(5120)
                             ->deleteUploadedFileUsing(function ($file, $livewire) {
                                 if ($file && Storage::disk('public')->exists($file)) {
                                     Storage::disk('public')->delete($file);
                                 }
-                                
+
                                 if ($livewire->record) {
                                     $livewire->record->teamBanner = null;
                                     $livewire->record->save();
                                 }
-                                
+
                                 return null;
                             })
                             ->visible(fn (string $context): bool => $context === 'edit')
@@ -165,18 +166,19 @@ class TeamResource extends Resource
                                 // Custom file naming logic here
                                 $oldBanner = $livewire->record->userBanner;
 
-                                $newFilename = 'teamBanner-' . time() . '-' . auth()->id() . '.' . $file->getClientOriginalExtension();
+                                $newFilename = 'teamBanner-'.time().'-'.auth()->id().'.'.$file->getClientOriginalExtension();
                                 $directory = 'images/team';
-                                
+
                                 $path = $file->storeAs($directory, $newFilename, 'public');
                                 $livewire->record->teamBanner = $path;
                                 $livewire->record->save();
                                 if ($oldBanner && $oldBanner !== $state) {
                                     $livewire->record->destroyTeanBanner($oldBanner);
                                 }
+
                                 return $path;
                             }),
-                        ]),
+                    ]),
 
                 Forms\Components\Select::make('country')
                     ->label('Region')
@@ -210,15 +212,14 @@ class TeamResource extends Resource
                     ->circular()
                     ->defaultImageUrl(url('/assets/images/404q.png'))
                     ->extraImgAttributes([
-                            'class' => 'border border-gray-300 dark:border-gray-600',
-                        ])
+                        'class' => 'border border-gray-300 dark:border-gray-600',
+                    ])
                     ->size(60),
                 Tables\Columns\TextColumn::make('teamName')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Team Creator')
                     ->numeric(),
-
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
@@ -235,7 +236,7 @@ class TeamResource extends Resource
                     ->numeric(),
 
                 Tables\Columns\TextColumn::make('country_name')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
@@ -244,8 +245,7 @@ class TeamResource extends Resource
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
                     ->toggleable(isToggledHiddenByDefault: true),
-               
-              
+
             ])
             // ->filters([
             //     //
@@ -266,7 +266,7 @@ class TeamResource extends Resource
             RelationManagers\TeamFollowRelationManager::class,
             RelationManagers\TeamProfileRelationManager::class,
             RelationManagers\MembersRelationManager::class,
-            RelationManagers\TeamCaptainRelationManager::class
+            RelationManagers\TeamCaptainRelationManager::class,
         ];
     }
 

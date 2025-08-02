@@ -11,33 +11,33 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VoteToStayRequest extends FormRequest
 {
-    public RosterMember $rosterMember ;
+    public RosterMember $rosterMember;
+
     /**
      * Determine if the user is authorized to make this request.
      */
+    public function authorize(): bool
+    {
+        return true;
+    }
 
-     public function authorize(): bool
-     {
-         return true;
-     }
- 
-     public function withValidator($validator)
-     {
-         $validator->after(function ($validator) {
-  
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
             $rosterMember = RosterMember::find($this->roster_id);
 
-            if (!$rosterMember) {
-                $validator->errors()->add('event',  'Roster member not found');
+            if (! $rosterMember) {
+                $validator->errors()->add('event', 'Roster member not found');
             }
 
             $this->rosterMember = $rosterMember;
 
             if ($rosterMember->user_id !== $this->attributes->get('user')?->id) {
-                $validator->errors()->add('event',  'Unauthorized to vote for this roster member');
+                $validator->errors()->add('event', 'Unauthorized to vote for this roster member');
             }
 
-         });
+        });
     }
 
     /**
@@ -53,20 +53,20 @@ class VoteToStayRequest extends FormRequest
             ],
             'vote_to_quit' => [
                 'required',
-                'boolean'
-            ]
-    
+                'boolean',
+            ],
+
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
-        
+
         $error = $validator->errors()->first();
-    
-        throw new ValidationException($validator, response()->json( [
+
+        throw new ValidationException($validator, response()->json([
             'message' => $error,
-            'success'=> false
+            'success'=> false,
         ], 422));
     }
 }

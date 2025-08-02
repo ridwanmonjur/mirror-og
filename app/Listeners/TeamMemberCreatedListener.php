@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\TeamMemberCreated;
 use App\Models\NotifcationsUser;
-use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -22,11 +21,11 @@ class TeamMemberCreatedListener implements ShouldQueue
     public function handle(TeamMemberCreated $event)
     {
         $event->teamMember->load([
-            'team:id,teamName,teamBanner,creator_id',  
+            'team:id,teamName,teamBanner,creator_id',
             'user:id,name,userBanner',
-            'team.members' => function($query) {
+            'team.members' => function ($query) {
                 $query->where('status', 'accepted');  // Fixed relationship and where clause
-            }            
+            },
         ]);
 
         $selectTeam = $event->teamMember->team;
@@ -71,8 +70,8 @@ class TeamMemberCreatedListener implements ShouldQueue
 
         $memberNotification = [];
         foreach ($selectTeam->members as $member) {
-            $route = $member->user->id == $selectTeam->creator_id ? 
-                route('participant.team.manage', $selectTeam->id):
+            $route = $member->user->id == $selectTeam->creator_id ?
+                route('participant.team.manage', $selectTeam->id) :
                 route('public.participant.view', $user->id);
 
             $memberNotification[] = [
@@ -81,7 +80,7 @@ class TeamMemberCreatedListener implements ShouldQueue
                 'html' => $teamNotification,
                 'link' => $route,
                 'img_src' => $user->userBanner,
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ];
         }
 
@@ -91,21 +90,20 @@ class TeamMemberCreatedListener implements ShouldQueue
             'html' => $userNotification,
             'link' => route('public.team.view', $selectTeam->id),
             'img_src' => $selectTeam->teamBanner,
-            'created_at' => DB::raw('NOW()')
+            'created_at' => DB::raw('NOW()'),
         ];
 
         NotifcationsUser::insertWithCount([...$memberNotification, $userNotification]);
-           
-        
+
     }
 
     public function failed($event, $exception): void
     {
-          // Log the error
-          Log::error('TeamCreatedListener failed', [
+        // Log the error
+        Log::error('TeamCreatedListener failed', [
             'exception' => $exception->getMessage(),
             'team_member_id' => $this->teamMember->id ?? null,
-            'stack_trace' => $exception->getTraceAsString()
+            'stack_trace' => $exception->getTraceAsString(),
         ]);
     }
 }

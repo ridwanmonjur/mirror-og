@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class CartItem extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'cart_id', 'product_id', 'quantity', 'subtotal'
+        'cart_id', 'product_id', 'quantity', 'subtotal',
     ];
 
     protected $casts = [
-        'subtotal' => 'decimal:2'
+        'subtotal' => 'decimal:2',
     ];
 
     public function cart()

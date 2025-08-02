@@ -12,5 +12,6 @@ class EventType extends Model
     protected $fillable = ['eventType', 'eventDefinitions'];
 
     protected $table = 'event_type';
-    public $timestamps = NULL;
+
+    public $timestamps = null;
 }

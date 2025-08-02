@@ -28,8 +28,4 @@ class TransactionHistoryRequest extends FormRequest
     {
         return $this->get('page', 10);
     }
-
-
-   
-
 }

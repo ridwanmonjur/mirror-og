@@ -17,7 +17,6 @@
 // {
 //     protected static ?string $model = Stars::class;
 
-
 //     public static function form(Form $form): Form
 //     {
 //         return $form
@@ -30,7 +29,7 @@
 //                     ->relationship('starredUser', 'name',
 //                     )
 //                     ->required(),
-                
+
 //             ]);
 //     }
 

@@ -16,12 +16,12 @@ class EditUser extends EditRecord
     {
         // Get the user
         $user = $this->record;
-        
+
         // Add participant data if available
         if ($user->role === 'PARTICIPANT' && $user->participant) {
             $data['participant'] = $user->participant->toArray();
         }
-        
+
         // Add organizer data if available
         if ($user->role === 'ORGANIZER' && $user->organizer) {
             $data['organizer'] = $user->organizer->toArray();

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->enum('match_type', ['league', 'tournament']);
             $table->string('stage_name')->nullable();
             $table->string('inner_stage_name')->nullable();
-            $table->string('status')->nullable()->default("upcoming");
+            $table->string('status')->nullable()->default('upcoming');
             $table->string('result')->nullable();
             $table->timestamps();
 

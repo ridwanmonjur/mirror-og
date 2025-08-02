@@ -18,7 +18,6 @@
 // {
 //     protected static ?string $model = ActivityLogs::class;
 
-
 //     public static function form(Form $form): Form
 //     {
 //         return $form
@@ -31,7 +30,6 @@
 //                 Forms\Components\Textarea::make('log')
 //                     ->required()
 //                     ->columnSpanFull(),
-                
 
 //                 // Forms\Components\TextInput::make('subject_type')
 //                 //     ->required()
@@ -62,7 +60,7 @@
 //                 ->options(function (callable $get) {
 //                     $type = $get('subject_type');
 //                     if (!$type) return [];
-                    
+
 //                     return $type::query()
 //                         ->pluck('name', 'id')
 //                         ->toArray();
@@ -74,7 +72,7 @@
 
 //             Forms\Components\Select::make('object_type')
 //                 ->label('Object Type')
-            
+
 //                 ->reactive()
 //                 ->afterStateUpdated(fn (callable $set) => $set('object_id', null)),
 
@@ -83,7 +81,7 @@
 //                 ->options(function (callable $get) {
 //                     $type = $get('object_type');
 //                     if (!$type) return [];
-                    
+
 //                     return $type::query()
 //                         ->pluck('name', 'id')
 //                         ->toArray();
@@ -104,24 +102,22 @@
 
 //                 Tables\Columns\TextColumn::make('action')
 //                     ->searchable(),
-               
+
 //                 Tables\Columns\TextColumn::make('action')
 //                     ->searchable(),
 
-               
 //                 Tables\Columns\TextColumn::make('object_type')
 //                     ->label('Object Type')
 //                     ->formatStateUsing(fn (string $state): string => class_basename($state))
 //                     ->sortable(),
-                
-               
+
 //                 // Tables\Columns\TextColumn::make('subject_type')
 //                 //     ->searchable(),
 //                 // Tables\Columns\TextColumn::make('subject_id')
-                
+
 //                 //     ->numeric()
 //                 //     ->sortable(),
-                
+
 //                 Tables\Columns\TextColumn::make('created_at')
 //                     ->dateTime()
 //                     ->sortable()

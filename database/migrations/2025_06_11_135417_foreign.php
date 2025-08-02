@@ -18,7 +18,7 @@ return new class extends Migration
             } catch (\Exception $e) {
                 // Foreign key doesn't exist, continue
             }
-            
+
             try {
                 if (Schema::hasColumn('participant_payments', 'team_members_id')) {
                     $table->dropForeign(['team_members_id']);
@@ -27,7 +27,7 @@ return new class extends Migration
             } catch (\Exception $e) {
                 // Foreign key doesn't exist, continue
             }
-            
+
             try {
                 if (Schema::hasColumn('participant_payments', 'user_id')) {
                     $table->dropForeign(['user_id']);
@@ -40,37 +40,36 @@ return new class extends Migration
 
         Schema::table('participant_payments', function (Blueprint $table) {
             // Modify columns to be nullable (using correct column type)
-                $table->unsignedBigInteger('team_members_id')->nullable();
-            
-                $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('team_members_id')->nullable();
 
-                $table->unsignedBigInteger('history_id')->nullable();
-            
-                $table->foreign('history_id')
-                      ->references('id')
-                      ->on('transaction_history')
-                      ->onDelete('set null')
-                      ->onUpdate('restrict');
-                      
-                $table->foreign('team_members_id')
-                      ->references('id')
-                      ->on('team_members')
-                      ->onDelete('set null')
-                      ->onUpdate('restrict');
-                      
-                $table->foreign('user_id')
-                      ->references('id')
-                      ->on('users')
-                      ->onDelete('set null')
-                      ->onUpdate('restrict');
-            
+            $table->unsignedBigInteger('user_id')->nullable();
+
+            $table->unsignedBigInteger('history_id')->nullable();
+
+            $table->foreign('history_id')
+                ->references('id')
+                ->on('transaction_history')
+                ->onDelete('set null')
+                ->onUpdate('restrict');
+
+            $table->foreign('team_members_id')
+                ->references('id')
+                ->on('team_members')
+                ->onDelete('set null')
+                ->onUpdate('restrict');
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('set null')
+                ->onUpdate('restrict');
+
         });
 
         Schema::table('user_coupons', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_coupons', 'redeemable_count')) {
+            if (! Schema::hasColumn('user_coupons', 'redeemable_count')) {
                 $table->integer('redeemable_count')->default(0);
             }
-
 
             if (Schema::hasColumn('user_coupons', 'redeemed_at')) {
                 $table->dropColumn(['redeemed_at']);
@@ -78,13 +77,13 @@ return new class extends Migration
         });
 
         Schema::table('user_coupons', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_coupons', 'redeemed_at')) {
+            if (! Schema::hasColumn('user_coupons', 'redeemed_at')) {
                 $table->date('redeemed_at')->nullable(true);
             }
         });
 
         Schema::table('participant_payments', function (Blueprint $table) {
-            if (!Schema::hasColumn('participant_payments', 'type')) {
+            if (! Schema::hasColumn('participant_payments', 'type')) {
                 $table->string('type');
             }
         });
@@ -96,69 +95,72 @@ return new class extends Migration
             // Drop foreign keys first
             try {
                 $table->dropForeign(['history_id']);
-            } catch (\Exception $e) {}
-            
+            } catch (\Exception $e) {
+            }
+
             try {
                 $table->dropForeign(['team_members_id']);
-            } catch (\Exception $e) {}
-            
+            } catch (\Exception $e) {
+            }
+
             try {
                 $table->dropForeign(['user_id']);
-            } catch (\Exception $e) {}
-            
+            } catch (\Exception $e) {
+            }
+
             // Revert column changes
             if (Schema::hasColumn('participant_payments', 'team_members_id')) {
                 $table->unsignedBigInteger('team_members_id')->nullable()->change();
             }
-            
+
             if (Schema::hasColumn('participant_payments', 'user_id')) {
                 $table->unsignedBigInteger('user_id')->nullable()->change();
             }
-            
+
             // Recreate original foreign keys with CASCADE
             if (Schema::hasColumn('participant_payments', 'history_id')) {
                 $table->foreign('history_id')
-                      ->references('id')
-                      ->on('transaction_history')
-                      ->onDelete('cascade')
-                      ->onUpdate('restrict');
+                    ->references('id')
+                    ->on('transaction_history')
+                    ->onDelete('cascade')
+                    ->onUpdate('restrict');
             }
-                      
+
             if (Schema::hasColumn('participant_payments', 'team_members_id')) {
                 $table->foreign('team_members_id')
-                      ->references('id')
-                      ->on('team_members')
-                      ->onDelete('cascade')
-                      ->onUpdate('restrict');
+                    ->references('id')
+                    ->on('team_members')
+                    ->onDelete('cascade')
+                    ->onUpdate('restrict');
             }
-                      
+
             if (Schema::hasColumn('participant_payments', 'user_id')) {
                 $table->foreign('user_id')
-                      ->references('id')
-                      ->on('users')
-                      ->onDelete('cascade')
-                      ->onUpdate('restrict');
+                    ->references('id')
+                    ->on('users')
+                    ->onDelete('cascade')
+                    ->onUpdate('restrict');
             }
         });
-        
+
         Schema::table('user_coupons', function (Blueprint $table) {
             if (Schema::hasColumn('user_coupons', 'redeemable_count')) {
                 $table->dropColumn('redeemable_count');
             }
 
-            if (!Schema::hasColumn('user_coupons', 'redeemed_at')) {
+            if (! Schema::hasColumn('user_coupons', 'redeemed_at')) {
                 $table->dropColumn(['redeemed_at']);
             }
         });
 
         Schema::table('user_coupons', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_coupons', 'redeemed_at')) {
+            if (! Schema::hasColumn('user_coupons', 'redeemed_at')) {
                 $table->date('redeemed_at')->nullable(true);
             }
         });
 
         Schema::table('participant_payments', function (Blueprint $table) {
-            if (!Schema::hasColumn('participant_payments', 'type')) {
+            if (! Schema::hasColumn('participant_payments', 'type')) {
                 $table->string('type');
             }
         });

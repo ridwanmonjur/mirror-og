@@ -5,11 +5,11 @@
     $isOrg = $bracket['user_level'] === $USER_ACCESS['IS_ORGANIZER'];
 @endphp
 <div class="tournament-bracket__item tournament d-none-until-hover2-parent">
-    <div class="tournament-bracket__match  middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} popover-parent "
+    <div class="tournament-bracket__match table-report  middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} popover-parent "
         tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
         data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}" data-item-type="middle"
     >
-        <x-brackets.bracket-table :bracket="$bracket"  :isFirst="false" />
+        <x-brackets.bracket-table :bracket="$bracket"  :isLeague="false"  />
         <div class="text-center mx-auto tournament-bracket__displayLargeScreen position-relative  ">
             <x-brackets.bracket-middle-item-popover :position1="$bracket['team1_position']" :teamBanner1="$bracket['team1_teamBanner']" :teamId1="$bracket['team1_id']"
                 :position2="$bracket['team2_position']" :teamBanner2="$bracket['team2_teamBanner']" :teamName2="$bracket['team2_teamName']" :teamId2="$bracket['team2_id']"
@@ -23,7 +23,7 @@
                     <span class="d-none-until-hover2">
                         <svg 
                             data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
-                            onclick="updateModalShow(event); " style="z-index: 999;"
+                            onclick="previousMatchUpdateShow(event); " style="z-index: 999;"
                             xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil-square  cursor-pointer me-2" viewBox="0 0 16 16">
                             <path

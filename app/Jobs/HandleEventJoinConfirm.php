@@ -20,15 +20,16 @@ class ConfirmStrategy
 {
     public function handle($parameters)
     {
-        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event, 
-            'join_id' => $join_id, 'joinEvent' => $joinEvent 
+        ['selectTeam' => $selectTeam, 'user' => $user, 'event' => $event,
+            'join_id' => $join_id, 'joinEvent' => $joinEvent
         ] = $parameters;
-      
+
         $teamMembers = $joinEvent->roster;
-        $memberNotification = []; $memberMail = [];
+        $memberNotification = [];
+        $memberMail = [];
         foreach ($teamMembers as $member) {
-            $addressPartHTML = $user->id == $member->user->id 
-                ? "You have" 
+            $addressPartHTML = $user->id == $member->user->id
+                ? 'You have'
                 : <<<HTML
             <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/user/{$user->id}">
                 {$user->name}</button> has
@@ -71,19 +72,19 @@ class ConfirmStrategy
                 'type' => 'teams',
                 'link' =>  route('participant.register.manage', [
                     'id' => $selectTeam->id,
-                    'scroll' => $join_id
+                    'scroll' => $join_id,
                 ]),
                 'icon_type' => 'confirm',
                 'html' => $html,
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ];
 
             if ($member->user->email) {
                 $memberMail[] = $member->user->email;
-            } 
+            }
 
-            $addressPart2Log = $member->user->id == $user->id 
-                ? 'You' 
+            $addressPart2Log = $member->user->id == $user->id
+                ? 'You'
                 : <<<HTML
             <a href="/view/user/{$member->user->id}" class="notification-blue">
                 <span>{$member->user->name}</span>
@@ -120,11 +121,10 @@ class ConfirmStrategy
             'text' => $htmlMail,
             'link' =>  route('participant.register.manage', [
                 'id' => $selectTeam->id,
-                'scroll' => $join_id
+                'scroll' => $join_id,
             ]),
         ]));
-       
-        
+
         ActivityLogs::insert($allEventLogs);
         NotifcationsUser::insertWithCount($memberNotification);
     }
@@ -134,18 +134,19 @@ class VoteStartStrategy
 {
     public function handle($parameters)
     {
-        [   
-            'selectTeam' => $selectTeam, 
-            'user' => $user, 
-            'event' => $event,  
+        [
+            'selectTeam' => $selectTeam,
+            'user' => $user,
+            'event' => $event,
             'join_id' => $join_id,
             'joinEvent' => $joinEvent,
         ] = $parameters;
 
         $teamMembers = $joinEvent->roster;
-        $memberNotification = []; $memberMail = [];
+        $memberNotification = [];
+        $memberMail = [];
         foreach ($teamMembers as $member) {
-            $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
+            $addressPart = $user->id == $member->user->id ? 'You have' : $user->name.' has';
             $htmlNotif = <<<HTML
                 <span class="notification-gray">
                     A vote to <span class="notification-danger" >QUIT</span> the 
@@ -175,17 +176,17 @@ class VoteStartStrategy
                 </span>
             HTML;
 
-            $addressPart = $user->id == $member->user->id ? 'You have' : $user->name . ' has';
+            $addressPart = $user->id == $member->user->id ? 'You have' : $user->name.' has';
             $memberNotification[] = [
                 'user_id' => $member->user->id,
                 'type' => 'teams',
                 'link' =>  route('participant.register.manage', [
                     'id' => $selectTeam->id,
-                    'scroll' => $join_id
+                    'scroll' => $join_id,
                 ]),
                 'icon_type' => 'vote',
                 'html' => $htmlNotif,
-                'created_at' => DB::raw('NOW()')
+                'created_at' => DB::raw('NOW()'),
             ];
 
             if ($member->user->email) {
@@ -198,7 +199,7 @@ class VoteStartStrategy
             'text' => $htmlMail,
             'link' =>  route('participant.register.manage', [
                 'id' => $selectTeam->id,
-                'scroll' => $join_id
+                'scroll' => $join_id,
             ]),
         ]));
 
@@ -206,21 +207,18 @@ class VoteStartStrategy
     }
 }
 
-class OrgCancelStrategy{
-    public function handle($parameters) {
-
-    }
+class OrgCancelStrategy
+{
+    public function handle($parameters) {}
 }
-
 
 class VoteEndStrategy
 {
-    
     public function handle($parameters)
     {
         [
-            'selectTeam' => $selectTeam, 
-            'event' => $event, 
+            'selectTeam' => $selectTeam,
+            'event' => $event,
             'willQuit' => $willQuit,
             'discount' => $discountsByUserAndType,
             'join_id' => $join_id,
@@ -270,7 +268,6 @@ class VoteEndStrategy
                     HTML;
                 }
 
-            
                 $htmlNotif = <<<HTML
                     <span class="notification-gray">
                         <button class="btn-transparent px-0 border-0 notification-entity" data-href="/view/team/{$selectTeam->id}">
@@ -280,26 +277,25 @@ class VoteEndStrategy
                             {$event->eventName}</button>.
                     </span>
                 HTML;
-                
+
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'teams',
                     'link' =>  route('participant.register.manage', [
                         'id' => $selectTeam->id,
-                        'scroll' => $join_id
+                        'scroll' => $join_id,
                     ]),
                     'icon_type' => 'quit',
                     'html' => $htmlNotif,
-                    'created_at' => DB::raw('NOW()')
+                    'created_at' => DB::raw('NOW()'),
                 ];
 
                 if ($member->user->email) {
                     $memberMail[] = $member->user->email;
                 }
 
-
                 $joinEvent->vote_ongoing = false;
-                $joinEvent->join_status = "canceled";
+                $joinEvent->join_status = 'canceled';
 
                 $joinEvent->save();
             }
@@ -309,7 +305,7 @@ class VoteEndStrategy
                 'text' => $htmlMail,
                 'link' =>  route('participant.register.manage', [
                     'id' => $selectTeam->id,
-                    'scroll' => $join_id
+                    'scroll' => $join_id,
                 ]),
             ]));
 
@@ -349,11 +345,11 @@ class VoteEndStrategy
             //         'updated_at' => now(),
             //     ];
             // })->toArray();
-        
+
             // DB::table('roster_history')->insert($rosterHistoryData);
-        
+
             // $memberIds = $teamMembers->pluck('id')->toArray();
-        
+
             // DB::table('roster_members')->whereIn('id', $memberIds)->delete();
         } else {
             $htmlNotif = <<<HTML
@@ -384,17 +380,17 @@ class VoteEndStrategy
                         Your team has voted to <span class="notification-blue">STAY</span>. Please complete the remaining registration to book your place, if your team hasn't done so.
                     </span>
                 HTML;
-                
+
                 $memberNotification[] = [
                     'user_id' => $member->user->id,
                     'type' => 'teams',
                     'link' =>  route('participant.register.manage', [
                         'id' => $selectTeam->id,
-                        'scroll' => $join_id
+                        'scroll' => $join_id,
                     ]),
                     'icon_type' => 'stay',
                     'html' => $htmlNotif,
-                    'created_at' => DB::raw('NOW()')
+                    'created_at' => DB::raw('NOW()'),
                 ];
 
                 if ($member->user->email) {
@@ -407,7 +403,7 @@ class VoteEndStrategy
                 'text' => $htmlMail,
                 'link' =>  route('participant.register.manage', [
                     'id' => $selectTeam->id,
-                    'scroll' => $join_id
+                    'scroll' => $join_id,
                 ]),
             ]));
 
@@ -418,7 +414,6 @@ class VoteEndStrategy
         }
     }
 }
-
 
 class HandleEventJoinConfirm implements ShouldQueue
 {
@@ -442,7 +437,7 @@ class HandleEventJoinConfirm implements ShouldQueue
         if (! class_exists($strategyClass)) {
             throw new \InvalidArgumentException("Strategy class {$strategyClass} does not exist.");
         }
-        $strategy = new $strategyClass();
+        $strategy = new $strategyClass;
         $strategy->handle($this->parameters);
     }
 }

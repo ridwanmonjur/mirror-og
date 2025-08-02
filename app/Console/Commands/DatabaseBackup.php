@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class DatabaseBackup extends Command
 {
     protected $signature = 'tasks:backup {--path=database/backups/backup.sql : Path to save the backup}';
+
     protected $description = 'Backup the database to a SQL file';
 
     public function handle()
@@ -24,7 +25,7 @@ class DatabaseBackup extends Command
             $host = config("database.connections.{$connection}.host");
 
             // Create the command
-            $command = "mysqldump -h {$host} -u {$username} " . ($password ? "-p{$password}" : '') . " {$database} > {$path}";
+            $command = "mysqldump -h {$host} -u {$username} ".($password ? "-p{$password}" : '')." {$database} > {$path}";
 
             // Execute the command
             exec($command, $output, $returnVar);

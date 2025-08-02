@@ -11,15 +11,20 @@ use Illuminate\Support\Facades\DB;
 class ShowShopCheckoutRequest extends FormRequest
 {
     public float $total;
+
     public array $prevForm;
+
     public float $cartPaymentSum = 0;
+
     public $cart; // Cache the cart instance
 
     public array $fee;
+
     public bool $paymentDone = false;
+
     public array $couponStatus = [
         'error' => null,
-        'success' => null
+        'success' => null,
     ];
 
     public function authorize(): bool
@@ -47,56 +52,58 @@ class ShowShopCheckoutRequest extends FormRequest
         $user = $this->attributes->get('user');
 
         $userId = $user->id;
-        
+
         $this->cart = NewCart::getUserCart($userId);
 
         $cart = $this->cart;
 
         $prevForm = [
-            'coupon_code' => $this->input('coupon_code') ?? null
+            'coupon_code' => $this->input('coupon_code') ?? null,
         ];
 
         $this->prevForm = $prevForm;
 
         if ($cart->getCount() == 0) {
             $validator->errors()->add(
-                'cart', 
-                "Your cart is empty!"
+                'cart',
+                'Your cart is empty!'
             );
+
             return;
         }
 
         // Check product availability
         foreach ($cart->getContent() as $item) {
             $product = Product::find($item->product_id);
-            if (!$product ) {
+            if (! $product) {
                 $validator->errors()->add(
-                    'products', 
-                    "Some items in your cart are no longer available."
+                    'products',
+                    'Some items in your cart are no longer available.'
                 );
+
                 return;
             }
         }
 
         $total = (float) $cart->getNumbers()->get('newTotal');
         $this->total = $total;
-        $paymentOptionLower = config("constants.STRIPE.MINIMUM_RM");
+        $paymentOptionLower = config('constants.STRIPE.MINIMUM_RM');
         $paymentOptionHigher = $total - $paymentOptionLower;
-        
+
         // For GET requests, use the total as default amount if not provided
         $amount = $this->input('amount', $total);
-        
+
         [$fee, $isCouponApplied, $error, $coupon] = SystemCoupon::loadCoupon(
-            $this->input('coupon_code'), 
-            $amount, 
-            0.0, 
-            'shop', 
+            $this->input('coupon_code'),
+            $amount,
+            0.0,
+            'shop',
             $user->id
         );
-        
+
         $this->couponStatus = [
             'success' => $isCouponApplied,
-            'error' => $error
+            'error' => $error,
         ];
 
         $this->fee = $fee;
@@ -104,17 +111,19 @@ class ShowShopCheckoutRequest extends FormRequest
         $soFarPaid = $this->cartPaymentSum + $fee['totalFee'];
         $pending = $total - $soFarPaid;
 
-        if ($fee['finalFee'] <= config("constants.STRIPE.ZERO")) {
-            if (!$isCouponApplied) {
+        if ($fee['finalFee'] <= config('constants.STRIPE.ZERO')) {
+            if (! $isCouponApplied) {
                 $validator->errors()->add(
                     'amount',
                     "You have tried to pay RM {$fee['finalFee']}. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower."
                 );
+
                 return;
             }
 
             $this->paymentDone = true;
-            return;    
+
+            return;
         }
 
         if ($fee['finalFee'] < $paymentOptionLower) {
@@ -122,24 +131,27 @@ class ShowShopCheckoutRequest extends FormRequest
                 'amount',
                 "You have tried to pay RM {$fee['finalFee']}. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower."
             );
+
             return;
         }
 
-        if ($pending > config("constants.STRIPE.ZERO") && $soFarPaid > $paymentOptionHigher) {
+        if ($pending > config('constants.STRIPE.ZERO') && $soFarPaid > $paymentOptionHigher) {
             $minimum = ($total - $this->cartPaymentSum) - $paymentOptionLower;
             $validator->errors()->add(
                 'amount',
                 "You have tried to pay RM {$fee['finalFee']}. If you don't pay full amount, you have to pay higher than RM $paymentOptionLower and lower than RM $minimum."
             );
+
             return;
         }
 
         $pendingBeforePayment = $this->total - $this->cartPaymentSum;
-        if ($pendingBeforePayment < config("constants.STRIPE.ZERO")) {
+        if ($pendingBeforePayment < config('constants.STRIPE.ZERO')) {
             $validator->errors()->add(
                 'amount',
                 "You've already paid for this order!"
             );
+
             return;
         }
     }

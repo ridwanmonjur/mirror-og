@@ -80,7 +80,7 @@
 //                     ->relationship('event', 'eventName')
 //                     ->label('Event')
 //                     ->searchable(),
-              
+
 //             ])
 //             ->persistFiltersInSession()
 //         ->persistSortInSession()

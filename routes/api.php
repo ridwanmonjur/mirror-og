@@ -62,7 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/user/participants', [ParticipantController::class, 'searchParticipant'])->name('user.teams.index');
         Route::post('/user/firebase', [ChatController::class, 'getFirebaseUsers'])->name('user.firebase.readAll');
         Route::post('/user/settings', [UserController::class, 'changeSettings'])->name('user.settings.action');
-        Route::post('/user/notifications', [UserController::class, 'createNotification'])->name('notifications.store'); 
+        Route::post('/user/notifications', [UserController::class, 'createNotification'])->name('notifications.store');
         Route::post('/user/notifications/{id}', [UserController::class, 'markAsRead'])->name('notifications.actopn');
 
         Route::post('/user/{id}/background', [UserController::class, 'replaceBackground'])->name('user.userBackgroundApi.action');
@@ -101,7 +101,7 @@ Route::group(['prefix' => 'organizer'], function () {
             Route::post('/event/{id}/destroy', [OrganizerEventController::class, 'destroy'])->name('event.destroy.action');
             Route::post('/event/{id}/results', action: [OrganizerEventResultsController::class, 'store'])->name('event.results.store');
             Route::post('/event/{id}/notifications', action: [OrganizerEventController::class, 'storeNotify'])->name('event.notify.store');
-            
+
             Route::post('/event/{id}/matches', [OrganizerEventResultsController::class, 'upsertBracket'])->name('event.matches.upsert');
             Route::post('/event/{id}/awards', [OrganizerEventResultsController::class, 'storeAward'])->name('event.awards.store');
             Route::delete('/event/{id}/awards/{awardId}', [OrganizerEventResultsController::class, 'destroyAward'])->name('event.awards.destroy');
@@ -111,33 +111,31 @@ Route::group(['prefix' => 'organizer'], function () {
     });
 });
 
-
-
 Route::prefix('analytics')->group(function () {
-    
+
     // Test connection
     Route::get('test', [AnalyticsController::class, 'testConnection']);
-    
+
     // Summary and dashboard
     Route::get('summary', [AnalyticsController::class, 'getSummary']);
     Route::get('dashboard', [AnalyticsController::class, 'getDashboard']);
-    
+
     // All events
     Route::get('events', [AnalyticsController::class, 'getAllEvents']);
     Route::get('events/{eventId}', [AnalyticsController::class, 'getEventDetails']);
-    
+
     // Events by dimension
     Route::get('events/by/{dimension}', [AnalyticsController::class, 'getEventsByDimension']);
-    
+
     // Specific dimension shortcuts
     Route::get('games', [AnalyticsController::class, 'getGames']);
     Route::get('tiers', [AnalyticsController::class, 'getTiers']);
     Route::get('esports', [AnalyticsController::class, 'getEsports']);
     Route::get('locations', [AnalyticsController::class, 'getLocations']);
     Route::get('types', [AnalyticsController::class, 'getTypes']);
-    
+
     // Tier-specific endpoints
     Route::get('tiers/hit', [AnalyticsController::class, 'getAllTiersHit']);
     Route::get('tiers/analytics', [AnalyticsController::class, 'getTierAnalytics']);
-    
+
 });

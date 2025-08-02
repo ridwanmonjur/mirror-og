@@ -16,15 +16,15 @@ return new class extends Migration
             if (Schema::hasColumn('matches', 'winner_id')) {
                 $table->dropColumn('winner_id');
             }
-            
+
             if (Schema::hasColumn('matches', 'winner_next_position')) {
                 $table->dropColumn('winner_next_position');
             }
-            
+
             if (Schema::hasColumn('matches', 'loser_next_position')) {
                 $table->dropColumn('loser_next_position');
             }
-            
+
             if (Schema::hasColumn('matches', 'match_type')) {
                 $table->dropColumn('match_type');
             }
@@ -38,19 +38,19 @@ return new class extends Migration
     {
         Schema::table('matches', function (Blueprint $table) {
             // Check if columns don't exist before adding them
-            if (!Schema::hasColumn('matches', 'winner_id')) {
+            if (! Schema::hasColumn('matches', 'winner_id')) {
                 $table->unsignedBigInteger('winner_id')->nullable();
             }
-            
-            if (!Schema::hasColumn('matches', 'winner_next_position')) {
+
+            if (! Schema::hasColumn('matches', 'winner_next_position')) {
                 $table->string('winner_next_position')->nullable();
             }
-            
-            if (!Schema::hasColumn('matches', 'loser_next_position')) {
+
+            if (! Schema::hasColumn('matches', 'loser_next_position')) {
                 $table->string('loser_next_position')->nullable();
             }
-            
-            if (!Schema::hasColumn('matches', 'match_type')) {
+
+            if (! Schema::hasColumn('matches', 'match_type')) {
                 $table->enum('match_type', ['league', 'tournament']);
             }
         });

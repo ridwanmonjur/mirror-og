@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('withdrawal_history_token', 64)->unique();
             $table->timestamp('expires_at');
             $table->timestamps();
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index(['withdrawal_history_token', 'expires_at']);
         });

@@ -11,10 +11,15 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class UpdateMemberRequest extends FormRequest
 {
     protected $teamMember;
+
     protected $team;
+
     protected $status;
+
     protected $isSameActor;
+
     protected $newToOldRules;
+
     protected $errorMessages;
 
     public function authorize()
@@ -49,12 +54,12 @@ class UpdateMemberRequest extends FormRequest
             $this->newToOldRules = [
                 'left' => true,
                 'accepted' => [
-                    'pending' => !$this->isSameActor,
+                    'pending' => ! $this->isSameActor,
                     'rejected' => $this->isSameActor,
                     'left' => $this->isSameActor,
                 ],
                 'rejected' => [
-                    'pending' => !$this->isSameActor,
+                    'pending' => ! $this->isSameActor,
                     'rejected' => $this->isSameActor,
                     'accepted' => $this->isSameActor,
                 ],
@@ -62,14 +67,14 @@ class UpdateMemberRequest extends FormRequest
             $this->errorMessages = [
                 'accepted' => [
                     'pending' => $this->isSameActor ? 'You cannot accept your own pending request' : '',
-                    'rejected' => !$this->isSameActor ? 'Only the original requester can accept after rejection' : '',
-                    'left' => !$this->isSameActor ? 'Only the original member can accept after leaving' : '',
+                    'rejected' => ! $this->isSameActor ? 'Only the original requester can accept after rejection' : '',
+                    'left' => ! $this->isSameActor ? 'Only the original member can accept after leaving' : '',
                     'accepted' => 'Request is already accepted',
                 ],
                 'rejected' => [
                     'pending' => $this->isSameActor ? 'You cannot reject your own pending request' : '',
-                    'rejected' => !$this->isSameActor ? 'Only the original requester can modify a rejected request' : '',
-                    'accepted' => !$this->isSameActor ? 'Only the accepted member can reject their request' : '',
+                    'rejected' => ! $this->isSameActor ? 'Only the original requester can modify a rejected request' : '',
+                    'accepted' => ! $this->isSameActor ? 'Only the accepted member can reject their request' : '',
                 ],
             ];
         }
@@ -84,29 +89,31 @@ class UpdateMemberRequest extends FormRequest
 
     protected function validateAll($validator)
     {
-        if (!$this->teamMember) {
+        if (! $this->teamMember) {
             $validator->errors()->add('team_member', 'Team member not found');
-            return; 
-        }
 
-       
-
-        if ($this->team && $this->team->creator_id == $this->teamMember->user_id && $this->status != 'accepted') {
-            $validator->errors()->add('team_creator', "Can't modify creator of the team");
             return;
         }
 
-        if ($this->status == 'accepted') { 
+        if ($this->team && $this->team->creator_id == $this->teamMember->user_id && $this->status != 'accepted') {
+            $validator->errors()->add('team_creator', "Can't modify creator of the team");
+
+            return;
+        }
+
+        if ($this->status == 'accepted') {
 
             if ($this->teamMember->countTeamMembers() >= 10) {
                 $validator->errors()->add('team_limit', 'Too many members are already in the team');
+
                 return;
             }
 
             if ($this->team->status == 'private') {
                 $validator->errors()->add('team_private', "It's a private team with only invites allowing new members");
+
                 return;
-            }  else if ($this->team->status !== 'public') { 
+            } elseif ($this->team->status !== 'public') {
                 $this->status = 'pending';
             }
 
@@ -118,6 +125,7 @@ class UpdateMemberRequest extends FormRequest
 
             if ($count > 5) {
                 $validator->errors()->add('team_limit', "You already members of $count teams");
+
                 return;
             }
 
@@ -127,12 +135,13 @@ class UpdateMemberRequest extends FormRequest
                 if ($timeSinceLeft < 24) {
                     $hoursRemaining = 24 - $timeSinceLeft;
                     $validator->errors()->add('team_grace_period', "You must wait {$hoursRemaining} more hours before joining a new team after leaving your previous team.");
+
                     return;
                 }
             }
         }
 
-        if (!$this->status) {
+        if (! $this->status) {
             return;
         }
 
@@ -142,7 +151,7 @@ class UpdateMemberRequest extends FormRequest
             $isPermitted = $isPermitted[$this->teamMember->status] ?? false;
         }
 
-        if (!$isPermitted) {
+        if (! $isPermitted) {
             $message = 'This request is not allowed. ';
             if (isset($this->errorMessages[$this->status][$this->teamMember->status])) {
                 $message .= $this->errorMessages[$this->status][$this->teamMember->status];
@@ -181,14 +190,13 @@ class UpdateMemberRequest extends FormRequest
         $errors = $validator->errors();
         $firstError = $errors->first();
 
-            throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => $firstError,
-                    'errors' => $errors
-                ], 422)
-            );
+        throw new HttpResponseException(
+            response()->json([
+                'success' => false,
+                'message' => $firstError,
+                'errors' => $errors,
+            ], 422)
+        );
 
-       
     }
 }

@@ -8,11 +8,11 @@
     <div class="tournament-bracket__round  tournament-bracket__round--gold w-100-mobile">
         <div class="tournament-bracket__list tournament-bracket__joined-list  tournament-bracket__joined-odd-list">
             <div class="tournament-bracket__item tournament final">
-                <div class="tournament-bracket__match user-select-none middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
+                <div class="tournament-bracket__match table-report user-select-none middle-item {{ $bracket['team1_position'] }} {{ $bracket['team2_position'] }} tournament"
                     tabindex="0" data-bracket="{{ json_encode($bracket) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="{{ $innerStageName }}" data-order="{{ $order }}"
                 >
-                    <x-brackets.bracket-table :bracket="$bracket"  :isFirst="false" />
+                    <x-brackets.bracket-table :bracket="$bracket"  :isLeague="false" />
 
                     <div class="text-center popover-parent   mx-auto tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                     >
@@ -31,7 +31,7 @@
                             <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">
                                 <span 
                                     data-team1_id="{{$bracket['team1_position']}}" data-team2_id="{{$bracket['team2_position']}}"
-                                    class="d-none-until-hover" onclick="updateModalShow(event); "
+                                    class="d-none-until-hover" onclick="previousMatchUpdateShow(event); "
                                     data-bs-toggle="modal" >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -58,11 +58,11 @@
     <div class="tournament-bracket__round tournament-bracket__round--gold d-none d-lg-block">
         <div class="tournament-bracket__list  tournament-bracket__joined-list tournament-bracket__joined-even-list">
             <div class="tournament-bracket__item tournament final">
-                <div class="tournament-bracket__match middle-item tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
+                <div class="tournament-bracket__match table-report middle-item tournament finals  {{ $winner['team1_position'] }} " tabindex="0"
                      data-bracket="{{ json_encode($winner) }}" data-stage_name="{{ $stageName }}"
                     data-inner_stage_name="W" data-order="{{ $order }}"
                 >
-                    <x-brackets.bracket-table :bracket="$winner"  :isFirst="false" />
+                    <x-brackets.bracket-table :bracket="$winner"  :isLeague="false"  />
                     <div class="text-center mx-auto popover-parent tournament-bracket__displayLargeScreen position-relative d-none-until-hover-parent"
                         style="z-index: 998; top: 50%; left: -70%">
                         
@@ -73,7 +73,7 @@
                             <small class="position-absolute winner-label d-none-until-hover" style="left: 100%;">
                                 <span 
                                     data-team1_id="{{$winner['team1_position']}}" 
-                                    class="d-none-until-hover" onclick="updateModalShow(event); "
+                                    class="d-none-until-hover" onclick="previousMatchUpdateShow(event); "
                                     data-bs-toggle="modal" >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

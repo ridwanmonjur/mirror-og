@@ -1,12 +1,12 @@
 /* ERROR State */
-.EventStatus-ERROR {
+.EventStatus-ERROR, .EventStatus-ERROR-HOME {
     background-color: #EF4444;
     color: white;
     border: 1px solid #EF4444;
 }
 
 /* PENDING State */
-.EventStatus-PENDING {
+.EventStatus-PENDING, .EventStatus-PENDING-HOME {
     background-color: #EF4444;
     color: white;
     border: 1px solid #EF4444;
@@ -36,14 +36,14 @@
 
 
 /* LIVE State */
-.EventStatus-LIVE {
+.EventStatus-LIVE, .EventStatus-LIVE-HOME {
     background-color: #43A4D7;
     color: white;
     border: 2px solid #43A4D7;
 }
 
 /* SCHEDULED State */
-.EventStatus-SCHEDULED {
+.EventStatus-SCHEDULED, .EventStatus-SCHEDULED-HOME {
     background-color: #43A4D7;
     color: white;
     border: 2px solid #43A4D7;
@@ -54,7 +54,7 @@
 }
  
 /* ONGOING State */
-.EventStatus-ONGOING, .EventStatus-ONGOING-HOME {
+.EventStatus-ONGOING {
     background-color: #FFFBFB;
     color: #2e4b59;
     border: 2px solid #FFFBFB;
@@ -107,21 +107,13 @@
 /* ENDED State */
 .EventStatus-ENDED, .EventStatus-ENDED-HOME {
     background-color: #A6A6A6;
-    color: white;
+    color: white !important;
     border: 2px solid #A6A6A6;
 }
 
 .Color-ENDED {
     color: #A6A6A6;
 }
-
-.EventStatus-ENDED-HOME {
-    background-color: #A6A6A6;
-    color: black;
-    border: 2px solid #A6A6A6;
-}
-
-
 
 .EventStatus-ENDED-HOME svg.ENDED {
     display:inline !important;

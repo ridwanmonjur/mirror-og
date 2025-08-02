@@ -23,7 +23,6 @@ use App\Http\Controllers\Shop\OrdersController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\CouponsController;
-
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -52,7 +51,7 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
-Route::get('/seed/event/{tier}', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/event/{tier}/{type}', [MiscController::class, 'seedBrackets']);
 Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
 Route::get('/deadlineTasks/{id}/{taskType}', [MiscController::class, 'deadlineTasks']);
@@ -60,8 +59,8 @@ Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respo
 Route::get('/download-withdrawal-csv/{token}', [MiscController::class, 'downloadWithdrawalCsv'])->name('download.withdrawal.csv');
 
 // Shop
-Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
-Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+// Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+// Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
@@ -122,7 +121,6 @@ Route::group(['prefix' => 'participant'], function () {
 
     // Social login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('participant.google.login');
-    Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('participant.steam.login');
 
     // General participant functions
     Route::group(['middleware' => 'auth'], function () {
@@ -156,7 +154,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::post('/event/member', [ParticipantTeamController::class, 'teamMemberManagementRedirected'])->name('participant.memberManage.action');
             Route::get('/event/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.event.view');
             Route::get('/eventv2/{id}', [ParticipantEventController::class, 'viewEvent'])->name('participant.eventv2.view');
-            
+
             Route::post('/event/{id}/join/team/select', [ParticipantEventController::class, 'selectTeamToJoinEvent'])->name('participant.selectTeamToJoin.action');
             Route::post('/event/{id}/join/team/create', [ParticipantEventController::class, 'createTeamToJoinEvent'])->name('participant.createTeamToJoinEvent.action');
             Route::post('/event/{id}/join/redirect/selectOrCreateTeamToJoinEvent', [ParticipantEventController::class, 'redirectToSelectOrCreateTeamToJoinEvent'])->name('participant.event.selectOrCreateTeam.redirect');
@@ -184,7 +182,6 @@ Route::group(['prefix' => 'organizer'], function () {
 
     // Social login
     Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('organizer.google.login');
-    Route::get('/auth/steam', [AuthController::class, 'redirectToSteam'])->name('organizer.steam.login');
 
     // General organizer functions
     Route::group(['middleware' => 'auth'], function () {
@@ -221,28 +218,19 @@ Route::group(['prefix' => 'organizer'], function () {
     });
 });
 
-
-
-
-
-Route::middleware( ['auth',  'prevent-back-history'] )->group(function () {
+Route::middleware(['auth',  'prevent-back-history'])->group(function () {
     Route::group(['middleware' => ['check-permission:participant|organizer']], function () {
-        Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
-        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-        Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
-        Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
+        // Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+        // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        // Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+        // Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
+        // Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 
-        // Cart2 routes with wallet and discount support
-        Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.index');
-        Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
-        Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
+        // // Cart2 routes with wallet and discount support
+        // Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.index');
+        // Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
+        // Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
 
-        Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
+        // Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
     });
 });
-
-
-
-
-

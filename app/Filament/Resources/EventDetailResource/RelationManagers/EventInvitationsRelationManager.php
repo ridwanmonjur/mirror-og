@@ -14,6 +14,7 @@ use Illuminate\Contracts\Pagination\CursorPaginator;
 class EventInvitationsRelationManager extends RelationManager
 {
     use HandlesFilamentExceptions;
+
     protected static string $relationship = 'invitationList';
 
     public function form(Form $form): Form
@@ -25,9 +26,9 @@ class EventInvitationsRelationManager extends RelationManager
                     ->searchDebounce(500)
                     ->label('Organizer')
                     ->searchable()
-                    ->relationship('organizer', 'name', 
-                    fn ($query) => $query->where('role', 'ORGANIZER') ),
-          
+                    ->relationship('organizer', 'name',
+                        fn ($query) => $query->where('role', 'ORGANIZER')),
+
                 Forms\Components\Select::make('team_id')
                     ->optionsLimit(10)
                     ->searchDebounce(500)

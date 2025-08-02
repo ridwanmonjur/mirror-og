@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class InterestedUser extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'email',
         'email_verified_at',
         'email_verified_token',
-        'pass_text'
+        'pass_text',
     ];
 
     protected $table = 'interested_user';
@@ -25,5 +26,4 @@ class InterestedUser extends Model
     {
         return $this->belongsTo(User::class, 'email', 'email');
     }
-
 }

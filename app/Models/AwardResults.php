@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\DB;
 class AwardResults extends Model
 {
     use HasFactory;
+
     protected $table = 'awards_results';
+
     public $fillable = ['join_events_id', 'award_id', 'team_id'];
 
     public function team(): BelongsTo
@@ -23,7 +25,6 @@ class AwardResults extends Model
     {
         return $this->belongsTo(Award::class, 'award_id', 'id');
     }
-  
 
     public static function getTeamAwardResults(string|int $id): Collection
     {

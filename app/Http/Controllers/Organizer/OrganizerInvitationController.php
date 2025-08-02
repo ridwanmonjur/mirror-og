@@ -8,7 +8,6 @@ use App\Models\EventInvitation;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class OrganizerInvitationController extends Controller
 {
@@ -28,7 +27,7 @@ class OrganizerInvitationController extends Controller
 
         $isUserSameAsAuth = true;
 
-        if (!$event) {
+        if (! $event) {
             throw new ModelNotFoundException("Event not found with id: {$id}");
         }
 
@@ -41,7 +40,7 @@ class OrganizerInvitationController extends Controller
     public function store(Request $request)
     {
         $team = Team::where('id', $request->team_id)->first();
-        if (!$team) {
+        if (! $team) {
             return response()->json([
                 'success' => false,
                 'message' => 'You have not chosen any teams!',
@@ -55,7 +54,7 @@ class OrganizerInvitationController extends Controller
             ]);
         }
 
-        $invitation = new EventInvitation();
+        $invitation = new EventInvitation;
         $invitation->organizer_user_id = $request->organizer_id;
         $invitation->event_id = $request->event_id;
         $invitation->team_id = $request->team_id;

@@ -21,7 +21,7 @@ class ChatController extends Controller
             }
 
             $userProfile = User::find($request->userId);
-            if (!$userProfile) {
+            if (! $userProfile) {
                 return $this->showErrorParticipant('We have no user by this id!');
             }
         }

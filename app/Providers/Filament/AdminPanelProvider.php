@@ -40,14 +40,14 @@ class AdminPanelProvider extends PanelProvider
                     )
                     ->groups([
                         NavigationGroup::make('Users & Teams')
-                        ->items([
-                            ...\App\Filament\Resources\UserResource::getNavigationItems(),
-                            // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
-                            ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
-                            ...\App\Filament\Resources\WithdrawalPasswordResource::getNavigationItems(),
-                            ...\App\Filament\Resources\TeamResource::getNavigationItems(),
-                        ]),
+                            ->items([
+                                ...\App\Filament\Resources\UserResource::getNavigationItems(),
+                                // ...\App\Filament\Resources\ActivityLogsResource::getNavigationItems(),
+                                ...\App\Filament\Resources\TransactionHistoryResource::getNavigationItems(),
+                                ...\App\Filament\Resources\InterestedUserResource::getNavigationItems(),
+                                ...\App\Filament\Resources\WithdrawalPasswordResource::getNavigationItems(),
+                                ...\App\Filament\Resources\TeamResource::getNavigationItems(),
+                            ]),
                         NavigationGroup::make('Social')
                             ->items([
                                 ...\App\Filament\Resources\BlocksResource::getNavigationItems(),
@@ -56,7 +56,7 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\LikeResource::getNavigationItems(),
                                 ...\App\Filament\Resources\OrganizerFollowResource::getNavigationItems(),
                                 ...\App\Filament\Resources\ParticipantFollowResource::getNavigationItems(),
-                        ]),
+                            ]),
                         NavigationGroup::make('Event Details')
                             ->items([
                                 ...\App\Filament\Resources\EventDetailResource::getNavigationItems(),
@@ -64,8 +64,7 @@ class AdminPanelProvider extends PanelProvider
                                 ...\App\Filament\Resources\PaymentIntentResource::getNavigationItems(),
                             ])
                             ->collapsible(false),
-                        
-         
+
                         NavigationGroup::make('Setup')
                             ->items([
                                 ...\App\Filament\Resources\EventTypeResource::getNavigationItems(),
@@ -87,9 +86,7 @@ class AdminPanelProvider extends PanelProvider
                                     ->url(fn (): string => \App\Filament\Pages\Analytics::getUrl())
                                     ->visible(fn (): bool => auth()->check() && auth()->user()->role === 'ADMIN'),
                             ]),
-         
-                   
-                        
+
                     ]);
             })
             ->id('admin')
@@ -108,7 +105,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
-            
+
             ->sidebarFullyCollapsibleOnDesktop()
             ->maxContentWidth('full')
             ->middleware([

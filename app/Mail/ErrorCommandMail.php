@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,9 +13,13 @@ class ErrorCommandMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $className;
+
     public string $errorMessage;
+
     public string $errorDate;
+
     public string $errorTime;
+
     public string $stackTrace;
 
     /**

@@ -12,7 +12,7 @@ class Stars extends Model
 
     protected $fillable = [
         'user_id',
-        'starred_user_id'
+        'starred_user_id',
     ];
 
     protected $table = 'stars';

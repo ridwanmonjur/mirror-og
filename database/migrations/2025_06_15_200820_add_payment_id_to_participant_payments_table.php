@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasTable('organizer_payments')) {
-        Schema::create('organizer_payments', function (Blueprint $table) {
-            $table->id();
-            $table->double('payment_amount')->nullable();
-            $table->double('discount_amount')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('history_id')->nullable();
-            $table->unsignedBigInteger('payment_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('history_id')->references('id')->on('transaction_history')->onDelete('cascade');
-            $table->foreign('payment_id')->references('id')->on('stripe_transactions')->onDelete('set null');
+        if (! Schema::hasTable('organizer_payments')) {
+            Schema::create('organizer_payments', function (Blueprint $table) {
+                $table->id();
+                $table->double('payment_amount')->nullable();
+                $table->double('discount_amount')->nullable();
+                $table->unsignedBigInteger('user_id')->nullable();
+                $table->unsignedBigInteger('history_id')->nullable();
+                $table->unsignedBigInteger('payment_id')->nullable();
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('history_id')->references('id')->on('transaction_history')->onDelete('cascade');
+                $table->foreign('payment_id')->references('id')->on('stripe_transactions')->onDelete('set null');
 
-        });
+            });
         }
 
         if (Schema::hasColumn('participant_payments', 'payment_id')) {

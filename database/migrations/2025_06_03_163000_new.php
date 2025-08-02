@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('event_tier') && !Schema::hasColumn('event_tier', 'earlyEntryFee')) {
-            Schema::table('event_tier', function ( $table) {
+        if (Schema::hasTable('event_tier') && ! Schema::hasColumn('event_tier', 'earlyEntryFee')) {
+            Schema::table('event_tier', function ($table) {
                 $table->string('earlyEntryFee')->after('tierEntryFee');
             });
         }
 
         if (Schema::hasTable('event_tier') && Schema::hasColumn('event_tier', 'earlyEntryFee')) {
-            Schema::table('event_tier', function ( $table) {
+            Schema::table('event_tier', function ($table) {
                 DB::table('event_tier')->update([
                     'earlyEntryFee' => 25,
                 ]);
@@ -28,7 +28,7 @@ return new class extends Migration
         if (Schema::hasTable('event_tier_type_signup_dates')) {
             DB::table('event_tier_type_signup_dates')->update([
                 'signup_open' => 800,
-                'signup_close' => 1
+                'signup_close' => 1,
             ]);
         }
     }

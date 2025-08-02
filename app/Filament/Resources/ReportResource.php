@@ -3,20 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReportResource\Pages;
-use App\Filament\Resources\ReportResource\RelationManagers;
 use App\Models\Report;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Traits\HandlesFilamentExceptions;
 
 class ReportResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = Report::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
@@ -26,35 +24,35 @@ class ReportResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('reporter_id')
-                ->relationship('reporter', 'name')
-                ->searchable()
-                ->optionsLimit(10)
-                ->searchDebounce(500)
-                ->required()
-                ->live()
-                ->rules([
-                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                        if ($value && $value == $get('reported_user_id')) {
-                            $fail('A user cannot report themselves. Please select different users.');
-                        }
-                    }
-                ]),
-                
-            Forms\Components\Select::make('reported_user_id')
-                ->relationship('reportedUser', 'name')
-                ->label('Reported User')
-                ->searchable()
-                ->optionsLimit(10)
-                ->searchDebounce(500)
-                ->required()
-                ->live()
-                ->rules([
-                    fn ($get) => function ($attribute, $value, $fail) use ($get) {
-                        if ($value && $value == $get('reporter_id')) {
-                            $fail('A user cannot report themselves. Please select different users.');
-                        }
-                    }
-                ]),
+                    ->relationship('reporter', 'name')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('reported_user_id')) {
+                                $fail('A user cannot report themselves. Please select different users.');
+                            }
+                        },
+                    ]),
+
+                Forms\Components\Select::make('reported_user_id')
+                    ->relationship('reportedUser', 'name')
+                    ->label('Reported User')
+                    ->searchable()
+                    ->optionsLimit(10)
+                    ->searchDebounce(500)
+                    ->required()
+                    ->live()
+                    ->rules([
+                        fn ($get) => function ($attribute, $value, $fail) use ($get) {
+                            if ($value && $value == $get('reporter_id')) {
+                                $fail('A user cannot report themselves. Please select different users.');
+                            }
+                        },
+                    ]),
                 Forms\Components\TextInput::make('reason')
                     ->required()
                     ->maxLength(255),
@@ -82,7 +80,7 @@ class ReportResource extends Resource
                     ->numeric()
                     ->searchable()
                     ->sortable(),
-               
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->sortable()

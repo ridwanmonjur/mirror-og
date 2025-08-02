@@ -20,18 +20,16 @@ use ErrorException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Session;
 use App\Services\EventMatchService;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Match\ParticipantViewEventRequest;
 
 class ParticipantEventController extends Controller
 {
     private $paymentService;
+
     private $eventMatchService;
 
     public function __construct(PaymentService $paymentService, EventMatchService $eventMatchService)
@@ -39,8 +37,6 @@ class ParticipantEventController extends Controller
         $this->paymentService = $paymentService;
         $this->eventMatchService = $eventMatchService;
     }
-
-    
 
     public function viewEvent(ParticipantViewEventRequest $request, $id)
     {
@@ -55,10 +51,11 @@ class ParticipantEventController extends Controller
             // Check if this is the V2 route
             $routeName = $request->route()->getName();
             $viewName = ($routeName === 'participant.eventv2.view') ? 'Public.ViewEventV2' : 'Public.ViewEvent';
-            
+
             return view($viewName, [...$viewData, 'livePreview' => 0, ...$bracketData]);
         } catch (Exception $e) {
             Log::error($e);
+
             return $this->showErrorParticipant($e->getMessage());
         }
     }
@@ -132,16 +129,17 @@ class ParticipantEventController extends Controller
     public function redirectToCreateTeamToJoinEvent(Request $request, $id)
     {
         $user = $request->attributes->get('user');
-        
+
         if ($user->participant && $user->participant->team_left_at) {
             $timeSinceLeft = now()->diffInHours($user->participant->team_left_at);
             if ($timeSinceLeft < 24) {
                 $hoursRemaining = 24 - $timeSinceLeft;
                 $errorMessage = "You must wait {$hoursRemaining} more hours before creating a new team after leaving your previous team.";
+
                 return view('Participant.CreateTeamToRegister', compact('id'))->with('errorMessage', $errorMessage);
             }
         }
-        
+
         return view('Participant.CreateTeamToRegister', compact('id'));
     }
 
@@ -163,6 +161,7 @@ class ParticipantEventController extends Controller
 
             if ($joinTeamButNotRoster) {
                 $errorMessage = 'You have already joined this event with this particular team before! Join with a new team or re-join your roster!';
+
                 return redirect()
                     ->route('participant.register.manage', ['id' => $teamId])
                     ->with('errorMessage', $errorMessage)
@@ -205,6 +204,7 @@ class ParticipantEventController extends Controller
             DB::rollBack();
             if ($e->getCode() === '23000' || $e->getCode() === 1062) {
                 $errorMessage = $e->getMessage();
+
                 return $this->showErrorParticipant($errorMessage);
             }
         }
@@ -249,17 +249,18 @@ class ParticipantEventController extends Controller
         try {
             $user = $request->attributes->get('user');
             $user_id = $user->id;
-            
+
             if ($user->participant && $user->participant->team_left_at) {
                 $timeSinceLeft = now()->diffInHours($user->participant->team_left_at);
                 if ($timeSinceLeft < 24) {
                     $hoursRemaining = 24 - $timeSinceLeft;
                     $errorMessage = "You must wait {$hoursRemaining} more hours before creating a new team after leaving your previous team.";
                     session()->flash('errorMessage', $errorMessage);
+
                     return view('Participant.CreateTeamToRegister', ['id' => $id]);
                 }
             }
-            
+
             [
                 'teamList' => $selectTeam,
                 'count' => $count,
@@ -282,7 +283,7 @@ class ParticipantEventController extends Controller
             }
 
             if ($count < 5) {
-                $selectTeam = new Team();
+                $selectTeam = new Team;
                 $selectTeam = Team::validateAndSaveTeam($request, $selectTeam, $user_id);
                 TeamMember::bulkCreateTeanMembers($selectTeam->id, [$user_id], 'accepted');
                 TeamCaptain::insert([
@@ -307,16 +308,18 @@ class ParticipantEventController extends Controller
             if ($e->errorInfo[1] == 1062) {
                 $errorMessage = 'This team name was taken. Please change to another name.';
             } else {
-                $errorMessage = 'Error updating team: ' . $e->getMessage();
+                $errorMessage = 'Error updating team: '.$e->getMessage();
             }
 
             DB::rollBack();
             session()->flash('errorMessage', $errorMessage);
+
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
         } catch (Exception $e) {
             DB::rollBack();
             $errorMessage = $e->getMessage();
             session()->flash('errorMessage', $errorMessage);
+
             return view('Participant.CreateTeamToRegister', ['id' => $id]);
         }
     }
@@ -333,8 +336,7 @@ class ParticipantEventController extends Controller
                 'user_id' => $request->attributes->get('user')?->id,
             ])->first();
 
-
-            if (!($rosterMember && $rosterMember->team_id)) {
+            if (! ($rosterMember && $rosterMember->team_id)) {
                 return $this->showErrorParticipant("Doesn't belong to this roster!");
             }
 
@@ -359,27 +361,27 @@ class ParticipantEventController extends Controller
 
             if ($isToBeConfirmed) {
                 $isPermitted = $joinEvent->payment_status === 'completed';
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     $errorMessage = 'Unformtunately, your payment is not yet cleared!';
                 }
 
                 $isPermitted = $joinEvent->vote_ongoing == null && $isPermitted;
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     $errorMessage = 'Unformtunately, the vote is ongoing';
                 }
 
                 $isPermitted = $joinEvent->join_status == 'pending';
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     $errorMessage = $joinEvent->join_stauts == 'confirmed' ? 'You have already confirmed your registration!' : 'Your registration is already canceled.';
                 }
             } else {
                 $isPermitted = $joinEvent->vote_ongoing == null;
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     $errorMessage = 'Unformtunately, the vote is ongoing';
                 }
 
                 $isPermitted = $joinEvent->join_status == 'pending' || $joinEvent->join_status == 'confirmed';
-                if (!$isPermitted) {
+                if (! $isPermitted) {
                     $errorMessage = $joinEvent->join_stauts == 'canceled' ? 'You have already canceled your registration!' : 'Your registration is in a weird state.';
                 }
             }
@@ -403,6 +405,7 @@ class ParticipantEventController extends Controller
                     $rosterCount = $joinEvent->roster->count();
                     if ($rosterCount == 1) {
                         $errorMessage = "You're just one member. Please leave the roster instead!";
+
                         return redirect($routeBack)->with('errorMessage', $errorMessage)->with('scroll', $request->join_event_id);
                     } else {
                         $joinEvent->vote_starter_id = $user->id;

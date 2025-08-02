@@ -12,7 +12,8 @@ class RosterMember extends Model
     use HasFactory;
 
     protected $table = 'roster_members';
-    protected $fillable = ['user_id', 'join_events_id', 'team_id', 'team_member_id', 'vote_to_quit' ];
+
+    protected $fillable = ['user_id', 'join_events_id', 'team_id', 'team_member_id', 'vote_to_quit'];
 
     public function user(): BelongsTo
     {
@@ -24,8 +25,7 @@ class RosterMember extends Model
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
-
-    public static function userJoinEventRoster(int| string $joinEventId, Collection $teamMembers, int|string $teamId, int|string $userId): bool
+    public static function userJoinEventRoster(int|string $joinEventId, Collection $teamMembers, int|string $teamId, int|string $userId): bool
     {
         $data = [];
 
@@ -35,7 +35,7 @@ class RosterMember extends Model
                     'join_events_id' => $joinEventId,
                     'user_id' => $member->user_id,
                     'team_member_id' => $member->id,
-                    'team_id' => $teamId
+                    'team_id' => $teamId,
                 ];
             }
         }
@@ -79,7 +79,7 @@ class RosterMember extends Model
         $leaveVoteCount = 0;
 
         $totalVoteCount++;
-        
+
         if ($this->vote_to_quit === true) {
             $leaveVoteCount++;
         } else {
@@ -90,7 +90,7 @@ class RosterMember extends Model
     }
 
     public function getRosterVoteView(
-        string|int $userId, 
+        string|int $userId,
         array &$currentUser
     ): void {
         if ($this->user_id == $userId) {
@@ -100,6 +100,6 @@ class RosterMember extends Model
             $currentUser['rosterId'] = $this->id;
 
         }
-        
+
     }
 }

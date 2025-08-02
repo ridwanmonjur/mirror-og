@@ -35,7 +35,7 @@ class Controller extends BaseController
         return response()->json([
             'success' => false,
             'message' => 'Operation failed',
-            'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
         ], 500);
     }
 }

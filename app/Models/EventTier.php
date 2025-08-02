@@ -15,6 +15,7 @@ class EventTier extends Model
     protected $fillable = ['eventTier', 'tierIcon', 'tierTeamSlot', 'tierPrizePool', 'tierEntryFee', 'earlyEntryFee'];
 
     protected $table = 'event_tier';
+
     public $timestamps = false;  // Add this line
 
     public static function scopeByUserOrNullUser(Builder $query, $userId)

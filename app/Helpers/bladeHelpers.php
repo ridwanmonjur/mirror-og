@@ -1,6 +1,5 @@
 <?php
 
-
 // function bladeGetPaymentLogos($logoType)
 // {
 //     $logoName = [
@@ -43,9 +42,6 @@ function bldRtMap($registeredParticipants, $totalParticipants)
     return $stylesEventRatio;
 }
 
-
-
-
 function bldImg($eventBanner)
 {
     $imgFailure = asset('assets/images/404.png');
@@ -58,19 +54,12 @@ function bldImg($eventBanner)
     return $eventBannerImg;
 }
 
-
-
 function bldImgF()
 {
     $imgFailure = asset('assets/images/404.png');
 
     return "onerror=\"this.onerror=null;this.src='{$imgFailure}';\"";
 }
-
-
-
-
-
 
 function bladeEventGameImage($eventBanner)
 {

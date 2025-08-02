@@ -6,18 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\EmailValidationRequest;
 use App\Mail\SendBetaWelcomeMail;
 use App\Mail\VerifyInterestedUserMail;
-use App\Models\InterestedUser;
 use App\Models\Participant;
 use App\Models\User;
-use App\Services\AuthService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class BetaController extends Controller
 {
@@ -29,7 +25,7 @@ class BetaController extends Controller
 
             $user = DB::table(table: 'interested_user')->where('email', $email)->first();
 
-            if (!$user) {
+            if (! $user) {
                 $token = generateToken();
 
                 DB::table('interested_user')->insert([
@@ -115,7 +111,7 @@ class BetaController extends Controller
     public function verifyInterestedUser($token)
     {
         $user = DB::table(table: 'interested_user')->where('email_verified_token', $token)->first();
-        if (!$user) {
+        if (! $user) {
             return view('Public.Verify')->with('error', 'Invalid verification token.');
         }
 
@@ -186,7 +182,7 @@ class BetaController extends Controller
                 $user = new User([
                     'email' => $email,
                     'password' => Hash::make($password),
-                    'name' => generateToken(2) . $username . generateToken(2),
+                    'name' => generateToken(2).$username.generateToken(2),
                     'role' => 'PARTICIPANT',
                     'created_at' => now(),
                     'email_verified_at' => now(),

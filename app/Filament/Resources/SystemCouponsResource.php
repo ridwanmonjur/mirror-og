@@ -15,6 +15,7 @@ use App\Filament\Traits\HandlesFilamentExceptions;
 class SystemCouponsResource extends Resource
 {
     use HandlesFilamentExceptions;
+
     protected static ?string $model = SystemCoupon::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-ticket';
@@ -24,84 +25,84 @@ class SystemCouponsResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make('Coupon Details')
-                ->schema([
-                    Forms\Components\TextInput::make('code')
-                        ->required()
-                        ->unique(ignoreRecord: true)
-                        ->maxLength(255)
-                        ->columnSpan(1),
-                    
-                    Forms\Components\TextInput::make('amount')
-                        ->required()
-                        ->numeric()
-                        ->minValue(0)
-                        ->prefix(fn (callable $get) => $get('discount_type') === 'percent' ? '' : 'RM ')
-                        ->suffix(fn (callable $get) => $get('discount_type') === 'percent' ? '%' : '')
-                        ->maxValue(fn (callable $get) => $get('discount_type') === 'percent' ? 100 : 9999999.99)
-                        ->live()
-                        ->columnSpan(1),
-                    
-                    Forms\Components\Select::make('for_type')
-                        ->label('Role')
-                        ->options([
-                            'organizer' => 'Organizer',
-                            'participant' => 'Participant',
-                        ])
-                        ->default('participant')
-                        ->disabled(fn ($record) => $record !== null)
-                        ->columnSpan(1),
-                    
-                    Forms\Components\TextInput::make('redeemable_count')
-                        ->label('Count')
-                        ->required()
-                        ->numeric()
-                        ->minValue(1)
-                        ->maxValue(9999)
-                        ->default(1)
-                        ->columnSpan(1),
-                    
-                    Forms\Components\Select::make('discount_type')
-                        ->label('Discount Type')
-                        ->options([
-                            'sum' => 'Sum',
-                            'percent' => 'Percent',
-                        ])
-                        ->default('sum')
-                        ->live()
-                        ->columnSpan(1),
-                    
-                    Forms\Components\DateTimePicker::make('expires_at')
-                        ->label('Expires At')
-                        ->displayFormat('Y-m-d h:i A')
-                        ->timezone('Asia/Kuala_Lumpur')
-                        ->seconds(false)
-                        ->native(false)
-                        ->nullable()
-                        ->columnSpan(1),
-                ])
-                ->columns(2),
+                    ->schema([
+                        Forms\Components\TextInput::make('code')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255)
+                            ->columnSpan(1),
 
-            Forms\Components\Section::make('Settings')
-                ->schema([
-                    Forms\Components\Toggle::make('is_active')
-                        ->label('Active')
-                        ->default(true)
-                        ->columnSpan(1),
-                    
-                    Forms\Components\Toggle::make('is_public')
-                        ->label('Public')
-                        ->default(true)
-                        ->columnSpan(1),
-                ])
-                ->columns(2),
+                        Forms\Components\TextInput::make('amount')
+                            ->required()
+                            ->numeric()
+                            ->minValue(0)
+                            ->prefix(fn (callable $get) => $get('discount_type') === 'percent' ? '' : 'RM ')
+                            ->suffix(fn (callable $get) => $get('discount_type') === 'percent' ? '%' : '')
+                            ->maxValue(fn (callable $get) => $get('discount_type') === 'percent' ? 100 : 9999999.99)
+                            ->live()
+                            ->columnSpan(1),
 
-            Forms\Components\Section::make('Description')
-                ->schema([
-                    Forms\Components\Textarea::make('description')
-                        ->nullable()
-                        ->rows(3)
-                        ->columnSpanFull(),
-                ]),
+                        Forms\Components\Select::make('for_type')
+                            ->label('Role')
+                            ->options([
+                                'organizer' => 'Organizer',
+                                'participant' => 'Participant',
+                            ])
+                            ->default('participant')
+                            ->disabled(fn ($record) => $record !== null)
+                            ->columnSpan(1),
+
+                        Forms\Components\TextInput::make('redeemable_count')
+                            ->label('Count')
+                            ->required()
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(9999)
+                            ->default(1)
+                            ->columnSpan(1),
+
+                        Forms\Components\Select::make('discount_type')
+                            ->label('Discount Type')
+                            ->options([
+                                'sum' => 'Sum',
+                                'percent' => 'Percent',
+                            ])
+                            ->default('sum')
+                            ->live()
+                            ->columnSpan(1),
+
+                        Forms\Components\DateTimePicker::make('expires_at')
+                            ->label('Expires At')
+                            ->displayFormat('Y-m-d h:i A')
+                            ->timezone('Asia/Kuala_Lumpur')
+                            ->seconds(false)
+                            ->native(false)
+                            ->nullable()
+                            ->columnSpan(1),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Settings')
+                    ->schema([
+                        Forms\Components\Toggle::make('is_active')
+                            ->label('Active')
+                            ->default(true)
+                            ->columnSpan(1),
+
+                        Forms\Components\Toggle::make('is_public')
+                            ->label('Public')
+                            ->default(true)
+                            ->columnSpan(1),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Description')
+                    ->schema([
+                        Forms\Components\Textarea::make('description')
+                            ->nullable()
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ]),
             ]);
     }
 
@@ -111,15 +112,13 @@ class SystemCouponsResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->copyable(),
-                
-                
+
                 Tables\Columns\TextColumn::make('amount')
-                    ->formatStateUsing(fn ($record) => 
-                        $record->discount_type === 'percent' 
-                            ? $record->amount . '%' 
-                            : 'RM ' . $record->amount
+                    ->formatStateUsing(fn ($record) => $record->discount_type === 'percent'
+                            ? $record->amount.'%'
+                            : 'RM '.$record->amount
                     ),
-                
+
                 Tables\Columns\TextColumn::make('for_type')
                     ->label('Role Type')
                     ->badge()
@@ -128,11 +127,11 @@ class SystemCouponsResource extends Resource
                         'participant' => 'info',
                         default => 'gray',
                     }),
-                
+
                 Tables\Columns\TextColumn::make('redeemable_count')
                     ->label('Redeem Count')
                     ->numeric(),
-                
+
                 Tables\Columns\TextColumn::make('discount_type')
                     ->label('Discount Type')
                     ->badge()
@@ -141,22 +140,21 @@ class SystemCouponsResource extends Resource
                         'percent' => 'info',
                         default => 'gray',
                     }),
-                
+
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active'),
-                
+
                 Tables\Columns\IconColumn::make('is_public')
                     ->boolean()
                     ->label('Public'),
-                
+
                 Tables\Columns\TextColumn::make('expires_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
-                    
+
                     ->placeholder('Never'),
-           
-                
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y-m-d h:i A')
                     ->timezone('Asia/Kuala_Lumpur')
@@ -169,19 +167,18 @@ class SystemCouponsResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
 
-            ])
-            // ->bulkActions([
-            //     Tables\Actions\BulkActionGroup::make([
-            //         Tables\Actions\DeleteBulkAction::make(),
-            //     ]),
-            // ])
-            ;
+            ]);
+        // ->bulkActions([
+        //     Tables\Actions\BulkActionGroup::make([
+        //         Tables\Actions\DeleteBulkAction::make(),
+        //     ]),
+        // ])
     }
 
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UserCouponRelationManager::class
+            RelationManagers\UserCouponRelationManager::class,
         ];
     }
 

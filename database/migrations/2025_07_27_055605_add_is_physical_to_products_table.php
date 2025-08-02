@@ -13,7 +13,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('products')) {
             Schema::table('products', function (Blueprint $table) {
-                if (!Schema::hasColumn('products', 'isPhysical')) {
+                if (! Schema::hasColumn('products', 'isPhysical')) {
                     $table->boolean('isPhysical')->default(true);
                 }
             });

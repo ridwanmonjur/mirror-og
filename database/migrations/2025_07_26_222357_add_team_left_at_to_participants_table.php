@@ -13,7 +13,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('participants')) {
             Schema::table('participants', function (Blueprint $table) {
-                if (!Schema::hasColumn('participants', 'team_left_at')) {
+                if (! Schema::hasColumn('participants', 'team_left_at')) {
                     $table->timestamp('team_left_at')->nullable();
                 }
             });

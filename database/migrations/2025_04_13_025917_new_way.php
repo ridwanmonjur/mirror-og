@@ -24,7 +24,7 @@ return new class extends Migration
             }
 
             // Check if morphs columns don't exist before adding them
-            if (!Schema::hasColumn('tasks', 'taskable_id') && !Schema::hasColumn('tasks', 'taskable_type')) {
+            if (! Schema::hasColumn('tasks', 'taskable_id') && ! Schema::hasColumn('tasks', 'taskable_type')) {
                 $table->morphs('taskable');
             }
         });
@@ -32,7 +32,7 @@ return new class extends Migration
         if (Schema::hasTable('bracket_deadlines')) {
             Schema::dropIfExists('bracket_deadlines');
         }
-        
+
         Schema::create('bracket_deadlines', function (Blueprint $table) {
             $table->id();
             $table->string('stage'); // Like 'L', 'U', 'F'
@@ -45,13 +45,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('event_details')
                 ->onDelete('cascade');
-                
+
             $table->unique(['event_details_id', 'stage', 'inner_stage']);
         });
 
         Artisan::call('db:seed', [
             '--class' => 'Database\\Seeders\\BracketDeadlinesSeeder',
-            '--force' => true
+            '--force' => true,
         ]);
 
         // Re-enable foreign key checks
@@ -71,15 +71,15 @@ return new class extends Migration
             if (Schema::hasColumn('tasks', 'taskable_id')) {
                 $table->dropColumn('taskable_id');
             }
-            
+
             if (Schema::hasColumn('tasks', 'taskable_type')) {
                 $table->dropColumn('taskable_type');
             }
 
             // Add event_id if it doesn't exist
-            if (!Schema::hasColumn('tasks', 'event_id')) {
+            if (! Schema::hasColumn('tasks', 'event_id')) {
                 $table->unsignedBigInteger('event_id')->nullable();
-                
+
                 // Add foreign key constraint
                 try {
                     $table->foreign('event_id')
@@ -92,14 +92,14 @@ return new class extends Migration
                 }
             }
         });
-        
+
         Schema::dropIfExists('bracket_deadlines');
-        
+
         Schema::create('bracket_deadlines', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('event_details_id')->unique();
             $table->json('deadlines');
-            
+
             $table->foreign('event_details_id')
                 ->references('id')
                 ->on('event_details')

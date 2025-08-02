@@ -1,4 +1,4 @@
-import { getDoc, updateDoc, initializeFirestore, memoryLocalCache, doc, collection, setDoc, serverTimestamp } from "firebase/firestore";
+import { getDoc, updateDoc, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, collection, setDoc, serverTimestamp } from "firebase/firestore";
 import { createApp }  from "petite-vue";
 import { initializeApp } from "firebase/app";
 import Swal from "sweetalert2";
@@ -17,7 +17,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = initializeFirestore(app, {
-    localCache: memoryLocalCache(),
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+    })
 });
 
 

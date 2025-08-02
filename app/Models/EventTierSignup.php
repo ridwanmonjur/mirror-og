@@ -17,10 +17,10 @@ class EventTierSignup extends Model
         'type_id',
         'signup_open',
         'signup_close',
-        'normal_signup_start_advanced_close'
+        'normal_signup_start_advanced_close',
     ];
 
-    public $timestamps = NULL;
+    public $timestamps = null;
 
     /**
      * Get the tier that this signup belongs to

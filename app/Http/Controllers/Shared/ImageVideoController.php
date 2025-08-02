@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Shared;
 use App\Http\Controllers\Controller;
 use App\Models\ImageVideo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
@@ -33,9 +32,9 @@ class ImageVideoController extends Controller
                 'content_length' => $request->header('Content-Length'),
                 'max_post_size' => ini_get('post_max_size'),
                 'max_upload_size' => ini_get('upload_max_filesize'),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
-            
+
             return response()->json(
                 [
                     'message' => 'File too large. Please reduce file size and try again.',
@@ -46,9 +45,9 @@ class ImageVideoController extends Controller
         } catch (\Exception $e) {
             Log::error('Media upload failed', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
-            
+
             return response()->json(
                 [
                     'message' => 'Upload failed',
@@ -72,7 +71,7 @@ class ImageVideoController extends Controller
 
         $stream = new StreamedResponse(function () use ($file) {
             $stream = fopen($file, 'rb');
-            while (!feof($stream)) {
+            while (! feof($stream)) {
                 echo fread($stream, 8192);
                 flush();
             }
@@ -82,7 +81,7 @@ class ImageVideoController extends Controller
         $stream->headers->set('Content-Type', $mime);
         $stream->headers->set('Content-Length', $size);
         $stream->headers->set('Accept-Ranges', 'bytes');
-        $stream->headers->set('Content-Range', 'bytes 0-' . ($size - 1) . '/' . $size);
+        $stream->headers->set('Content-Range', 'bytes 0-'.($size - 1).'/'.$size);
 
         return $stream;
     }

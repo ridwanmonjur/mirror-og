@@ -13,9 +13,11 @@ use Illuminate\Queue\InteractsWithQueue;
 class WithdrawalCsvExportMail extends Mailable implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $tries = 3;
 
     public $userName;
+
     public $downloadLink;
 
     /**

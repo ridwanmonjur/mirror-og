@@ -5,7 +5,6 @@
 
 <div id="routeConfig" 
      data-google-login="{{ route('organizer.google.login') }}"
-     data-steam-login="{{ route('organizer.steam.login') }}"
     class="d-none"
 >
 </div>

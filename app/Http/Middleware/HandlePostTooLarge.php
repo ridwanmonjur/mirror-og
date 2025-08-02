@@ -27,19 +27,19 @@ class HandlePostTooLarge
                 'method' => $request->method(),
                 'content_length' => $request->header('Content-Length'),
                 'max_post_size' => '8MB',
-                'user_agent' => $request->header('User-Agent')
+                'user_agent' => $request->header('User-Agent'),
             ]);
 
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => 'File too large. Please reduce file size and try again.',
                     'error' => 'The uploaded file exceeds the maximum allowed size of 8MB.',
-                    'max_size' => '8MB'
+                    'max_size' => '8MB',
                 ], 413);
             }
 
             return back()->withErrors([
-                'file' => 'The uploaded file is too large. Maximum size allowed is 8MB.'
+                'file' => 'The uploaded file is too large. Maximum size allowed is 8MB.',
             ])->withInput();
         }
 
@@ -53,19 +53,19 @@ class HandlePostTooLarge
                 'max_post_size' => '8MB',
                 'user_agent' => $request->header('User-Agent'),
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'message' => 'File too large. Please reduce file size and try again.',
                     'error' => 'The uploaded file exceeds the maximum allowed size of 8MB.',
-                    'max_size' => '8MB'
+                    'max_size' => '8MB',
                 ], 413);
             }
 
             return back()->withErrors([
-                'file' => 'The uploaded file is too large. Maximum size allowed is 8MB.'
+                'file' => 'The uploaded file is too large. Maximum size allowed is 8MB.',
             ])->withInput();
         }
     }
@@ -76,8 +76,7 @@ class HandlePostTooLarge
     protected function exceedsPostSizeLimit(Request $request): bool
     {
         $contentLength = $request->header('Content-Length');
-        
+
         return $contentLength && $contentLength > self::MAX_POST_SIZE;
     }
-
 }

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\NewCart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\CartService;
@@ -17,16 +16,17 @@ class ShopService
     {
         $this->cartService = $cartService;
     }
+
     public function getProductsWithFilters(Request $request)
     {
         $categories = Category::all();
-        
+
         if ($request->category && $request->category !== 'all') {
             $products = Product::with('categories')->whereHas('categories', function ($query) use ($request) {
                 $query->where('slug', $request->category);
             });
             $categoryName = optional($categories->where('slug', $request->category)->first())->name;
-        } elseif (!$request->category || $request->category === 'all' || $request->category === '') {
+        } elseif (! $request->category || $request->category === 'all' || $request->category === '') {
             $products = Product::with('categories');
             $categoryName = 'All Categories';
         } else {
@@ -101,7 +101,7 @@ class ShopService
         $cart = $this->getUserCart($userId);
         $discount = 0;
         $cartTotal = $cart->getTotal();
-        
+
         return [
             'cart' => $cart,
             'discount' => $discount,
@@ -113,7 +113,7 @@ class ShopService
     public function addItemToCart(int $userId, Product $product, $variantIds = null, $quantity = 1)
     {
         $cart = $this->getUserCart($userId);
-        
+
         try {
             if ($quantity <= 0) {
                 return ['success' => false, 'message' => 'Quantity must be greater than 0.'];
@@ -122,7 +122,7 @@ class ShopService
             if ($variantIds && is_array($variantIds)) {
                 foreach ($variantIds as $variantId) {
                     $variant = $product->productVariants()->find($variantId);
-                    if (!$variant) {
+                    if (! $variant) {
                         return ['success' => false, 'message' => 'Selected variant not found.'];
                     }
                     if ($variant->stock <= 0) {
@@ -133,20 +133,22 @@ class ShopService
                     }
                 }
             }
-            
+
             $this->cartService->addItem($cart, $product->id, $quantity, $product->price, $variantIds);
+
             return ['success' => true, 'message' => 'Item was added to your cart!'];
         } catch (\Exception $e) {
             Log::error($e);
+
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
-    public function updateCartItem(int $userId, int $productId, int $quantity, int $maxStock = null)
+    public function updateCartItem(int $userId, int $productId, int $quantity, ?int $maxStock = null)
     {
         $cart = $this->getUserCart($userId);
-        
-        if (!$cart) {
+
+        if (! $cart) {
             return ['success' => false, 'message' => 'Cart not found'];
         }
 
@@ -161,17 +163,18 @@ class ShopService
         $product = Product::find($productId);
         if ($product) {
             $this->cartService->updateItem($cart, $productId, $quantity, $product->price);
+
             return ['success' => true, 'message' => 'Quantity was updated successfully!'];
         }
-        
+
         return ['success' => false, 'message' => 'Product not found'];
     }
 
     public function updateCartItemById(int $userId, int $cartItemId, int $quantity, int $maxStock)
     {
         $cart = $this->getUserCart($userId);
-        
-        if (!$cart) {
+
+        if (! $cart) {
             return ['success' => false, 'message' => 'Cart not found'];
         }
 
@@ -184,7 +187,7 @@ class ShopService
         }
 
         $cartItem = $cart->items()->find($cartItemId);
-        if (!$cartItem) {
+        if (! $cartItem) {
             return ['success' => false, 'message' => 'Cart item not found'];
         }
 
@@ -194,34 +197,37 @@ class ShopService
             $cartItem->subtotal = $quantity * $product->price;
             $cartItem->save();
             $this->cartService->updateTotal($cart);
+
             return ['success' => true, 'message' => 'Quantity was updated successfully!'];
         }
-        
+
         return ['success' => false, 'message' => 'Product not found'];
     }
 
     public function removeItemFromCart(int $userId, int $productId)
     {
         $cart = $this->getUserCart($userId);
-        
+
         if ($cart) {
             $this->cartService->removeItem($cart, $productId);
+
             return ['success' => true, 'message' => 'Item has been removed!'];
         }
-        
+
         return ['success' => false, 'message' => 'Cart not found'];
     }
 
     public function removeItemFromCartById(int $userId, int $cartItemId)
     {
         $cart = $this->getUserCart($userId);
-        
+
         if ($cart) {
             $cart->items()->where('id', $cartItemId)->delete();
             $this->cartService->updateTotal($cart);
+
             return ['success' => true, 'message' => 'Item has been removed!'];
         }
-        
+
         return ['success' => false, 'message' => 'Cart not found'];
     }
 }

@@ -14,17 +14,15 @@ use Illuminate\Support\Facades\DB;
 final class TeamFactory extends Factory
 {
     /**
-    * The name of the factory's corresponding model.
-    *
-    * @var string
-    */
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = Team::class;
 
     /**
-    * Define the model's default state.
-    *
-    * @return array
-    */
+     * Define the model's default state.
+     */
     public function definition(): array
     {
         return [
@@ -38,11 +36,12 @@ final class TeamFactory extends Factory
         ];
     }
 
-    public static function deleteRelatedTables() {
-  
+    public static function deleteRelatedTables()
+    {
+
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
+
         // Truncate tables
         DB::table('teams')->truncate();
         DB::table('team_profile')->truncate();
