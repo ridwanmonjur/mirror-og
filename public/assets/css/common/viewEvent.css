@@ -941,7 +941,6 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 
 .tournament-bracket__content .tournament-bracketTeam:first-child {
     width: 50%;
-    order: 0;
     text-align: right;
 }
 @media (min-width: 992px) and (max-width: 1200px) {
@@ -950,12 +949,10 @@ tournament-bracket__round:last-child .tournament-bracket__list {
    }
 }
 .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__pos {
-    order: 2;
     justify-content: flex-end;
 }
 @media (min-width: 600px) {
     .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__pos {
-        order: 0;
    }
 }
 @media (min-width: 992px) and (max-width: 1200px) {
@@ -965,16 +962,13 @@ tournament-bracket__round:last-child .tournament-bracket__list {
    }
 }
 .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__score {
-    order: 0;
 }
 @media (min-width: 600px) {
     .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__score {
-        order: 2;
    }
 }
 .tournament-bracket__content .tournament-bracketTeam:last-child {
     width: 50%;
-    order: 2;
     text-align: left;
 }
 @media (min-width: 992px) and (max-width: 1200px) {
@@ -993,7 +987,6 @@ tournament-bracket__round:last-child .tournament-bracket__list {
    }
 }
 .tournament-bracket__content .tournament-bracketTeam:last-child .tournament-bracket__code {
-    order: 1;
 }
 .tournament-bracket__table {
     display: block;
@@ -1005,7 +998,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 }
 
 @media (min-width: 992px) {
-    .tournament-bracket__table {
+    .tournament-bracket .tournament-bracket__table {
         display: none;
    }
    .tournament-bracket__displayLargeScreen{
