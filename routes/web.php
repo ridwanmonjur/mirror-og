@@ -59,8 +59,8 @@ Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respo
 Route::get('/download-withdrawal-csv/{token}', [MiscController::class, 'downloadWithdrawalCsv'])->name('download.withdrawal.csv');
 
 // Shop
-Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
-Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
+// Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+// Route::get('/shop/{product}', [ShopController::class, 'show'])->name('shop.show');
 
 // Logout
 Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.action');
@@ -220,17 +220,17 @@ Route::group(['prefix' => 'organizer'], function () {
 
 Route::middleware(['auth',  'prevent-back-history'])->group(function () {
     Route::group(['middleware' => ['check-permission:participant|organizer']], function () {
-        Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
-        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-        Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
-        Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
+        // Route::get('/orders', [OrdersController::class, 'index'])->name('orders.index');
+        // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        // Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+        // Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
+        // Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 
-        // Cart2 routes with wallet and discount support
-        Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.index');
-        Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
-        Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
+        // // Cart2 routes with wallet and discount support
+        // Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.index');
+        // Route::post('/walletCheckout', [CheckoutController::class, 'walletCheckout'])->name('shop.walletCheckout');
+        // Route::get('/checkout/transition', [CheckoutController::class, 'showCheckoutTransition'])->name('shop.checkout.transition');
 
-        Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
+        // Route::get('/thankyou', [CheckoutController::class, 'thankyou'])->name('confirmation.index');
     });
 });
