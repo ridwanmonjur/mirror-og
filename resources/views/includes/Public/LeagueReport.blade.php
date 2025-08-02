@@ -7,31 +7,44 @@
 @include('includes.BracketModal.Dispute')
 <div id="bracket-list" class="custom-scrollbar tab-bracketlist">
 
-        @if (isset($bracketList['league']['standings']))
+        @if (isset($joinEventAndTeamList) && count($joinEventAndTeamList) > 0)
             <h5 class="mb-2 text-start"><u>League Standings</u></h5>
             <div class="mb-2 row px-0 mx-0">
                 <div class="col-12">
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Position</th>
-                                    <th>Team</th>
-                                    <th>Played</th>
-                                    <th>Won</th>
-                                    <th>Lost</th>
-                                    <th>Points</th>
+                                    <th class="text-start align-middle">Team</th>
+                                    <th class="text-center align-middle">Played</th>
+                                    <th class="text-center align-middle">Won</th>
+                                    <th class="text-center align-middle">Draw</th>
+                                    <th class="text-center align-middle">Lost</th>
+                                    <th class="text-center align-middle">Points</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($bracketList['league']['standings'] as $position => $team)
+                                @foreach ($joinEventAndTeamList as $team)
                                     <tr>
-                                        <td>{{ $position + 1 }}</td>
-                                        <td>{{ $team['name'] }}</td>
-                                        <td>{{ $team['played'] }}</td>
-                                        <td>{{ $team['won'] }}</td>
-                                        <td>{{ $team['lost'] }}</td>
-                                        <td>{{ $team['points'] }}</td>
+                                        
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                @if($team->teamBanner)
+                                                    <img src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                                        {!! bldImgF() !!}
+                                                        class="rounded-circle object-fit-cover border border-primary me-2"
+                                                        style="width: 24px; height: 24px;"
+                                                        alt="Team banner">
+                                                @endif
+                                                <span>{{ $team->teamName }}</span>
+                                              
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">{{ $team->played ?? 0 }}</td>
+                                        <td class="text-center align-middle">{{ $team->won ?? 0 }}</td>
+                                        <td class="text-center align-middle">{{ $team->draw ?? 0 }}</td>
+                                        <td class="text-center align-middle">{{ $team->lost ?? 0 }}</td>
+                                        <td class="text-center align-middle fw-bold text-primary">{{ $team->points ?? 0 }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
