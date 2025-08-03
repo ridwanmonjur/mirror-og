@@ -112,6 +112,11 @@ function editCreatePosition(event) {
             body: JSON.stringify({
                 'join_events_id': joinEventId,
                 'position': joinEventPosition,
+                'played': formData.get('played'),
+                'won': formData.get('won'),
+                'draw': formData.get('draw'),
+                'lost': formData.get('lost'),
+                'points': formData.get('points'),
                 'teamName': formData.get('teamName'),
                 'team_id': formData.get('team_id'),
                 'eventName': formData.get('eventName'),

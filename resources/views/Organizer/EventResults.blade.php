@@ -143,6 +143,7 @@
                             <button id="PositionBtn" class="tab-button py-2  outer-tab"
                                 onclick="showTab(event, 'Position', 'outer-tab')">Position
                             </button>
+                           
                             {{-- <button id="AwardsBtn" class="tab-button py-2  outer-tab"
                                 onclick="showTab(event, 'Awards', 'outer-tab')">
                                 Awards
@@ -153,9 +154,9 @@
                             </button> --}}
                         </div>
                         <br>
-                        <div class="tab-content pb-4 tab-size d-none outer-tab mx-auto" id="Position">
+                        <div class="tab-content card py-4 tab-size d-none outer-tab mx-auto" id="Position">
                             <!-- Main Container -->
-                            <div class="card border-0 py-0 my-0 mx-auto" style="background: none; width: 90%;">
+                            <div class=" border-0 py-3 my-0 mx-auto" style="background: none; width: 90%;">
                                 @if (isset($joinEventAndTeamList[0]))
                                     <div class="d-flex flex-column gap-3">
                                         @foreach ($joinEventAndTeamList as $joinEventAndTeam)
@@ -225,12 +226,11 @@
                                                         <div class="modal-body">
                                                             <form onsubmit="editCreatePosition(event);">
                                                                 <div class="mx-auto text-center mt-3">
-                                                                    <h5 class="text-primary"> Choose a position for team:
+                                                                    <h5 class="text-primary"> Update your team's results:
                                                                         {{ $joinEventAndTeam->teamName }}. </h5>
                                                                     <br>
                                                                     <p> Choose between 1 and
                                                                         {{ $event->tier?->tierTeamSlot }}</p>
-                                                                    <br>
                                                                     <div class="input-group mb-3 mx-auto d-flex justify-content-center">
                                                                         <span class="input-group-text bg-primary text-light"
                                                                             id="basic-addon2">#</span>
@@ -238,6 +238,7 @@
                                                                             placeholder="{{'1-'.  $event->tier?->tierTeamSlot }}"
                                                                             style="max-width: 100px !important;"
                                                                             type="number" name="position" min="1"
+                                                                            value="{{ $joinEventAndTeam->position ?? 0 }}"
                                                                             max="{{ $event->tier?->tierTeamSlot }}">
                                                                         <input type="hidden" name="eventName"
                                                                             value="{{ $event->eventName ?? 'No name yet' }}">
@@ -252,6 +253,40 @@
                                                                         <input type="hidden" name="team_id"
                                                                             value="{{ $joinEventAndTeam->team_id }}">
                                                                     </div>
+                                                                    @if($event->type && $event->type->eventType !== 'Tournament')
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-6">
+                                                                            <label class="form-label">Played</label>
+                                                                            <input class="form-control" type="number" name="played" min="0" max="9999" placeholder="0" value="{{ $joinEventAndTeam->played ?? 0 }}">
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <label class="form-label">Won</label>
+                                                                            <input class="form-control" type="number" name="won" min="0" max="9999" placeholder="0" value="{{ $joinEventAndTeam->won ?? 0 }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-6">
+                                                                            <label class="form-label">Draw</label>
+                                                                            <input class="form-control" type="number" name="draw" min="0" max="9999" placeholder="0" value="{{ $joinEventAndTeam->draw ?? 0 }}">
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <label class="form-label">Lost</label>
+                                                                            <input class="form-control" type="number" name="lost" min="0" max="9999" placeholder="0" value="{{ $joinEventAndTeam->lost ?? 0 }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-12">
+                                                                            <label class="form-label">Points</label>
+                                                                            <input class="form-control" type="number" name="points" min="0" max="9999" placeholder="0" value="{{ $joinEventAndTeam->points ?? 0 }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    @else
+                                                                        <input type="hidden" name="played" value="0">
+                                                                        <input type="hidden" name="won" value="0">
+                                                                        <input type="hidden" name="draw" value="0">
+                                                                        <input type="hidden" name="lost" value="0">
+                                                                        <input type="hidden" name="points" value="0">
+                                                                    @endif
                                                                     <br>
                                                                     <button type="submit"
                                                                         class="oceans-gaming-default-button me-3">Submit
@@ -281,7 +316,70 @@
                                     </div>
                                 @endif
                             </div>
+                        
+                        @if($event->type && $event->type->eventType !== 'Tournament')
+                            <div class="card  border-0 py-2 my-2  mx-auto" style="background: none; width: 90%;" >
+                                @if (isset($joinEventAndTeamList[0]))
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="text-start align-middle">Team</th>
+                                                    <th scope="col" class="text-center align-middle">Played</th>
+                                                    <th scope="col" class="text-center align-middle">Won</th>
+                                                    <th scope="col" class="text-center align-middle">Draw</th>
+                                                    <th scope="col" class="text-center align-middle">Lost</th>
+                                                    <th scope="col" class="text-center align-middle">Points</th>
+                                                    <th scope="col" class="text-center align-middle">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($joinEventAndTeamList as $team)
+                                                    <tr>
+                                                        <td class="align-middle">
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="{{ '/storage' . '/'. $team->teamBanner }}"
+                                                                    {!! bldImgF() !!}
+                                                                    class="rounded-circle object-fit-cover border border-primary me-3"
+                                                                    style="width: 32px; height: 32px;"
+                                                                    alt="Team banner">
+                                                                <span>{{ $team->teamName }}</span>
+                                                                
+                                                            </div>
+                                                        </td>
+                                                        
+                                                        <td class="text-center align-middle"><span class="fw-light">{{ $team->played ?? 0 }}</span></td>
+                                                        <td class="text-center align-middle"><span class="fw-normal">{{ $team->won ?? 0 }}</span></td>
+                                                        <td class="text-center align-middle"><span class="fw-medium">{{ $team->draw ?? 0 }}</span></td>
+                                                        <td class="text-center align-middle"><span class="fw-semibold">{{ $team->lost ?? 0 }}</span></td>
+                                                        <td class="text-center align-middle"><span class="fw-bold text-primary">{{ $team->points ?? 0 }}</span></td>
+                                                        <td class="text-center align-middle">
+                                                            <svg data-bs-toggle="modal" data-bs-target="{{ '#rank' . $team->id1 . '-modal' }}"
+                                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                fill="currentColor" class="bi bi-pencil cursor-pointer" viewBox="0 0 16 16">
+                                                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                                            </svg>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div>
+                                        <div class="text-start py-4">
+                                            <svg class="ms-4" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <p class="d-inline text-body-secondary text-center mb-0">No teams confirmed registration yet.</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
+                        @endif
                         {{-- <div class="tab-content tab-size outer-tab d-none mx-auto" id="Awards">
                             <div class="mx-auto member-table d-flex justify-content-center">
                                 <button data-bs-toggle="modal" data-bs-target="{{ '#award' . '-modal' }}"

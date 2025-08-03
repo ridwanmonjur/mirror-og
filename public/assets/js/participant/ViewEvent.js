@@ -52,6 +52,16 @@ async function submitLikesForm(event) {
 
         let data = await response.json();
 
+        // Track social interaction for likes
+        if (window.trackSocialInteraction) {
+            let event_id = formData.get('event_id');
+            window.trackSocialInteraction(
+                data.isLiked ? 'like' : 'unlike',
+                event_id,
+                'event'
+            );
+        }
+
         if (data.isLiked) {
             count++;
             likesButton.innerHTML = `<svg 
