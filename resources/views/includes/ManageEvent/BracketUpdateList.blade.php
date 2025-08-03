@@ -118,6 +118,7 @@
                                         <th>Team</th>
                                         <th>Played</th>
                                         <th>Won</th>
+                                        <th>Draw</th>
                                         <th>Lost</th>
                                         <th>Points</th>
                                     </tr>
@@ -129,6 +130,7 @@
                                             <td>{{ $team['name'] }}</td>
                                             <td>{{ $team['played'] }}</td>
                                             <td>{{ $team['won'] }}</td>
+                                            <td>{{ $team['draw'] ?? 0 }}</td>
                                             <td>{{ $team['lost'] }}</td>
                                             <td>{{ $team['points'] }}</td>
                                         </tr>

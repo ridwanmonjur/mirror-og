@@ -31,8 +31,8 @@ class OrganizerEventResultsController extends Controller
 
     public function index(Request $request, $id)
     {
-        $event = EventDetail::with(['tier', 'user'])
-            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id', 'user_id', 'slug'])
+        $event = EventDetail::with(['tier', 'user', 'type'])
+            ->select(['id', 'eventBanner', 'eventName', 'eventDescription', 'event_tier_id', 'user_id', 'slug', 'event_type_id'])
             ->where('id', $id)
             ->firstOrFail();
 
@@ -53,18 +53,25 @@ class OrganizerEventResultsController extends Controller
         $joinEventsId = $request->join_events_id;
         $existingRow = DB::table('event_join_results')->where('join_events_id', $joinEventsId)->first();
 
+        $data = [
+            'position' => $request->position,
+            'played' => $request->played ?? 0,
+            'won' => $request->won ?? 0,
+            'draw' => $request->draw ?? 0,
+            'points' => $request->points ?? 0,
+            'lost' => $request->lost ?? 0,
+        ];
+
         if ($existingRow) {
             DB::table('event_join_results')
                 ->where('join_events_id', $joinEventsId)
-                ->update(['position' => $request->position]);
+                ->update($data);
         } else {
-            DB::table('event_join_results')->insert([
-                'join_events_id' => $joinEventsId,
-                'position' => $request->position,
-            ]);
+            $data['join_events_id'] = $joinEventsId;
+            DB::table('event_join_results')->insert($data);
         }
 
-        return response()->json(['success' => true, 'message' => 'Position updated successfully'], 200);
+        return response()->json(['success' => true, 'message' => 'Results updated successfully'], 200);
     }
 
     /**

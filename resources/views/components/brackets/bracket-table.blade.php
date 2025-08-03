@@ -26,7 +26,7 @@
                         data-position="{{$bracket['team1_position']}}"
                         width="40" height= "40"
                         src="{{asset('assets/images/404.svg')}}" 
-                        class="object-fit-cover mobile-img border border-secondary team rounded-circle me-2" alt="Team View"
+                        class="object-fit-cover mobile-img border border-secondary team rounded-circle" alt="Team View"
                     >
                  @endif
                     <svg 
@@ -59,13 +59,13 @@
                          data-position="{{$bracket['team2_position']}}"
                          src="{{ asset('storage/'.$bracket['team2_teamBanner']) }}" width="40" height= "40"
                          onerror="this.src='/assets/images/404q.svg';" 
-                         class="object-fit-cover mobile-img border border-primary team rounded-circle me-2" alt="Team View">
+                         class="object-fit-cover mobile-img border border-primary team rounded-circle" alt="Team View">
                  @else
                     <img  
                         data-position="{{$bracket['team2_position']}}"
                         width="40" height= "40"
                         src="{{asset('assets/images/404.svg')}}" 
-                        class="object-fit-cover mobile-img border border-secondary team rounded-circle me-2" alt="Team View"
+                        class="object-fit-cover mobile-img border border-secondary team rounded-circle" alt="Team View"
                     >
                 @endif
 

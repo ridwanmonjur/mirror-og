@@ -16,7 +16,7 @@ class EventJoinResults extends Model
 
     protected $table = 'event_join_results';
 
-    protected $fillable = ['join_events_id', 'position', 'prize_sum'];
+    protected $fillable = ['join_events_id', 'position', 'prize_sum', 'played', 'won', 'draw', 'points', 'lost'];
 
     public function joinEvent(): BelongsTo
     {
@@ -37,6 +37,11 @@ class EventJoinResults extends Model
                 'join_events.team_id',
                 'teams.*',
                 'event_join_results.position',
+                'event_join_results.played',
+                'event_join_results.won',
+                'event_join_results.draw',
+                'event_join_results.points',
+                'event_join_results.lost',
             )->get();
     }
 
