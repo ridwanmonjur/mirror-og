@@ -151,7 +151,8 @@
             {{-- x-data="alpineDataComponent" --}}
         >
             <div  v-cloak class="position-lg-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2">
-                <form method="POST" action="{{ route('participant.team.follow', ['id'=> $selectTeam->id]) }}">
+                <form method="POST" action="{{ route('participant.team.follow', ['id'=> $selectTeam->id]) }}" 
+                      onsubmit="return handleTeamFollow(event, {{ $selectTeam->id }}, {{ $isUserFollowingTeam ? 'true' : 'false' }})">
                     @csrf
                     <button
                         type="submit"
