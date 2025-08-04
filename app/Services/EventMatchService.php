@@ -98,7 +98,6 @@ class EventMatchService
 
         $matchesUpperCount = intval($event->tier?->tierTeamSlot);
         $dataService = DataServiceFactory::create($event->type->eventType);
-        
         if (! $matchesUpperCount) {
             $previousValues = [];
         } else {
@@ -114,11 +113,13 @@ class EventMatchService
             $page
         );
 
+        $pagination = $dataService->getPagination();
+        $roundNames = $dataService->getRoundNames();
 
 
-        if (isset($bracketList['roundNames'])) {
+        if ($pagination['total_pages'] > 1) {
             $matchesToProcess = $event->matches()
-                ?->whereIn('stage_name', $bracketList['roundNames'])
+                ?->whereIn('stage_name', $roundNames)
                 ->get() ?? [];
         } else {
             $matchesToProcess = $event->matches;
@@ -177,7 +178,8 @@ class EventMatchService
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues,
             'DISPUTE_ACCESS' => $DISPUTTE_ENUMS,
-            'pagination' => $dataService->getPagination()
+            'pagination' => $pagination,
+            'roundNames' => $roundNames
         ];
     }
 

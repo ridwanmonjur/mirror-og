@@ -235,6 +235,8 @@ class OrganizerEventResultsController extends Controller
             return $this->showErrorOrganizer("Event with id: {$id} cannot be of this type: {$event->type->eventType}");
         }
 
+        $page = (int) ($request->query('page') ?: 1);
+
         $event->load([
             'tier',
             'type',
@@ -246,7 +248,8 @@ class OrganizerEventResultsController extends Controller
         $bracket = $this->eventMatchService->generateBrackets(
             $event,
              true, 
-             null
+             null,
+             $page
         );
 
         return view('Organizer.Brackets', [

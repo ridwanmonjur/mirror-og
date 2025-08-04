@@ -20,4 +20,6 @@ interface DataServiceInterface
     public function getPrevValues(): array;
 
     public function getPagination() : ?array;
+
+    public function getRoundNames() : ?array;
 }
