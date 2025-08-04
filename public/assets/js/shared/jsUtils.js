@@ -352,11 +352,11 @@ async function onFollowSubmit(event) {
         let data = await response.json();
         
         // Track social interaction
-        if (window.analytics) {
-            window.analytics.trackSocialInteraction(
+        if (window.trackSocialInteraction) {
+            window.trackSocialInteraction(
                 data.isFollowing ? 'follow' : 'unfollow',
                 dataset.joinEventUser || 'unknown',
-                'organizer'
+                'user'
             );
         }
         
@@ -679,4 +679,50 @@ function searchPart(e) {
 
     window.location.href = ENDPOINT;
 }
+
+async function handleTeamFollow(event, teamId, isCurrentlyFollowing) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const button = form.querySelector('button[type="submit"]');
+    
+    button.disabled = true;
+    
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+            },
+            body: new FormData(form)
+        });
+
+        if (response.ok) {
+            if (window.trackSocialInteraction) {
+                window.trackSocialInteraction(
+                    isCurrentlyFollowing ? 'unfollow' : 'follow',
+                    teamId,
+                    'team'
+                );
+            }
+            
+            window.location.reload();
+        } else {
+            throw new Error('Network response was not ok');
+        }
+    } catch (error) {
+        console.error('Error handling team follow:', error);
+        if (window.toastError) {
+            window.toastError('Failed to update team follow status. Please try again.');
+        }
+    } finally {
+        button.disabled = false;
+    }
+    
+    return false; 
+}
+
+window.handleTeamFollow = handleTeamFollow;
 

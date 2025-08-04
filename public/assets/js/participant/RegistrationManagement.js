@@ -325,6 +325,25 @@ function submitConfirmCancelForm(event) {
     let rosterMap = JSON.parse(rosterMapJSON);
     
     function submitForm() {
+        // Track social interaction for event registration
+        if (window.trackSocialInteraction) {
+            const actionType = cancel ? 'cancel_event_registration' : 'confirm_event_registration';
+            window.trackSocialInteraction(
+                actionType,
+                joinEventId,
+                'event'
+            );
+        }
+        
+        // Track form submission
+        if (window.trackFormSubmission) {
+            const formType = cancel ? 'event_cancellation' : 'event_registration';
+            window.trackFormSubmission(formType, {
+                event_id: joinEventId,
+                action: cancel ? 'cancel' : 'register'
+            });
+        }
+        
         document.querySelector(`.${form}`).submit();
     }
    
@@ -871,6 +890,15 @@ function approveMemberAction(event) {
             fetchData(url,
                 function(responseData) {
                     if (responseData.success) {
+                        // Track social interaction for joining event roster
+                        if (window.trackSocialInteraction) {
+                            window.trackSocialInteraction(
+                                'join_event_roster',
+                                joinEventId,
+                                'event'
+                            );
+                        }
+                        
                         localStorage.setItem('swal', ROSTER_STATUS_ENUMS.ROSTER_APPROVE);
                         localStorage.setItem('scroll', joinEventId);
                         localStorage.setItem('message', responseData.message);
@@ -947,6 +975,15 @@ async function disapproveMemberAction(event) {
         fetchData(url,
             function(responseData) {
                 if (responseData.success) {
+                    // Track social interaction for leaving event roster
+                    if (window.trackSocialInteraction) {
+                        window.trackSocialInteraction(
+                            'leave_event_roster',
+                            joinEventId,
+                            'event'
+                        );
+                    }
+                    
                     localStorage.setItem('swal', ROSTER_STATUS_ENUMS.ROSTER_DISAPPROVE);
                     localStorage.setItem('message', responseData.message);
                     localStorage.setItem('scroll', joinEventId);

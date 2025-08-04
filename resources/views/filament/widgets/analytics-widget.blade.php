@@ -608,11 +608,12 @@
                                     });
                                 }
                                 
-                                // For now, show empty data for social and form counts
-                                // These would be populated when social/form tracking is implemented
-                                createCountList({}, 'social-actions-list', 'social-actions-total', page);
-                                createCountList({}, 'social-targets-list', 'social-targets-total', page);
-                                createCountList({}, 'form-submissions-list', 'form-submissions-total', page);
+                                const safeSocialCounts = analyticsData?.socialCounts || { actions: {}, targetTypes: {} };
+                                const safeFormCounts = analyticsData?.formCounts || { formNames: {} };
+                                
+                                createCountList(safeSocialCounts.actions || {}, 'social-actions-list', 'social-actions-total', page);
+                                createCountList(safeSocialCounts.targetTypes || {}, 'social-targets-list', 'social-targets-total', page);
+                                createCountList(safeFormCounts.formNames || {}, 'form-submissions-list', 'form-submissions-total', page);
                                 
                                 updatePaginationControls();
                                 showContent();
