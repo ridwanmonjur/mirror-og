@@ -5,28 +5,31 @@
  >
      <thead class="sr-only">
          <tr>
-             <th>Team</th>
              <th>Score</th>
+             <th>Team</th>
          </tr>
      </thead>
      <tbody class="tournament-bracket__content">
          <tr class="tournament-bracketTeam  px-2 py-3 bg-translucent  tournament-bracketTeam--winner ">
-             <td class="tournament-bracket__pos ">
-                 <abbr class="tournament-bracket__code me-2"
+             <td class="tournament-bracket__score">
+                 <span class="tournament-bracket__number dotted-score-box ms-auto">0</span>
+             </td>
+             <td class="tournament-bracket__pos d-flex align-items-center my-2 flex-nowrap justify-content-end">
+                 <span class="tournament-bracket__code me-2"
                      title="{{ $bracket['team1_position'] }}">{{ $bracket['team1_position'] }} 
-                 </abbr>
+                 </span>
                 
                  @if ($bracket['team1_id'])
                     <img 
                         data-position="{{$bracket['team1_position']}}"
                         src="{{ asset('storage/'.$bracket['team1_teamBanner'])  }}" width="40" height= "40"
-                        onerror="this.src='/assets/images/404.svg';" class="object-fit-cover mobile-img team border border-primary rounded-circle" alt="Team View">
+                        onerror="this.src='/assets/images/404.svg';" class="object-fit-cover mobile-img me-2 team border border-primary rounded-circle" alt="Team View">
                 @else
                     <img  
                         data-position="{{$bracket['team1_position']}}"
                         width="40" height= "40"
                         src="{{asset('assets/images/404.svg')}}" 
-                        class="object-fit-cover mobile-img border border-secondary team rounded-circle" alt="Team View"
+                        class="object-fit-cover mobile-img border border-secondary team rounded-circle me-2" alt="Team View"
                     >
                  @endif
                     <svg 
@@ -34,23 +37,26 @@
                         data-position1="{{$bracket['team1_position']}}"
                         data-position2="{{$bracket['team2_position']}}"
                         onclick="currentMatchReportShow(event);" 
-                        class="ms-2"
+                        class="my-2"
                         width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z" stroke="#878787 " stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                     
              </td>
-             <td class="tournament-bracket__score  ">
-                 <span class="tournament-bracket__number dotted-score-box">0</span>
+             <td class="d-inline-block ">
+                 <abbr class=" me-auto text-muted fw-bold">{{$bracket['team1_teamName']}}</abbr>
              </td>
          </tr>
          <tr class="tournament-bracketTeam  bg-translucent px-2 py-3 ">
           
-             <td class="tournament-bracket__pos ">
+             <td class="tournament-bracket__score">
+                 <span class="tournament-bracket__number dotted-score-box me-auto">0</span>
+             </td>
+             <td class="tournament-bracket__pos d-flex align-items-center my-2  flex-nowrap justify-content-start">
                     <svg 
                         data-position="{{$bracket['team2_position']}}" 
                         data-position1="{{$bracket['team1_position']}}"
                         data-position2="{{$bracket['team2_position']}}"
                         onclick="currentMatchReportShow(event);" 
-                        class="me-2"
+                        class="my-2 me-2"
                         width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z" stroke="#878787 " stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                    
                 
@@ -59,26 +65,23 @@
                          data-position="{{$bracket['team2_position']}}"
                          src="{{ asset('storage/'.$bracket['team2_teamBanner']) }}" width="40" height= "40"
                          onerror="this.src='/assets/images/404q.svg';" 
-                         class="object-fit-cover mobile-img border border-primary team rounded-circle" alt="Team View">
+                         class="object-fit-cover me-2 mobile-img border border-primary team rounded-circle" alt="Team View">
                  @else
                     <img  
                         data-position="{{$bracket['team2_position']}}"
                         width="40" height= "40"
                         src="{{asset('assets/images/404.svg')}}" 
-                        class="object-fit-cover mobile-img border border-secondary team rounded-circle" alt="Team View"
+                        class="object-fit-cover me-2 mobile-img border border-secondary team rounded-circle" alt="Team View"
                     >
                 @endif
 
-                 <abbr class="tournament-bracket__code"
-                     title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</abbr>
+                 <span class="tournament-bracket__code"
+                     title="{{ $bracket['team2_position'] }}">{{ $bracket['team2_position'] }}</span>
                
              </td>
-          
-             <td class="tournament-bracket__score ">
-                 <span class="tournament-bracket__number dotted-score-box">0</span>
-                  
+            <td class="d-inline-block ">
+                 <abbr class="ms-auto text-muted fw-bold">{{$bracket['team2_teamName']}}</abbr>
              </td>
-            
          </tr>
          
      </tbody>
