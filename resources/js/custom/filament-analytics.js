@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, setDoc, serverTimestamp, query, collection, where, orderBy, limit, getDocs } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -421,71 +421,133 @@ window.initializeFilamentAnalytics = function() {
     }
 };
 
-window.getAnalyticsCounts = async function() {
+// Time-based analytics data retrieval
+function getDateKeysForFilter(timeFilter) {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    
+    switch (timeFilter) {
+        case '1d':
+            return {
+                collection: 'analytics-daily',
+                docPattern: `${year}-${month}-${day}`
+            };
+        case '1m':
+            return {
+                collection: 'analytics-monthly', 
+                docPattern: `${year}-${month}`
+            };
+        case '1y':
+            return {
+                collection: 'analytics',
+                docPattern: `${year}`
+            };
+        default:
+            return {
+                collection: 'analytics-yearly',
+                docPattern: `${year}`
+            };
+    }
+}
+
+async function getTimeBasedAnalytics(timeFilter = '1d') {
     try {
-        const [clickCountsRef, viewCountsRef] = [
-            doc(db, 'analytics', 'clickCounts'),
-            doc(db, 'analytics', 'viewCounts')
+        const { collection: collectionName, docPattern } = getDateKeysForFilter(timeFilter);
+        
+        // For the analytics collection, use the exact document names as they exist
+        let clickDocName, viewDocName, socialDocName, formDocName;
+        
+        if (collectionName === 'analytics') {
+            // Yearly data is stored directly in analytics collection
+            clickDocName = `clickCounts-${docPattern}`;
+            viewDocName = `viewCounts-${docPattern}`;
+            socialDocName = `socialCounts-${docPattern}`;
+            formDocName = `formCounts-${docPattern}`;
+        } else {
+            // Daily and monthly data uses the full date pattern
+            clickDocName = `clickCounts-${docPattern}`;
+            viewDocName = `viewCounts-${docPattern}`;
+            socialDocName = `socialCounts-${docPattern}`;
+            formDocName = `formCounts-${docPattern}`;
+        }
+        
+        const [clickCountsRef, viewCountsRef, socialCountsRef, formCountsRef] = [
+            doc(db, collectionName, clickDocName),
+            doc(db, collectionName, viewDocName),
+            doc(db, collectionName, socialDocName),
+            doc(db, collectionName, formDocName)
         ];
         
-        const [clickSnap, viewSnap] = await Promise.all([
+        console.log(`Querying analytics from ${collectionName}:`, {
+            clickDoc: clickDocName,
+            viewDoc: viewDocName,
+            socialDoc: socialDocName,
+            formDoc: formDocName
+        });
+        
+        const [clickSnap, viewSnap, socialSnap, formSnap] = await Promise.all([
             getDoc(clickCountsRef),
-            getDoc(viewCountsRef)
+            getDoc(viewCountsRef),
+            getDoc(socialCountsRef),
+            getDoc(formCountsRef)
         ]);
         
-        const clickData = clickSnap.exists() ? clickSnap.data() : {
+        const defaultStructure = {
             eventTiers: {},
             eventTypes: {},
             esportTitles: {},
             locations: {},
             eventNames: {},
             userIds: {},
-            lastUpdated: serverTimestamp()
+            date: docPattern
         };
         
-        const viewData = viewSnap.exists() ? viewSnap.data() : {
-            eventTiers: {},
-            eventTypes: {},
-            esportTitles: {},
-            locations: {},
-            eventNames: {},
-            userIds: {},
-            lastUpdated: serverTimestamp()
+        const clickData = clickSnap.exists() ? clickSnap.data() : defaultStructure;
+        const viewData = viewSnap.exists() ? viewSnap.data() : defaultStructure;
+        const socialData = socialSnap.exists() ? socialSnap.data() : { 
+            actions: {}, 
+            targetTypes: {}, 
+            date: docPattern 
+        };
+        const formData = formSnap.exists() ? formSnap.data() : { 
+            formNames: {}, 
+            date: docPattern 
         };
         
-        if (!clickSnap.exists()) {
-            await setDoc(clickCountsRef, clickData);
-        }
-        
-        if (!viewSnap.exists()) {
-            await setDoc(viewCountsRef, viewData);
-        }
+        console.log('Analytics data retrieved:', {
+            clickExists: clickSnap.exists(),
+            viewExists: viewSnap.exists(),
+            socialExists: socialSnap.exists(),
+            formExists: formSnap.exists()
+        });
         
         return {
             clickCounts: clickData,
-            viewCounts: viewData
+            viewCounts: viewData,
+            socialCounts: socialData,
+            formCounts: formData
         };
     } catch (error) {
-        console.error('Error getting analytics counts:', error);
+        console.error('Error getting time-based analytics:', error);
         return {
-            clickCounts: {
-                eventTiers: {},
-                eventTypes: {},
-                esportTitles: {},
-                locations: {},
-                eventNames: {},
-                userIds: {}
-            },
-            viewCounts: {
-                eventTiers: {},
-                eventTypes: {},
-                esportTitles: {},
-                locations: {},
-                eventNames: {},
-                userIds: {}
-            }
+            clickCounts: { eventTiers: {}, eventTypes: {}, esportTitles: {}, locations: {}, eventNames: {}, userIds: {} },
+            viewCounts: { eventTiers: {}, eventTypes: {}, esportTitles: {}, locations: {}, eventNames: {}, userIds: {} },
+            socialCounts: { actions: {}, targetTypes: {} },
+            formCounts: { formNames: {} }
         };
     }
+}
+
+// Legacy function for backward compatibility - now uses yearly data
+window.getAnalyticsCounts = async function() {
+    return await getTimeBasedAnalytics('1y');
+};
+
+// New time-filtered function
+window.getTimeFilteredAnalyticsCounts = async function(timeFilter = '1d') {
+    return await getTimeBasedAnalytics(timeFilter);
 };
 
 export default filamentAnalytics;
