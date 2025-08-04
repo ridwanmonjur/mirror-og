@@ -6,13 +6,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "./brackets";
 import firebaseService from "../services/firebase.js";
 
-export default function BracketData(fileStore) {
-  const { auth, db } = firebaseService.getServices();
-  const hiddenUserId = document.getElementById('hidden_user_id')?.value;
-  const eventId = document.getElementById('eventId')?.value;
-  const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value ?? '[]');
-  const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums').value ?? '[]');
-  const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
+export default function BracketData({ fileStore, bracketData, auth, db }) {
+  const { hiddenUserId, eventId, userLevelEnums, previousValues, disputeLevelEnums, userTeamId } = bracketData;
   
   let totalMatches = 3;
   const {

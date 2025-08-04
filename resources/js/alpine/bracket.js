@@ -10,8 +10,20 @@ import UploadData from "../custom/UploadData";
 import firebaseService from "../services/firebase.js";
 
 
-const eventId = document.getElementById('eventId')?.value;
-const { db } = firebaseService.initialize();
+const bracketDataEl = document.getElementById('bracket-report-data');
+const bracketData = {
+  hiddenUserId: bracketDataEl?.dataset.hiddenUserId,
+  eventId: bracketDataEl?.dataset.eventId,
+  userLevelEnums: JSON.parse(bracketDataEl?.dataset.userLevelEnums ?? '[]'),
+  disputeLevelEnums: JSON.parse(bracketDataEl?.dataset.disputeLevelEnums ?? '[]'),
+  userTeamId: bracketDataEl?.dataset.joinEventTeamId || null,
+  previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]')
+};
+
+console.log({bracketData});
+
+const { hiddenUserId, eventId } = bracketData;
+const { auth, db} = firebaseService.getServices(hiddenUserId);
 
 window.updateReportDispute = async (reportId, team1Id, team2Id) => {
   const reportRef = doc(db, `event/${eventId}/brackets`, reportId);
@@ -274,7 +286,12 @@ window.onload = () => {
     });
     
   createApp({
-    BracketData: () => BracketData(fileStore),
+    BracketData: () => BracketData({ 
+      fileStore, 
+      bracketData,
+      auth, 
+      db 
+    }),
     UploadData: (type) => UploadData(type, fileStore),
     CountDown
   }).mount('#Bracket');

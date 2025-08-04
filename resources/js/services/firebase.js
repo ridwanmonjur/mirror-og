@@ -3,11 +3,12 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 
 class FirebaseService {
-  constructor() {
+  constructor(hiddenUserId = null) {
     this.app = null;
     this.auth = null;
     this.db = null;
     this.isInitialized = false;
+    this.hiddenUserId = hiddenUserId;
   }
 
   initialize() {
@@ -30,8 +31,7 @@ class FirebaseService {
 
     this.app = initializeApp(firebaseConfig);
     
-    const hiddenUserId = document.getElementById('hidden_user_id')?.value;
-    if (hiddenUserId) {
+    if (this.hiddenUserId) {
       this.auth = getAuth(this.app);
     }
 
@@ -77,7 +77,11 @@ class FirebaseService {
     }
   }
 
-  getServices() {
+  getServices(hiddenUserId = null) {
+    if (hiddenUserId) {
+      this.hiddenUserId = hiddenUserId;
+    }
+    
     if (!this.isInitialized) {
       this.initialize();
     }
