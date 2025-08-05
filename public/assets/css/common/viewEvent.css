@@ -927,6 +927,10 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     background: rgb(227, 225, 225) !important;
 }
 
+.bg-special {
+    background: rgba(207, 205, 205, 0.5) !important;
+}
+
 .bg-translucent:first-child {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
