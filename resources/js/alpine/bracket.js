@@ -17,7 +17,8 @@ const bracketData = {
   userLevelEnums: JSON.parse(bracketDataEl?.dataset.userLevelEnums ?? '[]'),
   disputeLevelEnums: JSON.parse(bracketDataEl?.dataset.disputeLevelEnums ?? '[]'),
   userTeamId: bracketDataEl?.dataset.joinEventTeamId || null,
-  previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]')
+  previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]'),
+  roundNames: JSON.parse(bracketDataEl?.dataset.roundNames ?? '[]')
 };
 
 console.log({bracketData});
@@ -69,7 +70,7 @@ window.updateReportDispute = async (reportId, team1Id, team2Id) => {
 
 async function getAllMatchStatusesData() {
   const matchesCRef = collection(db, `event/${eventId}/brackets`);
-  const allMatchStatusesQ = query(matchesCRef);
+  const allMatchStatusesQ = query(matchesCRef, where('stageName', 'in', bracketData.roundNames));
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;

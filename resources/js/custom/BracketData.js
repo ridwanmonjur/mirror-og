@@ -7,7 +7,7 @@ import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScore
 import firebaseService from "../services/firebase.js";
 
 export default function BracketData({ fileStore, bracketData, auth, db }) {
-  const { hiddenUserId, eventId, userLevelEnums, previousValues, disputeLevelEnums, userTeamId } = bracketData;
+  const { hiddenUserId, eventId, userLevelEnums,  disputeLevelEnums, userTeamId } = bracketData;
   
   let totalMatches = 3;
   const {
@@ -119,6 +119,7 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
             position: eventUpdate.position ?? _initialBracket.report.position,
             userLevel: eventUpdate.user_level ?? _initialBracket.report.userLevel,
             deadline: eventUpdate.deadline ?? null,
+            stageName: eventUpdate.stage_name ?? null,
             teams: [
               {
                 ..._initialBracket.report.teams[0],
@@ -361,7 +362,7 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
       try {
         let firestoreDoc = {
           score: [tempState?.score[0] ?? "0", tempState?.score[1] ?? "0"],
-      
+          stageName: tempState.stageName,
           realWinners: [...tempState.realWinners],
           organizerWinners: [...tempState.organizerWinners],
           team1Id: tempState.teams[0].id,

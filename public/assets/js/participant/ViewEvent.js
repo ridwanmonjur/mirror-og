@@ -161,7 +161,8 @@ const bracketData = {
   userLevelEnums: JSON.parse(bracketDataEl?.dataset.userLevelEnums ?? '[]'),
   disputeLevelEnums: JSON.parse(bracketDataEl?.dataset.disputeLevelEnums ?? '[]'),
   userTeamId: bracketDataEl?.dataset.joinEventTeamId || null,
-  previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]')
+  previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]'),
+//   roundNames: JSON.parse(bracketDataEl?.dataset.roundNames ?? '[]')
 };
 
 const { hiddenUserId, eventId, userLevelEnums, disputeLevelEnums, userTeamId, previousValues } = bracketData;
@@ -338,6 +339,7 @@ function reportModalShowAction (position, triggerParentsPositionIds, classNames)
             team2_teamName:  dataset.team2_teamName,
             position: position,
             deadline: dataset.deadline,
+            stage_name: parentWithDataset.dataset.stage_name
 
         }
     });
