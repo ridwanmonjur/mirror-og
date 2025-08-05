@@ -229,6 +229,7 @@ class OrganizerEventResultsController extends Controller
 
     public function viewBrackets(Request $request, $id)
     {
+        $user = auth()->user();
         $event = EventDetail::with(['type'])->findOrFail($id);
 
         if (! $event->type->eventType) {
@@ -256,6 +257,7 @@ class OrganizerEventResultsController extends Controller
             'id' => $id,
             'eventType' => $event->type->eventType,
             'event' => $event,
+            'user' => $user,
             ...$bracket,
         ]);
     }

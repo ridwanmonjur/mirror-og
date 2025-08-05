@@ -156,8 +156,11 @@ class FirebaseController extends Controller
      */
     public function seedResults(Request $request, $eventId)
     {
-        // Define the document specifications with document IDs as keys
-        $documentSpecs = [
+        $event = EventDetail::with(['game', 'type'])->findOrFail($eventId);
+        $gamesPerMatch = $event->game->games_per_match;
+        $isLeague = $event?->type?->eventType === 'League';
+        
+        $originalDocumentSpecs = [
             'W1.W2' => [
                 'team1Winners' => ['0', null, null], // DEFAULT WINNERS
             ],
@@ -199,6 +202,28 @@ class FirebaseController extends Controller
                 'team2Winners' => ['1', '0', '1'],
             ],
         ];
+
+        $documentSpecs = [];
+        $indexCounter = 1; 
+        
+        foreach ($originalDocumentSpecs as $documentId => $specs) {
+            $newDocumentId = $documentId;
+            
+            if ($isLeague) {
+                preg_match_all('/\d+/', $documentId, $matches);
+                if (count($matches[0]) >= 2) {
+                    $newDocumentId = "P{$indexCounter}.P" . ($indexCounter + 1);
+                    $indexCounter += 2;
+                }
+            }
+            
+            $newSpecs = [];
+            foreach ($specs as $key => $winners) {
+                $newSpecs[$key] = array_slice($winners, 0, $gamesPerMatch);
+            }
+            
+            $documentSpecs[$newDocumentId] = $newSpecs;
+        }
 
         $customValuesArray = [];
         $specificIds = [];
@@ -254,91 +279,4 @@ class FirebaseController extends Controller
         return [...$disputes, ...$reports];
     }
 
-    public function showBrackets(Request $request, $eventId)
-    {
-        $event = EventDetail::with(['tier'])
-            ->where('id', $eventId)
-            ->firstOrFail()
-            ->toArray();
-        if (! $event['tier']) {
-            return $this->showErrorParticipant('Event Tier has not been chosen for this event!');
-        }
-
-        $teams = Team::join('join_events', 'teams.id', '=', 'join_events.team_id')
-            ->where('join_events.join_status', 'confirmed')
-            ->where('join_events.event_details_id', $eventId)
-            ->select(['teams.id', 'teams.teamName', 'teams.teamBanner'])
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->id => $item];
-            })
-            ->toArray();
-
-        $ogBrackets = DB::table('brackets_setup')
-            ->leftJoin('brackets', function ($join) use ($eventId) {
-                $join->on('brackets.team1_position', '=', 'brackets_setup.team1_position')->on('brackets.team2_position', '=', 'brackets_setup.team2_position')->where('brackets.event_details_id', '=', $eventId);
-            })
-            ->where('brackets_setup.event_tier_id', '=', $event['tier']['id'])
-            ->leftJoin('teams as team1', function ($join) {
-                $join->on('brackets.team1_id', '=', 'team1.id')->whereNotNull('brackets.team1_id');
-            })
-            ->leftJoin('teams as team2', function ($join) {
-                $join->on('brackets.team2_id', '=', 'team2.id')->whereNotNull('brackets.team2_id');
-            })
-            ->select('brackets.id', 'brackets.team1_id', 'brackets.team2_id', DB::raw("COALESCE(brackets.event_details_id, $eventId) as event_details_id"), 'brackets_setup.stage_name', 'brackets_setup.inner_stage_name', 'brackets_setup.order', 'brackets_setup.team2_position', 'brackets_setup.team1_position', 'team1.teamName as team1Name', 'team2.teamName as team2Name', 'team1.teamBanner as team1_banner', 'team2.teamBanner as team2_banner')
-            ->get();
-
-        $brackets = $this->firestoreService->generateBrackets($ogBrackets, $event['id']);
-
-        return view('filament.pages.brackets', compact('brackets', 'event', 'teams'));
-    }
-
-    public function showDisputes(Request $request, $eventId)
-    {
-        $event = EventDetail::with(['tier'])
-            ->where('id', $eventId)
-            ->first()
-            ->toArray();
-        if (! $event['tier']) {
-            return $this->showErrorParticipant('Event Tier has not been chosen for this event!');
-        }
-
-        $disputes = $this->firestoreService->generateDisputes($event['id']);
-        $teams = Team::join('join_events', 'teams.id', '=', 'join_events.team_id')
-            ->where('join_events.join_status', 'confirmed')
-            ->where('join_events.event_details_id', $eventId)
-            ->select(['teams.id', 'teams.teamName', 'teams.teamBanner'])
-            ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->id => $item];
-            })
-            ->toArray();
-
-        $setup = DB::table('brackets_setup')
-            ->select(['team1_position', 'team2_position'])
-            ->where('brackets_setup.event_tier_id', '=', $event['tier']['id'])
-            ->get()
-            ->filter(function ($item) {
-                return $item->team1_position != 'F';
-            })
-            ->map(function ($item) {
-                return $item->team1_position.'.'.$item->team2_position;
-            })
-            ->toArray();
-
-        $users = Team::join('join_events', 'teams.id', '=', 'join_events.team_id')
-            ->leftJoin('roster_members', 'join_events.id', '=', 'roster_members.join_events_id')
-            ->leftJoin('users', 'roster_members.user_id', '=', 'users.id')
-            ->where('join_events.join_status', 'confirmed')
-            ->where('join_events.event_details_id', $eventId)
-            ->select(['teams.id as team_id', 'teams.teamName', 'teams.teamBanner', 'users.id as user_id', 'users.name', 'users.userBanner'])
-            ->get()
-            ->toArray();
-
-        $DISPUTTE_ENUMS = config('constants.DISPUTE');
-        $disputeRoles = array_flip($DISPUTTE_ENUMS);
-
-        // dd($users);
-        return view('filament.pages.reports', compact('disputes', 'event', 'teams', 'users', 'disputeRoles', 'setup'));
-    }
 }
