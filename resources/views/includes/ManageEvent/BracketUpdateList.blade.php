@@ -116,18 +116,22 @@
                 <h5 class="mt-3 mb-2 text-start"><u>Rounds & Results</u></h5>
                 <div class="mb-2 mx-auto px-0 mx-0 ">
 
-                    @foreach ($bracketList['table'] as $roundKey => $roundData)
+                    @foreach ($bracketList as $roundKey => $roundData)
                         <div class="my-3 ">
                             <h6>Round {{ $roundKey }}</h6>
                             <div class="row">
-                                @foreach ($roundData as $matchKey => $match)
+                                @foreach ($roundData as $fakeKey => $actualRoundData[0])
+                                     {{-- <h5>{{$fakeKey}}</h5> --}}
+                                     {{-- <h5>{{json_encode($actualRoundData[0])}}</h5> --}}
+                                     @foreach ($actualRoundData[0] as $match) 
                                     <div class="my-3 col-12 col-md-6 col-xxl-4">
                                         <div>
+                                            {{-- <h5>{{$fakeKey}}</h5> --}}
                                             <div class=" d-none-until-hover2-parent">
                                                 <div class="table-report middle-item {{ $match['team1_position'] }} {{ $match['team2_position'] }} popover-parent "
                                                     tabindex="0" data-bracket="{{ json_encode($match) }}"
-                                                    data-stage_name="table"
-                                                    data-inner_stage_name="{{ $roundKey }}" 
+                                                    data-stage_name="{{ $fakeKey }}"
+                                                    data-inner_stage_name="{{ $fakeKey }}" 
                                                     data-order="{{ $match['order'] }}" 
                                                     data-item-type="middle">
                                                     <x-brackets.bracket-table :bracket="$match" :isLeague="true" />
@@ -135,6 +139,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endforeach  
                                 @endforeach
                             </div>
                         </div>
