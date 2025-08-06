@@ -76,7 +76,8 @@ final class EventDetailFactory extends Factory
     public function seed($eventIndex, $options = [
         'eventTier' => 'Dolphin',
         'eventName' => 'Test Brackets',
-        'eventType' => 'Tournament'
+        'eventType' => 'Tournament',
+        'eventGame' => 'Dota 2',
     ])
     {
         // dd($options);
@@ -103,12 +104,12 @@ final class EventDetailFactory extends Factory
                 'updated_at' => now(),
             ]);
 
-        $eventCategory = EventCategory::where('gameTitle', 'Dota 2')->first();
+        $eventCategory = EventCategory::where('gameTitle', $options['eventGame'])->first();
         if (! $eventCategory) {
             $eventCategory = EventCategory::create([
-                'gameTitle' => 'Dota 2',
+                'gameTitle' => $options['eventGame'],
                 'gameIcon' => 'images/event_details/dota2.png',
-                'eventDefinitions' => 'Dota 2 is a 2013 multiplayer online battle arena video game by Valve. The game is a sequel to Defense of the Ancients, a community-created mod for Blizzard Entertainment\'s Warcraft III: Reign of Chaos.',
+                'eventDefinitions' => " {$options['eventGame']} is a 2013 multiplayer online game.",
                 'user_id' => $user->id,
             ]);
         }
@@ -167,13 +168,13 @@ final class EventDetailFactory extends Factory
 
         Log::info($eventTypes);
 
-        return $this->createSampleEvents($user, $options['eventTier'], $options['eventType'], $eventIndex,
+        return $this->createSampleEvents($user, $options['eventTier'], $options['eventType'], $options['eventGame'], $eventIndex,
             $options['eventName']);
     }
 
-    private function createSampleEvents($user, $eventTier, $eventType, $eventIndex, $eventName)
+    private function createSampleEvents($user, $eventTier, $eventType, $eventGame, $eventIndex, $eventName)
     {
-        $category = EventCategory::where('gameTitle', 'Dota 2')->first();
+        $category = EventCategory::where('gameTitle', $eventGame)->first();
         $tier = EventTier::where('eventTier', $eventTier)->first();
         $type = EventType::where('eventType', $eventType)->first();
         // dd($type);
