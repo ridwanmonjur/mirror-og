@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\BracketDeadlineSetup;
 use App\Models\EventTier;
+use App\Models\EventType;
 
 class BracketDeadlineSetupSeeder extends Seeder
 {
@@ -73,22 +74,28 @@ class BracketDeadlineSetupSeeder extends Seeder
         ];
 
         $eventTiers = EventTier::whereIn('tierTeamSlot', array_keys($configurations))->get();
+        $tournamentType = EventType::where('eventType', 'Tournament')->first();
+        
+        if (!$tournamentType) {
+            $this->command->error('Tournament event type not found. Please seed event types first.');
+            return;
+        }
 
         foreach ($eventTiers as $eventTier) {
             $slotSize = $eventTier->tierTeamSlot;
             if (isset($configurations[$slotSize])) {
                 BracketDeadlineSetup::updateOrCreate(
-                    ['tier_id' => $eventTier->id],
+                    [
+                        'tier_id' => $eventTier->id,
+                        'type_id' => $tournamentType->id
+                    ],
                     ['deadline_config' => $configurations[$slotSize]]
                 );
             }
         }
 
-        // If we don't have any event tiers for these slot sizes yet,
-        // create placeholder entries with tier_id = tierTeamSlot
-        // These can be updated later when event tiers are created
+        
         foreach ($configurations as $slotSize => $config) {
-            // Check if we've already created an entry for this slot size
             $exists = false;
             foreach ($eventTiers as $eventTier) {
                 if ($eventTier->tierTeamSlot == $slotSize) {
@@ -100,7 +107,10 @@ class BracketDeadlineSetupSeeder extends Seeder
             // If not, create a placeholder
             if (! $exists) {
                 BracketDeadlineSetup::updateOrCreate(
-                    ['tier_id' => $slotSize], // This is just a placeholder ID
+                    [
+                        'tier_id' => $slotSize, 
+                        'type_id' => $tournamentType->id
+                    ],
                     ['deadline_config' => $config]
                 );
             }
