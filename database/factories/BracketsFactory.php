@@ -49,6 +49,7 @@ class BracketsFactory extends Factory
             'eventTier' => 'Dolphin',
             'eventType' => 'Tournament',
             'eventName' => 'Test Brackets',
+            'eventGame' => 'Dota 2',
             'joinEvent' => [
                 'join_status' => 'confirmed',
                 'payment_status' => 'confirmed',
