@@ -424,6 +424,8 @@
                     let currentPage = 1;
                     const itemsPerPage = 5;
                     
+                    let loadingEl, errorEl, contentEl, errorMessageEl;
+                    
                     function waitForAnalytics() {
                         if (window.getAnalyticsCounts) {
                             initializeAnalyticsDashboard();
@@ -433,85 +435,115 @@
                     }
                     
                     function initializeAnalyticsDashboard() {
-                        const loadingEl = document.getElementById('analytics-loading');
-                        const errorEl = document.getElementById('analytics-error');
-                        const contentEl = document.getElementById('analytics-content');
-                        const errorMessageEl = document.getElementById('error-message');
+                        // Initialize element references
+                        loadingEl = document.getElementById('analytics-loading');
+                        errorEl = document.getElementById('analytics-error');
+                        contentEl = document.getElementById('analytics-content');
+                        errorMessageEl = document.getElementById('error-message');
                         
-                        function showLoading() {
-                            loadingEl.classList.remove('hidden');
-                            errorEl.classList.add('hidden');
-                            contentEl.classList.add('hidden');
-                        }
+                        document.getElementById('retry-analytics').addEventListener('click', function() {
+                            updateDashboard(currentPage);
+                        });
                         
-                        function showError(message) {
-                            loadingEl.classList.add('hidden');
-                            errorEl.classList.remove('hidden');
-                            contentEl.classList.add('hidden');
-                            errorMessageEl.textContent = message;
-                        }
-                        
-                        function showContent() {
-                            loadingEl.classList.add('hidden');
-                            errorEl.classList.add('hidden');
-                            contentEl.classList.remove('hidden');
-                        }
-                        
-                        function combineCountObjects(obj1, obj2) {
-                            const combined = {};
-                            
-                            // Add all keys from obj1
-                            for (const [key, value] of Object.entries(obj1)) {
-                                combined[key] = value;
+                        document.getElementById('prev-page').addEventListener('click', function() {
+                            if (currentPage > 1) {
+                                updateDashboard(currentPage - 1);
                             }
-                            
-                            // Add all keys from obj2, combining counts if key exists
-                            for (const [key, value] of Object.entries(obj2)) {
-                                combined[key] = (combined[key] || 0) + value;
-                            }
-                            
-                            return combined;
+                        });
+                        
+                        document.getElementById('next-page').addEventListener('click', function() {
+                            updateDashboard(currentPage + 1);
+                        });
+                        
+                        // Initial load
+                        updateDashboard();
+                        
+                        // Initialize tab functionality
+                        initializeTabs();
+                        
+                        // Initialize time filter functionality
+                        initializeTimeFilters();
+                    }
+                    
+                    function showLoading() {
+                        loadingEl.classList.remove('hidden');
+                        errorEl.classList.add('hidden');
+                        contentEl.classList.add('hidden');
+                    }
+                    
+                    function showError(message) {
+                        loadingEl.classList.add('hidden');
+                        errorEl.classList.remove('hidden');
+                        contentEl.classList.add('hidden');
+                        errorMessageEl.textContent = message;
+                    }
+                    
+                    function showContent() {
+                        loadingEl.classList.add('hidden');
+                        errorEl.classList.add('hidden');
+                        contentEl.classList.remove('hidden');
+                    }
+                    
+                    function combineCountObjects(obj1, obj2) {
+                        const combined = {};
+                        
+                        // Add all keys from obj1
+                        for (const [key, value] of Object.entries(obj1)) {
+                            combined[key] = value;
                         }
                         
-                        function createCountList(data, containerId, totalId, page = 1) {
-                            const container = document.getElementById(containerId);
-                            const totalEl = document.getElementById(totalId);
-                            
-                            if (!data || Object.keys(data).length === 0) {
-                                container.innerHTML = '<div class="text-sm text-gray-600 dark:text-gray-400">No data available</div>';
-                                totalEl.textContent = 'Total: 0';
-                                return;
-                            }
-                            
-                            const entries = Object.entries(data);
-                            const total = entries.reduce((sum, [, count]) => sum + count, 0);
-                            
-                            // Sort by count descending and paginate
-                            const sortedEntries = entries.sort(([,a], [,b]) => b - a);
-                            const startIndex = (page - 1) * itemsPerPage;
-                            const endIndex = startIndex + itemsPerPage;
-                            const pageEntries = sortedEntries.slice(startIndex, endIndex);
-                            
-                            container.innerHTML = '';
-                            pageEntries.forEach(([name, count]) => {
-                                const div = document.createElement('div');
-                                div.className = 'flex justify-between items-center text-sm';
-                                div.innerHTML = `
-                                    <span class="text-gray-900 dark:text-white truncate pr-2">${name || 'Unknown'}</span>
-                                    <span class="text-blue-600 font-medium">${count.toLocaleString()}</span>
-                                `;
-                                container.appendChild(div);
-                            });
-                            
-                            const totalSpan = totalEl.querySelector('span:last-child');
-                            if (totalSpan) {
-                                totalSpan.textContent = total.toLocaleString();
-                            } else {
-                                totalEl.textContent = `Total: ${total.toLocaleString()}`;
-                            }
+                        // Add all keys from obj2, combining counts if key exists
+                        for (const [key, value] of Object.entries(obj2)) {
+                            combined[key] = (combined[key] || 0) + value;
                         }
                         
-                        async function updateDashboard(page = 1) {
+                        return combined;
+                    }
+                    
+                    function createCountList(data, containerId, totalId, page = 1) {
+                        const container = document.getElementById(containerId);
+                        const totalEl = document.getElementById(totalId);
+                        
+                        if (!data || Object.keys(data).length === 0) {
+                            container.innerHTML = '<div class="text-sm text-gray-600 dark:text-gray-400">No data available</div>';
+                            totalEl.textContent = 'Total: 0';
+                            return;
+                        }
+                        
+                        const entries = Object.entries(data);
+                        const total = entries.reduce((sum, [, count]) => sum + count, 0);
+                        
+                        // Sort by count descending and paginate
+                        const sortedEntries = entries.sort(([,a], [,b]) => b - a);
+                        const startIndex = (page - 1) * itemsPerPage;
+                        const endIndex = startIndex + itemsPerPage;
+                        const pageEntries = sortedEntries.slice(startIndex, endIndex);
+                        
+                        container.innerHTML = '';
+                        pageEntries.forEach(([name, count]) => {
+                            const div = document.createElement('div');
+                            div.className = 'flex justify-between items-center text-sm';
+                            div.innerHTML = `
+                                <span class="text-gray-900 dark:text-white truncate pr-2">${name || 'Unknown'}</span>
+                                <span class="text-blue-600 font-medium">${count.toLocaleString()}</span>
+                            `;
+                            container.appendChild(div);
+                        });
+                        
+                        const totalSpan = totalEl.querySelector('span:last-child');
+                        if (totalSpan) {
+                            totalSpan.textContent = total.toLocaleString();
+                        } else {
+                            totalEl.textContent = `Total: ${total.toLocaleString()}`;
+                        }
+                    }
+                    
+                    function updatePaginationControls() {
+                        document.getElementById('page-info').textContent = `Page ${currentPage}`;
+                        document.getElementById('prev-page').disabled = currentPage <= 1;
+                    }
+                    
+                    async function updateDashboard(page = 1) {
                             showLoading();
                             currentPage = page;
                             
@@ -623,36 +655,6 @@
                                 showError(error.message || 'Failed to load analytics data');
                             }
                         }
-                        
-                        function updatePaginationControls() {
-                            document.getElementById('page-info').textContent = `Page ${currentPage}`;
-                            document.getElementById('prev-page').disabled = currentPage <= 1;
-                        }
-                        
-                        // Event listeners
-                        document.getElementById('retry-analytics').addEventListener('click', function() {
-                            updateDashboard(currentPage);
-                        });
-                        
-                        document.getElementById('prev-page').addEventListener('click', function() {
-                            if (currentPage > 1) {
-                                updateDashboard(currentPage - 1);
-                            }
-                        });
-                        
-                        document.getElementById('next-page').addEventListener('click', function() {
-                            updateDashboard(currentPage + 1);
-                        });
-                        
-                        // Initial load
-                        updateDashboard();
-                        
-                        // Initialize tab functionality
-                        initializeTabs();
-                        
-                        // Initialize time filter functionality
-                        initializeTimeFilters();
-                    }
                     
                     function initializeTabs() {
                         // Set default active tabs (combined)

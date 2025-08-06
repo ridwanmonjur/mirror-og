@@ -441,7 +441,7 @@ function getDateKeysForFilter(timeFilter) {
             };
         case '1y':
             return {
-                collection: 'analytics',
+                collection: 'analytics-yearly',
                 docPattern: `${year}`
             };
         default:
