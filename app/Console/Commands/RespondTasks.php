@@ -204,11 +204,6 @@ class RespondTasks extends Command
 
                         [$playerNotif, $orgNotif, $logs, $memberIdList, $prizeDetails] = $this->getEndedNotifications($endedEvents, $event->tier);
 
-                        Log::info($playerNotif);
-                        Log::info($orgNotif);
-                        Log::info($logs);
-                        Log::info($memberIdList);
-                        Log::info($prizeDetails);
                         $this->handleEventTypes([$playerNotif, $orgNotif], $endedEvents);
 
                         $this->handlePrizeAndActivityLogs($logs, $endedEvents, $memberIdList, $prizeDetails);

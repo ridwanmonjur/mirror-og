@@ -18,7 +18,8 @@ const bracketData = {
   disputeLevelEnums: JSON.parse(bracketDataEl?.dataset.disputeLevelEnums ?? '[]'),
   userTeamId: bracketDataEl?.dataset.joinEventTeamId || null,
   previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]'),
-  roundNames: JSON.parse(bracketDataEl?.dataset.roundNames ?? '[]')
+  roundNames: JSON.parse(bracketDataEl?.dataset.roundNames ?? '[]'),
+  gamesPerMatch: parseInt(bracketDataEl?.dataset.gamesPerMatch ?? '3', 3)
 };
 
 console.log({bracketData});

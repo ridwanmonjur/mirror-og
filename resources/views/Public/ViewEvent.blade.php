@@ -138,6 +138,7 @@
         data-user-level-enums="{{json_encode($USER_ACCESS)}}"
         data-dispute-level-enums="{{json_encode($DISPUTE_ACCESS)}}"
         data-hidden-user-id="{{ $userId }}"
+        data-games-per-match="{{$event?->game?->games_per_match ?? 3}}"
     >
     </div>
     @if ($isEarly)

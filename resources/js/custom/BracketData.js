@@ -7,9 +7,9 @@ import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScore
 import firebaseService from "../services/firebase.js";
 
 export default function BracketData({ fileStore, bracketData, auth, db }) {
-  const { hiddenUserId, eventId, userLevelEnums,  disputeLevelEnums, userTeamId } = bracketData;
+  const { hiddenUserId, eventId, userLevelEnums,  disputeLevelEnums, userTeamId, gamesPerMatch } = bracketData;
   
-  let totalMatches = 3;
+  let totalMatches = gamesPerMatch || 3;
   const {
     reportStore,
     disputeStore,
@@ -502,7 +502,7 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
       let subscribeToCurrentReportDisputesSnapshot = onSnapshot(
         disputeQuery,
         async (disputeSnapshot) => {
-          let allDisputes = [null, null, null];
+          let allDisputes = Array(totalMatches).fill(null);
           disputeSnapshot.docChanges().forEach((change) => {
             let data = change.doc.data();
             let id = change.doc.id;

@@ -100,8 +100,7 @@ class LeagueDataService implements DataServiceInterface
                     'winner_next_position' => null,
                     'loser_next_position' => null,
                     'order' => $match-1,
-                    'deadline' => null,
-                    // 'deadline' => $deadlines ? ($deadlines['league'][$round] ?? null) : null,
+                    'deadline' => $deadline ? (isset($deadline[$round][$round]) ? $deadline[$round][$round]: null) : null,
                 ];
             }
             $rounds[$roundName][$roundName] = $matches;
