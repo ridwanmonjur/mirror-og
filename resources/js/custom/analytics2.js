@@ -115,7 +115,7 @@ async function updateSocialCounts(action, targetType) {
         const collections = [
             { collection: 'analytics-daily', docId: dateKeys.daily },
             { collection: 'analytics-monthly', docId: dateKeys.monthly },
-            { collection: 'analytics', docId: dateKeys.yearly }
+            { collection: 'analytics-yearly', docId: dateKeys.yearly }
         ];
         
         for (const { collection, docId } of collections) {
@@ -204,15 +204,22 @@ async function updateFormCounts(formName) {
     }
 }
 
-// Only add functions to window if analytics meta tag is present
 if (document.querySelector('meta[name="analytics"]')) {
     window.trackEventCardClick = async function(element, event) {
         console.log("Event card click tracked");
         
-        // Prevent default navigation if this is a link
         if (event) {
             event.preventDefault();
         }
+        
+        if (element.disabled || element.dataset.clicking === 'false') {
+            console.log("Element already disabled or being processed");
+            return;
+        }
+        
+        const storedHref = element.href;
+        element.disabled = true;
+        element.dataset.clicking = 'false';
         
         try {
             const eventData = {
@@ -230,31 +237,37 @@ if (document.querySelector('meta[name="analytics"]')) {
 
             console.log('Tracking event data:', eventData);
 
-            // Wait for analytics to be saved before allowing redirect
-            await Promise.all([
-                updateAnalyticsCounts(
-                    eventData.eventTier,
-                    eventData.eventType,
-                    eventData.esportTitle,
-                    eventData.location,
-                    eventData.eventName,
-                    eventData.userId,
-                    'click'
-                ),
-               
-            ]);
+            const analyticsPromise = updateAnalyticsCounts(
+                eventData.eventTier,
+                eventData.eventType,
+                eventData.esportTitle,
+                eventData.location,
+                eventData.eventName,
+                eventData.userId,
+                'click'
+            );
 
-            console.log('Event card click tracked successfully:', eventData);
+            const timeoutPromise = new Promise(resolve => {
+                setTimeout(resolve, 2000);
+            });
 
-            if (element.href) {
-                window.location.href = element.href;
-            }
+            Promise.race([analyticsPromise, timeoutPromise]).finally(() => {
+                if (storedHref) {
+                    window.location.href = storedHref;
+                }
+            });
+
+            analyticsPromise.then(() => {
+                console.log('Event card click tracked successfully:', eventData);
+            }).catch((error) => {
+                console.error('Error tracking event card click analytics:', error);
+            });
 
         } catch (error) {
             console.error('Error tracking event card click:', error);
             
-            if (element.href) {
-                window.location.href = element.href;
+            if (storedHref) {
+                window.location.href = storedHref;
             }
         }
     };
