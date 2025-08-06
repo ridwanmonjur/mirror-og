@@ -21,7 +21,9 @@ return new class extends Migration
 
             Schema::create('bracket_deadline_setup', function (Blueprint $table) {
                 $table->id();
-                $table->unsignedBigInteger('tier_id')->unique();
+                $table->unsignedBigInteger('tier_id')
+                    // ->unique()
+                    ;
                 $table->json('deadline_config');
                 $table->foreign('tier_id')
                     ->references('id')
