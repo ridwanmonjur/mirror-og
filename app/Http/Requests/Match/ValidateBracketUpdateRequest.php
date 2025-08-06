@@ -83,7 +83,7 @@ class ValidateBracketUpdateRequest extends FormRequest
                 return false;
             }
 
-        } else {
+        } elseif ($user->role != 'ADMIN') {
             $this->failureMessage = 'No valid user role';
 
             return false;

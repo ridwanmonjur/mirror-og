@@ -282,7 +282,9 @@ class EventDetail extends Model implements Feedable
 
     public function createDeadlinesTask(): void
     {
-        $deadlineSetup = BracketDeadlineSetup::where('tier_id', $this->event_tier_id)->first();
+        $deadlineSetup = BracketDeadlineSetup::where('tier_id', $this->event_tier_id)
+            ->where('type_id', $this->event_type_id)
+            ->first();
 
         if (! $deadlineSetup) {
             return;

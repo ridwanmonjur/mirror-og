@@ -39,10 +39,9 @@
         $event->game?->id ? 'data-game-id="' . $event->game->id . '"' : '',
         $event->user?->id ? 'data-user-id="' . $event->user->id . '"' : ''
     ])));
+    // dd($bracketList, $pagination, $roundNames);
+    $showBracketFirst = isset($pagination) && $pagination['current_page'] > 1;
 
-@endphp
-@php
-    // dd($bracketList);
 @endphp 
 <head>
     @include('googletagmanager::head')
@@ -122,12 +121,24 @@
     </script>
 <body>
     @include('googletagmanager::body')
-    <input type="hidden" id="disputeLevelEnums" value="{{json_encode($DISPUTE_ACCESS)}}">
     @include('includes.Navbar')
     <div class="d-none" id="analytics-data" 
         data-event-id="{{$event->id}}"
         data-event-name="{{ $event->eventName }}"
+        
         {!! $eventDataAttributes !!}
+    >
+    </div>
+    <div class="d-none" id="bracket-report-data"
+        data-event-id="{{$event->id}}"
+        data-event-type="{{ $event->type->eventType }}"
+        data-round-names="{{ json_encode($roundNames) }}"
+        data-previous-values="{{ json_encode($previousValues) }}"
+        data-join-event-team-id="{{$existingJoint?->team_id }}"
+        data-user-level-enums="{{json_encode($USER_ACCESS)}}"
+        data-dispute-level-enums="{{json_encode($DISPUTE_ACCESS)}}"
+        data-hidden-user-id="{{ $userId }}"
+        data-games-per-match="{{$event?->game?->games_per_match ?? 3}}"
     >
     </div>
     @if ($isEarly)
@@ -143,7 +154,7 @@
     <input type="hidden" id="create_url" value="{{ route('event.create') }}">
     <input type="hidden" id="edit_url" value="{{ route('event.edit', $event->id) }}">
     <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
-    <main x-data="alpineDataComponent">
+    <main >
         <br class="d-none-at-desktop">
         
         <div>
@@ -499,9 +510,9 @@
                     </div>
                     <div>
                 <div class="tab ms-0 position-relative tab-viewEvent" >
-                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks active ' }}"
+                    <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' . ($showBracketFirst ? '' : 'active') }}"
                         onclick=" openTab(event, 'Overview', 'current-title'); closeAllTippy();  ">Overview</button>
-                    <button class=" loading {{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
+                    <button class=" loading {{ 'side-image-' . $eventTierLower . ' tablinks ' . ($showBracketFirst ? 'active' : '') }}"
                         id="tabLoading"
                         onclick="
                             if (checkIfLoading(event)) { openTab(event, 'Bracket', 'bracket-list'); openAllTippy(); }
@@ -512,14 +523,15 @@
                         onclick=" openTab(event, 'Result', 'current-positions'); closeAllTippy();  ">Result</button>
                 </div>
                 <br>
-                <div id="Overview" class="tabcontent" style="display: block; ;">
+                <div id="Overview" class="tabcontent" style="display: {{ $showBracketFirst ? 'none' : 'block' }};">
                     <h2 id="current-title" class="fs-5 text-start"><u>About this event</u></h2>
                     <p style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
                 <div id="Bracket" v-scope="BracketData()"
                     @vue:mounted="init()"
-                    class="tabcontent " 
+                    class="tabcontent" 
+                    style="display: {{ $showBracketFirst ? 'block' : 'none' }};"
                 >
                     @if ($event->type && $event->type->eventType == 'Tournament')
                         @include('includes.Public.BracketReport')

@@ -11,11 +11,11 @@ class BracketDataService implements DataServiceInterface
         return [
             'id' => null,
             'team1_id' => null,
-            'team1_teamName' => 'No team',
+            'team1_teamName' => 'TBD',
             'team1_teamBanner' => null,
             'team1_roster' => null,
             'team2_id' => null,
-            'team2_teamName' => 'No team',
+            'team2_teamName' => 'TBD',
             'team2_teamBanner' => null,
             'team2_roster' => null,
             'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : $USER_ENUMS['IS_PUBLIC'],
@@ -29,7 +29,23 @@ class BracketDataService implements DataServiceInterface
 
     public function getPagination(): ?array
     {
-        return null;
+        return [
+            "current_page" => 1,
+            "total_pages" => 1, 
+            "total_rounds" => 3,
+            "rounds_per_page" => 3,
+            "has_next_page" => false,
+            "has_prev_page" => false,
+            "showing_rounds" =>  [
+                "from" => 1,
+                "to" => 3
+            ]
+        ];
+    }
+
+    public function getRoundNames(): ?array 
+    {
+        return ['U', 'L', 'F'];
     }
 
     const PREV_VALUES = [

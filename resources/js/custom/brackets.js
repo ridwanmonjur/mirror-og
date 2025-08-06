@@ -128,6 +128,7 @@ let disputeStore = {
         defaultWinners: null,
         disqualified: false,
         disputeResolved: null,
+        stageName: null,
         realWinners: null,
         userLevel: userLevelEnums['IS_PUBLIC'],
         completeMatchStatus: 'UPCOMING',
@@ -203,6 +204,7 @@ function createReportTemp(report, reportList) {
     defaultWinners: [...reportList.defaultWinners],
     disqualified: report.disqualified,
     disputeResolved: [...reportList.disputeResolved],
+    stageName: report.stageName
   }
 
   return update;

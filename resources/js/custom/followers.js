@@ -207,6 +207,14 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
                 }
                 const data = await makeRequest(route, 'POST', inputObject);
                 
+                if (window.trackSocialInteraction) {
+                    window.trackSocialInteraction(
+                        data.isFollowing ? 'follow' : 'unfollow',
+                        inputId,
+                        buttonRole.toLowerCase()
+                    );
+                }
+                
                 if (isUserSame) {
                     const followerSpanAlt = document.querySelector('span[data-following-stats]');
                     const statsData = followerSpanAlt.dataset.followingStats;
@@ -326,7 +334,20 @@ function ProfileData(userOrTeamId, loggedUserId, isUserSame, role, loggedUserRol
 
                 }
 
-                await makeRequest(route, 'POST', inputObject);
+                const friendData = await makeRequest(route, 'POST', inputObject);
+
+                if (window.trackSocialInteraction) {
+                    const friendActions = {
+                        'friend-request': 'friend_request',
+                        'unfriend': 'unfriend',
+                        'acceptt-pending-request': 'friend_accept',
+                        'reject-request': 'friend_reject',
+                        'cancel-request': 'friend_cancel'
+                    };
+                    
+                    const trackedAction = friendActions[action] || action;
+                    window.trackSocialInteraction(trackedAction, inputId, 'user');
+                }
 
                 if (isUserSame) {
                     if (action == 'unfriend' || newStatus == 'accepted') {

@@ -88,10 +88,11 @@ class DeadlineTasks extends Command
 
             if ($type == 0 || $type == 1) {
                 $startedBracketDeadlines = BracketDeadline::whereIn('id', $startedTaskIds)->get();
-                $startDetails = EventDetail::whereIn('id', $startedTaskIds)->withEventTierAndFilteredMatches($startedBracketDeadlines)->get();
+                $startDetails = EventDetail::whereIn('id', $startedTaskIds)->withEventTierAndFilteredMatches($startedBracketDeadlines)->with('game')->get();
                 foreach ($startDetails as $detail) {
                     try {
-                        $this->handleStartedTasks($detail->matches);
+                        $gamesPerMatch = $detail->game && $detail->game->games_per_match ? $detail->game->games_per_match : 3;
+                        $this->handleStartedTasks($detail->matches, $gamesPerMatch);
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
                     }
@@ -100,11 +101,13 @@ class DeadlineTasks extends Command
 
             if ($type == 0 || $type == 2) {
                 $endBracketDeadlines = BracketDeadline::whereIn('id', $endTaskIds)->get();
-                $endDetails = EventDetail::whereIn('id', $endTaskIds)->withEventTierAndFilteredMatches($endBracketDeadlines)->get();
+                $endDetails = EventDetail::whereIn('id', $endTaskIds)->withEventTierAndFilteredMatches($endBracketDeadlines)->with(['type', 'game'])->get();
                 foreach ($endDetails as $detail) {
                     try {
+                        $isLeague = $detail->type && $detail->type->eventType === 'League';
+                        $gamesPerMatch = $detail->game && $detail->game->games_per_match ? $detail->game->games_per_match : 3;
                         $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
-                        $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id);
+                        $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
                     }
@@ -113,11 +116,13 @@ class DeadlineTasks extends Command
 
             if ($type == 0 || $type == 3) {
                 $orgBracketDeadlines = BracketDeadline::whereIn('id', $orgTaskIds)->get();
-                $orgDetails = EventDetail::whereIn('id', $orgTaskIds)->withEventTierAndFilteredMatches($orgBracketDeadlines)->get();
+                $orgDetails = EventDetail::whereIn('id', $orgTaskIds)->withEventTierAndFilteredMatches($orgBracketDeadlines)->with(['type', 'game'])->get();
                 foreach ($orgDetails as $detail) {
                     try {
+                        $isLeague = $detail->type && $detail->type->eventType === 'League';
+                        $gamesPerMatch = $detail->game && $detail->game->games_per_match ? $detail->game->games_per_match : 3;
                         $bracketInfo = $this->bracketDataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
-                        $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id);
+                        $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
                     }

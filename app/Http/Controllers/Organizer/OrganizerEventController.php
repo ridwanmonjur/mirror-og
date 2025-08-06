@@ -162,10 +162,11 @@ class OrganizerEventController extends Controller
             $event = $request->getEvent();
             $user = $request->getStoredUser();
             $existingJoint = $request->getJoinEvent();
+            $page = (int) ($request->query('page') ?: 1);
 
             $viewData = $this->eventMatchService->getEventViewData($event, $user, $existingJoint);
 
-            $bracketData = $this->eventMatchService->generateBrackets($event, false, $existingJoint);
+            $bracketData = $this->eventMatchService->generateBrackets($event, false, $existingJoint,  $page);
 
             return view('Public.ViewEvent', [...$viewData, 'livePreview' => $request->query('live') === 'true' ? 1 : 0, ...$bracketData]);
         } catch (Exception $e) {

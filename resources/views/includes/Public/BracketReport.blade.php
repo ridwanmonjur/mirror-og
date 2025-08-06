@@ -1,14 +1,10 @@
-<input type="hidden" id="eventId" value="{{$event->id}}">
-<input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
-<input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
-<input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
 @include('includes.BracketModal.Report')
 @include('includes.BracketModal.Dispute')
 <div id="bracket-list"  class=" custom-scrollbar tab-bracketlist"
 >
     @if (isset($bracketList['U']))
 
-        <h5 class=" mb-2 text-start"><u>Upper bracket</u></h5>
+        <h5 class=" my-2 text-start"><u>Upper bracket</u></h5>
         <div class="mb-2 row px-0 mx-0">
             <div class="col-xl-6 tournament-bracket tournament-bracket--rounded ">
                 <div class="tournament-bracket__round tournament-bracket__round--quarterfinals">

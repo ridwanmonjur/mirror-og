@@ -154,9 +154,19 @@ document.getElementById('followForm')?.addEventListener('submit', async function
 
 
 
-let previousValues = JSON.parse(document.getElementById('previousValues')?.value ?? '[]');
-const eventId = document.getElementById('eventId')?.value;
+const bracketDataEl = document.getElementById('bracket-report-data');
+const bracketData = {
+  hiddenUserId: bracketDataEl?.dataset.hiddenUserId,
+  eventId: bracketDataEl?.dataset.eventId,
+  userLevelEnums: JSON.parse(bracketDataEl?.dataset.userLevelEnums ?? '[]'),
+  disputeLevelEnums: JSON.parse(bracketDataEl?.dataset.disputeLevelEnums ?? '[]'),
+  userTeamId: bracketDataEl?.dataset.joinEventTeamId || null,
+  previousValues: JSON.parse(bracketDataEl?.dataset.previousValues ?? '[]'),
+//   roundNames: JSON.parse(bracketDataEl?.dataset.roundNames ?? '[]')
+};
 
+const { hiddenUserId, eventId, userLevelEnums, disputeLevelEnums, userTeamId, previousValues } = bracketData;
+console.log({bracketData});
 var bracketItemList = document.querySelectorAll('.codeCANcode.tournament-bracket__item');
 bracketItemList.forEach(item => {
     item.classList.add('special-item-right');
@@ -276,7 +286,10 @@ function previousMatchReportShow(event) {
     event.preventDefault();
     const button = event.currentTarget;
     let { position } = button.dataset;
+    console.log({previousValues});
+    console.log({previousValues});
     let triggerParentsPositionIds = previousValues[position];
+    console.log({position, triggerParentsPositionIds});
     if (!triggerParentsPositionIds) {
         return;
     }
@@ -326,6 +339,7 @@ function reportModalShowAction (position, triggerParentsPositionIds, classNames)
             team2_teamName:  dataset.team2_teamName,
             position: position,
             deadline: dataset.deadline,
+            stage_name: parentWithDataset.dataset.stage_name
 
         }
     });
@@ -623,7 +637,7 @@ submitBtnElement?.addEventListener('click', function(event) {
                     if (match.team2_position && team2 && team1) {
                         window.updateReportDispute(`${match.team1_position}.${match.team2_position}`, team1.id, team2.id);
                     }
-                    let imgsMap = {}, smallsMap = {};
+                    let imgsMap = {};
                     
 
                     let imgsMobile = currentMatchMobile?.querySelectorAll(`.tournament-bracket__pos img.team`) ?? [];
