@@ -927,6 +927,10 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     background: rgb(227, 225, 225) !important;
 }
 
+.bg-special {
+    background: rgba(207, 205, 205, 0.5) !important;
+}
+
 .bg-translucent:first-child {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
@@ -943,51 +947,15 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     width: 50%;
     text-align: right;
 }
-@media (min-width: 992px) and (max-width: 1200px) {
-    .tournament-bracket__content .tournament-bracketTeam:first-child {
-        align-items: flex-end;
-   }
-}
-.tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__pos {
-    justify-content: flex-end;
-}
-@media (min-width: 600px) {
-    .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__pos {
-   }
-}
-@media (min-width: 992px) and (max-width: 1200px) {
-    .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__pos {
-        flex-direction: column-reverse;
-        align-items: flex-end;
-   }
-}
-.tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__score {
-}
-@media (min-width: 600px) {
-    .tournament-bracket__content .tournament-bracketTeam:first-child .tournament-bracket__score {
-   }
-}
+
+
+
 .tournament-bracket__content .tournament-bracketTeam:last-child {
     width: 50%;
     text-align: left;
 }
-@media (min-width: 992px) and (max-width: 1200px) {
-    .tournament-bracket__content .tournament-bracketTeam:last-child {
-        align-items: flex-start;
-   }
-}
-@media (min-width: 992px) {
-    .tournament-bracket__content .tournament-bracketTeam:last-child .tournament-bracket__pos {
-        justify-content: flex-start;
-   }
-}
-@media (min-width: 992px) and (max-width: 1200px) {
-    .tournament-bracket__content .tournament-bracketTeam:last-child .tournament-bracket__pos {
-        align-items: flex-start;
-   }
-}
-.tournament-bracket__content .tournament-bracketTeam:last-child .tournament-bracket__code {
-}
+
+
 .tournament-bracket__table {
     display: block;
 }
@@ -1016,16 +984,8 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     font-weight: 300;
     padding-bottom: 0.75em;
 }
-.tournament-bracketTeam {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-}
-@media (min-width: 600px) {
-    .tournament-bracketTeam {
-        flex-direction: column-reverse;
-   }
-}
+
+
 
 .tab-viewEvent {
     top: 20px;
@@ -1037,9 +997,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
 }
 
 @media (min-width: 992px) {
-    .tournament-bracketTeam {
-        flex-direction: column-reverse;
-   }
+   
    .tab-viewEvent {
         width: 100%; 
         top: 20px;
@@ -1056,28 +1014,8 @@ tournament-bracket__round:last-child .tournament-bracket__list {
         top:20px;
     }
 }
-.tournament-bracket__pos {
-    font-size: 0.95rem;
-    display: flex;
-    margin-top: 0.5em;
-    align-items: center;
-}
-@media (max-width: 600px) {
-    .tournament-bracket__pos {
-        margin-top: 0;
-   }
-}
-@media (min-width: 992px) and (max-width: 1200px) {
-    .tournament-bracket__pos {
-        display: flex;
-        flex-direction: column;
-   }
-    .tournament-bracket__pos .tournament-bracket__code {
-        margin-top: 0.2em;
-   }
 
-  
-}
+
 
 
 
@@ -1104,10 +1042,7 @@ tournament-bracket__round:last-child .tournament-bracket__list {
     display: flex;
     align-items: center;
 }
-.tournament-bracketTeam:first-child .tournament-bracket__score {
-    flex-direction: row-reverse;
-    padding-left: 0.75em;
-}
+
 .tournament-bracketTeam:last-child .tournament-bracket__score {
     padding-right: 0.75em;
 }

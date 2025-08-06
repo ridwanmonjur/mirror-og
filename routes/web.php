@@ -51,7 +51,7 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
-Route::get('/seed/event/{tier}/{type}', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/event/{tier}/{type?}/{game?}', [MiscController::class, 'seedBrackets']);
 Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
 Route::get('/deadlineTasks/{id}/{taskType}', [MiscController::class, 'deadlineTasks']);
@@ -101,9 +101,9 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => ['auth', 'prevent-back-history']], function () {
         Route::redirect('/profile', '/admin', 301)->name('admin.profile.view');
-        Route::get('/brackets/{eventId}', [FirebaseController::class, 'showBrackets'])->name('filament.pages.brackets.index');
-        Route::get('/disputes/{eventId}', [FirebaseController::class, 'showDisputes']);
-        Route::post('/brackets/{eventId}', [FirebaseController::class, 'storeBrackets'])->name('filament.pages.brackets.store');
+        Route::get('/brackets/{eventId}', [OrganizerEventResultsController::class, 'viewBrackets'])->name('filament.pages.brackets.index');
+        // Route::get('/disputes/{eventId}', [FirebaseController::class, 'showDisputes']);
+        // Route::post('/brackets/{eventId}', [FirebaseController::class, 'storeBrackets'])->name('filament.pages.brackets.store');
         Route::group(['middleware' => 'check-permission:admin'], function () {
             Route::get('/onboardBeta', [BetaController::class, 'viewOnboardBeta'])->name('admin.onboardBeta.view');
             Route::post('/onboardBeta', [BetaController::class, 'postOnboardBeta'])->name('admin.onboardBeta.action');

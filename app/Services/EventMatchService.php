@@ -62,43 +62,12 @@ class EventMatchService
         ?JoinEvent $existingJoint,
         ?int $page = 1
     ): array {
-
         $USER_ENUMS = config('constants.USER_ACCESS');
         $DISPUTTE_ENUMS = config('constants.DISPUTE');
-
-        $joinEventIds = $event->joinEvents->pluck('id');
-
-        $event->load([
-            'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
-                $query->select('id', 'team_id', 'join_events_id', 'user_id')
-                    ->whereIn('join_events_id', $joinEventIds)
-                    ->with(['user' => function ($query) {
-                        $query->select('id', 'name', 'userBanner');
-                    }]);
-            },
-            'matches',
-        ]);
-
-        $teamMap = collect();
-        $teamList = collect();
-        $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
-            $teamMap[$joinEvent->team->id] = $joinEvent->team;
-            if ($joinEvent->join_status === 'confirmed') {
-                $teamList->push($joinEvent->team);
-            }
-        });
-
         $deadlines = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
-        $matchTeamIds = collect();
-        $event->matches->each(function ($match) use ($teamMap, &$matchTeamIds) {
-            $match->team1 = $teamMap->get($match->team1_id);
-            $match->team2 = $teamMap->get($match->team2_id);
-            $matchTeamIds->push($match->team1_id, $match->team2_id);
-        });
 
-        $matchesUpperCount = intval($event->tier?->tierTeamSlot);
         $dataService = DataServiceFactory::create($event->type->eventType);
-        
+        $matchesUpperCount = intval($event->tier?->tierTeamSlot);
         if (! $matchesUpperCount) {
             $previousValues = [];
         } else {
@@ -110,21 +79,39 @@ class EventMatchService
             $matchesUpperCount,
             $willFixBracketsAsOrganizer,
             $USER_ENUMS,
-            null,
+            $deadlines,
             $page
         );
 
+        $pagination = $dataService->getPagination();
+        $roundNames = $dataService->getRoundNames();
+
+      
+        $joinEventIds = $event->joinEvents->pluck('id');
+
+        $event->load([
+            'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
+                $query->select('id', 'team_id', 'join_events_id', 'user_id')
+                    ->whereIn('join_events_id', $joinEventIds)
+                    ->with(['user' => function ($query) {
+                        $query->select('id', 'name', 'userBanner');
+                    }]);
+            },
+            'matches' => fn($query) => $query->whereIn('stage_name', $roundNames)
+            ->with(['team1.roster.user:id,name,userBanner', 'team2.roster.user:id,name,userBanner'])
+        ]);
+
+        $teamMap = collect();
+        $teamList = collect();
+        $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
+            $teamMap[$joinEvent->team->id] = $joinEvent->team;
+            if ($joinEvent->join_status === 'confirmed') {
+                $teamList->push($joinEvent->team);
+            }
+        });
 
 
-        if (isset($bracketList['roundNames'])) {
-            $matchesToProcess = $event->matches()
-                ?->whereIn('stage_name', $bracketList['roundNames'])
-                ->get() ?? [];
-        } else {
-            $matchesToProcess = $event->matches;
-        }
-
-        $bracketList = $matchesToProcess?->reduce(function ($bracketList, $match, $index) use (
+        $bracketList = $event->matches->reduce(function ($bracketList, $match, $index) use (
             $existingJoint,
             $willFixBracketsAsOrganizer,
             $USER_ENUMS,
@@ -168,7 +155,7 @@ class EventMatchService
             return data_set($bracketList, $path, $mergedData);
         }, $bracketList);
 
-        // dd($bracketList, $matchesToProcess);
+        // dd($bracketList, $event->matches, $roundNames);
 
         return [
             'teamList' => $teamList,
@@ -177,7 +164,8 @@ class EventMatchService
             'existingJoint' => $existingJoint,
             'previousValues' => $previousValues,
             'DISPUTE_ACCESS' => $DISPUTTE_ENUMS,
-            'pagination' => $dataService->getPagination()
+            'pagination' => $pagination,
+            'roundNames' => $roundNames
         ];
     }
 

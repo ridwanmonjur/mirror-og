@@ -6,15 +6,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScores, updateReportFromFirestore, showSwal, createReportTemp, createDisputeDto, generateWarningHtml, updateAllCountdowns, diffDateWithNow, updateCurrentReportDots } from "./brackets";
 import firebaseService from "../services/firebase.js";
 
-export default function BracketData(fileStore) {
-  const { auth, db } = firebaseService.getServices();
-  const hiddenUserId = document.getElementById('hidden_user_id')?.value;
-  const eventId = document.getElementById('eventId')?.value;
-  const userLevelEnums = JSON.parse(document.getElementById('userLevelEnums').value ?? '[]');
-  const disputeLevelEnums = JSON.parse(document.getElementById('disputeLevelEnums').value ?? '[]');
-  const userTeamId = document.getElementById('joinEventTeamId').value[0] ?? null;
+export default function BracketData({ fileStore, bracketData, auth, db }) {
+  const { hiddenUserId, eventId, userLevelEnums,  disputeLevelEnums, userTeamId, gamesPerMatch } = bracketData;
   
-  let totalMatches = 3;
+  let totalMatches = gamesPerMatch || 3;
   const {
     reportStore,
     disputeStore,
@@ -124,6 +119,7 @@ export default function BracketData(fileStore) {
             position: eventUpdate.position ?? _initialBracket.report.position,
             userLevel: eventUpdate.user_level ?? _initialBracket.report.userLevel,
             deadline: eventUpdate.deadline ?? null,
+            stageName: eventUpdate.stage_name ?? null,
             teams: [
               {
                 ..._initialBracket.report.teams[0],
@@ -366,7 +362,7 @@ export default function BracketData(fileStore) {
       try {
         let firestoreDoc = {
           score: [tempState?.score[0] ?? "0", tempState?.score[1] ?? "0"],
-      
+          stageName: tempState.stageName,
           realWinners: [...tempState.realWinners],
           organizerWinners: [...tempState.organizerWinners],
           team1Id: tempState.teams[0].id,
@@ -506,7 +502,7 @@ export default function BracketData(fileStore) {
       let subscribeToCurrentReportDisputesSnapshot = onSnapshot(
         disputeQuery,
         async (disputeSnapshot) => {
-          let allDisputes = [null, null, null];
+          let allDisputes = Array(totalMatches).fill(null);
           disputeSnapshot.docChanges().forEach((change) => {
             let data = change.doc.data();
             let id = change.doc.id;

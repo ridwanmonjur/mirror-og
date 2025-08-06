@@ -276,15 +276,16 @@ class MiscController extends Controller
         return $eventName;
     }
 
-    public function seedBrackets(Request $request, $tier, $type): JsonResponse
+    public function seedBrackets(Request $request, $tier, $type = 'Tournament', $game = 'Dota 2'): JsonResponse
     {
         try {
             $factory = new BracketsFactory;
             $seed = $factory->seed([
                 'event' => [
                     'eventTier' => $tier,
-                    'eventName' => 'Test Brackets',
+                    'eventName' => "Test {$type} {$game}",
                     'eventType' => $type,
+                    'eventGame' => $game
                 ],
                 'joinEvent' => [
                     'join_status' => 'confirmed',

@@ -18,67 +18,91 @@ const db = initializeFirestore(app, {
     })
 });
 
-async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId, collectionName = 'globalCounts') {
+// Utility functions for date formatting
+function getDateKeys() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    
+    return {
+        daily: `${year}-${month}-${day}`,
+        monthly: `${year}-${month}`,
+        yearly: `${year}`
+    };
+}
+
+async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId, type = 'click') {
     try {
-        const countsRef = doc(db, 'analytics', collectionName);
+        const dateKeys = getDateKeys();
         
-        // Check if document exists first
-        const docSnap = await getDoc(countsRef);
+        const collections = [
+            { collection: 'analytics-daily', docId: dateKeys.daily },
+            { collection: 'analytics-monthly', docId: dateKeys.monthly },
+            { collection: 'analytics-yearly', docId: dateKeys.yearly }
+        ];
         
-        const updateData = {
-            lastUpdated: serverTimestamp()
-        };
-
-        if (eventTier) {
-            updateData[`eventTiers.${eventTier}`] = increment(1);
-        }
-        
-        if (eventType) {
-            updateData[`eventTypes.${eventType}`] = increment(1);
-        }
-        
-        if (esportTitle) {
-            updateData[`esportTitles.${esportTitle}`] = increment(1);
-        }
-        
-        if (location) {
-            updateData[`locations.${location}`] = increment(1);
-        }
-
-        if (eventName) {
-            updateData[`eventNames.${eventName}`] = increment(1);
-        }
-
-        if (userId) {
-            updateData[`userIds.${userId}`] = increment(1);
-        }
-
-        if (!docSnap.exists()) {
-            // Create document with initial structure
-            const initialData = {
-                eventTiers: {},
-                eventTypes: {},
-                esportTitles: {},
-                locations: {},
-                eventNames: {},
-                userIds: {},
-                lastUpdated: serverTimestamp()
+        for (const { collection, docId } of collections) {
+            const countsRef = doc(db, collection, `${type}Counts-${docId}`);
+            
+            const docSnap = await getDoc(countsRef);
+            
+            const updateData = {
+                lastUpdated: serverTimestamp(),
+                date: docId
             };
+
+            if (eventTier) {
+                updateData[`eventTiers.${eventTier}`] = increment(1);
+            }
             
-            // Add initial counts
-            if (eventTier) initialData.eventTiers[eventTier] = 1;
-            if (eventType) initialData.eventTypes[eventType] = 1;
-            if (esportTitle) initialData.esportTitles[esportTitle] = 1;
-            if (location) initialData.locations[location] = 1;
-            if (eventName) initialData.eventNames[eventName] = 1;
-            if (userId) initialData.userIds[userId] = 1;
+            if (eventType) {
+                updateData[`eventTypes.${eventType}`] = increment(1);
+            }
             
-            await setDoc(countsRef, initialData);
-        } else {
-            await updateDoc(countsRef, updateData);
+            if (esportTitle) {
+                updateData[`esportTitles.${esportTitle}`] = increment(1);
+            }
+            
+            if (location) {
+                updateData[`locations.${location}`] = increment(1);
+            }
+
+            if (eventName) {
+                updateData[`eventNames.${eventName}`] = increment(1);
+            }
+
+            if (userId) {
+                updateData[`userIds.${userId}`] = increment(1);
+            }
+
+            if (!docSnap.exists()) {
+                // Create document with initial structure
+                const initialData = {
+                    eventTiers: {},
+                    eventTypes: {},
+                    esportTitles: {},
+                    locations: {},
+                    eventNames: {},
+                    userIds: {},
+                    lastUpdated: serverTimestamp(),
+                    date: docId
+                };
+                
+                if (eventTier) initialData.eventTiers[eventTier] = 1;
+                if (eventType) initialData.eventTypes[eventType] = 1;
+                if (esportTitle) initialData.esportTitles[esportTitle] = 1;
+                if (location) initialData.locations[location] = 1;
+                if (eventName) initialData.eventNames[eventName] = 1;
+                if (userId) initialData.userIds[userId] = 1;
+                
+                await setDoc(countsRef, initialData);
+            } else {
+                await updateDoc(countsRef, updateData);
+            }
         }
         
-        console.log('Analytics counts updated');
+        console.log('Analytics counts updated for all time periods');
     } catch (error) {
         console.error('Error updating analytics counts:', error);
     }
@@ -86,41 +110,50 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
 
 async function updateSocialCounts(action, targetType) {
     try {
-        const socialRef = doc(db, 'analytics', 'socialCounts');
+        const dateKeys = getDateKeys();
         
-        // Check if document exists first
-        const docSnap = await getDoc(socialRef);
+        const collections = [
+            { collection: 'analytics-daily', docId: dateKeys.daily },
+            { collection: 'analytics-monthly', docId: dateKeys.monthly },
+            { collection: 'analytics-yearly', docId: dateKeys.yearly }
+        ];
         
-        const updateData = {
-            lastUpdated: serverTimestamp()
-        };
-
-        if (action) {
-            updateData[`actions.${action}`] = increment(1);
-        }
-        
-        if (targetType) {
-            updateData[`targetTypes.${targetType}`] = increment(1);
-        }
-
-        if (!docSnap.exists()) {
-            // Create document with initial structure
-            const initialData = {
-                actions: {},
-                targetTypes: {},
-                lastUpdated: serverTimestamp()
+        for (const { collection, docId } of collections) {
+            const socialRef = doc(db, collection, `socialCounts-${docId}`);
+            
+            const docSnap = await getDoc(socialRef);
+            
+            const updateData = {
+                lastUpdated: serverTimestamp(),
+                date: docId
             };
+
+            if (action) {
+                updateData[`actions.${action}`] = increment(1);
+            }
             
-            // Add initial counts
-            if (action) initialData.actions[action] = 1;
-            if (targetType) initialData.targetTypes[targetType] = 1;
-            
-            await setDoc(socialRef, initialData);
-        } else {
-            await updateDoc(socialRef, updateData);
+            if (targetType) {
+                updateData[`targetTypes.${targetType}`] = increment(1);
+            }
+
+            if (!docSnap.exists()) {
+                const initialData = {
+                    actions: {},
+                    targetTypes: {},
+                    lastUpdated: serverTimestamp(),
+                    date: docId
+                };
+                
+                if (action) initialData.actions[action] = 1;
+                if (targetType) initialData.targetTypes[targetType] = 1;
+                
+                await setDoc(socialRef, initialData);
+            } else {
+                await updateDoc(socialRef, updateData);
+            }
         }
         
-        console.log('Social counts updated');
+        console.log('Social counts updated for all time periods');
     } catch (error) {
         console.error('Error updating social counts:', error);
     }
@@ -128,49 +161,65 @@ async function updateSocialCounts(action, targetType) {
 
 async function updateFormCounts(formName) {
     try {
-        const formRef = doc(db, 'analytics', 'formJoins');
+        const dateKeys = getDateKeys();
         
-        // Check if document exists first
-        const docSnap = await getDoc(formRef);
+        const collections = [
+            { collection: 'analytics-daily', docId: dateKeys.daily },
+            { collection: 'analytics-monthly', docId: dateKeys.monthly },
+            { collection: 'analytics-yearly', docId: dateKeys.yearly }
+        ];
         
-        const updateData = {
-            lastUpdated: serverTimestamp()
-        };
-
-        if (formName) {
-            updateData[`formNames.${formName}`] = increment(1);
-        }
-
-        if (!docSnap.exists()) {
-            // Create document with initial structure
-            const initialData = {
-                formNames: {},
-                lastUpdated: serverTimestamp()
+        for (const { collection, docId } of collections) {
+            const formRef = doc(db, collection, `formCounts-${docId}`);
+            
+            const docSnap = await getDoc(formRef);
+            
+            const updateData = {
+                lastUpdated: serverTimestamp(),
+                date: docId
             };
-            
-            // Add initial counts
-            if (formName) initialData.formNames[formName] = 1;
-            
-            await setDoc(formRef, initialData);
-        } else {
-            await updateDoc(formRef, updateData);
+
+            if (formName) {
+                updateData[`formNames.${formName}`] = increment(1);
+            }
+
+            if (!docSnap.exists()) {
+                const initialData = {
+                    formNames: {},
+                    lastUpdated: serverTimestamp(),
+                    date: docId
+                };
+                
+                if (formName) initialData.formNames[formName] = 1;
+                
+                await setDoc(formRef, initialData);
+            } else {
+                await updateDoc(formRef, updateData);
+            }
         }
         
-        console.log('Form counts updated');
+        console.log('Form counts updated for all time periods');
     } catch (error) {
         console.error('Error updating form counts:', error);
     }
 }
 
-// Only add functions to window if analytics meta tag is present
 if (document.querySelector('meta[name="analytics"]')) {
     window.trackEventCardClick = async function(element, event) {
         console.log("Event card click tracked");
         
-        // Prevent default navigation if this is a link
         if (event) {
             event.preventDefault();
         }
+        
+        if (element.disabled || element.dataset.clicking === 'false') {
+            console.log("Element already disabled or being processed");
+            return;
+        }
+        
+        const storedHref = element.href;
+        element.disabled = true;
+        element.dataset.clicking = 'false';
         
         try {
             const eventData = {
@@ -188,33 +237,37 @@ if (document.querySelector('meta[name="analytics"]')) {
 
             console.log('Tracking event data:', eventData);
 
-            // Wait for analytics to be saved before allowing redirect
-            await Promise.all([
-                updateAnalyticsCounts(
-                    eventData.eventTier,
-                    eventData.eventType,
-                    eventData.esportTitle,
-                    eventData.location,
-                    eventData.eventName,
-                    eventData.userId,
-                    'clickCounts'
-                ),
-               
-            ]);
+            const analyticsPromise = updateAnalyticsCounts(
+                eventData.eventTier,
+                eventData.eventType,
+                eventData.esportTitle,
+                eventData.location,
+                eventData.eventName,
+                eventData.userId,
+                'click'
+            );
 
-            console.log('Event card click tracked successfully:', eventData);
+            const timeoutPromise = new Promise(resolve => {
+                setTimeout(resolve, 2000);
+            });
 
-            // Now navigate to the link if it exists
-            if (element.href) {
-                window.location.href = element.href;
-            }
+            Promise.race([analyticsPromise, timeoutPromise]).finally(() => {
+                if (storedHref) {
+                    window.location.href = storedHref;
+                }
+            });
+
+            analyticsPromise.then(() => {
+                console.log('Event card click tracked successfully:', eventData);
+            }).catch((error) => {
+                console.error('Error tracking event card click analytics:', error);
+            });
 
         } catch (error) {
             console.error('Error tracking event card click:', error);
             
-            // Even if tracking fails, still navigate if it's a link
-            if (element.href) {
-                window.location.href = element.href;
+            if (storedHref) {
+                window.location.href = storedHref;
             }
         }
     };
@@ -242,7 +295,7 @@ if (document.querySelector('meta[name="analytics"]')) {
                 eventData.location,
                 eventData.eventName,
                 eventData.userId,
-                'viewCounts'
+                'view'
             );
 
             console.log('Event view tracked:', eventData);
@@ -254,15 +307,39 @@ if (document.querySelector('meta[name="analytics"]')) {
     };
 
     window.trackSocialInteraction = function(action, target, targetType = 'user') {
-        const eventData = {
-            event_category: 'social',
-            event_label: `${action}_${targetType}`,
-            social_action: action,
-            social_target: target,
-            social_type: targetType
-        };
-        
-        updateSocialCounts(action, targetType);
+        try {
+            const eventData = {
+                event_category: 'social',
+                event_label: `${action}_${targetType}`,
+                social_action: action,
+                social_target: target,
+                social_type: targetType
+            };
+            
+            const socialInteractionTypes = {
+                'like': 'UserLikes',
+                'unlike': 'UserLikes', 
+                'follow': targetType === 'user' ? 'UserFollows' : targetType === 'team' ? 'TeamFollows' : targetType === 'event' ? 'EventFollows' : 'UserFollows',
+                'unfollow': targetType === 'user' ? 'UserFollows' : targetType === 'team' ? 'TeamFollows' : targetType === 'event' ? 'EventFollows' : 'UserFollows',
+                'friend_request': 'UserFollows',
+                'unfriend': 'UserFollows'
+            };
+
+            const interactionCategory = socialInteractionTypes[action] || 'UserFollows';
+            
+            console.log('Social interaction tracked:', {
+                action,
+                target,
+                targetType,
+                category: interactionCategory,
+                eventData
+            });
+            
+            updateSocialCounts(action, targetType);
+            
+        } catch (error) {
+            console.error('Error tracking social interaction:', error);
+        }
     };
 
     window.trackFormSubmission = function(formName, additionalParams = {}) {

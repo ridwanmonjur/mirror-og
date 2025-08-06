@@ -16,6 +16,7 @@ class BracketDeadlineSetup extends Model
 
     protected $fillable = [
         'tier_id',
+        'type_id',
         'deadline_config',
     ];
 
@@ -34,5 +35,13 @@ class BracketDeadlineSetup extends Model
     public function eventTier(): BelongsTo
     {
         return $this->belongsTo(EventTier::class, 'tier_id', 'id');
+    }
+
+    /**
+     * Get the event type that owns this bracket deadline setup.
+     */
+    public function eventType(): BelongsTo
+    {
+        return $this->belongsTo(EventType::class, 'type_id', 'id');
     }
 }

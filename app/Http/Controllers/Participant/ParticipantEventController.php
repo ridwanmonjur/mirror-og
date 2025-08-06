@@ -45,12 +45,11 @@ class ParticipantEventController extends Controller
             $user = $request->getStoredUser();
             $existingJoint = $request->getJoinEvent();
             $viewData = $this->eventMatchService->getEventViewData($event, $user, $existingJoint);
-
-            $bracketData = $this->eventMatchService->generateBrackets($event, false, $existingJoint);
+            $page = (int) ($request->query('page') ?: 1);
+            $bracketData = $this->eventMatchService->generateBrackets($event, false, $existingJoint, $page);
 
             // Check if this is the V2 route
-            $routeName = $request->route()->getName();
-            $viewName = ($routeName === 'participant.eventv2.view') ? 'Public.ViewEventV2' : 'Public.ViewEvent';
+            $viewName = 'Public.ViewEvent';
 
             return view($viewName, [...$viewData, 'livePreview' => 0, ...$bracketData]);
         } catch (Exception $e) {

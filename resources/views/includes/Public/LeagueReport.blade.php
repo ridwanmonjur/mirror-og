@@ -1,14 +1,9 @@
-
-<input type="hidden" id="eventId" value="{{ $event->id }}">
-<input type="hidden" id="previousValues" value="{{ json_encode($previousValues) }}">
-<input type="hidden" id="joinEventTeamId" value="{{ $existingJoint?->team_id }}">
-<input type="hidden" id="userLevelEnums" value="{{ json_encode($USER_ACCESS) }}">
 @include('includes.BracketModal.Report')
 @include('includes.BracketModal.Dispute')
 <div id="bracket-list" class="custom-scrollbar tab-bracketlist">
 
         @if (isset($joinEventAndTeamList) && count($joinEventAndTeamList) > 0)
-            <h5 class="mb-2 text-start"><u>League Standings</u></h5>
+            <h5 class="my-2 text-start"><u>League Standings</u></h5>
             <div class="mb-2 row px-0 mx-0">
                 <div class="col-12">
                     <div class="table-responsive">
@@ -56,27 +51,37 @@
 
         @if (isset($bracketList) && !empty($bracketList))
             <h5 class="mt-3 mb-2 text-start"><u>Rounds & Results</u></h5>
+            
+            {{-- Pagination Component --}}
+            @if(isset($pagination))
+                <x-pagination.league-pagination :pagination="$pagination" />
+            @endif
+            
             <div class="mb-2 px-0 mx-0">
-                    
-                    @foreach ($bracketList['table'] as $roundKey => $roundData)
+                    @foreach ($bracketList as $roundKey => $roundData)
                         <div class="my-3 ">
                             <h6>Round {{ $roundKey }}</h6>
                             <div class="row">
-                                @foreach ($roundData as $matchKey => $match)
-                                    
-                                    <div class="my-3 col-12 col-lg-6">
-                                        <div class=" d-none-until-hover2-parent">
-                                            <div class="table-report middle-item {{ $match['team1_position'] }} {{ $match['team2_position'] }} popover-parent "
-                                                tabindex="0" data-bracket="{{ json_encode($match) }}" 
-                                               data-stage_name="table"
-                                                data-inner_stage_name="{{ $roundKey }}" 
-                                                data-order="{{ $match['order'] }}" 
-                                                data-item-type="middle"
-                                            >
-                                                <x-brackets.bracket-table :bracket="$match" :isLeague="false"  />
+                                @foreach ($roundData as $fakeKey => $actualRoundData[0])
+                                     {{-- <h5>{{$fakeKey}}</h5> --}}
+                                     {{-- <h5>{{json_encode($actualRoundData[0])}}</h5> --}}
+                                     @foreach ($actualRoundData[0] as $match) 
+                                    <div class="my-3 col-12 col-md-6 ">
+                                        <div>
+                                            {{-- <h5>{{$fakeKey}}</h5> --}}
+                                            <div class=" d-none-until-hover2-parent">
+                                                <div class="table-report middle-item {{ $match['team1_position'] }} {{ $match['team2_position'] }} popover-parent "
+                                                    tabindex="0" data-bracket="{{ json_encode($match) }}"
+                                                    data-stage_name="{{ $fakeKey }}"
+                                                    data-inner_stage_name="{{ $fakeKey }}" 
+                                                    data-order="{{ $match['order'] }}" 
+                                                    data-item-type="middle">
+                                                    <x-brackets.bracket-table :bracket="$match" :isLeague="true" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    @endforeach  
                                 @endforeach
                             </div>
                         </div>

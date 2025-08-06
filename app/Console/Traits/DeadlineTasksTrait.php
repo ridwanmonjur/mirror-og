@@ -130,7 +130,7 @@ trait DeadlineTasksTrait
 
     }
 
-    public function handleDisputes($matchStatusData, $bracket, $eventId, $willBreakConflicts = false)
+    public function handleDisputes($matchStatusData, $bracket, $eventId, $willBreakConflicts = false, $gamesPerMatch = 3)
     {
         /**
          * Handles match dispute resolution in a tournament bracket
@@ -139,16 +139,17 @@ trait DeadlineTasksTrait
          * @param  array  $bracket  Information about the current bracket/match
          * @param  string  $eventId  ID of the tournament event
          * @param  bool  $willBreakConflicts  Whether to randomly resolve conflicting dispute claims
+         * @param  int  $gamesPerMatch  Number of games per match
          * @return array Returns updates for match report, dispute references, dispute value updates, and dispute status
          */
-        $realWinners = $matchStatusData['realWinners'] ?? [null, null, null];
-        $disputeResolved = $matchStatusData['disputeResolved'] ?? [null, null, null];
+        $realWinners = $matchStatusData['realWinners'] ?? array_fill(0, $gamesPerMatch, null);
+        $disputeResolved = $matchStatusData['disputeResolved'] ?? array_fill(0, $gamesPerMatch, null);
         $scores = [0, 0];
         $isUpdatedDispute = false;
         $updateReportValues = [];
-        $updateDisputeValues = [null, null, null];
-        $disputeRefList = [null, null, null];
-        for ($i = 0; $i < 3; $i++) {
+        $updateDisputeValues = array_fill(0, $gamesPerMatch, null);
+        $disputeRefList = array_fill(0, $gamesPerMatch, null);
+        for ($i = 0; $i < $gamesPerMatch; $i++) {
             if (! isset($realWinners[$i])) {
                 if (! $disputeResolved[$i]) {
                     $disputePath =  $bracket['team1_position'].'.'.$bracket['team2_position'].'.'.$i;
@@ -203,29 +204,28 @@ trait DeadlineTasksTrait
         ];
     }
 
-    public function handleReports($matchStatusData, $willBreakTiesAndConflicts = false)
+    public function handleReports($matchStatusData, $gamesPerMatch = 3, $willBreakTiesAndConflicts = false)
     {
         /**
          * Resolves winners for matchups with incomplete/conflicted/tied submissions.
          *
          * @param  array  $matchStatusData  Current match status and result data
-         * @param  array  $bracket  Current bracket context
-         * @param  string  $eventId  Event identifier for dispute references
+         * @param  int  $gamesPerMatch  Number of games per match
          * @param  bool  $willBreakTiesAndConflicts  Whether to auto-resolve tied/disputed matches
          * @return array Updated match data or empty array if no updates
          */
-        $team1Winners = $matchStatusData['team1Winners'] ?? [null, null, null];
-        $team2Winners = $matchStatusData['team2Winners'] ?? [null, null, null];
-        $realWinners = $matchStatusData['realWinners'] ?? [null, null, null];
-        $defaultWinners = $matchStatusData['defaultWinners'] ?? [null, null, null];
-        $randomWinners = $matchStatusData['randomWinners'] ?? [null, null, null];
+        $team1Winners = $matchStatusData['team1Winners'] ?? array_fill(0, $gamesPerMatch, null);
+        $team2Winners = $matchStatusData['team2Winners'] ?? array_fill(0, $gamesPerMatch, null);
+        $realWinners = $matchStatusData['realWinners'] ?? array_fill(0, $gamesPerMatch, null);
+        $defaultWinners = $matchStatusData['defaultWinners'] ?? array_fill(0, $gamesPerMatch, null);
+        $randomWinners = $matchStatusData['randomWinners'] ?? array_fill(0, $gamesPerMatch, null);
         $scores = [0, 0];
         $noScores = 0;
         $updated = false;
         $newUpdate = [];
         $disqualified = false;
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < $gamesPerMatch; $i++) {
             if (! isset($realWinners[$i])) {
                 // Complete but conflict
                 if (isset($team2Winners[$i]) && isset($team1Winners[$i])) {
@@ -235,7 +235,7 @@ trait DeadlineTasksTrait
                         $realWinners[$i] = $winner_chosen;
                     }
                     if ($willBreakTiesAndConflicts) {
-                        $disputeResolved = $matchStatusData['disputeResolved'] ?? [null, null, null];
+                        $disputeResolved = $matchStatusData['disputeResolved'] ?? array_fill(0, $gamesPerMatch, null);
                         if (! isset($disputeResolved[$i]) || $disputeResolved[$i]) {
                             $updated = true;
                             $winner_chosen = (string) rand(0, 1);
@@ -260,16 +260,16 @@ trait DeadlineTasksTrait
         }
 
         $scores = $this->calcScores($realWinners);
-        if ($noScores == 3) {
+        if ($noScores == $gamesPerMatch) {
             $updated = true;
             $disqualified = true;
         } elseif ($willBreakTiesAndConflicts) {
             // Break Tie
             if ($scores[0] == $scores[1]) {
-                for ($i = 0; $i < 3; $i++) {
+                for ($i = 0; $i < $gamesPerMatch; $i++) {
                     if (! isset($team2Winners[$i]) && ! isset($team1Winners[$i])) {
                         if ($willBreakTiesAndConflicts) {
-                            $disputeResolved = $matchStatusData['disputeResolved'] ?? [null, null, null];
+                            $disputeResolved = $matchStatusData['disputeResolved'] ?? array_fill(0, $gamesPerMatch, null);
                             if (! isset($disputeResolved[$i]) || $disputeResolved[$i]) {
                                 $updated = true;
                                 $realWinners[$i] = (string) rand(0, 1);
@@ -297,7 +297,7 @@ trait DeadlineTasksTrait
         ];
     }
 
-    public function handleStartedTasks(Collection $startedBrackets)
+    public function handleStartedTasks(Collection $startedBrackets, $gamesPerMatch = 3)
     {
         foreach ($startedBrackets as $bracket) {
 
@@ -306,20 +306,23 @@ trait DeadlineTasksTrait
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
+                $startedStatusArray = ['ONGOING'];
+                $startedStatusArray = array_merge($startedStatusArray, array_fill(0, $gamesPerMatch - 1, 'UPCOMING'));
                 $docRef->update([
-                    ['path' => 'matchStatus', 'value' => ['ONGOING', 'UPCOMING', 'UPCOMING']],
+                    ['path' => 'matchStatus', 'value' => $startedStatusArray],
                     ['path' => 'completeMatchStatus', 'value' => 'ONGOING'],
                 ]);
             }
         }
     }
 
-    public function handleEndedTasks(Collection $endBrackets, $bracketInfo, $tierId)
+    public function handleEndedTasks(Collection $endBrackets, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
     {
         foreach ($endBrackets as $bracket) {
             $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
+            $endedStatusArray = array_fill(0, $gamesPerMatch, 'ENDED');
             $updateValues = [
-                ['path' => 'matchStatus', 'value' => ['ENDED', 'ENDED', 'ENDED']],
+                ['path' => 'matchStatus', 'value' => $endedStatusArray],
                 ['path' => 'completeMatchStatus', 'value' => 'ENDED'],
             ];
 
@@ -336,7 +339,7 @@ trait DeadlineTasksTrait
                 [$disputeRefList,
                     $updateDisputeValues,
                     $updateValues
-                ] = $this->interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId);
+                ] = $this->interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, false, $isLeague, $gamesPerMatch);
                 if (! empty($updateValues)) {
                     $docRef->update($updateValues);
                 }
@@ -350,7 +353,7 @@ trait DeadlineTasksTrait
 
     }
 
-    public function handleOrgTasks(Collection $orgBrackets, $bracketInfo, $tierId)
+    public function handleOrgTasks(Collection $orgBrackets, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
     {
         foreach ($orgBrackets as $bracket) {
             $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
@@ -365,7 +368,7 @@ trait DeadlineTasksTrait
                 [$disputeRefList,
                     $updateDisputeValues,
                     $updateValues
-                ] = $this->interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, true);
+                ] = $this->interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, true, $isLeague, $gamesPerMatch);
                 Log::info($updateValues);
                 Log::info($updateDisputeValues);
                 if (! empty($updateValues)) {
@@ -380,14 +383,14 @@ trait DeadlineTasksTrait
         }
     }
 
-    protected function interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, $afterOrganizerDeadline = false)
+    protected function interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, $afterOrganizerDeadline = false, $isLeague = false, $gamesPerMatch = 3)
     {
         [
             $updateReportValues,
             $disputeRefList,
             $updateDisputeValues,
             $isUpdatedDispute
-        ] = $this->handleDisputes($matchStatusData, $bracket, $bracket['event_details_id'], $afterOrganizerDeadline);
+        ] = $this->handleDisputes($matchStatusData, $bracket, $bracket['event_details_id'], $afterOrganizerDeadline, $gamesPerMatch);
 
         if ($isUpdatedDispute) {
             $updateValues = $this->updateValueByPath($updateValues, $updateReportValues);
@@ -397,14 +400,16 @@ trait DeadlineTasksTrait
         [
             $newUpdate,
             $updated
-        ] = $this->handleReports($matchStatusData);
+        ] = $this->handleReports($matchStatusData, $gamesPerMatch);
 
         if ($updated) {
             $updateValues = $this->updateValueByPath($updateValues, $newUpdate);
             $matchStatusData = $this->updateValueByPath($matchStatusData, $newUpdate, true);
         }
 
-        $this->resolveNextStage($bracket, $extraBracket, $matchStatusData['score'], $tierId);
+        if (!$isLeague) {
+            $this->resolveNextStage($bracket, $extraBracket, $matchStatusData['score'], $tierId);
+        }
 
         return [
             $disputeRefList,

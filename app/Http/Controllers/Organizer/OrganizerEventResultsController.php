@@ -229,11 +229,14 @@ class OrganizerEventResultsController extends Controller
 
     public function viewBrackets(Request $request, $id)
     {
+        $user = auth()->user();
         $event = EventDetail::with(['type'])->findOrFail($id);
 
         if (! $event->type->eventType) {
             return $this->showErrorOrganizer("Event with id: {$id} cannot be of this type: {$event->type->eventType}");
         }
+
+        $page = (int) ($request->query('page') ?: 1);
 
         $event->load([
             'tier',
@@ -246,13 +249,15 @@ class OrganizerEventResultsController extends Controller
         $bracket = $this->eventMatchService->generateBrackets(
             $event,
              true, 
-             null
+             null,
+             $page
         );
 
         return view('Organizer.Brackets', [
             'id' => $id,
             'eventType' => $event->type->eventType,
             'event' => $event,
+            'user' => $user,
             ...$bracket,
         ]);
     }

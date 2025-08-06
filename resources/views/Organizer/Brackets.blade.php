@@ -21,11 +21,18 @@
         @include('includes.Navbar')
  
     <main id="Bracket"  v-scope="BracketData()" @vue:mounted="init()" @vue:unmounted="destroy();" class="position-relative">
-        <input type="hidden" id="eventId" value="{{$event->id}}">
-        <input type="hidden" id="previousValues" value="{{json_encode($previousValues)}}">
-        <input type="hidden" id="joinEventTeamId" value="{{$existingJoint?->team_id }}">
-        <input type="hidden" id="userLevelEnums" value="{{json_encode($USER_ACCESS)}}">
-        <input type="hidden" id="disputeLevelEnums" value="{{json_encode($DISPUTE_ACCESS)}}">
+     
+        <div class="d-none" id="bracket-report-data"
+            data-event-id="{{$event->id}}"
+            data-round-names="{{ json_encode($roundNames) }}"
+            data-previous-values="{{ json_encode($previousValues) }}"
+            data-join-event-team-id="{{$existingJoint?->team_id }}"
+            data-user-level-enums="{{json_encode($USER_ACCESS)}}"
+            data-dispute-level-enums="{{json_encode($DISPUTE_ACCESS)}}"
+            data-hidden-user-id="{{ $userId }}"
+            data-games-per-match="{{$event?->game?->games_per_match ?? 3}}"
+        >
+        </div>
 
         <input type="hidden" id="hidden_user_id" value="{{ $userId }}">
          <div >

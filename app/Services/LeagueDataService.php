@@ -14,11 +14,11 @@ class LeagueDataService implements DataServiceInterface
         return [
             'id' => null,
             'team1_id' => null,
-            'team1_teamName' => 'No team',
+            'team1_teamName' => 'TBD',
             'team1_teamBanner' => null,
             'team1_roster' => null,
             'team2_id' => null,
-            'team2_teamName' => 'No team',
+            'team2_teamName' => 'TBD',
             'team2_teamBanner' => null,
             'team2_roster' => null,
             'user_level' => $isOrganizer ? $USER_ENUMS['IS_ORGANIZER'] : $USER_ENUMS['IS_PUBLIC'],
@@ -39,6 +39,11 @@ class LeagueDataService implements DataServiceInterface
         return $this->pagination;
     }
 
+    public function getRoundNames(): ?array 
+    {
+        return $this->roundNames;
+    }
+
     public function produceBrackets(
         int $teamNumber,
         bool $isOrganizer,
@@ -57,7 +62,7 @@ class LeagueDataService implements DataServiceInterface
             : [];
     
         $totalRounds = $teamNumber - 1;
-        if ($page='all') {
+        if ($page == 'all') {
             $roundsPerPage = $totalRounds;
             $page = 1;
         }
@@ -72,7 +77,6 @@ class LeagueDataService implements DataServiceInterface
         $rounds = [];
         $roundNames = [];
 
-        // dd($startRound, $endRound, $rounds);
         
         for ($round = $startRound; $round <= $endRound; $round++) {
 
@@ -83,7 +87,7 @@ class LeagueDataService implements DataServiceInterface
             $matches = [];
             
             for ($match = 1; $match <= $matchesPerRound; $match++) {
-                $matchKey = 'M' . (($round - 1) * $matchesPerRound + $match);
+                // $matchKey = 'M' . (($round - 1) * $matchesPerRound + $match);
                 
                 $basePosition = ($round - 1) * $matchesPerRound * 2;
                 $position1 = 'P' . ($basePosition + ($match - 1) * 2 + 1);
@@ -96,13 +100,15 @@ class LeagueDataService implements DataServiceInterface
                     'winner_next_position' => null,
                     'loser_next_position' => null,
                     'order' => $match-1,
-                    'deadline' => null,
-                    // 'deadline' => $deadlines ? ($deadlines['league'][$round] ?? null) : null,
+                    'deadline' => $deadline ? (isset($deadline[$round][$round]) ? $deadline[$round][$round]: null) : null,
                 ];
-                $rounds[$roundName] = $matches;
             }
+            $rounds[$roundName][$roundName] = $matches;
+
 
         }
+
+        // dd($rounds, $roundNames, $page);
     
         $totalPages = ceil($totalRounds / $roundsPerPage);
         $hasNextPage = $page < $totalPages;
@@ -123,6 +129,6 @@ class LeagueDataService implements DataServiceInterface
             ]
         ];
     
-        return ['table' => $rounds];
+        return $rounds;
     }
 }
