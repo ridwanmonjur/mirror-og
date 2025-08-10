@@ -333,14 +333,18 @@ class MiscController extends Controller
     {
         $currentDateTime = Carbon::now()->utc();
 
-        $events = EventDetail::landingPageQuery($request, $currentDateTime)->simplePaginate();
-
+        $events = EventDetail::landingPageQuery($request, $currentDateTime)
+            ->orderBy('startDate', 'desc')
+            ->orderBy('startTime', 'desc') 
+            ->orderBy('id', 'desc')
+            ->simplePaginate();
         $output = compact('events');
         if ($request->ajax()) {
             $view = view('includes.Landing', $output)->render();
 
             return response()->json(['html' => $view]);
         }
+        // dd($output);
 
         return view('Landing', $output);
     }

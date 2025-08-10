@@ -69,8 +69,10 @@ class DeadlineTasks extends Command
                 $eventIdInt = (int) $eventId;
                 $deadlines = BracketDeadline::where('event_details_id', $eventIdInt)->get();
                 $deadlinesPast = $deadlines->pluck('id');
-                $tasks = Task::where('taskable_id', $deadlinesPast)->where('taskable_type', 'Deadline')->get();
+                $tasks = Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', 'Deadline')->get();
             }
+
+            // dd($tasks);
 
             foreach ($tasks as $task) {
                 switch ($task->task_name) {

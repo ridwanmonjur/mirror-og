@@ -205,8 +205,6 @@ class FirestoreService
         try {
             $firestoreDB = $this->firestore->database();
 
-            $bulkWriter = $firestoreDB->bulkWriter();
-
             for ($i = 0; $i < $count; $i++) {
                 $disputeId = $specificIds[$i];
                 $customValues = $customValuesArray[$i] ?? [];
@@ -238,33 +236,22 @@ class FirestoreService
                     ->collection('disputes')
                     ->document($disputeId);
 
-                $bulkWriter->set($docRef, $disputeData, ['merge' => false]);
+                $docRef->set($disputeData, ['merge' => false]);
 
                 $results[] = [
-                    'statusDispute' => 'pending',
+                    'statusDispute' => 'success',
                     'disputeId' => $disputeId,
+                    'messageDispute' => 'Dispute created or overwritten successfully',
                 ];
-            }
-
-            // Add debug logging before close
-            error_log('FirestoreService: About to close BulkWriter for disputes with '.count($results).' documents');
-
-            // Close the bulk writer to flush all writes
-            $bulkWriter->close();
-
-            // Update results to success after close
-            foreach ($results as &$result) {
-                $result['statusDispute'] = 'success';
-                $result['messageDispute'] = 'Dispute created or overwritten successfully';
             }
 
             return [
                 'statusDispute' => 'success',
-                'messageDispute' => 'BulkWriter operation completed - all disputes created or overwritten',
+                'messageDispute' => 'Individual operation completed - all disputes created or overwritten',
                 'resultsDispute' => $results,
             ];
         } catch (\Exception $e) {
-            error_log('FirestoreService BulkWriter disputes error: '.$e->getMessage());
+            error_log('FirestoreService individual dispute write error: '.$e->getMessage());
             error_log('Error trace: '.$e->getTraceAsString());
 
             return [

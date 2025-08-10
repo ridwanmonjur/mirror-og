@@ -39,7 +39,15 @@ class WeeklyTasks extends Command
         try {
             $weekAgo = Carbon::now()->subDays(7);
             $monthAgo = Carbon::now()->copy()->subDays(29);
-            DB::table(table: 'monitored_scheduled_task_log_items')->where('created_at', '<', $weekAgo)->delete();
+            
+            DB::table('monitored_scheduled_task_log_items')
+                ->whereIn('monitored_scheduled_task_id', function($query) use ($weekAgo) {
+                    $query->select('id')
+                          ->from('monitored_scheduled_tasks')
+                          ->where('last_started_at', '<', $weekAgo);
+                })
+                ->delete();
+                
             DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $weekAgo)->delete();
             NotifcationsUser::where('created_at', '<', $weekAgo)->delete();
             Task::where('action_time', '<=', $monthAgo)->delete();

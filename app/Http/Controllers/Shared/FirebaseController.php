@@ -235,7 +235,7 @@ class FirebaseController extends Controller
 
         $reports = $this->firestoreService->createBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds);
 
-        $disputeSpecs = [
+        $originalDisputeSpecs = [
             'W11.W12.0' => [
                 'dispute_image_videos' => ['media/img/dispute_evidence_3.jpg'],
                 'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
@@ -265,6 +265,59 @@ class FirebaseController extends Controller
                 'report_id' => 'W11.W12',
             ],
         ];
+
+        error_log("=== DOCUMENT SPECS TRANSFORMATION ===");
+        error_log("Event Type: " . ($isLeague ? 'League' : 'Tournament'));
+        error_log("Games Per Match: " . $gamesPerMatch);
+        
+        error_log("Original Document Specs:");
+        foreach ($originalDocumentSpecs as $key => $value) {
+            error_log("  $key => " . print_r($value, true));
+        }
+        
+        error_log("Transformed Document Specs:");
+        foreach ($documentSpecs as $key => $value) {
+            error_log("  $key => " . print_r($value, true));
+        }
+        
+        $disputeSpecs = [];
+        $disputeIndexCounter = 1;
+        
+        error_log("Original Dispute Specs:");
+        foreach ($originalDisputeSpecs as $key => $value) {
+            error_log("  $key => " . print_r($value, true));
+        }
+        
+        foreach ($originalDisputeSpecs as $disputeId => $specs) {
+            $newDisputeId = $disputeId;
+            
+            if ($isLeague) {
+                preg_match('/^([WL]\d+\.[WL]\d+)\.(\d+)$/', $disputeId, $matches);
+                if ($matches) {
+                    $matchPart = $matches[1];
+                    $matchNumber = $matches[2];
+                    
+                    preg_match_all('/\d+/', $matchPart, $numberMatches);
+                    if (count($numberMatches[0]) >= 2) {
+                        $newMatchPart = "P{$disputeIndexCounter}.P" . ($disputeIndexCounter + 1);
+                        $newDisputeId = "{$newMatchPart}.{$matchNumber}";
+                        $specs['report_id'] = $newMatchPart;
+                        
+                        if ($disputeId === 'W11.W12.2') {
+                            $disputeIndexCounter += 2;
+                        }
+                    }
+                }
+            }
+            
+            $disputeSpecs[$newDisputeId] = $specs;
+        }
+
+        error_log("Transformed Dispute Specs:");
+        foreach ($disputeSpecs as $key => $value) {
+            error_log("  $key => " . print_r($value, true));
+        }
+        error_log("=== END TRANSFORMATION ===");
 
         $customValuesArray = [];
         $specificIds = [];

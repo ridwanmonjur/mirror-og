@@ -708,7 +708,7 @@ class EventDetail extends Model implements Feedable
                 ['joinEvents' => function ($q) {
                     $q->where('join_status', 'confirmed');
                 }])
-            ->orderBy('startDate', 'asc');
+            ;
     }
 
     public static function filterEventsFull(Request $request)
