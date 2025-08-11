@@ -36,7 +36,6 @@ return new class extends Migration
             $table->index(['event_tier_id']);
         });
 
-        $this->seedBracketsSetupData();
     }
 
     /**
@@ -52,41 +51,5 @@ return new class extends Migration
     /**
      * Seed the brackets_setup table with data from BracketDataService
      */
-    private function seedBracketsSetupData()
-    {
-        $eventTiers = EventTier::all();
-        $bracketDataService = new BracketDataService;
-
-        foreach ($eventTiers as $eventTier) {
-            $teamNumber = $eventTier->tierTeamSlot;
-
-            if (! $teamNumber) {
-                continue;
-            }
-
-            $brackets = $bracketDataService->produceBrackets(
-                $teamNumber,
-                true,
-                null,
-                null
-            );
-
-            foreach ($brackets as $stage_name => $rounds) {
-                foreach ($rounds as $inner_stage_name => $matches) {
-                    foreach ($matches as $order => $match) {
-                        DB::table('brackets_setup')->insert([
-                            'event_tier_id' => $eventTier->id,
-                            'team1_position' => $match['team1_position'],
-                            'team2_position' => $match['team2_position'],
-                            'winner_next_position' => $match['winner_next_position'],
-                            'loser_next_position' => $match['loser_next_position'],
-                            'order' => $order,
-                            'stage_name' => $stage_name,
-                            'inner_stage_name' => $inner_stage_name,
-                        ]);
-                    }
-                }
-            }
-        }
-    }
+    
 };

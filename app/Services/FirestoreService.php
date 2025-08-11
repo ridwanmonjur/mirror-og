@@ -34,7 +34,8 @@ class FirestoreService
         string|int $eventId,
         int $count,
         array $customValuesArray = [],
-        array $specificIds = []
+        array $specificIds = [],
+        int $gamesPerMatch = 3
     ) {
         $results = [];
 
@@ -47,19 +48,19 @@ class FirestoreService
 
                 $defaultReport = [
                     'completeMatchStatus' => 'UPCOMING',
-                    'defaultWinners' => [null, null, null],
-                    'disputeResolved' => [null, null, null],
+                    'defaultWinners' => array_fill(0, $gamesPerMatch, null),
+                    'disputeResolved' => array_fill(0, $gamesPerMatch, null),
                     'disqualified' => false,
-                    'matchStatus' => ['UPCOMING', 'UPCOMING', 'UPCOMING'],
-                    'organizerWinners' => [null, null, null],
+                    'matchStatus' => array_fill(0, $gamesPerMatch, 'UPCOMING'),
+                    'organizerWinners' => array_fill(0, $gamesPerMatch, null),
                     'position' => null,
-                    'randomWinners' => [null, null, null],
-                    'realWinners' => [null, null, null],
+                    'randomWinners' => array_fill(0, $gamesPerMatch, null),
+                    'realWinners' => array_fill(0, $gamesPerMatch, null),
                     'score' => [0, 0],
                     'team1Id' => null,
-                    'team1Winners' => [null, null, null],
+                    'team1Winners' => array_fill(0, $gamesPerMatch, null),
                     'team2Id' => null,
-                    'team2Winners' => [null, null, null],
+                    'team2Winners' => array_fill(0, $gamesPerMatch, null),
                 ];
 
                 // Clean the custom values to prevent circular references
@@ -104,13 +105,15 @@ class FirestoreService
      * @param  int  $count  Number of reports to create
      * @param  array  $customValuesArray  Array of custom values for each report
      * @param  array  $specificIds  Optional array of specific IDs to use instead of sequential ones
+     * @param  int  $gamesPerMatch  Number of games per match
      * @return array Response with status and report references
      */
     public function createBatchReports(
         string|int $eventId,
         int $count,
         array $customValuesArray = [],
-        array $specificIds = []
+        array $specificIds = [],
+        int $gamesPerMatch = 3
     ) {
         $results = [];
 
@@ -126,19 +129,19 @@ class FirestoreService
 
                 $defaultReport = [
                     'completeMatchStatus' => 'UPCOMING',
-                    'defaultWinners' => [null, null, null],
-                    'disputeResolved' => [null, null, null],
+                    'defaultWinners' => array_fill(0, $gamesPerMatch, null),
+                    'disputeResolved' => array_fill(0, $gamesPerMatch, null),
                     'disqualified' => false,
-                    'matchStatus' => ['UPCOMING', 'UPCOMING', 'UPCOMING'],
-                    'organizerWinners' => [null, null, null],
+                    'matchStatus' => array_fill(0, $gamesPerMatch, 'UPCOMING'),
+                    'organizerWinners' => array_fill(0, $gamesPerMatch, null),
                     'position' => null,
-                    'randomWinners' => [null, null, null],
-                    'realWinners' => [null, null, null],
+                    'randomWinners' => array_fill(0, $gamesPerMatch, null),
+                    'realWinners' => array_fill(0, $gamesPerMatch, null),
                     'score' => [0, 0],
                     'team1Id' => null,
-                    'team1Winners' => [null, null, null],
+                    'team1Winners' => array_fill(0, $gamesPerMatch, null),
                     'team2Id' => null,
-                    'team2Winners' => [null, null, null],
+                    'team2Winners' => array_fill(0, $gamesPerMatch, null),
                 ];
 
                 // Clean the custom values to prevent circular references
@@ -181,7 +184,7 @@ class FirestoreService
 
             // If BulkWriter fails, try individual writes as fallback
             error_log('FirestoreService: Falling back to individual writes due to BulkWriter error');
-            return $this->createIndividualReports($eventId, $count, $customValuesArray, $specificIds);
+            return $this->createIndividualReports($eventId, $count, $customValuesArray, $specificIds, $gamesPerMatch);
         }
     }
 
@@ -204,8 +207,6 @@ class FirestoreService
 
         try {
             $firestoreDB = $this->firestore->database();
-
-            $bulkWriter = $firestoreDB->bulkWriter();
 
             for ($i = 0; $i < $count; $i++) {
                 $disputeId = $specificIds[$i];
@@ -238,33 +239,22 @@ class FirestoreService
                     ->collection('disputes')
                     ->document($disputeId);
 
-                $bulkWriter->set($docRef, $disputeData, ['merge' => false]);
+                $docRef->set($disputeData, ['merge' => false]);
 
                 $results[] = [
-                    'statusDispute' => 'pending',
+                    'statusDispute' => 'success',
                     'disputeId' => $disputeId,
+                    'messageDispute' => 'Dispute created or overwritten successfully',
                 ];
-            }
-
-            // Add debug logging before close
-            error_log('FirestoreService: About to close BulkWriter for disputes with '.count($results).' documents');
-
-            // Close the bulk writer to flush all writes
-            $bulkWriter->close();
-
-            // Update results to success after close
-            foreach ($results as &$result) {
-                $result['statusDispute'] = 'success';
-                $result['messageDispute'] = 'Dispute created or overwritten successfully';
             }
 
             return [
                 'statusDispute' => 'success',
-                'messageDispute' => 'BulkWriter operation completed - all disputes created or overwritten',
+                'messageDispute' => 'Individual operation completed - all disputes created or overwritten',
                 'resultsDispute' => $results,
             ];
         } catch (\Exception $e) {
-            error_log('FirestoreService BulkWriter disputes error: '.$e->getMessage());
+            error_log('FirestoreService individual dispute write error: '.$e->getMessage());
             error_log('Error trace: '.$e->getTraceAsString());
 
             return [
@@ -275,63 +265,4 @@ class FirestoreService
         }
     }
 
-    public function generateDisputes(string $eventId): array
-    {
-        $docRef = $this->firestore->database()->collection('event')->document($eventId)->collection('disputes');
-        $documents = $docRef->documents();
-        $disputes = [];
-
-        foreach ($documents as $document) {
-            if ($document->exists()) {
-                $disputes[] = [...$document->data(), 'id' => $document->id()];
-            }
-        }
-
-        return $disputes;
-    }
-
-    public function generateBrackets(Collection $matches, string|int $eventId): array
-    {
-        $allBracketDocs = $this->firestore->database()
-            ->collection('event')
-            ->document($eventId)
-            ->collection('brackets')
-            ->documents();
-
-        $bracketDataByPath = [];
-        foreach ($allBracketDocs as $doc) {
-            $bracketDataByPath[$doc->id()] = $doc->data();
-        }
-
-        $brackets = [];
-        foreach ($matches as $bracket) {
-
-            $additionalData = [];
-            $matchStatusPath = $bracket->team1_position.'.'.$bracket->team2_position;
-            if (isset($bracketDataByPath[$matchStatusPath])) {
-                $additionalData = $bracketDataByPath[$matchStatusPath];
-            } else {
-                $additionalData = [
-                    'organizerWinners' => [null, null, null],
-                    'disputeResolved' => [null, null, null],
-                    'disqualified' => false,
-                    'team2Winners' => [null, null, null],
-                    'team1Winners' => [null, null, null],
-                    'score' => [0, 0],
-                    'defaultWinners' => [null, null, null],
-                    'position' => 'U9',
-                    'matchStatus' => [null, null, null],
-                    'randomWinners' => [null, null, null],
-                    'realWinners' => [null, null, null],
-                ];
-            }
-
-            $brackets[] = [
-                ...(array) $bracket,
-                ...$additionalData,
-            ];
-        }
-
-        return $brackets;
-    }
 }

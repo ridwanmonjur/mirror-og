@@ -27,7 +27,7 @@ class EventMatchService
                 false,
                 null,
                 null,
-                'all'
+                $event->type->eventType == 'Tournament' ? 'all' : 1
             );
 
 
@@ -65,7 +65,7 @@ class EventMatchService
         $USER_ENUMS = config('constants.USER_ACCESS');
         $DISPUTTE_ENUMS = config('constants.DISPUTE');
         $deadlines = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
-
+        // dd($deadlines);
         $dataService = DataServiceFactory::create($event->type->eventType);
         $matchesUpperCount = intval($event->tier?->tierTeamSlot);
         if (! $matchesUpperCount) {

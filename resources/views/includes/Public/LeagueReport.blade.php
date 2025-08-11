@@ -61,14 +61,11 @@
                     @foreach ($bracketList as $roundKey => $roundData)
                         <div class="my-3 ">
                             <h6>Round {{ $roundKey }}</h6>
-                            <div class="row">
-                                @foreach ($roundData as $fakeKey => $actualRoundData[0])
-                                     {{-- <h5>{{$fakeKey}}</h5> --}}
-                                     {{-- <h5>{{json_encode($actualRoundData[0])}}</h5> --}}
-                                     @foreach ($actualRoundData[0] as $match) 
+                            <div class="row px-0 mx-0">
+                                @foreach ($roundData as $fakeKey => $actualRoundData)
+                                     @foreach ($actualRoundData as $match) 
                                     <div class="my-3 col-12 col-md-6 ">
                                         <div>
-                                            {{-- <h5>{{$fakeKey}}</h5> --}}
                                             <div class=" d-none-until-hover2-parent">
                                                 <div class="table-report middle-item {{ $match['team1_position'] }} {{ $match['team2_position'] }} popover-parent "
                                                     tabindex="0" data-bracket="{{ json_encode($match) }}"

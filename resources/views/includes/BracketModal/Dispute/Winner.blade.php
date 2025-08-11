@@ -1,5 +1,5 @@
 <div class="my-0 py-0" >
-    <template v-if="dispute && dispute.dispute_teamNumber">
+    <template v-if="dispute && dispute?.dispute_teamNumber">
         <div class="row">
             <div class="{{ 'col-12 text-center pt-0 pb-2 px-0 ' . 'Team1' . ' ' . 'Team2' }}">
                 <div class="row justify-content-start bg-light border border-3 border rounded px-2 py-2">
@@ -26,13 +26,13 @@
                                         v-if="
                                         dispute?.resolution_resolved_by == disputeLevelEnums['DISPUTEE']
                                         && dispute?.dispute_teamNumber
-                                        && report.teams[dispute.dispute_teamNumber]?.name
+                                        && report.teams[dispute?.dispute_teamNumber]?.name
                                     ">
                                         <div class="mt-2">
                                             <p class="text-success mt-2">
                                                 <span
                                                     v-text="report.teams[dispute?.dispute_teamNumber]?.name">
-                                                </span> (the disputee) has conceded the dispute.
+                                                </span> (the disputee) has conceded the dispute?.
                                             </p>
                                         </div>
                                     </template>
@@ -40,7 +40,7 @@
                                         v-else-if="dispute?.resolution_resolved_by == disputeLevelEnums['RESPONDER']">
                                         <div class="mt-2">
                                             <p class="text-success mt-2">
-                                                The responder has conceded the dispute. The disputee is declared as the
+                                                The responder has conceded the dispute?. The disputee is declared as the
                                                 winner.
                                             </p>
                                         </div>
@@ -76,11 +76,11 @@
                                         <form method="POST" class="d-inline" v-on:submit="resolveDisputeForm(event)">
                                             <input type="hidden" name="action" value="resolve">
                                             <input type="hidden" name="id"
-                                                v-bind:value="dispute.id">
+                                                v-bind:value="dispute?.id">
                                             <input type="hidden" name="match_number"
-                                                v-bind:value="dispute.match_number">
+                                                v-bind:value="dispute?.match_number">
                                             <input type="hidden" name="already_winner"
-                                                v-bind:value="dispute.resolution_winner">
+                                                v-bind:value="dispute?.resolution_winner">
                                             <input type="hidden" name="resolution_resolved_by"
                                                 v-bind:value="disputeLevelEnums['ORGANIZER']">
                                             <button type="submit"

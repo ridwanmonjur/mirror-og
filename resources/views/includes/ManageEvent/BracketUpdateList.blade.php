@@ -120,10 +120,8 @@
                         <div class="my-3 ">
                             <h6>Round {{ $roundKey }}</h6>
                             <div class="row">
-                                @foreach ($roundData as $fakeKey => $actualRoundData[0])
-                                     {{-- <h5>{{$fakeKey}}</h5> --}}
-                                     {{-- <h5>{{json_encode($actualRoundData[0])}}</h5> --}}
-                                     @foreach ($actualRoundData[0] as $match) 
+                                 @foreach ($roundData as $fakeKey => $actualRoundData)
+                                     @foreach ($actualRoundData as $match) 
                                     <div class="my-3 col-12 col-md-6 col-xxl-4">
                                         <div>
                                             {{-- <h5>{{$fakeKey}}</h5> --}}

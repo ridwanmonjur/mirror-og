@@ -4,6 +4,7 @@ namespace App\Console\Traits;
 
 use App\Services\BracketDataService;
 use App\Models\Brackets;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -332,6 +333,7 @@ trait DeadlineTasksTrait
                 ->document($bracket['event_details_id'])
                 ->collection('brackets')
                 ->document($matchStatusPath);
+                
             $snapshot = $docRef->snapshot();
 
             if ($snapshot->exists()) {
@@ -345,7 +347,14 @@ trait DeadlineTasksTrait
                 }
                 foreach ($disputeRefList as $index =>  $disputeRef) {
                     if (! empty($updateDisputeValues[$index])) {
-                        $disputeRef?->update($updateDisputeValues[$index]);
+                        
+                        $formattedDisputeValues = [];
+                        foreach ($updateDisputeValues[$index] as $path => $value) {
+                            $formattedDisputeValues[] = ['path' => $path, 'value' => $value];
+                        }
+                        
+                        $disputeRef?->update($formattedDisputeValues);
+                       
                     }
                 }
             }
@@ -374,9 +383,17 @@ trait DeadlineTasksTrait
                 if (! empty($updateValues)) {
                     $docRef->update($updateValues);
                 }
+                
                 foreach ($disputeRefList as $index =>  $disputeRef) {
                     if (! empty($updateDisputeValues[$index])) {
-                        $disputeRef?->update($updateDisputeValues[$index]);
+                        
+                        $formattedDisputeValues = [];
+                        foreach ($updateDisputeValues[$index] as $path => $value) {
+                            $formattedDisputeValues[] = ['path' => $path, 'value' => $value];
+                        }
+                        
+                        $disputeRef?->update($formattedDisputeValues);
+                        
                     }
                 }
             }
