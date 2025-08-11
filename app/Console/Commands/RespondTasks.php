@@ -244,7 +244,7 @@ class RespondTasks extends Command
 
                         // Optionally try to revert event status if it was updated but processing failed
                         try {
-                            EventDetail::where('id', $eventId)->update(['status' => 'ACTIVE']);
+                            EventDetail::where('id', $eventId)->update(['status' => 'ONGOING']);
                             Log::info('Reverted event status due to processing failure', ['event_id' => $eventId]);
                         } catch (Exception $revertException) {
                             Log::error('Failed to revert event status', [
