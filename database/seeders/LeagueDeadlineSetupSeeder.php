@@ -25,7 +25,9 @@ class LeagueDeadlineSetupSeeder extends Seeder
         $leagueType = EventType::where('eventType', 'League')->first();
         
         if (!$leagueType) {
-            $this->command->error('League event type not found. Please seed event types first.');
+            if ($this->command) {
+                $this->command->error('League event type not found. Please seed event types first.');
+            }
             return;
         }
 
@@ -70,9 +72,13 @@ class LeagueDeadlineSetupSeeder extends Seeder
             BracketDeadlineSetup::whereNull('type_id')
                 ->update(['type_id' => $tournamentType->id]);
                 
-            $this->command->info('Updated BracketDeadlineSetup records with null type_id to Tournament type.');
+            if ($this->command) {
+                $this->command->info('Updated BracketDeadlineSetup records with null type_id to Tournament type.');
+            }
         } else {
-            $this->command->error('Tournament event type not found. Cannot update null type_id records.');
+            if ($this->command) {
+                $this->command->error('Tournament event type not found. Cannot update null type_id records.');
+            }
         }
     }
 

@@ -159,71 +159,135 @@ class FirebaseController extends Controller
         $event = EventDetail::with(['game', 'type'])->findOrFail($eventId);
         $gamesPerMatch = $event->game->games_per_match;
         $isLeague = $event?->type?->eventType === 'League';
-        
-        $originalDocumentSpecs = [
-            'W1.W2' => [
-                'team1Winners' => ['0', null, null], // DEFAULT WINNERS
-            ],
-            'W3.W4' => [
-                'team1Winners' => ['0', '1', null], // DEFAULT WINNERS
-            ],
-            'W5.W6' => [
-                'team1Winners' => ['0', '1', '1'],
-            ],
-            'W7.W8' => [
-                'team1Winners' => ['1', '1', '1'], // RANDOM WINNERS
-                'team2Winners' => ['1', '0', '1'],
-            ],
-            'W9.W10' => [
-                'team1Winners' => ['0', '1', '0'],
-                'team2Winners' => ['1', '0', '1'],
-            ],
-            'W11.W12' => [
-                'team1Winners' => ['0', '1', '0'],
-                'team2Winners' => ['1', '0', '1'],
-            ],
-            'W13.W14' => [
-                'team1Winners' => [null, null, null],
-                'team2Winners' => [null, null, null],
-            ],
-            'L3.L4' => [
-                'team1Winners' => ['0', '1', '0'],
-                'team2Winners' => ['1', '0', '1'],
-            ],
-            'L5.L6' => [
-                'team1Winners' => ['0', '1', '1'],
-            ],
-            'L7.L8' => [
-                'team1Winners' => ['1', '1', '1'],
-                'team2Winners' => ['1', '0', '1'],
-            ],
-            'L9.L10' => [
-                'team1Winners' => ['0', '1', '0'],
-                'team2Winners' => ['1', '0', '1'],
-            ],
-        ];
+        $originalDocumentSpecs = null;
+
+        if (!$isLeague) {
+            $originalDocumentSpecs = [
+                'W1.W2' => [
+                    'team1Winners' => ['0', null, null], // DEFAULT WINNERS
+                    'stageName' => 'U'
+                ],
+                'W3.W4' => [
+                    'team1Winners' => ['0', '1', null], // DEFAULT WINNERS
+                    'stageName' => 'U'
+                ],
+                'W5.W6' => [
+                    'team1Winners' => ['0', '1', '1'],
+                    'stageName' => 'U'
+                ],
+                'W7.W8' => [
+                    'team1Winners' => ['1', '1', '1'], // RANDOM WINNERS
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'U'
+                ],
+                'W9.W10' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'U'
+                ],
+                'W11.W12' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'U'
+                ],
+                'W13.W14' => [
+                    'team1Winners' => [null, null, null],
+                    'team2Winners' => [null, null, null],
+                    'stageName' => 'U'
+                ],
+                'L3.L4' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'L'
+                ],
+                'L5.L6' => [
+                    'team1Winners' => ['0', '1', '1'],
+                    'stageName' => 'L'
+                ],
+                'L7.L8' => [
+                    'team1Winners' => ['1', '1', '1'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'L'
+                ],
+                'L9.L10' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'L'
+                ],
+            ];
+        } else {
+            $originalDocumentSpecs = [
+                'P1.P2' => [
+                    'team1Winners' => ['0', null, null], // DEFAULT WINNERS
+                    'stageName' => 'R1'
+                ],
+                'P3.P4' => [
+                    'team1Winners' => ['0', '1', null], // DEFAULT WINNERS
+                    'stageName' => 'R1'
+                ],
+                'P5.P6' => [
+                    'team1Winners' => ['0', '1', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P7.P8' => [
+                    'team1Winners' => ['1', '1', '1'], // RANDOM WINNERS
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P9.P10' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P11.P12' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P13.P14' => [
+                    'team1Winners' => [null, null, null],
+                    'team2Winners' => [null, null, null],
+                    'stageName' => 'R1'
+                ],
+                'P15.P16' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P17.P18' => [
+                    'team1Winners' => ['0', '1', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P19.P20' => [
+                    'team1Winners' => ['1', '1', '1'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'R1'
+                ],
+                'P21.P22' => [
+                    'team1Winners' => ['0', '1', '0'],
+                    'team2Winners' => ['1', '0', '1'],
+                    'stageName' => 'R1'
+                ],
+            ];
+        }
 
         $documentSpecs = [];
         $indexCounter = 1; 
-        
+
         foreach ($originalDocumentSpecs as $documentId => $specs) {
             $newDocumentId = $documentId;
             
-            if ($isLeague) {
-                preg_match_all('/\d+/', $documentId, $matches);
-                if (count($matches[0]) >= 2) {
-                    $newDocumentId = "P{$indexCounter}.P" . ($indexCounter + 1);
-                    $indexCounter += 2;
-                }
-            }
             
             $newSpecs = [];
             foreach ($specs as $key => $winners) {
-                $newSpecs[$key] = array_slice($winners, 0, $gamesPerMatch);
+                $newSpecs[$key] = is_array($winners) ? array_slice($winners, 0, $gamesPerMatch) : $winners;
             }
             
             $documentSpecs[$newDocumentId] = $newSpecs;
         }
+
+        
+        
 
         $customValuesArray = [];
         $specificIds = [];
@@ -233,101 +297,83 @@ class FirebaseController extends Controller
             $customValuesArray[] = $customValues;
         }
 
-        $reports = $this->firestoreService->createBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds);
 
-        $originalDisputeSpecs = [
-            'W11.W12.0' => [
-                'dispute_image_videos' => ['media/img/dispute_evidence_3.jpg'],
-                'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
-                'dispute_teamId' => '24',
-                'dispute_teamNumber' => '0',
-                'dispute_userId' => '86',
-                'match_number' => '0',
-                'report_id' => 'W11.W12',
-            ],
-            'W11.W12.1' => [
-                'dispute_description' => 'Team 24 is disputing the result of match 1',
-                'dispute_reason' => 'Disputed game result due to server lag/disconnection.',
-                'dispute_teamId' => '24',
-                'dispute_teamNumber' => '0',
-                'dispute_userId' => '86',
-                'match_number' => '1',
-                'report_id' => 'W11.W12',
-            ],
-            'W11.W12.2' => [
-                'dispute_description' => 'Both teams using restricted characters',
-                'dispute_image_videos' => ['media/img/dispute_evidence_1.jpg', 'media/img/dispute_evidence_2.jpg'],
-                'dispute_reason' => 'Disputed game result due to use of prohibited characters/hero/content.',
-                'dispute_teamId' => '24',
-                'dispute_teamNumber' => '0',
-                'dispute_userId' => '86',
-                'match_number' => '2',
-                'report_id' => 'W11.W12',
-            ],
-        ];
-
-        error_log("=== DOCUMENT SPECS TRANSFORMATION ===");
-        error_log("Event Type: " . ($isLeague ? 'League' : 'Tournament'));
-        error_log("Games Per Match: " . $gamesPerMatch);
+        $reports = $this->firestoreService->createBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds, $gamesPerMatch);
         
-        error_log("Original Document Specs:");
-        foreach ($originalDocumentSpecs as $key => $value) {
-            error_log("  $key => " . print_r($value, true));
-        }
-        
-        error_log("Transformed Document Specs:");
-        foreach ($documentSpecs as $key => $value) {
-            error_log("  $key => " . print_r($value, true));
-        }
-        
-        $disputeSpecs = [];
-        $disputeIndexCounter = 1;
-        
-        error_log("Original Dispute Specs:");
-        foreach ($originalDisputeSpecs as $key => $value) {
-            error_log("  $key => " . print_r($value, true));
-        }
-        
-        foreach ($originalDisputeSpecs as $disputeId => $specs) {
-            $newDisputeId = $disputeId;
-            
-            if ($isLeague) {
-                preg_match('/^([WL]\d+\.[WL]\d+)\.(\d+)$/', $disputeId, $matches);
-                if ($matches) {
-                    $matchPart = $matches[1];
-                    $matchNumber = $matches[2];
-                    
-                    preg_match_all('/\d+/', $matchPart, $numberMatches);
-                    if (count($numberMatches[0]) >= 2) {
-                        $newMatchPart = "P{$disputeIndexCounter}.P" . ($disputeIndexCounter + 1);
-                        $newDisputeId = "{$newMatchPart}.{$matchNumber}";
-                        $specs['report_id'] = $newMatchPart;
-                        
-                        if ($disputeId === 'W11.W12.2') {
-                            $disputeIndexCounter += 2;
-                        }
-                    }
-                }
-            }
-            
-            $disputeSpecs[$newDisputeId] = $specs;
-        }
-
-        error_log("Transformed Dispute Specs:");
-        foreach ($disputeSpecs as $key => $value) {
-            error_log("  $key => " . print_r($value, true));
-        }
-        error_log("=== END TRANSFORMATION ===");
-
-        $customValuesArray = [];
+        $customDisputeValuesArray = [];
         $specificIds = [];
 
-        foreach ($disputeSpecs as $disputeId => $customValues) {
-            $specificIds[] = $disputeId;
-            $customValuesArray[] = $customValues;
+        $originalDisputeSpecs = null;
+        if ($isLeague) {
+            $originalDisputeSpecs = [
+                'P1.P2.0' => [
+                    'dispute_image_videos' => ['media/img/dispute_evidence_3.jpg'],
+                    'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
+                    'dispute_teamId' => '24',
+                    'dispute_teamNumber' => '0',
+                    'dispute_userId' => '86',
+                    'match_number' => '0',
+                    'report_id' => 'P1.P2',
+                ],
+                'P1.P2.1' => [
+                    'dispute_description' => 'Team 24 is disputing the result of match 1',
+                    'dispute_reason' => 'Disputed game result due to server lag/disconnection.',
+                    'dispute_teamId' => '24',
+                    'dispute_teamNumber' => '0',
+                    'dispute_userId' => '86',
+                    'match_number' => '1',
+                    'report_id' => 'P1.P2',
+                ],
+                'P1.P2.2' => [
+                    'dispute_description' => 'Both teams using restricted characters',
+                    'dispute_image_videos' => ['media/img/dispute_evidence_1.jpg', 'media/img/dispute_evidence_2.jpg'],
+                    'dispute_reason' => 'Disputed game result due to use of prohibited characters/hero/content.',
+                    'dispute_teamId' => '24',
+                    'dispute_teamNumber' => '0',
+                    'dispute_userId' => '86',
+                    'match_number' => '2',
+                    'report_id' => 'P1.P2',
+                ],
+            ];
+        } else {
+            $originalDisputeSpecs = [
+                'W11.W12.0' => [
+                    'dispute_image_videos' => ['media/img/dispute_evidence_3.jpg'],
+                    'dispute_reason' => 'There is suspected compromises to match integrity (e.g. match-fixing).',
+                    'dispute_teamId' => '24',
+                    'dispute_teamNumber' => '0',
+                    'dispute_userId' => '86',
+                    'match_number' => '0',
+                    'report_id' => 'W11.W12',
+                ],
+                'W11.W12.1' => [
+                    'dispute_description' => 'Team 24 is disputing the result of match 1',
+                    'dispute_reason' => 'Disputed game result due to server lag/disconnection.',
+                    'dispute_teamId' => '24',
+                    'dispute_teamNumber' => '0',
+                    'dispute_userId' => '86',
+                    'match_number' => '1',
+                    'report_id' => 'W11.W12',
+                ],
+                'W11.W12.2' => [
+                    'dispute_description' => 'Both teams using restricted characters',
+                    'dispute_image_videos' => ['media/img/dispute_evidence_1.jpg', 'media/img/dispute_evidence_2.jpg'],
+                    'dispute_reason' => 'Disputed game result due to use of prohibited characters/hero/content.',
+                    'dispute_teamId' => '24',
+                    'dispute_teamNumber' => '0',
+                    'dispute_userId' => '86',
+                    'match_number' => '2',
+                    'report_id' => 'W11.W12',
+                ],
+            ];
         }
 
-        $disputes = $this->firestoreService->createBatchDisputes($eventId, count($specificIds), $customValuesArray, $specificIds);
+        foreach ($originalDisputeSpecs as $disputeId => $customValues) {
+            $specificIds[] = $disputeId;
+            $customDisputeValuesArray[] = $customValues;
+        }
+
+        $disputes = $this->firestoreService->createBatchDisputes($eventId, count($specificIds), $customDisputeValuesArray, $specificIds);
 
         return [...$disputes, ...$reports];
     }

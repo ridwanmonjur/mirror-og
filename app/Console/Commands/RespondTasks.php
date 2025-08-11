@@ -65,6 +65,11 @@ class RespondTasks extends Command
             $liveTaskIds = [];
             $startedTaskIds = [];
             $regOverTaskIds = [];
+            
+            $endedEventIds = [];
+            $liveEventIds = [];
+            $startedEventIds = [];
+            $regOverEventIds = [];
 
             if ($type === 0) {
                 $tasks = Task::where('taskable_type', 'EventDetail')
@@ -102,18 +107,27 @@ class RespondTasks extends Command
                 switch ($task->task_name) {
                     case 'ended':
                         $endedTaskIds[] = $task->taskable_id;
+                        $endedEventIds[$task->event_id] = true;
                         break;
                     case 'live':
                         $liveTaskIds[] = $task->taskable_id;
+                        $liveEventIds[$task->event_id] = true;
                         break;
                     case 'started':
                         $startedTaskIds[] = $task->taskable_id;
+                        $startedEventIds[$task->event_id] = true;
                         break;
                     case 'reg_over':
                         $regOverTaskIds[] = $task->taskable_id;
+                        $regOverEventIds[$task->event_id] = true;
                         break;
                 }
             }
+
+            $endedEventIds = array_keys($endedEventIds);
+            $liveEventIds = array_keys($liveEventIds);
+            $startedEventIds = array_keys($startedEventIds);
+            $regOverEventIds = array_keys($regOverEventIds);
 
             // dd(vars: $tasks);
 
@@ -124,7 +138,7 @@ class RespondTasks extends Command
 
                 $shouldCancel = false;
 
-                foreach ($startedTaskIds as $eventId) {
+                foreach ($startedEventIds as $eventId) {
                     try {
                         $event = EventDetail::where('id', $eventId)
                             ->with('tier')
@@ -164,7 +178,7 @@ class RespondTasks extends Command
             }
 
             if ($type == 0 || $type == 2) {
-                foreach ($liveTaskIds as $eventId) {
+                foreach ($liveEventIds as $eventId) {
                     try {
                         $joinEvents = JoinEvent::where('event_details_id', $eventId)
                             ->where('join_status', 'confirmed')
@@ -179,11 +193,11 @@ class RespondTasks extends Command
             }
 
             if ($type == 0 || $type == 3) {
-                $totalEvents = count($endedTaskIds);
+                $totalEvents = count($endedEventIds);
                 $processedEvents = 0;
                 $failedEvents = 0;
 
-                foreach ($endedTaskIds as $eventId) {
+                foreach ($endedEventIds as $eventId) {
                     try {
                         $endedEvents = JoinEvent::where('event_details_id', $eventId)
                             ->where('join_status', 'confirmed')
@@ -254,9 +268,9 @@ class RespondTasks extends Command
             }
 
             if ($type == 0 || $type == 4) {
-                foreach ($regOverTaskIds as $regOverTaskId) {
+                foreach ($regOverEventIds as $eventId) {
                     try {
-                        $event = EventDetail::where('id', $regOverTaskId)
+                        $event = EventDetail::where('id', $eventId)
                             ->with('tier')
                             ->withCount([
                                 'joinEvents' => function ($q) {
