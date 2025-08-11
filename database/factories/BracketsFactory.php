@@ -64,6 +64,7 @@ class BracketsFactory extends Factory
 
         $joinEventFactory = new JoinEventFactory;
         // dd($options);
+        
         $result = $joinEventFactory->seed($options);
 
         $events = collect($result['events']);
@@ -76,20 +77,12 @@ class BracketsFactory extends Factory
 
         foreach ($events as $detail) {
             $this->eventMatchService->createBrackets($detail);
-            $this->updateBracketTeams(
-                $detail->id,
-                'U',
-                ['e1', 'e3', 'e5', 'p2'],
-                $teams
-            );
-
-            // 2. Update L, e2, e4 brackets
-            $this->updateBracketTeams(
-                $detail->id,
-                'L',
-                ['e2', 'e4', 'p2'],
-                $teams
-            );
+            
+            if ($detail->type->eventType === 'Tournament') {
+                $this->updateTournamentBrackets($detail->id, $teams);
+            } else {
+                $this->updateLeagueBrackets($detail->id, $teams);
+            }
         }
 
         return [
@@ -130,6 +123,52 @@ class BracketsFactory extends Factory
             $teamIndex++;
 
             $bracket->save();
+        }
+    }
+
+    /**
+     * Update bracket teams for Tournament events
+     *
+     * @param  int  $eventId  Event ID
+     * @param  array  $teams  Array of team models to use for assignment
+     */
+    private function updateTournamentBrackets(int $eventId, array $teams): void
+    {
+        $this->updateBracketTeams(
+            $eventId,
+            'U',
+            ['e1', 'e3', 'e5', 'p2'],
+            $teams
+        );
+
+        // 2. Update L, e2, e4 brackets
+        $this->updateBracketTeams(
+            $eventId,
+            'L',
+            ['e2', 'e4', 'p2'],
+            $teams
+        );
+    }
+
+    /**
+     * Update bracket teams for League events
+     *
+     * @param  int  $eventId  Event ID
+     * @param  array  $teams  Array of team models to use for assignment
+     */
+    private function updateLeagueBrackets(int $eventId, array $teams): void
+    {
+        // For leagues, stage_name and inner_stage_name are the same
+        // Using R1, R2, R3, R4, R5 for both stage and inner stage
+        $rounds = ['R1', 'R2'];
+        
+        foreach ($rounds as $round) {
+            $this->updateBracketTeams(
+                $eventId,
+                $round,
+                [$round],
+                $teams
+            );
         }
     }
 }

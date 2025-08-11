@@ -160,10 +160,10 @@
         <div>
             @if ($tier)
                 <div class="{{ 'side-image side-image-' . $eventTierLower }} ">
-                    <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="side-image-absolute-top " src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img   alt="{{ $eventTierLowerImg }}" class="side-image-absolute-top " src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
                 <div class="{{ 'side-image side-image-' . $eventTierLower }}">
-                    <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="side-image-absolute-bottom slideInRight" src="{{ $eventTierLowerImg }}" width="80" height="80">
+                    <img   alt="{{ $eventTierLowerImg }}" class="side-image-absolute-bottom slideInRight" src="{{ $eventTierLowerImg }}" width="80" height="80">
                 </div>
             @else
                 <div>
@@ -186,7 +186,7 @@
                 <div>
                     <div class="position-relative rounded-banner-parent">
                         <div class="d-flex justify-content-center d-lg-none">
-                            <img loading="lazy"  alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}"
+                            <img   alt="{{ $eventTierLowerImg }}" class="image-at-top" src="{{ $eventTierLowerImg }}"
                                 onerror="this.onerror=null;this.width='500px';this.height='50px';this.src='{{asset('assets/images/404.png')}}';"
                                 width="120" height="90"
                             >
@@ -269,7 +269,7 @@
                                 <div class="flexbox-centered-space card-subtitle me-2">
                                     <div class="flexbox-centered-space">
                                         @if (isset($event->user) && isset($event->user->userBanner))
-                                            <img loading="lazy"  alt="User Banner"  src="{{ asset('storage/'.$event->user->userBanner) }}"
+                                            <img   alt="User Banner"  src="{{ asset('storage/'.$event->user->userBanner) }}"
                                                 onerror="this.src='/assets/images/404.png';"
                                                 class="{{ 'rounded-image d-inline rounded-box-' . $eventTierLower }}" alt="menu"
                                             >

@@ -20,7 +20,8 @@ class BracketDeadlineSetupSeeder extends Seeder
                     'e1' => ['start' => 0, 'end'=> 3],
                     'e2' => ['start' => 4, 'end'=> 6],
                     'e3' => ['start' => 7, 'end'=> 8],
-                    'p0' => ['start' => 9, 'end'=> 10],
+                    'e4' => ['start' => 9, 'end'=> 10],
+                    'p0' => ['start' => 11, 'end'=> 12],
                 ],
                 'L' => [
                     'e1' => ['start' => 4, 'end'=> 6],
@@ -34,6 +35,7 @@ class BracketDeadlineSetupSeeder extends Seeder
                 ],
                 'F' => [
                     'F' => ['start' => 21, 'end'=> 22],
+                    'W' => ['start' => 23, 'end'=> 24],
                 ],
             ],
             16 => [
@@ -41,6 +43,7 @@ class BracketDeadlineSetupSeeder extends Seeder
                     'e1' => ['start' => 0, 'end'=> 3],
                     'e2' => ['start' => 4, 'end'=> 6],
                     'e3' => ['start' => 7, 'end'=> 8],
+                    'e5' => ['start' => 8, 'end'=> 9],
                     'p0' => ['start' => 9, 'end'=> 10],
                 ],
                 'L' => [
@@ -53,6 +56,7 @@ class BracketDeadlineSetupSeeder extends Seeder
                 ],
                 'F' => [
                     'F' => ['start' => 17, 'end'=> 18],
+                    'W' => ['start' => 19, 'end'=> 20],
                 ],
             ],
             8 => [
@@ -69,6 +73,7 @@ class BracketDeadlineSetupSeeder extends Seeder
                 ],
                 'F' => [
                     'F' => ['start' => 13, 'end'=> 14],
+                    'W' => ['start' => 15, 'end'=> 16],
                 ],
             ],
         ];

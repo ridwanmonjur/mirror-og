@@ -86,8 +86,8 @@ class Kernel extends HttpKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('tasks:create')->daily();
-        $schedule->command('tasks:respond')->everyThirtyMinutes();
+        // $schedule->command('tasks:create')->daily();
+        // $schedule->command('tasks:respond')->everyThirtyMinutes();
 
     }
 }

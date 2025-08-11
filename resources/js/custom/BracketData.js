@@ -106,7 +106,8 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
           }
 
         } else {
-          resetDotsToContainer();
+      
+          resetDotsToContainer(gamesPerMatch);
 
           newReportUI = {
             ..._initialBracket.reportUI,
@@ -437,13 +438,19 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
     changeMatchNumber(increment) {
       clearSelection();
       let newNo = Number(this.reportUI.matchNumber) + Number(increment);
+      
+      if (newNo < 0 || newNo >= totalMatches) {
+        return;
+      }
+      
       this.clearUploadData();
       let isDisabled = newNo != 0; 
       if (isDisabled) {
         isDisabled = isDisabled &&
           this.report.userLevel != this.userLevelEnums['IS_ORGANIZER'] &&
           reportStore.list.realWinners[newNo-1] == null &&
-          reportStore.list.teams[this.reportUI.teamNumber]?.winners[newNo-1] == null;
+          reportStore.list.teams[this.reportUI.teamNumber]?.winners[newNo-1] == null &&
+          newNo !== totalMatches - 1;
       }
 
       let demoNo = newNo + 1;
@@ -474,7 +481,8 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
           (
             reportStore.list.realWinners[currentNumber-1] == null &&
             reportStore.list.teams[this.reportUI.teamNumber]?.winners[currentNumber-1] == null
-          );
+          ) &&
+          currentNumber !== totalMatches - 1;
       }
 
       console.log({isDisabled});
@@ -544,14 +552,12 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
             let matchNumber = newReportUI.matchNumber;
             this.report = updateReportFromFirestore(newReport, data, matchNumber);
             this.setDisabled(newReportUI);
-            updateCurrentReportDots(reportStore.list);
+            updateCurrentReportDots(reportStore.list, gamesPerMatch);
             this.makeCurrentReportDisputeSnapshot(classNamesWithoutPrecedingDot);
            
           } else {
              
             newReportUI.matchNumber = 0;
-             
-
             reportStore.setList(_reportStore.list);
             this.report = { ...newReport };
             this.setDisabled(newReportUI);

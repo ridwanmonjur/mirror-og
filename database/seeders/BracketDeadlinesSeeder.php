@@ -5,10 +5,7 @@ namespace Database\Seeders;
 use App\Services\EventMatchService;
 use Illuminate\Database\Seeder;
 use App\Models\EventDetail;
-use App\Models\BracketDeadlineSetup;
-use App\Models\BracketDeadline;
-use App\Models\Task;
-use Carbon\Carbon;
+
 
 class BracketDeadlinesSeeder extends Seeder
 {

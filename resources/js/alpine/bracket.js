@@ -97,7 +97,7 @@ async function getAllMatchStatusesData() {
     if (!isLoadedActionType) {
 
       Object.entries(allDataList).forEach(([key, value]) => {
-        addDotsToContainer(key, value)
+        addDotsToContainer(key, value, bracketData.gamesPerMatch)
       });
 
       addAllTippy();
@@ -105,14 +105,14 @@ async function getAllMatchStatusesData() {
     } else {
 
       Object.entries(newDataList).forEach(([key, value]) => {
-        addDotsToContainer(key, value);
+        addDotsToContainer(key, value, bracketData.gamesPerMatch);
         newClassList.push([key, value.position])
       });
 
       addTippyToClass(newClassList);
 
       Object.entries(modifiedDataList).forEach(([key, value]) => {
-        addDotsToContainer(key, value);
+        addDotsToContainer(key, value, bracketData.gamesPerMatch);
         modifiedClassList.push([key, value.position])
       });
 

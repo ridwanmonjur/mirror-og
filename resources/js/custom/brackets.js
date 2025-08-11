@@ -4,158 +4,159 @@ export const cloneArrays = (obj, keys) =>
   Object.fromEntries(keys.map(key => [key, [...obj[key]]]));
 
 const generateInitialBracket = (userTeamId, disputeLevelEnums, userLevelEnums, totalMatches) => {
-  
-let reportStore = {
-  list: {
-    organizerWinners: Array(totalMatches).fill(null),
-    randomWinners: Array(totalMatches).fill(null),
-    defaultWinners: Array(totalMatches).fill(null),
-    disputeResolved: Array(totalMatches).fill(null),
-    realWinners: Array(totalMatches).fill(null),
-    matchStatus: Array(totalMatches).fill('UPCOMING'),
-    teams: [
-      {
-        winners: Array(totalMatches).fill(null),
-      },
-      {
-        winners: Array(totalMatches).fill(null),
-      }
-    ],
-  },
-
-  setList(list) {
-    this.list = list;
-  },
-
-
-  makeCurrentReport(report, matchNumber ) {
-    return {
-      ...report,
-      organizerWinners: this.list.organizerWinners[matchNumber],
-      randomWinners: this.list.randomWinners[matchNumber],
-      defaultWinners: this.list.defaultWinners[matchNumber],
-      disputeResolved: this.list.disputeResolved[matchNumber],
-      realWinners: this.list.realWinners[matchNumber],
-      matchStatus: this.list.matchStatus[matchNumber],
+  let reportStore = {
+    list: {
+      organizerWinners: Array(totalMatches).fill(null),
+      randomWinners: Array(totalMatches).fill(null),
+      defaultWinners: Array(totalMatches).fill(null),
+      disputeResolved: Array(totalMatches).fill(null),
+      realWinners: Array(totalMatches).fill(null),
+      matchStatus: Array(totalMatches).fill('UPCOMING'),
       teams: [
         {
-          ...report.teams[0],
-          winners: this.list.teams[0].winners[matchNumber],
+          winners: Array(totalMatches).fill(null),
         },
         {
-          ...report.teams[1],
-          winners: this.list.teams[1].winners[matchNumber],
+          winners: Array(totalMatches).fill(null),
         }
       ],
-    }
-  },
+    },
 
- updateListFromFirestore(sourceData) {
-    this.list = {
-      ...cloneArrays(sourceData, [
-        'organizerWinners', 'matchStatus', 'realWinners', 
-        'randomWinners', 'defaultWinners', 'disputeResolved'
-      ]),
-      teams: [
-        { winners: [...sourceData.team1Winners] },
-        { winners: [...sourceData.team2Winners] }
-      ]
-    };
-  },
+    setList(list) {
+      this.list = list;
+    },
 
-  setListFromTemp(tempState) {
-    this.list = { 
-      ...tempState, 
-      teams: [
-        { winners: [...tempState.teams[0].winners] },
-        { winners: [...tempState.teams[1].winners] }
-      ]
-    };
-   },
-  
-  makeReportListFromTemp(tempState, position) {
-      const { teams, ...rest } = tempState;
-      
-      ['organizerWinners', 'randomWinners', 'defaultWinners', 'disputeResolved', 'realWinners', 'matchStatus']
-        .forEach(key => {
-          if (rest[key] !== undefined) {
-            this.list[key][position] = rest[key];
-          }
-        });
-      
-      if (teams?.[0]?.winners !== undefined) {
-        this.list.teams[0].winners[position] = teams[0].winners;
-      }
-      if (teams?.[1]?.winners !== undefined) {
-        this.list.teams[1].winners[position] = teams[1].winners;
-      }
-    }
-  
-  
-};
 
-let disputeStore = {
-  list: Array(totalMatches).fill(null),
-
-  makeCurrentDispute(matchNumber) {
-    return this.list[matchNumber] ? {
-      ...this.list[matchNumber]
-    } : null;
-  },
-
-  setList(list) {
-    this.list = list;
-  }
-};
-
-  let _initialBracket = {
-      firebaseUser: null,
-      disputeLevelEnums,
-      subscribeToMatchStatusesSnapshot: null,
-      subscribeToCurrentReportDisputesSnapshot: null,
-      reportUI: {
-        matchNumber: 0,
-        userTeamId,
-        teamNumber: 0,
-        otherTeamNumber: 1,
-        disabled: false,
-        statusText: 'Select a winner for Game 1'
-      },
-      report: {
-        id: null,
-        organizerWinners: null,
-        randomWinners: null,
-        defaultWinners: null,
-        disqualified: false,
-        disputeResolved: null,
-        stageName: null,
-        realWinners: null,
-        userLevel: userLevelEnums['IS_PUBLIC'],
-        completeMatchStatus: 'UPCOMING',
-        matchStatus: 'UPCOMING',
-        deadline: null,
+    makeCurrentReport(report, matchNumber ) {
+      return {
+        ...report,
+        organizerWinners: this.list.organizerWinners[matchNumber],
+        randomWinners: this.list.randomWinners[matchNumber],
+        defaultWinners: this.list.defaultWinners[matchNumber],
+        disputeResolved: this.list.disputeResolved[matchNumber],
+        realWinners: this.list.realWinners[matchNumber],
+        matchStatus: this.list.matchStatus[matchNumber],
         teams: [
           {
-            winners: null,
-            id: null,
-            position: "",
-            banner: "",
-            name: "No team chosen yet",
-            score: 0,
+            ...report.teams[0],
+            winners: this.list.teams[0].winners[matchNumber],
           },
           {
-            id: null,
-            position: "",
-            banner: "",
-            name: "No team chosen yet",
-            winners:  null,
-            score: 0,
+            ...report.teams[1],
+            winners: this.list.teams[1].winners[matchNumber],
           }
         ],
-        position: ""
-      },
-      dispute: null,
-    };
+      }
+    },
+
+    updateListFromFirestore(sourceData) {
+      this.list = {
+        ...cloneArrays(sourceData, [
+          'organizerWinners', 'matchStatus', 'realWinners', 
+          'randomWinners', 'defaultWinners', 'disputeResolved'
+        ]),
+        teams: [
+          { winners: [...sourceData.team1Winners] },
+          { winners: [...sourceData.team2Winners] }
+        ]
+      };
+    },
+
+    setListFromTemp(tempState) {
+      this.list = { 
+        ...tempState, 
+        teams: [
+          { winners: [...tempState.teams[0].winners] },
+          { winners: [...tempState.teams[1].winners] }
+        ]
+      };
+    },
+    
+    makeReportListFromTemp(tempState, position) {
+        const { teams, ...rest } = tempState;
+        
+        ['organizerWinners', 'randomWinners', 'defaultWinners', 'disputeResolved', 'realWinners', 'matchStatus']
+          .forEach(key => {
+            if (rest[key] !== undefined) {
+              this.list[key][position] = rest[key];
+            }
+          });
+        
+        if (teams?.[0]?.winners !== undefined) {
+          this.list.teams[0].winners[position] = teams[0].winners;
+        }
+        if (teams?.[1]?.winners !== undefined) {
+          this.list.teams[1].winners[position] = teams[1].winners;
+        }
+      }
+    
+    
+  };
+
+  let disputeStore = {
+    list: Array(totalMatches).fill(null),
+
+    makeCurrentDispute(matchNumber) {
+      return this.list[matchNumber] ? {
+        ...this.list[matchNumber]
+      } : null;
+    },
+
+    setList(list) {
+      this.list = list;
+    }
+  };
+
+  let _initialBracket = {
+    firebaseUser: null,
+    disputeLevelEnums,
+    subscribeToMatchStatusesSnapshot: null,
+    subscribeToCurrentReportDisputesSnapshot: null,
+    reportUI: {
+      matchNumber: 0,
+      userTeamId,
+      teamNumber: 0,
+      otherTeamNumber: 1,
+      disabled: false,
+      statusText: 'Select a winner for Game 1'
+    },
+    report: {
+      id: null,
+      organizerWinners: null,
+      randomWinners: null,
+      defaultWinners: null,
+      disqualified: false,
+      disputeResolved: null,
+      stageName: null,
+      realWinners: null,
+      userLevel: userLevelEnums['IS_PUBLIC'],
+      completeMatchStatus: 'UPCOMING',
+      matchStatus: 'UPCOMING',
+      totalMatches,
+      deadline: null,
+      teams: [
+        {
+          winners: null,
+          id: null,
+          position: "",
+          banner: "",
+          name: "No team chosen yet",
+          score: 0,
+        },
+        {
+          id: null,
+          position: "",
+          banner: "",
+          name: "No team chosen yet",
+          winners:  null,
+          score: 0,
+        }
+      ],
+      position: ""
+    },
+    dispute: null,
+  };
+
   return {
      _initialBracket,
      reportStore,
@@ -163,14 +164,19 @@ let disputeStore = {
   };
 }
 
-function resetDotsToContainer() {
+function resetDotsToContainer(gamesPerMatch) {
   let parent = document.getElementById('reportModal');
   let dottedScoreContainer = parent.querySelectorAll('.dotted-score-container');
+  let totalMatches = gamesPerMatch || 3;
+  
   dottedScoreContainer.forEach((element) => {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
       dottedElement.classList.remove('bg-success', 'bg-red');
       dottedElement.classList.add('bg-secondary');
-      if (dottedElementIndex == 2) {
+      
+      if (dottedElementIndex <= totalMatches -1) {
+        dottedElement.classList.remove('d-none');
+      } else {
         dottedElement.classList.add('d-none');
       }
     });
@@ -373,21 +379,23 @@ function clearSelection() {
   });
 }
 
-function updateCurrentReportDots(reportStore) {
+function updateCurrentReportDots(reportStore, totalMatches) {
   let dottedScoreContainer = document.querySelectorAll('#reportModal .dotted-score-container');
     dottedScoreContainer.forEach((element, index) => {
       element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-        if (reportStore.realWinners[dottedElementIndex]) {
-          if (reportStore.realWinners[dottedElementIndex] == index) {
-            dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
-            dottedElement.classList.add("bg-success");
-          } else {
-            dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
-            dottedElement.classList.add("bg-red");
+        if (dottedElementIndex <= totalMatches - 1) { 
+          if (reportStore.realWinners[dottedElementIndex]) {
+            if (reportStore.realWinners[dottedElementIndex] == index) {
+              dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
+              dottedElement.classList.add("bg-success");
+            } else {
+              dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
+              dottedElement.classList.add("bg-red");
+            }
           }
         } else {
-          dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
-          dottedElement.classList.add('bg-secondary');
+          dottedElement.classList.remove('bg-success', 'bg-red');
+          dottedElement.classList.add('bg-secondary', 'd-none');
         }
       })
     })

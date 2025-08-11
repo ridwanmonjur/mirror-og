@@ -197,6 +197,7 @@ class EventDetail extends Model implements Feedable
         if ($status !== 'PENDING' && $status!= 'DRAFT' && $status !== 'PREVIEW') {
             $tasksData = [
                 [
+                    'event_id' => $this->id,
                     'taskable_id' => $this->id,
                     'taskable_type' => 'EventDetail',
                     'task_name' => 'started',
@@ -204,6 +205,7 @@ class EventDetail extends Model implements Feedable
                     'created_at' => $now,
                 ],
                 [
+                    'event_id' => $this->id,
                     'taskable_id' => $this->id,
                     'taskable_type' => 'EventDetail',
                     'task_name' => 'ended',
@@ -215,6 +217,7 @@ class EventDetail extends Model implements Feedable
             if ($this->sub_action_public_date) {
                 $tasksData[] =
                 [
+                    'event_id' => $this->id,
                     'task_name' => 'live',
                     'action_time' => $this->sub_action_public_date.' '.$this->sub_action_public_time,
                     'created_at' => $now,
@@ -272,6 +275,7 @@ class EventDetail extends Model implements Feedable
             ])->delete();
 
             Task::create([
+                'event_id' => $this->id,
                 'taskable_id' => $this->id,
                 'taskable_type' => 'EventDetail',
                 'task_name' => 'reg_over',
@@ -348,6 +352,7 @@ class EventDetail extends Model implements Feedable
 
                 $tasksToCreate = [...$tasksToCreate,
                     [
+                        'event_id' => $this->id,
                         'taskable_id' => $deadline->id,
                         'taskable_type' => 'Deadline',
                         'task_name' => 'start_report',
@@ -355,6 +360,7 @@ class EventDetail extends Model implements Feedable
                         'created_at' => $now,
                     ],
                     [
+                        'event_id' => $this->id,
                         'taskable_id' => $deadline->id,
                         'taskable_type' => 'Deadline',
                         'task_name' => 'end_report',
@@ -362,6 +368,7 @@ class EventDetail extends Model implements Feedable
                         'created_at' => $now,
                     ],
                     [
+                        'event_id' => $this->id,
                         'taskable_id' => $deadline->id,
                         'taskable_type' => 'Deadline',
                         'task_name' => 'org_report',
@@ -708,7 +715,7 @@ class EventDetail extends Model implements Feedable
                 ['joinEvents' => function ($q) {
                     $q->where('join_status', 'confirmed');
                 }])
-            ->orderBy('startDate', 'asc');
+            ;
     }
 
     public static function filterEventsFull(Request $request)

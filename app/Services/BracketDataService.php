@@ -278,7 +278,7 @@ class BracketDataService implements DataServiceInterface
                         'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines ? $deadlines['F']['F'] : null,
+                        'deadline' => $deadlines['F']['F'] ?? null,
 
                     ]],
                     'W' => [[
@@ -287,7 +287,7 @@ class BracketDataService implements DataServiceInterface
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines ? $deadlines['F']['W'] : null,
+                        'deadline' => $deadlines['F']['W'] ?? null,
 
                     ]],
                 ],
@@ -299,7 +299,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 1
                         [
@@ -308,7 +308,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 2
                         [
@@ -317,7 +317,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 3
                         [
@@ -326,7 +326,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 4
                         [
@@ -335,7 +335,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 5
                         [
@@ -344,7 +344,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 6
                         [
@@ -353,7 +353,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 7
                         [
@@ -362,7 +362,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 8
                         [
@@ -371,7 +371,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L9',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 9
                         [
@@ -380,7 +380,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L10',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 10
                         [
@@ -389,7 +389,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L11',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 11
                         [
@@ -398,7 +398,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L12',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 12
                         [
@@ -407,7 +407,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L13',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 13
                         [
@@ -416,7 +416,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L14',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 14
                         [
@@ -425,7 +425,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U15',
                             'loser_next_position' => 'L15',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 15
                         [
@@ -434,7 +434,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U16',
                             'loser_next_position' => 'L16',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 16
                     ],
@@ -445,7 +445,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U17',
                             'loser_next_position' => 'L18',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 1
                         [
@@ -454,7 +454,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U18',
                             'loser_next_position' => 'L20',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 2
                         [
@@ -463,7 +463,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U19',
                             'loser_next_position' => 'L22',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 3
                         [
@@ -472,7 +472,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U20',
                             'loser_next_position' => 'L24',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 4
                         [
@@ -481,7 +481,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U21',
                             'loser_next_position' => 'L26',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 5
                         [
@@ -490,7 +490,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U22',
                             'loser_next_position' => 'L28',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 6
                         [
@@ -499,7 +499,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U23',
                             'loser_next_position' => 'L30',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 7
                         [
@@ -508,7 +508,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U24',
                             'loser_next_position' => 'L32',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 8
                     ],
@@ -519,7 +519,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U25',
                             'loser_next_position' => 'L42',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null,
+                            'deadline' => $deadlines['U']['e3'] ?? null,
 
                         ], // 1
                         [
@@ -528,7 +528,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U26',
                             'loser_next_position' => 'L44',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null,
+                            'deadline' => $deadlines['U']['e3'] ?? null,
 
                         ], // 2
                         [
@@ -537,7 +537,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U27',
                             'loser_next_position' => 'L46',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null,
+                            'deadline' => $deadlines['U']['e3'] ?? null,
 
                         ], // 3
                         [
@@ -546,7 +546,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U28',
                             'loser_next_position' => 'L48',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null,
+                            'deadline' => $deadlines['U']['e3'] ?? null,
 
                         ], // 4
                     ],
@@ -557,7 +557,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U29',
                             'loser_next_position' => 'L54',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e4'] : null,
+                            'deadline' => $deadlines['U']['e4'] ?? null,
 
                         ], // 1
                         [
@@ -566,7 +566,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U30',
                             'loser_next_position' => 'L56',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e4'] : null,
+                            'deadline' => $deadlines['U']['e4'] ?? null,
 
                         ], // 2
                     ],
@@ -577,7 +577,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L60',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['p0'] : null,
+                            'deadline' => $deadlines['U']['p0'] ?? null,
 
                         ], // 1
                     ],
@@ -590,7 +590,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 1
                         [
@@ -599,7 +599,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 2
                         [
@@ -608,7 +608,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 3
                         [
@@ -617,7 +617,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 4
                         [
@@ -626,7 +626,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 5
                         [
@@ -635,7 +635,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 6
                         [
@@ -644,7 +644,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L29',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 7
                         [
@@ -653,7 +653,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L31',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 8
                     ],
@@ -664,7 +664,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L33',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 1
                         [
@@ -673,7 +673,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L34',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 2
                         [
@@ -682,7 +682,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L35',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 3
                         [
@@ -691,7 +691,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L36',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 4
                         [
@@ -700,7 +700,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L37',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 5
                         [
@@ -709,7 +709,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L38',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 6
                         [
@@ -718,7 +718,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L39',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 7
                         [
@@ -727,7 +727,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L40',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 8
                     ],
@@ -738,7 +738,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L41',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null,
+                            'deadline' => $deadlines['L']['e3'] ?? null,
 
                         ], // 1
                         [
@@ -747,7 +747,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L43',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null,
+                            'deadline' => $deadlines['L']['e3'] ?? null,
 
                         ], // 2
                         [
@@ -756,7 +756,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L45',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null,
+                            'deadline' => $deadlines['L']['e3'] ?? null,
 
                         ], // 3
                         [
@@ -765,7 +765,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L47',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null,
+                            'deadline' => $deadlines['L']['e3'] ?? null,
 
                         ], // 4
                     ],
@@ -776,7 +776,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L49',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null,
+                            'deadline' => $deadlines['L']['e4'] ?? null,
 
                         ], // 1
                         [
@@ -785,7 +785,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L50',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null,
+                            'deadline' => $deadlines['L']['e4'] ?? null,
 
                         ], // 2
                         [
@@ -794,7 +794,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L51',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null,
+                            'deadline' => $deadlines['L']['e4'] ?? null,
 
                         ], // 3
                         [
@@ -803,7 +803,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L52',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null,
+                            'deadline' => $deadlines['L']['e4'] ?? null,
 
                         ], // 4
                     ],
@@ -814,7 +814,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L53',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e5'] : null,
+                            'deadline' => $deadlines['L']['e5'] ?? null,
 
                         ], // 1
                         [
@@ -823,7 +823,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L55',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e5'] : null,
+                            'deadline' => $deadlines['L']['e5'] ?? null,
 
                         ], // 2
                     ],
@@ -834,7 +834,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L57',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e6'] : null,
+                            'deadline' => $deadlines['L']['e6'] ?? null,
 
                         ], // 1
                         [
@@ -843,7 +843,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L58',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e6'] : null,
+                            'deadline' => $deadlines['L']['e6'] ?? null,
 
                         ], // 2
                     ],
@@ -854,7 +854,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L59',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['p1'] : null,
+                            'deadline' => $deadlines['L']['p1'] ?? null,
 
                         ], // 1
                     ],
@@ -865,7 +865,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['p2'] : null,
+                            'deadline' => $deadlines['L']['p2'] ?? null,
 
                         ], // 1
                     ],
@@ -880,7 +880,7 @@ class BracketDataService implements DataServiceInterface
                         'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines ? $deadlines['F']['F'] : null,
+                        'deadline' => $deadlines['F']['F'] ?? null,
 
                     ]],
                     'W' => [[
@@ -889,7 +889,7 @@ class BracketDataService implements DataServiceInterface
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines ? $deadlines['F']['W'] : null,
+                        'deadline' => $deadlines['F']['W'] ?? null,
 
                     ]],
                 ],
@@ -901,7 +901,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 1
                         [
@@ -910,7 +910,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 2
                         [
@@ -919,7 +919,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 3
                         [
@@ -928,7 +928,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 4
                         [
@@ -937,7 +937,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 5
                         [
@@ -946,7 +946,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L6',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 6
                         [
@@ -955,7 +955,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U7',
                             'loser_next_position' => 'L7',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 7
                         [
@@ -964,7 +964,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U8',
                             'loser_next_position' => 'L8',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 8
                     ],
@@ -975,7 +975,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U9',
                             'loser_next_position' => 'L10',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 1
                         [
@@ -984,7 +984,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U10',
                             'loser_next_position' => 'L12',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 2
                         [
@@ -993,7 +993,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U11',
                             'loser_next_position' => 'L14',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 3
                         [
@@ -1003,7 +1003,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U12',
                             'loser_next_position' => 'L16',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 4
                     ],
@@ -1014,7 +1014,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U13',
                             'loser_next_position' => 'L22',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null,
+                            'deadline' => $deadlines['U']['e3'] ?? null,
 
                         ], // 1
                         [
@@ -1023,7 +1023,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U14',
                             'loser_next_position' => 'L24',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e3'] : null,
+                            'deadline' => $deadlines['U']['e3'] ?? null,
 
                         ], // 2
                     ],
@@ -1034,7 +1034,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L28',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['p0'] : null,
+                            'deadline' => $deadlines['U']['p0'] ?? null,
 
                         ], // 1
                     ],
@@ -1047,7 +1047,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L9',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 1
                         [
@@ -1056,7 +1056,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 2
                         [
@@ -1065,7 +1065,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L13',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 3
                         [
@@ -1074,7 +1074,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L15',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 4
                     ],
@@ -1085,7 +1085,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L17',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 1
                         [
@@ -1094,7 +1094,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L18',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 2
                         [
@@ -1103,7 +1103,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L19',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 3
                         [
@@ -1112,7 +1112,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L20',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 4
                     ],
@@ -1123,7 +1123,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L21',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null,
+                            'deadline' => $deadlines['L']['e3'] ?? null,
 
                         ], // 1
                         [
@@ -1132,7 +1132,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L23',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e3'] : null,
+                            'deadline' => $deadlines['L']['e3'] ?? null,
 
                         ], // 2
                     ],
@@ -1143,7 +1143,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L25',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null,
+                            'deadline' => $deadlines['L']['e4'] ?? null,
 
                         ], // 1
                         [
@@ -1152,7 +1152,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L26',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['e4'] : null,
+                            'deadline' => $deadlines['L']['e4'] ?? null,
 
                         ], // 2
                     ],
@@ -1163,7 +1163,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L27',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['p1'] : null,
+                            'deadline' => $deadlines['L']['p1'] ?? null,
 
                         ], // 1
                     ],
@@ -1174,7 +1174,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['p2'] : null,
+                            'deadline' => $deadlines['L']['p2'] ?? null,
 
                         ], // 1
                     ],
@@ -1189,7 +1189,7 @@ class BracketDataService implements DataServiceInterface
                         'winner_next_position' => 'F',
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines ? $deadlines['F']['F'] : null,
+                        'deadline' => $deadlines['F']['F'] ?? null,
 
                     ]],
                     'W' => [[
@@ -1198,7 +1198,7 @@ class BracketDataService implements DataServiceInterface
                         'winner_next_position' => null,
                         'loser_next_position' => null,
                         ...$defaultValues,
-                        'deadline' => $deadlines ? $deadlines['F']['W'] : null,
+                        'deadline' => $deadlines['F']['W'] ?? null,
 
                     ]],
                 ],
@@ -1210,7 +1210,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U1',
                             'loser_next_position' => 'L1',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 1
                         [
@@ -1219,7 +1219,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U2',
                             'loser_next_position' => 'L2',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 2
                         [
@@ -1228,7 +1228,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U3',
                             'loser_next_position' => 'L3',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 3
                         [
@@ -1237,7 +1237,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'U4',
                             'loser_next_position' => 'L4',
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['U']['e1'] : null,
+                            'deadline' => $deadlines['U']['e1'] ?? null,
 
                         ], // 4
                     ],
@@ -1248,7 +1248,7 @@ class BracketDataService implements DataServiceInterface
                             ...$defaultValues,
                             'winner_next_position' => 'U5',
                             'loser_next_position' => 'L6',
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 1
                         [
@@ -1257,7 +1257,7 @@ class BracketDataService implements DataServiceInterface
                             ...$defaultValues,
                             'winner_next_position' => 'U6',
                             'loser_next_position' => 'L8',
-                            'deadline' => $deadlines ? $deadlines['U']['e2'] : null,
+                            'deadline' => $deadlines['U']['e2'] ?? null,
 
                         ], // 2
                     ],
@@ -1268,7 +1268,7 @@ class BracketDataService implements DataServiceInterface
                             ...$defaultValues,
                             'winner_next_position' => 'G1',
                             'loser_next_position' => 'L12',
-                            'deadline' => $deadlines ? $deadlines['U']['p0'] : null,
+                            'deadline' => $deadlines['U']['p0'] ?? null,
 
                         ], // 1
                     ],
@@ -1281,7 +1281,7 @@ class BracketDataService implements DataServiceInterface
                             ...$defaultValues,
                             'winner_next_position' => 'L5',
                             'loser_next_position' => null,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 1
                         [
@@ -1290,7 +1290,7 @@ class BracketDataService implements DataServiceInterface
                             ...$defaultValues,
                             'winner_next_position' => 'L7',
                             'loser_next_position' => null,
-                            'deadline' => $deadlines ? $deadlines['L']['e1'] : null,
+                            'deadline' => $deadlines['L']['e1'] ?? null,
 
                         ], // 2
                     ],
@@ -1301,7 +1301,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L9',
                             ...$defaultValues,
                             'loser_next_position' => null,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 1
                         [
@@ -1310,7 +1310,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L10',
                             ...$defaultValues,
                             'loser_next_position' => null,
-                            'deadline' => $deadlines ? $deadlines['L']['e2'] : null,
+                            'deadline' => $deadlines['L']['e2'] ?? null,
 
                         ], // 2
                     ],
@@ -1321,7 +1321,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'L11',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['p1'] : null,
+                            'deadline' => $deadlines['L']['p1'] ?? null,
 
                         ], // 1
                     ],
@@ -1332,7 +1332,7 @@ class BracketDataService implements DataServiceInterface
                             'winner_next_position' => 'G2',
                             'loser_next_position' => null,
                             ...$defaultValues,
-                            'deadline' => $deadlines ? $deadlines['L']['p2'] : null,
+                            'deadline' => $deadlines['L']['p2'] ?? null,
 
                         ], // 1
                     ],
