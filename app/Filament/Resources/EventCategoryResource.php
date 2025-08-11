@@ -45,10 +45,9 @@ class EventCategoryResource extends Resource
                                 $directory = 'images/event_details';
                                 $path = $file->storeAs($directory, $newFilename, 'public');
 
-                                // Access record from table modal
-                                $recordId = $livewire->mountedTableActionRecord;
+                                // Access record - handle both table modal and edit page contexts
+                                $recordId = $livewire->mountedTableActionRecord ?? $livewire->record?->id;
                                 if ($recordId) {
-                                    // Replace 'EventCategory' with your actual model class
                                     $record = \App\Models\EventCategory::find($recordId);
 
                                     if ($record) {
@@ -69,11 +68,11 @@ class EventCategoryResource extends Resource
                                     Storage::disk('public')->delete($file);
                                 }
 
-                                $recordId = $livewire->mountedTableActionRecord;
+                                $recordId = $livewire->mountedTableActionRecord ?? $livewire->record?->id;
                                 if ($recordId) {
                                     $record = \App\Models\EventCategory::find($recordId);
 
-                                    if ($record) { // Add null check for safety
+                                    if ($record) {
                                         $record->gameIcon = null;
                                         $record->save();
                                     }
