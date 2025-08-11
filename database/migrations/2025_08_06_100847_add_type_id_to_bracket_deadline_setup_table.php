@@ -61,9 +61,10 @@ return new class extends Migration
         Schema::table('bracket_deadline_setup', function (Blueprint $table) {
             if (Schema::hasTable('bracket_deadline_setup') && Schema::hasColumn('bracket_deadline_setup', 'type_id')) {
                
-                
-                $table->dropForeign(['type_id']);
+                DB::statement('SET FOREIGN_KEY_CHECKS=0;');
                 $table->dropColumn(['type_id']);
+                DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
             }
         });
     }
