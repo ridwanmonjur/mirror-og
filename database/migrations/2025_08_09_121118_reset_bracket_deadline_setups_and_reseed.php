@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\BracketDeadlineSetup;
 use Database\Seeders\BracketDeadlineSetupSeeder;
 use Database\Seeders\LeagueDeadlineSetupSeeder;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -14,15 +15,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Delete all existing BracketDeadlineSetup records
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         BracketDeadlineSetup::truncate();
         
-        // Run the seeders to repopulate with updated configurations
         $bracketSeeder = new BracketDeadlineSetupSeeder();
         $bracketSeeder->run();
         
         $leagueSeeder = new LeagueDeadlineSetupSeeder();
         $leagueSeeder->run();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     /**
