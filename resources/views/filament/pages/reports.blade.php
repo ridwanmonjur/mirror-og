@@ -39,12 +39,12 @@
             </thead>
             <tbody>
                 <tr v-for="dispute in disputes">
-                    <td  class="text-center" v-text="dispute.report_id"></td>
-                    <td  class="text-center" v-text="Number(dispute.match_number)+1"></td>
-                    <td  class="text-center" v-text="dispute.dispute_reason"></td>
-                    <td  class="text-center" v-text="teams[dispute.dispute_teamId]?.teamName"></td>
+                    <td  class="text-center" v-text="dispute?.report_id"></td>
+                    <td  class="text-center" v-text="Number(dispute?.match_number)+1"></td>
+                    <td  class="text-center" v-text="dispute?.dispute_reason"></td>
+                    <td  class="text-center" v-text="teams[dispute?.dispute_teamId]?.teamName"></td>
                     <td class="text-center" >
-                        <span v-if="dispute.resolution_winner >= 0" class="badge bg-success text-dark ">Resolved</span>
+                        <span v-if="dispute?.resolution_winner >= 0" class="badge bg-success text-dark ">Resolved</span>
                         <span v-else class="badge bg-warning text-dark ">Pending</span>
 
                     </td>
@@ -208,7 +208,7 @@
                                 <label >Resolution Resolved by</label>
                             </div>
                             <div class="mb-3 form-floating">
-                                <select class="form-select" v-bind:id ="'resolution_winner'" name="resolution_winner" v-bind:value="selectedDispute.resolution_winner">
+                                <select class="form-select" v-bind:id ="'resolution_winner'" name="resolution_winner" v-bind:value="selectedDispute?.resolution_winner">
                                     <option value="null">No teams</option>
                                     <option value="0">Team 1</option>
                                     <option value="1">Team 2</option>

@@ -164,7 +164,7 @@ function addTippyToClass(classAndPositionList) {
 
 window.addTippyToClass = addTippyToClass;
 
-function addDotsToContainer(key, value) {
+function addDotsToContainer(key, value, gamesPerMatch) {
   console.log({key, value});
   console.log({key, value});
   console.log({key, value});
@@ -178,17 +178,19 @@ function addDotsToContainer(key, value) {
 
   dottedScoreContainer?.forEach((element, index) => {
     element.querySelectorAll('.dotted-score')?.forEach((dottedElement, dottedElementIndex) => {
-      if (value.realWinners[dottedElementIndex]) {
-        if (value.realWinners[dottedElementIndex] == index) {
-          dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
-          dottedElement.classList.add("bg-success");
-        } else {
-          dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
-          dottedElement.classList.add("bg-red");
+      if (dottedElementIndex <= gamesPerMatch-1) {
+        if (value.realWinners[dottedElementIndex]) {
+          if (value.realWinners[dottedElementIndex] == index) {
+            dottedElement.classList.remove('bg-secondary', 'bg-red', 'd-none');
+            dottedElement.classList.add("bg-success");
+          } else {
+            dottedElement.classList.remove('bg-secondary', 'bg-success', 'd-none');
+            dottedElement.classList.add("bg-red");
+          }
         }
       } else {
-        dottedElement.classList.remove('bg-success', 'bg-red', 'd-none');
-        dottedElement.classList.add('bg-secondary');
+        dottedElement.classList.remove('bg-success', 'bg-red');
+        dottedElement.classList.add('bg-secondary', 'd-none');
       }
     })
   });
