@@ -926,7 +926,6 @@ class EventDetail extends Model implements Feedable
         } else {
             $baseEventName = $eventDetail->eventName;
             $baseSlug = Str::slug($eventDetail->eventName);
-            $counter = 1;
 
             $eventDetail->eventName = $baseEventName;
             $eventDetail->slug = $baseSlug;
@@ -934,9 +933,9 @@ class EventDetail extends Model implements Feedable
             while (self::where('eventName', $eventDetail->eventName)
                 ->orWhere('slug', $eventDetail->slug)
                 ->exists()) {
-                $eventDetail->eventName = $baseEventName.' '.$counter;
-                $eventDetail->slug = $baseSlug.'-'.$counter;
-                $counter++;
+                $randomSuffix = Str::lower(Str::random(3));
+                $eventDetail->eventName = $baseEventName.' '.$randomSuffix;
+                $eventDetail->slug = $baseSlug.'-'.$randomSuffix;
             }
         }
 
