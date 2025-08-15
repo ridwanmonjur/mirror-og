@@ -1,0 +1,12 @@
+{
+  "firestore": [
+    {
+      "database": "oceansgaming-staging", 
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "(default)",
+      "rules": "firestore.rules" 
+    }
+  ]
+}

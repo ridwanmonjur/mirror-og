@@ -56,3 +56,105 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 
 ## Analytics Implementation
 The platform includes comprehensive analytics tracking using Google Analytics.
+
+## Terraform Firebase Infrastructure
+Terraform automatically creates Firebase web apps and configures all environment variables:
+
+### What Terraform Creates:
+- Firebase project setup
+- Firestore database with security rules
+- Firebase web app configuration
+- Google OAuth integration
+- Initial Firestore collections (room, event, analytics-*)
+
+### Environment Variables Auto-Configured:
+- `FIREBASE_API_KEY` / `VITE_FIREBASE_API_KEY`
+- `VITE_AUTH_DOMAIN`
+- `VITE_STORAGE_BUCKET`
+- `VITE_APP_ID`
+- `VITE_PROJECT_ID`
+- OAuth credentials
+
+### Composer Commands for Terraform:
+```bash
+# Development environment
+composer tf:dev:plan        # Plan changes (preview only)
+composer tf:dev:plan-save   # Save plan to dev.tfplan file
+composer tf:dev:apply-plan  # Apply saved plan file
+composer tf:dev:apply       # Direct apply (skips plan file)
+composer tf:dev:output      # Show outputs
+
+# Staging environment  
+composer tf:staging:plan
+composer tf:staging:plan-save
+composer tf:staging:apply-plan
+composer tf:staging:apply
+composer tf:staging:output
+
+# Production environment
+composer tf:prod:plan
+composer tf:prod:plan-save
+composer tf:prod:apply-plan
+composer tf:prod:apply
+composer tf:prod:output
+
+# Utilities
+composer tf:init            # Initialize Terraform
+composer tf:validate        # Validate configuration
+composer tf:fmt             # Format configuration
+composer tf:state:list      # List Terraform state
+```
+
+**Plan Output Files:**
+- `terraform/dev.tfplan` - Development plan file
+- `terraform/staging.tfplan` - Staging plan file  
+- `terraform/prod.tfplan` - Production plan file
+
+**Recommended workflow:**
+1. `composer tf:dev:plan-save` - Save plan to `terraform/dev.tfplan`
+2. Review the plan file at `terraform/dev.tfplan`
+3. `composer tf:dev:apply-plan` - Apply exact saved plan
+
+All `.env` files are automatically updated with Firebase configuration when Terraform runs.
+
+### OAuth Client Setup
+Terraform generates a setup script for creating Google OAuth clients manually:
+
+**After running Terraform:**
+1. Run `./create-oauth-client.sh` to see OAuth client setup instructions
+2. Create OAuth client in Google Cloud Console with the provided settings
+3. Update `.env` files with the generated Client ID and Client Secret
+
+**OAuth Configuration:**
+- **JavaScript Origins**: `http://localhost:8000`, `https://oceansgaming.gg`, `https://driftwood.gg`
+- **Redirect URIs**: `/auth/google/callback` for each origin
+- **Type**: Web application
+
+### Terraform State Management
+Remote state storage is configured for team collaboration:
+
+**Bootstrap Commands (Run First):**
+```bash
+# Development environment
+composer tf:bootstrap:dev:init      # Initialize bootstrap
+composer tf:bootstrap:dev:plan      # Plan bootstrap
+composer tf:bootstrap:dev:apply     # Create state storage bucket
+
+# Staging/Production
+composer tf:bootstrap:staging:apply
+composer tf:bootstrap:prod:apply
+
+# Get bucket information
+composer tf:bootstrap:output        # Shows bucket name for backend config
+```
+
+**Backend Configuration:**
+After bootstrap, update the appropriate backend file (`backend-dev.tf`, `backend-staging.tf`, `backend-prod.tf`) with the bucket name from bootstrap output, then run `composer tf:init` to migrate to remote state.
+
+**State Features:**
+- Versioning enabled for rollback capability
+- Automatic lifecycle management (90-day retention)
+- Environment isolation (separate state per environment)  
+- Team collaboration with state locking
+
+See `terraform/README-STATE-MANAGEMENT.md` for detailed setup and troubleshooting.

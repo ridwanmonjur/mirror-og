@@ -112,13 +112,13 @@
         "local": [
             "rm -f .env",
             "cp .env.example .env",
-            "composer update",
-            "npm run build",
+            "@REM composer update",
+            "@REM npm run build",
             "chmod +x dev.sh stop.sh"
         ],
         "npm-build": [
             "npm install",
-            "npm run build",
+            "@REM npm run build",
             "rm -rf node_modules"
         ],
         "build": [
@@ -128,7 +128,7 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "npm run build",
+            "@REM npm run build",
             "rm -rf node_modules",
                         
             "rm -rf storage/framework/cache/data/*",
@@ -160,8 +160,109 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "npm run build",
+            "@REM npm run build",
             "rm -rf node_modules"
+        ],
+
+
+        "tf:dev:plan": [
+            "gcloud config set project ocean-s-firebase",
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -out=\"dev.tfplan\"'"
+        ],
+        
+
+        "tf:staging:plan": [
+            "gcloud config set project tf-driftwood-dev",
+            "gcloud auth application-default set-quota-project tf-driftwood-dev",
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\" -out=\"staging.tfplan\"'"
+        ],
+       
+        "tf:prod:plan": [
+            "gcloud config set project mystical-surfer-428905-i0",
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\" -out=\"prod.tfplan\"'"
+        ],
+
+     
+        "tf:dev:apply": [
+            "gcloud config set project ocean-s-firebase",
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform apply dev.tfplan'"
+        ],
+    
+      
+        "tf:staging:apply": [
+            "gcloud config set project tf-driftwood-dev",
+            "gcloud auth application-default set-quota-project tf-driftwood-dev",
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply staging.tfplan'"
+        ],
+
+        "tf:prod:apply": [
+            "gcloud config set project mystical-surfer-428905-i0",
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform apply prod.tfplan'"
+        ],
+     
+       
+       
+        
+        "tf:dev:destroy": [
+            "gcloud config set project ocean-s-firebase",
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform destroy -var-file=\"dev.tfvars\" -auto-approve'"
+        ],
+        "tf:staging:destroy": [
+            "gcloud config set project tf-driftwood-dev",
+            "gcloud auth application-default set-quota-project tf-driftwood-dev",
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply -var-file=\"staging.tfvars\" -target=null_resource.disable_firestore_delete_protection'",
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform destroy -var-file=\"staging.tfvars\" -auto-approve'"
+        ],
+        "tf:prod:destroy": [
+            "gcloud config set project mystical-surfer-428905-i0",
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform destroy -var-file=\"prod.tfvars\" -auto-approve'"
+        ],
+        "tf:validate": [
+            "cd terraform && terraform validate"
+        ],
+        "tf:init": [
+            "cd terraform && terraform init"
+        ],
+       
+        "tf:bootstrap:dev:init": [
+            "cd terraform/bootstrap && terraform init"
+        ],
+        "tf:bootstrap:dev:plan": [
+            "gcloud config set project ocean-s-firebase",
+            "bash -c 'cd terraform/bootstrap && source ../scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\"'"
+        ],
+        "tf:bootstrap:dev:apply": [
+            "gcloud config set project ocean-s-firebase",
+            "bash -c 'cd terraform/bootstrap && source ../scripts/load-env.sh dev && terraform apply -var-file=\"dev.tfvars\" -auto-approve'"
+        ],
+        "tf:bootstrap:staging:plan": [
+            "gcloud config set project tf-driftwood-dev",
+            "bash -c 'cd terraform/bootstrap && source ../scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\"'"
+        ],
+        "tf:bootstrap:staging:apply": [
+            "gcloud config set project tf-driftwood-dev",
+            "bash -c 'cd terraform/bootstrap && source ../scripts/load-env.sh staging && terraform apply -var-file=\"staging.tfvars\" -auto-approve'"
+        ],
+        "tf:bootstrap:prod:plan": [
+            "gcloud config set project mystical-surfer-428905-i0",
+            "bash -c 'cd terraform/bootstrap && source ../scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\"'"
+        ],
+        "tf:bootstrap:prod:apply": [
+            "gcloud config set project mystical-surfer-428905-i0",
+            "bash -c 'cd terraform/bootstrap && source ../scripts/load-env.sh prod && terraform apply -var-file=\"prod.tfvars\" -auto-approve'"
+        ],
+        "tf:bootstrap:output": [
+            "cd terraform/bootstrap && terraform output"
+        ],
+        "tf:destroy:all": [
+            "echo 'Removing all Terraform state files...'",
+            "rm -f terraform/.terraform/terraform.tfstate",
+            "rm -f terraform/terraform.tfstate*",
+            "rm -f terraform/dev.tfplan",
+            "rm -f terraform/staging.tfplan", 
+            "rm -f terraform/prod.tfplan",
+            "rm -rf terraform/.terraform/",
+            "echo 'All Terraform state files removed successfully.'"
         ]
     },
     "extra": {
