@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use Searchable;
 
     protected $fillable = [
         'name', 'slug', 'details', 'price', 'description',
@@ -32,24 +30,4 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class);
     }
 
-    /**
-     * Get the indexable data array for the model.
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        $array = $this->toArray();
-
-        $extraFields = [
-            'categories' => $this->categories->pluck('name')->toArray(),
-        ];
-
-        return array_merge($array, $extraFields);
-    }
-
-    public function shouldBeSearchable()
-    {
-        return true;
-    }
 }

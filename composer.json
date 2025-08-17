@@ -6,9 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "doctrine/dbal": "^3.10",
         "fakerphp/faker": "^1.24",
         "filament/filament": "^3.2",
-        "openspout/openspout": "^4.28.0 <4.29.0",
         "google/analytics-admin": "^0.29.0",
         "google/analytics-data": "^0.22.2",
         "google/cloud-firestore": "^1.48",
@@ -19,20 +19,18 @@
         "laravel/pulse": "^1.2",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
+        "laravel/ui": "^4.6",
         "livewire/livewire": "^3.5",
-        "opcodesio/log-viewer": "^3.11",
+        "openspout/openspout": "^4.28.0 <4.29.0",
         "paragonie/sodium_compat": "^2.1",
         "predis/predis": "^2.2",
+        "sentry/sentry-laravel": "^4.15",
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-googletagmanager": "^2.8",
         "spatie/laravel-sitemap": "^7.3",
-        "stripe/stripe-php": "^13.0",
-        "algolia/algoliasearch-client-php": "*",
-        "doctrine/dbal": "^3.10",
-        "laravel/scout": "^10.16",
-        "laravel/ui": "^4.6"
+        "stripe/stripe-php": "^13.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
@@ -48,6 +46,7 @@
         "nextbuild/database-viewer": "^1.0",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/phpinsights": "^2.11",
+        "opcodesio/log-viewer": "^3.19",
         "phpunit/phpunit": "^10.1",
         "spatie/laravel-ignition": "^2.0",
         "thedoctor0/laravel-factory-generator": "^1.4"
