@@ -1,0 +1,183 @@
+{
+    "test_date": "2025-08-16 02:51:39",
+    "events_tested": 15,
+    "event_range": "1-20",
+    "average_without_cache_ms": 28.153069814046223,
+    "average_first_hit_ms": 9.383122126261393,
+    "average_second_hit_ms": 9.850549697875977,
+    "average_third_hit_ms": 8.840656280517578,
+    "improvement_1st_to_2nd_percent": -4.981578256413738,
+    "improvement_2nd_to_3rd_percent": 10.252152908544348,
+    "overall_improvement_percent": 68.59789593493363,
+    "average_memory_kb": 136.53333333333333,
+    "best_improvement_percent": 95.95543648664066,
+    "worst_improvement_percent": 16.387943367372106,
+    "median_improvement_percent": 84.5809172377438,
+    "detailed_results": [
+        {
+            "event_id": 1,
+            "event_type": "Tournament",
+            "team_slots": "16",
+            "without_cache_ms": 225.68798065185547,
+            "first_hit_ms": 8.604049682617188,
+            "second_hit_ms": 9.013891220092773,
+            "third_hit_ms": 9.128093719482422,
+            "overall_improvement_percent": 95.95543648664066,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 2,
+            "event_type": "N\/A",
+            "team_slots": "N\/A",
+            "without_cache_ms": 3.304004669189453,
+            "first_hit_ms": 0.5688667297363281,
+            "second_hit_ms": 0.49495697021484375,
+            "third_hit_ms": 0.3528594970703125,
+            "overall_improvement_percent": 89.32024823206812,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 5,
+            "event_type": "N\/A",
+            "team_slots": "N\/A",
+            "without_cache_ms": 2.176046371459961,
+            "first_hit_ms": 0.3609657287597656,
+            "second_hit_ms": 0.28395652770996094,
+            "third_hit_ms": 0.36907196044921875,
+            "overall_improvement_percent": 83.03933384463679,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 6,
+            "event_type": "Tournament",
+            "team_slots": "16",
+            "without_cache_ms": 16.691923141479492,
+            "first_hit_ms": 13.139963150024414,
+            "second_hit_ms": 12.861967086791992,
+            "third_hit_ms": 10.078907012939453,
+            "overall_improvement_percent": 39.61806001913985,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 7,
+            "event_type": "Tournament",
+            "team_slots": "32",
+            "without_cache_ms": 4.832983016967773,
+            "first_hit_ms": 3.1969547271728516,
+            "second_hit_ms": 3.983020782470703,
+            "third_hit_ms": 4.040956497192383,
+            "overall_improvement_percent": 16.387943367372106,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 8,
+            "event_type": "League",
+            "team_slots": "32",
+            "without_cache_ms": 13.978958129882812,
+            "first_hit_ms": 8.013010025024414,
+            "second_hit_ms": 6.005048751831055,
+            "third_hit_ms": 7.758140563964844,
+            "overall_improvement_percent": 44.50129622049393,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 9,
+            "event_type": "Tournament",
+            "team_slots": "16",
+            "without_cache_ms": 9.901046752929688,
+            "first_hit_ms": 7.426023483276367,
+            "second_hit_ms": 8.226156234741211,
+            "third_hit_ms": 6.742000579833984,
+            "overall_improvement_percent": 31.90618377961857,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 10,
+            "event_type": "N\/A",
+            "team_slots": "N\/A",
+            "without_cache_ms": 1.8091201782226562,
+            "first_hit_ms": 0.43201446533203125,
+            "second_hit_ms": 0.28705596923828125,
+            "third_hit_ms": 0.2789497375488281,
+            "overall_improvement_percent": 84.5809172377438,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 11,
+            "event_type": "League",
+            "team_slots": "32",
+            "without_cache_ms": 37.72592544555664,
+            "first_hit_ms": 26.24201774597168,
+            "second_hit_ms": 26.19194984436035,
+            "third_hit_ms": 21.55900001525879,
+            "overall_improvement_percent": 42.853621851182425,
+            "memory_kb": 2048
+        },
+        {
+            "event_id": 12,
+            "event_type": "League",
+            "team_slots": "32",
+            "without_cache_ms": 10.787010192871094,
+            "first_hit_ms": 6.277799606323242,
+            "second_hit_ms": 8.480072021484375,
+            "third_hit_ms": 6.942987442016602,
+            "overall_improvement_percent": 35.63566439748917,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 13,
+            "event_type": "Tournament",
+            "team_slots": "32",
+            "without_cache_ms": 10.471820831298828,
+            "first_hit_ms": 7.7800750732421875,
+            "second_hit_ms": 7.827997207641602,
+            "third_hit_ms": 8.035898208618164,
+            "overall_improvement_percent": 23.26169117981877,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 14,
+            "event_type": "League",
+            "team_slots": "32",
+            "without_cache_ms": 11.97504997253418,
+            "first_hit_ms": 6.54292106628418,
+            "second_hit_ms": 5.511045455932617,
+            "third_hit_ms": 9.07278060913086,
+            "overall_improvement_percent": 24.2359687020925,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 15,
+            "event_type": "League",
+            "team_slots": "32",
+            "without_cache_ms": 11.012077331542969,
+            "first_hit_ms": 6.363153457641602,
+            "second_hit_ms": 5.7430267333984375,
+            "third_hit_ms": 6.435155868530273,
+            "overall_improvement_percent": 41.56274356975838,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 16,
+            "event_type": "Tournament",
+            "team_slots": "32",
+            "without_cache_ms": 32.16409683227539,
+            "first_hit_ms": 23.654937744140625,
+            "second_hit_ms": 27.784109115600586,
+            "third_hit_ms": 21.438121795654297,
+            "overall_improvement_percent": 33.34766429958638,
+            "memory_kb": 0
+        },
+        {
+            "event_id": 17,
+            "event_type": "Tournament",
+            "team_slots": "32",
+            "without_cache_ms": 29.778003692626953,
+            "first_hit_ms": 22.144079208374023,
+            "second_hit_ms": 25.06399154663086,
+            "third_hit_ms": 20.376920700073242,
+            "overall_improvement_percent": 31.57056157824785,
+            "memory_kb": 0
+        }
+    ]
+}

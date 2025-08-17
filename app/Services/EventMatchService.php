@@ -12,6 +12,7 @@ use App\Models\Like;
 use App\Models\Brackets;
 use App\Models\OrganizerFollow;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class EventMatchService
 {
@@ -19,16 +20,23 @@ class EventMatchService
     public function createBrackets(EventDetail $event)
     {
         // dd($event);
-        if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot) {
-            // dd($event->type->eventType);
-            $dataService = DataServiceFactory::create($event->type->eventType);
-            $bracketList = $dataService->produceBrackets(
-                $event->tier->tierTeamSlot,
-                false,
-                null,
-                null,
-                $event->type->eventType == 'Tournament' ? 'all' : 1
-            );
+        if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot && $event?->type?->eventType) {
+            $eventType = $event->type->eventType;
+            $dataService = DataServiceFactory::create($eventType);
+            $page = $eventType == 'Tournament' ? 'all' : 1;
+            
+            $cacheKey = "{$eventType}_{$event->id}_{$event->tier->tierTeamSlot}_{$page}_0";
+            $bracketList = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
+                $dataService, $event, $page
+            ) {
+                return $dataService->produceBrackets(
+                    $event->tier->tierTeamSlot,
+                    false,
+                    null,
+                    null,
+                    $page
+                );
+            });
 
 
             $now = now();
@@ -64,9 +72,25 @@ class EventMatchService
     ): array {
         $USER_ENUMS = config('constants.USER_ACCESS');
         $DISPUTTE_ENUMS = config('constants.DISPUTE');
-        $deadlines = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
-        // dd($deadlines);
-        $dataService = DataServiceFactory::create($event->type->eventType);
+        $deadlineData = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
+        $deadlines = $deadlineData['deadlines'];
+        $deadlinesHash = $deadlineData['hash'];
+        
+        $eventType = $event->type?->eventType;
+        if (!$eventType) {
+            return [
+                'teamList' => collect(),
+                'matchesUpperCount' => 0,
+                'bracketList' => [],
+                'existingJoint' => $existingJoint,
+                'previousValues' => [],
+                'DISPUTE_ACCESS' => $DISPUTTE_ENUMS,
+                'pagination' => null,
+                'roundNames' => null
+            ];
+        }
+        
+        $dataService = DataServiceFactory::create($eventType);
         $matchesUpperCount = intval($event->tier?->tierTeamSlot);
         if (! $matchesUpperCount) {
             $previousValues = [];
@@ -75,16 +99,37 @@ class EventMatchService
             $previousValues = $prevValues[$matchesUpperCount] ?? [];
         }
 
-        $bracketList = $dataService->produceBrackets(
-            $matchesUpperCount,
-            $willFixBracketsAsOrganizer,
-            $USER_ENUMS,
-            $deadlines,
-            $page
-        );
-
-        $pagination = $dataService->getPagination();
-        $roundNames = $dataService->getRoundNames();
+        $cacheKey = "{$eventType}_{$event->id}_{$matchesUpperCount}_{$page}_{$deadlinesHash}";
+        
+        $cachedData = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
+            $dataService, $matchesUpperCount, $willFixBracketsAsOrganizer, $USER_ENUMS, $deadlines, $page
+        ) {
+            $bracketList = $dataService->produceBrackets(
+                $matchesUpperCount,
+                $willFixBracketsAsOrganizer,
+                $USER_ENUMS,
+                $deadlines,
+                $page
+            );
+            
+            return [
+                'bracketList' => $bracketList,
+                'pagination' => $dataService->getPagination(),
+                'roundNames' => $dataService->getRoundNames()
+            ];
+        });
+        
+        // Handle legacy cache data or ensure array structure
+        if (is_array($cachedData) && isset($cachedData['bracketList'])) {
+            $bracketList = $cachedData['bracketList'];
+            $pagination = $cachedData['pagination'] ?? null;
+            $roundNames = $cachedData['roundNames'] ?? null;
+        } else {
+            // Legacy cache format or direct bracket list
+            $bracketList = is_array($cachedData) ? $cachedData : [];
+            $pagination = null;
+            $roundNames = null;
+        }
 
       
         $joinEventIds = $event->joinEvents->pluck('id');

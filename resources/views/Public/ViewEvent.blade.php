@@ -40,7 +40,7 @@
         $event->user?->id ? 'data-user-id="' . $event->user->id . '"' : ''
     ])));
     // dd($bracketList, $pagination, $roundNames);
-    $showBracketFirst = isset($pagination) && $pagination['current_page'] > 1;
+    $showBracketFirst = isset($pagination) && isset($pagination['current_page']) && $pagination['current_page'] > 1;
 
 @endphp 
 <head>

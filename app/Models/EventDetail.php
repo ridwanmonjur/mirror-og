@@ -227,7 +227,8 @@ class EventDetail extends Model implements Feedable
             }
 
             Task::insert($tasksData);
-
+            
+            \App\Models\BracketDeadline::clearEventCache($this->id);
         }
     }
 
@@ -281,6 +282,8 @@ class EventDetail extends Model implements Feedable
                 'task_name' => 'reg_over',
                 'action_time' => $insertData['signup_close'],
             ]);
+            
+            \App\Models\BracketDeadline::clearEventCache($this->id);
         }
     }
 
@@ -380,6 +383,8 @@ class EventDetail extends Model implements Feedable
         }
 
         Task::insert($tasksToCreate);
+        
+        \App\Models\BracketDeadline::clearEventCache($this->id);
     }
 
     public function statusResolved(): string
@@ -920,7 +925,7 @@ class EventDetail extends Model implements Feedable
 
         if (! isset($request->eventName)) {
             do {
-                $eventDetail->slug = 'event-'.str_pad(random_int(1000, 99999), 9, '0', STR_PAD_LEFT);
+                $eventDetail->slug = 'event-'.Str::lower(Str::random(5));
                 $exists = self::where('slug', $eventDetail->slug)->exists();
             } while ($exists);
         } else {
@@ -932,11 +937,18 @@ class EventDetail extends Model implements Feedable
 
             while (self::where('eventName', $eventDetail->eventName)
                 ->orWhere('slug', $eventDetail->slug)
+                ->when($eventDetail->id, function ($query) use ($eventDetail) {
+                    return $query->where('id', '!=', $eventDetail->id);
+                })
                 ->exists()) {
                 $randomSuffix = Str::lower(Str::random(3));
                 $eventDetail->eventName = $baseEventName.' '.$randomSuffix;
                 $eventDetail->slug = $baseSlug.'-'.$randomSuffix;
             }
+        }
+
+        if ($eventDetail->id) {
+            \App\Models\BracketDeadline::clearEventCache($eventDetail->id);
         }
 
         return [$eventDetail, $isTimeSame];
