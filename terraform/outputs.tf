@@ -7,12 +7,12 @@ output "project_id" {
 output "firebase_config" {
   description = "Firebase web app configuration"
   value = {
-    api_key             = data.google_firebase_web_app_config.driftwood_app_config.api_key
-    auth_domain         = data.google_firebase_web_app_config.driftwood_app_config.auth_domain
+    api_key             = local.api_key
+    auth_domain         = local.auth_domain
     project_id          = var.project_id
-    storage_bucket      = data.google_firebase_web_app_config.driftwood_app_config.storage_bucket
-    messaging_sender_id = data.google_firebase_web_app_config.driftwood_app_config.messaging_sender_id
-    app_id              = google_firebase_web_app.driftwood_app.app_id
+    storage_bucket      = local.storage_bucket
+    messaging_sender_id = local.messaging_sender_id
+    app_id              = local.web_app_id
   }
 }
 
@@ -23,17 +23,18 @@ output "firebase_config" {
 
 output "web_app_id" {
   description = "Firebase Web App ID"
-  value       = google_firebase_web_app.driftwood_app.app_id
+  value       = local.web_app_id
 }
 
-output "oauth_client_id" {
-  description = "Generated Google OAuth client ID"
-  value       = local.oauth_client_id
+output "app_check_config" {
+  description = "App Check configuration status"
   sensitive   = true
+  value = {
+    firestore_enforcement = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+    auth_enforcement     = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+    environment          = var.environment
+    debug_token_enabled  = var.environment != "prod"
+    recaptcha_enabled    = var.environment == "prod" && var.recaptcha_site_key != ""
+  }
 }
 
-output "oauth_client_secret" {
-  description = "Generated Google OAuth client secret"
-  value       = local.oauth_client_secret
-  sensitive   = true
-}

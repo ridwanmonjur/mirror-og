@@ -16,6 +16,3 @@ region = "asia-southeast1"
 # Firestore location
 firestore_location = "asia-southeast1"
 
-# Google OAuth credentials from your .env files
-google_oauth_client_id     = "your-google-client-id"
-google_oauth_client_secret = "your-google-client-secret"

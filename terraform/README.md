@@ -6,7 +6,7 @@ This Terraform configuration sets up Firebase/Firestore infrastructure for the D
 
 - Firebase project integration
 - Firestore database with security rules
-- Firebase Authentication with Google OAuth
+- Firebase Authentication
 - Firebase Web App configuration
 
 ## Prerequisites
@@ -315,8 +315,6 @@ You can also manually set environment variables:
 
 ```bash
 export TF_VAR_project_id="your-project-id"
-export TF_VAR_google_oauth_client_id="your-client-id"
-export TF_VAR_google_oauth_client_secret="your-client-secret"
 
 terraform plan -var-file="dev.tfvars"
 terraform apply -var-file="dev.tfvars"
@@ -436,7 +434,6 @@ This terraform configuration successfully manages:
 - API enablement resources (APIs already enabled manually)
 - Firestore database creation (database already exists)
 - Identity Platform configuration (requires billing)
-- Google OAuth provider setup (requires billing)
 
 🔧 **Next Steps:**
 1. Enable billing on the Google Cloud project to unlock Identity Platform features

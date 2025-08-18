@@ -38,6 +38,11 @@ export TF_VAR_environment=$ENVIRONMENT
 FIREBASE_CREDENTIALS_PATH=$(grep "^FIREBASE_CREDENTIALS=" $ENV_FILE | cut -d '=' -f2)
 export GOOGLE_APPLICATION_CREDENTIALS="../$FIREBASE_CREDENTIALS_PATH"
 
+# Configure gcloud for the project
+echo "Configuring gcloud for project: $TF_VAR_project_id"
+gcloud config set project $TF_VAR_project_id
+gcloud auth application-default set-quota-project $TF_VAR_project_id
+
 echo "Environment variables set:"
 echo "TF_VAR_project_id=$TF_VAR_project_id"
 echo "TF_VAR_bucket_name=$TF_VAR_bucket_name"

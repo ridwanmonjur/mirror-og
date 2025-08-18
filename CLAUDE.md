@@ -117,18 +117,6 @@ composer tf:state:list      # List Terraform state
 
 All `.env` files are automatically updated with Firebase configuration when Terraform runs.
 
-### OAuth Client Setup
-Terraform generates a setup script for creating Google OAuth clients manually:
-
-**After running Terraform:**
-1. Run `./create-oauth-client.sh` to see OAuth client setup instructions
-2. Create OAuth client in Google Cloud Console with the provided settings
-3. Update `.env` files with the generated Client ID and Client Secret
-
-**OAuth Configuration:**
-- **JavaScript Origins**: `http://localhost:8000`, `https://oceansgaming.gg`, `https://driftwood.gg`
-- **Redirect URIs**: `/auth/google/callback` for each origin
-- **Type**: Web application
 
 ### Terraform State Management
 Remote state storage is configured for team collaboration:

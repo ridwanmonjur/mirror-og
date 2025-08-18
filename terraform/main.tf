@@ -108,35 +108,6 @@ resource "google_billing_budget" "budget" {
 
 
 
-# IAM binding for user account Firestore access
-resource "google_project_iam_member" "user_datastore_owner" {
-  project = var.project_id
-  role    = "roles/datastore.owner"
-  member  = "user:oceansgaming05@gmail.com"
-}
-
-# Additional IAM binding for user account to create Firestore databases
-resource "google_project_iam_member" "user_firebase_admin" {
-  project = var.project_id
-  role    = "roles/firebase.admin"
-  member  = "user:oceansgaming05@gmail.com"
-}
-
-# IAM binding for user account to manage project services
-resource "google_project_iam_member" "user_service_admin" {
-  project = var.project_id
-  role    = "roles/serviceusage.serviceUsageAdmin"
-  member  = "user:oceansgaming05@gmail.com"
-}
-
-# IAM binding for user account as project editor (broader permissions)
-resource "google_project_iam_member" "user_editor" {
-  project = var.project_id
-  role    = "roles/editor"
-  member  = "user:oceansgaming05@gmail.com"
-}
-
-
 
 
 
@@ -170,8 +141,8 @@ data "external" "indexes_exist" {
       PROJECT_ID="${var.project_id}"
       DB_NAME="${var.project_name}-${var.environment}"
 
-      # Check if any indexes exist
-      if gcloud firestore indexes list --project="$PROJECT_ID" --database="$DB_NAME" --format="value(name)" 2>/dev/null | grep -q "."; then
+      # Check if any composite indexes exist
+      if gcloud firestore indexes composite list --project="$PROJECT_ID" --database="$DB_NAME" --format="value(name)" 2>/dev/null | grep -q "."; then
         echo '{"exists": "true"}'
       else
         echo '{"exists": "false"}'
@@ -189,9 +160,35 @@ resource "null_resource" "deploy_firestore_rules" {
       set -e
       PROJECT_ID="${var.project_id}"
       DATABASE_ID="${var.project_name}-${var.environment}"
+      ENVIRONMENT="${var.environment}"
       
       # Change to project root directory where firestore.rules is located
       cd ..
+      
+      # Update firebase.json with correct database ordering based on environment
+      PROJECT_NAME="${var.project_name}"
+      
+      cat > firebase.json << JSON
+{
+  "firestore": [
+   
+    {
+      "database": "$PROJECT_NAME-dev",
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "$PROJECT_NAME-staging", 
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "$PROJECT_NAME-prod",
+      "rules": "firestore.rules"
+    }
+  ]
+}
+JSON
+      
+      echo "Updated firebase.json for environment: $ENVIRONMENT"
       
       # Deploy rules using Firebase CLI to specific database
       firebase use "$PROJECT_ID"
@@ -253,16 +250,16 @@ resource "null_resource" "wait_for_firestore_ready" {
       PROJECT="${var.project_id}"
       DB_NAME="${var.project_name}-${var.environment}"
       echo "Waiting for Firestore database to become ACTIVE..."
-      for i in {1..30}; do
-        STATUS=$(gcloud firestore databases describe "$DB_NAME" --project="$PROJECT" --format="value(state)" || echo "MISSING")
+      for i in {1..60}; do
+        STATUS=$(gcloud firestore databases describe --database="$DB_NAME" --project="$PROJECT" --format="value(state)" 2>/dev/null || echo "MISSING")
         if [ "$STATUS" = "ACTIVE" ]; then
-          echo "Firestore is ready!"
+          echo "Firestore database $DB_NAME is ready!"
           exit 0
         fi
-        echo "Status: $STATUS — retrying in 10s..."
-        sleep 10
+        echo "Attempt $i/60: Status: $STATUS — retrying in 15s..."
+        sleep 15
       done
-      echo "Timed out waiting for Firestore!"
+      echo "Timed out waiting for Firestore database $DB_NAME to become ACTIVE after 15 minutes!"
       exit 1
     EOT
   }
@@ -293,6 +290,22 @@ resource "null_resource" "disable_firestore_delete_protection" {
 
 
 
+# Check if Identity Platform is already enabled
+data "external" "identity_platform_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set -e
+      PROJECT_ID="${var.project_id}"
+
+      if gcloud services list --enabled --project="$PROJECT_ID" --filter="name:identitytoolkit" --format="value(name)" | grep -q identitytoolkit; then
+        echo '{"exists": "true"}'
+      else
+        echo '{"exists": "false"}'
+      fi
+    EOT
+  ]
+}
+
 # Local variable for database reference
 locals {
   # If database is created by terraform, use it; otherwise use the existing database name
@@ -301,7 +314,7 @@ locals {
 
 # Firebase Auth configuration - conditional creation
 resource "google_identity_platform_config" "auth_config" {
-  count    = var.skip_identity_platform ? 0 : 1
+  count    = (var.skip_identity_platform || data.external.identity_platform_exists.result.exists == "true") ? 0 : 1
   provider = google-beta
   project  = var.project_id
 
@@ -331,66 +344,7 @@ resource "google_identity_platform_config" "auth_config" {
   ]
 }
 
-# Create OAuth client configuration script
-resource "local_file" "oauth_setup_script" {
-  filename = "../create-oauth-client.sh"
-  file_permission = "0755"
-  content = <<-EOT
-#!/bin/bash
-# Script to create Google OAuth client for ${var.project_name}-${var.environment}
 
-echo "Creating OAuth client for project: ${var.project_id}"
-echo "Environment: ${var.environment}"
-echo ""
-echo "Please create an OAuth client in Google Cloud Console with these settings:"
-echo ""
-echo "Project: ${var.project_id}"
-echo "Application Type: Web application"
-echo "Name: ${var.project_name}-${var.environment}-web-client"
-echo ""
-echo "Authorized JavaScript origins:"
-echo "- http://localhost:8000"
-echo "- https://oceansgaming.gg"
-echo "- https://driftwood.gg"
-echo ""
-echo "Authorized redirect URIs:"
-echo "- http://localhost:8000/auth/google/callback"
-echo "- https://driftwood.gg/auth/google/callback"
-echo "- https://oceansgaming.gg/auth/google/callback"
-echo ""
-echo "After creating the OAuth client:"
-echo "1. Copy the Client ID and Client Secret"
-echo "2. Update your .env file with the credentials:"
-echo "   GOOGLE_CLIENT_ID=your_client_id_here"
-echo "   GOOGLE_CLIENT_SECRET=your_client_secret_here"
-echo ""
-echo "Google Cloud Console URL:"
-echo "https://console.cloud.google.com/apis/credentials?project=${var.project_id}"
-EOT
-
-  depends_on = [google_firebase_project.default]
-}
-
-# Read OAuth credentials from current .env files
-data "local_file" "current_env_for_oauth" {
-  filename = var.environment == "dev" ? "../.env" : var.environment == "staging" ? "../.env.staging" : "../.env.prod"
-}
-
-# Extract OAuth credentials from .env file
-locals {
-  env_lines = split("\n", data.local_file.current_env_for_oauth.content)
-  
-  # Find GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET from .env
-  oauth_client_id = try(
-    regex("GOOGLE_CLIENT_ID=(.+)", join("\n", local.env_lines))[0],
-    "your_google_oauth_client_id_here"
-  )
-  
-  oauth_client_secret = try(
-    regex("GOOGLE_CLIENT_SECRET=(.+)", join("\n", local.env_lines))[0], 
-    "your_google_oauth_client_secret_here"
-  )
-}
 
 
 
@@ -400,8 +354,55 @@ locals {
 # Firebase rules release is handled by null_resource.force_deploy_rules using Firebase CLI
 # This avoids the "Resource already exists" error with Terraform provider
 
+# Check if Firebase web app already exists
+data "external" "firebase_web_app_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set +e  # Don't exit on errors
+      PROJECT_ID="${var.project_id}"
+      APP_NAME="${var.project_name}-${var.environment}-web"
+      
+      # Try to check if Firebase web app exists using gcloud alpha firebase
+      # If this fails, assume no app exists to avoid breaking Terraform
+      if command -v firebase >/dev/null 2>&1; then
+        # Use Firebase CLI if available
+        APPS_JSON=$(firebase apps:list --project="$PROJECT_ID" --json 2>/dev/null || echo "[]")
+        
+        # Look for the specific app by display name first
+        APP_ID=""
+        # Parse JSON manually to find app with matching displayName
+        while IFS= read -r line; do
+          if echo "$line" | grep -q "\"displayName\": \"$APP_NAME\""; then
+            # Found matching display name, get the appId from next few lines
+            APP_ID=$(echo "$APPS_JSON" | grep -A 10 "\"displayName\": \"$APP_NAME\"" | grep '"appId":' | head -1 | sed 's/.*"appId": *"\([^"]*\)".*/\1/')
+            break
+          fi
+        done <<< "$APPS_JSON"
+        
+        # If no app with exact name found, use any existing app to prevent duplicates
+        if [ -z "$APP_ID" ]; then
+          APP_ID=$(echo "$APPS_JSON" | grep '"appId":' | head -1 | sed 's/.*"appId": *"\([^"]*\)".*/\1/')
+          if [ -n "$APP_ID" ]; then
+            echo "Warning: No app named $APP_NAME found, reusing existing app: $APP_ID" >&2
+          fi
+        fi
+        
+        if [ -n "$APP_ID" ] && [ "$APP_ID" != "null" ]; then
+          echo "{\"exists\": \"true\", \"app_id\": \"$APP_ID\"}"
+        else
+          echo "{\"exists\": \"false\", \"app_id\": \"\"}"
+        fi
+      else
+        # Firebase CLI not available, assume no app exists
+        echo "{\"exists\": \"false\", \"app_id\": \"\"}"
+      fi
+    EOT
+  ]
+}
+
 # Firebase Web App
 resource "google_firebase_web_app" "driftwood_app" {
+  count    = data.external.firebase_web_app_exists.result.exists == "true" ? 0 : 1
   provider = google-beta
   project  = var.project_id
 
@@ -410,13 +411,36 @@ resource "google_firebase_web_app" "driftwood_app" {
   depends_on = [google_firebase_project.default]
 }
 
-# Firebase Web App configuration (data source)
-data "google_firebase_web_app_config" "driftwood_app_config" {
+# Local values to use existing or new app_id and config
+locals {
+  web_app_id = (data.external.firebase_web_app_exists.result.exists == "true" && data.external.firebase_web_app_exists.result.app_id != "") ? data.external.firebase_web_app_exists.result.app_id : (length(google_firebase_web_app.driftwood_app) > 0 ? google_firebase_web_app.driftwood_app[0].app_id : "")
+  
+  # Use existing app config if app exists and has valid ID, otherwise use new app config
+  app_config = (data.external.firebase_web_app_exists.result.exists == "true" && data.external.firebase_web_app_exists.result.app_id != "") ? data.google_firebase_web_app_config.existing_app_config[0] : (length(data.google_firebase_web_app_config.new_app_config) > 0 ? data.google_firebase_web_app_config.new_app_config[0] : null)
+  
+  # Safe accessors for app config with fallbacks
+  api_key = local.app_config != null ? local.app_config.api_key : ""
+  auth_domain = local.app_config != null ? local.app_config.auth_domain : ""
+  storage_bucket = local.app_config != null ? local.app_config.storage_bucket : ""
+  messaging_sender_id = local.app_config != null ? local.app_config.messaging_sender_id : ""
+}
+
+# Firebase Web App configuration for existing apps
+data "google_firebase_web_app_config" "existing_app_config" {
+  count      = data.external.firebase_web_app_exists.result.exists == "true" && data.external.firebase_web_app_exists.result.app_id != "" ? 1 : 0
   provider   = google-beta
   project    = var.project_id
-  web_app_id = google_firebase_web_app.driftwood_app.app_id
+  web_app_id = data.external.firebase_web_app_exists.result.app_id
+}
 
-  depends_on = [google_firebase_web_app.driftwood_app]
+# Firebase Web App configuration for newly created apps
+data "google_firebase_web_app_config" "new_app_config" {
+  count      = data.external.firebase_web_app_exists.result.exists == "true" ? 0 : 1
+  provider   = google-beta
+  project    = var.project_id
+  web_app_id = local.web_app_id
+
+  depends_on = [google_firebase_web_app.driftwood_app[0]]
 }
 
 # Firebase App Check configuration for production (reCAPTCHA Enterprise)
@@ -424,7 +448,7 @@ resource "google_firebase_app_check_recaptcha_enterprise_config" "driftwood_app_
   count    = var.environment == "prod" ? 1 : 0
   provider = google-beta
   project  = var.project_id
-  app_id   = google_firebase_web_app.driftwood_app.app_id
+  app_id   = local.web_app_id
 
   site_key             = var.recaptcha_site_key
   token_ttl            = "7200s"
@@ -440,7 +464,7 @@ resource "google_firebase_app_check_debug_token" "dev_debug_token" {
   count        = var.environment != "prod" ? 1 : 0
   provider     = google-beta
   project      = var.project_id
-  app_id       = google_firebase_web_app.driftwood_app.app_id
+  app_id       = local.web_app_id
   display_name = "${var.environment}-debug-token"
   token        = var.debug_token != "" ? var.debug_token : "12345678-1234-4567-8901-123456789abc"
 
@@ -452,7 +476,7 @@ resource "google_firebase_app_check_service_config" "firestore" {
   provider     = google-beta
   project      = var.project_id
   service_id   = "firestore.googleapis.com"
-  enforcement_mode = var.environment == "prod" ? "ENFORCED" : "UNENFORCED"
+  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
 
   depends_on = [
     google_project_service.required_apis,
@@ -465,15 +489,120 @@ resource "google_firebase_app_check_service_config" "identitytoolkit" {
   provider     = google-beta
   project      = var.project_id
   service_id   = "identitytoolkit.googleapis.com" 
-  enforcement_mode = var.environment == "prod" ? "ENFORCED" : "UNENFORCED"
+  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
 
   depends_on = [
     google_project_service.required_apis
   ]
 }
 
-# Note: Cloud Functions and Storage App Check configs removed as they're not supported yet
-# Only Firestore and Auth (Identity Toolkit) support App Check service configs currently
+# App Check Service Config for Cloud Functions
+resource "google_firebase_app_check_service_config" "cloudfunctions" {
+  provider     = google-beta
+  project      = var.project_id
+  service_id   = "cloudfunctions.googleapis.com"
+  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+
+  depends_on = [
+    google_project_service.required_apis
+  ]
+}
+
+# App Check Service Config for Cloud Storage
+resource "google_firebase_app_check_service_config" "storage" {
+  provider     = google-beta
+  project      = var.project_id
+  service_id   = "storage.googleapis.com"
+  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+
+  depends_on = [
+    google_project_service.required_apis
+  ]
+}
+
+# Register web app with App Check services
+resource "null_resource" "register_app_check_services" {
+  provisioner "local-exec" {
+    command = <<EOT
+      set -e
+      PROJECT_ID="${var.project_id}"
+      DATABASE_ID="${local.database_id}"
+      APP_ID="${local.web_app_id}"
+      ENVIRONMENT="${var.environment}"
+      ENFORCE_APP_CHECK="${var.enforce_app_check}"
+      
+      echo "Configuring App Check for web app $APP_ID..."
+      echo "Project: $PROJECT_ID"
+      echo "Database: $DATABASE_ID"
+      echo "Environment: $ENVIRONMENT"
+      
+      # Check if Firebase CLI is available
+      if ! command -v firebase >/dev/null 2>&1; then
+        echo "Firebase CLI not found. App Check configuration may be incomplete."
+        echo "Install with: npm install -g firebase-tools"
+        exit 0
+      fi
+      
+      # Set Firebase project
+      firebase use "$PROJECT_ID"
+      
+      # Configure App Check for the web app
+      echo "Configuring App Check for services..."
+      
+      # The service configs are managed by Terraform, but we need to ensure
+      # the web app is properly associated with App Check
+      
+      # For development environments, ensure debug tokens are properly configured
+      if [ "$ENVIRONMENT" != "prod" ]; then
+        echo "🔧 Development environment detected"
+        echo "   Debug tokens are configured via Terraform"
+        echo "   Add debug tokens to your app: https://console.firebase.google.com/project/$PROJECT_ID/appcheck/apps/$APP_ID"
+      fi
+      
+      # Show App Check status
+      ENFORCEMENT_STATUS="${(var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"}"
+      echo ""
+      echo "✅ App Check Configuration Summary:"
+      echo "   📱 Web App ID: $APP_ID"
+      echo "   🔒 Enforcement: $ENFORCEMENT_STATUS"
+      echo "   🗄️  Firestore: $ENFORCEMENT_STATUS"
+      echo "   🔐 Authentication: $ENFORCEMENT_STATUS"
+      echo "   ⚡ Cloud Functions: $ENFORCEMENT_STATUS"
+      echo "   💾 Cloud Storage: $ENFORCEMENT_STATUS"
+      echo ""
+      
+      if [ "$ENFORCEMENT_STATUS" = "ENFORCED" ]; then
+        echo "⚠️  App Check is ENFORCED - Only verified apps can access services"
+        echo "   Ensure your app includes valid App Check tokens in all requests"
+      else
+        echo "🔓 App Check is UNENFORCED - All requests are allowed (development mode)"
+        echo "   To enforce App Check, set enforce_app_check = true in terraform vars"
+      fi
+      
+      echo ""
+      echo "🔗 Firebase Console: https://console.firebase.google.com/project/$PROJECT_ID/appcheck"
+    EOT
+  }
+
+  triggers = {
+    database_id = local.database_id
+    app_id      = local.web_app_id
+    project_id  = var.project_id
+    enforcement = var.enforce_app_check
+    environment = var.environment
+  }
+
+  depends_on = [
+    google_firebase_web_app.driftwood_app,
+    google_firestore_database.default,
+    google_firebase_app_check_service_config.firestore,
+    google_firebase_app_check_service_config.identitytoolkit,
+    google_firebase_app_check_service_config.cloudfunctions,
+    google_firebase_app_check_service_config.storage,
+    google_firebase_app_check_debug_token.dev_debug_token,
+    google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check
+  ]
+}
 
 # Firestore indexes for optimal query performance
 # Note: Single field indexes like stageName are automatically created by Firestore
@@ -592,8 +721,47 @@ locals {
   }
 }
 
-resource "google_firestore_document" "collection_init" {
+# Check if individual collection init documents already exist
+data "external" "collection_document_exists" {
   for_each = local.collections
+  
+  program = [
+    "bash", "-c", <<EOT
+      set +e  # Don't exit on errors
+      PROJECT_ID="${var.project_id}"
+      DB_NAME="${var.project_name}-${var.environment}"
+      COLLECTION="${each.key}"
+      
+      # Debug output
+      echo "Checking document: projects/$PROJECT_ID/databases/$DB_NAME/documents/$COLLECTION/_init" >&2
+      
+      # Check if this specific init document exists
+      RESULT=$(gcloud firestore documents get "_init" --collection="$COLLECTION" --database="$DB_NAME" --project="$PROJECT_ID" 2>&1)
+      EXIT_CODE=$?
+      
+      echo "Exit code: $EXIT_CODE" >&2
+      echo "Result: $RESULT" >&2
+      
+      if [ $EXIT_CODE -eq 0 ]; then
+        echo "{\"exists\": \"true\"}"
+      else
+        # Check if error is "not found" vs other error
+        if echo "$RESULT" | grep -q "NOT_FOUND\|not found\|does not exist"; then
+          echo "{\"exists\": \"false\"}"
+        else
+          # Other error, assume exists to avoid creating duplicates
+          echo "{\"exists\": \"true\"}"
+        fi
+      fi
+    EOT
+  ]
+}
+
+resource "google_firestore_document" "collection_init" {
+  for_each = {
+    for k, v in local.collections : k => v
+    if data.external.collection_document_exists[k].result.exists == "false"
+  }
   
   provider    = google-beta
   project     = var.project_id
@@ -612,6 +780,10 @@ resource "google_firestore_document" "collection_init" {
       stringValue = each.value.type
     }
   })
+
+  lifecycle {
+    prevent_destroy = true
+  }
 
   depends_on = [
     google_firestore_database.default
@@ -654,16 +826,15 @@ locals {
   update_env_content = { 
     for env_name, env_content in local.env_files_to_update : env_name => join("\n", [
       for line in split("\n", env_content) : 
-      startswith(line, "FIREBASE_API_KEY=") ? "FIREBASE_API_KEY=${data.google_firebase_web_app_config.driftwood_app_config.api_key}" :
+      startswith(line, "FIREBASE_API_KEY=") ? "FIREBASE_API_KEY=${local.api_key}" :
       startswith(line, "FIREBASE_DATABASE_ID=") ? "FIREBASE_DATABASE_ID=${local.database_id}" :
-      startswith(line, "VITE_FIREBASE_API_KEY=") ? "VITE_FIREBASE_API_KEY=${data.google_firebase_web_app_config.driftwood_app_config.api_key}" :
-      startswith(line, "VITE_AUTH_DOMAIN=") ? "VITE_AUTH_DOMAIN=${data.google_firebase_web_app_config.driftwood_app_config.auth_domain}" :
-      startswith(line, "VITE_STORAGE_BUCKET=") ? "VITE_STORAGE_BUCKET=${data.google_firebase_web_app_config.driftwood_app_config.storage_bucket}" :
-      startswith(line, "VITE_MESSAGE_SENDER_ID=") ? "VITE_MESSAGE_SENDER_ID=${data.google_firebase_web_app_config.driftwood_app_config.messaging_sender_id}" :
-      startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${google_firebase_web_app.driftwood_app.app_id}" :
+      startswith(line, "VITE_FIREBASE_API_KEY=") ? "VITE_FIREBASE_API_KEY=${local.api_key}" :
+      startswith(line, "VITE_AUTH_DOMAIN=") ? "VITE_AUTH_DOMAIN=${local.auth_domain}" :
+      startswith(line, "VITE_STORAGE_BUCKET=") ? "VITE_STORAGE_BUCKET=${local.storage_bucket}" :
+      startswith(line, "VITE_MESSAGE_SENDER_ID=") ? "VITE_MESSAGE_SENDER_ID=${local.messaging_sender_id}" :
+      startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
+      startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
-      startswith(line, "GOOGLE_CLIENT_ID=") ? "GOOGLE_CLIENT_ID=${local.oauth_client_id}" :
-      startswith(line, "GOOGLE_CLIENT_SECRET=") ? "GOOGLE_CLIENT_SECRET=${local.oauth_client_secret}" :
       line
     ])
   }
@@ -688,11 +859,10 @@ resource "null_resource" "update_env_files" {
   
   # Triggers when Firebase config changes
   triggers = {
-    api_key        = data.google_firebase_web_app_config.driftwood_app_config.api_key
-    auth_domain    = data.google_firebase_web_app_config.driftwood_app_config.auth_domain
-    app_id         = google_firebase_web_app.driftwood_app.app_id
+    api_key        = local.api_key
+    auth_domain    = local.auth_domain
+    app_id         = local.web_app_id
     database_id    = local.database_id
-    oauth_client_id = local.oauth_client_id
     content_hash   = md5(each.value)
   }
 
@@ -707,7 +877,8 @@ EOF
   }
   
   depends_on = [
-    data.google_firebase_web_app_config.driftwood_app_config,
+    data.google_firebase_web_app_config.existing_app_config,
+    data.google_firebase_web_app_config.new_app_config,
     local_file.env_backups
   ]
 }
@@ -753,9 +924,9 @@ resource "null_resource" "npm_build" {
   
   # Triggers when relevant files change
   triggers = {
-    api_key        = data.google_firebase_web_app_config.driftwood_app_config.api_key
-    auth_domain    = data.google_firebase_web_app_config.driftwood_app_config.auth_domain
-    app_id         = google_firebase_web_app.driftwood_app.app_id
+    api_key        = local.api_key
+    auth_domain    = local.auth_domain
+    app_id         = local.web_app_id
     package_json   = filemd5("../package.json")
     env_files      = join(",", [for k, v in null_resource.update_env_files : k])
     database_id    = local.database_id

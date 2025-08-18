@@ -71,3 +71,9 @@ variable "debug_token" {
   default     = ""
   sensitive   = true
 }
+
+variable "enforce_app_check" {
+  description = "Enforce App Check for all environments (default: only prod)"
+  type        = bool
+  default     = false
+}
