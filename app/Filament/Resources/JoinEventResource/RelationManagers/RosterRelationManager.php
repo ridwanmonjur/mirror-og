@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\RosterMember;
 use App\Filament\Traits\HandlesFilamentExceptions;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 
@@ -87,15 +88,28 @@ class RosterRelationManager extends RelationManager
                         // Make sure join_events_id is properly set from the relationship
                         $data['join_events_id'] = $this->ownerRecord->id;
 
-                        return $this->getRelationship()->create($data);
+                        $roster = $this->getRelationship()->create($data);
+                        
+                        // Clear roster cache
+                        RosterMember::clearRosterCache($this->ownerRecord->event_details_id);
+                        
+                        return $roster;
                     }),
             ])
             ->actions([
 
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function () {
+                        // Clear roster cache after edit
+                        RosterMember::clearRosterCache($this->ownerRecord->event_details_id);
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function () {
+                        // Clear roster cache after delete
+                        RosterMember::clearRosterCache($this->ownerRecord->event_details_id);
+                    }),
             ])
-            ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\BulkAction::make('set_vote_true')->label('Set Vote to Quit: Yes')->icon('heroicon-o-check')->action(fn ($records) => $records->each->update(['vote_to_quit' => true]))->requiresConfirmation()->modalHeading('Set Vote to Quit: Yes')->modalDescription('Are you sure you want to mark these roster entries as having voted to quit?'), Tables\Actions\BulkAction::make('set_vote_false')->label('Set Vote to Quit: No')->icon('heroicon-o-x-mark')->action(fn ($records) => $records->each->update(['vote_to_quit' => false]))->requiresConfirmation()->modalHeading('Set Vote to Quit: No')->modalDescription('Are you sure you want to mark these roster entries as not having voted to quit?'), Tables\Actions\DeleteBulkAction::make()])]);
+            ->bulkActions([]);
     }
 
     protected function paginateTableQuery(Builder $query): CursorPaginator
