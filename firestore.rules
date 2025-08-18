@@ -74,7 +74,7 @@ service cloud.firestore {
       
       // Brackets subcollection
       match /brackets/{bracketId} {
-        allow read: if isAuthenticated();
+        allow read: if true;
         
         allow create: if isAuthenticated() && 
           hasRequiredBracketFields() &&
@@ -108,10 +108,7 @@ service cloud.firestore {
       
       // Disputes subcollection  
       match /disputes/{disputeId} {
-        allow read: if isAuthenticated() &&
-          (isOrganizerOrAdmin() || 
-           resource.data.dispute_userId == getUserId() ||
-           resource.data.response_userId == getUserId());
+        allow read: if true;
         
         allow create: if isAuthenticated() && 
           hasRequiredDisputeFields() &&
@@ -141,23 +138,14 @@ service cloud.firestore {
       }
     }
     
-    // Analytics collections
-    match /analytics/{docId} {
-      allow read: if isOrganizerOrAdmin();
-      
-      allow write: if isAuthenticated() && 
-        (docId.matches('.*Counts.*') || docId.matches('.*-\\d{4}.*')) &&
-        request.resource.data.lastUpdated == request.time;
-    }
-    
     match /analytics-daily/{docId} {
-      allow read: if isOrganizerOrAdmin();
-      allow write: if isAuthenticated() && docId.matches('.*-\\d{4}-\\d{2}-\\d{2}');
+      allow read: if isAdmin();
+      allow write: if true;
     }
     
     match /analytics-monthly/{docId} {
-      allow read: if isOrganizerOrAdmin();  
-      allow write: if isAuthenticated() && docId.matches('.*-\\d{4}-\\d{2}');
+      allow read: if isAdmin();
+      allow write: if true;
     }
     
     match /analytics-yearly/{docId} {
@@ -171,11 +159,9 @@ service cloud.firestore {
         (resource.data.user1 == getUserId() || resource.data.user2 == getUserId());
       
       allow create, update: if isAuthenticated() && 
-        (request.resource.data.user1 == getUserId() || request.resource.data.user2 == getUserId()) &&
-        request.resource.data.blocked_by == null || 
-        request.resource.data.blocked_by == getUserId();
+        (request.resource.data.user1 == getUserId() || request.resource.data.user2 == getUserId()) ;
         
-      allow delete: if false; // Rooms should not be deleted
+      allow delete: if isAdmin(); // Rooms should not be deleted
     }
     
     // Default deny all other documents
