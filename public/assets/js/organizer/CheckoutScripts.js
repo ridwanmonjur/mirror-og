@@ -187,7 +187,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                     email: hiddenVars['userEmail'],
                     name: hiddenVars['userName'],
                     stripe_customer_id: hiddenVars['stripeCustomerId'],
-                    purpose: 'event_creation',
+                    purpose: hiddenVars['eventId'] + 'event_creation' + hiddenVars['eventId'],
                     metadata : {
                         eventId: hiddenVars['eventId'],
                         couponCode: hiddenVars['couponCode'] || null
