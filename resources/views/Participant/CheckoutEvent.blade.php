@@ -29,6 +29,7 @@
     </main>
     
     <div class="d-none" id="payment-variables" 
+        data-remaining-amount="{{ $remaining_amount }}"
         data-payment-amount="{{ $fee['finalFee'] }}"
         data-total-fee="{{ $fee['totalFee'] }}"
         data-user-email="{{ $user->email }}"

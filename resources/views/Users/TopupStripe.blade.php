@@ -116,7 +116,13 @@
                         email: paymentVars['userEmail'],
                         name: paymentVars['userName'],
                         stripe_customer_id: paymentVars['stripeCustomerId'],
-                        purpose: 'wallet_topup',
+                        purpose: 'wallet_topup_' + new Date().toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: '2-digit', 
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }).replace(/[\/,\s:]/g, '_'),
                         metadata: {
                             type: 'topup',
                             email: paymentVars['userEmail'],
