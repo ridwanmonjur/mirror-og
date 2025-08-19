@@ -285,6 +285,29 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('login_as_user')
+                    ->label('Login as User')
+                    ->icon('heroicon-o-arrow-right-on-rectangle')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Login as User')
+                    ->modalDescription('Are you sure you want to login as this user? This will log you out of your current admin session.')
+                    ->modalSubmitActionLabel('Login as User')
+                    ->action(function (User $record) {
+                        try {
+                            $currentAdminId = auth()->id();
+                            
+                            session(['impersonating_admin_id' => $currentAdminId]);
+                            
+                            auth()->loginUsingId($record->id);
+                            
+                            return redirect()->to('/');
+                        } catch (\Exception $e) {
+                            
+                            throw $e;
+                        }
+                    })
+                    ->visible(fn () => auth()->check() && auth()->user()->role === 'ADMIN'),
             ]);
         // ->bulkActions([
         //     Tables\Actions\BulkActionGroup::make([
