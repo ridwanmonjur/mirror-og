@@ -8,6 +8,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Traits\HandlesFilamentExceptions;
+use App\Models\NotificationCounter;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
 class NotificationCountRelationManager extends RelationManager
@@ -81,11 +82,20 @@ class NotificationCountRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('Set Notification Counts')
                     ->visible(fn () => ! $this->getOwnerRecord()->notificationCount()->exists())
-                    ->createAnother(false),
+                    ->createAnother(false)
+                    ->after(function ($record) {
+                        NotificationCounter::clearCache($record->user_id);
+                    }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function ($record) {
+                        NotificationCounter::clearCache($record->user_id);
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function ($record) {
+                        NotificationCounter::clearCache($record->user_id);
+                    }),
             ])
             ->bulkActions([
                 // No bulk actions needed for one-to-one

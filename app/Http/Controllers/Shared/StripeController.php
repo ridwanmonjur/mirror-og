@@ -46,7 +46,6 @@ class StripeController extends Controller
                     && $eventType == config('constants.SIGNUP_STATUS.NORMAL');
             }
 
-            // dd($isManualCaptureMethod);
 
             $user = $request->get('user');
             $isEmptyStripeCustomerId = empty($user->stripe_customer_id);
@@ -72,6 +71,8 @@ class StripeController extends Controller
 
             $paymentIntentStripe = null;
 
+            $idempotencyKey = hash('sha256', $user->id . '_' . $request->paymentAmount . '_'. $request->purpose );
+
             $paymentIntentStripeBody = [
                 'amount' => +$request->paymentAmount * 100,
                 'metadata' => $request->metadata,
@@ -85,7 +86,7 @@ class StripeController extends Controller
 
             $paymentIntentStripeBody['customer'] = $customer->id;
 
-            $paymentIntentStripe = $this->stripeClient->createPaymentIntent($paymentIntentStripeBody);
+            $paymentIntentStripe = $this->stripeClient->createPaymentIntent($paymentIntentStripeBody, $idempotencyKey);
 
             $paymentIntentDBBody = [
                 'user_id' => $user->id,

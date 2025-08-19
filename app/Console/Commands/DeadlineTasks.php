@@ -12,6 +12,7 @@ use App\Services\DataServiceFactory;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
@@ -121,9 +122,19 @@ class DeadlineTasks extends Command
                         $gamesPerMatch = $detail->game && $detail->game->games_per_match ? $detail->game->games_per_match : 3;
                         $eventType = $isLeague ? 'League' : 'Tournament';
                         $dataService = DataServiceFactory::create($eventType);
-                        $bracketInfo = $dataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
-                        Log::info($bracketInfo);
-                        $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
+                        if ($detail->type?->eventType && $detail->tier?->tierTeamSlot) {
+                            $cacheKey = "{$detail->type->eventType}_{$detail->id}_{$detail->tier->tierTeamSlot}_all_0";
+                            
+                            $bracketInfo = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
+                                $dataService, $detail
+                            ) {
+                                return $dataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
+                            });
+
+                            Log::info($bracketInfo);
+                            $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
+                        } 
+
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
                     }
@@ -139,10 +150,18 @@ class DeadlineTasks extends Command
                         $gamesPerMatch = $detail->game && $detail->game->games_per_match ? $detail->game->games_per_match : 3;
                         $eventType = $isLeague ? 'League' : 'Tournament';
                         $dataService = DataServiceFactory::create($eventType);
-                        $bracketInfo = $dataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
-                        Log::info($bracketInfo);
+                        if ($detail->type?->eventType && $detail->tier?->tierTeamSlot) {
+                            $cacheKey = "{$detail->type->eventType}_{$detail->id}_{$detail->tier->tierTeamSlot}_all_0";
+                            
+                            $bracketInfo = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
+                                $dataService, $detail
+                            ) {
+                                return $dataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
+                            });
 
-                        $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
+                            $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
+
+                        }
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
                     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class RosterMember extends Model
 {
@@ -14,6 +15,15 @@ class RosterMember extends Model
     protected $table = 'roster_members';
 
     protected $fillable = ['user_id', 'join_events_id', 'team_id', 'team_member_id', 'vote_to_quit'];
+
+    /**
+     * Clear roster cache for specific event
+     */
+    public static function clearRosterCache($eventId)
+    {
+        $cacheKey = "roster_data_event_{$eventId}";
+        Cache::forget($cacheKey);
+    }
 
     public function user(): BelongsTo
     {

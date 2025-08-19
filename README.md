@@ -9,6 +9,10 @@
 - Hostinger MYSQL and local MYSQL with UTC timezone.  
 - PHP extensions for GRPC and social auth
 - An un-restricted php environment 
+- Firebase project must be created for each .env. This allows 3 necessary APIs to be enabled by default
+(along with 35 others)
+- Don't create your own Google Cloud Service Account. Use firebases's Service Account so you have firestore's policies.
+- Add policies: Service Account Admin, Project IAM Admin and Editor
 
 ## Admin Credentials
 ```
@@ -20,7 +24,25 @@ Password: 12345678
 
 1. First, install PHP 8.2 and required extensions:
 
-2. Install project dependencies:
+2. Configure Google Cloud SDK:
+```bash
+# Set the project
+gcloud config set project ocean-s-firebase
+
+# Authenticate with Google Cloud
+gcloud auth login
+
+# Set application default credentials
+gcloud auth application-default login
+
+# Verify configuration
+gcloud config get-value project
+gcloud auth list
+gcloud projects list
+
+```
+
+3. Install project dependencies:
 ```bash
 # Create environment file for Driftwood
 cp .env.prod .env
@@ -41,14 +63,14 @@ npm i -g vite
 npm run build
 ```
 
-3. Set up environment:
+4. Set up environment:
 ```bash
 
 # Generate JWT secret
 php artisan jwt:secret
 ```
 
-4. Set up storage:
+5. Set up storage:
 ```bash
 # Remove existing storage symlink if exists
 rm -rf public/storage
@@ -73,7 +95,7 @@ php artisan db:restore --path=database/backups/dev.sql
 
 ```
 
-5. Database setup:
+6. Database setup:
 ```bash
 
 # Run migrations
@@ -86,7 +108,7 @@ php artisan generate:factory
 # The data is located in database/migrations/data.sql
 ```
 
-6. Set up Filament admin:
+7. Set up Filament admin:
 ```bash
 # Create admin user
 php artisan make:filament-user
@@ -95,10 +117,113 @@ php artisan make:filament-user
 # Set role='admin' for the created user in the users table
 ```
 
-7. Clear application cache:
+8. Clear application cache:
 ```bash
 php artisan optimize:clear
 ```
+
+## Terraform Infrastructure Setup
+
+### Quick Start with Composer Scripts (Recommended)
+
+Configure and deploy Firebase and Google Cloud resources using composer scripts:
+
+```bash
+# Initialize Terraform
+composer tf:init
+
+# Validate configuration
+composer tf:validate
+
+# Format terraform files
+composer tf:fmt
+
+# Basic operations for each environment
+# Development
+composer tf:dev:plan        # Plan changes
+composer tf:dev:apply       # Apply changes
+
+# Staging
+composer tf:staging:plan    # Plan changes
+composer tf:staging:apply   # Apply changes
+
+
+# Production
+composer tf:prod:plan       # Plan changes
+composer tf:prod:apply      # Apply changes
+```
+
+### Environment Configuration
+
+**Development Environment:**
+- Project: `ocean-s-firebase`
+- Uses `.env.example` configuration
+- Debug mode enabled
+- Firebase project for development
+
+**Staging Environment:**
+- Project: `tf-driftwood-dev`
+- Uses `.env.staging` configuration
+- Production-like setup with debug features
+
+**Production Environment:**
+- Project: `turnkey-charter-428905-c8`
+- Uses `.env.prod` configuration
+- Optimized for performance and security
+
+### Infrastructure Components
+
+The terraform configuration manages:
+- **Firebase Project**: Automated project setup
+- **Firestore Database**: NoSQL database with security rules
+- **Firebase Authentication**: Google OAuth integration
+- **Firebase Web App**: Application configuration
+- **Security Rules**: Comprehensive access control
+- **Identity Platform**: Authentication services
+
+## Composer Scripts Reference
+
+### Environment Management
+```bash
+# Switch to production environment
+composer env
+
+# Switch to staging environment  
+composer env:staging
+
+# Setup local development environment
+composer local
+```
+
+### Development & Build Scripts
+```bash
+# Code formatting with Laravel Pint
+composer pint
+composer pint:fix
+
+# Static analysis with PHPStan
+composer stan
+
+# Code quality insights
+composer insights
+composer insights:fix
+
+# Clear development caches
+composer dev:clear
+
+# Build for production
+composer build
+
+# Build for staging
+composer staging
+
+# Build frontend assets only
+composer npm-build
+
+# Start partial Docker environment
+composer docker:partial
+```
+
 
 ## Bracket System Abbreviations
 

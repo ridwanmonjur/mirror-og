@@ -36,6 +36,11 @@ class ParticipantRosterController extends Controller
                 'team_id' => $request->team_id,
             ]);
 
+            $joinEvent = JoinEvent::find($request->join_events_id);
+            if ($joinEvent) {
+                RosterMember::clearRosterCache($joinEvent->event_details_id);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Roster member approved successfully',
@@ -63,6 +68,11 @@ class ParticipantRosterController extends Controller
             $rosterMember = $request->rosterMember;
             $rosterMember->vote_to_quit = $request->vote_to_quit;
             $rosterMember->save();
+            
+            $joinEvent = JoinEvent::find($rosterMember->join_events_id);
+            if ($joinEvent) {
+                RosterMember::clearRosterCache($joinEvent->event_details_id);
+            }
 
             $joinEvent = JoinEvent::where('id', $rosterMember->join_events_id)
                 ->with(['roster', 'roster.user', 'eventDetails.user:id,name,userBanner', 'eventDetails.tier:id,eventTier'])
@@ -158,6 +168,10 @@ class ParticipantRosterController extends Controller
 
             if ($member) {
                 $member->delete();
+                $joinEvent = JoinEvent::find($request->join_events_id);
+                if ($joinEvent) {
+                    RosterMember::clearRosterCache($joinEvent->event_details_id);
+                }
             }
 
             $joinEvent->save();

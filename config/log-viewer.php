@@ -10,7 +10,7 @@ return [
     |
     */
 
-    'enabled' => env('LOG_VIEWER_ENABLED', true),
+    'enabled' => env('LOG_VIEWER_ENABLED', env('APP_ENV') !== 'production'),
 
     'api_only' => env('LOG_VIEWER_API_ONLY', false),
 

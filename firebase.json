@@ -1,0 +1,17 @@
+{
+  "firestore": [
+   
+    {
+      "database": "driftwood-dev",
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "driftwood-staging", 
+      "rules": "firestore.rules"
+    },
+    {
+      "database": "driftwood-prod",
+      "rules": "firestore.rules"
+    }
+  ]
+}

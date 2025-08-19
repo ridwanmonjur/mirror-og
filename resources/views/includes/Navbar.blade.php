@@ -23,7 +23,7 @@
             $routeLogo = '/admin';
         }
 
-        $notificationsCount = $user->load('notificationCount')->notificationCount;    
+        $notificationsCount = \App\Models\NotificationCounter::getCachedCount($user->id);    
         if ($notificationsCount) {
             $notificationsCountArray = $notificationsCount->toArray();
         }

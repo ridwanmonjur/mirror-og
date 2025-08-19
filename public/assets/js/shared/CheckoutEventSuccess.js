@@ -20,7 +20,7 @@ for (let i = 0; i < shareUrl.length; i++) {
 
 const checkbox = document.getElementById('notifyCheckbox');
     
-checkbox.addEventListener('change', async function(e) {
+checkbox?.addEventListener('change', async function(e) {
     e.preventDefault();
     
     const newState = this.checked;
