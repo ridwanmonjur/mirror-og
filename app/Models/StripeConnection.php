@@ -52,13 +52,18 @@ class StripeConnection
         return $this->stripeClient->customers->create($options);
     }
 
-    public function createPaymentIntent(array $array): PaymentIntent
+    public function createPaymentIntent(array $array, ?string $idempotencyKey = null): PaymentIntent
     {
+        $options = [];
+        if ($idempotencyKey) {
+            $options['idempotency_key'] = $idempotencyKey;
+        }
+        
         return $this->stripeClient->paymentIntents->create([
             ...$array,
             'currency' => 'myr',
             // 'setup_future_usage' => 'off_session',
-        ]);
+        ], $options);
     }
 
     public function createStripeInvoice(string|int|null $customerId): ?Invoice

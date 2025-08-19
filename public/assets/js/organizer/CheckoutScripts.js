@@ -187,6 +187,7 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                     email: hiddenVars['userEmail'],
                     name: hiddenVars['userName'],
                     stripe_customer_id: hiddenVars['stripeCustomerId'],
+                    purpose: 'event_creation',
                     metadata : {
                         eventId: hiddenVars['eventId'],
                         couponCode: hiddenVars['couponCode'] || null
@@ -230,6 +231,11 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
     async function finalizeStripeCardPayment(event) {
         event.preventDefault();
         const submitButton = event.currentTarget;
+        if (submitButton.disabled) { 
+          console.error("Double clicking");console.error("Double clicking");
+            return;
+        }
+
         submitButton.disabled = true;
         try {
             let savePaymentCheck = document.getElementById('save-payment');
@@ -283,6 +289,10 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('
                 submitButton.disabled = false;
                 return;
             }
+
+            // Update payment intent input to show success
+            let paymentIntentInput = document.getElementById('payment_intent_id');
+            if (paymentIntentInput) paymentIntentInput.value = 'success';
 
             window.closeLoading();
         } catch (error) {

@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     Array.from(userCheckboxes).forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
+        checkbox?.addEventListener('change', function() {
             const allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
             selectAllCheckbox.checked = allChecked;
             updateSendButton();

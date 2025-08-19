@@ -116,6 +116,7 @@
                         email: paymentVars['userEmail'],
                         name: paymentVars['userName'],
                         stripe_customer_id: paymentVars['stripeCustomerId'],
+                        purpose: 'wallet_topup',
                         metadata: {
                             type: 'topup',
                             email: paymentVars['userEmail'],
@@ -209,6 +210,11 @@
             let saveDefaultCheck = document.getElementById('save-default');
 
             const submitButton = event.currentTarget;
+            if (submitButton.disabled) { 
+                console.error("Double clicking");console.error("Double clicking");
+                return;
+            }
+
             submitButton.disabled = true;
             try {
                 window.showLoading();
@@ -263,6 +269,10 @@
                     submitButton.disabled = false;
                     return false;
                 }
+
+                // Update payment intent input to show success
+                let paymentIntentInput = document.getElementById('payment_intent_id');
+                if (paymentIntentInput) paymentIntentInput.value = 'success';
 
                 window.closeLoading();
                 return false;

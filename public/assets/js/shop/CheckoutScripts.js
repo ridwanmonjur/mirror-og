@@ -198,6 +198,7 @@ class PaymentProcessor {
                     capture_method: 'manual',
                     stripe_customer_id: paymentVars['stripeCustomerId'],
                     role: "SHOP",
+                    purpose: 'shop_purchase',
                     metadata : {
                         cartTotal: paymentVars['cartTotal'],
                         couponCode: paymentVars['couponCode'] || null
@@ -307,6 +308,10 @@ class PaymentProcessor {
         const submitButton = event.currentTarget;
         let savePaymentCheck = document.getElementById('save-payment');
         let saveDefaultCheck = document.getElementById('save-default');
+        if (submitButton.disabled) { 
+          console.error("Double clicking");console.error("Double clicking");
+            return;
+        }
 
         submitButton.disabled = true;
         try {
@@ -406,6 +411,10 @@ class PaymentProcessor {
                 submitButton.disabled = false;
                 return;
             }
+
+            // Update payment intent input to show success
+            let paymentIntentInput = document.getElementById('payment_intent_id');
+            if (paymentIntentInput) paymentIntentInput.value = 'success';
 
             window.closeLoading();
         } catch (error) {
