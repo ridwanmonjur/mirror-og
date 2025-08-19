@@ -11,7 +11,9 @@ use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\Brackets;
 use App\Models\OrganizerFollow;
+use App\Models\RosterMember;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class EventMatchService
 {
@@ -19,16 +21,23 @@ class EventMatchService
     public function createBrackets(EventDetail $event)
     {
         // dd($event);
-        if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot) {
-            // dd($event->type->eventType);
-            $dataService = DataServiceFactory::create($event->type->eventType);
-            $bracketList = $dataService->produceBrackets(
-                $event->tier->tierTeamSlot,
-                false,
-                null,
-                null,
-                $event->type->eventType == 'Tournament' ? 'all' : 1
-            );
+        if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot && $event?->type?->eventType) {
+            $eventType = $event->type->eventType;
+            $dataService = DataServiceFactory::create($eventType);
+            $page = $eventType == 'Tournament' ? 'all' : 1;
+            
+            $cacheKey = "{$eventType}_{$event->id}_{$event->tier->tierTeamSlot}_{$page}_0";
+            $bracketList = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
+                $dataService, $event, $page
+            ) {
+                return $dataService->produceBrackets(
+                    $event->tier->tierTeamSlot,
+                    false,
+                    null,
+                    null,
+                    $page
+                );
+            });
 
 
             $now = now();
@@ -64,9 +73,25 @@ class EventMatchService
     ): array {
         $USER_ENUMS = config('constants.USER_ACCESS');
         $DISPUTTE_ENUMS = config('constants.DISPUTE');
-        $deadlines = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
-        // dd($deadlines);
-        $dataService = DataServiceFactory::create($event->type->eventType);
+        $deadlineData = BracketDeadline::getByEventDetail($event->id, $event->tier?->tierTeamSlot);
+        $deadlines = $deadlineData['deadlines'];
+        $deadlinesHash = $deadlineData['hash'];
+        
+        $eventType = $event->type?->eventType;
+        if (!$eventType) {
+            return [
+                'teamList' => collect(),
+                'matchesUpperCount' => 0,
+                'bracketList' => [],
+                'existingJoint' => $existingJoint,
+                'previousValues' => [],
+                'DISPUTE_ACCESS' => $DISPUTTE_ENUMS,
+                'pagination' => null,
+                'roundNames' => null
+            ];
+        }
+        
+        $dataService = DataServiceFactory::create($eventType);
         $matchesUpperCount = intval($event->tier?->tierTeamSlot);
         if (! $matchesUpperCount) {
             $previousValues = [];
@@ -75,46 +100,83 @@ class EventMatchService
             $previousValues = $prevValues[$matchesUpperCount] ?? [];
         }
 
-        $bracketList = $dataService->produceBrackets(
-            $matchesUpperCount,
-            $willFixBracketsAsOrganizer,
-            $USER_ENUMS,
-            $deadlines,
-            $page
-        );
-
-        $pagination = $dataService->getPagination();
-        $roundNames = $dataService->getRoundNames();
+        $cacheKey = "{$eventType}_{$event->id}_{$matchesUpperCount}_{$page}_{$deadlinesHash}";
+        
+        $cachedData = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
+            $dataService, $matchesUpperCount, $willFixBracketsAsOrganizer, $USER_ENUMS, $deadlines, $page
+        ) {
+            $bracketList = $dataService->produceBrackets(
+                $matchesUpperCount,
+                $willFixBracketsAsOrganizer,
+                $USER_ENUMS,
+                $deadlines,
+                $page
+            );
+            
+            return [
+                'bracketList' => $bracketList,
+                'pagination' => $dataService->getPagination(),
+                'roundNames' => $dataService->getRoundNames()
+            ];
+        });
+        
+        // Handle legacy cache data or ensure array structure
+        if (is_array($cachedData) && isset($cachedData['bracketList'])) {
+            $bracketList = $cachedData['bracketList'];
+            $pagination = $cachedData['pagination'] ?? null;
+            $roundNames = $cachedData['roundNames'] ?? null;
+        } else {
+            // Legacy cache format or direct bracket list
+            $bracketList = is_array($cachedData) ? $cachedData : [];
+            $pagination = null;
+            $roundNames = null;
+        }
 
       
+        // Get join event IDs and team IDs efficiently
         $joinEventIds = $event->joinEvents->pluck('id');
+        $teamIds = $event->joinEvents->pluck('team_id');
 
+        // Cache roster data for better performance using event ID
+        $rosterCacheKey = "roster_data_event_{$event->id}";
+        $rosterMembers = Cache::remember($rosterCacheKey, config('cache.ttl', 3600), function () use ($teamIds, $joinEventIds) {
+            return RosterMember::whereIn('team_id', $teamIds)
+                ->whereIn('join_events_id', $joinEventIds)
+                ->with(['user:id,name,userBanner'])
+                ->select('id', 'team_id', 'join_events_id', 'user_id')
+                ->get()
+                ->groupBy('team_id');
+        });
+
+        // Load matches and teams efficiently
         $event->load([
-            'joinEvents.team.roster' => function ($query) use ($joinEventIds) {
-                $query->select('id', 'team_id', 'join_events_id', 'user_id')
-                    ->whereIn('join_events_id', $joinEventIds)
-                    ->with(['user' => function ($query) {
-                        $query->select('id', 'name', 'userBanner');
-                    }]);
-            },
+            'joinEvents.team',
             'matches' => fn($query) => $query->whereIn('stage_name', $roundNames)
-            ->with(['team1.roster.user:id,name,userBanner', 'team2.roster.user:id,name,userBanner'])
+                ->with(['team1:id,teamName,teamBanner', 'team2:id,teamName,teamBanner'])
         ]);
 
-        $teamMap = collect();
+        // Build team map and list efficiently using array access for better performance
+        $teamMap = [];
         $teamList = collect();
-        $event->joinEvents->each(function ($joinEvent) use (&$teamList, &$teamMap) {
-            $teamMap[$joinEvent->team->id] = $joinEvent->team;
+        
+        foreach ($event->joinEvents as $joinEvent) {
+            $team = $joinEvent->team;
+            $team->roster = $rosterMembers->get($team->id, collect());
+            
+            $teamMap[$team->id] = $team;
             if ($joinEvent->join_status === 'confirmed') {
-                $teamList->push($joinEvent->team);
+                $teamList->push($team);
             }
-        });
+        }
+        
+        $teamMap = collect($teamMap);
 
 
         $bracketList = $event->matches->reduce(function ($bracketList, $match, $index) use (
             $existingJoint,
             $willFixBracketsAsOrganizer,
             $USER_ENUMS,
+            $rosterMembers,
         ) {
             $path = "{$match->stage_name}.{$match->inner_stage_name}.{$match->order}";
             $user_level = null;
@@ -132,21 +194,25 @@ class EventMatchService
 
             $existingData = data_get($bracketList, $path, []);
 
+            // Pre-compute team data for efficiency
+            $team1 = $match->team1;
+            $team2 = $match->team2;
+            
             $updatedProperties = [
                 'id' => $match->id,
                 'event_details_id' => $match->event_details_id,
                 'team1_id' => $match->team1_id,
                 'team2_id' => $match->team2_id,
-                'team1_teamBanner' => $match->team1?->teamBanner,
-                'team2_teamBanner' => $match->team2?->teamBanner,
-                'team1_teamName' => $match->team1?->teamName,
-                'team2_teamName' => $match->team2?->teamName,
-                'team1_roster' => $match->team1?->roster,
-                'team2_roster' => $match->team2?->roster,
+                'team1_teamBanner' => $team1?->teamBanner,
+                'team2_teamBanner' => $team2?->teamBanner,
+                'team1_teamName' => $team1?->teamName,
+                'team2_teamName' => $team2?->teamName,
+                'team1_roster' => $match->team1_id ? $rosterMembers->get($match->team1_id, collect()) : collect(),
+                'team2_roster' => $match->team2_id ? $rosterMembers->get($match->team2_id, collect()) : collect(),
                 'team1_position' => $match->team1_position,
                 'team2_position' => $match->team2_position,
-                'team1_name' => $match->team1->name ?? null,
-                'team2_name' => $match->team2->name ?? null,
+                'team1_name' => $team1?->teamName,
+                'team2_name' => $team2?->teamName,
                 'user_level' => $user_level,
             ];
 
@@ -169,7 +235,7 @@ class EventMatchService
         ];
     }
 
-    public function getEventViewData(EventDetail $event, ?User $user, ?JoinEvent $existingJoint): array
+    public function getEventViewData(?EventDetail $event, ?User $user, ?JoinEvent $existingJoint): array
     {
         $userId = $user?->id;
 

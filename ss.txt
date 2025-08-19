@@ -174,3 +174,10 @@ brackets,
 scheduler, 
 player checkout, 
 spreadsheet generation, 
+
+
+
+TODO:
+1. discord error tracking
+2. change logs to sentry
+3. tests

@@ -69,7 +69,7 @@
                     <span>{{ $status }}</span>
                 </button>
             </div>
-            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! bldImgF() !!} class="cover " style="min-height: 150px !important; ">
+            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! bldImgF() !!} class="cover " style="height: 150px !important; ">
             <div class="frame1 d-flex justify-content-between flex-wrap px-3">
                 <div>
                     <img 
@@ -173,14 +173,14 @@
                     </h5>
                     @if ($willShowStartsInCountDown ) 
                         @if ($fmtStartIn)
-                            <div class="text-center">
+                            <div class="text-center" style="height: 25px;">
                                 <p class="my-0 py-0"> Starts in 
                                     <span class="{{ ' Color-' . $event->tier->eventTier }}">{{$fmtStartIn}}</span>
                                 </p>
                             </div>
                         @endif
                     @else
-                        <div class="text-center mt-1">
+                        <div class="text-center mt-1" style="height: 25px;">
                             <button onclick="window.trackEventCardClick(this, event)" 
                                 data-event-id="{{ $event['id'] }}" 
                                 data-event-name="{{ $event->eventName }}"

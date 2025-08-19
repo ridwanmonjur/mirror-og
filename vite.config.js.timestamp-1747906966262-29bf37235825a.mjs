@@ -13,7 +13,6 @@ var vite_config_default = defineConfig({
         "resources/js/alpine/chat.js",
         "resources/js/alpine/teamhead.js",
         "resources/js/alpine/organizer.js",
-        "resources/js/alpine/adminBrackets.js",
         "resources/js/alpine/participant.js",
         "resources/js/alpine/notifications.js",
         "resources/js/custom/share.js"

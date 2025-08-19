@@ -6,9 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "doctrine/dbal": "^3.10",
         "fakerphp/faker": "^1.24",
         "filament/filament": "^3.2",
-        "openspout/openspout": "^4.28.0 <4.29.0",
         "google/analytics-admin": "^0.29.0",
         "google/analytics-data": "^0.22.2",
         "google/cloud-firestore": "^1.48",
@@ -19,20 +19,18 @@
         "laravel/pulse": "^1.2",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
+        "laravel/ui": "^4.6",
         "livewire/livewire": "^3.5",
-        "opcodesio/log-viewer": "^3.11",
+        "openspout/openspout": "^4.28.0 <4.29.0",
         "paragonie/sodium_compat": "^2.1",
         "predis/predis": "^2.2",
+        "sentry/sentry-laravel": "^4.15",
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/steam": "^4.2",
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-googletagmanager": "^2.8",
         "spatie/laravel-sitemap": "^7.3",
-        "stripe/stripe-php": "^13.0",
-        "algolia/algoliasearch-client-php": "*",
-        "doctrine/dbal": "^3.10",
-        "laravel/scout": "^10.16",
-        "laravel/ui": "^4.6"
+        "stripe/stripe-php": "^13.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
@@ -48,6 +46,7 @@
         "nextbuild/database-viewer": "^1.0",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/phpinsights": "^2.11",
+        "opcodesio/log-viewer": "^3.19",
         "phpunit/phpunit": "^10.1",
         "spatie/laravel-ignition": "^2.0",
         "thedoctor0/laravel-factory-generator": "^1.4"
@@ -112,14 +111,17 @@
         "local": [
             "rm -f .env",
             "cp .env.example .env",
-            "composer update",
-            "npm run build",
+            "@REM composer update",
+            "@REM npm run build",
             "chmod +x dev.sh stop.sh"
         ],
         "npm-build": [
             "npm install",
-            "npm run build",
+            "@REM npm run build",
             "rm -rf node_modules"
+        ],
+        "cache:test": [
+            "php artisan cache:performance-test --range=1-20 --save"
         ],
         "build": [
             "rm -rf node_modules",
@@ -128,7 +130,7 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "npm run build",
+            "@REM npm run build",
             "rm -rf node_modules",
                         
             "rm -rf storage/framework/cache/data/*",
@@ -160,8 +162,76 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "npm run build",
+            "@REM npm run build",
             "rm -rf node_modules"
+        ],
+
+
+        "tf:dev:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -out=\"dev.tfplan\"'"
+        ],
+        
+        "tf:dev2:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_firestore_database.default -target=google_firestore_index.event_disputes_report_event -target=google_firestore_index.room_user1_user2 -target=google_firestore_index.room_user2_user1 -target=google_firestore_index.disputes_validation -target=google_firestore_document.collection_init -target=null_resource.deploy_firestore_rules -target=null_resource.wait_for_firestore_ready -target=null_resource.register_database_to_app -target=null_resource.update_env_files -target=null_resource.npm_build -target=null_resource.composer_update -out=\"dev2.tfplan\"'"
+        ],
+        
+
+        "tf:staging:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\" -out=\"staging.tfplan\"'"
+        ],
+       
+        "tf:prod:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\" -out=\"prod.tfplan\"'"
+        ],
+
+     
+        "tf:dev:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform apply dev.tfplan'"
+        ],
+        
+        "tf:dev2:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform apply dev2.tfplan'"
+        ],
+    
+      
+        "tf:staging:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply staging.tfplan'"
+        ],
+
+        "tf:prod:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform apply prod.tfplan'"
+        ],
+     
+       
+       
+        
+        "tf:dev:destroy": [
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform destroy -var-file=\"dev.tfvars\" -auto-approve'"
+        ],
+        "tf:staging:destroy": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply -var-file=\"staging.tfvars\" -target=null_resource.disable_firestore_delete_protection'",
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform destroy -var-file=\"staging.tfvars\" -auto-approve'"
+        ],
+        "tf:prod:destroy": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform destroy -var-file=\"prod.tfvars\" -auto-approve'"
+        ],
+        "tf:validate": [
+            "cd terraform && terraform validate"
+        ],
+        "tf:init": [
+            "cd terraform && terraform init"
+        ],
+       
+        
+        "tf:destroy:all": [
+            "echo 'Removing all Terraform state files...'",
+            "rm -f terraform/.terraform/terraform.tfstate",
+            "rm -f terraform/terraform.tfstate*",
+            "rm -f terraform/dev.tfplan",
+            "rm -f terraform/staging.tfplan", 
+            "rm -f terraform/prod.tfplan",
+            "rm -rf terraform/.terraform/",
+            "echo 'All Terraform state files removed successfully.'"
         ]
     },
     "extra": {

@@ -22,3 +22,10 @@ yarn-error.log
 /.vscode
 .targets
 composer.lock
+
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform/
+.terraform.lock.hcl

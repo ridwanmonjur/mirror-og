@@ -148,9 +148,9 @@ class RespondTasks extends Command
                                 },
                             ])
                             ->first();
-                        Log::info("Found {$event->eventName}");
 
                         if ($event) {
+                            Log::info("Found {$event->eventName}");
                             $shouldCancel = $this->checkAndCancelEvent($event);
 
                             if (! $shouldCancel) {

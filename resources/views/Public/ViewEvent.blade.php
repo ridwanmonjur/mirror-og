@@ -40,14 +40,16 @@
         $event->user?->id ? 'data-user-id="' . $event->user->id . '"' : ''
     ])));
     // dd($bracketList, $pagination, $roundNames);
-    $showBracketFirst = isset($pagination) && $pagination['current_page'] > 1;
+    $showBracketFirst = isset($pagination) && isset($pagination['current_page']) && $pagination['current_page'] > 1;
 
 @endphp 
 <head>
     @include('googletagmanager::head')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="analytics" content="enabled">
+    @if (!in_array($event->status, ['DRAFT', 'PREVIEW', 'PENDING'])) 
+        <meta name="analytics" content="enabled">
+    @endif
     <title>{{ $event->eventName }} | {{ $tier ?? 'Tournament' }} {{ $type ?? 'Event' }} - RM {{ $event->tier?->tierPrizePool ?? '0' }} Prize Pool | Driftwood GG</title>
         <!-- Essential Meta Tags -->
     <meta name="description" content="{{ Str::limit($event->eventDescription, 155) ?? 'Join ' . $event->eventName . ' - ' . ($event->tier?->tierPrizePool ? 'RM ' . $event->tier?->tierPrizePool . ' Prize Pool' : '') . ' | ' . $type . ' event starting ' . $combinedStr }}">
