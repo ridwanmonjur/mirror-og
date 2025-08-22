@@ -18,6 +18,10 @@ terraform {
       source  = "hashicorp/null"
       version = "~> 3.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
 }
 
@@ -32,6 +36,11 @@ provider "google-beta" {
   region  = var.region
 }
 
+# Get current project details
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
 # Enable required APIs with proper lifecycle management
 resource "google_project_service" "required_apis" {
   for_each = toset([
@@ -44,7 +53,8 @@ resource "google_project_service" "required_apis" {
     "recaptchaenterprise.googleapis.com",
     "firebaseappcheck.googleapis.com",
     "cloudfunctions.googleapis.com",
-    "storage.googleapis.com"
+    "storage.googleapis.com",
+    "cloudbuild.googleapis.com"
   ])
 
   project = var.project_id
@@ -113,19 +123,19 @@ resource "google_billing_budget" "budget" {
 
 
 ############################################################
-# 1. Check if Firestore already exists
+# 1. Check if default Firestore database exists
 ############################################################
 data "external" "firestore_exists" {
   program = [
     "bash", "-c", <<EOT
       set -e
       PROJECT_ID="${var.project_id}"
-      DB_NAME="${var.project_name}-${var.environment}"
-
-      if gcloud firestore databases describe --project="$PROJECT_ID" --database="$DB_NAME" >/dev/null 2>&1; then
-        echo '{"exists": "true"}'
+      
+      # Check for default database first
+      if gcloud firestore databases describe --project="$PROJECT_ID" --database="(default)" >/dev/null 2>&1; then
+        echo '{"exists": "true", "database_id": "(default)"}'
       else
-        echo '{"exists": "false"}'
+        echo '{"exists": "false", "database_id": "(default)"}'
       fi
     EOT
   ]
@@ -139,7 +149,7 @@ data "external" "indexes_exist" {
     "bash", "-c", <<EOT
       set -e
       PROJECT_ID="${var.project_id}"
-      DB_NAME="${var.project_name}-${var.environment}"
+      DB_NAME="(default)"
 
       # Check if any composite indexes exist
       if gcloud firestore indexes composite list --project="$PROJECT_ID" --database="$DB_NAME" --format="value(name)" 2>/dev/null | grep -q "."; then
@@ -152,47 +162,33 @@ data "external" "indexes_exist" {
 }
 
 ############################################################
-# Deploy Firebase rules using CLI commands to specific database
+# Deploy Firebase rules using CLI commands to default database
 ############################################################
 resource "null_resource" "deploy_firestore_rules" {
   provisioner "local-exec" {
     command = <<EOT
       set -e
       PROJECT_ID="${var.project_id}"
-      DATABASE_ID="${var.project_name}-${var.environment}"
+      DATABASE_ID="(default)"
       ENVIRONMENT="${var.environment}"
       
       # Change to project root directory where firestore.rules is located
       cd ..
       
-      # Update firebase.json with correct database ordering based on environment
-      PROJECT_NAME="${var.project_name}"
-      
+      # Update firebase.json with default database configuration
       cat > firebase.json << JSON
 {
-  "firestore": [
-   
-    {
-      "database": "$PROJECT_NAME-dev",
-      "rules": "firestore.rules"
-    },
-    {
-      "database": "$PROJECT_NAME-staging", 
-      "rules": "firestore.rules"
-    },
-    {
-      "database": "$PROJECT_NAME-prod",
-      "rules": "firestore.rules"
-    }
-  ]
+  "firestore": {
+    "rules": "firestore.rules"
+  }
 }
 JSON
       
-      echo "Updated firebase.json for environment: $ENVIRONMENT"
+      echo "Updated firebase.json for default database"
       
-      # Deploy rules using Firebase CLI to specific database
+      # Deploy rules using Firebase CLI to default database
       firebase use "$PROJECT_ID"
-      firebase deploy --only firestore:$DATABASE_ID --project="$PROJECT_ID"
+      firebase deploy --only firestore --project="$PROJECT_ID"
     EOT
   }
 
@@ -200,23 +196,22 @@ JSON
   triggers = {
     rules_hash = filemd5("../firestore.rules")
     project_id = var.project_id
-    database_id = "${var.project_name}-${var.environment}"
+    database_id = "(default)"
   }
 
   depends_on = [
-    google_firestore_database.default,
     google_firebase_project.default
   ]
 }
 
 ############################################################
-# 2. Create Firestore only if it doesn't exist
+# 2. Create default Firestore database only if it doesn't exist
 ############################################################
 resource "google_firestore_database" "default" {
   count    = data.external.firestore_exists.result.exists == "true" ? 0 : 1
   provider = google-beta
   project  = var.project_id
-  name     = "${var.project_name}-${var.environment}"
+  name     = "(default)"
 
   location_id   = var.firestore_location
   type          = "FIRESTORE_NATIVE"
@@ -248,7 +243,7 @@ resource "null_resource" "wait_for_firestore_ready" {
   provisioner "local-exec" {
     command = <<EOT
       PROJECT="${var.project_id}"
-      DB_NAME="${var.project_name}-${var.environment}"
+      DB_NAME="(default)"
       echo "Waiting for Firestore database to become ACTIVE..."
       for i in {1..60}; do
         STATUS=$(gcloud firestore databases describe --database="$DB_NAME" --project="$PROJECT" --format="value(state)" 2>/dev/null || echo "MISSING")
@@ -271,7 +266,7 @@ resource "null_resource" "wait_for_firestore_ready" {
 resource "null_resource" "disable_firestore_delete_protection" {
   triggers = {
     project_id     = var.project_id
-    database_name  = "${var.project_name}-${var.environment}"
+    database_name  = "(default)"
   }
 
   provisioner "local-exec" {
@@ -308,8 +303,8 @@ data "external" "identity_platform_exists" {
 
 # Local variable for database reference
 locals {
-  # If database is created by terraform, use it; otherwise use the existing database name
-  database_id = length(google_firestore_database.default) > 0 ? google_firestore_database.default[0].name : "${var.project_name}-${var.environment}"
+  # Always use default database
+  database_id = "(default)"
 }
 
 # Firebase Auth configuration - conditional creation
@@ -496,29 +491,8 @@ resource "google_firebase_app_check_service_config" "identitytoolkit" {
   ]
 }
 
-# App Check Service Config for Cloud Functions
-resource "google_firebase_app_check_service_config" "cloudfunctions" {
-  provider     = google-beta
-  project      = var.project_id
-  service_id   = "cloudfunctions.googleapis.com"
-  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
-
-  depends_on = [
-    google_project_service.required_apis
-  ]
-}
-
-# App Check Service Config for Cloud Storage
-resource "google_firebase_app_check_service_config" "storage" {
-  provider     = google-beta
-  project      = var.project_id
-  service_id   = "storage.googleapis.com"
-  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
-
-  depends_on = [
-    google_project_service.required_apis
-  ]
-}
+# Note: Cloud Functions and Storage App Check service configs are not supported
+# in all regions and configurations. Only Firestore and Identity Toolkit are configured.
 
 # Register web app with App Check services
 resource "null_resource" "register_app_check_services" {
@@ -597,8 +571,6 @@ resource "null_resource" "register_app_check_services" {
     google_firestore_database.default,
     google_firebase_app_check_service_config.firestore,
     google_firebase_app_check_service_config.identitytoolkit,
-    google_firebase_app_check_service_config.cloudfunctions,
-    google_firebase_app_check_service_config.storage,
     google_firebase_app_check_debug_token.dev_debug_token,
     google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check
   ]
@@ -695,6 +667,33 @@ resource "google_firestore_index" "disputes_validation" {
   depends_on = [google_firestore_database.default]
 }
 
+# Message subcollection composite index for timestamp and __name__ descending queries
+resource "google_firestore_index" "message_timestamp_name_desc" {
+  provider     = google-beta
+  project      = var.project_id
+  database     = local.database_id
+  collection   = "message"
+  query_scope  = "COLLECTION_GROUP"
+
+  fields {
+    field_path = "timestamp"
+    order      = "ASCENDING"
+  }
+
+  fields {
+    field_path = "__name__"
+    order      = "DESCENDING"
+  }
+
+  # Allow async creation - don't wait for index to be ready
+  lifecycle {
+    ignore_changes = [database, collection, fields]
+    create_before_destroy = false
+  }
+
+  depends_on = [google_firestore_database.default]
+}
+
 # Create default Firestore collections for the current database
 locals {
   collections = {
@@ -721,7 +720,7 @@ locals {
   }
 }
 
-# Check if individual collection init documents already exist
+# Check if individual collection init documents already exist using Firestore REST API
 data "external" "collection_document_exists" {
   for_each = local.collections
   
@@ -729,29 +728,33 @@ data "external" "collection_document_exists" {
     "bash", "-c", <<EOT
       set +e  # Don't exit on errors
       PROJECT_ID="${var.project_id}"
-      DB_NAME="${var.project_name}-${var.environment}"
+      DB_NAME="(default)"
       COLLECTION="${each.key}"
       
-      # Debug output
-      echo "Checking document: projects/$PROJECT_ID/databases/$DB_NAME/documents/$COLLECTION/_init" >&2
+      # Get access token
+      ACCESS_TOKEN=$(gcloud auth print-access-token 2>/dev/null)
+      if [ -z "$ACCESS_TOKEN" ]; then
+        echo "Failed to get access token, assuming document doesn't exist" >&2
+        echo "{\"exists\": \"false\"}"
+        exit 0
+      fi
       
-      # Check if this specific init document exists
-      RESULT=$(gcloud firestore documents get "_init" --collection="$COLLECTION" --database="$DB_NAME" --project="$PROJECT_ID" 2>&1)
-      EXIT_CODE=$?
+      # Check if this specific init document exists using Firestore REST API
+      URL="https://firestore.googleapis.com/v1/projects/$PROJECT_ID/databases/$DB_NAME/documents/$COLLECTION/_init"
       
-      echo "Exit code: $EXIT_CODE" >&2
-      echo "Result: $RESULT" >&2
+      RESULT=$(curl -s -w "HTTP_STATUS:%%{http_code}" -H "Authorization: Bearer $ACCESS_TOKEN" "$URL" 2>/dev/null)
+      HTTP_STATUS=$(echo "$RESULT" | grep -o "HTTP_STATUS:[0-9]*" | cut -d: -f2)
       
-      if [ $EXIT_CODE -eq 0 ]; then
+      echo "Checking: $URL" >&2
+      echo "HTTP Status: $HTTP_STATUS" >&2
+      
+      if [ "$HTTP_STATUS" = "200" ]; then
         echo "{\"exists\": \"true\"}"
+      elif [ "$HTTP_STATUS" = "404" ]; then
+        echo "{\"exists\": \"false\"}"
       else
-        # Check if error is "not found" vs other error
-        if echo "$RESULT" | grep -q "NOT_FOUND\|not found\|does not exist"; then
-          echo "{\"exists\": \"false\"}"
-        else
-          # Other error, assume exists to avoid creating duplicates
-          echo "{\"exists\": \"true\"}"
-        fi
+        echo "Unexpected HTTP status $HTTP_STATUS, assuming document doesn't exist" >&2
+        echo "{\"exists\": \"false\"}"
       fi
     EOT
   ]
@@ -781,9 +784,6 @@ resource "google_firestore_document" "collection_init" {
     }
   })
 
-  lifecycle {
-    prevent_destroy = true
-  }
 
   depends_on = [
     google_firestore_database.default
@@ -835,6 +835,8 @@ locals {
       startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
       startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
+      # startswith(line, "VITE_AUTH_SERVICE_URL=") ? "VITE_AUTH_SERVICE_URL=${google_cloudfunctions2_function.auth_service.service_config[0].uri}" :
+      startswith(line, "VITE_API_URL=") ? "VITE_API_URL=${google_cloudfunctions_function.driftwood_api.https_trigger_url}" :
       line
     ])
   }
@@ -863,6 +865,7 @@ resource "null_resource" "update_env_files" {
     auth_domain    = local.auth_domain
     app_id         = local.web_app_id
     database_id    = local.database_id
+    api_url        = google_cloudfunctions_function.driftwood_api.https_trigger_url
     content_hash   = md5(each.value)
   }
 
@@ -944,4 +947,307 @@ resource "null_resource" "npm_build" {
   depends_on = [
     null_resource.update_env_files
   ]
+}
+
+# Create auth service environment file
+resource "local_file" "auth_service_env" {
+  content = join("\n", [
+    "FIREBASE_PROJECT_ID=${var.project_id}",
+    "FIREBASE_DATABASE_ID=(default)",
+    "FIREBASE_API_KEY=${local.api_key}",
+    "FIREBASE_AUTH_DOMAIN=${local.auth_domain}",
+    "FIREBASE_STORAGE_BUCKET=${local.storage_bucket}",
+    "FIREBASE_MESSAGING_SENDER_ID=${local.messaging_sender_id}",
+    "FIREBASE_APP_ID=${local.web_app_id}",
+    "FIREBASE_CREDENTIALS_PATH=./firebase-credentials.json",
+    "SECRET_KEY=${var.auth_service_secret_key != "" ? var.auth_service_secret_key : "change-me-in-production-${random_password.auth_secret[0].result}"}",
+    "ALGORITHM=HS256",
+    "ACCESS_TOKEN_EXPIRE_MINUTES=30",
+    "ENVIRONMENT=${var.environment}",
+    "PORT=8000",
+    ""
+  ])
+  
+  filename = "../auth-service/.env"
+  
+  depends_on = [
+    data.google_firebase_web_app_config.existing_app_config,
+    data.google_firebase_web_app_config.new_app_config
+  ]
+}
+
+# Generate random secret key if not provided
+resource "random_password" "auth_secret" {
+  count   = var.auth_service_secret_key == "" ? 1 : 0
+  length  = 64
+  special = true
+}
+
+# Copy Firebase service account key to auth service directory
+resource "null_resource" "copy_firebase_key" {
+  count = var.environment == "dev" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      # Check if we have a service account key in the project root
+      if [ -f "../firebase-credentials.json" ]; then
+        cp "../firebase-credentials.json" "../auth-service/firebase-credentials.json"
+        echo "Copied Firebase service account key to auth service"
+      elif [ -f "../serviceAccountKey.json" ]; then
+        cp "../serviceAccountKey.json" "../auth-service/firebase-credentials.json"
+        echo "Copied serviceAccountKey.json to auth service as firebase-credentials.json"
+      else
+        echo "No Firebase service account key found. You'll need to:"
+        echo "1. Download service account key from Firebase Console"
+        echo "2. Save it as auth-service/firebase-credentials.json"
+        echo "3. Or use default application credentials for cloud deployment"
+      fi
+    EOT
+  }
+  
+  triggers = {
+    environment = var.environment
+  }
+  
+  depends_on = [local_file.auth_service_env]
+}
+
+# Check for existing Cloud Functions
+data "external" "existing_functions" {
+  program = [
+    "bash", "-c", <<EOT
+      set -e
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      # Get count of existing functions (simpler approach)
+      FUNCTION_COUNT=$(gcloud functions list --project="$PROJECT_ID" --format="value(name)" 2>/dev/null | grep -E "(driftwood-auth|driftwood-health|driftwood-api-${var.environment})" | wc -l || echo "0")
+      
+      if [ "$FUNCTION_COUNT" -gt 0 ]; then
+        echo "{\"exists\": \"true\", \"count\": \"$FUNCTION_COUNT\"}"
+      else
+        echo "{\"exists\": \"false\", \"count\": \"0\"}"
+      fi
+    EOT
+  ]
+}
+
+# Clean up existing functions that might conflict
+resource "null_resource" "cleanup_existing_functions" {
+  count = data.external.existing_functions.result.exists == "true" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<EOT
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      # Delete any existing functions that use our source bucket
+      echo "Cleaning up existing Cloud Functions..."
+      
+      # List and delete functions one by one
+      for func in driftwood-auth driftwood-health "driftwood-api-${var.environment}"; do
+        if gcloud functions describe "$func" --project="$PROJECT_ID" --region="$REGION" >/dev/null 2>&1; then
+          echo "Deleting existing function: $func"
+          gcloud functions delete "$func" --project="$PROJECT_ID" --region="$REGION" --quiet
+        fi
+      done
+    EOT
+  }
+
+  triggers = {
+    project_id = var.project_id
+    region     = var.region
+  }
+}
+
+# Create Cloud Storage bucket for Cloud Functions source code
+resource "google_storage_bucket" "functions_bucket" {
+  name     = "${var.project_id}-functions-source"
+  location = var.region
+  project  = var.project_id
+
+  uniform_bucket_level_access = true
+  
+  lifecycle_rule {
+    condition {
+      age = 30
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [name, location]
+  }
+
+  depends_on = [google_project_service.required_apis]
+}
+
+# Build and package the Cloud Function
+resource "null_resource" "build_functions" {
+  triggers = {
+    functions_hash = filemd5("../functions/main.py")
+    requirements_hash = filemd5("../functions/requirements.txt")
+    project_id     = var.project_id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ../functions
+      
+      # Create deployment package with all Python files
+      zip -r function-source.zip main.py requirements.txt
+    EOT
+  }
+
+  depends_on = [
+    google_storage_bucket.functions_bucket,
+    null_resource.cleanup_existing_functions
+  ]
+}
+
+# Upload the function source to Cloud Storage
+resource "google_storage_bucket_object" "function_source" {
+  name   = "auth-function-${timestamp()}.zip"
+  bucket = google_storage_bucket.functions_bucket.name
+  source = "../functions/function-source.zip"
+
+  depends_on = [null_resource.build_functions]
+}
+
+# Deploy the auth service as a Cloud Function Gen 2 - DISABLED (using unified driftwood_api instead)
+# resource "google_cloudfunctions2_function" "auth_service" {
+#   name        = "driftwood-auth"
+#   description = "Driftwood authentication service"
+#   project     = var.project_id
+#   location    = var.region
+#
+#   build_config {
+#     runtime     = "python311"
+#     entry_point = "driftwood_api"
+#     source {
+#       storage_source {
+#         bucket = google_storage_bucket.functions_bucket.name
+#         object = google_storage_bucket_object.function_source.name
+#       }
+#     }
+#   }
+#
+#   service_config {
+#     max_instance_count = 10
+#     min_instance_count = 0
+#     available_memory   = "256Mi"
+#     timeout_seconds    = 60
+#     service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+#     
+#     environment_variables = {
+#       SECRET_KEY = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
+#       ENVIRONMENT = var.environment
+#     }
+#     
+#     ingress_settings = "ALLOW_ALL"
+#   }
+#
+#   depends_on = [
+#     google_storage_bucket_object.function_source,
+#     google_project_service.required_apis
+#   ]
+# }
+
+# IAM binding to allow public access to the function - DISABLED
+# resource "google_cloudfunctions2_function_iam_member" "auth_service_invoker" {
+#   project        = var.project_id
+#   location       = var.region
+#   cloud_function = google_cloudfunctions2_function.auth_service.name
+#
+#   role   = "roles/cloudfunctions.invoker"
+#   member = "allUsers"
+# }
+
+# Deploy health check function as Cloud Function Gen 1
+resource "google_cloudfunctions_function" "health_check" {
+  name        = "driftwood-health"
+  description = "Driftwood health check service"
+  project     = var.project_id
+  region      = var.region
+  runtime     = "python311"
+
+  available_memory_mb   = 256
+  source_archive_bucket = google_storage_bucket.functions_bucket.name
+  source_archive_object = google_storage_bucket_object.function_source.name
+  
+  trigger_http          = true
+  https_trigger_security_level = "SECURE_OPTIONAL"
+  timeout                      = 60
+  entry_point          = "driftwood_api"
+  service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+  
+  environment_variables = {
+    ENVIRONMENT = var.environment
+    FIREBASE_PROJECT_ID = var.project_id
+    FIREBASE_DATABASE_ID = "(default)"
+  }
+
+  depends_on = [
+    google_storage_bucket_object.function_source,
+    google_project_service.required_apis
+  ]
+}
+
+# IAM binding to allow public access to the health check function (1st gen)
+resource "google_cloudfunctions_function_iam_member" "health_check_invoker" {
+  project        = var.project_id
+  region         = var.region
+  cloud_function = google_cloudfunctions_function.health_check.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers"
+}
+
+# Deploy FastAPI service as a Cloud Function Gen 1
+resource "google_cloudfunctions_function" "driftwood_api" {
+  name        = "driftwood-api-${var.environment}"
+  description = "Driftwood FastAPI service"
+  project     = var.project_id
+  region      = var.region
+  runtime     = "python311"
+
+  available_memory_mb   = 512
+  source_archive_bucket = google_storage_bucket.functions_bucket.name
+  source_archive_object = google_storage_bucket_object.function_source.name
+  
+  trigger_http          = true
+  https_trigger_security_level = "SECURE_OPTIONAL"
+  timeout                      = 60
+  entry_point          = "driftwood_api"
+  service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+  
+  environment_variables = {
+    ENVIRONMENT = var.environment
+    FIREBASE_PROJECT_ID = var.project_id
+    FIREBASE_DATABASE_ID = "(default)"
+  }
+
+  depends_on = [
+    google_storage_bucket_object.function_source,
+    google_project_service.required_apis
+  ]
+}
+
+# IAM binding to allow public access to the FastAPI function (1st gen)
+resource "google_cloudfunctions_function_iam_member" "driftwood_api_invoker" {
+  project        = var.project_id
+  region         = var.region
+  cloud_function = google_cloudfunctions_function.driftwood_api.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers"
+}
+
+# IAM binding to allow service account to sign blobs (needed for custom tokens)
+resource "google_project_iam_member" "driftwood_api_token_creator" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 }

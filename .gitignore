@@ -29,3 +29,11 @@ composer.lock
 *.tfplan
 .terraform/
 .terraform.lock.hcl
+
+# Auth service (to be removed)
+/auth-service/
+
+# Functions deployment artifacts
+/functions/function-source.zip
+/functions/lib/
+/functions/node_modules/

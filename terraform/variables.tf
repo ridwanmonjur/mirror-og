@@ -77,3 +77,10 @@ variable "enforce_app_check" {
   type        = bool
   default     = false
 }
+
+variable "auth_service_secret_key" {
+  description = "Secret key for JWT token signing in auth service"
+  type        = string
+  default     = ""
+  sensitive   = true
+}

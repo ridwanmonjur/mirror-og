@@ -61,7 +61,7 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
       this.clearUploadData();
       if (hiddenUserId) {
         try {
-          const { user, claims } = await firebaseService.initializeAuth();
+          const { user, claims } = await firebaseService.initializeAuth(eventId);
           this.firebaseUser = user;
           this.userClaims = claims;
           this.isInitialized = true;
