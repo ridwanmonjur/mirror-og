@@ -8,13 +8,14 @@ use App\Models\EventDetail;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
 use App\Models\WithdrawalPassword;
+use App\Services\DeadlineTaskService;
+use App\Services\RespondTaskService;
 use Carbon\Carbon;
 use Database\Factories\BracketsFactory;
 use Database\Factories\JoinEventFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
@@ -37,7 +38,7 @@ class MiscController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
-    public function deadlineTasks(Request $request, $id, $taskType): JsonResponse
+    public function deadlineTasks(Request $request, $id, $taskType, DeadlineTaskService $deadlineTaskService): JsonResponse
     {
         Cache::flush();
 
@@ -67,22 +68,24 @@ class MiscController extends Controller
             );
         }
 
-        $exitCode = Artisan::call('tasks:deadline', [
-            'type' => $typeMap[$taskType],
-            '--event_id' => (string) $id,
-        ]);
+        try {
+            $deadlineTaskService->execute($typeMap[$taskType], (string) $id);
+            $status = 'success';
+        } catch (\Exception $e) {
+            $status = 'failed';
+        }
 
         Cache::flush();
 
         return response()->json([
-            'status' => $exitCode === 0 ? 'success' : 'failed',
+            'status' => $status,
             'message' => ucfirst($taskType).' tasks executed',
         ]);
     }
 
     // Updated route
 
-    public function respondTasks(Request $request, $eventId, $taskType = null): JsonResponse
+    public function respondTasks(Request $request, $eventId, $taskType = null, RespondTaskService $respondTaskService): JsonResponse
     {
         Cache::flush();
 
@@ -128,17 +131,84 @@ class MiscController extends Controller
             );
         }
 
-        $artisanParams = ['type' => $typeMap[$taskType]];
-
-        if (in_array($taskType, ['start', 'live', 'end', 'all', 'reg', 'resetStart'])) {
-            $artisanParams['--event_id'] = (string) $eventId;
+        try {
+            $eventIdParam = null;
+            if (in_array($taskType, ['start', 'live', 'end', 'all', 'reg', 'resetStart'])) {
+                $eventIdParam = (string) $eventId;
+            }
+            
+            $respondTaskService->execute($typeMap[$taskType], $eventIdParam);
+            $status = 'success';
+        } catch (\Exception $e) {
+            $status = 'failed';
         }
 
-        $exitCode = Artisan::call('tasks:respond', $artisanParams);
         Cache::flush();
 
         return response()->json([
-            'status' => $exitCode === 0 ? 'success' : 'failed',
+            'status' => $status,
+            'message' => $messageMap[$taskType],
+            'helpUrls' => $helpUrls,
+        ]);
+    }
+
+    public function allTasks(Request $request, $taskType, $eventId = null, RespondTaskService $respondTaskService): JsonResponse
+    {
+        Cache::flush();
+
+        $respondTypeMap = [
+            'event_started' => 1,
+            'event_live' => 2,
+            'event_ended' => 3,
+            'event_reg_over' => 4,
+            'event_resetStart' => 5,
+            'report_start' => 6,
+            'report_end' => 7,
+            'report_org' => 8,
+            'tasks_all' => 0,
+        ];
+
+        $messageMap = [
+            'event_started' => 'Event started tasks executed',
+            'event_live' => 'Event live tasks executed', 
+            'event_ended' => 'Event ended tasks executed',
+            'event_reg_over' => 'Event registration over tasks executed',
+            'event_resetStart' => 'Event reset task executed',
+            'report_start' => 'Report start tasks executed',
+            'report_end' => 'Report end tasks executed',
+            'report_org' => 'Report org tasks executed',
+            'tasks_all' => 'All tasks executed',
+        ];
+
+        $baseUrl = $request->getSchemeAndHttpHost();
+        $basePath = '/seed/tasks';
+
+        $helpUrls = [];
+        foreach (array_keys($messageMap) as $type) {
+            $helpUrls[$type] = $baseUrl.$basePath.'/'.$type . ($eventId ? '/'.$eventId : '');
+        }
+
+        if (isset($respondTypeMap[$taskType])) {
+            try {
+                $eventIdParam = $eventId ? (string) $eventId : null;
+                $respondTaskService->execute($respondTypeMap[$taskType], $eventIdParam);
+                $status = 'success';
+            } catch (\Exception $e) {
+                $status = 'failed';
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid task type',
+                'available_types' => array_keys($messageMap),
+                'helpUrls' => $helpUrls,
+            ], 400);
+        }
+
+        Cache::flush();
+
+        return response()->json([
+            'status' => $status,
             'message' => $messageMap[$taskType],
             'helpUrls' => $helpUrls,
         ]);

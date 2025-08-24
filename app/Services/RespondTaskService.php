@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services;
 
 use App\Models\Task;
 use App\Traits\PrinterLoggerTrait;
@@ -12,11 +12,10 @@ use App\Models\JoinEvent;
 use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class RespondTasks extends Command
+class RespondTaskService
 {
     use PrinterLoggerTrait, RespondTaksTrait;
 
@@ -26,43 +25,21 @@ class RespondTasks extends Command
 
     public function __construct(StripeConnection $stripeService)
     {
-        parent::__construct();
+        $this->stripeService = $stripeService;
         $now = Carbon::now();
-        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $taskId = $this->logEntry('Respond tasks in the database', 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 4=reg_over, 0=all} {--event_id= : Optional event ID to filter tasks}', '*/30 * * * *', $now);
         $this->taskIdParent = $taskId;
         $this->initializeTrait($stripeService, $taskId);
     }
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $signature = 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 4=reg_over, 0=all} {--event_id= : Optional event ID to filter tasks}';
-
-    protected $description = 'Respond tasks in the database';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function execute(int $type = 0, ?string $eventId = null): void
     {
         $now = Carbon::now();
-        $type = (int) $this->argument('type');
-        $eventId = $this->option('event_id');
         $eventIdInt = 0;
         Log::info("Event of type {$type} ran");
         $taskId = $this->taskIdParent;
 
         try {
-         
-            
             $endedEventIds = [];
             $liveEventIds = [];
             $startedEventIds = [];
@@ -235,7 +212,6 @@ class RespondTasks extends Command
                             'failed_so_far' => $failedEvents,
                         ]);
 
-                        // Optionally try to revert event status if it was updated but processing failed
                         try {
                             EventDetail::where('id', $eventId)->update(['status' => 'ONGOING']);
                             Log::info('Reverted event status due to processing failure', ['event_id' => $eventId]);
@@ -251,7 +227,6 @@ class RespondTasks extends Command
                     }
                 }
 
-                // Final summary log
                 Log::info('Event processing batch completed', [
                     'total_events' => $totalEvents,
                     'processed_successfully' => $processedEvents,
@@ -288,4 +263,5 @@ class RespondTasks extends Command
             $this->logError($taskId, $e);
         }
     }
+
 }

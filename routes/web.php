@@ -18,11 +18,6 @@ use App\Http\Controllers\Shared\FirebaseController;
 use App\Http\Controllers\Shared\ImageVideoController;
 use App\Http\Controllers\Shared\SocialController;
 use App\Http\Controllers\Shared\StripeController;
-use App\Http\Controllers\Shop\ShopController;
-use App\Http\Controllers\Shop\OrdersController;
-use App\Http\Controllers\Shop\CartController;
-use App\Http\Controllers\Shop\CheckoutController;
-use App\Http\Controllers\Shop\CouponsController;
 use App\Http\Controllers\User\ChatController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -54,8 +49,7 @@ Route::get('/countries', [MiscController::class, 'countryList'])->name('country.
 Route::get('/seed/event/{tier}/{type?}/{game?}', [MiscController::class, 'seedBrackets']);
 Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
-Route::get('/deadlineTasks/{id}/{taskType}', [MiscController::class, 'deadlineTasks']);
-Route::get('/respondTasks/{eventId}/{taskType?}', [MiscController::class, 'respondTasks']);
+Route::get('/seed/tasks/{taskType}/{eventId?}', [MiscController::class, 'allTasks']);
 Route::get('/download-withdrawal-csv/{token}', [MiscController::class, 'downloadWithdrawalCsv'])->name('download.withdrawal.csv');
 
 // Shop

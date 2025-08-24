@@ -1,38 +1,23 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services;
 
 use App\Models\EventDetail;
 use App\Models\Task;
-use App\Traits\PrinterLoggerTrait;
 use App\Traits\DeadlineTasksTrait;
+use App\Traits\PrinterLoggerTrait;
 use App\Models\BracketDeadline;
 use App\Services\BracketDataService;
 use App\Services\DataServiceFactory;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
-class DeadlineTasks extends Command
+class DeadlineTaskService
 {
     use DeadlineTasksTrait, PrinterLoggerTrait;
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $signature = 'tasks:deadline {type=0 : The task type to process: 1=started, 2=ended, 3=org, 0=all} {--event_id= : Optional event ID to filter tasks}';
-
-    protected $description = 'Respond tasks in the database';
 
     protected $bracketDataService;
 
@@ -40,22 +25,20 @@ class DeadlineTasks extends Command
 
     public function __construct(BracketDataService $bracketDataService)
     {
-        parent::__construct();
+        $this->bracketDataService = $bracketDataService;
         $now = Carbon::now();
         $firebaseConfig = Config::get('services.firebase');
         $disputeEnums = Config::get('constants.DISPUTE');
-        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $taskId = $this->logEntry('Respond tasks in the database', 'tasks:deadline {type=0 : The task type to process: 1=started, 2=ended, 3=org, 0=all} {--event_id= : Optional event ID to filter tasks}', '*/30 * * * *', $now);
         $this->taskIdParent = $taskId;
         $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
     }
 
-    public function handle()
+    public function execute(int $type = 0, ?string $eventId = null): void
     {
         $now = Carbon::now();
         $taskId = $this->taskIdParent;
         try {
-            $type = (int) $this->argument('type');
-            $eventId = $this->option('event_id');
             $tasks = null;
             $startedTaskIds = [];
             $endTaskIds = [];
