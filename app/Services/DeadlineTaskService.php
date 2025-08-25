@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class DeadlineTaskService
 {
@@ -23,6 +24,8 @@ class DeadlineTaskService
 
     protected $taskIdParent;
 
+    protected $pythonApiUrl;
+
     public function __construct(BracketDataService $bracketDataService)
     {
         $this->bracketDataService = $bracketDataService;
@@ -31,6 +34,7 @@ class DeadlineTaskService
         $disputeEnums = Config::get('constants.DISPUTE');
         $taskId = $this->logEntry('Respond tasks in the database', 'tasks:deadline {type=0 : The task type to process: 1=started, 2=ended, 3=org, 0=all} {--event_id= : Optional event ID to filter tasks}', '*/30 * * * *', $now);
         $this->taskIdParent = $taskId;
+        $this->pythonApiUrl = config('cloud_function.url');
         $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
     }
 
@@ -89,7 +93,7 @@ class DeadlineTaskService
                 foreach ($startDetails as $detail) {
                     try {
                         $gamesPerMatch = $detail->game && $detail->game->games_per_match ? $detail->game->games_per_match : 3;
-                        $this->handleStartedTasks($detail->matches, $gamesPerMatch);
+                        $this->callPythonStartedTasks($detail->id, $detail->matches, $gamesPerMatch);
                     } catch (Exception $e) {
                         $this->logError($taskId, $e);
                     }
@@ -115,7 +119,7 @@ class DeadlineTaskService
                             });
 
                             Log::info($bracketInfo);
-                            $this->handleEndedTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
+                            $this->callPythonEndedTasks($detail->id, $detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
                         } 
 
                     } catch (Exception $e) {
@@ -142,7 +146,7 @@ class DeadlineTaskService
                                 return $dataService->produceBrackets($detail->tier->tierTeamSlot, false, null, null, 'all');
                             });
 
-                            $this->handleOrgTasks($detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
+                            $this->callPythonOrgTasks($detail->id, $detail->matches, $bracketInfo, $detail->tier->id, $isLeague, $gamesPerMatch);
 
                         }
                     } catch (Exception $e) {
@@ -155,6 +159,150 @@ class DeadlineTaskService
             $this->logExit($taskId, $now);
         } catch (Exception $e) {
             $this->logError($taskId, $e);
+        }
+    }
+
+    protected function callPythonStartedTasks($detailId, $matches, $gamesPerMatch = 3)
+    {
+        try {
+            $matchesData = $matches->map(function ($match) {
+                return [
+                    'team1_position' => $match['team1_position'],
+                    'team2_position' => $match['team2_position'],
+                    'event_details_id' => $match['event_details_id'],
+                ];
+            })->toArray();
+
+            $response = Http::timeout(30)->post($this->pythonApiUrl . '/deadline/started', [
+                'detail_id' => $detailId,
+                'matches' => $matchesData,
+                'games_per_match' => $gamesPerMatch
+            ]);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                Log::info('Python handleStartedTasks completed successfully', [
+                    'processed_matches' => count($matchesData),
+                    'response_status' => $responseData['status'] ?? 'unknown'
+                ]);
+            } else {
+                Log::error('Python handleStartedTasks failed', [
+                    'status' => $response->status(),
+                    'error' => $response->body()
+                ]);
+                throw new Exception('Failed to process started tasks via Python API');
+            }
+        } catch (Exception $e) {
+            Log::error('callPythonStartedTasks error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    protected function callPythonEndedTasks($detailId, $matches, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
+    {
+        try {
+            $matchesData = $matches->map(function ($match) {
+                return [
+                    'team1_position' => $match['team1_position'],
+                    'team2_position' => $match['team2_position'],
+                    'event_details_id' => $match['event_details_id'],
+                    'stage_name' => $match['stage_name'],
+                    'inner_stage_name' => $match['inner_stage_name'],
+                    'order' => $match['order']
+                ];
+            })->toArray();
+
+            $response = Http::timeout(30)->post($this->pythonApiUrl . '/deadline/ended', [
+                'detail_id' => $detailId,
+                'matches' => $matchesData,
+                'bracket_info' => $bracketInfo,
+                'tier_id' => $tierId,
+                'is_league' => $isLeague,
+                'games_per_match' => $gamesPerMatch
+            ]);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                
+                if (isset($responseData['next_stage_data']) && !empty($responseData['next_stage_data'])) {
+                    foreach ($responseData['next_stage_data'] as $nextStageData) {
+                        $this->resolveNextStage(
+                            $nextStageData['bracket'],
+                            $nextStageData['extra_bracket'],
+                            $nextStageData['scores'],
+                            $nextStageData['tier_id']
+                        );
+                    }
+                }
+
+                Log::info('Python handleEndedTasks completed successfully', [
+                    'processed_matches' => count($matchesData),
+                    'response_status' => $responseData['status'] ?? 'unknown'
+                ]);
+            } else {
+                Log::error('Python handleEndedTasks failed', [
+                    'status' => $response->status(),
+                    'error' => $response->body()
+                ]);
+                throw new Exception('Failed to process ended tasks via Python API');
+            }
+        } catch (Exception $e) {
+            Log::error('callPythonEndedTasks error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    protected function callPythonOrgTasks($detailId, $matches, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
+    {
+        try {
+            $matchesData = $matches->map(function ($match) {
+                return [
+                    'team1_position' => $match['team1_position'],
+                    'team2_position' => $match['team2_position'],
+                    'event_details_id' => $match['event_details_id'],
+                    'stage_name' => $match['stage_name'],
+                    'inner_stage_name' => $match['inner_stage_name'],
+                    'order' => $match['order']
+                ];
+            })->toArray();
+
+            $response = Http::timeout(30)->post($this->pythonApiUrl . '/deadline/org', [
+                'detail_id' => $detailId,
+                'matches' => $matchesData,
+                'bracket_info' => $bracketInfo,
+                'tier_id' => $tierId,
+                'is_league' => $isLeague,
+                'games_per_match' => $gamesPerMatch
+            ]);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                
+                if (isset($responseData['next_stage_data']) && !empty($responseData['next_stage_data'])) {
+                    foreach ($responseData['next_stage_data'] as $nextStageData) {
+                        $this->resolveNextStage(
+                            $nextStageData['bracket'],
+                            $nextStageData['extra_bracket'],
+                            $nextStageData['scores'],
+                            $nextStageData['tier_id']
+                        );
+                    }
+                }
+
+                Log::info('Python handleOrgTasks completed successfully', [
+                    'processed_matches' => count($matchesData),
+                    'response_status' => $responseData['status'] ?? 'unknown'
+                ]);
+            } else {
+                Log::error('Python handleOrgTasks failed', [
+                    'status' => $response->status(),
+                    'error' => $response->body()
+                ]);
+                throw new Exception('Failed to process organizer tasks via Python API');
+            }
+        } catch (Exception $e) {
+            Log::error('callPythonOrgTasks error: ' . $e->getMessage());
+            throw $e;
         }
     }
 }
