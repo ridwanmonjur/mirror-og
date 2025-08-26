@@ -64,6 +64,7 @@
                             <div class="row px-0 mx-0">
                                 @foreach ($roundData as $fakeKey => $actualRoundData)
                                      @foreach ($actualRoundData as $match) 
+                                     @if (isset( $match['order']))
                                     <div class="my-3 col-12 col-md-6 ">
                                         <div>
                                             <div class=" d-none-until-hover2-parent">
@@ -78,6 +79,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
                                     @endforeach  
                                 @endforeach
                             </div>

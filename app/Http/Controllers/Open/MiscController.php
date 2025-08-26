@@ -38,123 +38,54 @@ class MiscController extends Controller
         return response()->json(['success' => true, 'data' => $games], 200);
     }
 
-    public function deadlineTasks(Request $request, $id, $taskType, DeadlineTaskService $deadlineTaskService): JsonResponse
+  
+
+    
+
+    public function allTasks(Request $request, RespondTaskService $respondTaskService): JsonResponse
     {
-        Cache::flush();
+        $validator = Validator::make($request->all(), [
+            'taskType' => 'required|in:event_started,event_live,event_ended,event_reg_over,event_resetStart,report_start,report_end,report_org,tasks_all',
+            'eventId' => 'integer',
+        ], [
+            'taskType.required' => 'Task type is required.',
+            'taskType.in' => 'Task type must be one of: event_started, event_live, event_ended, event_reg_over, event_resetStart, report_start, report_end, report_org, tasks_all.',
+            'eventId.integer' => 'Event ID must be an integer.',
+        ]);
 
-        $typeMap = [
-            'start' => 1,
-            'end' => 2,
-            'org' => 3,
-        ];
+        if ($validator->fails()) {
+            $baseUrl = $request->getSchemeAndHttpHost();
+            $basePath = '/seed/tasks';
 
-        $baseUrl = $request->getSchemeAndHttpHost();
-        $basePath = '/deadlineTasks'.'/'.$id;
+            $exampleUrls = [
+                $baseUrl.$basePath.'?taskType=event_started&eventId=123',
+                $baseUrl.$basePath.'?taskType=event_live&eventId=456',
+                $baseUrl.$basePath.'?taskType=event_ended&eventId=789',
+                $baseUrl.$basePath.'?taskType=event_reg_over&eventId=101',
+                $baseUrl.$basePath.'?taskType=event_resetStart&eventId=202',
+                $baseUrl.$basePath.'?taskType=report_start&eventId=303',
+                $baseUrl.$basePath.'?taskType=report_end&eventId=404',
+                $baseUrl.$basePath.'?taskType=report_org&eventId=505',
+                $baseUrl.$basePath.'?taskType=tasks_all',
+                $baseUrl.$basePath.'?taskType=event_started',
+            ];
 
-        $helpUrls = [
-            'start' => $baseUrl.$basePath.'/start',
-            'end' => $baseUrl.$basePath.'/end',
-            'org' => $baseUrl.$basePath.'/reg',
-        ];
-
-        if (! array_key_exists($taskType, $typeMap)) {
             return response()->json(
                 [
                     'status' => 'error',
-                    'message' => 'Invalid type. Must be start, end, or org',
-                    'helpUrls' => $helpUrls,
+                    'message' => 'Invalid URL',
+                    'exampleUrls' => $exampleUrls,
+                    'errors' => $validator->errors(),
                 ],
                 400,
             );
         }
 
-        try {
-            $deadlineTaskService->execute($typeMap[$taskType], (string) $id);
-            $status = 'success';
-        } catch (\Exception $e) {
-            $status = 'failed';
-        }
-
         Cache::flush();
 
-        return response()->json([
-            'status' => $status,
-            'message' => ucfirst($taskType).' tasks executed',
-        ]);
-    }
-
-    // Updated route
-
-    public function respondTasks(Request $request, $eventId, $taskType = null, RespondTaskService $respondTaskService): JsonResponse
-    {
-        Cache::flush();
-
-        $typeMap = [
-            'start' => 1,
-            'live' => 2,
-            'end' => 3,
-            'reg' => 4,
-            'resetStart' => 5,
-            'all' => 0,
-        ];
-
-        $messageMap = [
-            'start' => 'Start tasks executed',
-            'live' => 'Live tasks executed',
-            'end' => 'End tasks executed',
-            'reg' => 'Registration over tasks executed',
-            'all' => 'All tasks executed',
-            'resetStart' => 'Reset task executed',
-        ];
-
-        $baseUrl = $request->getSchemeAndHttpHost();
-        $basePath = '/respondTasks'.'/'.$eventId;
-
-        $helpUrls = [
-            'start' => $baseUrl.$basePath.'/start',
-            'live' => $baseUrl.$basePath.'/live',
-            'end' => $baseUrl.$basePath.'/end',
-            'reg' => $baseUrl.$basePath.'/reg',
-            'resetStart' => $baseUrl.$basePath.'/resetStart',
-            'all' => $baseUrl.$basePath.'/all',
-        ];
-
-        if (! isset($typeMap[$taskType])) {
-            return response()->json(
-                [
-                    'status' => 'error',
-                    'message' => 'Invalid event type',
-                    'help' => $messageMap,
-                    'helpUrls' => $helpUrls,
-                ],
-                400,
-            );
-        }
-
-        try {
-            $eventIdParam = null;
-            if (in_array($taskType, ['start', 'live', 'end', 'all', 'reg', 'resetStart'])) {
-                $eventIdParam = (string) $eventId;
-            }
-            
-            $respondTaskService->execute($typeMap[$taskType], $eventIdParam);
-            $status = 'success';
-        } catch (\Exception $e) {
-            $status = 'failed';
-        }
-
-        Cache::flush();
-
-        return response()->json([
-            'status' => $status,
-            'message' => $messageMap[$taskType],
-            'helpUrls' => $helpUrls,
-        ]);
-    }
-
-    public function allTasks(Request $request, $taskType, $eventId = null, RespondTaskService $respondTaskService): JsonResponse
-    {
-        Cache::flush();
+        $validated = $validator->validated();
+        $taskType = $validated['taskType'];
+        $eventId = $validated['eventId'] ?? null;
 
         $respondTypeMap = [
             'event_started' => 1,
@@ -180,29 +111,12 @@ class MiscController extends Controller
             'tasks_all' => 'All tasks executed',
         ];
 
-        $baseUrl = $request->getSchemeAndHttpHost();
-        $basePath = '/seed/tasks';
-
-        $helpUrls = [];
-        foreach (array_keys($messageMap) as $type) {
-            $helpUrls[$type] = $baseUrl.$basePath.'/'.$type . ($eventId ? '/'.$eventId : '');
-        }
-
-        if (isset($respondTypeMap[$taskType])) {
-            try {
-                $eventIdParam = $eventId ? (string) $eventId : null;
-                $respondTaskService->execute($respondTypeMap[$taskType], $eventIdParam);
-                $status = 'success';
-            } catch (\Exception $e) {
-                $status = 'failed';
-            }
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid task type',
-                'available_types' => array_keys($messageMap),
-                'helpUrls' => $helpUrls,
-            ], 400);
+        try {
+            $eventIdParam = $eventId ? (string) $eventId : null;
+            $respondTaskService->execute($respondTypeMap[$taskType], $eventIdParam);
+            $status = 'success';
+        } catch (\Exception $e) {
+            $status = 'failed';
         }
 
         Cache::flush();
@@ -210,7 +124,6 @@ class MiscController extends Controller
         return response()->json([
             'status' => $status,
             'message' => $messageMap[$taskType],
-            'helpUrls' => $helpUrls,
         ]);
     }
 
@@ -346,9 +259,55 @@ class MiscController extends Controller
         return $eventName;
     }
 
-    public function seedBrackets(Request $request, $tier, $type = 'Tournament', $game = 'Dota 2'): JsonResponse
+    public function seedBrackets(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'tier' => 'required|string',
+            'type' => 'string',
+            'game' => 'string',
+            'numberOfTeams' => 'integer|min:2|max:16',
+        ], [
+            'tier.required' => 'Tier parameter is required.',
+            'numberOfTeams.integer' => 'Number of teams must be an integer.',
+            'numberOfTeams.min' => 'Number of teams must be at least 2.',
+            'numberOfTeams.max' => 'Number of teams cannot exceed 16.',
+        ]);
+
+        if ($validator->fails()) {
+            $baseUrl = $request->getSchemeAndHttpHost();
+            $basePath = '/seed/event';
+
+            $exampleUrls = [
+                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game='.urlencode('Dota 2').'&numberOfTeams=8',
+                $baseUrl.$basePath.'?tier=Starfish&type=League&game=Chess&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game=Fifa&numberOfTeams=8',
+                $baseUrl.$basePath.'?tier=Dolphin&type=League&game='.urlencode('Dota 2').'&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Starfish&type=Tournament&game=Chess&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=League&game=Fifa&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game=Chess&numberOfTeams=8',
+                $baseUrl.$basePath.'?tier=Starfish&type=League&game='.urlencode('Dota 2').'&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game='.urlencode('Dota 2').'&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=League&game=Fifa&numberOfTeams=16',
+            ];
+
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Invalid URL',
+                    'exampleUrls' => $exampleUrls,
+                    'errors' => $validator->errors(),
+                ],
+                400,
+            );
+        }
+
         try {
+            $validated = $validator->validated();
+            $tier = $validated['tier'];
+            $type = $validated['type'] ?? 'Tournament';
+            $game = $validated['game'] ?? 'Dota 2';
+            $numberOfTeams = $validated['numberOfTeams'] ?? 2;
+
             $factory = new BracketsFactory;
             $seed = $factory->seed([
                 'event' => [
@@ -365,6 +324,7 @@ class MiscController extends Controller
                         'type' => 'wallet',
                     ],
                 ],
+                'numberOfTeams' => $numberOfTeams,
             ]);
 
             [
@@ -386,7 +346,6 @@ class MiscController extends Controller
                 200,
             );
         } catch (\Exception $e) {
-            // Return error response if something goes wrong
             return response()->json(
                 [
                     'success' => false,
@@ -404,9 +363,9 @@ class MiscController extends Controller
         $currentDateTime = Carbon::now()->utc();
 
         $events = EventDetail::landingPageQuery($request, $currentDateTime)
-            ->orderBy('startDate', 'desc')
-            ->orderBy('startTime', 'desc') 
-            ->orderBy('id', 'desc')
+            ->orderBy('startDate', 'asc')
+            ->orderBy('startTime', 'asc') 
+            ->orderBy('id', 'asc')
             ->simplePaginate();
         $output = compact('events');
         if ($request->ajax()) {

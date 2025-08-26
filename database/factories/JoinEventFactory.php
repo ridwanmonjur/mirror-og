@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\EventCategory;
 use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
@@ -58,6 +59,7 @@ final class JoinEventFactory extends Factory
                 'type' => 'wallet',
             ],
         ],
+        'numberOfTeams' => 2,
     ])
     {
         // Store the events and teams
@@ -70,8 +72,18 @@ final class JoinEventFactory extends Factory
         $events[] = $result['event'];
         $organizers[] = $result['organizer'];
 
+        $playersPerTeam = 5;
+        $eventGame = $options['event']['eventGame'] ?? 'Dota 2';
+        
+        $eventCategory = EventCategory::where('gameTitle', $eventGame)->first();
+        if ($eventCategory) {
+            $playersPerTeam = $eventCategory->player_per_team ?? 5;
+        }
+
+        $numberOfUsers = ($options['numberOfTeams'] * $playersPerTeam)  ?? 80;
+        
         $teamMemberFactory = new TeamMemberFactory;
-        $teamResult = $teamMemberFactory->seed();
+        $teamResult = $teamMemberFactory->seed($numberOfUsers, $playersPerTeam);
         $teams = $teamResult['teams'];
         $members = $teamResult['members'];
         foreach ($teams as $team) {

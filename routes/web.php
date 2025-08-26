@@ -46,10 +46,10 @@ Route::get('/interestedUser/verify/{token}', [BetaController::class, 'verifyInte
 
 Route::get('/countries', [MiscController::class, 'countryList'])->name('country.view');
 // Route::get('/games', [MiscController::class, 'gameList'])->name('game.view');
-Route::get('/seed/event/{tier}/{type?}/{game?}', [MiscController::class, 'seedBrackets']);
+Route::get('/seed/event', [MiscController::class, 'seedBrackets']);
 Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
-Route::get('/seed/tasks/{taskType}/{eventId?}', [MiscController::class, 'allTasks']);
+Route::get('/seed/tasks', [MiscController::class, 'allTasks']);
 Route::get('/download-withdrawal-csv/{token}', [MiscController::class, 'downloadWithdrawalCsv'])->name('download.withdrawal.csv');
 
 // Shop
