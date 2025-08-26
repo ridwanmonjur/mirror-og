@@ -84,7 +84,7 @@ class AdminPanelProvider extends PanelProvider
                                     ->activeIcon('heroicon-s-chart-bar')
                                     ->isActiveWhen(fn (): bool => request()->routeIs('filament.admin.pages.analytics'))
                                     ->url(fn (): string => \App\Filament\Pages\Analytics::getUrl())
-                                    ->visible(fn (): bool => auth()->check() && auth()->user()->role === 'ADMIN'),
+                                    ->visible(fn (): bool => auth()->check() && auth()->user()->role === 'ADMIN' && config('app.env') !== 'production'),
                             ]),
 
                     ]);

@@ -8,8 +8,7 @@ use App\Models\EventDetail;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
 use App\Models\WithdrawalPassword;
-use App\Services\DeadlineTaskService;
-use App\Services\RespondTaskService;
+use Illuminate\Support\Facades\Artisan;
 use Carbon\Carbon;
 use Database\Factories\BracketsFactory;
 use Database\Factories\JoinEventFactory;
@@ -42,14 +41,14 @@ class MiscController extends Controller
 
     
 
-    public function allTasks(Request $request, RespondTaskService $respondTaskService): JsonResponse
+    public function allTasks(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'taskType' => 'required|in:event_started,event_live,event_ended,event_reg_over,event_resetStart,report_start,report_end,report_org,tasks_all',
+            'taskType' => 'required|in:event_started,event_live,event_ended,event_reg_over,event_resetStart,report_start,report_end,report_org,tasks_all,weekly_tasks',
             'eventId' => 'integer',
         ], [
             'taskType.required' => 'Task type is required.',
-            'taskType.in' => 'Task type must be one of: event_started, event_live, event_ended, event_reg_over, event_resetStart, report_start, report_end, report_org, tasks_all.',
+            'taskType.in' => 'Task type must be one of: event_started, event_live, event_ended, event_reg_over, event_resetStart, report_start, report_end, report_org, tasks_all, weekly_tasks.',
             'eventId.integer' => 'Event ID must be an integer.',
         ]);
 
@@ -67,6 +66,7 @@ class MiscController extends Controller
                 $baseUrl.$basePath.'?taskType=report_end&eventId=404',
                 $baseUrl.$basePath.'?taskType=report_org&eventId=505',
                 $baseUrl.$basePath.'?taskType=tasks_all',
+                $baseUrl.$basePath.'?taskType=weekly_tasks',
                 $baseUrl.$basePath.'?taskType=event_started',
             ];
 
@@ -97,6 +97,7 @@ class MiscController extends Controller
             'report_end' => 7,
             'report_org' => 8,
             'tasks_all' => 0,
+            'weekly_tasks' => 9,
         ];
 
         $messageMap = [
@@ -109,11 +110,23 @@ class MiscController extends Controller
             'report_end' => 'Report end tasks executed',
             'report_org' => 'Report org tasks executed',
             'tasks_all' => 'All tasks executed',
+            'weekly_tasks' => 'Weekly cleanup tasks executed',
         ];
 
         try {
-            $eventIdParam = $eventId ? (string) $eventId : null;
-            $respondTaskService->execute($respondTypeMap[$taskType], $eventIdParam);
+            $taskTypeId = $respondTypeMap[$taskType];
+            
+            if ($eventId) {
+                Artisan::call('tasks:run-all', [
+                    'task_type' => $taskTypeId,
+                    '--event_id' => $eventId
+                ]);
+            } else {
+                Artisan::call('tasks:run-all', [
+                    'task_type' => $taskTypeId
+                ]);
+            }
+            
             $status = 'success';
         } catch (\Exception $e) {
             $status = 'failed';

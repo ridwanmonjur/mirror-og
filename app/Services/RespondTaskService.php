@@ -32,7 +32,7 @@ class RespondTaskService
         $this->initializeTrait($stripeService, $taskId);
     }
 
-    public function execute(int $type = 0, ?string $eventId = null): void
+    public function execute(int $type = 0, ?string $eventId = null, ?int $taskType = null): void
     {
         $now = Carbon::now();
         $eventIdInt = 0;
@@ -45,12 +45,49 @@ class RespondTaskService
             $startedEventIds = [];
             $regOverEventIds = [];
 
-            if ($type === 0) {
-                $tasks = Task::where('taskable_type', 'EventDetail')
-                    ->where('action_time', '>=', $now->copy()->subMinutes(5))
-                    ->where('action_time', '<=', $now->copy()->addMinutes(29))
-                    ->get();
+            if ($taskType !== null) {
+                // Run for specific task type (from MiscController)
+                // taskType 1=started, 2=live, 3=ended, 4=reg_over, 5=resetStart
+                $taskNameMap = [
+                    1 => 'started',
+                    2 => 'live',
+                    3 => 'ended', 
+                    4 => 'reg_over',
+                    5 => 'resetStart'
+                ];
+                
+                $taskName = $taskNameMap[$taskType] ?? null;
+                if ($taskName) {
+                    if ($eventId !== null) {
+                        $eventIdInt = (int) $eventId;
+                        $tasks = Task::where('taskable_id', $eventIdInt)
+                            ->where('taskable_type', 'EventDetail')
+                            ->where('task_name', $taskName)
+                            ->get();
+                    } else {
+                        $tasks = Task::where('taskable_type', 'EventDetail')
+                            ->where('task_name', $taskName)
+                            ->where('action_time', '>=', $now->copy()->subMinutes(5))
+                            ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                            ->get();
+                    }
+                } else {
+                    $tasks = collect(); // Empty collection for invalid taskType
+                }
+            } elseif ($type === 0) {
+                if ($eventId !== null) {
+                    // Run all task types for specific event
+                    $eventIdInt = (int) $eventId;
+                    $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
+                } else {
+                    // Run all tasks in time window
+                    $tasks = Task::where('taskable_type', 'EventDetail')
+                        ->where('action_time', '>=', $now->copy()->subMinutes(5))
+                        ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                        ->get();
+                }
             } else {
+                // Run specific task type for specific event
                 $eventIdInt = (int) $eventId;
                 $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
             }

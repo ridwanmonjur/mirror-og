@@ -1,22 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, setDoc,  doc, updateDoc, increment, serverTimestamp, getDoc } from "firebase/firestore";
+// Firebase will be dynamically imported only when needed
 
-const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_MESSAGE_SENDER_ID,
-    appId: import.meta.env.VITE_APP_ID,
-};
 
-const app = initializeApp(firebaseConfig);
-
-const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({
-        tabManager: persistentMultipleTabManager()
-    })
-});
 
 // Utility functions for date formatting
 function getDateKeys() {
@@ -32,8 +16,55 @@ function getDateKeys() {
     };
 }
 
+
+if (document.querySelector('meta[name="analytics"]') && import.meta.env.VITE_APP_ENV !== 'production') {
+
+// Dynamically import Firebase modules
+let firebaseModules = null;
+let db = null;
+
+async function initializeFirebase() {
+    if (!firebaseModules) {
+        const [firebaseApp, firestore] = await Promise.all([
+            import('firebase/app'),
+            import('firebase/firestore')
+        ]);
+        
+        firebaseModules = {
+            initializeApp: firebaseApp.initializeApp,
+            initializeFirestore: firestore.initializeFirestore,
+            persistentLocalCache: firestore.persistentLocalCache,
+            persistentMultipleTabManager: firestore.persistentMultipleTabManager,
+            setDoc: firestore.setDoc,
+            doc: firestore.doc,
+            updateDoc: firestore.updateDoc,
+            increment: firestore.increment,
+            serverTimestamp: firestore.serverTimestamp,
+            getDoc: firestore.getDoc
+        };
+
+        const firebaseConfig = {
+            apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+            authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+            projectId: import.meta.env.VITE_PROJECT_ID,
+            storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+            messagingSenderId: import.meta.env.VITE_MESSAGE_SENDER_ID,
+            appId: import.meta.env.VITE_APP_ID,
+        };
+
+        const app = firebaseModules.initializeApp(firebaseConfig);
+        db = firebaseModules.initializeFirestore(app, {
+            localCache: firebaseModules.persistentLocalCache({
+                tabManager: firebaseModules.persistentMultipleTabManager()
+            })
+        });
+    }
+    return { firebaseModules, db };
+}
+
 async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId, type = 'click') {
     try {
+        const { firebaseModules, db: firestoreDb } = await initializeFirebase();
         const dateKeys = getDateKeys();
         
         const collections = [
@@ -43,37 +74,43 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
         ];
         
         for (const { collection, docId } of collections) {
-            const countsRef = doc(db, collection, `${type}Counts-${docId}`);
+            const countsRef = firebaseModules.doc(firestoreDb, collection, `${type}Counts-${docId}`);
             
-            const docSnap = await getDoc(countsRef);
+            const docSnap = await firebaseModules.getDoc(countsRef);
             
             const updateData = {
-                lastUpdated: serverTimestamp(),
+                lastUpdated: firebaseModules.serverTimestamp(),
                 date: docId
             };
 
-            if (eventTier) {
-                updateData[`eventTiers.${eventTier}`] = increment(1);
+            if (eventTier && typeof eventTier === 'string' && eventTier.trim()) {
+                const cleanTier = eventTier.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                updateData[`eventTiers.${cleanTier}`] = firebaseModules.increment(1);
             }
             
-            if (eventType) {
-                updateData[`eventTypes.${eventType}`] = increment(1);
+            if (eventType && typeof eventType === 'string' && eventType.trim()) {
+                const cleanType = eventType.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                updateData[`eventTypes.${cleanType}`] = firebaseModules.increment(1);
             }
             
-            if (esportTitle) {
-                updateData[`esportTitles.${esportTitle}`] = increment(1);
+            if (esportTitle && typeof esportTitle === 'string' && esportTitle.trim()) {
+                const cleanTitle = esportTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                updateData[`esportTitles.${cleanTitle}`] = firebaseModules.increment(1);
             }
             
-            if (location) {
-                updateData[`locations.${location}`] = increment(1);
+            if (location && typeof location === 'string' && location.trim()) {
+                const cleanLocation = location.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                updateData[`locations.${cleanLocation}`] = firebaseModules.increment(1);
             }
 
-            if (eventName) {
-                updateData[`eventNames.${eventName}`] = increment(1);
+            if (eventName && typeof eventName === 'string' && eventName.trim()) {
+                const cleanName = eventName.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                updateData[`eventNames.${cleanName}`] = firebaseModules.increment(1);
             }
 
-            if (userId) {
-                updateData[`userIds.${userId}`] = increment(1);
+            if (userId && typeof userId === 'string' && userId.trim()) {
+                const cleanUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 50);
+                updateData[`userIds.${cleanUserId}`] = firebaseModules.increment(1);
             }
 
             if (!docSnap.exists()) {
@@ -85,20 +122,38 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
                     locations: {},
                     eventNames: {},
                     userIds: {},
-                    lastUpdated: serverTimestamp(),
+                    lastUpdated: firebaseModules.serverTimestamp(),
                     date: docId
                 };
                 
-                if (eventTier) initialData.eventTiers[eventTier] = 1;
-                if (eventType) initialData.eventTypes[eventType] = 1;
-                if (esportTitle) initialData.esportTitles[esportTitle] = 1;
-                if (location) initialData.locations[location] = 1;
-                if (eventName) initialData.eventNames[eventName] = 1;
-                if (userId) initialData.userIds[userId] = 1;
+                if (eventTier && typeof eventTier === 'string' && eventTier.trim()) {
+                    const cleanTier = eventTier.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                    initialData.eventTiers[cleanTier] = 1;
+                }
+                if (eventType && typeof eventType === 'string' && eventType.trim()) {
+                    const cleanType = eventType.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                    initialData.eventTypes[cleanType] = 1;
+                }
+                if (esportTitle && typeof esportTitle === 'string' && esportTitle.trim()) {
+                    const cleanTitle = esportTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                    initialData.esportTitles[cleanTitle] = 1;
+                }
+                if (location && typeof location === 'string' && location.trim()) {
+                    const cleanLocation = location.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                    initialData.locations[cleanLocation] = 1;
+                }
+                if (eventName && typeof eventName === 'string' && eventName.trim()) {
+                    const cleanName = eventName.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 100);
+                    initialData.eventNames[cleanName] = 1;
+                }
+                if (userId && typeof userId === 'string' && userId.trim()) {
+                    const cleanUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 50);
+                    initialData.userIds[cleanUserId] = 1;
+                }
                 
-                await setDoc(countsRef, initialData);
+                await firebaseModules.setDoc(countsRef, initialData);
             } else {
-                await updateDoc(countsRef, updateData);
+                await firebaseModules.updateDoc(countsRef, updateData);
             }
         }
         
@@ -110,6 +165,7 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
 
 async function updateSocialCounts(action, targetType) {
     try {
+        const { firebaseModules, db: firestoreDb } = await initializeFirebase();
         const dateKeys = getDateKeys();
         
         const collections = [
@@ -119,37 +175,37 @@ async function updateSocialCounts(action, targetType) {
         ];
         
         for (const { collection, docId } of collections) {
-            const socialRef = doc(db, collection, `socialCounts-${docId}`);
+            const socialRef = firebaseModules.doc(firestoreDb, collection, `socialCounts-${docId}`);
             
-            const docSnap = await getDoc(socialRef);
+            const docSnap = await firebaseModules.getDoc(socialRef);
             
             const updateData = {
-                lastUpdated: serverTimestamp(),
+                lastUpdated: firebaseModules.serverTimestamp(),
                 date: docId
             };
 
             if (action) {
-                updateData[`actions.${action}`] = increment(1);
+                updateData[`actions.${action}`] = firebaseModules.increment(1);
             }
             
             if (targetType) {
-                updateData[`targetTypes.${targetType}`] = increment(1);
+                updateData[`targetTypes.${targetType}`] = firebaseModules.increment(1);
             }
 
             if (!docSnap.exists()) {
                 const initialData = {
                     actions: {},
                     targetTypes: {},
-                    lastUpdated: serverTimestamp(),
+                    lastUpdated: firebaseModules.serverTimestamp(),
                     date: docId
                 };
                 
                 if (action) initialData.actions[action] = 1;
                 if (targetType) initialData.targetTypes[targetType] = 1;
                 
-                await setDoc(socialRef, initialData);
+                await firebaseModules.setDoc(socialRef, initialData);
             } else {
-                await updateDoc(socialRef, updateData);
+                await firebaseModules.updateDoc(socialRef, updateData);
             }
         }
         
@@ -161,6 +217,7 @@ async function updateSocialCounts(action, targetType) {
 
 async function updateFormCounts(formName) {
     try {
+        const { firebaseModules, db: firestoreDb } = await initializeFirebase();
         const dateKeys = getDateKeys();
         
         const collections = [
@@ -170,31 +227,31 @@ async function updateFormCounts(formName) {
         ];
         
         for (const { collection, docId } of collections) {
-            const formRef = doc(db, collection, `formCounts-${docId}`);
+            const formRef = firebaseModules.doc(firestoreDb, collection, `formCounts-${docId}`);
             
-            const docSnap = await getDoc(formRef);
+            const docSnap = await firebaseModules.getDoc(formRef);
             
             const updateData = {
-                lastUpdated: serverTimestamp(),
+                lastUpdated: firebaseModules.serverTimestamp(),
                 date: docId
             };
 
             if (formName) {
-                updateData[`formNames.${formName}`] = increment(1);
+                updateData[`formNames.${formName}`] = firebaseModules.increment(1);
             }
 
             if (!docSnap.exists()) {
                 const initialData = {
                     formNames: {},
-                    lastUpdated: serverTimestamp(),
+                    lastUpdated: firebaseModules.serverTimestamp(),
                     date: docId
                 };
                 
                 if (formName) initialData.formNames[formName] = 1;
                 
-                await setDoc(formRef, initialData);
+                await firebaseModules.setDoc(formRef, initialData);
             } else {
-                await updateDoc(formRef, updateData);
+                await firebaseModules.updateDoc(formRef, updateData);
             }
         }
         
@@ -204,7 +261,6 @@ async function updateFormCounts(formName) {
     }
 }
 
-if (document.querySelector('meta[name="analytics"]')) {
     window.trackEventCardClick = async function(element, event) {
         console.log("Event card click tracked");
         
@@ -212,14 +268,14 @@ if (document.querySelector('meta[name="analytics"]')) {
             event.preventDefault();
         }
         
-        if (element.disabled || element.dataset.clicking === 'false') {
+        if (element.disabled || element.dataset.clicking === 'true') {
             console.log("Element already disabled or being processed");
             return;
         }
         
         const storedHref = element.href;
         element.disabled = true;
-        element.dataset.clicking = 'false';
+        element.dataset.clicking = 'true';
         
         try {
             const eventData = {
@@ -237,13 +293,25 @@ if (document.querySelector('meta[name="analytics"]')) {
 
             console.log('Tracking event data:', eventData);
 
+            // Validate eventData to prevent empty or undefined values
+            const cleanEventData = {
+                eventTier: eventData.eventTier || null,
+                eventType: eventData.eventType || null,
+                esportTitle: eventData.esportTitle || null,
+                location: eventData.location || null,
+                eventName: eventData.eventName || null,
+                userId: eventData.userId || null
+            };
+            
+            console.log('Clean event data:', cleanEventData);
+
             const analyticsPromise = updateAnalyticsCounts(
-                eventData.eventTier,
-                eventData.eventType,
-                eventData.esportTitle,
-                eventData.location,
-                eventData.eventName,
-                eventData.userId,
+                cleanEventData.eventTier,
+                cleanEventData.eventType,
+                cleanEventData.esportTitle,
+                cleanEventData.location,
+                cleanEventData.eventName,
+                cleanEventData.userId,
                 'click'
             );
 
@@ -351,6 +419,32 @@ if (document.querySelector('meta[name="analytics"]')) {
         };
         
         updateFormCounts(formName);
+    };
+} else {
+    // Non-production environment - provide no-op functions
+    window.trackEventCardClick = function(element, event) {
+        console.log("Analytics disabled in non-production environment");
+        if (event) {
+            event.preventDefault();
+        }
+        // Still handle navigation for clicked links
+        if (element.href) {
+            setTimeout(() => {
+                window.location.href = element.href;
+            }, 100);
+        }
+    };
+    
+    window.trackEventViewFromDiv = function(element) {
+        console.log("Analytics disabled in non-production environment");
+    };
+    
+    window.trackSocialInteraction = function(action, target, targetType) {
+        console.log("Analytics disabled in non-production environment");
+    };
+    
+    window.trackFormSubmission = function(formName, additionalParams) {
+        console.log("Analytics disabled in non-production environment");
     };
 }
 

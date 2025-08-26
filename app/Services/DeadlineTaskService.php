@@ -38,7 +38,7 @@ class DeadlineTaskService
         $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
     }
 
-    public function execute(int $type = 0, ?string $eventId = null): void
+    public function execute(int $type = 0, ?string $eventId = null, ?int $taskType = null): void
     {
         $now = Carbon::now();
         $taskId = $this->taskIdParent;
@@ -48,12 +48,51 @@ class DeadlineTaskService
             $endTaskIds = [];
             $orgTaskIds = [];
 
-            if ($type === 0) {
-                $tasks = Task::where('taskable_type', 'Deadline')
-                    ->where('action_time', '>=', $now->copy()->subMinutes(5))
-                    ->where('action_time', '<=', $now->copy()->addMinutes(29))
-                    ->get();
+            if ($taskType !== null) {
+                // Run for specific task type (from MiscController)
+                // taskType 6=report_start, 7=report_end, 8=report_org
+                $taskNameMap = [
+                    6 => 'start_report',
+                    7 => 'end_report', 
+                    8 => 'org_report'
+                ];
+                
+                $taskName = $taskNameMap[$taskType] ?? null;
+                if ($taskName) {
+                    if ($eventId !== null) {
+                        $eventIdInt = (int) $eventId;
+                        $deadlines = BracketDeadline::where('event_details_id', $eventIdInt)->get();
+                        $deadlinesPast = $deadlines->pluck('id');
+                        $tasks = Task::whereIn('taskable_id', $deadlinesPast)
+                            ->where('taskable_type', 'Deadline')
+                            ->where('task_name', $taskName)
+                            ->get();
+                    } else {
+                        $tasks = Task::where('taskable_type', 'Deadline')
+                            ->where('task_name', $taskName)
+                            ->where('action_time', '>=', $now->copy()->subMinutes(5))
+                            ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                            ->get();
+                    }
+                } else {
+                    $tasks = collect(); // Empty collection for invalid taskType
+                }
+            } elseif ($type === 0) {
+                if ($eventId !== null) {
+                    // Run all task types for specific event
+                    $eventIdInt = (int) $eventId;
+                    $deadlines = BracketDeadline::where('event_details_id', $eventIdInt)->get();
+                    $deadlinesPast = $deadlines->pluck('id');
+                    $tasks = Task::whereIn('taskable_id', $deadlinesPast)->where('taskable_type', 'Deadline')->get();
+                } else {
+                    // Run all tasks in time window
+                    $tasks = Task::where('taskable_type', 'Deadline')
+                        ->where('action_time', '>=', $now->copy()->subMinutes(5))
+                        ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                        ->get();
+                }
             } else {
+                // Run specific task type for specific event
                 $eventIdInt = (int) $eventId;
                 $deadlines = BracketDeadline::where('event_details_id', $eventIdInt)->get();
                 $deadlinesPast = $deadlines->pluck('id');
