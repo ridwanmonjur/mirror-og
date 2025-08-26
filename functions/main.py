@@ -1,78 +1,95 @@
-import functions_framework
 import firebase_admin
 from firebase_admin import auth, firestore
 from datetime import datetime, timedelta
 from jose import jwt
 import os
 import logging
-from flask import jsonify
+from typing import Optional, List, Dict, Any
+from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
+# Initialize Firebase Admin
 if not firebase_admin._apps:
     firebase_admin.initialize_app()
 
+# Environment variables
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key')
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-@functions_framework.http
-def driftwood_api(request):
-    """Main API endpoint for auth and health."""
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-    }
-    
-    if request.method == 'OPTIONS':
-        headers['Access-Control-Allow-Methods'] = 'GET, POST'
-        headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        headers['Access-Control-Max-Age'] = '3600'
-        return ('', 204, headers)
-    
-    # Route based on path
-    if request.path == '/auth/token' and request.method == 'POST':
-        return handle_auth_token(request, headers)
-    elif request.path == '/room/block' and request.method == 'POST':
-        return handle_room_block(request, headers)
-    elif request.path == '/batch/reports' and request.method == 'POST':
-        return handle_batch_reports(request, headers)
-    elif request.path == '/batch/disputes' and request.method == 'POST':
-        return handle_batch_disputes(request, headers)
-    elif request.path == '/deadline/started' and request.method == 'POST':
-        return handle_started_tasks(request, headers)
-    elif request.path == '/deadline/ended' and request.method == 'POST':
-        return handle_ended_tasks(request, headers)
-    elif request.path == '/deadline/org' and request.method == 'POST':
-        return handle_org_tasks(request, headers)
-    elif request.path == '/health' and request.method == 'GET':
-        return handle_health_check(headers)
-    else:
-        return (jsonify({'error': 'Not found'}), 404, headers)
+# Create FastAPI app
+app = FastAPI(
+    title="Driftwood API",
+    description="Driftwood esports platform API",
+    version="2.0.0"
+)
 
-def handle_auth_token(request, headers):
-    """Handle auth token creation."""
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Pydantic models for request/response validation
+class AuthTokenRequest(BaseModel):
+    uid: str
+    role: Optional[str] = "PARTICIPANT"
+    teamId: Optional[str] = None
+
+class RoomBlockRequest(BaseModel):
+    user1: str
+    user2: str
+    action: str  # 'block' or 'unblock'
+    blocked_by: Optional[str] = None
+
+class BatchReportsRequest(BaseModel):
+    event_id: str
+    count: int
+    custom_values_array: Optional[List[Dict[str, Any]]] = []
+    specific_ids: Optional[List[str]] = []
+    games_per_match: Optional[int] = 3
+
+class BatchDisputesRequest(BaseModel):
+    event_id: str
+    count: int
+    custom_values_array: Optional[List[Dict[str, Any]]] = []
+    specific_ids: Optional[List[str]] = []
+
+class DeadlineTasksRequest(BaseModel):
+    detail_id: str
+    matches: Optional[List[Dict[str, Any]]] = []
+    bracket_info: Optional[Dict[str, Any]] = {}
+    tier_id: Optional[str] = None
+    is_league: Optional[bool] = False
+    games_per_match: Optional[int] = 3
+
+# Auth token endpoint
+@app.post("/auth/token")
+async def create_auth_token(request: AuthTokenRequest):
+    """Create authentication token for user."""
     try:
-        request_json = request.get_json()
-        if not request_json or 'uid' not in request_json:
-            return (jsonify({'error': 'uid is required'}), 400, headers)
-        
-        uid = str(request_json['uid'])
+        uid = str(request.uid)
         if not uid:
-            return (jsonify({'error': 'uid is required'}), 400, headers)
+            raise HTTPException(status_code=400, detail="uid is required")
         
-        # Get additional user data from request
-        role = request_json.get('role', 'PARTICIPANT')  # Default role
-        team_id = request_json.get('teamId')  # Can be None
-        
+        # Create custom claims
         custom_claims = {
             "uid": uid,
             "source": "driftwood-laravel",
-            "role": role,
+            "role": request.role,
             "userId": uid,
-            "teamId": team_id
+            "teamId": request.teamId
         }
         
+        # Create Firebase custom token
         custom_token = auth.create_custom_token(uid, custom_claims)
         
+        # Create JWT token
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         jwt_payload = {
             "uid": uid,
@@ -81,124 +98,108 @@ def handle_auth_token(request, headers):
         }
         jwt_token = jwt.encode(jwt_payload, SECRET_KEY, algorithm=ALGORITHM)
         
-        response_data = {
+        # Return same format as Flask
+        return {
             'token': custom_token.decode('utf-8'),
             'jwt_token': jwt_token,
             'expires_at': expire.isoformat()
         }
         
-        return (jsonify(response_data), 200, headers)
-        
     except Exception as e:
         logging.error(f"Error creating token: {e}")
-        return (jsonify({'error': 'Failed to create authentication token'}), 500, headers)
+        raise HTTPException(status_code=500, detail="Failed to create authentication token")
 
-def handle_room_block(request, headers):
+# Room block/unblock endpoint
+@app.post("/room/block")
+async def handle_room_block(request: RoomBlockRequest):
     """Handle room blocking/unblocking operations."""
     try:
-        request_json = request.get_json()
-        if not request_json:
-            return (jsonify({'error': 'Request body is required'}), 400, headers)
+        if request.action not in ['block', 'unblock']:
+            raise HTTPException(status_code=400, detail='action must be "block" or "unblock"')
         
-        user1_id = request_json.get('user1')
-        user2_id = request_json.get('user2')
-        action = request_json.get('action')  # 'block' or 'unblock'
-        blocked_by = request_json.get('blocked_by')
-        
-        if not user1_id or not user2_id or not action:
-            return (jsonify({'error': 'user1, user2, and action are required'}), 400, headers)
-        
-        if action not in ['block', 'unblock']:
-            return (jsonify({'error': 'action must be "block" or "unblock"'}), 400, headers)
-        
-        if action == 'block' and not blocked_by:
-            return (jsonify({'error': 'blocked_by is required for block action'}), 400, headers)
+        if request.action == 'block' and not request.blocked_by:
+            raise HTTPException(status_code=400, detail='blocked_by is required for block action')
         
         db = firestore.client()
         room_collection = db.collection('room')
         
-        query1 = room_collection.where('user1', '==', str(user1_id)).where('user2', '==', str(user2_id))
-        query2 = room_collection.where('user2', '==', str(user1_id)).where('user1', '==', str(user2_id))
+        query1 = room_collection.where('user1', '==', str(request.user1)).where('user2', '==', str(request.user2))
+        query2 = room_collection.where('user2', '==', str(request.user1)).where('user1', '==', str(request.user2))
         
         rooms_updated = 0
         
         for doc in query1.stream():
-            if action == 'block':
-                doc.reference.update({'blocked_by': str(blocked_by)})
+            if request.action == 'block':
+                doc.reference.update({'blocked_by': str(request.blocked_by)})
             else:  # unblock
                 doc.reference.update({'blocked_by': None})
             rooms_updated += 1
         
         for doc in query2.stream():
-            if action == 'block':
-                doc.reference.update({'blocked_by': str(blocked_by)})
+            if request.action == 'block':
+                doc.reference.update({'blocked_by': str(request.blocked_by)})
             else:  # unblock
                 doc.reference.update({'blocked_by': None})
             rooms_updated += 1
         
-        return (jsonify({
+        # Return same format as Flask
+        return {
             'success': True,
-            'action': action,
+            'action': request.action,
             'rooms_updated': rooms_updated,
-            'message': f'Successfully {action}ed {rooms_updated} room(s)'
-        }), 200, headers)
+            'message': f'Successfully {request.action}ed {rooms_updated} room(s)'
+        }
         
+    except HTTPException:
+        raise
     except Exception as e:
+        action = getattr(request, 'action', 'unknown')
         logging.error(f"Error in room {action} operation: {e}")
-        return (jsonify({'error': f'Failed to {action} room'}), 500, headers)
+        raise HTTPException(status_code=500, detail=f'Failed to {action} room')
 
-def handle_batch_reports(request, headers):
-    """Handle batch reports creation."""
+# Batch reports endpoint
+@app.post("/batch/reports")
+async def create_batch_reports(request: BatchReportsRequest):
+    """Create batch reports."""
     try:
-        request_json = request.get_json()
-        if not request_json:
-            return (jsonify({'error': 'Request body is required'}), 400, headers)
-        
-        event_id = request_json.get('event_id')
-        count = request_json.get('count')
-        custom_values_array = request_json.get('custom_values_array', [])
-        specific_ids = request_json.get('specific_ids', [])
-        games_per_match = request_json.get('games_per_match', 3)
-        
-        if not event_id or not count:
-            return (jsonify({'error': 'event_id and count are required'}), 400, headers)
-        
-        result = createBatchReports(event_id, count, custom_values_array, specific_ids, games_per_match)
-        return (jsonify(result), 200, headers)
+        result = createBatchReports(
+            request.event_id, 
+            request.count, 
+            request.custom_values_array, 
+            request.specific_ids, 
+            request.games_per_match
+        )
+        return result
         
     except Exception as e:
         logging.error(f"Error in batch reports creation: {e}")
-        return (jsonify({'error': 'Failed to create batch reports'}), 500, headers)
+        raise HTTPException(status_code=500, detail="Failed to create batch reports")
 
-def handle_batch_disputes(request, headers):
-    """Handle batch disputes creation."""
+# Batch disputes endpoint
+@app.post("/batch/disputes")
+async def create_batch_disputes(request: BatchDisputesRequest):
+    """Create batch disputes."""
     try:
-        request_json = request.get_json()
-        if not request_json:
-            return (jsonify({'error': 'Request body is required'}), 400, headers)
-        
-        event_id = request_json.get('event_id')
-        count = request_json.get('count')
-        custom_values_array = request_json.get('custom_values_array', [])
-        specific_ids = request_json.get('specific_ids', [])
-        
-        if not event_id or not count:
-            return (jsonify({'error': 'event_id and count are required'}), 400, headers)
-        
-        result = createBatchDisputes(event_id, count, custom_values_array, specific_ids)
-        return (jsonify(result), 200, headers)
+        result = createBatchDisputes(
+            request.event_id, 
+            request.count, 
+            request.custom_values_array, 
+            request.specific_ids
+        )
+        return result
         
     except Exception as e:
         logging.error(f"Error in batch disputes creation: {e}")
-        return (jsonify({'error': 'Failed to create batch disputes'}), 500, headers)
+        raise HTTPException(status_code=500, detail="Failed to create batch disputes")
 
-def handle_health_check(headers):
-    """Handle health check."""
-    return (jsonify({
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    return {
         'status': 'healthy',
         'service': 'driftwood-api',
         'timestamp': datetime.utcnow().isoformat()
-    }), 200, headers)
+    }
 
 def createBatchReports(event_id, count, custom_values_array=None, specific_ids=None, games_per_match=3):
     """Create or overwrite multiple reports with specified IDs and customizable values using BulkWriter"""
@@ -564,32 +565,23 @@ class DeadlineTaskTrait:
             'next_stage_data': next_stage_data
         }
 
-def handle_started_tasks(request, headers):
-    """Handle started tournament tasks"""
+# Started tasks endpoint
+@app.post("/deadline/started")
+async def handle_started_tasks(request: DeadlineTasksRequest):
+    """Handle started tournament tasks."""
     try:
-        request_json = request.get_json()
-        if not request_json:
-            return (jsonify({'error': 'Request body is required'}), 400, headers)
-        
-        detail_id = request_json.get('detail_id')
-        matches = request_json.get('matches', [])
-        games_per_match = request_json.get('games_per_match', 3)
-        
-        if not detail_id:
-            return (jsonify({'error': 'detail_id is required'}), 400, headers)
-        
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(detail_id)
+        trait.fetch_all_event_data(request.detail_id)
         results = []
         
-        for match in matches:
+        for match in request.matches:
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
             
             # Check if bracket exists in our hashmap
             if match_status_path in trait.all_brackets:
                 doc_ref = trait.db.collection('event').document(match['event_details_id']).collection('brackets').document(match_status_path)
                 
-                started_status_array = ['ONGOING'] + ['UPCOMING'] * (games_per_match - 1)
+                started_status_array = ['ONGOING'] + ['UPCOMING'] * (request.games_per_match - 1)
                 doc_ref.update({
                     'matchStatus': started_status_array,
                     'completeMatchStatus': 'ONGOING'
@@ -601,41 +593,30 @@ def handle_started_tasks(request, headers):
                     'message': 'Match status updated to started'
                 })
         
-        return (jsonify({
+        # Return same format as Flask
+        return {
             'status': 'success',
             'message': f'Processed {len(results)} started matches',
             'results': results
-        }), 200, headers)
+        }
         
     except Exception as e:
         logging.error(f"Error in handle_started_tasks: {e}")
-        return (jsonify({'error': 'Failed to handle started tasks'}), 500, headers)
+        raise HTTPException(status_code=500, detail="Failed to handle started tasks")
 
-def handle_ended_tasks(request, headers):
-    """Handle ended tournament tasks"""
+# Ended tasks endpoint
+@app.post("/deadline/ended")
+async def handle_ended_tasks(request: DeadlineTasksRequest):
+    """Handle ended tournament tasks."""
     try:
-        request_json = request.get_json()
-        if not request_json:
-            return (jsonify({'error': 'Request body is required'}), 400, headers)
-        
-        detail_id = request_json.get('detail_id')
-        matches = request_json.get('matches', [])
-        bracket_info = request_json.get('bracket_info', {})
-        tier_id = request_json.get('tier_id')
-        is_league = request_json.get('is_league', False)
-        games_per_match = request_json.get('games_per_match', 3)
-        
-        if not detail_id:
-            return (jsonify({'error': 'detail_id is required'}), 400, headers)
-        
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(detail_id)
+        trait.fetch_all_event_data(request.detail_id)
         results = []
         next_stage_data_list = []
         
-        for match in matches:
-            extra_bracket = bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
-            ended_status_array = ['ENDED'] * games_per_match
+        for match in request.matches:
+            extra_bracket = request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
+            ended_status_array = ['ENDED'] * request.games_per_match
             
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
             
@@ -650,7 +631,7 @@ def handle_ended_tasks(request, headers):
                 
                 result = trait.interpret_deadlines(
                     match_status_data, initial_update_values, match, extra_bracket, 
-                    tier_id, False, is_league, games_per_match
+                    request.tier_id, False, request.is_league, request.games_per_match
                 )
                 
                 # Update Firestore document
@@ -673,41 +654,30 @@ def handle_ended_tasks(request, headers):
                     'message': 'Match ended and processed'
                 })
         
-        return (jsonify({
+        # Return same format as Flask
+        return {
             'status': 'success',
             'message': f'Processed {len(results)} ended matches',
             'results': results,
             'next_stage_data': next_stage_data_list
-        }), 200, headers)
+        }
         
     except Exception as e:
         logging.error(f"Error in handle_ended_tasks: {e}")
-        return (jsonify({'error': 'Failed to handle ended tasks'}), 500, headers)
+        raise HTTPException(status_code=500, detail="Failed to handle ended tasks")
 
-def handle_org_tasks(request, headers):
-    """Handle organizer deadline tasks"""
+# Organizer tasks endpoint
+@app.post("/deadline/org")
+async def handle_org_tasks(request: DeadlineTasksRequest):
+    """Handle organizer deadline tasks."""
     try:
-        request_json = request.get_json()
-        if not request_json:
-            return (jsonify({'error': 'Request body is required'}), 400, headers)
-        
-        detail_id = request_json.get('detail_id')
-        matches = request_json.get('matches', [])
-        bracket_info = request_json.get('bracket_info', {})
-        tier_id = request_json.get('tier_id')
-        is_league = request_json.get('is_league', False)
-        games_per_match = request_json.get('games_per_match', 3)
-        
-        if not detail_id:
-            return (jsonify({'error': 'detail_id is required'}), 400, headers)
-        
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(detail_id)
+        trait.fetch_all_event_data(request.detail_id)
         results = []
         next_stage_data_list = []
         
-        for match in matches:
-            extra_bracket = bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
+        for match in request.matches:
+            extra_bracket = request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
             
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
             
@@ -717,7 +687,7 @@ def handle_org_tasks(request, headers):
                 
                 result = trait.interpret_deadlines(
                     match_status_data, {}, match, extra_bracket, 
-                    tier_id, True, is_league, games_per_match
+                    request.tier_id, True, request.is_league, request.games_per_match
                 )
                 
                 # Update Firestore document
@@ -740,16 +710,25 @@ def handle_org_tasks(request, headers):
                     'message': 'Organizer deadline processed'
                 })
         
-        return (jsonify({
+        # Return same format as Flask
+        return {
             'status': 'success',
             'message': f'Processed {len(results)} organizer tasks',
             'results': results,
             'next_stage_data': next_stage_data_list
-        }), 200, headers)
+        }
         
     except Exception as e:
         logging.error(f"Error in handle_org_tasks: {e}")
-        return (jsonify({'error': 'Failed to handle organizer tasks'}), 500, headers)
+        raise HTTPException(status_code=500, detail="Failed to handle organizer tasks")
 
-# Alias for backwards compatibility
-health_check = driftwood_api
+# Google's recommended approach for FastAPI with Cloud Functions 2nd gen
+import functions_framework
+from functions_framework import create_app
+
+@functions_framework.http
+def driftwood_api(request):
+    """Firebase Functions entry point for FastAPI app."""
+    # Google's recommended method: create_app automatically handles ASGI/WSGI conversion
+    handler = create_app(app)
+    return handler(request)

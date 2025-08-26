@@ -59,9 +59,9 @@ output "app_check_config" {
 output "cloud_function_urls" {
   description = "Cloud Function URLs"
   value = {
-    # auth_service_url = google_cloudfunctions_function.auth_service.https_trigger_url
-    health_check_url = google_cloudfunctions_function.health_check.https_trigger_url
-    driftwood_api_url = google_cloudfunctions_function.driftwood_api.https_trigger_url
+    # auth_service_url = google_cloudfunctions2_function.auth_service.service_config[0].uri
+    health_check_url = google_cloudfunctions2_function.health_check.service_config[0].uri
+    driftwood_api_url = google_cloudfunctions2_function.driftwood_api.service_config[0].uri
   }
 }
 

@@ -835,8 +835,7 @@ locals {
       startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
       startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
-      # startswith(line, "VITE_AUTH_SERVICE_URL=") ? "VITE_AUTH_SERVICE_URL=${google_cloudfunctions2_function.auth_service.service_config[0].uri}" :
-      startswith(line, "VITE_API_URL=") ? "VITE_API_URL=${google_cloudfunctions_function.driftwood_api.https_trigger_url}" :
+      startswith(line, "VITE_API_URL=") ? "VITE_API_URL=${google_cloudfunctions2_function.driftwood_api.service_config[0].uri}" :
       line
     ])
   }
@@ -865,7 +864,7 @@ resource "null_resource" "update_env_files" {
     auth_domain    = local.auth_domain
     app_id         = local.web_app_id
     database_id    = local.database_id
-    api_url        = google_cloudfunctions_function.driftwood_api.https_trigger_url
+    api_url        = google_cloudfunctions2_function.driftwood_api.service_config[0].uri
     content_hash   = md5(each.value)
   }
 
@@ -1012,7 +1011,7 @@ resource "null_resource" "copy_firebase_key" {
   depends_on = [local_file.auth_service_env]
 }
 
-# Check for existing Cloud Functions
+# Check for existing Cloud Functions (both 1st and 2nd gen)
 data "external" "existing_functions" {
   program = [
     "bash", "-c", <<EOT
@@ -1020,13 +1019,18 @@ data "external" "existing_functions" {
       PROJECT_ID="${var.project_id}"
       REGION="${var.region}"
       
-      # Get count of existing functions (simpler approach)
-      FUNCTION_COUNT=$(gcloud functions list --project="$PROJECT_ID" --format="value(name)" 2>/dev/null | grep -E "(driftwood-auth|driftwood-health|driftwood-api-${var.environment})" | wc -l || echo "0")
+      # Get count of existing 1st gen functions
+      GEN1_COUNT=$(gcloud functions list --project="$PROJECT_ID" --format="value(name)" 2>/dev/null | grep -E "(driftwood-auth|driftwood-health|driftwood-api-${var.environment})" | wc -l || echo "0")
       
-      if [ "$FUNCTION_COUNT" -gt 0 ]; then
-        echo "{\"exists\": \"true\", \"count\": \"$FUNCTION_COUNT\"}"
+      # Get count of existing 2nd gen functions
+      GEN2_COUNT=$(gcloud functions list --project="$PROJECT_ID" --gen2 --format="value(name)" 2>/dev/null | grep -E "(driftwood-auth|driftwood-health-${var.environment}|driftwood-api-${var.environment})" | wc -l || echo "0")
+      
+      TOTAL_COUNT=$((GEN1_COUNT + GEN2_COUNT))
+      
+      if [ "$TOTAL_COUNT" -gt 0 ]; then
+        echo "{\"exists\": \"true\", \"count\": \"$TOTAL_COUNT\", \"gen1\": \"$GEN1_COUNT\", \"gen2\": \"$GEN2_COUNT\"}"
       else
-        echo "{\"exists\": \"false\", \"count\": \"0\"}"
+        echo "{\"exists\": \"false\", \"count\": \"0\", \"gen1\": \"0\", \"gen2\": \"0\"}"
       fi
     EOT
   ]
@@ -1044,11 +1048,19 @@ resource "null_resource" "cleanup_existing_functions" {
       # Delete any existing functions that use our source bucket
       echo "Cleaning up existing Cloud Functions..."
       
-      # List and delete functions one by one
+      # Delete 1st gen functions
       for func in driftwood-auth driftwood-health "driftwood-api-${var.environment}"; do
         if gcloud functions describe "$func" --project="$PROJECT_ID" --region="$REGION" >/dev/null 2>&1; then
-          echo "Deleting existing function: $func"
+          echo "Deleting existing 1st gen function: $func"
           gcloud functions delete "$func" --project="$PROJECT_ID" --region="$REGION" --quiet
+        fi
+      done
+      
+      # Delete 2nd gen functions
+      for func in driftwood-auth "driftwood-health-${var.environment}" "driftwood-api-${var.environment}"; do
+        if gcloud functions describe "$func" --project="$PROJECT_ID" --region="$REGION" --gen2 >/dev/null 2>&1; then
+          echo "Deleting existing 2nd gen function: $func"
+          gcloud functions delete "$func" --project="$PROJECT_ID" --region="$REGION" --gen2 --quiet
         fi
       done
     EOT
@@ -1165,28 +1177,42 @@ resource "google_storage_bucket_object" "function_source" {
 #   member = "allUsers"
 # }
 
-# Deploy health check function as Cloud Function Gen 1
-resource "google_cloudfunctions_function" "health_check" {
-  name        = "driftwood-health"
+# Deploy health check function as Cloud Function Gen 2
+resource "google_cloudfunctions2_function" "health_check" {
+  name        = "driftwood-health-${var.environment}"
   description = "Driftwood health check service"
   project     = var.project_id
-  region      = var.region
-  runtime     = "python311"
+  location    = var.region
 
-  available_memory_mb   = 256
-  source_archive_bucket = google_storage_bucket.functions_bucket.name
-  source_archive_object = google_storage_bucket_object.function_source.name
-  
-  trigger_http          = true
-  https_trigger_security_level = "SECURE_OPTIONAL"
-  timeout                      = 60
-  entry_point          = "driftwood_api"
-  service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
-  
-  environment_variables = {
-    ENVIRONMENT = var.environment
-    FIREBASE_PROJECT_ID = var.project_id
-    FIREBASE_DATABASE_ID = "(default)"
+  build_config {
+    runtime     = "python311"
+    entry_point = "driftwood_api"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.functions_bucket.name
+        object = google_storage_bucket_object.function_source.name
+      }
+    }
+  }
+
+  service_config {
+    max_instance_count    = 5
+    min_instance_count    = 0
+    available_memory      = "256Mi"
+    available_cpu         = "0.5"
+    timeout_seconds       = 60
+    max_instance_request_concurrency = 1
+    service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+    
+    environment_variables = {
+      ENVIRONMENT          = var.environment
+      FIREBASE_PROJECT_ID  = var.project_id
+      FIREBASE_DATABASE_ID = "(default)"
+      SECRET_KEY          = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
+    }
+    
+    ingress_settings = "ALLOW_ALL"
+    all_traffic_on_latest_revision = true
   }
 
   depends_on = [
@@ -1195,38 +1221,52 @@ resource "google_cloudfunctions_function" "health_check" {
   ]
 }
 
-# IAM binding to allow public access to the health check function (1st gen)
-resource "google_cloudfunctions_function_iam_member" "health_check_invoker" {
+# IAM binding to allow public access to the health check function (2nd gen)
+resource "google_cloudfunctions2_function_iam_member" "health_check_invoker" {
   project        = var.project_id
-  region         = var.region
-  cloud_function = google_cloudfunctions_function.health_check.name
+  location       = var.region
+  cloud_function = google_cloudfunctions2_function.health_check.name
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
 }
 
-# Deploy FastAPI service as a Cloud Function Gen 1
-resource "google_cloudfunctions_function" "driftwood_api" {
+# Deploy FastAPI service as a Cloud Function Gen 2
+resource "google_cloudfunctions2_function" "driftwood_api" {
   name        = "driftwood-api-${var.environment}"
   description = "Driftwood FastAPI service"
   project     = var.project_id
-  region      = var.region
-  runtime     = "python311"
+  location    = var.region
 
-  available_memory_mb   = 512
-  source_archive_bucket = google_storage_bucket.functions_bucket.name
-  source_archive_object = google_storage_bucket_object.function_source.name
-  
-  trigger_http          = true
-  https_trigger_security_level = "SECURE_OPTIONAL"
-  timeout                      = 60
-  entry_point          = "driftwood_api"
-  service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
-  
-  environment_variables = {
-    ENVIRONMENT = var.environment
-    FIREBASE_PROJECT_ID = var.project_id
-    FIREBASE_DATABASE_ID = "(default)"
+  build_config {
+    runtime     = "python311"
+    entry_point = "driftwood_api"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.functions_bucket.name
+        object = google_storage_bucket_object.function_source.name
+      }
+    }
+  }
+
+  service_config {
+    max_instance_count    = 5
+    min_instance_count    = 0
+    available_memory      = "512Mi"
+    available_cpu         = "1"
+    timeout_seconds       = 300
+    max_instance_request_concurrency = 100
+    service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+    
+    environment_variables = {
+      ENVIRONMENT          = var.environment
+      FIREBASE_PROJECT_ID  = var.project_id
+      FIREBASE_DATABASE_ID = "(default)"
+      SECRET_KEY          = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
+    }
+    
+    ingress_settings = "ALLOW_ALL"
+    all_traffic_on_latest_revision = true
   }
 
   depends_on = [
@@ -1235,11 +1275,11 @@ resource "google_cloudfunctions_function" "driftwood_api" {
   ]
 }
 
-# IAM binding to allow public access to the FastAPI function (1st gen)
-resource "google_cloudfunctions_function_iam_member" "driftwood_api_invoker" {
+# IAM binding to allow public access to the FastAPI function (2nd gen)
+resource "google_cloudfunctions2_function_iam_member" "driftwood_api_invoker" {
   project        = var.project_id
-  region         = var.region
-  cloud_function = google_cloudfunctions_function.driftwood_api.name
+  location       = var.region
+  cloud_function = google_cloudfunctions2_function.driftwood_api.name
 
   role   = "roles/cloudfunctions.invoker"
   member = "allUsers"
