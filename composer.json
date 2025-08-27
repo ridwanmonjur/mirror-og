@@ -31,7 +31,8 @@
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-googletagmanager": "^2.8",
         "spatie/laravel-sitemap": "^7.3",
-        "stripe/stripe-php": "^13.0"
+        "stripe/stripe-php": "^13.0",
+        "opcodesio/log-viewer": "^3.19"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",
@@ -47,7 +48,6 @@
         "nextbuild/database-viewer": "^1.0",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/phpinsights": "^2.11",
-        "opcodesio/log-viewer": "^3.19",
         "phpunit/phpunit": "^10.1",
         "spatie/laravel-ignition": "^2.0",
         "thedoctor0/laravel-factory-generator": "^1.4"
