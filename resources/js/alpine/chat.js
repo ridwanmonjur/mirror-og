@@ -1,8 +1,10 @@
 import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, setDoc,  addDoc, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence, addDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { getAuth,  signInWithCustomToken } from "firebase/auth";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
+let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,21 +16,128 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
+let databaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
 const db = initializeFirestore(app, {
     localCache: persistentLocalCache({
         tabManager: persistentMultipleTabManager()
     })
 });
 
+
 let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+const authStore = reactive({
+    jwtToken: null,
+    firebaseUser: null,
+    isAuthenticated: false,
+    
+    async getJWTToken(uid) {
+        try {
+            // Check sessionStorage for existing token with expiration
+            const tokenKey = `chat_${uid}`;
+            const tokenData = sessionStorage.getItem(tokenKey);
+            
+            if (tokenData) {
+                const parsed = JSON.parse(tokenData);
+                const expiresAt = new Date(parsed.expires_at);
+                const now = new Date();
+                
+                // Check if token is still valid (with 5 minute buffer)
+                if (expiresAt > new Date(now.getTime() + 5 * 60 * 1000)) {
+                    console.log('Using existing token from sessionStorage');
+                    this.jwtToken = parsed.token;
+                    return parsed.token;
+                } else {
+                    console.log('Token expired, removing from sessionStorage');
+                    sessionStorage.removeItem(tokenKey);
+                }
+            }
+            
+            let domain = `${import.meta.env.VITE_CLOUD_FRONTEND_URL}`;
+            console.log({domain});
+            
+            // Get user role and team info from loggedUserProfile
+            const role = loggedUserProfile?.role || 'PARTICIPANT';
+            const teamId = loggedUserProfile?.team?.id || loggedUserProfile?.teams?.[0]?.id || null;
+            
+            const response = await fetch(`${domain}/auth/token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    uid,
+                    role,
+                    teamId
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            const token = result.token;
+            this.jwtToken = token;
+            
+            // Store token with expiration time in sessionStorage
+            const tokenInfo = {
+                token: token,
+                expires_at: result.expires_at,
+                created_at: new Date().toISOString()
+            };
+            sessionStorage.setItem(tokenKey, JSON.stringify(tokenInfo));
+            
+            return token;
+        } catch (error) {
+            console.error('Error getting JWT token:', error);
+            return null;
+        }
+    },
+    
+    async initAuth() {
+        try {
+            const larvelUserId = loggedUserProfile?.id;
+            if (!larvelUserId) {
+                throw new Error('No Laravel user ID found');
+            }
+            
+            const jwtToken = await this.getJWTToken(larvelUserId);
+            if (!jwtToken) {
+                throw new Error('Failed to get JWT token');
+            }
+            
+            const userCredential = await signInWithCustomToken(auth, jwtToken);
+            this.firebaseUser = userCredential.user;
+            this.isAuthenticated = true;
+            
+            // Verify the user has required claims
+            const idTokenResult = await userCredential.user.getIdTokenResult();
+            if (!idTokenResult.claims.role || !idTokenResult.claims.userId) {
+                console.warn('User missing required claims:', idTokenResult.claims);
+            }
+            
+            console.log('Firebase auth successful:', {
+                uid: userCredential.user.uid,
+                claims: idTokenResult.claims
+            });
+            
+            return userCredential.user;
+        } catch (error) {
+            console.error('Error initializing auth:', error);
+            this.isAuthenticated = false;
+            throw error;
+        }
+    }
+});
 
 const chatInput = document.querySelector(".chat-input textarea");
 
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
-let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
 let viewUserProfile = JSON.parse(viewUserProfileInput?.value ?? "[]");
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -289,6 +398,17 @@ const roomStore = reactive({
                     }
 
                     let roomId = newRoomData.user1 + '.' + newRoomData.user2;
+                    
+                    if (!authStore.isAuthenticated) {
+                        console.log('Firebase auth not ready for room creation, initializing...');
+                        await authStore.initAuth();
+                        
+                        if (!authStore.isAuthenticated) {
+                            console.error("Authentication failed for room creation");
+                            return;
+                        }
+                    }
+                    
                     await setDoc(doc(db, "room", roomId), {
                         user1: newRoomData.user1,
                         user2: newRoomData.user2,
@@ -445,6 +565,16 @@ function ChatListComponent() {
             }
 
             try {
+                if (!authStore.isAuthenticated) {
+                    console.log('Firebase auth not ready, initializing...');
+                    await authStore.initAuth();
+                    
+                    if (!authStore.isAuthenticated) {
+                        window.toastError("Authentication failed. Please refresh the page.");
+                        return;
+                    }
+                }
+
                 if (this.currentRoom == null) {
                     window.toastError("New chat still being updated...")
                 }
@@ -492,7 +622,8 @@ function ChatListComponent() {
                scrollIntoView();
 
             } catch (err) {
-                console.error(err);
+                console.error('Error sending message:', err);
+                window.toastError("Failed to send message. Please try again.");
             }
 
             chatInput.value = "";
@@ -546,8 +677,13 @@ function RoomComponent() {
             return newDate;
         },
         async mounted() {
-            await roomStore.initDB();
-          
+            try {
+                await authStore.initAuth();
+                await roomStore.initDB();
+            } catch (error) {
+                console.error('Error during component mount:', error);
+                window.toastError("Failed to initialize chat. Please refresh the page.");
+            }
         }
     }
 }

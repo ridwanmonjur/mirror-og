@@ -38,3 +38,34 @@ output "app_check_config" {
   }
 }
 
+# output "auth_service_env" {
+#   description = "Environment variables for auth service"
+#   sensitive   = true
+#   value = {
+#     FIREBASE_PROJECT_ID = var.project_id
+#     FIREBASE_DATABASE_ID = local.database_id
+#     FIREBASE_API_KEY = local.api_key
+#     FIREBASE_AUTH_DOMAIN = local.auth_domain
+#     FIREBASE_STORAGE_BUCKET = local.storage_bucket
+#     FIREBASE_MESSAGING_SENDER_ID = local.messaging_sender_id
+#     FIREBASE_APP_ID = local.web_app_id
+#     SECRET_KEY = var.auth_service_secret_key != "" ? var.auth_service_secret_key : "change-me-in-production"
+#     ALGORITHM = "HS256"
+#     ACCESS_TOKEN_EXPIRE_MINUTES = "30"
+#     ENVIRONMENT = var.environment
+#   }
+# }
+
+output "service_urls" {
+  description = "Service URLs"
+  value = {
+    driftwood_api_url = google_cloud_run_v2_service.driftwood_api.uri
+    health_check_url = "${google_cloud_run_v2_service.driftwood_api.uri}/health"
+    client_auth_url = google_cloudfunctions_function.client_auth_service.https_trigger_url
+    client_auth_token_url = "${google_cloudfunctions_function.client_auth_service.https_trigger_url}/auth/token"
+  }
+}
+
+# Using existing Firebase service account from FIREBASE_CREDENTIALS
+# No additional service account outputs needed
+

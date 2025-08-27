@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Traits;
+namespace App\Traits;
 
 use App\Models\ActivityLogs;
 use App\Models\BracketDeadline;

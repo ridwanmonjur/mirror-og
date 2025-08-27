@@ -28,6 +28,6 @@ class Analytics extends Page
 
     public static function canAccess(): bool
     {
-        return auth()->check() && auth()->user()->role === 'ADMIN';
+        return auth()->check() && auth()->user()->role === 'ADMIN' && config('app.env') !== 'production';
     }
 }

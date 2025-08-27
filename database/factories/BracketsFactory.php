@@ -44,23 +44,26 @@ class BracketsFactory extends Factory
         ];
     }
 
-    public function seed($options = [
-        'event' => [
-            'eventTier' => 'Dolphin',
-            'eventType' => 'Tournament',
-            'eventName' => 'Test Brackets',
-            'eventGame' => 'Dota 2',
+    public function seed($options = []) {
+        $defaults = [
+            'event' => [
+                'eventTier' => 'Dolphin',
+                'eventType' => 'Tournament',
+                'eventName' => 'Test Brackets',
+                'eventGame' => 'Dota 2',
+            ],
             'joinEvent' => [
                 'join_status' => 'confirmed',
                 'payment_status' => 'confirmed',
                 'participantPayment' => [
-                    'register_time' => null,
+                    'register_time' => config('constants.SIGNUP_STATUS.EARLY'),
                     'type' => 'wallet',
                 ],
             ],
-        ],
-    ])
-    {
+            'numberOfTeams' => 2,
+        ];
+
+        $options = array_merge($defaults, $options);
 
         $joinEventFactory = new JoinEventFactory;
         // dd($options);

@@ -78,7 +78,7 @@ return [
                  * https://firebase.google.com/docs/firestore/manage-databases
                  */
 
-                // 'database' => env('FIREBASE_FIRESTORE_DATABASE'),
+                'database' => env('FIREBASE_FIRESTORE_DATABASE'),
             ],
 
             /*

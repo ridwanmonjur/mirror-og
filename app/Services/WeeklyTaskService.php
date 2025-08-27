@@ -1,41 +1,23 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services;
 
 use App\Models\NotificationCounter;
 use App\Models\Task;
-use App\Console\Traits\PrinterLoggerTrait;
+use App\Traits\PrinterLoggerTrait;
 use App\Models\NotifcationsUser;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class WeeklyTasks extends Command
+class WeeklyTaskService
 {
     use PrinterLoggerTrait;
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $signature = 'tasks:weekly';
-
-    protected $description = 'Weekly tasks in the database';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function execute(): void
     {
         $today = Carbon::now();
-        $taskId = $this->logEntry($this->description, $this->signature, '0 0 * *', $today);
+        $taskId = $this->logEntry('Weekly tasks in the database', 'tasks:weekly', '0 0 * *', $today);
         try {
             $weekAgo = Carbon::now()->subDays(7);
             $monthAgo = Carbon::now()->copy()->subDays(29);

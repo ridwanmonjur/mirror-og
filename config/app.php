@@ -190,4 +190,19 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ])->toArray(),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Testing Configuration
+    |--------------------------------------------------------------------------
+    */
+
+    'testing' => [
+        'dusk_port' => env('DUSK_PORT', '9515'),
+    ],
+    'firebase' => [
+        'credentials' => env('FIREBASE_CREDENTIALS'),
+    ]
+
+    
+
 ];

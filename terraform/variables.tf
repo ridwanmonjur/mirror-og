@@ -40,6 +40,7 @@ variable "billing_account_id" {
 
 
 
+
 variable "force_composer_update" {
   description = "Force composer update even if files haven't changed"
   type        = bool
@@ -76,4 +77,16 @@ variable "enforce_app_check" {
   description = "Enforce App Check for all environments (default: only prod)"
   type        = bool
   default     = false
+}
+
+variable "auth_service_secret_key" {
+  description = "Secret key for JWT token signing in auth service"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "terraform_service_account" {
+  description = "Service account email used by Terraform and Laravel app"
+  type        = string
 }

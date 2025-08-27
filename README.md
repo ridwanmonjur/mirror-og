@@ -12,7 +12,7 @@
 - Firebase project must be created for each .env. This allows 3 necessary APIs to be enabled by default
 (along with 35 others)
 - Don't create your own Google Cloud Service Account. Use firebases's Service Account so you have firestore's policies.
-- Add policies: Service Account Admin, Project IAM Admin and Editor
+- Add policies: Service Account Admin, Project IAM Admin, Firebase Admin, and Editor
 
 ## Admin Credentials
 ```

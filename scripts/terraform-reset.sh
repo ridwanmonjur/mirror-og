@@ -57,18 +57,12 @@ terraform_destroy() {
     # Run destroy with auto-approve
     if [ "$ENVIRONMENT" = "dev" ]; then
         TF_VAR_project_id=$PROJECT_ID \
-        TF_VAR_google_oauth_client_id=334817186234-pm5ushoiq22289nea0usjvvh97v54lbo.apps.googleusercontent.com \
-        TF_VAR_google_oauth_client_secret=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 \
         terraform destroy -var-file="environments/dev.tfvars" -auto-approve
     elif [ "$ENVIRONMENT" = "staging" ]; then
         TF_VAR_project_id=$PROJECT_ID \
-        TF_VAR_google_oauth_client_id=334817186234-pm5ushoiq22289nea0usjvvh97v54lbo.apps.googleusercontent.com \
-        TF_VAR_google_oauth_client_secret=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 \
         terraform destroy -var-file="environments/staging.tfvars" -auto-approve
     elif [ "$ENVIRONMENT" = "prod" ]; then
         TF_VAR_project_id=$PROJECT_ID \
-        TF_VAR_google_oauth_client_id=334817186234-pm5ushoiq22289nea0usjvvh97v54lbo.apps.googleusercontent.com \
-        TF_VAR_google_oauth_client_secret=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 \
         terraform destroy -var-file="environments/prod.tfvars" -auto-approve
     fi
 }
@@ -90,18 +84,12 @@ terraform_apply() {
     # Run apply with auto-approve
     if [ "$ENVIRONMENT" = "dev" ]; then
         TF_VAR_project_id=$PROJECT_ID \
-        TF_VAR_google_oauth_client_id=334817186234-pm5ushoiq22289nea0usjvvh97v54lbo.apps.googleusercontent.com \
-        TF_VAR_google_oauth_client_secret=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 \
         terraform apply -var-file="environments/dev.tfvars" -auto-approve
     elif [ "$ENVIRONMENT" = "staging" ]; then
         TF_VAR_project_id=$PROJECT_ID \
-        TF_VAR_google_oauth_client_id=334817186234-pm5ushoiq22289nea0usjvvh97v54lbo.apps.googleusercontent.com \
-        TF_VAR_google_oauth_client_secret=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 \
         terraform apply -var-file="environments/staging.tfvars" -auto-approve
     elif [ "$ENVIRONMENT" = "prod" ]; then
         TF_VAR_project_id=$PROJECT_ID \
-        TF_VAR_google_oauth_client_id=334817186234-pm5ushoiq22289nea0usjvvh97v54lbo.apps.googleusercontent.com \
-        TF_VAR_google_oauth_client_secret=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 \
         terraform apply -var-file="environments/prod.tfvars" -auto-approve
     fi
 }

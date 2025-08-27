@@ -4,72 +4,99 @@ namespace App\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventDetail;
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Services\FirestoreService;
 use Exception;
-use Illuminate\Support\Facades\DB;
-use Kreait\Firebase\Contract\Auth;
-use Kreait\Firebase\Contract\Firestore;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use App\Services\CloudFunctionAuthService;
 
 class FirebaseController extends Controller
 {
-    private $auth;
-
-    private $firestore;
-
-    private FirestoreService $firestoreService;
-
-    public function __construct(Auth $auth, Firestore $firestore, FirestoreService $firestoreService)
+    protected $authService;
+    
+    public function __construct(CloudFunctionAuthService $authService)
     {
-        $this->auth = $auth;
-        $this->firestore = $firestore;
-        $this->firestoreService = $firestoreService;
+        $this->authService = $authService;
     }
+   
 
-    public function createToken()
+
+    private function updateRoomBlockStatus($user1Id, $user2Id, $action, $blockedBy = null)
     {
-        if (session()->has('firebase_token')) {
-            $tokenData = session('firebase_token');
-
-            if (time() - $tokenData['created_at'] < 3600) {
-                return [
-                    'token' => $tokenData['token'],
-                    'claims' => $tokenData['claims'],
-                    'from_session' => true,
-                ];
-            }
-        }
-
         try {
-            $user = auth()->user();
-            $claims = [
-                'uid' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-            ];
-
-            $token = $this->auth->createCustomToken($user->id, $claims)->toString();
-            session([
-                'firebase_token' => [
-                    'token' => $token,
-                    'claims' => $claims,
-                    'created_at' => time(),
-                ],
+            Log::info("Starting room block status update with cached identity token");
+    
+            $cloudFunctionUrl = config('services.cloud_server_functions.url');
+            
+            // Use server-side cache for identity token (NOT session)
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+            
+            Log::info("Making request to Cloud Run service");
+            
+            $response = Http::timeout(30)
+                ->contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken,
+                    'User-Agent' => 'Laravel-App/1.0'
+                ])
+                ->post($cloudFunctionUrl . '/room/block', [
+                    'user1' => $user1Id,
+                    'user2' => $user2Id,
+                    'action' => $action,
+                    'blocked_by' => $blockedBy
+                ]);
+    
+            if (!$response->successful()) {
+                // Clear cache on authentication errors
+                if ($response->status() === 401 || $response->status() === 403) {
+                    Log::warning("Authentication failed, clearing token cache");
+                    $this->authService->clearIdentityTokenCache($cloudFunctionUrl);
+                    
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+                    $response = Http::timeout(30)
+                        ->contentType('application/json')
+                        ->withHeaders(['Authorization' => 'Bearer ' . $identityToken])
+                        ->post($cloudFunctionUrl . '/room/block', [
+                            'user1' => $user1Id,
+                            'user2' => $user2Id,
+                            'action' => $action,
+                            'blocked_by' => $blockedBy
+                        ]);
+                }
+    
+                if (!$response->successful()) {
+                    Log::error('Cloud Run request failed', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    throw new Exception('Cloud Run request failed: ' . $response->body());
+                }
+            }
+            
+            $responseData = $response->json();
+            if (!isset($responseData['success']) || !$responseData['success']) {
+                throw new Exception('Cloud Run returned error: ' . ($responseData['message'] ?? 'Unknown error'));
+            }
+            
+            Log::info("Room block status updated successfully", $responseData);
+            return $responseData;
+            
+        } catch (Exception $e) {
+            Log::error('Failed to update room block status', [
+                'error' => $e->getMessage(),
+                'user1' => $user1Id,
+                'user2' => $user2Id,
+                'action' => $action
             ]);
-
-            return [
-                'token' => $token,
-                'claims' => $claims,
-                'from_session' => false,
-            ];
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            throw new Exception('Failed to update room block status: ' . $e->getMessage());
         }
     }
-
+    
+    
     public function toggleBlock(Request $request, $id): JsonResponse
     {
         try {
@@ -87,60 +114,24 @@ class FirebaseController extends Controller
             }
             if ($authenticatedUser->hasBlocked($user)) {
                 $authenticatedUser->blocks()->detach($user);
-                $message = 'User unblocked successfully';
                 $authenticatedUser->save();
-                $isBlocked = false;
-
-                $roomCollectionRef = $this->firestore->database()->collection('room');
-
-                $query1 = $roomCollectionRef->where('user1', '==', (string) $user->id)->where('user2', '==', (string) $authenticatedUser->id);
-
-                $query2 = $roomCollectionRef->where('user2', '==', (string) $user->id)->where('user1', '==', (string) $authenticatedUser->id);
-
-                $snapshot1 = $query1->documents();
-                $snapshot2 = $query2->documents();
-
-                foreach ($snapshot1 as $document) {
-                    $roomRef = $roomCollectionRef->document($document->id());
-                    $roomRef->update([['path' => 'blocked_by', 'value' => null]]);
-                }
-
-                foreach ($snapshot2 as $document) {
-                    $roomRef = $roomCollectionRef->document($document->id());
-                    $roomRef->update([['path' => 'blocked_by', 'value' => null]]);
-                }
+                $this->updateRoomBlockStatus($user->id, $authenticatedUser->id, 'unblock');
+                
+                return response()->json([
+                    'message' => 'User unblocked successfully',
+                    'is_blocked' => false,
+                ]);
             } else {
                 $authenticatedUser->blocks()->attach($user);
                 $authenticatedUser->save();
-                $message = 'User blocked successfully';
-                $isBlocked = true;
 
-                if (! $user->hasBlocked($authenticatedUser)) {
-                    $roomCollectionRef = $this->firestore->database()->collection('room');
-
-                    $query1 = $roomCollectionRef->where('user1', '==', (string) $user->id)->where('user2', '==', (string) $authenticatedUser->id);
-
-                    $query2 = $roomCollectionRef->where('user2', '==', (string) $user->id)->where('user1', '==', (string) $authenticatedUser->id);
-
-                    $snapshot1 = $query1->documents();
-                    $snapshot2 = $query2->documents();
-
-                    foreach ($snapshot1 as $document) {
-                        $roomRef = $roomCollectionRef->document($document->id());
-                        $roomRef->update([['path' => 'blocked_by', 'value' => $authenticatedUser->id]]);
-                    }
-
-                    foreach ($snapshot2 as $document) {
-                        $roomRef = $roomCollectionRef->document($document->id());
-                        $roomRef->update([['path' => 'blocked_by', 'value' => $authenticatedUser->id]]);
-                    }
-                }
+                    $this->updateRoomBlockStatus($user->id, $authenticatedUser->id, 'block', $authenticatedUser->id);
+                
+                return response()->json([
+                    'message' => 'User blocked successfully',
+                    'is_blocked' => true,
+                ]);
             }
-
-            return response()->json([
-                'message' => $message,
-                'is_blocked' => $isBlocked,
-            ]);
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -272,7 +263,6 @@ class FirebaseController extends Controller
         }
 
         $documentSpecs = [];
-        $indexCounter = 1; 
 
         foreach ($originalDocumentSpecs as $documentId => $specs) {
             $newDocumentId = $documentId;
@@ -286,9 +276,6 @@ class FirebaseController extends Controller
             $documentSpecs[$newDocumentId] = $newSpecs;
         }
 
-        
-        
-
         $customValuesArray = [];
         $specificIds = [];
 
@@ -298,7 +285,7 @@ class FirebaseController extends Controller
         }
 
 
-        $reports = $this->firestoreService->createBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds, $gamesPerMatch);
+        $reports = $this->callCloudFunctionBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds, $gamesPerMatch);
         
         $customDisputeValuesArray = [];
         $specificIds = [];
@@ -373,9 +360,81 @@ class FirebaseController extends Controller
             $customDisputeValuesArray[] = $customValues;
         }
 
-        $disputes = $this->firestoreService->createBatchDisputes($eventId, count($specificIds), $customDisputeValuesArray, $specificIds);
+        $disputes = $this->callCloudFunctionBatchDisputes($eventId, count($specificIds), $customDisputeValuesArray, $specificIds);
 
         return [...$disputes, ...$reports];
+    }
+
+    /**
+     * Call Cloud Function to handle batch reports creation
+     */
+    private function callCloudFunctionBatchReports($eventId, $count, $customValuesArray, $specificIds, $gamesPerMatch)
+    {
+        try {
+            $cloudFunctionUrl = config('cloud_server_functions.url');
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+
+            $response = Http::contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($cloudFunctionUrl . '/batch/reports', [
+                    'event_id' => $eventId,
+                    'count' => $count,
+                    'custom_values_array' => $customValuesArray,
+                    'specific_ids' => $specificIds,
+                    'games_per_match' => $gamesPerMatch
+                ]);
+
+            if (!$response->successful()) {
+                throw new Exception('Cloud function call failed: ' . $response->body());
+            }
+            
+            $responseData = $response->json();
+            if (!isset($responseData['statusReport']) || $responseData['statusReport'] !== 'success') {
+                throw new Exception('Cloud function returned error: ' . ($responseData['messageReport'] ?? 'Unknown error'));
+            }
+            
+            return $responseData;
+        } catch (Exception $e) {
+            throw new Exception('Failed to create batch reports: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Call Cloud Function to handle batch disputes creation
+     */
+    private function callCloudFunctionBatchDisputes($eventId, $count, $customValuesArray, $specificIds)
+    {
+        try {
+            $cloudFunctionUrl = config('cloud_server_functions.url');
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+
+            $cloudFunctionUrl = config('cloud_server_functions.url');
+            $response = Http::contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($cloudFunctionUrl . '/batch/disputes', [
+                    'event_id' => $eventId,
+                    'count' => $count,
+                    'custom_values_array' => $customValuesArray,
+                    'specific_ids' => $specificIds
+                ]);
+
+            if (!$response->successful()) {
+                throw new Exception('Cloud function call failed: ' . $response->body());
+            }
+            
+            $responseData = $response->json();
+            if (!isset($responseData['statusDispute']) || $responseData['statusDispute'] !== 'success') {
+                throw new Exception('Cloud function returned error: ' . ($responseData['messageDispute'] ?? 'Unknown error'));
+            }
+            
+            return $responseData;
+        } catch (Exception $e) {
+            throw new Exception('Failed to create batch disputes: ' . $e->getMessage());
+        }
     }
 
 }

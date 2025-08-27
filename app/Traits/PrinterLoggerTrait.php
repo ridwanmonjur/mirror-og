@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Traits;
+namespace App\Traits;
 
 use App\Mail\ErrorCommandMail;
 use Illuminate\Support\Facades\DB;
