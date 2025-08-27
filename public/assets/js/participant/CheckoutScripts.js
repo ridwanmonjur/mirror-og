@@ -64,6 +64,7 @@ class PaymentProcessor {
         userName,
         stripeCustomerId,
         joinEventId,
+        remainingAmount,
         memberId,
         teamId,
         eventId,
@@ -200,7 +201,7 @@ class PaymentProcessor {
                     capture_method: 'manual',
                     stripe_customer_id: paymentVars['stripeCustomerId'],
                     role: "PARTICIPANT",
-                    purpose: 'tournament_entry',
+                    purpose: paymentVars['joinEventId'] + '_tournament_entry_' + paymentVars['remainingAmount'],
                     metadata : {
                         joinEventId: paymentVars['joinEventId'],
                         memberId: paymentVars['memberId'],

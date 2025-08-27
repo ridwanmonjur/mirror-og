@@ -63,6 +63,7 @@ class PaymentProcessor {
         userName,
         stripeCustomerId,
         cartTotal,
+        cartId,
         couponCode,
         stripeKey,
         stripeCardIntentUrl,
@@ -198,7 +199,7 @@ class PaymentProcessor {
                     capture_method: 'manual',
                     stripe_customer_id: paymentVars['stripeCustomerId'],
                     role: "SHOP",
-                    purpose: 'shop_purchase',
+                    purpose: 'shop_purchase_' + paymentVars['cartId'],
                     metadata : {
                         cartTotal: paymentVars['cartTotal'],
                         couponCode: paymentVars['couponCode'] || null

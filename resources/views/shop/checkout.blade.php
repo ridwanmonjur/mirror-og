@@ -72,6 +72,7 @@
         data-user-name="{{ $user->name }}"
         data-stripe-customer-id="{{ $user->stripe_customer_id }}"
         data-cart-total="{{ $newTotal }}"
+         data-cart-id="{{ $cart->id }}"
         data-coupon-code="{{ $prevForm['coupon_code'] ?? '' }}"
         data-stripe-key="{{ config('services.stripe.key') }}"
         data-stripe-card-intent-url="{{ route('stripe.stripeCardIntentCreate') }}"

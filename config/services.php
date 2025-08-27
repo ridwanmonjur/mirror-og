@@ -61,4 +61,8 @@ return [
         ],
     ],
 
+    'cloud_server_functions' => [
+        'url' => env('VITE_CLOUD_SERVER_URL'),
+    ],
+
 ];

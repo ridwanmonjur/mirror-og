@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Services;
 
 use App\Models\Task;
-use App\Console\Traits\PrinterLoggerTrait;
-use App\Console\Traits\RespondTaksTrait;
+use App\Traits\PrinterLoggerTrait;
+use App\Traits\RespondTaksTrait;
 use App\Jobs\HandleEventJoinConfirm;
 use App\Models\BracketDeadline;
 use App\Models\EventDetail;
@@ -12,11 +12,10 @@ use App\Models\JoinEvent;
 use App\Models\StripeConnection;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class RespondTasks extends Command
+class RespondTaskService
 {
     use PrinterLoggerTrait, RespondTaksTrait;
 
@@ -26,57 +25,69 @@ class RespondTasks extends Command
 
     public function __construct(StripeConnection $stripeService)
     {
-        parent::__construct();
+        $this->stripeService = $stripeService;
         $now = Carbon::now();
-        $taskId = $this->logEntry($this->description, $this->signature, '*/30 * * * *', $now);
+        $taskId = $this->logEntry('Respond tasks in the database', 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 4=reg_over, 0=all} {--event_id= : Optional event ID to filter tasks}', '*/30 * * * *', $now);
         $this->taskIdParent = $taskId;
         $this->initializeTrait($stripeService, $taskId);
     }
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $signature = 'tasks:respond {type=0 : The task type to process: 1=started, 2=live, 3=ended, 4=reg_over, 0=all} {--event_id= : Optional event ID to filter tasks}';
-
-    protected $description = 'Respond tasks in the database';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function execute(int $type = 0, ?string $eventId = null, ?int $taskType = null): void
     {
         $now = Carbon::now();
-        $type = (int) $this->argument('type');
-        $eventId = $this->option('event_id');
         $eventIdInt = 0;
         Log::info("Event of type {$type} ran");
         $taskId = $this->taskIdParent;
 
         try {
-            $endedTaskIds = [];
-            $liveTaskIds = [];
-            $startedTaskIds = [];
-            $regOverTaskIds = [];
-            
             $endedEventIds = [];
             $liveEventIds = [];
             $startedEventIds = [];
             $regOverEventIds = [];
 
-            if ($type === 0) {
-                $tasks = Task::where('taskable_type', 'EventDetail')
-                    ->where('action_time', '>=', $now->copy()->subMinutes(5))
-                    ->where('action_time', '<=', $now->copy()->addMinutes(29))
-                    ->get();
+            if ($taskType !== null) {
+                // Run for specific task type (from MiscController)
+                // taskType 1=started, 2=live, 3=ended, 4=reg_over, 5=resetStart
+                $taskNameMap = [
+                    1 => 'started',
+                    2 => 'live',
+                    3 => 'ended', 
+                    4 => 'reg_over',
+                    5 => 'resetStart'
+                ];
+                
+                $taskName = $taskNameMap[$taskType] ?? null;
+                if ($taskName) {
+                    if ($eventId !== null) {
+                        $eventIdInt = (int) $eventId;
+                        $tasks = Task::where('taskable_id', $eventIdInt)
+                            ->where('taskable_type', 'EventDetail')
+                            ->where('task_name', $taskName)
+                            ->get();
+                    } else {
+                        $tasks = Task::where('taskable_type', 'EventDetail')
+                            ->where('task_name', $taskName)
+                            ->where('action_time', '>=', $now->copy()->subMinutes(5))
+                            ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                            ->get();
+                    }
+                } else {
+                    $tasks = collect(); // Empty collection for invalid taskType
+                }
+            } elseif ($type === 0) {
+                if ($eventId !== null) {
+                    // Run all task types for specific event
+                    $eventIdInt = (int) $eventId;
+                    $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
+                } else {
+                    // Run all tasks in time window
+                    $tasks = Task::where('taskable_type', 'EventDetail')
+                        ->where('action_time', '>=', $now->copy()->subMinutes(5))
+                        ->where('action_time', '<=', $now->copy()->addMinutes(29))
+                        ->get();
+                }
             } else {
+                // Run specific task type for specific event
                 $eventIdInt = (int) $eventId;
                 $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
             }
@@ -106,19 +117,15 @@ class RespondTasks extends Command
             foreach ($tasks as $task) {
                 switch ($task->task_name) {
                     case 'ended':
-                        $endedTaskIds[] = $task->taskable_id;
                         $endedEventIds[$task->event_id] = true;
                         break;
                     case 'live':
-                        $liveTaskIds[] = $task->taskable_id;
                         $liveEventIds[$task->event_id] = true;
                         break;
                     case 'started':
-                        $startedTaskIds[] = $task->taskable_id;
                         $startedEventIds[$task->event_id] = true;
                         break;
                     case 'reg_over':
-                        $regOverTaskIds[] = $task->taskable_id;
                         $regOverEventIds[$task->event_id] = true;
                         break;
                 }
@@ -242,7 +249,6 @@ class RespondTasks extends Command
                             'failed_so_far' => $failedEvents,
                         ]);
 
-                        // Optionally try to revert event status if it was updated but processing failed
                         try {
                             EventDetail::where('id', $eventId)->update(['status' => 'ONGOING']);
                             Log::info('Reverted event status due to processing failure', ['event_id' => $eventId]);
@@ -258,7 +264,6 @@ class RespondTasks extends Command
                     }
                 }
 
-                // Final summary log
                 Log::info('Event processing batch completed', [
                     'total_events' => $totalEvents,
                     'processed_successfully' => $processedEvents,
@@ -295,4 +300,5 @@ class RespondTasks extends Command
             $this->logError($taskId, $e);
         }
     }
+
 }

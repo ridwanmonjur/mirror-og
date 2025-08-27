@@ -38,6 +38,10 @@ export TF_VAR_environment=$ENVIRONMENT
 FIREBASE_CREDENTIALS_PATH=$(grep "^FIREBASE_CREDENTIALS=" $ENV_FILE | cut -d '=' -f2)
 export GOOGLE_APPLICATION_CREDENTIALS="../$FIREBASE_CREDENTIALS_PATH"
 
+# Extract Terraform service account
+export TERRAFORM_SERVICE_ACCOUNT=$(grep "TERRAFORM_SERVICE_ACCOUNT" $ENV_FILE | cut -d '=' -f2)
+export TF_VAR_terraform_service_account=$TERRAFORM_SERVICE_ACCOUNT
+
 # Configure gcloud for the project
 echo "Configuring gcloud for project: $TF_VAR_project_id"
 gcloud config set project $TF_VAR_project_id
@@ -49,6 +53,7 @@ echo "TF_VAR_bucket_name=$TF_VAR_bucket_name"
 echo "TF_VAR_billing_account_id=$TF_VAR_billing_account_id"
 echo "TF_VAR_environment=$TF_VAR_environment"
 echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
+echo "TERRAFORM_SERVICE_ACCOUNT=$TERRAFORM_SERVICE_ACCOUNT"
 
 echo ""
 echo "Now run your terraform commands, e.g.:"

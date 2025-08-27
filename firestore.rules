@@ -3,165 +3,78 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper functions for authentication and authorization
+    // Helper function for authentication
     function isAuthenticated() {
-      return request.auth != null && request.auth.uid != null;
+      return request.auth != null && 
+             request.auth.uid != null && 
+             request.auth.token != null &&
+             request.auth.token.userId != null;
     }
     
     function getUserId() {
       return request.auth.uid;
     }
     
-    function getUserRole() {
-      return request.auth.token.role;
-    }
-    
-    function isOrganizer() {
-      return getUserRole() == 'ORGANIZER';
-    }
-    
-    function isAdmin() {
-      return getUserRole() == 'ADMIN';
-    }
-    
-    function isParticipant() {
-      return getUserRole() == 'PARTICIPANT';
-    }
-    
-    function isOrganizerOrAdmin() {
-      return isOrganizer() || isAdmin();
-    }
-    
-    // Validate required fields for documents
-    function hasRequiredBracketFields() {
-      let required = ['score', 'stageName', 'realWinners', 'organizerWinners', 
-                      'team1Id', 'team2Id', 'position', 'completeMatchStatus', 
-                      'randomWinners', 'defaultWinners', 'disqualified', 
-                      'disputeResolved', 'team1Winners', 'team2Winners', 'matchStatus'];
-      
-      return required.toSet().difference(resource.data.keys().toSet()).size() == 0;
-    }
-    
-    function hasRequiredDisputeFields() {
-      let required = ['dispute_reason', 'dispute_teamId', 'dispute_teamNumber', 
-                      'dispute_userId', 'event_id', 'match_number', 'report_id'];
-      
-      return required.toSet().difference(resource.data.keys().toSet()).size() == 0;
-    }
-    
-    function isValidScore(score) {
-      return score is list && score.size() == 2 && 
-             score[0] is string && score[1] is string;
-    }
-    
-    function isValidWinners(winners) {
-      return winners is list && winners.size() <= 5 &&
-             winners.all(w, w == null || w == "0" || w == "1");
-    }
-    
-    function isValidMatchStatus(status) {
-      return status is list && 
-             status.all(s, s in ['UPCOMING', 'ONGOING', 'ENDED', 'DISPUTED']);
-    }
-    
-    function isValidCompleteMatchStatus(status) {
-      return status in ['UPCOMING', 'ONGOING', 'ENDED', 'DISPUTED'];
-    }
-    
     // Event collections security
     match /event/{eventId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
+      allow create, write: if isAuthenticated();
+      allow delete: if isAuthenticated();
       
-      // Brackets subcollection
-      match /brackets/{bracketId} {
+      // Brackets subcollection  
+      match /brackets/{matchId} {
         allow read: if true;
-        
-        allow create: if isAuthenticated() && 
-          hasRequiredBracketFields() &&
-          isValidScore(resource.data.score) &&
-          isValidWinners(resource.data.realWinners) &&
-          isValidWinners(resource.data.organizerWinners) &&
-          isValidWinners(resource.data.team1Winners) &&
-          isValidWinners(resource.data.team2Winners) &&
-          isValidMatchStatus(resource.data.matchStatus) &&
-          isValidCompleteMatchStatus(resource.data.completeMatchStatus) &&
-          resource.data.team1Id is string &&
-          resource.data.team2Id is string &&
-          resource.data.stageName is string &&
-          resource.data.disqualified is bool;
-        
-        allow update: if isAuthenticated() && 
-          (isOrganizerOrAdmin() || 
-           (isParticipant() && 
-            (resource.data.team1Id == getUserId() || resource.data.team2Id == getUserId()))) &&
-          hasRequiredBracketFields() &&
-          isValidScore(resource.data.score) &&
-          isValidWinners(resource.data.realWinners) &&
-          isValidWinners(resource.data.organizerWinners) &&
-          isValidWinners(resource.data.team1Winners) &&
-          isValidWinners(resource.data.team2Winners) &&
-          isValidMatchStatus(resource.data.matchStatus) &&
-          isValidCompleteMatchStatus(resource.data.completeMatchStatus);
-        
-        allow delete: if isOrganizerOrAdmin();
+        allow create, write: if isAuthenticated();
+        allow delete: if isAuthenticated();
       }
       
       // Disputes subcollection  
       match /disputes/{disputeId} {
         allow read: if true;
-        
-        allow create: if isAuthenticated() && 
-          hasRequiredDisputeFields() &&
-          resource.data.dispute_userId == getUserId() &&
-          resource.data.event_id == eventId &&
-          resource.data.dispute_reason is string && 
-          resource.data.dispute_reason.size() > 0 &&
-          resource.data.match_number is number &&
-          resource.data.match_number >= 0 &&
-          resource.data.dispute_teamId is string &&
-          resource.data.dispute_teamNumber in [0, 1] &&
-          resource.data.report_id is string &&
-          resource.data.created_at == request.time;
-        
-        allow update: if isAuthenticated() && 
-          (isOrganizerOrAdmin() || 
-           (resource.data.dispute_userId == getUserId() && 
-            request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['response_explanation', 'response_image_videos', 'response_userId', 
-                       'response_teamId', 'response_teamNumber', 'updated_at', 'status'])) ||
-           (isOrganizerOrAdmin() && 
-            request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['resolution_winner', 'resolution_resolved_by', 'updated_at']))) &&
-          request.resource.data.updated_at == request.time;
-        
-        allow delete: if isOrganizerOrAdmin();
+        allow create, write: if isAuthenticated();
+        allow update: if isAuthenticated();
+        allow delete: if isAuthenticated();
       }
     }
     
     match /analytics-daily/{docId} {
-      allow read: if isAdmin();
+      allow read: if isAuthenticated();
       allow write: if true;
     }
     
     match /analytics-monthly/{docId} {
-      allow read: if isAdmin();
+      allow read: if isAuthenticated();
       allow write: if true;
     }
     
     match /analytics-yearly/{docId} {
-      allow read: if isOrganizerOrAdmin();
-      allow write: if isAuthenticated() && docId.matches('.*-\\d{4}');
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
     }
     
-    // Chat/messaging (if applicable)
+    // Chat/messaging with authentication and blocking validation
     match /room/{roomId} {
       allow read: if isAuthenticated() && 
         (resource.data.user1 == getUserId() || resource.data.user2 == getUserId());
       
       allow create, update: if isAuthenticated() && 
-        (request.resource.data.user1 == getUserId() || request.resource.data.user2 == getUserId()) ;
+        (request.resource.data.user1 == getUserId() || request.resource.data.user2 == getUserId()) &&
+        request.resource.data.user1 is string &&
+        request.resource.data.user2 is string &&
+        request.resource.data.user1 != request.resource.data.user2;
         
-      allow delete: if isAdmin(); // Rooms should not be deleted
+      allow delete: if isAuthenticated();
+      
+      // Messages subcollection
+      match /message/{messageId} {
+        allow read: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/room/$(roomId)).data.user1 == getUserId() || 
+           get(/databases/$(database)/documents/room/$(roomId)).data.user2 == getUserId());
+        
+        allow write: if isAuthenticated() && 
+          (get(/databases/$(database)/documents/room/$(roomId)).data.user1 == getUserId() || 
+           get(/databases/$(database)/documents/room/$(roomId)).data.user2 == getUserId());
+      }
     }
     
     // Default deny all other documents

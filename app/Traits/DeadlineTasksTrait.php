@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Traits;
+namespace App\Traits;
 
 use App\Services\BracketDataService;
 use App\Models\Brackets;
@@ -17,12 +17,61 @@ trait DeadlineTasksTrait
 
     protected $disputeEnums;
 
+    protected $allBrackets = [];
+
+    protected $allDisputes = [];
+
     protected function initializeDeadlineTasksTrait(BracketDataService $bracketDataService, $firebaseConfig, $disputeEnums)
     {
         $this->bracketDataService = $bracketDataService;
         $factory = new \Kreait\Firebase\Factory;
         $this->disputeEnums = $disputeEnums;
         $this->firestore = $factory->withServiceAccount(base_path($firebaseConfig))->createFirestore();
+    }
+
+    protected function fetchAllEventData($eventDetailsId)
+    {
+        try {
+            $eventId = (string) $eventDetailsId;
+            
+            // Fetch all brackets for this event
+            $bracketsCollection = $this->firestore->database()
+                ->collection('event')
+                ->document($eventId)
+                ->collection('brackets');
+            $bracketSnapshots = $bracketsCollection->documents();
+            
+            $this->allBrackets = [];
+            foreach ($bracketSnapshots as $doc) {
+                if ($doc->exists()) {
+                    $this->allBrackets[$doc->id()] = $doc->data();
+                }
+            }
+            
+            // Fetch all disputes for this event
+            $disputesCollection = $this->firestore->database()
+                ->collection('event')
+                ->document($eventId)
+                ->collection('disputes');
+            $disputeSnapshots = $disputesCollection->documents();
+            
+            $this->allDisputes = [];
+            foreach ($disputeSnapshots as $doc) {
+                if ($doc->exists()) {
+                    $this->allDisputes[$doc->id()] = $doc->data();
+                }
+            }
+            
+            Log::info('Fetched all event data', [
+                'event_id' => $eventId,
+                'brackets_count' => count($this->allBrackets),
+                'disputes_count' => count($this->allDisputes)
+            ]);
+            
+        } catch (Exception $e) {
+            Log::error('Failed to fetch all event data: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function resolveNextStage($bracket, array $extraBracket, array $scores, $tierId)
@@ -154,10 +203,11 @@ trait DeadlineTasksTrait
             if (! isset($realWinners[$i])) {
                 if (! $disputeResolved[$i]) {
                     $disputePath =  $bracket['team1_position'].'.'.$bracket['team2_position'].'.'.$i;
-                    $disputeRef = $this->firestore->database()->collection('event')->document($eventId)->collection('disputes')->document($disputePath);
-                    $disputeDoc = $disputeRef?->snapshot();
-                    if ($disputeDoc->exists()) {
-                        $data = $disputeDoc->data();
+                    
+                    // Use hashmap lookup instead of individual Firestore query
+                    if (isset($this->allDisputes[$disputePath])) {
+                        $data = $this->allDisputes[$disputePath];
+                        $disputeRef = $this->firestore->database()->collection('event')->document($eventId)->collection('disputes')->document($disputePath);
                         // Case 1: One team filed a dispute but the other hasn't responded yet
                         if (isset($data['dispute_teamNumber']) && ! isset($data['response_teamId'])) {
                             $isUpdatedDispute = true;
@@ -298,15 +348,21 @@ trait DeadlineTasksTrait
         ];
     }
 
-    public function handleStartedTasks(Collection $startedBrackets, $gamesPerMatch = 3)
+    public function handleStartedTasks($eventDetailsId, Collection $startedBrackets, $gamesPerMatch = 3)
     {
+        $this->fetchAllEventData($eventDetailsId);
+        
         foreach ($startedBrackets as $bracket) {
-
             $matchStatusPath = $bracket['team1_position'].'.'.$bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
-            $snapshot = $docRef->snapshot();
-
-            if ($snapshot->exists()) {
+            
+            // Check if bracket exists in our hashmap
+            if (isset($this->allBrackets[$matchStatusPath])) {
+                $docRef = $this->firestore->database()
+                    ->collection('event')
+                    ->document($bracket['event_details_id'])
+                    ->collection('brackets')
+                    ->document($matchStatusPath);
+                    
                 $startedStatusArray = ['ONGOING'];
                 $startedStatusArray = array_merge($startedStatusArray, array_fill(0, $gamesPerMatch - 1, 'UPCOMING'));
                 $docRef->update([
@@ -317,8 +373,10 @@ trait DeadlineTasksTrait
         }
     }
 
-    public function handleEndedTasks(Collection $endBrackets, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
+    public function handleEndedTasks($eventDetailsId, Collection $endBrackets, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
     {
+        $this->fetchAllEventData($eventDetailsId);
+        
         foreach ($endBrackets as $bracket) {
             $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
             $endedStatusArray = array_fill(0, $gamesPerMatch, 'ENDED');
@@ -328,72 +386,76 @@ trait DeadlineTasksTrait
             ];
 
             $matchStatusPath = $bracket['team1_position'].'.'.$bracket['team2_position'];
-            $docRef = $this->firestore->database()
-                ->collection('event')
-                ->document($bracket['event_details_id'])
-                ->collection('brackets')
-                ->document($matchStatusPath);
+            
+            // Use hashmap lookup instead of individual Firestore query
+            if (isset($this->allBrackets[$matchStatusPath])) {
+                $matchStatusData = $this->allBrackets[$matchStatusPath];
                 
-            $snapshot = $docRef->snapshot();
-
-            if ($snapshot->exists()) {
-                $matchStatusData = $snapshot->data();
                 [$disputeRefList,
                     $updateDisputeValues,
                     $updateValues
                 ] = $this->interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, false, $isLeague, $gamesPerMatch);
+                
                 if (! empty($updateValues)) {
+                    $docRef = $this->firestore->database()
+                        ->collection('event')
+                        ->document($bracket['event_details_id'])
+                        ->collection('brackets')
+                        ->document($matchStatusPath);
                     $docRef->update($updateValues);
                 }
+                
                 foreach ($disputeRefList as $index =>  $disputeRef) {
                     if (! empty($updateDisputeValues[$index])) {
-                        
                         $formattedDisputeValues = [];
                         foreach ($updateDisputeValues[$index] as $path => $value) {
                             $formattedDisputeValues[] = ['path' => $path, 'value' => $value];
                         }
-                        
                         $disputeRef?->update($formattedDisputeValues);
-                       
                     }
                 }
             }
         }
-
     }
 
-    public function handleOrgTasks(Collection $orgBrackets, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
+    public function handleOrgTasks($eventDetailsId, Collection $orgBrackets, $bracketInfo, $tierId, $isLeague = false, $gamesPerMatch = 3)
     {
+        $this->fetchAllEventData($eventDetailsId);
+        
         foreach ($orgBrackets as $bracket) {
             $extraBracket = $bracketInfo[$bracket['stage_name']][$bracket['inner_stage_name']][$bracket['order']];
             $updateValues = [];
 
             $matchStatusPath = $bracket['team1_position'].'.'.$bracket['team2_position'];
-            $docRef = $this->firestore->database()->collection('event')->document($bracket['event_details_id'])->collection('brackets')->document($matchStatusPath);
-            $snapshot = $docRef->snapshot();
-
-            if ($snapshot->exists()) {
-                $matchStatusData = $snapshot->data();
+            
+            // Use hashmap lookup instead of individual Firestore query
+            if (isset($this->allBrackets[$matchStatusPath])) {
+                $matchStatusData = $this->allBrackets[$matchStatusPath];
+                
                 [$disputeRefList,
                     $updateDisputeValues,
                     $updateValues
                 ] = $this->interpretDeadlines($matchStatusData, $updateValues, $bracket, $extraBracket, $tierId, true, $isLeague, $gamesPerMatch);
+                
                 Log::info($updateValues);
                 Log::info($updateDisputeValues);
+                
                 if (! empty($updateValues)) {
+                    $docRef = $this->firestore->database()
+                        ->collection('event')
+                        ->document($bracket['event_details_id'])
+                        ->collection('brackets')
+                        ->document($matchStatusPath);
                     $docRef->update($updateValues);
                 }
                 
                 foreach ($disputeRefList as $index =>  $disputeRef) {
                     if (! empty($updateDisputeValues[$index])) {
-                        
                         $formattedDisputeValues = [];
                         foreach ($updateDisputeValues[$index] as $path => $value) {
                             $formattedDisputeValues[] = ['path' => $path, 'value' => $value];
                         }
-                        
                         $disputeRef?->update($formattedDisputeValues);
-                        
                     }
                 }
             }
