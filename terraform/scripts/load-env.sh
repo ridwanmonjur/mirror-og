@@ -7,7 +7,7 @@ ENVIRONMENT=${1:-dev}
 
 case $ENVIRONMENT in
   "dev")
-    ENV_FILE="../.env"
+    ENV_FILE="../.env.example"
     ;;
   "staging")
     ENV_FILE="../.env.staging"
