@@ -79,7 +79,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endif
+                                    {{-- @else
+                                    <div class="my-3 col-12 col-md-6 ">
+                                        <div>Order not set for this match</div>
+                                    </div>--}}
+                                    @endif 
                                     @endforeach  
                                 @endforeach
                             </div>

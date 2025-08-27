@@ -11,3 +11,4 @@ enforce_app_check = false  # Set to true to enforce App Check in development
 
 # Sensitive values loaded from .env files via environment variables
 # Use: source scripts/load-env.sh dev
+# terraform_service_account loaded from .env file via TF_VAR_terraform_service_account environment variable

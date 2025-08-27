@@ -4,11 +4,18 @@ from datetime import datetime, timedelta
 from jose import jwt
 import os
 import logging
-from typing import Optional, List, Dict, Any
-from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, Request
+import time
+from typing import Optional, Union
+from pydantic import BaseModel, validator
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from google.oauth2 import service_account
+from google.auth.transport import requests as google_requests
 
 # Initialize Firebase Admin
 if not firebase_admin._apps:
@@ -19,6 +26,56 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key')
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+# Rate limiter
+limiter = Limiter(key_func=get_remote_address)
+
+# HTTP Bearer security scheme
+security = HTTPBearer()
+
+# Authentication dependency
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Verify Google Cloud Platform Bearer token"""
+    try:
+        token = credentials.credentials
+        
+        # Use Google's tokeninfo endpoint to validate the access token
+        import requests
+        
+        logging.info(f"Validating token: {token[:20]}...")
+        
+        response = requests.get(
+            f'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={token}',
+            timeout=10
+        )
+        
+        logging.info(f"Token validation response status: {response.status_code}")
+        
+        if response.status_code == 200:
+            token_info = response.json()
+            logging.info(f"Token info: {token_info}")
+            
+            # Check if token has the required scope
+            token_scope = token_info.get('scope', '')
+            logging.info(f"Token scope: {token_scope}")
+            
+            # Check for cloud-platform scope (covers all Google Cloud APIs)
+            if 'https://www.googleapis.com/auth/cloud-platform' in token_scope:
+                logging.info("Token has valid cloud-platform scope")
+                return {"token": token, "valid": True, "info": token_info}
+            else:
+                logging.error(f"Token does not have required scope. Has: {token_scope}")
+                raise HTTPException(status_code=401, detail="Token does not have required scope")
+        else:
+            logging.error(f"Token validation failed with status {response.status_code}: {response.text}")
+            raise HTTPException(status_code=401, detail="Invalid access token")
+                
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Token verification error: {e}")
+        raise HTTPException(status_code=401, detail="Token verification failed")
+
+
 # Create FastAPI app
 app = FastAPI(
     title="Driftwood API",
@@ -26,10 +83,123 @@ app = FastAPI(
     version="2.0.0"
 )
 
+# Add rate limiter to app
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    client_ip = request.client.host
+    
+    # Get real IP from headers if behind proxy
+    real_ip = request.headers.get("x-forwarded-for")
+    if real_ip:
+        client_ip = real_ip.split(",")[0].strip()
+    
+    # Log incoming request details
+    logging.info(f"📥 Incoming {request.method} request to {request.url.path}")
+    logging.info(f"🌐 Client IP: {client_ip}")
+    logging.info(f"🔗 User-Agent: {request.headers.get('user-agent', 'Unknown')}")
+    logging.info(f"📋 Content-Type: {request.headers.get('content-type', 'None')}")
+    
+    # Check for Authorization header specifically
+    auth_header = request.headers.get("authorization")
+    if auth_header:
+        # Only log first 20 characters of token for security
+        token_preview = auth_header[:20] + "..." if len(auth_header) > 20 else auth_header
+        logging.info(f"🔑 Authorization header present: {token_preview}")
+        logging.info(f"🔢 Token length: {len(auth_header)} chars")
+        
+        # Check token type
+        if auth_header.startswith("Bearer "):
+            logging.info("✅ Token format: Bearer token")
+        else:
+            logging.warning("⚠️  Token format: Not a Bearer token")
+    else:
+        logging.warning("⚠️  No Authorization header found in request")
+    
+    # Log other important headers for debugging
+    important_headers = ['x-forwarded-for', 'x-real-ip', 'x-forwarded-proto', 'host']
+    for header in important_headers:
+        value = request.headers.get(header)
+        if value:
+            logging.info(f"🏷️  {header}: {value}")
+    
+    # Log request body for POST requests (be careful with sensitive data)
+    if request.method in ["POST", "PUT", "PATCH"]:
+        try:
+            # Read the body without consuming it
+            body = await request.body()
+            if body:
+                # Log first 200 chars of body for debugging
+                body_preview = body.decode('utf-8')[:200]
+                if len(body) > 200:
+                    body_preview += "..."
+                logging.info(f"📄 Request body preview: {body_preview}")
+            else:
+                logging.info("📄 Request body: Empty")
+        except Exception as e:
+            logging.warning(f"⚠️  Could not read request body: {str(e)}")
+    
+    # Process the request
+    try:
+        response = await call_next(request)
+        
+        # Calculate processing time
+        process_time = time.time() - start_time
+        
+        # Enhanced logging with status code analysis
+        status_emoji = "✅" if response.status_code < 400 else "❌" if response.status_code >= 500 else "⚠️"
+        
+        logging.info(f"{status_emoji} Response: {request.method} {request.url.path} - "
+                    f"Status: {response.status_code} - "
+                    f"Time: {process_time:.3f}s - "
+                    f"IP: {client_ip}")
+        
+        # Log additional details for error responses
+        if response.status_code >= 400:
+            logging.error(f"🚨 Error Response Details:")
+            logging.error(f"   Method: {request.method}")
+            logging.error(f"   Path: {request.url.path}")
+            logging.error(f"   Status: {response.status_code}")
+            logging.error(f"   Client IP: {client_ip}")
+            logging.error(f"   Processing Time: {process_time:.3f}s")
+            
+            # Log response headers for error cases
+            if hasattr(response, 'headers'):
+                logging.error(f"   Response Headers: {dict(response.headers)}")
+        
+        return response
+        
+    except Exception as e:
+        process_time = time.time() - start_time
+        
+        logging.error(f"💥 Request failed with exception:")
+        logging.error(f"   Method: {request.method}")
+        logging.error(f"   Path: {request.url.path}")
+        logging.error(f"   Client IP: {client_ip}")
+        logging.error(f"   Processing Time: {process_time:.3f}s")
+        logging.error(f"   Exception: {str(e)}")
+        logging.error(f"   Exception Type: {type(e).__name__}")
+        
+        # Re-raise the exception
+        raise
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://oceansgaming.gg",
+        "https://driftwood.gg",
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:8000",
+        "http://127.0.0.1:5173"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,43 +207,64 @@ app.add_middleware(
 
 # Pydantic models for request/response validation
 class AuthTokenRequest(BaseModel):
-    uid: str
-    role: Optional[str] = "PARTICIPANT"
-    teamId: Optional[str] = None
+    uid: Optional[Union[str, int]] = None  # Accept both string and int
+    role: str = "PARTICIPANT"
+    teamId: Optional[Union[str, int]] = None
+    
+    # Validator to convert uid to string
+    @validator('uid', pre=True)
+    def convert_uid_to_string(cls, v):
+        if v is not None:
+            return str(v)
+        return v
+    
+    # Validator to convert teamId to string if provided
+    @validator('teamId', pre=True) 
+    def convert_team_id_to_string(cls, v):
+        if v is not None:
+            return str(v)
+        return v
 
 class RoomBlockRequest(BaseModel):
-    user1: str
-    user2: str
-    action: str  # 'block' or 'unblock'
-    blocked_by: Optional[str] = None
+    user1: Optional[Union[str, int]] = None
+    user2: Optional[Union[str, int]] = None
+    action: Optional[str] = None
+    blocked_by: Optional[Union[str, int]] = None
+    
+    @validator('user1', 'user2', 'blocked_by', pre=True)
+    def convert_to_string(cls, v):
+        if v is not None:
+            return str(v)
+        return v
 
 class BatchReportsRequest(BaseModel):
-    event_id: str
-    count: int
-    custom_values_array: Optional[List[Dict[str, Any]]] = []
-    specific_ids: Optional[List[str]] = []
-    games_per_match: Optional[int] = 3
+    event_id: Optional[Union[str, int]] = None
+    count: Optional[int] = None
+    custom_values_array: Optional[list] = []
+    specific_ids: Optional[list] = []
+    games_per_match: int = 3
 
 class BatchDisputesRequest(BaseModel):
-    event_id: str
-    count: int
-    custom_values_array: Optional[List[Dict[str, Any]]] = []
-    specific_ids: Optional[List[str]] = []
+    event_id: Optional[Union[str, int]] = None
+    count: Optional[int] = None
+    custom_values_array: Optional[list] = []
+    specific_ids: Optional[list] = []
 
 class DeadlineTasksRequest(BaseModel):
-    detail_id: str
-    matches: Optional[List[Dict[str, Any]]] = []
-    bracket_info: Optional[Dict[str, Any]] = {}
-    tier_id: Optional[str] = None
-    is_league: Optional[bool] = False
-    games_per_match: Optional[int] = 3
+    detail_id: Optional[Union[str, int]] = None
+    matches: Optional[list] = []
+    bracket_info: Optional[dict] = {}
+    tier_id: Optional[Union[str, int]] = None
+    is_league: bool = False
+    games_per_match: int = 3
 
 # Auth token endpoint
 @app.post("/auth/token")
-async def create_auth_token(request: AuthTokenRequest):
+@limiter.limit("30/minute")
+async def create_auth_token(request: Request, auth_request: AuthTokenRequest):
     """Create authentication token for user."""
     try:
-        uid = str(request.uid)
+        uid = auth_request.uid
         if not uid:
             raise HTTPException(status_code=400, detail="uid is required")
         
@@ -81,9 +272,9 @@ async def create_auth_token(request: AuthTokenRequest):
         custom_claims = {
             "uid": uid,
             "source": "driftwood-laravel",
-            "role": request.role,
+            "role": auth_request.role,
             "userId": uid,
-            "teamId": request.teamId
+            "teamId": auth_request.teamId
         }
         
         # Create Firebase custom token
@@ -111,33 +302,34 @@ async def create_auth_token(request: AuthTokenRequest):
 
 # Room block/unblock endpoint
 @app.post("/room/block")
-async def handle_room_block(request: RoomBlockRequest):
+@limiter.limit("60/minute")
+async def handle_room_block(request: Request, room_request: RoomBlockRequest):
     """Handle room blocking/unblocking operations."""
     try:
-        if request.action not in ['block', 'unblock']:
+        if room_request.action not in ['block', 'unblock']:
             raise HTTPException(status_code=400, detail='action must be "block" or "unblock"')
         
-        if request.action == 'block' and not request.blocked_by:
+        if room_request.action == 'block' and not room_request.blocked_by:
             raise HTTPException(status_code=400, detail='blocked_by is required for block action')
         
         db = firestore.client()
         room_collection = db.collection('room')
         
-        query1 = room_collection.where('user1', '==', str(request.user1)).where('user2', '==', str(request.user2))
-        query2 = room_collection.where('user2', '==', str(request.user1)).where('user1', '==', str(request.user2))
+        query1 = room_collection.where('user1', '==', room_request.user1).where('user2', '==', room_request.user2)
+        query2 = room_collection.where('user2', '==', room_request.user1).where('user1', '==', room_request.user2)
         
         rooms_updated = 0
         
         for doc in query1.stream():
-            if request.action == 'block':
-                doc.reference.update({'blocked_by': str(request.blocked_by)})
+            if room_request.action == 'block':
+                doc.reference.update({'blocked_by': room_request.blocked_by})
             else:  # unblock
                 doc.reference.update({'blocked_by': None})
             rooms_updated += 1
         
         for doc in query2.stream():
-            if request.action == 'block':
-                doc.reference.update({'blocked_by': str(request.blocked_by)})
+            if room_request.action == 'block':
+                doc.reference.update({'blocked_by': room_request.blocked_by})
             else:  # unblock
                 doc.reference.update({'blocked_by': None})
             rooms_updated += 1
@@ -145,21 +337,22 @@ async def handle_room_block(request: RoomBlockRequest):
         # Return same format as Flask
         return {
             'success': True,
-            'action': request.action,
+            'action': room_request.action,
             'rooms_updated': rooms_updated,
-            'message': f'Successfully {request.action}ed {rooms_updated} room(s)'
+            'message': f'Successfully {room_request.action}ed {rooms_updated} room(s)'
         }
         
     except HTTPException:
         raise
     except Exception as e:
-        action = getattr(request, 'action', 'unknown')
+        action = getattr(room_request, 'action', 'unknown')
         logging.error(f"Error in room {action} operation: {e}")
         raise HTTPException(status_code=500, detail=f'Failed to {action} room')
 
 # Batch reports endpoint
 @app.post("/batch/reports")
-async def create_batch_reports(request: BatchReportsRequest):
+@limiter.limit("20/minute")
+async def create_batch_reports(http_request: Request, request: BatchReportsRequest):
     """Create batch reports."""
     try:
         result = createBatchReports(
@@ -177,7 +370,8 @@ async def create_batch_reports(request: BatchReportsRequest):
 
 # Batch disputes endpoint
 @app.post("/batch/disputes")
-async def create_batch_disputes(request: BatchDisputesRequest):
+@limiter.limit("20/minute")
+async def create_batch_disputes(http_request: Request, request: BatchDisputesRequest):
     """Create batch disputes."""
     try:
         result = createBatchDisputes(
@@ -567,7 +761,8 @@ class DeadlineTaskTrait:
 
 # Started tasks endpoint
 @app.post("/deadline/started")
-async def handle_started_tasks(request: DeadlineTasksRequest):
+@limiter.limit("10/minute")
+async def handle_started_tasks(http_request: Request, request: DeadlineTasksRequest):
     """Handle started tournament tasks."""
     try:
         trait = DeadlineTaskTrait()
@@ -606,7 +801,8 @@ async def handle_started_tasks(request: DeadlineTasksRequest):
 
 # Ended tasks endpoint
 @app.post("/deadline/ended")
-async def handle_ended_tasks(request: DeadlineTasksRequest):
+@limiter.limit("10/minute")
+async def handle_ended_tasks(http_request: Request, request: DeadlineTasksRequest):
     """Handle ended tournament tasks."""
     try:
         trait = DeadlineTaskTrait()
@@ -668,7 +864,8 @@ async def handle_ended_tasks(request: DeadlineTasksRequest):
 
 # Organizer tasks endpoint
 @app.post("/deadline/org")
-async def handle_org_tasks(request: DeadlineTasksRequest):
+@limiter.limit("10/minute")
+async def handle_org_tasks(http_request: Request, request: DeadlineTasksRequest):
     """Handle organizer deadline tasks."""
     try:
         trait = DeadlineTaskTrait()
@@ -722,13 +919,10 @@ async def handle_org_tasks(request: DeadlineTasksRequest):
         logging.error(f"Error in handle_org_tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to handle organizer tasks")
 
-# Google's recommended approach for FastAPI with Cloud Functions 2nd gen
-import functions_framework
-from functions_framework import create_app
-
-@functions_framework.http
-def driftwood_api(request):
-    """Firebase Functions entry point for FastAPI app."""
-    # Google's recommended method: create_app automatically handles ASGI/WSGI conversion
-    handler = create_app(app)
-    return handler(request)
+# Cloud Run entry point - FastAPI app runs directly with uvicorn
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)

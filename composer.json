@@ -11,6 +11,7 @@
         "filament/filament": "^3.2",
         "google/analytics-admin": "^0.29.0",
         "google/analytics-data": "^0.22.2",
+        "google/apiclient": "^2.18",
         "google/cloud-firestore": "^1.48",
         "guzzlehttp/guzzle": "^7.2",
         "io238/laravel-iso-countries": "^1.2",
@@ -172,7 +173,7 @@
         ],
         
         "tf:dev2:plan": [
-            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_firestore_database.default -target=google_firestore_index.event_disputes_report_event -target=google_firestore_index.room_user1_user2 -target=google_firestore_index.room_user2_user1 -target=google_firestore_index.disputes_validation -target=google_firestore_document.collection_init -target=null_resource.deploy_firestore_rules -target=null_resource.wait_for_firestore_ready -target=null_resource.register_database_to_app -target=null_resource.update_env_files -target=null_resource.npm_build -target=null_resource.composer_update -out=\"dev2.tfplan\"'"
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_cloud_run_v2_service.driftwood_api '"
         ],
         
 

@@ -40,6 +40,7 @@ variable "billing_account_id" {
 
 
 
+
 variable "force_composer_update" {
   description = "Force composer update even if files haven't changed"
   type        = bool
@@ -83,4 +84,9 @@ variable "auth_service_secret_key" {
   type        = string
   default     = ""
   sensitive   = true
+}
+
+variable "terraform_service_account" {
+  description = "Service account email used by Terraform and Laravel app"
+  type        = string
 }

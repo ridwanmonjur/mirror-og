@@ -122,6 +122,7 @@
                             <div class="row">
                                  @foreach ($roundData as $fakeKey => $actualRoundData)
                                      @foreach ($actualRoundData as $match) 
+                                     @if (isset($match['order']))
                                     <div class="my-3 col-12 col-md-6 col-xxl-4">
                                         <div>
                                             {{-- <h5>{{$fakeKey}}</h5> --}}
@@ -137,6 +138,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{-- @else
+                                    <div class="my-3 col-12 col-md-6 col-xxl-4">
+                                        <div>Order not set for this match</div>
+                                    </div> --}}
+                                    @endif
                                     @endforeach  
                                 @endforeach
                             </div>

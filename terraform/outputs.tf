@@ -56,12 +56,14 @@ output "app_check_config" {
 #   }
 # }
 
-output "cloud_function_urls" {
-  description = "Cloud Function URLs"
+output "service_urls" {
+  description = "Service URLs"
   value = {
-    # auth_service_url = google_cloudfunctions2_function.auth_service.service_config[0].uri
-    health_check_url = google_cloudfunctions2_function.health_check.service_config[0].uri
-    driftwood_api_url = google_cloudfunctions2_function.driftwood_api.service_config[0].uri
+    driftwood_api_url = google_cloud_run_v2_service.driftwood_api.uri
+    health_check_url = "${google_cloud_run_v2_service.driftwood_api.uri}/health"
   }
 }
+
+# Using existing Firebase service account from FIREBASE_CREDENTIALS
+# No additional service account outputs needed
 

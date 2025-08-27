@@ -8,41 +8,95 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use App\Services\CloudFunctionAuthService;
 
 class FirebaseController extends Controller
 {
+    protected $authService;
+    
+    public function __construct(CloudFunctionAuthService $authService)
+    {
+        $this->authService = $authService;
+    }
    
 
-    /**
-     * Call Cloud Function to handle room blocking/unblocking
-     */
+
     private function updateRoomBlockStatus($user1Id, $user2Id, $action, $blockedBy = null)
     {
         try {
+            Log::info("Starting room block status update with cached identity token");
+    
             $cloudFunctionUrl = config('services.cloud_function.url');
-            $response = Http::contentType('application/json')->post($cloudFunctionUrl . '/room/block', [
-                'user1' => $user1Id,
-                'user2' => $user2Id,
-                'action' => $action,
-                'blocked_by' => $blockedBy
-            ]);
-
+            
+            // Use server-side cache for identity token (NOT session)
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+            
+            Log::info("Making request to Cloud Run service");
+            
+            $response = Http::timeout(30)
+                ->contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken,
+                    'User-Agent' => 'Laravel-App/1.0'
+                ])
+                ->post($cloudFunctionUrl . '/room/block', [
+                    'user1' => $user1Id,
+                    'user2' => $user2Id,
+                    'action' => $action,
+                    'blocked_by' => $blockedBy
+                ]);
+    
             if (!$response->successful()) {
-                throw new Exception('Cloud function call failed: ' . $response->body());
+                // Clear cache on authentication errors
+                if ($response->status() === 401 || $response->status() === 403) {
+                    Log::warning("Authentication failed, clearing token cache");
+                    $this->authService->clearIdentityTokenCache($cloudFunctionUrl);
+                    
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+                    $response = Http::timeout(30)
+                        ->contentType('application/json')
+                        ->withHeaders(['Authorization' => 'Bearer ' . $identityToken])
+                        ->post($cloudFunctionUrl . '/room/block', [
+                            'user1' => $user1Id,
+                            'user2' => $user2Id,
+                            'action' => $action,
+                            'blocked_by' => $blockedBy
+                        ]);
+                }
+    
+                if (!$response->successful()) {
+                    Log::error('Cloud Run request failed', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    throw new Exception('Cloud Run request failed: ' . $response->body());
+                }
             }
             
             $responseData = $response->json();
             if (!isset($responseData['success']) || !$responseData['success']) {
-                throw new Exception('Cloud function returned error: ' . ($responseData['message'] ?? 'Unknown error'));
+                throw new Exception('Cloud Run returned error: ' . ($responseData['message'] ?? 'Unknown error'));
             }
             
+            Log::info("Room block status updated successfully", $responseData);
             return $responseData;
+            
         } catch (Exception $e) {
+            Log::error('Failed to update room block status', [
+                'error' => $e->getMessage(),
+                'user1' => $user1Id,
+                'user2' => $user2Id,
+                'action' => $action
+            ]);
             throw new Exception('Failed to update room block status: ' . $e->getMessage());
         }
     }
-
+    
+    
     public function toggleBlock(Request $request, $id): JsonResponse
     {
         try {
@@ -317,14 +371,21 @@ class FirebaseController extends Controller
     private function callCloudFunctionBatchReports($eventId, $count, $customValuesArray, $specificIds, $gamesPerMatch)
     {
         try {
-            $cloudFunctionUrl = config('services.cloud_function.url');
-            $response = Http::contentType('application/json')->post($cloudFunctionUrl . '/batch/reports', [
-                'event_id' => $eventId,
-                'count' => $count,
-                'custom_values_array' => $customValuesArray,
-                'specific_ids' => $specificIds,
-                'games_per_match' => $gamesPerMatch
-            ]);
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+
+            $cloudFunctionUrl = config('cloud_function.url');
+            $response = Http::contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($cloudFunctionUrl . '/batch/reports', [
+                    'event_id' => $eventId,
+                    'count' => $count,
+                    'custom_values_array' => $customValuesArray,
+                    'specific_ids' => $specificIds,
+                    'games_per_match' => $gamesPerMatch
+                ]);
 
             if (!$response->successful()) {
                 throw new Exception('Cloud function call failed: ' . $response->body());
@@ -347,13 +408,20 @@ class FirebaseController extends Controller
     private function callCloudFunctionBatchDisputes($eventId, $count, $customValuesArray, $specificIds)
     {
         try {
-            $cloudFunctionUrl = config('services.cloud_function.url');
-            $response = Http::contentType('application/json')->post($cloudFunctionUrl . '/batch/disputes', [
-                'event_id' => $eventId,
-                'count' => $count,
-                'custom_values_array' => $customValuesArray,
-                'specific_ids' => $specificIds
-            ]);
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+
+            $cloudFunctionUrl = config('cloud_function.url');
+            $response = Http::contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($cloudFunctionUrl . '/batch/disputes', [
+                    'event_id' => $eventId,
+                    'count' => $count,
+                    'custom_values_array' => $customValuesArray,
+                    'specific_ids' => $specificIds
+                ]);
 
             if (!$response->successful()) {
                 throw new Exception('Cloud function call failed: ' . $response->body());

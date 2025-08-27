@@ -9,6 +9,7 @@ use App\Traits\PrinterLoggerTrait;
 use App\Models\BracketDeadline;
 use App\Services\BracketDataService;
 use App\Services\DataServiceFactory;
+use App\Services\CloudFunctionAuthService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -25,10 +26,13 @@ class DeadlineTaskService
     protected $taskIdParent;
 
     protected $pythonApiUrl;
+    
+    protected $authService;
 
-    public function __construct(BracketDataService $bracketDataService)
+    public function __construct(BracketDataService $bracketDataService, CloudFunctionAuthService $authService)
     {
         $this->bracketDataService = $bracketDataService;
+        $this->authService = $authService;
         $now = Carbon::now();
         $firebaseConfig = Config::get('services.firebase');
         $disputeEnums = Config::get('constants.DISPUTE');
@@ -212,11 +216,18 @@ class DeadlineTaskService
                 ];
             })->toArray();
 
-            $response = Http::timeout(30)->post($this->pythonApiUrl . '/deadline/started', [
-                'detail_id' => $detailId,
-                'matches' => $matchesData,
-                'games_per_match' => $gamesPerMatch
-            ]);
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($this->pythonApiUrl);
+
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($this->pythonApiUrl . '/deadline/started', [
+                    'detail_id' => $detailId,
+                    'matches' => $matchesData,
+                    'games_per_match' => $gamesPerMatch
+                ]);
 
             if ($response->successful()) {
                 $responseData = $response->json();
@@ -225,11 +236,31 @@ class DeadlineTaskService
                     'response_status' => $responseData['status'] ?? 'unknown'
                 ]);
             } else {
-                Log::error('Python handleStartedTasks failed', [
-                    'status' => $response->status(),
-                    'error' => $response->body()
-                ]);
-                throw new Exception('Failed to process started tasks via Python API');
+                // Clear cache on authentication errors and retry once
+                if ($response->status() === 401 || $response->status() === 403) {
+                    Log::warning("Authentication failed, clearing token cache");
+                    $this->authService->clearIdentityTokenCache($this->pythonApiUrl);
+                    
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($this->pythonApiUrl);
+                    $response = Http::timeout(30)
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $identityToken
+                        ])
+                        ->post($this->pythonApiUrl . '/deadline/started', [
+                            'detail_id' => $detailId,
+                            'matches' => $matchesData,
+                            'games_per_match' => $gamesPerMatch
+                        ]);
+                }
+                
+                if (!$response->successful()) {
+                    Log::error('Python handleStartedTasks failed', [
+                        'status' => $response->status(),
+                        'error' => $response->body()
+                    ]);
+                    throw new Exception('Failed to process started tasks via Python API');
+                }
             }
         } catch (Exception $e) {
             Log::error('callPythonStartedTasks error: ' . $e->getMessage());
@@ -251,14 +282,21 @@ class DeadlineTaskService
                 ];
             })->toArray();
 
-            $response = Http::timeout(30)->post($this->pythonApiUrl . '/deadline/ended', [
-                'detail_id' => $detailId,
-                'matches' => $matchesData,
-                'bracket_info' => $bracketInfo,
-                'tier_id' => $tierId,
-                'is_league' => $isLeague,
-                'games_per_match' => $gamesPerMatch
-            ]);
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($this->pythonApiUrl);
+
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($this->pythonApiUrl . '/deadline/ended', [
+                    'detail_id' => $detailId,
+                    'matches' => $matchesData,
+                    'bracket_info' => $bracketInfo,
+                    'tier_id' => $tierId,
+                    'is_league' => $isLeague,
+                    'games_per_match' => $gamesPerMatch
+                ]);
 
             if ($response->successful()) {
                 $responseData = $response->json();
@@ -279,11 +317,34 @@ class DeadlineTaskService
                     'response_status' => $responseData['status'] ?? 'unknown'
                 ]);
             } else {
-                Log::error('Python handleEndedTasks failed', [
-                    'status' => $response->status(),
-                    'error' => $response->body()
-                ]);
-                throw new Exception('Failed to process ended tasks via Python API');
+                // Clear cache on authentication errors and retry once
+                if ($response->status() === 401 || $response->status() === 403) {
+                    Log::warning("Authentication failed, clearing token cache");
+                    $this->authService->clearIdentityTokenCache($this->pythonApiUrl);
+                    
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($this->pythonApiUrl);
+                    $response = Http::timeout(30)
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $identityToken
+                        ])
+                        ->post($this->pythonApiUrl . '/deadline/ended', [
+                            'detail_id' => $detailId,
+                            'matches' => $matchesData,
+                            'bracket_info' => $bracketInfo,
+                            'tier_id' => $tierId,
+                            'is_league' => $isLeague,
+                            'games_per_match' => $gamesPerMatch
+                        ]);
+                }
+                
+                if (!$response->successful()) {
+                    Log::error('Python handleEndedTasks failed', [
+                        'status' => $response->status(),
+                        'error' => $response->body()
+                    ]);
+                    throw new Exception('Failed to process ended tasks via Python API');
+                }
             }
         } catch (Exception $e) {
             Log::error('callPythonEndedTasks error: ' . $e->getMessage());
@@ -305,14 +366,21 @@ class DeadlineTaskService
                 ];
             })->toArray();
 
-            $response = Http::timeout(30)->post($this->pythonApiUrl . '/deadline/org', [
-                'detail_id' => $detailId,
-                'matches' => $matchesData,
-                'bracket_info' => $bracketInfo,
-                'tier_id' => $tierId,
-                'is_league' => $isLeague,
-                'games_per_match' => $gamesPerMatch
-            ]);
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($this->pythonApiUrl);
+
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken
+                ])
+                ->post($this->pythonApiUrl . '/deadline/org', [
+                    'detail_id' => $detailId,
+                    'matches' => $matchesData,
+                    'bracket_info' => $bracketInfo,
+                    'tier_id' => $tierId,
+                    'is_league' => $isLeague,
+                    'games_per_match' => $gamesPerMatch
+                ]);
 
             if ($response->successful()) {
                 $responseData = $response->json();
@@ -333,11 +401,34 @@ class DeadlineTaskService
                     'response_status' => $responseData['status'] ?? 'unknown'
                 ]);
             } else {
-                Log::error('Python handleOrgTasks failed', [
-                    'status' => $response->status(),
-                    'error' => $response->body()
-                ]);
-                throw new Exception('Failed to process organizer tasks via Python API');
+                // Clear cache on authentication errors and retry once
+                if ($response->status() === 401 || $response->status() === 403) {
+                    Log::warning("Authentication failed, clearing token cache");
+                    $this->authService->clearIdentityTokenCache($this->pythonApiUrl);
+                    
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($this->pythonApiUrl);
+                    $response = Http::timeout(30)
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $identityToken
+                        ])
+                        ->post($this->pythonApiUrl . '/deadline/org', [
+                            'detail_id' => $detailId,
+                            'matches' => $matchesData,
+                            'bracket_info' => $bracketInfo,
+                            'tier_id' => $tierId,
+                            'is_league' => $isLeague,
+                            'games_per_match' => $gamesPerMatch
+                        ]);
+                }
+                
+                if (!$response->successful()) {
+                    Log::error('Python handleOrgTasks failed', [
+                        'status' => $response->status(),
+                        'error' => $response->body()
+                    ]);
+                    throw new Exception('Failed to process organizer tasks via Python API');
+                }
             }
         } catch (Exception $e) {
             Log::error('callPythonOrgTasks error: ' . $e->getMessage());

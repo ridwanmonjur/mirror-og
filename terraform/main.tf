@@ -54,7 +54,9 @@ resource "google_project_service" "required_apis" {
     "firebaseappcheck.googleapis.com",
     "cloudfunctions.googleapis.com",
     "storage.googleapis.com",
-    "cloudbuild.googleapis.com"
+    "cloudbuild.googleapis.com",
+    "compute.googleapis.com",
+    "run.googleapis.com",
   ])
 
   project = var.project_id
@@ -245,7 +247,7 @@ resource "null_resource" "wait_for_firestore_ready" {
       PROJECT="${var.project_id}"
       DB_NAME="(default)"
       echo "Waiting for Firestore database to become ACTIVE..."
-      for i in {1..60}; do
+      for i in $(seq 1 60); do
         STATUS=$(gcloud firestore databases describe --database="$DB_NAME" --project="$PROJECT" --format="value(state)" 2>/dev/null || echo "MISSING")
         if [ "$STATUS" = "ACTIVE" ]; then
           echo "Firestore database $DB_NAME is ready!"
@@ -835,24 +837,15 @@ locals {
       startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
       startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
-      startswith(line, "VITE_API_URL=") ? "VITE_API_URL=${google_cloudfunctions2_function.driftwood_api.service_config[0].uri}" :
+      startswith(line, "VITE_API_URL=") ? "VITE_API_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
+      startswith(line, "CLOUD_FUNCTION_URL=") ? "CLOUD_FUNCTION_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
+      # Remove the old DRIFTWOOD_API_KEY since we're using IAM auth now
+      startswith(line, "DRIFTWOOD_API_KEY=") ? "" :
       line
     ])
   }
 }
 
-# Backup original .env files before making changes (only once)
-resource "local_file" "env_backups" {
-  for_each = local.env_files_to_update
-  
-  content  = each.value
-  filename = "../${each.key}.terraform.backup"
-  
-  # Only create backup if it doesn't exist
-  lifecycle {
-    ignore_changes = [content]
-  }
-}
 
 # Update .env files using null_resource to avoid destruction issues
 resource "null_resource" "update_env_files" {
@@ -864,7 +857,7 @@ resource "null_resource" "update_env_files" {
     auth_domain    = local.auth_domain
     app_id         = local.web_app_id
     database_id    = local.database_id
-    api_url        = google_cloudfunctions2_function.driftwood_api.service_config[0].uri
+    api_url        = google_cloud_run_v2_service.driftwood_api.uri
     content_hash   = md5(each.value)
   }
 
@@ -880,8 +873,7 @@ EOF
   
   depends_on = [
     data.google_firebase_web_app_config.existing_app_config,
-    data.google_firebase_web_app_config.new_app_config,
-    local_file.env_backups
+    data.google_firebase_web_app_config.new_app_config
   ]
 }
 
@@ -1096,7 +1088,30 @@ resource "google_storage_bucket" "functions_bucket" {
   depends_on = [google_project_service.required_apis]
 }
 
-# Build and package the Cloud Function
+# Build and push Docker image for Cloud Run
+resource "null_resource" "build_docker_image" {
+  triggers = {
+    main_py_hash = filemd5("../functions/main.py")
+    requirements_hash = filemd5("../functions/requirements.txt")
+    dockerfile_hash = filemd5("../functions/Dockerfile")
+    project_id     = var.project_id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ../functions
+      
+      # Build and push Docker image to Google Container Registry
+      gcloud builds submit --tag gcr.io/${var.project_id}/driftwood-api:latest .
+    EOT
+  }
+
+  depends_on = [
+    google_project_service.required_apis
+  ]
+}
+
+# Build and package the Cloud Function (for health check only)
 resource "null_resource" "build_functions" {
   triggers = {
     functions_hash = filemd5("../functions/main.py")
@@ -1119,7 +1134,7 @@ resource "null_resource" "build_functions" {
   ]
 }
 
-# Upload the function source to Cloud Storage
+# Upload the function source to Cloud Storage (for health check only)
 resource "google_storage_bucket_object" "function_source" {
   name   = "auth-function-${timestamp()}.zip"
   bucket = google_storage_bucket.functions_bucket.name
@@ -1177,117 +1192,83 @@ resource "google_storage_bucket_object" "function_source" {
 #   member = "allUsers"
 # }
 
-# Deploy health check function as Cloud Function Gen 2
-resource "google_cloudfunctions2_function" "health_check" {
-  name        = "driftwood-health-${var.environment}"
-  description = "Driftwood health check service"
-  project     = var.project_id
-  location    = var.region
+# Health check functionality is now included in the main Cloud Run API service
+# No separate health check function needed
 
-  build_config {
-    runtime     = "python311"
-    entry_point = "driftwood_api"
-    source {
-      storage_source {
-        bucket = google_storage_bucket.functions_bucket.name
-        object = google_storage_bucket_object.function_source.name
-      }
-    }
-  }
-
-  service_config {
-    max_instance_count    = 5
-    min_instance_count    = 0
-    available_memory      = "256Mi"
-    available_cpu         = "0.5"
-    timeout_seconds       = 60
-    max_instance_request_concurrency = 1
-    service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
-    
-    environment_variables = {
-      ENVIRONMENT          = var.environment
-      FIREBASE_PROJECT_ID  = var.project_id
-      FIREBASE_DATABASE_ID = "(default)"
-      SECRET_KEY          = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
-    }
-    
-    ingress_settings = "ALLOW_ALL"
-    all_traffic_on_latest_revision = true
-  }
-
-  depends_on = [
-    google_storage_bucket_object.function_source,
-    google_project_service.required_apis
-  ]
-}
-
-# IAM binding to allow public access to the health check function (2nd gen)
-resource "google_cloudfunctions2_function_iam_member" "health_check_invoker" {
-  project        = var.project_id
-  location       = var.region
-  cloud_function = google_cloudfunctions2_function.health_check.name
-
-  role   = "roles/cloudfunctions.invoker"
-  member = "allUsers"
-}
+# Health check IAM bindings removed - functionality now in main Cloud Run API service
 
 # Deploy FastAPI service as a Cloud Function Gen 2
-resource "google_cloudfunctions2_function" "driftwood_api" {
-  name        = "driftwood-api-${var.environment}"
-  description = "Driftwood FastAPI service"
-  project     = var.project_id
-  location    = var.region
+# Cloud Run service for Driftwood API
+resource "google_cloud_run_v2_service" "driftwood_api" {
+  name     = "driftwood-api-${var.environment}"
+  location = var.region
+  project  = var.project_id
 
-  build_config {
-    runtime     = "python311"
-    entry_point = "driftwood_api"
-    source {
-      storage_source {
-        bucket = google_storage_bucket.functions_bucket.name
-        object = google_storage_bucket_object.function_source.name
+  template {
+    scaling {
+      max_instance_count = 5
+      min_instance_count = 0
+    }
+
+    containers {
+      image = "gcr.io/${var.project_id}/driftwood-api:latest"
+      
+      ports {
+        container_port = 8080
+      }
+
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "512Mi"
+        }
+      }
+
+      env {
+        name  = "ENVIRONMENT"
+        value = var.environment
+      }
+      env {
+        name  = "FIREBASE_PROJECT_ID"
+        value = var.project_id
+      }
+      env {
+        name  = "FIREBASE_DATABASE_ID"
+        value = "(default)"
+      }
+      env {
+        name  = "SECRET_KEY"
+        value = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
       }
     }
+
+    service_account = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
   }
 
-  service_config {
-    max_instance_count    = 5
-    min_instance_count    = 0
-    available_memory      = "512Mi"
-    available_cpu         = "1"
-    timeout_seconds       = 300
-    max_instance_request_concurrency = 100
-    service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
-    
-    environment_variables = {
-      ENVIRONMENT          = var.environment
-      FIREBASE_PROJECT_ID  = var.project_id
-      FIREBASE_DATABASE_ID = "(default)"
-      SECRET_KEY          = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
-    }
-    
-    ingress_settings = "ALLOW_ALL"
-    all_traffic_on_latest_revision = true
+  traffic {
+    percent = 100
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
   }
 
   depends_on = [
-    google_storage_bucket_object.function_source,
-    google_project_service.required_apis
+    google_project_service.required_apis,
+    null_resource.build_docker_image
   ]
 }
 
-# IAM binding to allow public access to the FastAPI function (2nd gen)
-resource "google_cloudfunctions2_function_iam_member" "driftwood_api_invoker" {
-  project        = var.project_id
-  location       = var.region
-  cloud_function = google_cloudfunctions2_function.driftwood_api.name
-
-  role   = "roles/cloudfunctions.invoker"
-  member = "allUsers"
+# Grant Cloud Run invoker permission to the Terraform service account (same one used by Laravel)
+resource "google_cloud_run_service_iam_member" "terraform_service_account_invoker" {
+  service  = google_cloud_run_v2_service.driftwood_api.name
+  location = google_cloud_run_v2_service.driftwood_api.location
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${var.terraform_service_account}"
 }
 
-# IAM binding to allow service account to sign blobs (needed for custom tokens)
-resource "google_project_iam_member" "driftwood_api_token_creator" {
+# Grant the compute service account permission to create Firebase custom tokens
+resource "google_project_iam_member" "compute_token_creator" {
   project = var.project_id
   role    = "roles/iam.serviceAccountTokenCreator"
   member  = "serviceAccount:${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 }
+
+# IAM binding removed - will be added manually to service account
