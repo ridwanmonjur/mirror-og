@@ -41,6 +41,7 @@ data "google_project" "current" {
   project_id = var.project_id
 }
 
+
 # Enable required APIs with proper lifecycle management
 resource "google_project_service" "required_apis" {
   for_each = toset([
@@ -669,8 +670,14 @@ resource "google_firestore_index" "disputes_validation" {
   depends_on = [google_firestore_database.default]
 }
 
+# Check if message index exists
+data "external" "message_index_exists" {
+  program = ["bash", "-c", "gcloud firestore indexes list --database='(default)' --format='value(name)' | grep -q 'message' && echo '{\"exists\":\"true\"}' || echo '{\"exists\":\"false\"}'"]
+}
+
 # Message subcollection composite index for timestamp and __name__ descending queries
 resource "google_firestore_index" "message_timestamp_name_desc" {
+  count = data.external.message_index_exists.result.exists == "false" ? 1 : 0
   provider     = google-beta
   project      = var.project_id
   database     = local.database_id
@@ -691,6 +698,7 @@ resource "google_firestore_index" "message_timestamp_name_desc" {
   lifecycle {
     ignore_changes = [database, collection, fields]
     create_before_destroy = false
+    prevent_destroy = true
   }
 
   depends_on = [google_firestore_database.default]
@@ -1066,8 +1074,14 @@ resource "null_resource" "cleanup_existing_functions" {
   }
 }
 
+# Check if functions bucket exists
+data "external" "functions_bucket_exists" {
+  program = ["bash", "-c", "gsutil ls gs://$TF_VAR_project_id-functions-source >/dev/null 2>&1 && echo '{\"exists\":\"true\"}' || echo '{\"exists\":\"false\"}'"]
+}
+
 # Create Cloud Storage bucket for Cloud Functions source code
 resource "google_storage_bucket" "functions_bucket" {
+  count = data.external.functions_bucket_exists.result.exists == "false" ? 1 : 0
   name     = "${var.project_id}-functions-source"
   location = var.region
   project  = var.project_id
@@ -1085,9 +1099,15 @@ resource "google_storage_bucket" "functions_bucket" {
 
   lifecycle {
     ignore_changes = [name, location]
+    prevent_destroy = true
   }
 
   depends_on = [google_project_service.required_apis]
+}
+
+# Local value to handle conditional bucket reference
+locals {
+  functions_bucket_name = length(google_storage_bucket.functions_bucket) > 0 ? google_storage_bucket.functions_bucket[0].name : "${var.project_id}-functions-source"
 }
 
 # Build and push Docker image for Cloud Run
@@ -1139,7 +1159,7 @@ resource "null_resource" "build_functions" {
 # Upload the function source to Cloud Storage (for health check only)
 resource "google_storage_bucket_object" "function_source" {
   name   = "auth-function-${timestamp()}.zip"
-  bucket = google_storage_bucket.functions_bucket.name
+  bucket = local.functions_bucket_name
   source = "../cloud_server_functions/function-source.zip"
 
   depends_on = [null_resource.build_functions]
@@ -1157,7 +1177,7 @@ resource "google_storage_bucket_object" "function_source" {
 #     entry_point = "driftwood_api"
 #     source {
 #       storage_source {
-#         bucket = google_storage_bucket.functions_bucket.name
+#         bucket = local.functions_bucket_name
 #         object = google_storage_bucket_object.function_source.name
 #       }
 #     }
@@ -1224,7 +1244,7 @@ resource "null_resource" "build_client_auth_function" {
 # Upload the client auth function source to Cloud Storage
 resource "google_storage_bucket_object" "client_auth_function_source" {
   name   = "client-auth-function-${timestamp()}.zip"
-  bucket = google_storage_bucket.functions_bucket.name
+  bucket = local.functions_bucket_name
   source = "../cloud_client_auth/client-auth-source.zip"
 
   depends_on = [null_resource.build_client_auth_function]
@@ -1243,7 +1263,7 @@ resource "google_cloudfunctions_function" "client_auth_service" {
   entry_point          = "driftwood_client_auth"
   service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 
-  source_archive_bucket = google_storage_bucket.functions_bucket.name
+  source_archive_bucket = local.functions_bucket_name
   source_archive_object = google_storage_bucket_object.client_auth_function_source.name
 
   trigger_http = true
