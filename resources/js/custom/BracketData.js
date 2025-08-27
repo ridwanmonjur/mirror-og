@@ -7,7 +7,7 @@ import { generateInitialBracket, resetDotsToContainer, clearSelection, calcScore
 import firebaseService from "../services/firebase.js";
 
 export default function BracketData({ fileStore, bracketData, auth, db }) {
-  const { hiddenUserId, eventId, userLevelEnums,  disputeLevelEnums, userTeamId, gamesPerMatch } = bracketData;
+  const { hiddenUserId, userRole, joinEventTeamId, eventId, userLevelEnums,  disputeLevelEnums, userTeamId, gamesPerMatch } = bracketData;
   
   let totalMatches = gamesPerMatch || 3;
   const {
@@ -59,9 +59,9 @@ export default function BracketData({ fileStore, bracketData, auth, db }) {
     async init() {
       console.log(">>>init>>>");
       this.clearUploadData();
-      if (hiddenUserId) {
+      if (hiddenUserId && joinEventTeamId) {
         try {
-          const { user, claims } = await firebaseService.initializeAuth(eventId);
+          const { user, claims } = await firebaseService.initializeAuth(eventId, hiddenUserId, userRole, joinEventTeamId);
           this.firebaseUser = user;
           this.userClaims = claims;
           this.isInitialized = true;

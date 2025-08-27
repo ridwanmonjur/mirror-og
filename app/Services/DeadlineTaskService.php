@@ -38,7 +38,7 @@ class DeadlineTaskService
         $disputeEnums = Config::get('constants.DISPUTE');
         $taskId = $this->logEntry('Respond tasks in the database', 'tasks:deadline {type=0 : The task type to process: 1=started, 2=ended, 3=org, 0=all} {--event_id= : Optional event ID to filter tasks}', '*/30 * * * *', $now);
         $this->taskIdParent = $taskId;
-        $this->pythonApiUrl = config('cloud_function.url');
+        $this->pythonApiUrl = config('cloud_server_functions.url');
         $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
     }
 

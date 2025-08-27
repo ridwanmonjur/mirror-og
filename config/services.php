@@ -61,8 +61,8 @@ return [
         ],
     ],
 
-    'cloud_function' => [
-        'url' => env('VITE_API_URL'),
+    'cloud_server_functions' => [
+        'url' => env('VITE_CLOUD_SERVER_URL'),
     ],
 
 ];

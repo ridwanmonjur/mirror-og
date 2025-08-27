@@ -15,7 +15,7 @@ class CloudFunctionAuthService
      */
     public function getCachedIdentityToken($targetAudience)
     {
-        $cacheKey = 'identity_token_' . md5($targetAudience);
+        $cacheKey = 'identity_token';
         
         try {
             if (Cache::has($cacheKey)) {
@@ -26,7 +26,7 @@ class CloudFunctionAuthService
                     return $cachedData['token'];
                 } else {
                     Log::info("Cached token expired, generating new one");
-                    Cache::forget($cacheKey);
+                    $this->clearIdentityTokenCache();
                 }
             }
             
@@ -46,7 +46,7 @@ class CloudFunctionAuthService
             
         } catch (Exception $e) {
             Log::error("Failed to get cached identity token: " . $e->getMessage());
-            Cache::forget($cacheKey);
+            $this->clearIdentityTokenCache();
             throw $e;
         }
     }
@@ -54,11 +54,11 @@ class CloudFunctionAuthService
     /**
      * Clear identity token cache on error
      */
-    public function clearIdentityTokenCache($targetAudience)
+    public function clearIdentityTokenCache()
     {
-        $cacheKey = 'identity_token_' . md5($targetAudience);
+        $cacheKey = 'identity_token';
         Cache::forget($cacheKey);
-        Log::info("Identity token cache cleared for: " . $targetAudience);
+        Log::info("Identity token cache cleared");
     }
     
     /**

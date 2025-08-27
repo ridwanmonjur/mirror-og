@@ -837,8 +837,9 @@ locals {
       startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
       startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
-      startswith(line, "VITE_API_URL=") ? "VITE_API_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
-      startswith(line, "CLOUD_FUNCTION_URL=") ? "CLOUD_FUNCTION_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
+      startswith(line, "VITE_CLOUD_SERVER_URL=") ? "VITE_CLOUD_SERVER_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
+      startswith(line, "VITE_CLOUD_FRONTEND_URL=") ? "VITE_CLOUD_FRONTEND_URL=${google_cloudfunctions_function.client_auth_service.https_trigger_url}" :
+      startswith(line, "cloud_server_functions_URL=") ? "cloud_server_functions_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
       # Remove the old DRIFTWOOD_API_KEY since we're using IAM auth now
       startswith(line, "DRIFTWOOD_API_KEY=") ? "" :
       line
@@ -858,6 +859,7 @@ resource "null_resource" "update_env_files" {
     app_id         = local.web_app_id
     database_id    = local.database_id
     api_url        = google_cloud_run_v2_service.driftwood_api.uri
+    frontend_url   = google_cloudfunctions_function.client_auth_service.https_trigger_url
     content_hash   = md5(each.value)
   }
 
@@ -1091,15 +1093,15 @@ resource "google_storage_bucket" "functions_bucket" {
 # Build and push Docker image for Cloud Run
 resource "null_resource" "build_docker_image" {
   triggers = {
-    main_py_hash = filemd5("../functions/main.py")
-    requirements_hash = filemd5("../functions/requirements.txt")
-    dockerfile_hash = filemd5("../functions/Dockerfile")
+    main_py_hash = filemd5("../cloud_server_functions/main.py")
+    requirements_hash = filemd5("../cloud_server_functions/requirements.txt")
+    dockerfile_hash = filemd5("../cloud_server_functions/Dockerfile")
     project_id     = var.project_id
   }
 
   provisioner "local-exec" {
     command = <<-EOT
-      cd ../functions
+      cd ../cloud_server_functions
       
       # Build and push Docker image to Google Container Registry
       gcloud builds submit --tag gcr.io/${var.project_id}/driftwood-api:latest .
@@ -1114,14 +1116,14 @@ resource "null_resource" "build_docker_image" {
 # Build and package the Cloud Function (for health check only)
 resource "null_resource" "build_functions" {
   triggers = {
-    functions_hash = filemd5("../functions/main.py")
-    requirements_hash = filemd5("../functions/requirements.txt")
+    functions_hash = filemd5("../cloud_server_functions/main.py")
+    requirements_hash = filemd5("../cloud_server_functions/requirements.txt")
     project_id     = var.project_id
   }
 
   provisioner "local-exec" {
     command = <<-EOT
-      cd ../functions
+      cd ../cloud_server_functions
       
       # Create deployment package with all Python files
       zip -r function-source.zip main.py requirements.txt
@@ -1138,7 +1140,7 @@ resource "null_resource" "build_functions" {
 resource "google_storage_bucket_object" "function_source" {
   name   = "auth-function-${timestamp()}.zip"
   bucket = google_storage_bucket.functions_bucket.name
-  source = "../functions/function-source.zip"
+  source = "../cloud_server_functions/function-source.zip"
 
   depends_on = [null_resource.build_functions]
 }
@@ -1186,7 +1188,7 @@ resource "google_storage_bucket_object" "function_source" {
 # resource "google_cloudfunctions2_function_iam_member" "auth_service_invoker" {
 #   project        = var.project_id
 #   location       = var.region
-#   cloud_function = google_cloudfunctions2_function.auth_service.name
+#   cloud_server_functions = google_cloudfunctions2_function.auth_service.name
 #
 #   role   = "roles/cloudfunctions.invoker"
 #   member = "allUsers"
@@ -1196,6 +1198,79 @@ resource "google_storage_bucket_object" "function_source" {
 # No separate health check function needed
 
 # Health check IAM bindings removed - functionality now in main Cloud Run API service
+
+# Build and package the Client Auth Cloud Function Gen 1
+resource "null_resource" "build_client_auth_function" {
+  triggers = {
+    main_py_hash = filemd5("../cloud_client_auth/main.py")
+    requirements_hash = filemd5("../cloud_client_auth/requirements.txt")
+    project_id = var.project_id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      cd ../cloud_client_auth
+      
+      # Create deployment package with all Python files
+      zip -r client-auth-source.zip main.py requirements.txt
+    EOT
+  }
+
+  depends_on = [
+    google_storage_bucket.functions_bucket
+  ]
+}
+
+# Upload the client auth function source to Cloud Storage
+resource "google_storage_bucket_object" "client_auth_function_source" {
+  name   = "client-auth-function-${timestamp()}.zip"
+  bucket = google_storage_bucket.functions_bucket.name
+  source = "../cloud_client_auth/client-auth-source.zip"
+
+  depends_on = [null_resource.build_client_auth_function]
+}
+
+# Deploy the client auth service as a Cloud Function Gen 1
+resource "google_cloudfunctions_function" "client_auth_service" {
+  name        = "driftwood-client-auth-${var.environment}"
+  description = "Driftwood client authentication service (Gen 1)"
+  project     = var.project_id
+  region      = var.region
+  runtime     = "python311"
+
+  available_memory_mb   = 256
+  timeout              = 60
+  entry_point          = "driftwood_client_auth"
+  service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
+
+  source_archive_bucket = google_storage_bucket.functions_bucket.name
+  source_archive_object = google_storage_bucket_object.client_auth_function_source.name
+
+  trigger_http = true
+  https_trigger_security_level = "SECURE_ALWAYS"
+
+  environment_variables = {
+    SECRET_KEY = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
+    ENVIRONMENT = var.environment
+    ACCESS_TOKEN_EXPIRE_MINUTES = "30"
+    ALGORITHM = "HS256"
+  }
+
+  depends_on = [
+    google_storage_bucket_object.client_auth_function_source,
+    google_project_service.required_apis
+  ]
+}
+
+# IAM binding to allow public access to the client auth function
+resource "google_cloudfunctions_function_iam_member" "client_auth_service_invoker" {
+  project        = var.project_id
+  region         = var.region
+  cloud_function = google_cloudfunctions_function.client_auth_service.name
+
+  role   = "roles/cloudfunctions.invoker"
+  member = "allUsers"
+}
 
 # Deploy FastAPI service as a Cloud Function Gen 2
 # Cloud Run service for Driftwood API

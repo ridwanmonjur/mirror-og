@@ -61,6 +61,8 @@ output "service_urls" {
   value = {
     driftwood_api_url = google_cloud_run_v2_service.driftwood_api.uri
     health_check_url = "${google_cloud_run_v2_service.driftwood_api.uri}/health"
+    client_auth_url = google_cloudfunctions_function.client_auth_service.https_trigger_url
+    client_auth_token_url = "${google_cloudfunctions_function.client_auth_service.https_trigger_url}/auth/token"
   }
 }
 

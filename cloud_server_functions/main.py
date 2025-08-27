@@ -32,48 +32,7 @@ limiter = Limiter(key_func=get_remote_address)
 # HTTP Bearer security scheme
 security = HTTPBearer()
 
-# Authentication dependency
-def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """Verify Google Cloud Platform Bearer token"""
-    try:
-        token = credentials.credentials
-        
-        # Use Google's tokeninfo endpoint to validate the access token
-        import requests
-        
-        logging.info(f"Validating token: {token[:20]}...")
-        
-        response = requests.get(
-            f'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={token}',
-            timeout=10
-        )
-        
-        logging.info(f"Token validation response status: {response.status_code}")
-        
-        if response.status_code == 200:
-            token_info = response.json()
-            logging.info(f"Token info: {token_info}")
-            
-            # Check if token has the required scope
-            token_scope = token_info.get('scope', '')
-            logging.info(f"Token scope: {token_scope}")
-            
-            # Check for cloud-platform scope (covers all Google Cloud APIs)
-            if 'https://www.googleapis.com/auth/cloud-platform' in token_scope:
-                logging.info("Token has valid cloud-platform scope")
-                return {"token": token, "valid": True, "info": token_info}
-            else:
-                logging.error(f"Token does not have required scope. Has: {token_scope}")
-                raise HTTPException(status_code=401, detail="Token does not have required scope")
-        else:
-            logging.error(f"Token validation failed with status {response.status_code}: {response.text}")
-            raise HTTPException(status_code=401, detail="Invalid access token")
-                
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Token verification error: {e}")
-        raise HTTPException(status_code=401, detail="Token verification failed")
+
 
 
 # Create FastAPI app
@@ -91,139 +50,52 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start_time = time.time()
-    client_ip = request.client.host
-    
-    # Get real IP from headers if behind proxy
-    real_ip = request.headers.get("x-forwarded-for")
-    if real_ip:
-        client_ip = real_ip.split(",")[0].strip()
-    
-    # Log incoming request details
-    logging.info(f"📥 Incoming {request.method} request to {request.url.path}")
-    logging.info(f"🌐 Client IP: {client_ip}")
-    logging.info(f"🔗 User-Agent: {request.headers.get('user-agent', 'Unknown')}")
-    logging.info(f"📋 Content-Type: {request.headers.get('content-type', 'None')}")
-    
-    # Check for Authorization header specifically
-    auth_header = request.headers.get("authorization")
-    if auth_header:
-        # Only log first 20 characters of token for security
-        token_preview = auth_header[:20] + "..." if len(auth_header) > 20 else auth_header
-        logging.info(f"🔑 Authorization header present: {token_preview}")
-        logging.info(f"🔢 Token length: {len(auth_header)} chars")
-        
-        # Check token type
-        if auth_header.startswith("Bearer "):
-            logging.info("✅ Token format: Bearer token")
-        else:
-            logging.warning("⚠️  Token format: Not a Bearer token")
-    else:
-        logging.warning("⚠️  No Authorization header found in request")
-    
-    # Log other important headers for debugging
-    important_headers = ['x-forwarded-for', 'x-real-ip', 'x-forwarded-proto', 'host']
-    for header in important_headers:
-        value = request.headers.get(header)
-        if value:
-            logging.info(f"🏷️  {header}: {value}")
-    
-    # Log request body for POST requests (be careful with sensitive data)
-    if request.method in ["POST", "PUT", "PATCH"]:
-        try:
-            # Read the body without consuming it
-            body = await request.body()
-            if body:
-                # Log first 200 chars of body for debugging
-                body_preview = body.decode('utf-8')[:200]
-                if len(body) > 200:
-                    body_preview += "..."
-                logging.info(f"📄 Request body preview: {body_preview}")
-            else:
-                logging.info("📄 Request body: Empty")
-        except Exception as e:
-            logging.warning(f"⚠️  Could not read request body: {str(e)}")
-    
-    # Process the request
+
+    client_ip = request.headers.get("x-forwarded-for", request.client.host).split(",")[0].strip()
+
+    logging.info(f"➡️ {request.method} {request.url.path} from {client_ip}")
+
     try:
         response = await call_next(request)
-        
-        # Calculate processing time
-        process_time = time.time() - start_time
-        
-        # Enhanced logging with status code analysis
-        status_emoji = "✅" if response.status_code < 400 else "❌" if response.status_code >= 500 else "⚠️"
-        
-        logging.info(f"{status_emoji} Response: {request.method} {request.url.path} - "
-                    f"Status: {response.status_code} - "
-                    f"Time: {process_time:.3f}s - "
-                    f"IP: {client_ip}")
-        
-        # Log additional details for error responses
-        if response.status_code >= 400:
-            logging.error(f"🚨 Error Response Details:")
-            logging.error(f"   Method: {request.method}")
-            logging.error(f"   Path: {request.url.path}")
-            logging.error(f"   Status: {response.status_code}")
-            logging.error(f"   Client IP: {client_ip}")
-            logging.error(f"   Processing Time: {process_time:.3f}s")
-            
-            # Log response headers for error cases
-            if hasattr(response, 'headers'):
-                logging.error(f"   Response Headers: {dict(response.headers)}")
-        
+        duration = (time.time() - start_time) * 1000  # ms
+
+        logging.info(f"⬅️ {request.method} {request.url.path} "
+                     f"status={response.status_code} time={duration:.2f}ms")
+
         return response
-        
+
     except Exception as e:
-        process_time = time.time() - start_time
-        
-        logging.error(f"💥 Request failed with exception:")
-        logging.error(f"   Method: {request.method}")
-        logging.error(f"   Path: {request.url.path}")
-        logging.error(f"   Client IP: {client_ip}")
-        logging.error(f"   Processing Time: {process_time:.3f}s")
-        logging.error(f"   Exception: {str(e)}")
-        logging.error(f"   Exception Type: {type(e).__name__}")
-        
-        # Re-raise the exception
+        duration = (time.time() - start_time) * 1000
+
+        logging.error(f"💥 {request.method} {request.url.path} "
+                      f"from {client_ip} failed after {duration:.2f}ms - {type(e).__name__}: {e}")
         raise
 
-# Add CORS middleware
+
+# Configure CORS origins based on environment
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'dev')
+
+if ENVIRONMENT == 'prod':
+    ALLOWED_ORIGINS = ["https://driftwood.gg"]
+elif ENVIRONMENT == 'staging':
+    ALLOWED_ORIGINS = ["https://oceansgaming.gg"]
+else:  # dev
+    ALLOWED_ORIGINS = [
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost:5173",  # Vite dev server
+        "http://127.0.0.1:5173"
+    ]
+
+# Add CORS middleware with selective origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://oceansgaming.gg",
-        "https://driftwood.gg",
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:8000",
-        "http://127.0.0.1:5173"
-    ],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Pydantic models for request/response validation
-class AuthTokenRequest(BaseModel):
-    uid: Optional[Union[str, int]] = None  # Accept both string and int
-    role: str = "PARTICIPANT"
-    teamId: Optional[Union[str, int]] = None
-    
-    # Validator to convert uid to string
-    @validator('uid', pre=True)
-    def convert_uid_to_string(cls, v):
-        if v is not None:
-            return str(v)
-        return v
-    
-    # Validator to convert teamId to string if provided
-    @validator('teamId', pre=True) 
-    def convert_team_id_to_string(cls, v):
-        if v is not None:
-            return str(v)
-        return v
 
 class RoomBlockRequest(BaseModel):
     user1: Optional[Union[str, int]] = None
@@ -258,47 +130,6 @@ class DeadlineTasksRequest(BaseModel):
     is_league: bool = False
     games_per_match: int = 3
 
-# Auth token endpoint
-@app.post("/auth/token")
-@limiter.limit("30/minute")
-async def create_auth_token(request: Request, auth_request: AuthTokenRequest):
-    """Create authentication token for user."""
-    try:
-        uid = auth_request.uid
-        if not uid:
-            raise HTTPException(status_code=400, detail="uid is required")
-        
-        # Create custom claims
-        custom_claims = {
-            "uid": uid,
-            "source": "driftwood-laravel",
-            "role": auth_request.role,
-            "userId": uid,
-            "teamId": auth_request.teamId
-        }
-        
-        # Create Firebase custom token
-        custom_token = auth.create_custom_token(uid, custom_claims)
-        
-        # Create JWT token
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        jwt_payload = {
-            "uid": uid,
-            "exp": expire,
-            "iat": datetime.utcnow()
-        }
-        jwt_token = jwt.encode(jwt_payload, SECRET_KEY, algorithm=ALGORITHM)
-        
-        # Return same format as Flask
-        return {
-            'token': custom_token.decode('utf-8'),
-            'jwt_token': jwt_token,
-            'expires_at': expire.isoformat()
-        }
-        
-    except Exception as e:
-        logging.error(f"Error creating token: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create authentication token")
 
 # Room block/unblock endpoint
 @app.post("/room/block")
@@ -346,7 +177,6 @@ async def handle_room_block(request: Request, room_request: RoomBlockRequest):
         raise
     except Exception as e:
         action = getattr(room_request, 'action', 'unknown')
-        logging.error(f"Error in room {action} operation: {e}")
         raise HTTPException(status_code=500, detail=f'Failed to {action} room')
 
 # Batch reports endpoint
@@ -365,7 +195,6 @@ async def create_batch_reports(http_request: Request, request: BatchReportsReque
         return result
         
     except Exception as e:
-        logging.error(f"Error in batch reports creation: {e}")
         raise HTTPException(status_code=500, detail="Failed to create batch reports")
 
 # Batch disputes endpoint
@@ -383,7 +212,6 @@ async def create_batch_disputes(http_request: Request, request: BatchDisputesReq
         return result
         
     except Exception as e:
-        logging.error(f"Error in batch disputes creation: {e}")
         raise HTTPException(status_code=500, detail="Failed to create batch disputes")
 
 # Health check endpoint
@@ -457,7 +285,6 @@ def createBatchReports(event_id, count, custom_values_array=None, specific_ids=N
         }
         
     except Exception as e:
-        logging.error(f'createBatchReports error: {e}')
         return {
             'statusReport': 'error',
             'messageReport': str(e),
@@ -518,7 +345,6 @@ def createBatchDisputes(event_id, count, custom_values_array=None, specific_ids=
         }
         
     except Exception as e:
-        logging.error(f'createBatchDisputes error: {e}')
         return {
             'statusDispute': 'error',
             'messageDispute': str(e),
@@ -569,7 +395,6 @@ class DeadlineTaskTrait:
             logging.info(f'Fetched all event data for {event_id}: {len(self.all_brackets)} brackets, {len(self.all_disputes)} disputes')
             
         except Exception as e:
-            logging.error(f'Failed to fetch all event data: {e}')
             raise e
     
     def calc_scores(self, real_winners):
@@ -796,7 +621,6 @@ async def handle_started_tasks(http_request: Request, request: DeadlineTasksRequ
         }
         
     except Exception as e:
-        logging.error(f"Error in handle_started_tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to handle started tasks")
 
 # Ended tasks endpoint
@@ -859,7 +683,6 @@ async def handle_ended_tasks(http_request: Request, request: DeadlineTasksReques
         }
         
     except Exception as e:
-        logging.error(f"Error in handle_ended_tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to handle ended tasks")
 
 # Organizer tasks endpoint
@@ -916,7 +739,6 @@ async def handle_org_tasks(http_request: Request, request: DeadlineTasksRequest)
         }
         
     except Exception as e:
-        logging.error(f"Error in handle_org_tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to handle organizer tasks")
 
 # Cloud Run entry point - FastAPI app runs directly with uvicorn

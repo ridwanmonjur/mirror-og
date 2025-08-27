@@ -4,6 +4,7 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 import { getAuth,  signInWithCustomToken } from "firebase/auth";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
+let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -54,7 +55,7 @@ const authStore = reactive({
                 }
             }
             
-            let domain = `${import.meta.env.VITE_API_URL}`;
+            let domain = `${import.meta.env.VITE_CLOUD_FRONTEND_URL}`;
             console.log({domain});
             
             // Get user role and team info from loggedUserProfile
@@ -137,7 +138,6 @@ const chatInput = document.querySelector(".chat-input textarea");
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
-let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
 let viewUserProfile = JSON.parse(viewUserProfileInput?.value ?? "[]");
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

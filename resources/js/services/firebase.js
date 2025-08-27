@@ -54,7 +54,7 @@ class FirebaseService {
     };
   }
 
-  async initializeAuth(eventId) {
+  async initializeAuth(eventId, hiddenUserId, userRole, joinEventTeamId) {
     if (!this.auth) {
       throw new Error('Auth not initialized. User not logged in.');
     }
@@ -78,11 +78,10 @@ class FirebaseService {
       
       if (!jwtToken) {
         // Get user info
-        const uid = this.hiddenUserId;
-        const role = window.loggedUserProfile?.role || 'PARTICIPANT';
-        const teamId = window.loggedUserProfile?.team?.id || window.loggedUserProfile?.teams?.[0]?.id || null;
-        
-        const domain = `${import.meta.env.VITE_API_URL}`;
+        const uid = hiddenUserId;
+        const role = userRole;
+        const teamId = joinEventTeamId;
+        const domain = `${import.meta.env.VITE_CLOUD_FRONTEND_URL}`;
         const jwtRoute = `${domain}/auth/token`;
         const response = await fetch(jwtRoute, {
           method: 'POST',

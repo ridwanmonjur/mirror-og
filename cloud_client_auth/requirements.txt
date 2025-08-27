@@ -1,0 +1,5 @@
+Flask==2.3.3
+firebase-admin==6.2.0
+python-jose==3.3.0
+functions-framework==3.4.0
+Flask-Limiter==3.5.0

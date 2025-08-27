@@ -29,7 +29,7 @@ class FirebaseController extends Controller
         try {
             Log::info("Starting room block status update with cached identity token");
     
-            $cloudFunctionUrl = config('services.cloud_function.url');
+            $cloudFunctionUrl = config('services.cloud_server_functions.url');
             
             // Use server-side cache for identity token (NOT session)
             $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
@@ -371,10 +371,9 @@ class FirebaseController extends Controller
     private function callCloudFunctionBatchReports($eventId, $count, $customValuesArray, $specificIds, $gamesPerMatch)
     {
         try {
-            // Get cached identity token for authentication
+            $cloudFunctionUrl = config('cloud_server_functions.url');
             $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
 
-            $cloudFunctionUrl = config('cloud_function.url');
             $response = Http::contentType('application/json')
                 ->withHeaders([
                     'Authorization' => 'Bearer ' . $identityToken
@@ -408,10 +407,10 @@ class FirebaseController extends Controller
     private function callCloudFunctionBatchDisputes($eventId, $count, $customValuesArray, $specificIds)
     {
         try {
-            // Get cached identity token for authentication
+            $cloudFunctionUrl = config('cloud_server_functions.url');
             $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
 
-            $cloudFunctionUrl = config('cloud_function.url');
+            $cloudFunctionUrl = config('cloud_server_functions.url');
             $response = Http::contentType('application/json')
                 ->withHeaders([
                     'Authorization' => 'Bearer ' . $identityToken
