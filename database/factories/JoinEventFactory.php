@@ -59,7 +59,7 @@ final class JoinEventFactory extends Factory
                 'type' => 'wallet',
             ],
         ],
-        'numberOfTeams' => 2,
+        'noOfConTeams' => 2,
     ])
     {
         // Store the events and teams
@@ -80,7 +80,7 @@ final class JoinEventFactory extends Factory
             $playersPerTeam = $eventCategory->player_per_team ?? 5;
         }
 
-        $numberOfUsers = ($options['numberOfTeams'] * $playersPerTeam)  ?? 80;
+        $numberOfUsers = ($options['noOfConTeams'] * $playersPerTeam)  ?? 80;
         
         $teamMemberFactory = new TeamMemberFactory;
         $teamResult = $teamMemberFactory->seed($numberOfUsers, $playersPerTeam);

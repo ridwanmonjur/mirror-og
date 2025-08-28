@@ -113,12 +113,12 @@
             "rm -f .env",
             "cp .env.example .env",
             "@REM composer update",
-            "@REM npm run build",
+            "npm run build",
             "chmod +x dev.sh stop.sh"
         ],
         "npm-build": [
             "npm install",
-            "@REM npm run build",
+            "npm run build",
             "rm -rf node_modules"
         ],
         "cache:test": [
@@ -131,7 +131,7 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "@REM npm run build",
+            "npm run build",
             "rm -rf node_modules",
                         
             "rm -rf storage/framework/cache/data/*",
@@ -163,7 +163,7 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "@REM npm run build",
+            "npm run build",
             "rm -rf node_modules"
         ],
 

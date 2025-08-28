@@ -15,7 +15,7 @@ class CloudFunctionAuthService
      */
     public function getCachedIdentityToken($targetAudience)
     {
-        $cacheKey = 'identity_token';
+        $cacheKey = 'identity_token_' ;
         
         try {
             if (Cache::has($cacheKey)) {
@@ -26,7 +26,7 @@ class CloudFunctionAuthService
                     return $cachedData['token'];
                 } else {
                     Log::info("Cached token expired, generating new one");
-                    $this->clearIdentityTokenCache();
+                    Cache::forget($cacheKey);
                 }
             }
             
@@ -46,7 +46,7 @@ class CloudFunctionAuthService
             
         } catch (Exception $e) {
             Log::error("Failed to get cached identity token: " . $e->getMessage());
-            $this->clearIdentityTokenCache();
+            Cache::forget($cacheKey);
             throw $e;
         }
     }
@@ -54,11 +54,11 @@ class CloudFunctionAuthService
     /**
      * Clear identity token cache on error
      */
-    public function clearIdentityTokenCache()
+    public function clearIdentityTokenCache($targetAudience)
     {
-        $cacheKey = 'identity_token';
+        $cacheKey = 'identity_token_' ;
         Cache::forget($cacheKey);
-        Log::info("Identity token cache cleared");
+        Log::info("Identity token cache cleared for: " . $targetAudience);
     }
     
     /**
@@ -75,42 +75,51 @@ class CloudFunctionAuthService
     private function generateIdentityToken($credentialsPath, $targetAudience)
     {
         try {
+            // Load service account credentials
             $credentialsData = json_decode(file_get_contents($credentialsPath), true);
             
             if (!$credentialsData || !isset($credentialsData['private_key']) || !isset($credentialsData['client_email'])) {
                 throw new Exception('Invalid service account credentials file');
             }
 
+            // Create JWT payload for identity token request
             $now = time();
             $payload = [
-                'iss' => $credentialsData['client_email'],        // Issuer
-                'sub' => $credentialsData['client_email'],        // Subject
-                'aud' => 'https://oauth2.googleapis.com/token',   // Google OAuth2 endpoint
+                'iss' => $credentialsData['client_email'],        // Issuer (service account email)
+                'sub' => $credentialsData['client_email'],        // Subject (same as issuer)
+                'aud' => 'https://oauth2.googleapis.com/token',   // Audience (Google OAuth2 endpoint)
                 'iat' => $now,                                    // Issued at time
-                'exp' => $now + 3600,                             // Expiration (1 hour)
-                'target_audience' => $targetAudience              // Your Cloud Run URL
+                'exp' => $now + 3600,                             // Expiration time (1 hour)
+                'target_audience' => $targetAudience              // Target audience (your Cloud Run URL)
             ];
 
             $jwt = $this->createSignedJWT($payload, $credentialsData['private_key']);
 
-            $response = Http::timeout(10)->asForm()->post('https://oauth2.googleapis.com/token', [
+            $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
                 'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
                 'assertion' => $jwt
             ]);
 
             if (!$response->successful()) {
+                Log::error('Identity token exchange failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
                 throw new Exception('Failed to exchange JWT for identity token: ' . $response->body());
             }
 
             $tokenData = $response->json();
             
             if (!isset($tokenData['id_token'])) {
+                Log::error('Identity token not found in response', $tokenData);
                 throw new Exception('Identity token not found in OAuth response');
             }
 
+            Log::info("Identity token generated successfully");
             return $tokenData['id_token'];
             
         } catch (Exception $e) {
+            Log::error('Identity token generation failed: ' . $e->getMessage());
             throw new Exception('Identity token generation failed: ' . $e->getMessage());
         }
     }

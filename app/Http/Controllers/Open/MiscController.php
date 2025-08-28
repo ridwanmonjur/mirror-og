@@ -278,12 +278,12 @@ class MiscController extends Controller
             'tier' => 'required|string',
             'type' => 'string',
             'game' => 'string',
-            'numberOfTeams' => 'integer|min:2|max:16',
+            'noOfConTeams' => 'integer|min:2|max:16',
         ], [
             'tier.required' => 'Tier parameter is required.',
-            'numberOfTeams.integer' => 'Number of teams must be an integer.',
-            'numberOfTeams.min' => 'Number of teams must be at least 2.',
-            'numberOfTeams.max' => 'Number of teams cannot exceed 16.',
+            'noOfConTeams.integer' => 'Number of teams must be an integer.',
+            'noOfConTeams.min' => 'Number of teams must be at least 2.',
+            'noOfConTeams.max' => 'Number of teams cannot exceed 16.',
         ]);
 
         if ($validator->fails()) {
@@ -291,16 +291,16 @@ class MiscController extends Controller
             $basePath = '/seed/event';
 
             $exampleUrls = [
-                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game='.urlencode('Dota 2').'&numberOfTeams=8',
-                $baseUrl.$basePath.'?tier=Starfish&type=League&game=Chess&numberOfTeams=16',
-                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game=Fifa&numberOfTeams=8',
-                $baseUrl.$basePath.'?tier=Dolphin&type=League&game='.urlencode('Dota 2').'&numberOfTeams=16',
-                $baseUrl.$basePath.'?tier=Starfish&type=Tournament&game=Chess&numberOfTeams=16',
-                $baseUrl.$basePath.'?tier=Turtle&type=League&game=Fifa&numberOfTeams=16',
-                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game=Chess&numberOfTeams=8',
-                $baseUrl.$basePath.'?tier=Starfish&type=League&game='.urlencode('Dota 2').'&numberOfTeams=16',
-                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game='.urlencode('Dota 2').'&numberOfTeams=16',
-                $baseUrl.$basePath.'?tier=Dolphin&type=League&game=Fifa&numberOfTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game='.urlencode('Dota 2').'&noOfConTeams=8',
+                $baseUrl.$basePath.'?tier=Starfish&type=League&game=Chess&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game=Fifa&noOfConTeams=8',
+                $baseUrl.$basePath.'?tier=Dolphin&type=League&game='.urlencode('Dota 2').'&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Starfish&type=Tournament&game=Chess&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=League&game=Fifa&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game=Chess&noOfConTeams=8',
+                $baseUrl.$basePath.'?tier=Starfish&type=League&game='.urlencode('Dota 2').'&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game='.urlencode('Dota 2').'&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=League&game=Fifa&noOfConTeams=16',
             ];
 
             return response()->json(
@@ -319,7 +319,7 @@ class MiscController extends Controller
             $tier = $validated['tier'];
             $type = $validated['type'] ?? 'Tournament';
             $game = $validated['game'] ?? 'Dota 2';
-            $numberOfTeams = $validated['numberOfTeams'] ?? 2;
+            $noOfConTeams = $validated['noOfConTeams'] ?? 2;
 
             $factory = new BracketsFactory;
             $seed = $factory->seed([
@@ -337,7 +337,7 @@ class MiscController extends Controller
                         'type' => 'wallet',
                     ],
                 ],
-                'numberOfTeams' => $numberOfTeams,
+                'noOfConTeams' => $noOfConTeams,
             ]);
 
             [

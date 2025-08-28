@@ -4,6 +4,8 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 import { getAuth,  signInWithCustomToken } from "firebase/auth";
 // import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
+const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
+
 let loggedUserProfile = JSON.parse(loggedUserProfileInput?.value ?? "[]");
 
 const firebaseConfig = {
@@ -137,7 +139,6 @@ const chatInput = document.querySelector(".chat-input textarea");
 
 const fetchFirebaseUsersInputRoute = document.querySelector("#fetchFirebaseUsersInput");
 const viewUserProfileInput = document.querySelector("#viewUserProfile");
-const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
 let viewUserProfile = JSON.parse(viewUserProfileInput?.value ?? "[]");
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

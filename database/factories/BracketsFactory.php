@@ -60,7 +60,7 @@ class BracketsFactory extends Factory
                     'type' => 'wallet',
                 ],
             ],
-            'numberOfTeams' => 2,
+            'noOfConTeams' => 2,
         ];
 
         $options = array_merge($defaults, $options);
@@ -164,6 +164,7 @@ class BracketsFactory extends Factory
         // For leagues, stage_name and inner_stage_name are the same
         // Using R1, R2, R3, R4, R5 for both stage and inner stage
         $rounds = ['R1', 'R2'];
+        // 7, 15, 31
         
         foreach ($rounds as $round) {
             $this->updateBracketTeams(
@@ -172,6 +173,38 @@ class BracketsFactory extends Factory
                 [$round],
                 $teams
             );
+        }
+    }
+
+    private function updateLeagueDemo(int $eventId, array $teams): void
+    {
+        $teamCount = count($teams);
+        $matchups = [];
+        $roundNumber = 1;
+        
+        for ($i = 0; $i < $teamCount; $i++) {
+            for ($j = $i + 1; $j < $teamCount; $j++) {
+                $matchups[] = [
+                    'team1' => $teams[$i],
+                    'team2' => $teams[$j],
+                    'round' => 'R' . $roundNumber
+                ];
+                $roundNumber++;
+            }
+        }
+        
+        // Create bracket entries for each unique matchup
+        foreach ($matchups as $matchup) {
+            $bracket = Brackets::where('event_details_id', $eventId)
+                ->where('stage_name', $matchup['round'])
+                ->where('inner_stage_name', $matchup['round'])
+                ->first();
+                
+            if ($bracket) {
+                $bracket->team1_id = $matchup['team1']->id;
+                $bracket->team2_id = $matchup['team2']->id;
+                $bracket->save();
+            }
         }
     }
 }

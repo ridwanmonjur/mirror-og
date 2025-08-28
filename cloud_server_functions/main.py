@@ -5,6 +5,13 @@ from jose import jwt
 import os
 import logging
 import time
+
+# Configure logging with custom format
+logging.basicConfig(
+    level=logging.INFO, 
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 from typing import Optional, Union
 from pydantic import BaseModel, validator
 from fastapi import FastAPI, HTTPException, Request, Depends
@@ -49,26 +56,18 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    start_time = time.time()
-
     client_ip = request.headers.get("x-forwarded-for", request.client.host).split(",")[0].strip()
-
-    logging.info(f"➡️ {request.method} {request.url.path} from {client_ip}")
 
     try:
         response = await call_next(request)
-        duration = (time.time() - start_time) * 1000  # ms
-
-        logging.info(f"⬅️ {request.method} {request.url.path} "
-                     f"status={response.status_code} time={duration:.2f}ms")
+        
+        logging.info(f"{request.method} {request.url.path} {response.status_code} {client_ip}")
 
         return response
 
     except Exception as e:
-        duration = (time.time() - start_time) * 1000
-
-        logging.error(f"💥 {request.method} {request.url.path} "
-                      f"from {client_ip} failed after {duration:.2f}ms - {type(e).__name__}: {e}")
+        logging.error(f"{request.method} {request.url.path} 500 {client_ip}")
+        logging.error(f"Full Error: {type(e).__name__}: {str(e)}")
         raise
 
 
@@ -182,15 +181,15 @@ async def handle_room_block(request: Request, room_request: RoomBlockRequest):
 # Batch reports endpoint
 @app.post("/batch/reports")
 @limiter.limit("20/minute")
-async def create_batch_reports(http_request: Request, request: BatchReportsRequest):
+async def create_batch_reports(request: Request, batch_request: BatchReportsRequest):
     """Create batch reports."""
     try:
         result = createBatchReports(
-            request.event_id, 
-            request.count, 
-            request.custom_values_array, 
-            request.specific_ids, 
-            request.games_per_match
+            batch_request.event_id, 
+            batch_request.count, 
+            batch_request.custom_values_array, 
+            batch_request.specific_ids, 
+            batch_request.games_per_match
         )
         return result
         
@@ -200,14 +199,14 @@ async def create_batch_reports(http_request: Request, request: BatchReportsReque
 # Batch disputes endpoint
 @app.post("/batch/disputes")
 @limiter.limit("20/minute")
-async def create_batch_disputes(http_request: Request, request: BatchDisputesRequest):
+async def create_batch_disputes(request: Request, batch_request: BatchDisputesRequest):
     """Create batch disputes."""
     try:
         result = createBatchDisputes(
-            request.event_id, 
-            request.count, 
-            request.custom_values_array, 
-            request.specific_ids
+            batch_request.event_id, 
+            batch_request.count, 
+            batch_request.custom_values_array, 
+            batch_request.specific_ids
         )
         return result
         
@@ -587,21 +586,21 @@ class DeadlineTaskTrait:
 # Started tasks endpoint
 @app.post("/deadline/started")
 @limiter.limit("10/minute")
-async def handle_started_tasks(http_request: Request, request: DeadlineTasksRequest):
+async def handle_started_tasks(request: Request, tasks_request: DeadlineTasksRequest):
     """Handle started tournament tasks."""
     try:
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(request.detail_id)
+        trait.fetch_all_event_data(tasks_request.detail_id)
         results = []
         
-        for match in request.matches:
+        for match in tasks_request.matches:
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
             
             # Check if bracket exists in our hashmap
             if match_status_path in trait.all_brackets:
                 doc_ref = trait.db.collection('event').document(match['event_details_id']).collection('brackets').document(match_status_path)
                 
-                started_status_array = ['ONGOING'] + ['UPCOMING'] * (request.games_per_match - 1)
+                started_status_array = ['ONGOING'] + ['UPCOMING'] * (tasks_request.games_per_match - 1)
                 doc_ref.update({
                     'matchStatus': started_status_array,
                     'completeMatchStatus': 'ONGOING'
@@ -626,17 +625,17 @@ async def handle_started_tasks(http_request: Request, request: DeadlineTasksRequ
 # Ended tasks endpoint
 @app.post("/deadline/ended")
 @limiter.limit("10/minute")
-async def handle_ended_tasks(http_request: Request, request: DeadlineTasksRequest):
+async def handle_ended_tasks(request: Request, tasks_request: DeadlineTasksRequest):
     """Handle ended tournament tasks."""
     try:
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(request.detail_id)
+        trait.fetch_all_event_data(tasks_request.detail_id)
         results = []
         next_stage_data_list = []
         
-        for match in request.matches:
-            extra_bracket = request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
-            ended_status_array = ['ENDED'] * request.games_per_match
+        for match in tasks_request.matches:
+            extra_bracket = tasks_request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
+            ended_status_array = ['ENDED'] * tasks_request.games_per_match
             
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
             
@@ -651,7 +650,7 @@ async def handle_ended_tasks(http_request: Request, request: DeadlineTasksReques
                 
                 result = trait.interpret_deadlines(
                     match_status_data, initial_update_values, match, extra_bracket, 
-                    request.tier_id, False, request.is_league, request.games_per_match
+                    tasks_request.tier_id, False, tasks_request.is_league, tasks_request.games_per_match
                 )
                 
                 # Update Firestore document
@@ -688,16 +687,16 @@ async def handle_ended_tasks(http_request: Request, request: DeadlineTasksReques
 # Organizer tasks endpoint
 @app.post("/deadline/org")
 @limiter.limit("10/minute")
-async def handle_org_tasks(http_request: Request, request: DeadlineTasksRequest):
+async def handle_org_tasks(request: Request, tasks_request: DeadlineTasksRequest):
     """Handle organizer deadline tasks."""
     try:
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(request.detail_id)
+        trait.fetch_all_event_data(tasks_request.detail_id)
         results = []
         next_stage_data_list = []
         
-        for match in request.matches:
-            extra_bracket = request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
+        for match in tasks_request.matches:
+            extra_bracket = tasks_request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
             
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
             
@@ -707,7 +706,7 @@ async def handle_org_tasks(http_request: Request, request: DeadlineTasksRequest)
                 
                 result = trait.interpret_deadlines(
                     match_status_data, {}, match, extra_bracket, 
-                    request.tier_id, True, request.is_league, request.games_per_match
+                    tasks_request.tier_id, True, tasks_request.is_league, tasks_request.games_per_match
                 )
                 
                 # Update Firestore document

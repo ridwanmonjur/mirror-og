@@ -670,14 +670,9 @@ resource "google_firestore_index" "disputes_validation" {
   depends_on = [google_firestore_database.default]
 }
 
-# Check if message index exists
-data "external" "message_index_exists" {
-  program = ["bash", "-c", "gcloud firestore indexes list --database='(default)' --format='value(name)' | grep -q 'message' && echo '{\"exists\":\"true\"}' || echo '{\"exists\":\"false\"}'"]
-}
-
 # Message subcollection composite index for timestamp and __name__ descending queries
 resource "google_firestore_index" "message_timestamp_name_desc" {
-  count = data.external.message_index_exists.result.exists == "false" ? 1 : 0
+  count = data.external.indexes_exist.result.exists == "true" ? 0 : 1
   provider     = google-beta
   project      = var.project_id
   database     = local.database_id
@@ -1250,6 +1245,82 @@ resource "google_storage_bucket_object" "client_auth_function_source" {
   depends_on = [null_resource.build_client_auth_function]
 }
 
+# Check if Cloud Function exists and delete it if it does
+data "external" "cloud_function_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set -e
+      FUNCTION_NAME="driftwood-client-auth-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      if gcloud functions describe "$FUNCTION_NAME" --project="$PROJECT_ID" --region="$REGION" >/dev/null 2>&1; then
+        echo '{"exists": "true"}'
+      else
+        echo '{"exists": "false"}'
+      fi
+    EOT
+  ]
+}
+
+resource "null_resource" "delete_existing_cloud_function" {
+  count = data.external.cloud_function_exists.result.exists == "true" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<EOT
+      set -e
+      FUNCTION_NAME="driftwood-client-auth-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      echo "Deleting existing Cloud Function: $FUNCTION_NAME"
+      gcloud functions delete "$FUNCTION_NAME" --project="$PROJECT_ID" --region="$REGION" --quiet || true
+    EOT
+  }
+  
+  triggers = {
+    function_name = "driftwood-client-auth-${var.environment}"
+  }
+}
+
+# Check if Cloud Run service exists and delete it if it does
+data "external" "cloud_run_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set -e
+      SERVICE_NAME="driftwood-api-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      if gcloud run services describe "$SERVICE_NAME" --project="$PROJECT_ID" --region="$REGION" >/dev/null 2>&1; then
+        echo '{"exists": "true"}'
+      else
+        echo '{"exists": "false"}'
+      fi
+    EOT
+  ]
+}
+
+resource "null_resource" "delete_existing_cloud_run" {
+  count = data.external.cloud_run_exists.result.exists == "true" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<EOT
+      set -e
+      SERVICE_NAME="driftwood-api-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      echo "Deleting existing Cloud Run service: $SERVICE_NAME"
+      gcloud run services delete "$SERVICE_NAME" --project="$PROJECT_ID" --region="$REGION" --quiet || true
+    EOT
+  }
+  
+  triggers = {
+    service_name = "driftwood-api-${var.environment}"
+  }
+}
+
 # Deploy the client auth service as a Cloud Function Gen 1
 resource "google_cloudfunctions_function" "client_auth_service" {
   name        = "driftwood-client-auth-${var.environment}"
@@ -1278,7 +1349,8 @@ resource "google_cloudfunctions_function" "client_auth_service" {
 
   depends_on = [
     google_storage_bucket_object.client_auth_function_source,
-    google_project_service.required_apis
+    google_project_service.required_apis,
+    null_resource.delete_existing_cloud_function
   ]
 }
 
@@ -1347,7 +1419,8 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
 
   depends_on = [
     google_project_service.required_apis,
-    null_resource.build_docker_image
+    null_resource.build_docker_image,
+    null_resource.delete_existing_cloud_run
   ]
 }
 
