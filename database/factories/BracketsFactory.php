@@ -369,9 +369,8 @@ class BracketsFactory extends Factory
     
     private function seedLeagueDemoResults(int $eventId, int $gamesPerMatch): void
     {
-        // Get number of teams to determine total matches needed
+        // Get all brackets for this event
         $brackets = Brackets::where('event_details_id', $eventId)->get();
-        $totalMatches = $brackets->count();
         
         // Generate all match IDs dynamically
         $matchIds = [];
@@ -379,7 +378,7 @@ class BracketsFactory extends Factory
             $matchIds[] = $bracket->team1_position . '.' . $bracket->team2_position;
         }
         
-        $documentSpecs = $this->generateUnanimousMatches($matchIds, $gamesPerMatch);
+        $documentSpecs = $this->generateUnanimousMatches($matchIds, $brackets, $gamesPerMatch);
         
         $customValuesArray = [];
         $specificIds = [];
@@ -406,17 +405,35 @@ class BracketsFactory extends Factory
         $this->callCloudFunctionBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds, $gamesPerMatch);
     }
     
-    private function generateUnanimousMatches(array $matchIds, int $gamesPerMatch): array
+    private function generateUnanimousMatches(array $matchIds, $brackets, int $gamesPerMatch): array
     {
         $documentSpecs = [];
         $nullArray = array_fill(0, 3, null); // Base 3 elements
         
+        // Create bracket lookup by matchId
+        $bracketLookup = [];
+        foreach ($brackets as $bracket) {
+            $matchId = $bracket->team1_position . '.' . $bracket->team2_position;
+            $bracketLookup[$matchId] = $bracket;
+        }
+        
         // Step 1: Create all matches with unanimous decisions (team1Winners = team2Winners = realWinners)
         foreach ($matchIds as $index => $matchId) {
-            // Generate random but consistent results for each match
+            $bracket = $bracketLookup[$matchId];
+            
+            // Generate diverse score patterns for different matches
             $baseResults = [];
-            for ($i = 0; $i < 3; $i++) {
-                $baseResults[] = (string)($index % 2 === $i % 2 ? '1' : '0'); // Alternating pattern
+            $pattern = $index % 8; // 8 different patterns
+            
+            switch ($pattern) {
+                case 0: $baseResults = ['1', '1', '1']; break; // 3-0 (team2 wins all)
+                case 1: $baseResults = ['0', '0', '0']; break; // 0-3 (team1 wins all)
+                case 2: $baseResults = ['1', '1', '0']; break; // 2-1 (team2 wins)
+                case 3: $baseResults = ['0', '0', '1']; break; // 1-2 (team1 wins)
+                case 4: $baseResults = ['1', '0', '1']; break; // 2-1 (team2 wins)
+                case 5: $baseResults = ['0', '1', '0']; break; // 1-2 (team1 wins)
+                case 6: $baseResults = ['0', '0', null]; break; // 0-2 (team1 wins)
+                case 7: $baseResults = ['1', '1', null]; break; // 0-2 (team2 wins)
             }
             
             $documentSpecs[$matchId] = [
@@ -425,6 +442,9 @@ class BracketsFactory extends Factory
                 'realWinners' => $baseResults,
                 'randomWinners' => $nullArray,
                 'organizerWinners' => $nullArray,
+                'stageName' => $bracket->stage_name,
+                'team1Id' => $bracket->team1_id,
+                'team2Id' => $bracket->team2_id,
             ];
         }
         
