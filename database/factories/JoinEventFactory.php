@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\EventCategory;
+use App\Models\EventTier;
 use App\Models\JoinEvent;
 use App\Models\ParticipantPayment;
 use App\Models\RecordStripe;
@@ -79,6 +80,18 @@ final class JoinEventFactory extends Factory
         if ($eventCategory) {
             $playersPerTeam = $eventCategory->player_per_team ?? 5;
         }
+
+        $eventTier = EventTier::where('eventTier', $options['event']['eventTier'])->first();
+        if ($eventTier) {
+            $tierTeamSlot = (int) $eventTier->tierTeamSlot;
+            $noOfConTeams = (int) $options['noOfConTeams'];
+            
+            if ($noOfConTeams > $tierTeamSlot) {
+                $options['noOfConTeams'] = $tierTeamSlot;
+            }
+        }
+
+        JoinEvent::whereIn('event_details_id', collect($events)->pluck('id'))->delete();
 
         $numberOfUsers = ($options['noOfConTeams'] * $playersPerTeam)  ?? 80;
         

@@ -371,6 +371,106 @@ class MiscController extends Controller
         }
     }
 
+    public function seedBracketsDemo(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'tier' => 'required|string',
+            'type' => 'string',
+            'game' => 'string',
+            'noOfConTeams' => 'integer|min:2|max:16',
+        ], [
+            'tier.required' => 'Tier parameter is required.',
+            'noOfConTeams.integer' => 'Number of teams must be an integer.',
+            'noOfConTeams.min' => 'Number of teams must be at least 2.',
+            'noOfConTeams.max' => 'Number of teams cannot exceed 16.',
+        ]);
+
+        if ($validator->fails()) {
+            $baseUrl = $request->getSchemeAndHttpHost();
+            $basePath = '/seed/event-demo';
+
+            $exampleUrls = [
+                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game='.urlencode('Dota 2').'&noOfConTeams=8',
+                $baseUrl.$basePath.'?tier=Starfish&type=League&game=Chess&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game=Fifa&noOfConTeams=8',
+                $baseUrl.$basePath.'?tier=Dolphin&type=League&game='.urlencode('Dota 2').'&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Starfish&type=Tournament&game=Chess&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=League&game=Fifa&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=Tournament&game=Chess&noOfConTeams=8',
+                $baseUrl.$basePath.'?tier=Starfish&type=League&game='.urlencode('Dota 2').'&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Turtle&type=Tournament&game='.urlencode('Dota 2').'&noOfConTeams=16',
+                $baseUrl.$basePath.'?tier=Dolphin&type=League&game=Fifa&noOfConTeams=16',
+            ];
+
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Invalid URL',
+                    'exampleUrls' => $exampleUrls,
+                    'errors' => $validator->errors(),
+                ],
+                400,
+            );
+        }
+
+        try {
+            $validated = $validator->validated();
+            $tier = $validated['tier'];
+            $type = $validated['type'] ?? 'Tournament';
+            $game = $validated['game'] ?? 'Dota 2';
+            $noOfConTeams = $validated['noOfConTeams'] ?? 2;
+
+            $factory = new BracketsFactory;
+            $seed = $factory->seedDemo([
+                'event' => [
+                    'eventTier' => $tier,
+                    'eventName' => "Test {$type} {$game}",
+                    'eventType' => $type,
+                    'eventGame' => $game
+                ],
+                'joinEvent' => [
+                    'join_status' => 'confirmed',
+                    'payment_status' => 'confirmed',
+                    'participantPayment' => [
+                        'register_time' => config('constants.SIGNUP_STATUS.EARLY'),
+                        'type' => 'wallet',
+                    ],
+                ],
+                'noOfConTeams' => $noOfConTeams,
+            ]);
+
+            [
+                'eventIds' => $eventIds,
+                'participants' => $participants,
+                'organizers' => $organizers,
+            ] = $seed;
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Demo seeding completed successfully',
+                    'data' => [
+                        'events' => $eventIds,
+                        'participants' => $participants,
+                        'organizers' => $organizers,
+                    ],
+                ],
+                200,
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Demo seeding failed',
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ],
+                500,
+            );
+        }
+    }
+
+
     public function showLandingPage(Request $request)
     {
         $currentDateTime = Carbon::now()->utc();
