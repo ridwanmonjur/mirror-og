@@ -5,9 +5,11 @@ namespace Database\Factories;
 use App\Models\EventDetail;
 use App\Models\Brackets;
 use App\Models\Team;
+use App\Models\EventCategory;
 use App\Services\EventMatchService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Http;
 
 class BracketsFactory extends Factory
 {
@@ -295,6 +297,12 @@ class BracketsFactory extends Factory
             return;
         }
         
+        // Get games_per_match from EventCategory
+        $eventDetail = EventDetail::find($eventId);
+        $eventGame = $eventDetail->game->gameTitle ?? 'Dota 2';
+        $eventCategory = EventCategory::where('gameTitle', $eventGame)->first();
+        $gamesPerMatch = $eventCategory->games_per_match ?? 3;
+        
         $schedule = $this->generateRoundRobinSchedule($teams);
         
         foreach ($schedule as $roundIndex => $matches) {
@@ -314,6 +322,9 @@ class BracketsFactory extends Factory
                 }
             }
         }
+        
+        // Generate demo score data for Firestore
+        $this->seedLeagueDemoResults($eventId, $gamesPerMatch);
     }
     
     private function generateRoundRobinSchedule(array $teams): array
@@ -354,5 +365,156 @@ class BracketsFactory extends Factory
         }
         
         return $schedule;
+    }
+    
+    private function seedLeagueDemoResults(int $eventId, int $gamesPerMatch): void
+    {
+        // Get number of teams to determine total matches needed
+        $brackets = Brackets::where('event_details_id', $eventId)->get();
+        $totalMatches = $brackets->count();
+        
+        // Generate all match IDs dynamically
+        $matchIds = [];
+        foreach ($brackets as $bracket) {
+            $matchIds[] = $bracket->team1_position . '.' . $bracket->team2_position;
+        }
+        
+        $documentSpecs = $this->generateUnanimousMatches($matchIds, $gamesPerMatch);
+        
+        $customValuesArray = [];
+        $specificIds = [];
+
+        // Slice all arrays to gamesPerMatch and calculate scores in one loop
+        foreach ($documentSpecs as $documentId => $customValues) {
+            $slicedValues = [];
+            
+            foreach ($customValues as $key => $array) {
+                if (is_array($array)) {
+                    $slicedValues[$key] = array_slice($array, 0, $gamesPerMatch);
+                } else {
+                    $slicedValues[$key] = $array;
+                }
+            }
+            
+            // Calculate scores based on sliced realWinners
+            $slicedValues['score'] = $this->calculateScores($slicedValues['realWinners']);
+            
+            $specificIds[] = $documentId;
+            $customValuesArray[] = $slicedValues;
+        }
+
+        $this->callCloudFunctionBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds, $gamesPerMatch);
+    }
+    
+    private function generateUnanimousMatches(array $matchIds, int $gamesPerMatch): array
+    {
+        $documentSpecs = [];
+        $nullArray = array_fill(0, 3, null); // Base 3 elements
+        
+        // Step 1: Create all matches with unanimous decisions (team1Winners = team2Winners = realWinners)
+        foreach ($matchIds as $index => $matchId) {
+            // Generate random but consistent results for each match
+            $baseResults = [];
+            for ($i = 0; $i < 3; $i++) {
+                $baseResults[] = (string)($index % 2 === $i % 2 ? '1' : '0'); // Alternating pattern
+            }
+            
+            $documentSpecs[$matchId] = [
+                'team1Winners' => $baseResults,
+                'team2Winners' => $baseResults, // Same as team1 - unanimous
+                'realWinners' => $baseResults,
+                'randomWinners' => $nullArray,
+                'organizerWinners' => $nullArray,
+            ];
+        }
+        
+        // Step 2: Introduce conflicts by changing team2Winners for some matches
+        $conflictMatches = array_slice($matchIds, 0, min(4, count($matchIds))); // First 4 matches or less
+        
+        foreach ($conflictMatches as $matchId) {
+            // Flip team2's opinion to create conflict
+            $flippedResults = [];
+            foreach ($documentSpecs[$matchId]['team1Winners'] as $result) {
+                $flippedResults[] = $result === '1' ? '0' : '1';
+            }
+            $documentSpecs[$matchId]['team2Winners'] = $flippedResults;
+        }
+        
+        // Step 3: Resolve some conflicts with organizer decisions
+        $organizerMatches = array_slice($conflictMatches, 0, 2); // First 2 conflict matches
+        
+        foreach ($organizerMatches as $matchId) {
+            $organizerDecision = $documentSpecs[$matchId]['team1Winners']; // Organizer sides with team1
+            $documentSpecs[$matchId]['organizerWinners'] = $organizerDecision;
+            $documentSpecs[$matchId]['realWinners'] = $organizerDecision;
+        }
+        
+        // Step 4: Resolve remaining conflicts with random decisions
+        $randomMatches = array_slice($conflictMatches, 2); // Remaining conflict matches
+        
+        foreach ($randomMatches as $matchId) {
+            $randomDecision = [];
+            foreach ($documentSpecs[$matchId]['team1Winners'] as $i => $result) {
+                // Randomly pick between team1 and team2's choice
+                $randomDecision[] = $i % 2 === 0 ? $documentSpecs[$matchId]['team1Winners'][$i] : $documentSpecs[$matchId]['team2Winners'][$i];
+            }
+            $documentSpecs[$matchId]['randomWinners'] = $randomDecision;
+            $documentSpecs[$matchId]['realWinners'] = $randomDecision;
+        }
+        
+        return $documentSpecs;
+    }
+    
+    private function calculateScores(array $realWinners): array
+    {
+        $team1Score = 0;
+        $team2Score = 0;
+        
+        foreach ($realWinners as $winner) {
+            if ($winner === '1') {
+                $team1Score++;
+            } elseif ($winner === '0') {
+                $team2Score++;
+            }
+            // null values don't contribute to score
+        }
+        
+        return [$team1Score, $team2Score];
+    }
+    
+    private function callCloudFunctionBatchReports($eventId, $count, $customValuesArray, $specificIds, $gamesPerMatch)
+    {
+        try {
+            $cloudFunctionUrl = config('services.cloud_server_functions.url');
+            
+            // For factory usage, we'll use a simple approach without authentication
+            // In production, this would need proper authentication like in FirebaseController
+            $response = Http::timeout(30)
+                ->contentType('application/json')
+                ->post($cloudFunctionUrl . '/batch/reports', [
+                    'event_id' => $eventId,
+                    'count' => $count,
+                    'custom_values_array' => $customValuesArray,
+                    'specific_ids' => $specificIds,
+                    'games_per_match' => $gamesPerMatch
+                ]);
+
+            if (!$response->successful()) {
+                // Log error but don't throw exception to avoid breaking factory
+                \Illuminate\Support\Facades\Log::error('Cloud function call failed during factory seeding: ' . $response->body());
+                return null;
+            }
+            
+            $responseData = $response->json();
+            if (!isset($responseData['statusReport']) || $responseData['statusReport'] !== 'success') {
+                \Illuminate\Support\Facades\Log::error('Cloud function returned error during factory seeding: ' . ($responseData['messageReport'] ?? 'Unknown error'));
+                return null;
+            }
+            
+            return $responseData;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to create batch reports during factory seeding: ' . $e->getMessage());
+            return null;
+        }
     }
 }
