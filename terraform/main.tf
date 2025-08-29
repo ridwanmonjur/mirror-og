@@ -119,11 +119,39 @@ resource "google_billing_budget" "budget" {
   depends_on = [google_project_service.required_apis]
 }
 
+# Generate domain for reCAPTCHA based on environment
+locals {
+  recaptcha_domain = var.recaptcha_domain != "" ? var.recaptcha_domain : (
+    var.environment == "prod" ? "driftwood.gg" : 
+    var.environment == "staging" ? "staging.driftwood.gg" : 
+    "localhost"
+  )
+  
+  recaptcha_allowed_domains = var.environment == "dev" ? ["localhost", "127.0.0.1"] : [local.recaptcha_domain]
+}
 
+# Create Enterprise reCAPTCHA key for App Check
+resource "google_recaptcha_enterprise_key" "driftwood_recaptcha" {
+  provider     = google-beta
+  project      = var.project_id
+  display_name = "${var.project_name}-${var.environment}-appcheck"
 
+  web_settings {
+    integration_type    = "SCORE"
+    allow_all_domains  = var.environment == "dev"
+    allowed_domains    = var.environment == "dev" ? [] : local.recaptcha_allowed_domains
+    allow_amp_traffic  = false
+  }
 
+  # Add labels for better organization
+  labels = {
+    environment = var.environment
+    purpose     = "firebase-app-check"
+    project     = var.project_name
+  }
 
-
+  depends_on = [google_project_service.required_apis]
+}
 
 ############################################################
 # 1. Check if default Firestore database exists
@@ -441,19 +469,19 @@ data "google_firebase_web_app_config" "new_app_config" {
   depends_on = [google_firebase_web_app.driftwood_app[0]]
 }
 
-# Firebase App Check configuration for production (reCAPTCHA Enterprise)
+# Firebase App Check configuration with Enterprise reCAPTCHA for all environments
 resource "google_firebase_app_check_recaptcha_enterprise_config" "driftwood_app_check" {
-  count    = var.environment == "prod" ? 1 : 0
   provider = google-beta
   project  = var.project_id
   app_id   = local.web_app_id
 
-  site_key             = var.recaptcha_site_key
+  site_key             = google_recaptcha_enterprise_key.driftwood_recaptcha.name
   token_ttl            = "7200s"
   
   depends_on = [
     google_firebase_web_app.driftwood_app,
-    google_project_service.required_apis
+    google_project_service.required_apis,
+    google_recaptcha_enterprise_key.driftwood_recaptcha
   ]
 }
 
@@ -474,7 +502,7 @@ resource "google_firebase_app_check_service_config" "firestore" {
   provider     = google-beta
   project      = var.project_id
   service_id   = "firestore.googleapis.com"
-  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+  enforcement_mode = "ENFORCED"
 
   depends_on = [
     google_project_service.required_apis,
@@ -487,7 +515,7 @@ resource "google_firebase_app_check_service_config" "identitytoolkit" {
   provider     = google-beta
   project      = var.project_id
   service_id   = "identitytoolkit.googleapis.com" 
-  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+  enforcement_mode = "ENFORCED"
 
   depends_on = [
     google_project_service.required_apis
@@ -840,6 +868,7 @@ locals {
       startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
       startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
+      startswith(line, "VITE_RECAPTCHA=") ? "VITE_RECAPTCHA=${google_recaptcha_enterprise_key.driftwood_recaptcha.name}" :
       startswith(line, "VITE_CLOUD_SERVER_URL=") ? "VITE_CLOUD_SERVER_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
       startswith(line, "VITE_CLOUD_FRONTEND_URL=") ? "VITE_CLOUD_FRONTEND_URL=${google_cloudfunctions_function.client_auth_service.https_trigger_url}" :
       startswith(line, "cloud_server_functions_URL=") ? "cloud_server_functions_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :

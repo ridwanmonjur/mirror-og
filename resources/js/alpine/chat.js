@@ -2,7 +2,7 @@ import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence, addDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { getAuth,  signInWithCustomToken } from "firebase/auth";
-// import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { DateTime } from "luxon";
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
 
@@ -18,6 +18,23 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+// Initialize App Check with reCAPTCHA Enterprise
+try {
+    const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
+    if (recaptchaSiteKey) {
+        initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
+            isTokenAutoRefreshEnabled: true
+        });
+        console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
+    } else {
+        console.warn('VITE_RECAPTCHA not found - App Check not initialized');
+    }
+} catch (error) {
+    console.error('Failed to initialize App Check:', error);
+}
+
 const auth = getAuth(app);
 
 let databaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;

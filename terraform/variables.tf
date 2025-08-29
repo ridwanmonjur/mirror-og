@@ -90,3 +90,9 @@ variable "terraform_service_account" {
   description = "Service account email used by Terraform and Laravel app"
   type        = string
 }
+
+variable "recaptcha_domain" {
+  description = "Domain for reCAPTCHA Enterprise key (auto-generated based on environment)"
+  type        = string
+  default     = ""
+}

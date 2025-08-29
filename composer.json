@@ -173,16 +173,24 @@
         ],
         
         "tf:dev2:plan": [
-            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_cloud_run_v2_service.driftwood_api '"
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_recaptcha_enterprise_key.driftwood_recaptcha -target=google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check -target=google_firebase_app_check_service_config.firestore -target=google_firebase_app_check_service_config.identitytoolkit -target=null_resource.update_env_files -out=\"dev2.tfplan\"'"
         ],
         
 
         "tf:staging:plan": [
             "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\" -out=\"staging.tfplan\"'"
         ],
+        
+        "tf:staging2:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\" -target=google_recaptcha_enterprise_key.driftwood_recaptcha -target=google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check -target=null_resource.update_env_files -out=\"staging2.tfplan\"'"
+        ],
        
         "tf:prod:plan": [
             "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\" -out=\"prod.tfplan\"'"
+        ],
+        
+        "tf:prod2:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\" -target=google_recaptcha_enterprise_key.driftwood_recaptcha -target=google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check -target=null_resource.update_env_files -out=\"prod2.tfplan\"'"
         ],
 
      
@@ -198,9 +206,17 @@
         "tf:staging:apply": [
             "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply staging.tfplan'"
         ],
+        
+        "tf:staging2:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply staging2.tfplan'"
+        ],
 
         "tf:prod:apply": [
             "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform apply prod.tfplan'"
+        ],
+        
+        "tf:prod2:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform apply prod2.tfplan'"
         ],
      
        
