@@ -49,7 +49,6 @@ resource "google_project_service" "required_apis" {
     "firestore.googleapis.com", 
     "identitytoolkit.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "billingbudgets.googleapis.com",
     "iam.googleapis.com",
     "recaptchaenterprise.googleapis.com",
     "firebaseappcheck.googleapis.com",
@@ -83,41 +82,7 @@ resource "google_firebase_project" "default" {
   depends_on = [google_project_service.required_apis]
 }
 
-# Billing budget to ensure billing is enabled
-resource "google_billing_budget" "budget" {
-  count = var.billing_account_id != "" ? 1 : 0
-  
-  billing_account = var.billing_account_id
-  display_name    = "${var.project_name}-${var.environment}-budget"
-  
-  budget_filter {
-    projects = ["projects/${var.project_id}"]
-  }
-  
-  amount {
-    specified_amount {
-      currency_code = "USD"
-      units         = var.environment == "prod" ? "500" : "100"
-    }
-  }
-  
-  threshold_rules {
-    threshold_percent = 0.5
-    spend_basis      = "CURRENT_SPEND"
-  }
-  
-  threshold_rules {
-    threshold_percent = 0.9
-    spend_basis      = "CURRENT_SPEND"
-  }
-  
-  threshold_rules {
-    threshold_percent = 1.0
-    spend_basis      = "CURRENT_SPEND"
-  }
-  
-  depends_on = [google_project_service.required_apis]
-}
+# Budget creation removed to avoid costs - using GCP free tier only
 
 # Generate domain for reCAPTCHA based on environment
 locals {
@@ -1358,8 +1323,8 @@ resource "google_cloudfunctions_function" "client_auth_service" {
   region      = var.region
   runtime     = "python311"
 
-  available_memory_mb   = 256
-  timeout              = 60
+  available_memory_mb   = 128  # Free tier: up to 400,000 GB-seconds
+  timeout              = 60   # Keep timeout reasonable
   entry_point          = "driftwood_client_auth"
   service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 
@@ -1403,8 +1368,8 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
 
   template {
     scaling {
-      max_instance_count = 5
-      min_instance_count = 0
+      max_instance_count = 1  # Free tier: 2 million requests, limit concurrent instances
+      min_instance_count = 0  # Scale to zero when not used
     }
 
     containers {
@@ -1416,9 +1381,10 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
 
       resources {
         limits = {
-          cpu    = "1"
-          memory = "512Mi"
+          cpu    = "1"      # 1 vCPU within free tier
+          memory = "512Mi"  # Reduced memory for free tier
         }
+        cpu_idle = false    # CPU allocated only during request processing (free tier)
       }
 
       env {
