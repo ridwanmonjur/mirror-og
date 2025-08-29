@@ -1,11 +1,11 @@
 import functions_framework
 import firebase_admin
-from firebase_admin import auth
+from firebase_admin import auth, app_check
 from datetime import datetime, timedelta
 from jose import jwt
 import os
 import logging
-from flask import jsonify
+from flask import jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import time
@@ -63,6 +63,18 @@ def check_rate_limit(client_ip, limit_per_minute=30):
     request_counts[count_key] = current_count + 1
     return True
 
+def verify_app_check_token(app_check_token):
+    """Verify Firebase App Check token."""
+    if not app_check_token:
+        return False
+        
+    try:
+        app_check_claims = app_check.verify_token(app_check_token)
+        return True
+    except Exception as e:
+        logging.warning(f"App Check verification failed: {str(e)}")
+        return False
+
 @functions_framework.http
 def driftwood_client_auth(request):
     """Main API endpoint for auth and health."""
@@ -84,8 +96,9 @@ def driftwood_client_auth(request):
     elif ENVIRONMENT == 'dev':
         headers['Access-Control-Allow-Origin'] = '*'
     
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, HEAD'
+    headers['Access-Control-Allow-Headers'] = 'Accept, Accept-Language, Content-Language, Content-Type, Authorization, X-Requested-With, X-Firebase-AppCheck, Origin, Referer, User-Agent'
+    headers['Access-Control-Expose-Headers'] = 'Content-Type, Authorization, X-Firebase-AppCheck'
     headers['Access-Control-Max-Age'] = '86400'
     
     # Handle preflight OPTIONS requests
@@ -115,6 +128,12 @@ def driftwood_client_auth(request):
 def handle_auth_token(request, headers, start_time, client_ip):
     """Handle auth token creation."""
     try:
+        # Verify App Check token
+        app_check_token = request.headers.get("X-Firebase-AppCheck")
+        if not verify_app_check_token(app_check_token):
+            logging.warning(f"POST /auth/token 401 {client_ip} - App Check verification failed")
+            return (jsonify({'detail': 'App Check verification failed'}), 401, headers)
+        
         request_json = request.get_json(silent=True)
         logging.info(f"Raw request data: {request.get_data()}")
         logging.info(f"Parsed JSON data: {request_json}")

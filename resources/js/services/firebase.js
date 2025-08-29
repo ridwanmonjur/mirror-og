@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider, ReCaptchaV3Provider } from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, ReCaptchaV3Provider, getToken } from "firebase/app-check";
 
 class FirebaseService {
   constructor(hiddenUserId = null) {
@@ -169,6 +169,21 @@ class FirebaseService {
       db: this.db,
       appCheck: this.appCheck
     };
+  }
+
+  async getAppCheckToken() {
+    if (!this.appCheck) {
+      console.warn('App Check not initialized - cannot get token');
+      return null;
+    }
+
+    try {
+      const appCheckTokenResponse = await getToken(this.appCheck, false);
+      return appCheckTokenResponse.token;
+    } catch (error) {
+      console.error('Failed to get App Check token:', error);
+      return null;
+    }
   }
 }
 

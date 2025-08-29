@@ -1379,7 +1379,8 @@ resource "google_cloudfunctions_function" "client_auth_service" {
   depends_on = [
     google_storage_bucket_object.client_auth_function_source,
     google_project_service.required_apis,
-    null_resource.delete_existing_cloud_function
+    null_resource.delete_existing_cloud_function,
+    google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check
   ]
 }
 
