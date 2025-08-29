@@ -572,7 +572,7 @@ class DeadlineTaskTrait:
             next_stage_data = {
                 'bracket': bracket,
                 'extra_bracket': extra_bracket,
-                'scores': scores,
+                'score': scores,
                 'tier_id': tier_id
             }
         

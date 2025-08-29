@@ -306,7 +306,7 @@ class DeadlineTaskService
                         $this->resolveNextStage(
                             $nextStageData['bracket'],
                             $nextStageData['extra_bracket'],
-                            $nextStageData['scores'],
+                            $nextStageData['score'],
                             $nextStageData['tier_id']
                         );
                     }
@@ -390,7 +390,7 @@ class DeadlineTaskService
                         $this->resolveNextStage(
                             $nextStageData['bracket'],
                             $nextStageData['extra_bracket'],
-                            $nextStageData['scores'],
+                            $nextStageData['score'],
                             $nextStageData['tier_id']
                         );
                     }

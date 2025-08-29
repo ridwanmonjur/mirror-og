@@ -9,6 +9,7 @@ use App\Models\EventCategory;
 use App\Services\EventMatchService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class BracketsFactory extends Factory
@@ -83,7 +84,7 @@ class BracketsFactory extends Factory
         foreach ($events as $detail) {
             $this->eventMatchService->createBrackets($detail);
             
-            if ($detail->type->eventType === 'Tournament') {
+            if ($detail->type->eventType == 'Tournament') {
                 $this->updateTournamentBrackets($detail->id, $teams);
             } else {
                 $this->updateLeagueBrackets($detail->id, $teams);
@@ -135,7 +136,7 @@ class BracketsFactory extends Factory
         foreach ($events as $detail) {
             $this->eventMatchService->createBrackets($detail);
             
-            if ($detail->type->eventType === 'Tournament') {
+            if ($detail->type->eventType == 'Tournament') {
                 $this->updateTournamentDemo($detail->id, $teams);
             } else {
                 $this->updateLeagueDemo($detail->id, $teams);
@@ -233,60 +234,157 @@ class BracketsFactory extends Factory
     private function updateTournamentDemo(int $eventId, array $teams): void
     {
         $teamCount = count($teams);
-        $bracketDemoService = new \App\Services\BracketDemoService();
         
-        // Get demo bracket data with winners
-        $bracketData = $bracketDemoService->produceBrackets(
-            $teamCount,
-            false,
-            null,
-            [],
-            1
-        );
-        
-        // Update brackets with demo results
-        foreach ($bracketData as $stageName => $stageData) {
-            foreach ($stageData as $innerStageName => $matches) {
-                foreach ($matches as $index => $match) {
-                    $bracket = Brackets::where('event_details_id', $eventId)
-                        ->where('stage_name', $stageName)
-                        ->where('inner_stage_name', $innerStageName)
-                        ->skip($index)
-                        ->first();
-                        
-                    if ($bracket) {
-                        // Assign teams based on positions
-                        $team1 = $this->getTeamByPosition($match['team1_position'], $teams);
-                        $team2 = $this->getTeamByPosition($match['team2_position'], $teams);
-                        
-                        if ($team1) $bracket->team1_id = $team1->id;
-                        if ($team2) $bracket->team2_id = $team2->id;
-                        
-                        // Set winner if available in demo data
-                        if (isset($match['winner_position'])) {
-                            $winner = $this->getTeamByPosition($match['winner_position'], $teams);
-                            if ($winner) {
-                                $bracket->winner_id = $winner->id;
-                            }
-                        }
-                        
-                        $bracket->save();
-                    }
-                }
-            }
+        if ($teamCount < 2) {
+            return;
         }
+        
+        $eventDetail = EventDetail::with(['game', 'tier'])->find($eventId);
+        $eventGame = $eventDetail->game->gameTitle ?? 'Dota 2';
+        $eventCategory = EventCategory::where('gameTitle', $eventGame)->first();
+        $gamesPerMatch = $eventCategory->games_per_match ?? 3;
+       
+        $this->assignTeamsToFirstBrackets($eventId, $teams);
+        [$semiMatchResults, $brackets] = $this->seedTournamentDemoResults($eventId, $gamesPerMatch);
+        $this->progressTeamsThroughBrackets($eventDetail, $brackets, $semiMatchResults);
     }
     
     private function getTeamByPosition(string $position, array $teams)
     {
-        // Extract team number from position (W1, W2, etc.)
         if (preg_match('/W(\d+)/', $position, $matches)) {
             $teamIndex = intval($matches[1]) - 1;
             return $teams[$teamIndex] ?? null;
         }
         
-        // For other positions, return first team as default
         return $teams[0] ?? null;
+    }
+    
+    private function assignTeamsToFirstBrackets(int $eventId, array $teams): void
+    {
+        $this->updateBracketTeams($eventId, 'U', ['e1'], $teams);
+    }
+    
+    
+    
+    private function progressTeamsThroughBrackets($eventDetail, $brackets, $semiMatchResults): void
+    {
+        $allResults = $semiMatchResults;
+        $specificIds = array_keys($semiMatchResults);
+        
+        $stageSequence = [
+            ['stage_name' => 'U', 'inner_stage_name' => 'e1'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'e1'], 
+            ['stage_name' => 'U', 'inner_stage_name' => 'e2'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'e2'],
+            ['stage_name' => 'U', 'inner_stage_name' => 'e3'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'e3'],
+            ['stage_name' => 'U', 'inner_stage_name' => 'e4'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'e4'],
+            ['stage_name' => 'U', 'inner_stage_name' => 'p0'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'e5'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'e6'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'p1'],
+            ['stage_name' => 'L', 'inner_stage_name' => 'p2'],
+            ['stage_name' => 'F', 'inner_stage_name' => 'F'],
+        ];
+        
+        foreach ($stageSequence as $stage) {
+            $stageBrackets = Brackets::where('event_details_id', $eventDetail->id)
+                ->where('stage_name', $stage['stage_name'])
+                ->where('inner_stage_name', $stage['inner_stage_name'])
+                ->get();
+            
+            if ($stageBrackets->isEmpty()) {
+                continue;
+            }
+            
+            $stageBracketsKeyed = $stageBrackets->keyBy(function ($item) {
+                return $item->team1_position . '.' . $item->team2_position;
+            });
+            
+            $stageSetup = DB::table('brackets_setup')
+                ->where('event_tier_id', $eventDetail->tier->id)
+                ->where('stage_name', $stage['stage_name'])
+                ->where('inner_stage_name', $stage['inner_stage_name'])
+                ->get()
+                ->keyBy(function ($item) {
+                    return $item->team1_position . '.' . $item->team2_position;
+                });
+            
+            foreach ($stageBracketsKeyed as $matchId => $bracket) {
+                if (!isset($allResults[$matchId])) {
+                    $isTeam1Winner = rand(1, 2) == 1;
+                    $pattern = rand(0, 3);
+                    $baseResults = [];
+                    
+                    if ($isTeam1Winner) {
+                        switch ($pattern) {
+                            case 0: $baseResults = ['0', '0', '0']; break; // 3-0 team1
+                            case 1: $baseResults = ['0', '0', '1']; break; // 2-1 team1
+                            case 2: $baseResults = ['0', '1', '0']; break; // 2-1 team1
+                            case 3: $baseResults = ['0', '0', null]; break; // 2-0 team1
+                        }
+                    } else {
+                        switch ($pattern) {
+                            case 0: $baseResults = ['1', '1', '1']; break; // 3-0 team2
+                            case 1: $baseResults = ['1', '1', '0']; break; // 2-1 team2
+                            case 2: $baseResults = ['1', '0', '1']; break; // 2-1 team2
+                            case 3: $baseResults = ['1', '1', null]; break; // 2-0 team2
+                        }
+                    }
+                    
+                    $allResults[$matchId] = [                       
+                        'team1Id' => $bracket->team1_id,
+                        'team2Id' => $bracket->team2_id,
+                    ];
+                    $specificIds[] = $matchId;
+                }
+                
+                $setup = $stageSetup->get($matchId);
+                if ($setup && isset($allResults[$matchId])) {
+                    if (!isset($allResults[$matchId]['score'])) {
+                        $allResults[$matchId]['score'] = $this->calculateScores($allResults[$matchId]['realWinners'] ?? ['0', '0']);
+                    }
+                    
+                    $scores = $allResults[$matchId]['score'];
+                    $winnerId = $scores[0] > $scores[1] ? $allResults[$matchId]['team1Id'] : $allResults[$matchId]['team2Id'];
+                    $loserId = $scores[0] > $scores[1] ? $allResults[$matchId]['team2Id'] : $allResults[$matchId]['team1Id'];
+                    
+                    if ($setup->winner_next_position && $winnerId) {
+                        $this->advanceTeamToNextBracket($eventDetail->id, $winnerId, $setup->winner_next_position);
+                    }
+                    
+                    if ($setup->loser_next_position && $loserId) {
+                        $this->advanceTeamToNextBracket($eventDetail->id, $loserId, $setup->loser_next_position);
+                    }
+                }
+            }
+        }
+        
+        if (!empty($allResults)) {
+            $gamesPerMatch = $eventDetail->game->games_per_match ?? 3;
+            $this->callCloudFunctionBatchReports($eventDetail->id, count($specificIds), array_values($allResults), $specificIds, $gamesPerMatch);
+        }
+    }
+    
+    private function advanceTeamToNextBracket(int $eventId, int $teamId, string $nextPosition): void
+    {
+        $nextBracket = Brackets::where('event_details_id', $eventId)
+            ->where(function($query) use ($nextPosition) {
+                $query->where('team1_position', $nextPosition)
+                      ->orWhere('team2_position', $nextPosition);
+            })
+            ->first();
+        
+        if ($nextBracket) {
+            if ($nextBracket->team1_position == $nextPosition && !$nextBracket->team1_id) {
+                $nextBracket->team1_id = $teamId;
+            } elseif ($nextBracket->team2_position == $nextPosition && !$nextBracket->team2_id) {
+                $nextBracket->team2_id = $teamId;
+            }
+            
+            $nextBracket->save();
+        }
     }
 
     private function updateLeagueDemo(int $eventId, array $teams): void
@@ -303,7 +401,7 @@ class BracketsFactory extends Factory
         $eventCategory = EventCategory::where('gameTitle', $eventGame)->first();
         $gamesPerMatch = $eventCategory->games_per_match ?? 3;
         
-        $schedule = $this->generateRoundRobinSchedule($teams);
+        $schedule = $this->generateLeagueSchedule($teams);
         
         foreach ($schedule as $roundIndex => $matches) {
             $roundName = 'R' . ($roundIndex + 1);
@@ -327,12 +425,12 @@ class BracketsFactory extends Factory
         $this->seedLeagueDemoResults($eventId, $gamesPerMatch);
     }
     
-    private function generateRoundRobinSchedule(array $teams): array
+    private function generateLeagueSchedule(array $teams): array
     {
         $teamCount = count($teams);
         $schedule = [];
         
-        if ($teamCount % 2 === 1) {
+        if ($teamCount % 2 == 1) {
             $teams[] = null; // Add bye for odd number of teams
             $teamCount++;
         }
@@ -346,7 +444,7 @@ class BracketsFactory extends Factory
                 $home = ($round + $i) % ($teamCount - 1);
                 $away = ($teamCount - 1 - $i + $round) % ($teamCount - 1);
                 
-                if ($i === 0) {
+                if ($i == 0) {
                     $away = $teamCount - 1;
                 }
                 
@@ -369,21 +467,16 @@ class BracketsFactory extends Factory
     
     private function seedLeagueDemoResults(int $eventId, int $gamesPerMatch): void
     {
-        // Get all brackets for this event
         $brackets = Brackets::where('event_details_id', $eventId)->get();
+        $bracketsKeyed = $brackets->keyBy(function ($item) {
+            return $item->team1_position . '.' . $item->team2_position;
+        });
         
-        // Generate all match IDs dynamically
-        $matchIds = [];
-        foreach ($brackets as $bracket) {
-            $matchIds[] = $bracket->team1_position . '.' . $bracket->team2_position;
-        }
-        
-        $documentSpecs = $this->generateUnanimousMatches($matchIds, $brackets, $gamesPerMatch);
+        $documentSpecs = $this->generateUnanimousMatches($bracketsKeyed, $gamesPerMatch);
         
         $customValuesArray = [];
         $specificIds = [];
 
-        // Slice all arrays to gamesPerMatch and calculate scores in one loop
         foreach ($documentSpecs as $documentId => $customValues) {
             $slicedValues = [];
             
@@ -395,7 +488,6 @@ class BracketsFactory extends Factory
                 }
             }
             
-            // Calculate scores based on sliced realWinners
             $slicedValues['score'] = $this->calculateScores($slicedValues['realWinners']);
             
             $specificIds[] = $documentId;
@@ -405,23 +497,112 @@ class BracketsFactory extends Factory
         $this->callCloudFunctionBatchReports($eventId, count($specificIds), $customValuesArray, $specificIds, $gamesPerMatch);
     }
     
-    private function generateUnanimousMatches(array $matchIds, $brackets, int $gamesPerMatch): array
+    private function seedTournamentDemoResults(int $eventId, int $gamesPerMatch): array
+    {
+        $brackets = Brackets::where('event_details_id', $eventId)->get();
+        
+        $bracketsWithTeams = $brackets->filter(function($bracket) {
+            return $bracket->team1_id && $bracket->team2_id;
+        });
+        
+        $bracketsKeyed = $bracketsWithTeams->keyBy(function ($item) {
+            return $item->team1_position . '.' . $item->team2_position;
+        });
+        
+        $documentSpecs = $this->generateTournamentMatches($bracketsKeyed, $gamesPerMatch);
+        
+        $customValuesArray = [];
+
+        foreach ($documentSpecs as $documentId => $customValues) {
+            $slicedValues = [];
+            
+            foreach ($customValues as $key => $array) {
+                if (is_array($array)) {
+                    $slicedValues[$key] = array_slice($array, 0, $gamesPerMatch);
+                } else {
+                    $slicedValues[$key] = $array;
+                }
+            }
+            
+            $slicedValues['score'] = $this->calculateScores($slicedValues['realWinners']);
+            
+            $customValuesArray[] = $slicedValues;
+        }
+
+        return [$customValuesArray, $brackets];
+    }
+    
+    private function generateTournamentMatches($brackets, int $gamesPerMatch): array
     {
         $documentSpecs = [];
-        $nullArray = array_fill(0, 3, null); // Base 3 elements
+        $nullArray = array_fill(0, $gamesPerMatch, null);
         
-        // Create bracket lookup by matchId
-        $bracketLookup = [];
-        foreach ($brackets as $bracket) {
-            $matchId = $bracket->team1_position . '.' . $bracket->team2_position;
-            $bracketLookup[$matchId] = $bracket;
+        $index = 0;
+        foreach ($brackets as $matchId => $bracket) {
+            
+            $isTeam1Winner = rand(1, 2) == 1;
+            
+            $pattern = rand(0, 3);
+            $baseResults = [];
+            
+            if ($isTeam1Winner) {
+                switch ($pattern) {
+                    case 0: $baseResults = ['0', '0', '0']; break; // 3-0 team1
+                    case 1: $baseResults = ['0', '0', '1']; break; // 2-1 team1
+                    case 2: $baseResults = ['0', '1', '0']; break; // 2-1 team1
+                    case 3: $baseResults = ['0', '0', null]; break; // 2-0 team1
+                    default: $baseResults = ['0', '0', '0']; break; // 3-0 team1
+                }
+            } else {
+                switch ($pattern) {
+                    case 0: $baseResults = ['1', '1', '1']; break; // 3-0 team2
+                    case 1: $baseResults = ['1', '1', '0']; break; // 2-1 team2
+                    case 2: $baseResults = ['1', '0', '1']; break; // 2-1 team2
+                    case 3: $baseResults = ['1', '1', null]; break; // 2-0 team2
+                    default: $baseResults = ['1', '1', '1']; break; // 3-0 team2
+                }
+            }
+            
+            $documentSpecs[$matchId] = [
+                'team1Winners' => $baseResults,
+                'team2Winners' => $baseResults, // Tournament matches are less controversial
+                'realWinners' => $baseResults,
+                'randomWinners' => $nullArray,
+                'organizerWinners' => $nullArray,
+                'stageName' => $bracket->stage_name,
+            ];
+            $index++;
         }
         
-        // Step 1: Create all matches with unanimous decisions (team1Winners = team2Winners = realWinners)
-        foreach ($matchIds as $index => $matchId) {
-            $bracket = $bracketLookup[$matchId];
+        $conflictMatches = array_filter(array_keys($brackets->toArray()), function($matchId) use ($brackets) {
+            $bracket = $brackets->get($matchId);
+            return $bracket && $bracket->stage_name == 'U' && 
+                   in_array($bracket->inner_stage_name, ['e1', 'e2']);
+        });
+        
+        $conflictMatches = array_slice($conflictMatches, 0, 2);
+        
+        foreach ($conflictMatches as $matchId) {
+            $flippedResults = [];
+            foreach ($documentSpecs[$matchId]['team1Winners'] as $result) {
+                $flippedResults[] = $result == '1' ? '0' : ($result == '0' ? '1' : null);
+            }
+            $documentSpecs[$matchId]['team2Winners'] = $flippedResults;
+            $documentSpecs[$matchId]['organizerWinners'] = $documentSpecs[$matchId]['team1Winners'];
+            $documentSpecs[$matchId]['realWinners'] = $documentSpecs[$matchId]['team1Winners'];
+        }
+        
+        return $documentSpecs;
+    }
+    
+    private function generateUnanimousMatches($brackets, int $gamesPerMatch): array
+    {
+        $documentSpecs = [];
+        $nullArray = array_fill(0, 3, null);
+        
+        $index = 0;
+        foreach ($brackets as $matchId => $bracket) {
             
-            // Generate diverse score patterns for different matches
             $baseResults = [];
             $pattern = $index % 8; // 8 different patterns
             
@@ -446,16 +627,16 @@ class BracketsFactory extends Factory
                 'team1Id' => $bracket->team1_id,
                 'team2Id' => $bracket->team2_id,
             ];
+            $index++;
         }
         
-        // Step 2: Introduce conflicts by changing team2Winners for some matches
-        $conflictMatches = array_slice($matchIds, 0, min(4, count($matchIds))); // First 4 matches or less
+        $conflictMatches = array_slice(array_keys($brackets->toArray()), 0, min(4, count($brackets)));
         
         foreach ($conflictMatches as $matchId) {
             // Flip team2's opinion to create conflict
             $flippedResults = [];
             foreach ($documentSpecs[$matchId]['team1Winners'] as $result) {
-                $flippedResults[] = $result === '1' ? '0' : '1';
+                $flippedResults[] = $result == '1' ? '0' : '1';
             }
             $documentSpecs[$matchId]['team2Winners'] = $flippedResults;
         }
@@ -476,7 +657,7 @@ class BracketsFactory extends Factory
             $randomDecision = [];
             foreach ($documentSpecs[$matchId]['team1Winners'] as $i => $result) {
                 // Randomly pick between team1 and team2's choice
-                $randomDecision[] = $i % 2 === 0 ? $documentSpecs[$matchId]['team1Winners'][$i] : $documentSpecs[$matchId]['team2Winners'][$i];
+                $randomDecision[] = $i % 2 == 0 ? $documentSpecs[$matchId]['team1Winners'][$i] : $documentSpecs[$matchId]['team2Winners'][$i];
             }
             $documentSpecs[$matchId]['randomWinners'] = $randomDecision;
             $documentSpecs[$matchId]['realWinners'] = $randomDecision;
@@ -491,12 +672,11 @@ class BracketsFactory extends Factory
         $team2Score = 0;
         
         foreach ($realWinners as $winner) {
-            if ($winner === '1') {
+            if ($winner == '0') {
                 $team1Score++;
-            } elseif ($winner === '0') {
+            } elseif ($winner == '1') {
                 $team2Score++;
             }
-            // null values don't contribute to score
         }
         
         return [$team1Score, $team2Score];
