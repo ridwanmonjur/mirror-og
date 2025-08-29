@@ -57,23 +57,15 @@ service cloud.firestore {
       allow read: if isAuthenticated() && 
         (resource.data.user1 == getUserId() || resource.data.user2 == getUserId());
       
-      allow create, update: if isAuthenticated() && 
-        (request.resource.data.user1 == getUserId() || request.resource.data.user2 == getUserId()) &&
-        request.resource.data.user1 is string &&
-        request.resource.data.user2 is string &&
-        request.resource.data.user1 != request.resource.data.user2;
+      allow create, update: if isAuthenticated() ;
         
       allow delete: if isAuthenticated();
       
       // Messages subcollection
       match /message/{messageId} {
-        allow read: if isAuthenticated() && 
-          (get(/databases/$(database)/documents/room/$(roomId)).data.user1 == getUserId() || 
-           get(/databases/$(database)/documents/room/$(roomId)).data.user2 == getUserId());
+        allow read: if isAuthenticated() ;
         
-        allow write: if isAuthenticated() && 
-          (get(/databases/$(database)/documents/room/$(roomId)).data.user1 == getUserId() || 
-           get(/databases/$(database)/documents/room/$(roomId)).data.user2 == getUserId());
+        allow write: if isAuthenticated();
       }
     }
     

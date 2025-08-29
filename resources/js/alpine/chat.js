@@ -265,7 +265,7 @@ const chatStore = reactive({
         const roomRef = collection(db, `room/${id}/message`);
 
         let q = query(roomRef,
-            orderBy("__name__", "desc")
+            orderBy("createdAt", "asc")
         );
 
 
@@ -303,14 +303,26 @@ const chatStore = reactive({
 
 
                     if (length) {
+                        console.log('currentDate:', currentDate);
+                        console.log('prevCreatedAt:', prevCreatedAt);
+                        console.log('currentDate.getDate():', currentDate?.getDate());
+                        console.log('prevCreatedAt.getDate():', prevCreatedAt?.getDate());
+                        console.log('currentDate.getMonth():', currentDate?.getMonth());
+                        console.log('prevCreatedAt.getMonth():', prevCreatedAt?.getMonth());
+                        console.log('currentDate.getYear():', currentDate?.getYear());
+                        console.log('prevCreatedAt.getYear():', prevCreatedAt?.getYear());
+                        
                         if (currentDate?.getDate() != prevCreatedAt?.getDate()
                             || currentDate?.getMonth() != prevCreatedAt?.getMonth()
                             || currentDate?.getYear() != prevCreatedAt?.getYear()
                         ) {
                             objectDoc['isLastDateShow'] = true;
                             objectDoc['lastDate'] = prevCreatedAt;
+                            console.log('Date changed - lastDate set to:', objectDoc['lastDate']);
                         }
                     }
+
+                    console.log('Final objectDoc:', objectDoc);
 
                     prevCreatedAt = objectDoc['createdAtDate'];
                     length++;
@@ -524,22 +536,12 @@ const roomStore = reactive({
 
 function DateDividerComponent(props) {
     return {
-        $template: `
-            <div v-if="shouldShowDate()" class="d-flex justify-content-center my-3">
-                <small 
-                class="mx-auto px-3 py-1 rounded-pill"
-                style="background-color: white; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);"
-                v-text="formattedDate()"
-                ></small>
-            </div>
-        `,
-
         formattedDate() {
             return humanReadableChatDateFormat(props.date)
         },
 
         shouldShowDate() {
-            return props.index === 0 || props.isLastDateShow
+            return props.index == 0 || props.shouldShowDate
         }
     }
 }
