@@ -37,3 +37,4 @@ composer.lock
 /cloud_server_functions/function-source.zip
 /cloud_server_functions/lib/
 /cloud_server_functions/node_modules/
+venv

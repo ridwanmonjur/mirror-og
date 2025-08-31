@@ -49,7 +49,6 @@ resource "google_project_service" "required_apis" {
     "firestore.googleapis.com", 
     "identitytoolkit.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "billingbudgets.googleapis.com",
     "iam.googleapis.com",
     "recaptchaenterprise.googleapis.com",
     "firebaseappcheck.googleapis.com",
@@ -83,47 +82,41 @@ resource "google_firebase_project" "default" {
   depends_on = [google_project_service.required_apis]
 }
 
-# Billing budget to ensure billing is enabled
-resource "google_billing_budget" "budget" {
-  count = var.billing_account_id != "" ? 1 : 0
+# Budget creation removed to avoid costs - using GCP free tier only
+
+# Generate domain for reCAPTCHA based on environment
+locals {
+  recaptcha_domain = var.recaptcha_domain != "" ? var.recaptcha_domain : (
+    var.environment == "prod" ? "driftwood.gg" : 
+    var.environment == "staging" ? "staging.driftwood.gg" : 
+    "localhost"
+  )
   
-  billing_account = var.billing_account_id
-  display_name    = "${var.project_name}-${var.environment}-budget"
-  
-  budget_filter {
-    projects = ["projects/${var.project_id}"]
-  }
-  
-  amount {
-    specified_amount {
-      currency_code = "USD"
-      units         = var.environment == "prod" ? "500" : "100"
-    }
-  }
-  
-  threshold_rules {
-    threshold_percent = 0.5
-    spend_basis      = "CURRENT_SPEND"
-  }
-  
-  threshold_rules {
-    threshold_percent = 0.9
-    spend_basis      = "CURRENT_SPEND"
-  }
-  
-  threshold_rules {
-    threshold_percent = 1.0
-    spend_basis      = "CURRENT_SPEND"
-  }
-  
-  depends_on = [google_project_service.required_apis]
+  recaptcha_allowed_domains = var.environment == "dev" ? ["localhost", "127.0.0.1"] : [local.recaptcha_domain]
 }
 
+# Create Enterprise reCAPTCHA key for App Check
+resource "google_recaptcha_enterprise_key" "driftwood_recaptcha" {
+  provider     = google-beta
+  project      = var.project_id
+  display_name = "${var.project_name}-${var.environment}-appcheck"
 
+  web_settings {
+    integration_type    = "SCORE"
+    allow_all_domains  = var.environment == "dev"
+    allowed_domains    = var.environment == "dev" ? [] : local.recaptcha_allowed_domains
+    allow_amp_traffic  = false
+  }
 
+  # Add labels for better organization
+  labels = {
+    environment = var.environment
+    purpose     = "firebase-app-check"
+    project     = var.project_name
+  }
 
-
-
+  depends_on = [google_project_service.required_apis]
+}
 
 ############################################################
 # 1. Check if default Firestore database exists
@@ -441,19 +434,19 @@ data "google_firebase_web_app_config" "new_app_config" {
   depends_on = [google_firebase_web_app.driftwood_app[0]]
 }
 
-# Firebase App Check configuration for production (reCAPTCHA Enterprise)
+# Firebase App Check configuration with Enterprise reCAPTCHA for all environments
 resource "google_firebase_app_check_recaptcha_enterprise_config" "driftwood_app_check" {
-  count    = var.environment == "prod" ? 1 : 0
   provider = google-beta
   project  = var.project_id
   app_id   = local.web_app_id
 
-  site_key             = var.recaptcha_site_key
+  site_key             = google_recaptcha_enterprise_key.driftwood_recaptcha.name
   token_ttl            = "7200s"
   
   depends_on = [
     google_firebase_web_app.driftwood_app,
-    google_project_service.required_apis
+    google_project_service.required_apis,
+    google_recaptcha_enterprise_key.driftwood_recaptcha
   ]
 }
 
@@ -474,7 +467,7 @@ resource "google_firebase_app_check_service_config" "firestore" {
   provider     = google-beta
   project      = var.project_id
   service_id   = "firestore.googleapis.com"
-  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+  enforcement_mode = "ENFORCED"
 
   depends_on = [
     google_project_service.required_apis,
@@ -487,7 +480,7 @@ resource "google_firebase_app_check_service_config" "identitytoolkit" {
   provider     = google-beta
   project      = var.project_id
   service_id   = "identitytoolkit.googleapis.com" 
-  enforcement_mode = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
+  enforcement_mode = "ENFORCED"
 
   depends_on = [
     google_project_service.required_apis
@@ -670,14 +663,9 @@ resource "google_firestore_index" "disputes_validation" {
   depends_on = [google_firestore_database.default]
 }
 
-# Check if message index exists
-data "external" "message_index_exists" {
-  program = ["bash", "-c", "gcloud firestore indexes list --database='(default)' --format='value(name)' | grep -q 'message' && echo '{\"exists\":\"true\"}' || echo '{\"exists\":\"false\"}'"]
-}
-
 # Message subcollection composite index for timestamp and __name__ descending queries
 resource "google_firestore_index" "message_timestamp_name_desc" {
-  count = data.external.message_index_exists.result.exists == "false" ? 1 : 0
+  count = data.external.indexes_exist.result.exists == "true" ? 0 : 1
   provider     = google-beta
   project      = var.project_id
   database     = local.database_id
@@ -845,6 +833,7 @@ locals {
       startswith(line, "VITE_PROJECT_ID=") ? "VITE_PROJECT_ID=${var.project_id}" :
       startswith(line, "VITE_APP_ID=") ? "VITE_APP_ID=${local.web_app_id}" :
       startswith(line, "VITE_FIREBASE_DATABASE_ID=") ? "VITE_FIREBASE_DATABASE_ID=${local.database_id}" :
+      startswith(line, "VITE_RECAPTCHA=") ? "VITE_RECAPTCHA=${google_recaptcha_enterprise_key.driftwood_recaptcha.name}" :
       startswith(line, "VITE_CLOUD_SERVER_URL=") ? "VITE_CLOUD_SERVER_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
       startswith(line, "VITE_CLOUD_FRONTEND_URL=") ? "VITE_CLOUD_FRONTEND_URL=${google_cloudfunctions_function.client_auth_service.https_trigger_url}" :
       startswith(line, "cloud_server_functions_URL=") ? "cloud_server_functions_URL=${google_cloud_run_v2_service.driftwood_api.uri}" :
@@ -1250,6 +1239,82 @@ resource "google_storage_bucket_object" "client_auth_function_source" {
   depends_on = [null_resource.build_client_auth_function]
 }
 
+# Check if Cloud Function exists and delete it if it does
+data "external" "cloud_function_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set -e
+      FUNCTION_NAME="driftwood-client-auth-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      if gcloud functions describe "$FUNCTION_NAME" --project="$PROJECT_ID" --region="$REGION" >/dev/null 2>&1; then
+        echo '{"exists": "true"}'
+      else
+        echo '{"exists": "false"}'
+      fi
+    EOT
+  ]
+}
+
+resource "null_resource" "delete_existing_cloud_function" {
+  count = data.external.cloud_function_exists.result.exists == "true" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<EOT
+      set -e
+      FUNCTION_NAME="driftwood-client-auth-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      echo "Deleting existing Cloud Function: $FUNCTION_NAME"
+      gcloud functions delete "$FUNCTION_NAME" --project="$PROJECT_ID" --region="$REGION" --quiet || true
+    EOT
+  }
+  
+  triggers = {
+    function_name = "driftwood-client-auth-${var.environment}"
+  }
+}
+
+# Check if Cloud Run service exists and delete it if it does
+data "external" "cloud_run_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set -e
+      SERVICE_NAME="driftwood-api-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      if gcloud run services describe "$SERVICE_NAME" --project="$PROJECT_ID" --region="$REGION" >/dev/null 2>&1; then
+        echo '{"exists": "true"}'
+      else
+        echo '{"exists": "false"}'
+      fi
+    EOT
+  ]
+}
+
+resource "null_resource" "delete_existing_cloud_run" {
+  count = data.external.cloud_run_exists.result.exists == "true" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<EOT
+      set -e
+      SERVICE_NAME="driftwood-api-${var.environment}"
+      PROJECT_ID="${var.project_id}"
+      REGION="${var.region}"
+      
+      echo "Deleting existing Cloud Run service: $SERVICE_NAME"
+      gcloud run services delete "$SERVICE_NAME" --project="$PROJECT_ID" --region="$REGION" --quiet || true
+    EOT
+  }
+  
+  triggers = {
+    service_name = "driftwood-api-${var.environment}"
+  }
+}
+
 # Deploy the client auth service as a Cloud Function Gen 1
 resource "google_cloudfunctions_function" "client_auth_service" {
   name        = "driftwood-client-auth-${var.environment}"
@@ -1258,8 +1323,8 @@ resource "google_cloudfunctions_function" "client_auth_service" {
   region      = var.region
   runtime     = "python311"
 
-  available_memory_mb   = 256
-  timeout              = 60
+  available_memory_mb   = 128  # Free tier: up to 400,000 GB-seconds
+  timeout              = 60   # Keep timeout reasonable
   entry_point          = "driftwood_client_auth"
   service_account_email = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
 
@@ -1278,7 +1343,9 @@ resource "google_cloudfunctions_function" "client_auth_service" {
 
   depends_on = [
     google_storage_bucket_object.client_auth_function_source,
-    google_project_service.required_apis
+    google_project_service.required_apis,
+    null_resource.delete_existing_cloud_function,
+    google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check
   ]
 }
 
@@ -1301,8 +1368,8 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
 
   template {
     scaling {
-      max_instance_count = 5
-      min_instance_count = 0
+      max_instance_count = 1  # Free tier: 2 million requests, limit concurrent instances
+      min_instance_count = 0  # Scale to zero when not used
     }
 
     containers {
@@ -1314,9 +1381,10 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
 
       resources {
         limits = {
-          cpu    = "1"
-          memory = "512Mi"
+          cpu    = "1"      # 1 vCPU within free tier
+          memory = "512Mi"  # Reduced memory for free tier
         }
+        cpu_idle = false    # CPU allocated only during request processing (free tier)
       }
 
       env {
@@ -1347,7 +1415,8 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
 
   depends_on = [
     google_project_service.required_apis,
-    null_resource.build_docker_image
+    null_resource.build_docker_image,
+    null_resource.delete_existing_cloud_run
   ]
 }
 

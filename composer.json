@@ -113,12 +113,12 @@
             "rm -f .env",
             "cp .env.example .env",
             "@REM composer update",
-            "@REM npm run build",
+            "npm run build",
             "chmod +x dev.sh stop.sh"
         ],
         "npm-build": [
             "npm install",
-            "@REM npm run build",
+            "npm run build",
             "rm -rf node_modules"
         ],
         "cache:test": [
@@ -131,7 +131,7 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "@REM npm run build",
+            "npm run build",
             "rm -rf node_modules",
                         
             "rm -rf storage/framework/cache/data/*",
@@ -163,7 +163,7 @@
             "composer2 install --no-dev --optimize-autoloader",
             "php artisan migrate",
             "npm ci",
-            "@REM npm run build",
+            "npm run build",
             "rm -rf node_modules"
         ],
 
@@ -173,16 +173,24 @@
         ],
         
         "tf:dev2:plan": [
-            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_cloud_run_v2_service.driftwood_api '"
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_cloudfunctions_function.client_auth_service -target=google_storage_bucket_object.client_auth_function_source -target=null_resource.build_client_auth_function -target=null_resource.delete_existing_cloud_function -target=null_resource.update_env_files -out=\"dev2.tfplan\"'"
         ],
         
 
         "tf:staging:plan": [
             "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\" -out=\"staging.tfplan\"'"
         ],
+        
+        "tf:staging2:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform plan -var-file=\"staging.tfvars\" -target=google_recaptcha_enterprise_key.driftwood_recaptcha -target=google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check -target=null_resource.update_env_files -out=\"staging2.tfplan\"'"
+        ],
        
         "tf:prod:plan": [
             "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\" -out=\"prod.tfplan\"'"
+        ],
+        
+        "tf:prod2:plan": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform plan -var-file=\"prod.tfvars\" -target=google_recaptcha_enterprise_key.driftwood_recaptcha -target=google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check -target=null_resource.update_env_files -out=\"prod2.tfplan\"'"
         ],
 
      
@@ -198,9 +206,17 @@
         "tf:staging:apply": [
             "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply staging.tfplan'"
         ],
+        
+        "tf:staging2:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh staging && terraform apply staging2.tfplan'"
+        ],
 
         "tf:prod:apply": [
             "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform apply prod.tfplan'"
+        ],
+        
+        "tf:prod2:apply": [
+            "bash -c 'cd terraform && source scripts/load-env.sh prod && terraform apply prod2.tfplan'"
         ],
      
        
