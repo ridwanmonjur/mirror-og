@@ -1,4 +1,5 @@
 // Firebase will be dynamically imported only when needed
+import firebaseService from '../services/firebase.js';
 
 
 
@@ -19,72 +20,32 @@ function getDateKeys() {
 
 if (document.querySelector('meta[name="analytics"]') && import.meta.env.VITE_APP_ENV !== 'production') {
 
-// Dynamically import Firebase modules
-let firebaseModules = null;
-let db = null;
+// Dynamically import only Firestore functions (not initialization)
+let firestoreModules = null;
 
-async function initializeFirebase() {
-    if (!firebaseModules) {
-        const [firebaseApp, firestore, appCheck] = await Promise.all([
-            import('firebase/app'),
-            import('firebase/firestore'),
-            import('firebase/app-check')
-        ]);
+async function getFirebaseServices() {
+    if (!firestoreModules) {
+        const firestore = await import('firebase/firestore');
         
-        firebaseModules = {
-            initializeApp: firebaseApp.initializeApp,
-            initializeFirestore: firestore.initializeFirestore,
-            persistentLocalCache: firestore.persistentLocalCache,
-            persistentMultipleTabManager: firestore.persistentMultipleTabManager,
+        firestoreModules = {
             setDoc: firestore.setDoc,
             doc: firestore.doc,
             updateDoc: firestore.updateDoc,
             increment: firestore.increment,
             serverTimestamp: firestore.serverTimestamp,
             getDoc: firestore.getDoc,
-            initializeAppCheck: appCheck.initializeAppCheck,
-            ReCaptchaEnterpriseProvider: appCheck.ReCaptchaEnterpriseProvider
         };
-
-        const firebaseConfig = {
-            apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-            authDomain: import.meta.env.VITE_AUTH_DOMAIN,
-            projectId: import.meta.env.VITE_PROJECT_ID,
-            storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-            messagingSenderId: import.meta.env.VITE_MESSAGE_SENDER_ID,
-            appId: import.meta.env.VITE_APP_ID,
-        };
-
-        const app = firebaseModules.initializeApp(firebaseConfig);
-        
-        // Initialize App Check with reCAPTCHA Enterprise
-        try {
-            const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
-            if (recaptchaSiteKey) {
-                firebaseModules.initializeAppCheck(app, {
-                    provider: new firebaseModules.ReCaptchaEnterpriseProvider(recaptchaSiteKey),
-                    isTokenAutoRefreshEnabled: true
-                });
-                console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
-            } else {
-                console.warn('VITE_RECAPTCHA not found - App Check not initialized');
-            }
-        } catch (error) {
-            console.error('Failed to initialize App Check:', error);
-        }
-        
-        db = firebaseModules.initializeFirestore(app, {
-            localCache: firebaseModules.persistentLocalCache({
-                tabManager: firebaseModules.persistentMultipleTabManager()
-            })
-        });
     }
-    return { firebaseModules, db };
+
+    // Get existing Firebase services (reuses existing Firestore instance)
+    const { db } = firebaseService.getServices();
+    
+    return { firebaseModules: firestoreModules, db };
 }
 
 async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location, eventName, userId, type = 'click') {
     try {
-        const { firebaseModules, db: firestoreDb } = await initializeFirebase();
+        const { firebaseModules, db: firestoreDb } = await getFirebaseServices();
         const dateKeys = getDateKeys();
         
         const collections = [
@@ -185,7 +146,7 @@ async function updateAnalyticsCounts(eventTier, eventType, esportTitle, location
 
 async function updateSocialCounts(action, targetType) {
     try {
-        const { firebaseModules, db: firestoreDb } = await initializeFirebase();
+        const { firebaseModules, db: firestoreDb } = await getFirebaseServices();
         const dateKeys = getDateKeys();
         
         const collections = [
@@ -237,7 +198,7 @@ async function updateSocialCounts(action, targetType) {
 
 async function updateFormCounts(formName) {
     try {
-        const { firebaseModules, db: firestoreDb } = await initializeFirebase();
+        const { firebaseModules, db: firestoreDb } = await getFirebaseServices();
         const dateKeys = getDateKeys();
         
         const collections = [
