@@ -402,9 +402,9 @@ async function updateFormCounts(formName) {
         updateFormCounts(formName);
     };
 } else {
-    // Non-production environment - provide no-op functions
+    // Production environment - provide no-op functions
     window.trackEventCardClick = function(element, event) {
-        console.log("Analytics disabled in non-production environment");
+        console.log("Analytics disabled in production environment");
         if (event) {
             event.preventDefault();
         }
@@ -417,15 +417,15 @@ async function updateFormCounts(formName) {
     };
     
     window.trackEventViewFromDiv = function(element) {
-        console.log("Analytics disabled in non-production environment");
+        console.log("Analytics disabled in production environment");
     };
     
     window.trackSocialInteraction = function(action, target, targetType) {
-        console.log("Analytics disabled in non-production environment");
+        console.log("Analytics disabled in production environment");
     };
     
     window.trackFormSubmission = function(formName, additionalParams) {
-        console.log("Analytics disabled in non-production environment");
+        console.log("Analytics disabled in production environment");
     };
 }
 

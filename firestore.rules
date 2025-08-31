@@ -49,7 +49,7 @@ service cloud.firestore {
     
     match /analytics-yearly/{docId} {
       allow read: if isAuthenticated();
-      allow write: if isAuthenticated();
+      allow write: if true;
     }
     
     // Chat/messaging with authentication and blocking validation
