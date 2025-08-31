@@ -172,7 +172,7 @@ def handle_auth_token(request, headers, start_time, client_ip):
         response_data = {
             'token': custom_token.decode('utf-8'),
             'jwt_token': jwt_token,
-            'expires_at': expire.isoformat()
+            'expires_at': expire.isoformat() + 'Z'
         }
         
         logging.info(f"POST /auth/token 200 {client_ip}")

@@ -140,6 +140,13 @@
                         index: index,
                         shouldShowDate: message['isLastDateShow'] 
                     })">
+                        <div v-if="shouldShowDate()" class="d-flex justify-content-center my-3">
+                            <small 
+                                class="mx-auto px-3 py-1 rounded-pill"
+                                style="background-color: white; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);"
+                                v-text="formattedDate()"
+                            ></small>
+                        </div>
                     </div>
                     <div :class="message.className">
                         <img v-if="message.sender?.userBanner" v-bind:src="`/storage/${message.sender.userBanner}`"
