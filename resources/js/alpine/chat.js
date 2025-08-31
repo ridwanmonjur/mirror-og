@@ -77,16 +77,13 @@ const authStore = reactive({
             
             if (tokenData) {
                 const parsed = JSON.parse(tokenData);
-                const expiresAt = new Date(parsed.expires_at);
-                const now = new Date();
                 
-                // Check if token is still valid (with 5 minute buffer)
-                if (expiresAt > new Date(now.getTime() + 5 * 60 * 1000)) {
+                // Check if token is still valid using timestamp
+                if (parsed.expires > Date.now()) {
                     console.log('Using existing token from sessionStorage');
                     this.jwtToken = parsed.token;
                     return parsed.token;
                 } else {
-                    console.log('Token expired, removing from sessionStorage');
                     sessionStorage.removeItem(tokenKey);
                 }
             }
@@ -126,11 +123,10 @@ const authStore = reactive({
             const token = result.token;
             this.jwtToken = token;
             
-            // Store token with expiration time in sessionStorage
+            // Store token with expiration time in sessionStorage (30 minutes)
             const tokenInfo = {
                 token: token,
-                expires_at: result.expires_at,
-                created_at: new Date().toISOString()
+                expires: Date.now() + (30 * 60 * 1000)
             };
             sessionStorage.setItem(tokenKey, JSON.stringify(tokenInfo));
             
@@ -265,7 +261,7 @@ const chatStore = reactive({
         const roomRef = collection(db, `room/${id}/message`);
 
         let q = query(roomRef,
-            orderBy("__name__", "desc")
+            orderBy("createdAt", "asc")
         );
 
 
@@ -524,22 +520,12 @@ const roomStore = reactive({
 
 function DateDividerComponent(props) {
     return {
-        $template: `
-            <div v-if="shouldShowDate()" class="d-flex justify-content-center my-3">
-                <small 
-                class="mx-auto px-3 py-1 rounded-pill"
-                style="background-color: white; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);"
-                v-text="formattedDate()"
-                ></small>
-            </div>
-        `,
-
         formattedDate() {
             return humanReadableChatDateFormat(props.date)
         },
 
         shouldShowDate() {
-            return props.index === 0 || props.isLastDateShow
+            return props.index == 0 || props.shouldShowDate
         }
     }
 }
