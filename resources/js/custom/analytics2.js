@@ -25,9 +25,10 @@ let db = null;
 
 async function initializeFirebase() {
     if (!firebaseModules) {
-        const [firebaseApp, firestore] = await Promise.all([
+        const [firebaseApp, firestore, appCheck] = await Promise.all([
             import('firebase/app'),
-            import('firebase/firestore')
+            import('firebase/firestore'),
+            import('firebase/app-check')
         ]);
         
         firebaseModules = {
@@ -40,7 +41,9 @@ async function initializeFirebase() {
             updateDoc: firestore.updateDoc,
             increment: firestore.increment,
             serverTimestamp: firestore.serverTimestamp,
-            getDoc: firestore.getDoc
+            getDoc: firestore.getDoc,
+            initializeAppCheck: appCheck.initializeAppCheck,
+            ReCaptchaEnterpriseProvider: appCheck.ReCaptchaEnterpriseProvider
         };
 
         const firebaseConfig = {
@@ -53,6 +56,23 @@ async function initializeFirebase() {
         };
 
         const app = firebaseModules.initializeApp(firebaseConfig);
+        
+        // Initialize App Check with reCAPTCHA Enterprise
+        try {
+            const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
+            if (recaptchaSiteKey) {
+                firebaseModules.initializeAppCheck(app, {
+                    provider: new firebaseModules.ReCaptchaEnterpriseProvider(recaptchaSiteKey),
+                    isTokenAutoRefreshEnabled: true
+                });
+                console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
+            } else {
+                console.warn('VITE_RECAPTCHA not found - App Check not initialized');
+            }
+        } catch (error) {
+            console.error('Failed to initialize App Check:', error);
+        }
+        
         db = firebaseModules.initializeFirestore(app, {
             localCache: firebaseModules.persistentLocalCache({
                 tabManager: firebaseModules.persistentMultipleTabManager()

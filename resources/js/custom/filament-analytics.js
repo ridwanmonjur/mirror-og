@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, getDoc, setDoc, serverTimestamp, query, collection, where, orderBy, limit, getDocs } from "firebase/firestore";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -11,6 +12,22 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+// Initialize App Check with reCAPTCHA Enterprise
+try {
+    const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
+    if (recaptchaSiteKey) {
+        initializeAppCheck(app, {
+            provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
+            isTokenAutoRefreshEnabled: true
+        });
+        console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
+    } else {
+        console.warn('VITE_RECAPTCHA not found - App Check not initialized');
+    }
+} catch (error) {
+    console.error('Failed to initialize App Check:', error);
+}
 
 const db = initializeFirestore(app, {
     localCache: persistentLocalCache({

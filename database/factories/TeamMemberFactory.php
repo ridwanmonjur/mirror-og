@@ -78,7 +78,7 @@ final class TeamMemberFactory extends Factory
 
         // Available team images
         $teamImages = [
-            'images/team/0.webp', 'images/team/1.jpg', 'images/team/2.jpg', 'images/team/3.avif', 
+            'images/team/0.webp', 'images/team/1.jpg', 'images/team/2.avif', 'images/team/3.avif', 
             'images/team/4.jpg', 'images/team/5.jpg', 'images/team/6.avif', 'images/team/7.jpg',
             'images/team/8.png', 'images/team/9.webp', 'images/team/10.jpg', 'images/team/12.jpg',
             'images/team/13.jpg', 'images/team/14.png', 'images/team/15.jpg', 'images/team/2.avif'
@@ -130,10 +130,10 @@ final class TeamMemberFactory extends Factory
             $participants[] = $user;
         }
 
-        $numberOfTeams = intval(ceil($numberOfUsers / $playersPerTeam));
+        $noOfConTeams = intval(ceil($numberOfUsers / $playersPerTeam));
         
         $creatorUsers = [];
-        for ($i = 0; $i < $numberOfTeams; $i++) {
+        for ($i = 0; $i < $noOfConTeams; $i++) {
             $creatorIndex = $i * $playersPerTeam;
             if ($creatorIndex < count($participants)) {
                 $creatorUsers[] = $participants[$creatorIndex];
@@ -142,7 +142,7 @@ final class TeamMemberFactory extends Factory
 
         $teams = [];
         
-        for ($i = 0; $i < $numberOfTeams; $i++) {
+        for ($i = 0; $i < $noOfConTeams; $i++) {
             $teamNameIndex = $i % count($teamNames);
             $teamImageIndex = $i % count($teamImages);
             $teamName = $teamNames[$teamNameIndex];

@@ -34,7 +34,19 @@ output "app_check_config" {
     auth_enforcement     = (var.environment == "prod" || var.enforce_app_check) ? "ENFORCED" : "UNENFORCED"
     environment          = var.environment
     debug_token_enabled  = var.environment != "prod"
-    recaptcha_enabled    = var.environment == "prod" && var.recaptcha_site_key != ""
+    recaptcha_enabled    = true
+    recaptcha_site_key   = google_recaptcha_enterprise_key.driftwood_recaptcha.name
+  }
+}
+
+output "recaptcha_config" {
+  description = "Enterprise reCAPTCHA configuration"
+  sensitive   = true
+  value = {
+    site_key     = google_recaptcha_enterprise_key.driftwood_recaptcha.name
+    display_name = google_recaptcha_enterprise_key.driftwood_recaptcha.display_name
+    domain       = local.recaptcha_domain
+    environment  = var.environment
   }
 }
 

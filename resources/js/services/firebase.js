@@ -1,12 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, ReCaptchaV3Provider, getToken } from "firebase/app-check";
 
 class FirebaseService {
   constructor(hiddenUserId = null) {
     this.app = null;
     this.auth = null;
     this.db = null;
+    this.appCheck = null;
     this.isInitialized = false;
     this.hiddenUserId = hiddenUserId;
   }
@@ -31,6 +33,23 @@ class FirebaseService {
 
     this.app = initializeApp(firebaseConfig);
     
+    // Initialize App Check with reCAPTCHA Enterprise
+    try {
+      const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
+      if (recaptchaSiteKey) {
+        this.appCheck = initializeAppCheck(this.app, {
+          provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
+          isTokenAutoRefreshEnabled: true
+        });
+        console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
+      } else {
+        console.warn('VITE_RECAPTCHA not found - App Check not initialized');
+      }
+    } catch (error) {
+      console.error('Failed to initialize App Check:', error);
+      // Continue without App Check in case of errors
+    }
+    
     if (this.hiddenUserId) {
       this.auth = getAuth(this.app);
     }
@@ -50,7 +69,8 @@ class FirebaseService {
     return {
       app: this.app,
       auth: this.auth,
-      db: this.db
+      db: this.db,
+      appCheck: this.appCheck
     };
   }
 
@@ -146,8 +166,24 @@ class FirebaseService {
     return {
       app: this.app,
       auth: this.auth,
-      db: this.db
+      db: this.db,
+      appCheck: this.appCheck
     };
+  }
+
+  async getAppCheckToken() {
+    if (!this.appCheck) {
+      console.warn('App Check not initialized - cannot get token');
+      return null;
+    }
+
+    try {
+      const appCheckTokenResponse = await getToken(this.appCheck, false);
+      return appCheckTokenResponse.token;
+    } catch (error) {
+      console.error('Failed to get App Check token:', error);
+      return null;
+    }
   }
 }
 

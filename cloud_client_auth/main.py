@@ -1,17 +1,21 @@
 import functions_framework
 import firebase_admin
-from firebase_admin import auth
+from firebase_admin import auth, app_check
 from datetime import datetime, timedelta
 from jose import jwt
 import os
 import logging
-from flask import jsonify
+from flask import jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import time
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging with custom format
+logging.basicConfig(
+    level=logging.INFO, 
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
@@ -59,6 +63,18 @@ def check_rate_limit(client_ip, limit_per_minute=30):
     request_counts[count_key] = current_count + 1
     return True
 
+def verify_app_check_token(app_check_token):
+    """Verify Firebase App Check token."""
+    if not app_check_token:
+        return False
+        
+    try:
+        app_check_claims = app_check.verify_token(app_check_token)
+        return True
+    except Exception as e:
+        logging.warning(f"App Check verification failed: {str(e)}")
+        return False
+
 @functions_framework.http
 def driftwood_client_auth(request):
     """Main API endpoint for auth and health."""
@@ -67,11 +83,8 @@ def driftwood_client_auth(request):
     if client_ip and ',' in client_ip:
         client_ip = client_ip.split(',')[0].strip()
     
-    # Log request
-    auth_header = request.headers.get('Authorization', 'None')
-    auth_info = f"{auth_header[:20]}..." if len(auth_header) > 20 else auth_header
-    user_agent = request.headers.get('User-Agent', 'Unknown')[:50]
-    logging.info(f"📥 {request.method}\t{request.path}\t{client_ip}\t{auth_info}\t{user_agent}")
+    # Log request in simplified format
+    logging.info(f"{request.method} {request.path} {client_ip}")
     
     # CORS headers
     origin = request.headers.get('Origin')
@@ -83,8 +96,9 @@ def driftwood_client_auth(request):
     elif ENVIRONMENT == 'dev':
         headers['Access-Control-Allow-Origin'] = '*'
     
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, HEAD'
+    headers['Access-Control-Allow-Headers'] = 'Accept, Accept-Language, Content-Language, Content-Type, Authorization, X-Requested-With, X-Firebase-AppCheck, Origin, Referer, User-Agent'
+    headers['Access-Control-Expose-Headers'] = 'Content-Type, Authorization, X-Firebase-AppCheck'
     headers['Access-Control-Max-Age'] = '86400'
     
     # Handle preflight OPTIONS requests
@@ -93,8 +107,7 @@ def driftwood_client_auth(request):
     
     # Rate limiting
     if not check_rate_limit(client_ip, 30):
-        process_time = (time.time() - start_time) * 1000
-        logging.warning(f"⚠️ {request.method}\t{request.path}\t429\t{process_time:.2f}ms\t{client_ip}")
+        logging.warning(f"{request.method} {request.path} 429 {client_ip}")
         return (jsonify({'error': 'Too Many Requests'}), 429, headers)
     
     try:
@@ -104,31 +117,34 @@ def driftwood_client_auth(request):
         elif request.path == '/health' and request.method == 'GET':
             return handle_health_check(headers, start_time, client_ip)
         else:
-            process_time = (time.time() - start_time) * 1000
-            logging.info(f"⚠️ {request.method}\t{request.path}\t404\t{process_time:.2f}ms\t{client_ip}")
+            logging.info(f"{request.method} {request.path} 404 {client_ip}")
             return (jsonify({'error': 'Not found'}), 404, headers)
             
     except Exception as e:
-        process_time = (time.time() - start_time) * 1000
-        logging.error(f"💥 {request.method}\t{request.path}\t500\t{process_time:.2f}ms\t{client_ip} - {e}")
+        logging.error(f"{request.method} {request.path} 500 {client_ip}")
+        logging.error(f"Full Error: {str(e)}")
         return (jsonify({'error': 'Internal server error'}), 500, headers)
 
 def handle_auth_token(request, headers, start_time, client_ip):
     """Handle auth token creation."""
     try:
+        # Verify App Check token
+        app_check_token = request.headers.get("X-Firebase-AppCheck")
+        if not verify_app_check_token(app_check_token):
+            logging.warning(f"POST /auth/token 401 {client_ip} - App Check verification failed")
+            return (jsonify({'detail': 'App Check verification failed'}), 401, headers)
+        
         request_json = request.get_json(silent=True)
         logging.info(f"Raw request data: {request.get_data()}")
         logging.info(f"Parsed JSON data: {request_json}")
         
         if not request_json or 'uid' not in request_json:
-            process_time = (time.time() - start_time) * 1000
-            logging.info(f"❌ POST\t/auth/token\t400\t{process_time:.2f}ms\t{client_ip}")
+            logging.info(f"POST /auth/token 400 {client_ip}")
             return (jsonify({'detail': 'uid is required'}), 400, headers)
         
         uid = str(request_json['uid'])
         if not uid:
-            process_time = (time.time() - start_time) * 1000
-            logging.info(f"❌ POST\t/auth/token\t400\t{process_time:.2f}ms\t{client_ip}")
+            logging.info(f"POST /auth/token 400 {client_ip}")
             return (jsonify({'detail': 'uid is required'}), 400, headers)
         
         # Get additional user data from request
@@ -159,16 +175,13 @@ def handle_auth_token(request, headers, start_time, client_ip):
             'expires_at': expire.isoformat()
         }
         
-        process_time = (time.time() - start_time) * 1000
-        logging.info(f"✅ POST\t/auth/token\t200\t{process_time:.2f}ms\t{client_ip}")
-        logging.info("─" * 80)
+        logging.info(f"POST /auth/token 200 {client_ip}")
         
         return (jsonify(response_data), 200, headers)
         
     except Exception as e:
-        process_time = (time.time() - start_time) * 1000
-        logging.error(f"❌ POST\t/auth/token\t500\t{process_time:.2f}ms\t{client_ip} - Error creating token: {e}")
-        logging.info("─" * 80)
+        logging.error(f"POST /auth/token 500 {client_ip}")
+        logging.error(f"Full Error: Error creating token: {str(e)}")
         return (jsonify({'detail': 'Failed to create authentication token'}), 500, headers)
 
 def handle_health_check(headers, start_time, client_ip):
@@ -180,9 +193,7 @@ def handle_health_check(headers, start_time, client_ip):
         'timestamp': datetime.utcnow().isoformat()
     }
     
-    process_time = (time.time() - start_time) * 1000
-    logging.info(f"✅ GET\t/health\t200\t{process_time:.2f}ms\t{client_ip}")
-    logging.info("─" * 80)
+    logging.info(f"GET /health 200 {client_ip}")
     
     return (jsonify(response_data), 200, headers)
 

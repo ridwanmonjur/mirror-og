@@ -24,7 +24,7 @@ class EventMatchService
         if (! isset($event->matches[0]) && $event?->tier?->tierTeamSlot && $event?->type?->eventType) {
             $eventType = $event->type->eventType;
             $dataService = DataServiceFactory::create($eventType);
-            $page = $eventType == 'Tournament' ? 'all' : 1;
+            $page = 'all';
             
             $cacheKey = "{$eventType}_{$event->id}_{$event->tier->tierTeamSlot}_{$page}_0";
             $bracketList = Cache::remember($cacheKey, config('cache.ttl', 3600), function () use (
