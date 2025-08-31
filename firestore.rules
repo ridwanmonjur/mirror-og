@@ -37,19 +37,17 @@ service cloud.firestore {
       }
     }
     
-    match /analytics-daily/{docId} {
-      allow read: if isAuthenticated();
-      allow write: if true;
+    // Analytics collections - allow all documents and subcollections
+    match /analytics-daily/{document=**} {
+      allow read, write: if true;
     }
     
-    match /analytics-monthly/{docId} {
-      allow read: if isAuthenticated();
-      allow write: if true;
+    match /analytics-monthly/{document=**} {
+      allow read, write: if true;
     }
     
-    match /analytics-yearly/{docId} {
-      allow read: if isAuthenticated();
-      allow write: if true;
+    match /analytics-yearly/{document=**} {
+      allow read, write: if true;
     }
     
     // Chat/messaging with authentication and blocking validation
