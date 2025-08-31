@@ -36,17 +36,25 @@ class FirebaseService {
     // Initialize App Check with reCAPTCHA Enterprise
     try {
       const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
+      console.log('Attempting App Check initialization with reCAPTCHA key:', recaptchaSiteKey ? 'Present' : 'Missing');
       if (recaptchaSiteKey) {
         this.appCheck = initializeAppCheck(this.app, {
           provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
           isTokenAutoRefreshEnabled: true
         });
-        console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
+        console.log('Firebase App Check initialized successfully with Enterprise reCAPTCHA');
+        console.log('App Check auto-refresh enabled:', true);
       } else {
         console.warn('VITE_RECAPTCHA not found - App Check not initialized');
+        console.warn('This will cause "Missing or insufficient permissions" errors');
       }
     } catch (error) {
       console.error('Failed to initialize App Check:', error);
+      console.error('App Check error details:', {
+        code: error.code,
+        message: error.message,
+        name: error.name
+      });
       // Continue without App Check in case of errors
     }
     
