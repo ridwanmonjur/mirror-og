@@ -89,8 +89,6 @@ class AuthService
         $finduser = null;
         if ($type === 'google') {
             $finduser = User::where('google_id', $user->id)->first();
-        } elseif ($type === 'steam') {
-            $finduser = User::where('steam_id', $user->id)->first();
         }
 
         if ($finduser) {
