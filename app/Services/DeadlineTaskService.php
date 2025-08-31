@@ -4,10 +4,8 @@ namespace App\Services;
 
 use App\Models\EventDetail;
 use App\Models\Task;
-use App\Traits\DeadlineTasksTrait;
 use App\Traits\PrinterLoggerTrait;
 use App\Models\BracketDeadline;
-use App\Services\BracketDataService;
 use App\Services\DataServiceFactory;
 use App\Services\CloudFunctionAuthService;
 use Carbon\Carbon;
@@ -16,10 +14,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Models\Brackets;
+use Illuminate\Support\Facades\DB;
 
 class DeadlineTaskService
 {
-    use DeadlineTasksTrait, PrinterLoggerTrait;
+    use  PrinterLoggerTrait;
 
     protected $bracketDataService;
 
@@ -29,17 +29,13 @@ class DeadlineTaskService
     
     protected $authService;
 
-    public function __construct(BracketDataService $bracketDataService, CloudFunctionAuthService $authService)
+    public function __construct(CloudFunctionAuthService $authService)
     {
-        $this->bracketDataService = $bracketDataService;
         $this->authService = $authService;
         $now = Carbon::now();
-        $firebaseConfig = Config::get('services.firebase');
-        $disputeEnums = Config::get('constants.DISPUTE');
         $taskId = $this->logEntry('Respond tasks in the database', 'tasks:deadline {type=0 : The task type to process: 1=started, 2=ended, 3=org, 0=all} {--event_id= : Optional event ID to filter tasks}', '*/30 * * * *', $now);
         $this->taskIdParent = $taskId;
-        $this->pythonApiUrl = config('services.cloud_server_functions.url');
-        $this->initializeDeadlineTasksTrait($bracketDataService, $firebaseConfig, $disputeEnums);
+        $this->pythonApiUrl =  Config::get('services.cloud_server_functions.url');
     }
 
     public function execute(int $type = 0, ?string $eventId = null, ?int $taskType = null): void
@@ -434,5 +430,111 @@ class DeadlineTaskService
             Log::error('callPythonOrgTasks error: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    public function resolveNextStage($bracket, array $extraBracket, array $scores, $tierId)
+    {
+        $winner_id =  null;
+        $loser_id =  null;
+
+        if ($scores[0] > $scores[1]) {
+            $winner_id = $bracket['team1_id'] ?? null;
+            $loser_id = $bracket['team2_id'] ?? null;
+        }
+
+        if ($scores[0] < $scores[1]) {
+            $winner_id = $bracket['team2_id'] ?? null;
+            $loser_id = $bracket['team1_id'] ?? null;
+        }
+
+        $next_position = $extraBracket['winner_next_position'];
+        $bracketSetup = DB::table('brackets_setup')
+            ->where('event_tier_id', $tierId)
+            ->where(function ($query) use ($next_position) {
+                $query->where('team1_position', $next_position)
+                    ->orWhere('team2_position', $next_position);
+            })
+            ->first();
+
+        $winnerBrackets = Brackets::where('event_details_id', $bracket['event_details_id'])
+            ->where(function ($query) use ($next_position) {
+                $query->where('team1_position', $next_position)
+                    ->orWhere('team2_position', $next_position);
+            })
+            ->first();
+
+        if (! $winnerBrackets) {
+            $winnerBrackets = new Brackets([
+                'event_details_id' => $bracket['event_details_id'],
+                'team1_position' => $bracketSetup['team1_position'],
+                'team2_position' => $bracketSetup['team2_position'],
+                'order' => $bracketSetup['order'],
+                'stage_name' => $bracketSetup['stage_name'],
+                'inner_stage_name' => $bracketSetup['inner_stage_name'],
+            ]);
+        }
+
+        $updated = false;
+
+        if ($winnerBrackets->team1_position == $next_position && $winnerBrackets->team1_id != $winner_id) {
+            $winnerBrackets->team1_id = $winner_id;
+            $updated = true;
+        }
+
+        if ($winnerBrackets->team2_position == $next_position && $winnerBrackets->team2_id != $winner_id) {
+            $winnerBrackets->team2_id = $winner_id;
+            $updated = true;
+        }
+
+        if ($updated) {
+            $winnerBrackets->save();
+        }
+
+        $loserNextPosition = $extraBracket['loser_next_position'];
+        if (! $loserNextPosition) {
+            return;
+        }
+        $bracketSetup = DB::table('brackets_setup')
+            ->where('event_tier_id', $tierId)
+            ->where(function ($query) use ($loserNextPosition) {
+                $query->where('team1_position', $loserNextPosition)
+                    ->orWhere('team2_position', $loserNextPosition);
+            })
+            ->first();
+
+        $loserBrackets = Brackets::where('event_details_id', $bracket['event_details_id'])
+            ->where(function ($query) use ($loserNextPosition) {
+                $query->where('team1_position', $loserNextPosition)
+                    ->orWhere('team2_position', $loserNextPosition);
+            })
+            ->first();
+
+        if (! $loserBrackets) {
+            $loserBrackets = new Brackets([
+                'event_details_id' => $bracket['event_details_id'],
+                'team1_position' => $bracketSetup['team1_position'],
+                'team2_position' => $bracketSetup['team2_position'],
+                'order' => $bracketSetup['order'],
+                'stage_name' => $bracketSetup['stage_name'],
+                'inner_stage_name' => $bracketSetup['inner_stage_name'],
+            ]);
+        }
+
+        $updated = false;
+
+        if ($loserBrackets->team1_position == $loserNextPosition && $loserBrackets->team1_id != $loser_id) {
+            $loserBrackets->team1_id = $loser_id;
+            $updated = true;
+        }
+
+        if ($loserBrackets->team2_position == $loserNextPosition && $loserBrackets->team2_id != $loser_id) {
+            $loserBrackets->team2_id = $loser_id;
+            $updated = true;
+        }
+
+        if ($updated) {
+            $loserBrackets->save();
+        }
+
     }
 }

@@ -51,15 +51,6 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
-    'steam' => [
-        'client_id' => null,
-        'client_secret' => '8AE02B51B52FA9BD6BB683EB4585A651',
-        'redirect' => env('STEAM_REDIRECT_URL'),
-        'allowed_hosts' => [
-            'driftwood.gg',
-            'oceansgaming.gg',
-        ],
-    ],
 
     'cloud_server_functions' => [
         'url' => env('VITE_CLOUD_SERVER_URL'),
