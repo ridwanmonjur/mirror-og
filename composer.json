@@ -167,7 +167,7 @@
         ],
         
         "tf:dev2:plan": [
-            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_cloudfunctions_function.client_auth_service -target=google_storage_bucket_object.client_auth_function_source -target=null_resource.build_client_auth_function -target=null_resource.delete_existing_cloud_function -target=null_resource.update_env_files -out=\"dev2.tfplan\"'"
+            "bash -c 'cd terraform && source scripts/load-env.sh dev && terraform plan -var-file=\"dev.tfvars\" -target=google_recaptcha_enterprise_key.driftwood_recaptcha -target=google_firebase_app_check_recaptcha_enterprise_config.driftwood_app_check -target=null_resource.update_env_files -out=\"dev2.tfplan\"'"
         ],
         
 

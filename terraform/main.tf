@@ -88,7 +88,7 @@ resource "google_firebase_project" "default" {
 locals {
   recaptcha_domain = var.recaptcha_domain != "" ? var.recaptcha_domain : (
     var.environment == "prod" ? "driftwood.gg" : 
-    var.environment == "staging" ? "staging.driftwood.gg" : 
+    var.environment == "staging" ? "oceansgaming.gg" : 
     "localhost"
   )
   
