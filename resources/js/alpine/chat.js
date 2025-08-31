@@ -77,16 +77,13 @@ const authStore = reactive({
             
             if (tokenData) {
                 const parsed = JSON.parse(tokenData);
-                const expiresAt = new Date(parsed.expires_at);
-                const now = new Date();
                 
-                // Check if token is still valid (with 5 minute buffer)
-                if (expiresAt > new Date(now.getTime() + 5 * 60 * 1000)) {
+                // Check if token is still valid using timestamp
+                if (parsed.expires > Date.now()) {
                     console.log('Using existing token from sessionStorage');
                     this.jwtToken = parsed.token;
                     return parsed.token;
                 } else {
-                    console.log('Token expired, removing from sessionStorage');
                     sessionStorage.removeItem(tokenKey);
                 }
             }
@@ -126,11 +123,10 @@ const authStore = reactive({
             const token = result.token;
             this.jwtToken = token;
             
-            // Store token with expiration time in sessionStorage
+            // Store token with expiration time in sessionStorage (30 minutes)
             const tokenInfo = {
                 token: token,
-                expires_at: result.expires_at,
-                created_at: new Date().toISOString()
+                expires: Date.now() + (30 * 60 * 1000)
             };
             sessionStorage.setItem(tokenKey, JSON.stringify(tokenInfo));
             
@@ -303,26 +299,14 @@ const chatStore = reactive({
 
 
                     if (length) {
-                        console.log('currentDate:', currentDate);
-                        console.log('prevCreatedAt:', prevCreatedAt);
-                        console.log('currentDate.getDate():', currentDate?.getDate());
-                        console.log('prevCreatedAt.getDate():', prevCreatedAt?.getDate());
-                        console.log('currentDate.getMonth():', currentDate?.getMonth());
-                        console.log('prevCreatedAt.getMonth():', prevCreatedAt?.getMonth());
-                        console.log('currentDate.getYear():', currentDate?.getYear());
-                        console.log('prevCreatedAt.getYear():', prevCreatedAt?.getYear());
-                        
                         if (currentDate?.getDate() != prevCreatedAt?.getDate()
                             || currentDate?.getMonth() != prevCreatedAt?.getMonth()
                             || currentDate?.getYear() != prevCreatedAt?.getYear()
                         ) {
                             objectDoc['isLastDateShow'] = true;
                             objectDoc['lastDate'] = prevCreatedAt;
-                            console.log('Date changed - lastDate set to:', objectDoc['lastDate']);
                         }
                     }
-
-                    console.log('Final objectDoc:', objectDoc);
 
                     prevCreatedAt = objectDoc['createdAtDate'];
                     length++;
