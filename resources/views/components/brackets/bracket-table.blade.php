@@ -68,7 +68,7 @@
                      <img
                          data-position="{{$bracket['team2_position']}}"
                          src="{{ asset('storage/'.$bracket['team2_teamBanner']) }}" width="40" height= "40"
-                         onerror="this.src='/assets/images/404q.svg';" 
+                         onerror="this.src='/assets/images/404q.png';" 
                          class="object-fit-cover me-2 mobile-img border border-primary team rounded-circle" alt="Team View">
                  @else
                     <img  
