@@ -181,3 +181,8 @@ TODO:
 1. discord error tracking
 2. change logs to sentry
 3. tests
+
+
+1v1 24 1st 8, then 16 
+3v3 24 48, 1st 24  
+5v5 80 128 last 10 driftwood, 70 oceansd

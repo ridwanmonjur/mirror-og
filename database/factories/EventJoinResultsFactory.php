@@ -19,15 +19,9 @@ final class EventJoinResultsFactory extends Factory
      */
     protected $model = EventJoinResults::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'join_events_id' => fake()->randomNumber(),
-            'position' => fake()->randomNumber(),
-            'event_id' => \App\Models\EventDetail::factory(),
-        ];
+        return [];
     }
+
 }

@@ -19,12 +19,9 @@ final class RosterCaptainFactory extends Factory
      */
     protected $model = RosterCaptain::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-        ];
+        return [];
     }
+
 }

@@ -19,15 +19,10 @@ final class AchievementsFactory extends Factory
      */
     protected $model = Achievements::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'title' => fake()->title,
-            'description' => fake()->text,
-            'join_event_id' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
+    
 }

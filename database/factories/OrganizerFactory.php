@@ -19,22 +19,10 @@ final class OrganizerFactory extends Factory
      */
     protected $model = Organizer::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'companyName' => fake()->optional()->word,
-            'companyDescription' => fake()->optional()->word,
-            'user_id' => \App\Models\User::factory(),
-            'stripe_customer_id' => fake()->optional()->word,
-            'industry' => fake()->optional()->word,
-            'type' => fake()->optional()->word,
-            'website_link' => fake()->optional()->word,
-            'instagram_link' => fake()->optional()->word,
-            'facebook_link' => fake()->optional()->word,
-            'twitter_link' => fake()->optional()->word,
-        ];
+        return [];
     }
+
+  
 }

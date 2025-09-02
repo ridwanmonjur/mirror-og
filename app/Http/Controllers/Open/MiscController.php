@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Open;
 use App\Http\Controllers\Controller;
 use App\Models\CountryRegion;
 use App\Models\EventDetail;
+use App\Models\Task;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
 use App\Models\WithdrawalPassword;
@@ -35,6 +36,90 @@ class MiscController extends Controller
         $games = DB::table('games')->get();
 
         return response()->json(['success' => true, 'data' => $games], 200);
+    }
+
+    public function tasksList(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'taskType' => 'required|in:event_started,event_live,event_ended,event_reg_over,event_resetStart,report_start,report_end,report_org,tasks_all,weekly_tasks',
+            'eventId' => 'integer',
+        ], [
+            'taskType.required' => 'Task type is required.',
+            'taskType.in' => 'Task type must be one of: event_started, event_live, event_ended, event_reg_over, event_resetStart, report_start, report_end, report_org, tasks_all, weekly_tasks.',
+            'eventId.integer' => 'Event ID must be an integer.',
+        ]);
+
+        if ($validator->fails()) {
+            $baseUrl = $request->getSchemeAndHttpHost();
+            $basePath = '/seed/time';
+
+            $exampleUrls = [
+                $baseUrl.$basePath.'?taskType=event_started&eventId=123',
+                $baseUrl.$basePath.'?taskType=event_live&eventId=456',
+                $baseUrl.$basePath.'?taskType=event_ended&eventId=789',
+                $baseUrl.$basePath.'?taskType=event_reg_over&eventId=101',
+                $baseUrl.$basePath.'?taskType=event_resetStart&eventId=202',
+                $baseUrl.$basePath.'?taskType=report_start&eventId=303',
+                $baseUrl.$basePath.'?taskType=report_end&eventId=404',
+                $baseUrl.$basePath.'?taskType=report_org&eventId=505',
+                $baseUrl.$basePath.'?taskType=tasks_all',
+                $baseUrl.$basePath.'?taskType=event_started',
+            ];
+
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Invalid URL',
+                    'exampleUrls' => $exampleUrls,
+                    'errors' => $validator->errors(),
+                ],
+                400,
+            );
+        }
+
+        $validated = $validator->validated();
+        $taskType = $validated['taskType'];
+        $eventId = $validated['eventId'] ?? null;
+
+        $taskNameMap = [
+            'event_started' => ['taskable_type' => 'EventDetail', 'task_name' => 'started'],
+            'event_live' => ['taskable_type' => 'EventDetail', 'task_name' => 'live'],
+            'event_ended' => ['taskable_type' => 'EventDetail', 'task_name' => 'ended'],
+            'event_reg_over' => ['taskable_type' => 'EventDetail', 'task_name' => 'reg_over'],
+            'report_start' => ['taskable_type' => 'Deadline', 'task_name' => 'start_report'],
+            'report_end' => ['taskable_type' => 'Deadline', 'task_name' => 'end_report'],
+            'report_org' => ['taskable_type' => 'Deadline', 'task_name' => 'org_report'],
+            'tasks_all' => null,
+        ];
+
+        try {
+            $now = Carbon::now();
+            
+          
+            $taskConfig = $taskNameMap[$taskType];
+            Task::where('taskable_type', $taskConfig['taskable_type'])
+                    ->where('task_name', $taskConfig['task_name'])
+                    ->where('event_id', $eventId)
+                    ->update(['action_time' => $now]);
+           
+
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Tasks retrieved for {$taskType}",
+                'data' => [
+                    'taskType' => $taskType,
+                    'eventId' => $eventId,
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve tasks',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
   

@@ -58,9 +58,9 @@ class RespondTaskService
                 
                 $taskName = $taskNameMap[$taskType] ?? null;
                 if ($taskName) {
-                    if ($eventId !== null) {
+                    if ($eventId != null) {
                         $eventIdInt = (int) $eventId;
-                        $tasks = Task::where('taskable_id', $eventIdInt)
+                        $tasks = Task::where('event_id', $eventIdInt)
                             ->where('taskable_type', 'EventDetail')
                             ->where('task_name', $taskName)
                             ->get();
@@ -75,10 +75,10 @@ class RespondTaskService
                     $tasks = collect(); // Empty collection for invalid taskType
                 }
             } elseif ($type === 0) {
-                if ($eventId !== null) {
+                if ($eventId != null) {
                     // Run all task types for specific event
                     $eventIdInt = (int) $eventId;
-                    $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
+                    $tasks = Task::where('event_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
                 } else {
                     // Run all tasks in time window
                     $tasks = Task::where('taskable_type', 'EventDetail')
@@ -89,7 +89,7 @@ class RespondTaskService
             } else {
                 // Run specific task type for specific event
                 $eventIdInt = (int) $eventId;
-                $tasks = Task::where('taskable_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
+                $tasks = Task::where('event_id', $eventIdInt)->where('taskable_type', 'EventDetail')->get();
             }
 
             if ($type == 5) {

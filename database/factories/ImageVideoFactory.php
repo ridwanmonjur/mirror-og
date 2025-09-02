@@ -19,16 +19,9 @@ final class ImageVideoFactory extends Factory
      */
     protected $model = ImageVideo::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'file_path' => fake()->word,
-            'file_type' => fake()->randomElement(['image', 'video']),
-            'mime_type' => fake()->word,
-            'size' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
 }

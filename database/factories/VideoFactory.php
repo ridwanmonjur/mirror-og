@@ -19,12 +19,9 @@ final class VideoFactory extends Factory
      */
     protected $model = Video::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-        ];
+        return [];
     }
+
 }

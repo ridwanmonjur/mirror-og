@@ -19,17 +19,9 @@ final class EventTierSignupFactory extends Factory
      */
     protected $model = EventTierSignup::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'tier_id' => \App\Models\EventTier::factory(),
-            'type_id' => \App\Models\EventType::factory(),
-            'signup_open' => fake()->randomNumber(),
-            'signup_close' => fake()->randomNumber(),
-            'normal_signup_start_advanced_close' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
 }

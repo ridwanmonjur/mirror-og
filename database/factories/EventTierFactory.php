@@ -19,18 +19,9 @@ final class EventTierFactory extends Factory
      */
     protected $model = EventTier::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'eventTier' => fake()->optional()->word,
-            'tierIcon' => fake()->optional()->word,
-            'tierTeamSlot' => fake()->optional()->word,
-            'tierPrizePool' => fake()->optional()->word,
-            'tierEntryFee' => fake()->optional()->word,
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

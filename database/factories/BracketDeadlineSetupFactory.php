@@ -19,14 +19,9 @@ final class BracketDeadlineSetupFactory extends Factory
      */
     protected $model = BracketDeadlineSetup::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'tier_id' => \App\Models\EventTier::factory(),
-            'deadline_config' => fake()->word,
-        ];
+        return [];
     }
+
 }

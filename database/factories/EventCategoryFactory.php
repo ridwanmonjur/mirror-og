@@ -19,16 +19,9 @@ final class EventCategoryFactory extends Factory
      */
     protected $model = EventCategory::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'gameTitle' => fake()->optional()->word,
-            'gameIcon' => fake()->optional()->word,
-            'eventDefinitions' => fake()->optional()->word,
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

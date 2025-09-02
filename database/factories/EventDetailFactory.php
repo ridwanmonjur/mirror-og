@@ -26,6 +26,13 @@ final class EventDetailFactory extends Factory
      */
     protected $model = \App\Models\EventDetail::class;
 
+    public function definition(): array
+    {
+        return [];
+    }
+
+   
+
     public static function deleteRelatedTables()
     {
         // Disable foreign key checks
@@ -41,34 +48,6 @@ final class EventDetailFactory extends Factory
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
-    /**
-     * Define the model's default state.
-     */
-    public function definition(): array
-    {
-        return [
-            'eventDefinitions' => fake()->optional()->word,
-            'eventName' => fake()->optional()->word,
-            'startDate' => fake()->optional()->date(),
-            'endDate' => fake()->optional()->date(),
-            'startTime' => fake()->optional()->time(),
-            'endTime' => fake()->optional()->time(),
-            'eventDescription' => fake()->optional()->text,
-            'eventBanner' => fake()->optional()->word,
-            'eventTags' => fake()->optional()->word,
-            'status' => fake()->optional()->word,
-            'venue' => fake()->optional()->word,
-            'sub_action_public_date' => fake()->optional()->word,
-            'sub_action_public_time' => fake()->optional()->word,
-            'sub_action_private' => fake()->optional()->word,
-            'user_id' => \App\Models\User::factory(),
-            'event_type_id' => \App\Models\EventType::factory(),
-            'event_tier_id' => \App\Models\EventTier::factory(),
-            'event_category_id' => \App\Models\EventCategory::factory(),
-            'payment_transaction_id' => \App\Models\OrganizerPayment::factory(),
-            'willNotify' => fake()->randomNumber(1),
-        ];
-    }
 
     /**
      * Run the database seeds.

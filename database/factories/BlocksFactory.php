@@ -19,14 +19,9 @@ final class BlocksFactory extends Factory
      */
     protected $model = Blocks::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => \App\Models\User::factory(),
-            'blocked_user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

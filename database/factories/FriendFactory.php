@@ -19,16 +19,10 @@ final class FriendFactory extends Factory
      */
     protected $model = Friend::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user1_id' => \App\Models\User::factory(),
-            'user2_id' => \App\Models\User::factory(),
-            'actor_id' => fake()->randomNumber(),
-            'status' => fake()->randomElement(['pending', 'accepted', 'rejected', 'left']),
-        ];
+        return [];
     }
+
+   
 }

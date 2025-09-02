@@ -19,17 +19,10 @@ final class RosterMemberFactory extends Factory
      */
     protected $model = RosterMember::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => \App\Models\User::factory(),
-            'join_events_id' => fake()->randomNumber(),
-            'team_member_id' => fake()->randomNumber(),
-            'team_id' => \App\Models\Team::factory(),
-            'vote_to_quit' => fake()->optional()->randomNumber(1),
-        ];
+        return [];
     }
+
+  
 }
