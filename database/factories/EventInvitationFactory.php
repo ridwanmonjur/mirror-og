@@ -19,16 +19,9 @@ final class EventInvitationFactory extends Factory
      */
     protected $model = EventInvitation::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'organizer_user_id' => \App\Models\User::factory(),
-            'event_id' => \App\Models\EventDetail::factory(),
-            'participant_user_id' => \App\Models\User::factory(),
-            'team_id' => \App\Models\Team::factory(),
-        ];
+        return [];
     }
+
 }

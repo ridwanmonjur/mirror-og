@@ -19,14 +19,10 @@ final class TeamCaptainFactory extends Factory
      */
     protected $model = TeamCaptain::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'team_member_id' => \App\Models\User::factory(),
-            'teams_id' => \App\Models\Team::factory(),
-        ];
+        return [];
     }
+
+ 
 }

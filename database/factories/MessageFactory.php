@@ -19,12 +19,10 @@ final class MessageFactory extends Factory
      */
     protected $model = Message::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-        ];
+        return [];
     }
+
+   
 }

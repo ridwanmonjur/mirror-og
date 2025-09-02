@@ -19,16 +19,9 @@ final class EventSignupFactory extends Factory
      */
     protected $model = EventSignup::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'event_id' => \App\Models\EventDetail::factory(),
-            'signup_open' => fake()->dateTime(),
-            'normal_signup_start_advanced_close' => fake()->dateTime(),
-            'signup_close' => fake()->dateTime(),
-        ];
+        return [];
     }
+
 }

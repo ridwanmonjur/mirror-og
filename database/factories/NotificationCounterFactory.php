@@ -19,16 +19,9 @@ final class NotificationCounterFactory extends Factory
      */
     protected $model = NotificationCounter::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => \App\Models\User::factory(),
-            'social_count' => fake()->randomNumber(),
-            'teams_count' => fake()->randomNumber(),
-            'event_count' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
 }

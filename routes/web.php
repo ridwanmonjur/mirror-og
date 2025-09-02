@@ -51,7 +51,9 @@ Route::get('/seed/event-demo', [MiscController::class, 'seedBracketsDemo']);
 
 Route::get('/seed/joins', [MiscController::class, 'seedJoins']);
 Route::get('/seed/results/{evenId}', [FirebaseController::class, 'seedResults']);
+
 Route::get('/seed/tasks', [MiscController::class, 'allTasks']);
+Route::get('/seed/time', [MiscController::class, 'tasksList']);
 Route::get('/download-withdrawal-csv/{token}', [MiscController::class, 'downloadWithdrawalCsv'])->name('download.withdrawal.csv');
 
 // Shop - Enable in non-production environments

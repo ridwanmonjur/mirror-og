@@ -19,15 +19,9 @@ final class AwardFactory extends Factory
      */
     protected $model = Award::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'title' => fake()->optional()->title,
-            'image' => fake()->optional()->word,
-            'description' => fake()->optional()->text,
-        ];
+        return [];
     }
+
 }

@@ -20,6 +20,13 @@ class UserFactory extends Factory
      */
     protected $model = User::class;
 
+    public function definition(): array
+    {
+        return [];
+    }
+
+   
+
     public static function deleteRelatedTables()
     {
 
@@ -36,25 +43,6 @@ class UserFactory extends Factory
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {
-        return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => bcrypt('123456'), // password
-            'remember_token' => Str::random(60),
-            'role' => 'PARTICIPANT', // Default role
-            'status' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-    }
 
     /**
      * Configure the model factory.

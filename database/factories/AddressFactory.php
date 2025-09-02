@@ -19,18 +19,10 @@ final class AddressFactory extends Factory
      */
     protected $model = Address::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'city' => fake()->city,
-            'addressLine1' => fake()->word,
-            'addressLine2' => fake()->optional()->word,
-            'postcode' => fake()->postcode,
-            'country' => fake()->country,
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
+   
 }

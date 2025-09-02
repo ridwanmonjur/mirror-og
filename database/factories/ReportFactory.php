@@ -19,18 +19,9 @@ final class ReportFactory extends Factory
      */
     protected $model = Report::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'reporter_id' => \App\Models\User::factory(),
-            'reported_user_id' => \App\Models\User::factory(),
-            'reason' => fake()->word,
-            'description' => fake()->optional()->text,
-            'status' => fake()->randomElement(['pending', 'investigating', 'resolved']),
-            'admin_notes' => fake()->optional()->text,
-        ];
+        return [];
     }
+
 }

@@ -25,18 +25,12 @@ final class TeamMemberFactory extends Factory
      */
     protected $model = TeamMember::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => \App\Models\User::factory(),
-            'team_id' => \App\Models\Team::factory(),
-            'status' => fake()->randomElement(['pending', 'accepted', 'rejected', 'left']),
-            'actor' => fake()->randomElement(['team', 'user']),
-        ];
+        return [];
     }
+
+   
 
     public function seed($numberOfUsers = 10, $playersPerTeam = 5)
     {
