@@ -19,14 +19,9 @@ final class ParticipantFollowFactory extends Factory
      */
     protected $model = ParticipantFollow::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'participant_follower' => \App\Models\User::factory(),
-            'participant_followee' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

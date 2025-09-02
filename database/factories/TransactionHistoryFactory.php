@@ -19,20 +19,9 @@ final class TransactionHistoryFactory extends Factory
      */
     protected $model = TransactionHistory::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'name' => fake()->words(3, true),
-            'type' => fake()->randomElement(['payment', 'withdrawal', 'refund', 'deposit']),
-            'link' => fake()->optional()->url(),
-            'amount' => fake()->randomFloat(2, 1, 1000),
-            'summary' => fake()->sentence(),
-            'isPositive' => fake()->boolean(),
-            'date' => fake()->dateTimeBetween('-1 year', 'now'),
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

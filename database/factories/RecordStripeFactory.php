@@ -19,16 +19,9 @@ final class RecordStripeFactory extends Factory
      */
     protected $model = RecordStripe::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'payment_id' => fake()->optional()->word,
-            'payment_status' => 'SUCCEEDED',
-            'payment_amount' => fake()->word,
-            // 'user_id' => \App\Models\User::factory()
-        ];
+        return [];
     }
+
 }

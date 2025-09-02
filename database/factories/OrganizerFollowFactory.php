@@ -19,15 +19,10 @@ final class OrganizerFollowFactory extends Factory
      */
     protected $model = OrganizerFollow::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'participant_user_id' => \App\Models\User::factory(),
-            'organizer_user_id' => \App\Models\User::factory(),
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
+ 
 }

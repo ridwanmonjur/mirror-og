@@ -19,17 +19,9 @@ final class PaymentIntentFactory extends Factory
      */
     protected $model = PaymentIntent::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => fake()->randomNumber(),
-            'payment_intent_id' => fake()->word,
-            'customer_id' => fake()->word,
-            'status' => fake()->word,
-            'amount' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
 }

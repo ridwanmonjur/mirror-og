@@ -27,23 +27,12 @@ final class JoinEventFactory extends Factory
      */
     protected $model = JoinEvent::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'event_details_id' => \App\Models\EventDetail::factory(),
-            'team_id' => \App\Models\Team::factory(),
-            'joiner_id' => \App\Models\User::factory(),
-            'joiner_participant_id' => fake()->randomNumber(),
-            'payment_status' => fake()->randomElement(['pending', 'completed', 'waived']),
-            'join_status' => fake()->randomElement(['canceled', 'confirmed', 'pending']),
-            'vote_starter_id' => \App\Models\User::factory(),
-            'vote_ongoing' => fake()->optional()->randomNumber(1),
-            'roster_captain_id' => \App\Models\RosterMember::factory(),
-        ];
+        return [];
     }
+
+ 
 
     public function seed($options = [
         'event' => [

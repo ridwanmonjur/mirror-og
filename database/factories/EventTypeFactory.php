@@ -19,14 +19,9 @@ final class EventTypeFactory extends Factory
      */
     protected $model = EventType::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'eventType' => fake()->optional()->word,
-            'eventDefinitions' => fake()->optional()->word,
-        ];
+        return [];
     }
+
 }

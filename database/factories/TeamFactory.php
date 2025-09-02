@@ -20,21 +20,12 @@ final class TeamFactory extends Factory
      */
     protected $model = Team::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'teamName' => fake()->word,
-            'creator_id' => \App\Models\User::factory(),
-            'teamDescription' => fake()->word,
-            'teamBanner' => fake()->optional()->word,
-            'country' => fake()->country,
-            'country_name' => fake()->word,
-            'country_flag' => fake()->word,
-        ];
+        return [];
     }
+
+    
 
     public static function deleteRelatedTables()
     {

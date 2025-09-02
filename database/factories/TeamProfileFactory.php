@@ -19,19 +19,9 @@ final class TeamProfileFactory extends Factory
      */
     protected $model = TeamProfile::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'backgroundColor' => fake()->optional()->word,
-            'backgroundBanner' => fake()->optional()->word,
-            'backgroundGradient' => fake()->optional()->word,
-            'fontColor' => fake()->optional()->word,
-            'frameColor' => fake()->optional()->word,
-            'team_id' => \App\Models\Team::factory(),
-            'follower_count' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
 }

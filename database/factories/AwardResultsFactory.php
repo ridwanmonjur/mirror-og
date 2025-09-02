@@ -19,15 +19,9 @@ final class AwardResultsFactory extends Factory
      */
     protected $model = AwardResults::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'join_events_id' => fake()->randomNumber(),
-            'award_id' => \App\Models\Award::factory(),
-            'team_id' => \App\Models\Team::factory(),
-        ];
+        return [];
     }
+
 }

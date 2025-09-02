@@ -19,16 +19,10 @@ final class InterestedUserFactory extends Factory
      */
     protected $model = InterestedUser::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'email' => \App\Models\User::factory(),
-            'email_verified_at' => fake()->optional()->datetime(),
-            'email_verified_token' => fake()->optional()->word,
-            'pass_text' => fake()->optional()->word,
-        ];
+        return [];
     }
+
+   
 }

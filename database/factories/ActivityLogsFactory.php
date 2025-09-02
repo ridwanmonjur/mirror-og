@@ -19,19 +19,9 @@ final class ActivityLogsFactory extends Factory
      */
     protected $model = ActivityLogs::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'action' => fake()->word,
-            'image' => fake()->optional()->word,
-            'log' => fake()->text,
-            'subject_type' => fake()->word,
-            'subject_id' => fake()->randomNumber(),
-            'object_type' => fake()->optional()->word,
-            'object_id' => fake()->optional()->randomNumber(),
-        ];
+        return [];
     }
+
 }

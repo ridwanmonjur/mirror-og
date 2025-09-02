@@ -19,16 +19,9 @@ final class TaskFactory extends Factory
      */
     protected $model = Task::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'task_name' => fake()->word,
-            'action_time' => fake()->dateTime(),
-            'taskable_type' => fake()->word,
-            'taskable_id' => fake()->randomNumber(),
-        ];
+        return [];
     }
+
 }

@@ -19,14 +19,9 @@ final class LikeFactory extends Factory
      */
     protected $model = Like::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => \App\Models\User::factory(),
-            'event_id' => \App\Models\EventDetail::factory(),
-        ];
+        return [];
     }
+
 }

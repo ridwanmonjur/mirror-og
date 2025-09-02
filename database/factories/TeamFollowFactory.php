@@ -19,14 +19,9 @@ final class TeamFollowFactory extends Factory
      */
     protected $model = TeamFollow::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'team_id' => \App\Models\Team::factory(),
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

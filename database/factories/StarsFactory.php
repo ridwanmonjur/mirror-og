@@ -19,14 +19,9 @@ final class StarsFactory extends Factory
      */
     protected $model = Stars::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'user_id' => \App\Models\User::factory(),
-            'starred_user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
 }

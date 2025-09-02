@@ -19,18 +19,10 @@ final class UserProfileFactory extends Factory
      */
     protected $model = UserProfile::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        return [
-            'backgroundColor' => fake()->optional()->word,
-            'backgroundBanner' => fake()->optional()->word,
-            'backgroundGradient' => fake()->optional()->word,
-            'fontColor' => fake()->optional()->word,
-            'frameColor' => fake()->optional()->word,
-            'user_id' => \App\Models\User::factory(),
-        ];
+        return [];
     }
+
+   
 }
