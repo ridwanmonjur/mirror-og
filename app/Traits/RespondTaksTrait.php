@@ -55,6 +55,20 @@ trait RespondTaksTrait
                         ->get();
                     $this->releaseFunds($event, $paidEvents);
 
+                    $systemCoupon = new SystemCoupon([
+                        'code' => "ORGREFUND{$event->id}",
+                        'amount' => 100,
+                        'description' => "Refund for failed event id: {$event->id}",
+                        'is_active' => true,
+                        'is_public' => false,
+                        'discount_type' => 'percent',
+                        'expires_at' => Carbon::now()->addYears(1),
+                        'for_type' => 'organizer',
+                        'redeemable_count' => 1,
+                    ]);
+
+                    $systemCoupon->save();
+
                     $event->update(['status' => 'FAILED']);
                     $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
                     $deadlinesPast = $deadlines->pluck('id');
@@ -146,12 +160,12 @@ trait RespondTaksTrait
                                     Log::info('entered here');
                                     // Check if a coupon with the same code already exists
                                     $existingCoupon = SystemCoupon::where('for_type', 'participant')
-                                        ->where('code', "Refund RM {$participantPay->payment_amount}")
+                                        ->where('code', "REFUNDRM{$participantPay->payment_amount}EVT{$event->id}")
                                         ->first();
 
                                     if (! $existingCoupon) {
                                         $systemCoupon = new SystemCoupon([
-                                            'code' => "Refund RM {$participantPay->payment_amount}",
+                                            'code' => "REFUNDRM{$participantPay->payment_amount}EVT{$event->id}",
                                             'amount' => $participantPay->payment_amount,
                                             'description' => 'Refund from organizers',
                                             'is_active' => true,
