@@ -114,16 +114,13 @@ trait RespondTaksTrait
                                 } elseif ($participantPay->type == 'wallet') {
                                     $wallet = Wallet::retrieveOrCreateCache($participantPay->user_id);
 
-                                    if (! $wallet->exists) {
-                                        $wallet->usable_balance = 0;
-                                        $wallet->current_balance = 0;
-                                        $wallet->save();
+                                   
+                                    if ($wallet) {
+                                        $wallet->update([
+                                            'usable_balance' => $wallet->usable_balance + $participantPay->payment_amount,
+                                            'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
+                                        ]);
                                     }
-
-                                    $wallet->update([
-                                        'usable_balance' => $wallet->usable_balance + $participantPay->payment_amount,
-                                        'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
-                                    ]);
                                 }
 
                                 if ($participantPay->history) {
@@ -136,18 +133,17 @@ trait RespondTaksTrait
                                     $wallet = Wallet::retrieveOrCreateCache($participantPay->user_id);
                                     Log::info($wallet);
 
-                                    if (! $wallet->exists) {
-                                        $wallet->usable_balance = 0;
-                                        $wallet->current_balance = 0;
-                                        $wallet->save();
-                                    }
+                                   
 
                                     Log::info($wallet);
+                                    if ($wallet) {
 
-                                    $wallet->update([
-                                        'usable_balance' => $wallet->usable_balance + $participantPay->payment_amount,
-                                        'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
-                                    ]);
+                                        $wallet->update([
+                                            'usable_balance' => $wallet->usable_balance + $participantPay->payment_amount,
+                                            'current_balance' => $wallet->current_balance + $participantPay->payment_amount, // Note: probably want current_balance here, not usable_balance
+                                        ]);
+                                    }
+
 
                                     Log::info($participantPay);
 
@@ -550,22 +546,24 @@ trait RespondTaksTrait
 
                     if (isset($prizeDetails[$join->id])) {
                         foreach ($join->roster as $member) {
-
-                            $transactionHistory[] = [
-                                'user_id' => $member->user->id,
-                                'name' => "Prize Money: RM {$prizeDetails[$join->id]}",
-                                'type' => 'Prize Money',
-                                'link' => null,
-                                'amount' => $prizeDetails[$join->id],
-                                'summary' => 'Prize Money for event',
-                                'date' => DB::raw('NOW()'),
-                            ];
-
-                            $walletData[] = [
-                                'user_id' => $member->user->id,
-                                'usable_balance' => DB::raw('COALESCE(usable_balance, 0) + '.$prizeDetails[$join->id]),
-                                'current_balance' => DB::raw('COALESCE(current_balance, 0) + '.$prizeDetails[$join->id]),
-                            ];
+                            if ($member->user->id){
+                                $transactionHistory[] = [
+                                    'user_id' => $member->user->id,
+                                    'name' => "Prize Money: RM {$prizeDetails[$join->id]}",
+                                    'type' => 'Prize Money',
+                                    'link' => null,
+                                    'amount' => $prizeDetails[$join->id],
+                                    'summary' => 'Prize Money for event',
+                                    'date' => DB::raw('NOW()'),
+                                ];
+    
+                                $walletData[] = [
+                                    'user_id' => $member->user->id,
+                                    'usable_balance' => $prizeDetails[$join->id],
+                                    'current_balance' => $prizeDetails[$join->id],
+                                ];
+                            }
+                          
                         }
                     }
 
@@ -574,7 +572,25 @@ trait RespondTaksTrait
                     }
 
                     if (! empty($walletData)) {
-                        Wallet::upsert($walletData, ['user_id'], ['usable_balance', 'current_balance']);
+                        foreach ($walletData as $data) {
+                            if (empty($data['user_id'])) {
+                                Log::error('Wallet data has null user_id', ['data' => $data]);
+                                continue;
+                            }
+                            
+                            $wallet = Wallet::where('user_id', $data['user_id'])->first();
+                            
+                            if ($wallet) {
+                                $wallet->increment('usable_balance', $data['usable_balance']);
+                                $wallet->increment('current_balance', $data['current_balance']);
+                            } else {
+                                Wallet::create([
+                                    'user_id' => $data['user_id'],
+                                    'usable_balance' => $data['usable_balance'],
+                                    'current_balance' => $data['current_balance']
+                                ]);
+                            }
+                        }
                     }
 
                     $processedCount++;

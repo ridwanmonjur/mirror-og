@@ -393,7 +393,14 @@ class DeadlineTaskTrait:
             
             logging.info(f'Fetched all event data for {event_id}: {len(self.all_brackets)} brackets, {len(self.all_disputes)} disputes')
             
+            # Return counts for validation
+            return {
+                'brackets_count': len(self.all_brackets),
+                'disputes_count': len(self.all_disputes)
+            }
+            
         except Exception as e:
+            logging.error(f'Failed to fetch event data for {event_id}: {str(e)}')
             raise e
     
     def calc_scores(self, real_winners):
@@ -590,8 +597,24 @@ async def handle_started_tasks(request: Request, tasks_request: DeadlineTasksReq
     """Handle started tournament tasks."""
     try:
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(tasks_request.detail_id)
+        event_data = trait.fetch_all_event_data(tasks_request.detail_id)
         results = []
+        
+        # Handle case where there are no brackets or disputes to process
+        if event_data['brackets_count'] == 0 and event_data['disputes_count'] == 0:
+            return {
+                'status': 'success',
+                'message': 'No data to process - event has 0 brackets and 0 disputes',
+                'results': []
+            }
+        
+        # Handle case where there are no matches to process
+        if not tasks_request.matches or len(tasks_request.matches) == 0:
+            return {
+                'status': 'success',
+                'message': 'No matches to process - empty matches array',
+                'results': []
+            }
         
         for match in tasks_request.matches:
             match_status_path = f"{match['team1_position']}.{match['team2_position']}"
@@ -629,9 +652,27 @@ async def handle_ended_tasks(request: Request, tasks_request: DeadlineTasksReque
     """Handle ended tournament tasks."""
     try:
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(tasks_request.detail_id)
+        event_data = trait.fetch_all_event_data(tasks_request.detail_id)
         results = []
         next_stage_data_list = []
+        
+        # Handle case where there are no brackets or disputes to process
+        if event_data['brackets_count'] == 0 and event_data['disputes_count'] == 0:
+            return {
+                'status': 'success',
+                'message': 'No data to process - event has 0 brackets and 0 disputes',
+                'results': [],
+                'next_stage_data': []
+            }
+        
+        # Handle case where there are no matches to process
+        if not tasks_request.matches or len(tasks_request.matches) == 0:
+            return {
+                'status': 'success',
+                'message': 'No matches to process - empty matches array',
+                'results': [],
+                'next_stage_data': []
+            }
         
         for match in tasks_request.matches:
             extra_bracket = tasks_request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
@@ -691,9 +732,27 @@ async def handle_org_tasks(request: Request, tasks_request: DeadlineTasksRequest
     """Handle organizer deadline tasks."""
     try:
         trait = DeadlineTaskTrait()
-        trait.fetch_all_event_data(tasks_request.detail_id)
+        event_data = trait.fetch_all_event_data(tasks_request.detail_id)
         results = []
         next_stage_data_list = []
+        
+        # Handle case where there are no brackets or disputes to process
+        if event_data['brackets_count'] == 0 and event_data['disputes_count'] == 0:
+            return {
+                'status': 'success',
+                'message': 'No data to process - event has 0 brackets and 0 disputes',
+                'results': [],
+                'next_stage_data': []
+            }
+        
+        # Handle case where there are no matches to process
+        if not tasks_request.matches or len(tasks_request.matches) == 0:
+            return {
+                'status': 'success',
+                'message': 'No matches to process - empty matches array',
+                'results': [],
+                'next_stage_data': []
+            }
         
         for match in tasks_request.matches:
             extra_bracket = tasks_request.bracket_info.get(match['stage_name'], {}).get(match['inner_stage_name'], {}).get(match['order'], {})
