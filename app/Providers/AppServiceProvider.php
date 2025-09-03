@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -58,14 +57,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::share('USER_ACCESS', config('constants.USER_ACCESS'));
-        LogViewer::auth(function ($request) use ($allowedEmails) {
-            if (app()->environment('production')) {
-                return $request->user()
-                && in_array($request->user()->email, $allowedEmails);
-            }
-
-            return true;
-        });
+     
 
         Event::listen(
             JoinEventSignuped::class,
