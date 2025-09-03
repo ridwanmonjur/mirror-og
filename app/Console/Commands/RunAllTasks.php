@@ -35,6 +35,7 @@ class RunAllTasks extends Command
         WeeklyTaskService $weeklyTaskService
     ) {
         parent::__construct();
+        DB::statement("SET SESSION wait_timeout = 10600");
         $this->deadlineTaskService = $deadlineTaskService;
         $this->respondTaskService = $respondTaskService;
         $this->weeklyTaskService = $weeklyTaskService;
@@ -113,7 +114,7 @@ class RunAllTasks extends Command
                 break;
             case 9: // weekly_tasks - WeeklyTaskService
                 $this->info("Running weekly task (type: {$taskType})...");
-                $this->weeklyTaskService->execute($taskType);
+                $this->weeklyTaskService->execute();
                 break;
             default:
                 throw new \InvalidArgumentException("Invalid task type: {$taskType}");
