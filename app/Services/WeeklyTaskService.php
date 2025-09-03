@@ -29,7 +29,7 @@ class WeeklyTaskService
                 })
                 ->delete();
                 
-            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $weekAgo)->delete();
+            DB::table('monitored_scheduled_tasks')->where('last_started_at', '<', $monthAgo)->delete();
             NotifcationsUser::where('created_at', '<', $monthAgo)->delete();
             Task::where('action_time', '<=', $monthAgo)->delete();
             NotificationCounter::resetNegativeCounts();
