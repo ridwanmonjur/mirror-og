@@ -52,8 +52,18 @@ class AppServiceProvider extends ServiceProvider
             'justforus@driftwood.gg',
         ];
 
+        $logViewerEmails = [
+            'admin@driftwood.gg',
+            'oceansgamingmy@gmail.com',
+            'mjrrdn@gmail.com'
+        ];
+
         Gate::define('viewPulse', function (?User $user) use ($allowedEmails) {
             return $user && in_array($user->email, $allowedEmails);
+        });
+
+        Gate::define('viewLogViewer', function (?User $user) use ($logViewerEmails) {
+            return $user && in_array($user->email, $logViewerEmails);
         });
 
         View::share('USER_ACCESS', config('constants.USER_ACCESS'));
