@@ -163,6 +163,11 @@ class BracketsFactory extends Factory
             ->get();
 
         $teamCount = count($teams);
+        
+        if ($teamCount === 0) {
+            return;
+        }
+        
         $teamIndex = 0;
 
         foreach ($brackets as $bracket) {
