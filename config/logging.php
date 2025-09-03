@@ -54,7 +54,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => env('APP_ENV') == 'local' ? ['single'] : ['sentry'],
             'ignore_exceptions' => false,
         ],
 
@@ -121,6 +121,11 @@ return [
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,
+        ],
+
+        'sentry' => [
+            'driver' => 'sentry',
+            'level' => env('LOG_LEVEL', 'debug'),
         ],
 
         'emergency' => [
