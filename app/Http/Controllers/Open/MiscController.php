@@ -363,7 +363,7 @@ class MiscController extends Controller
             'tier' => 'required|string',
             'type' => 'string',
             'game' => 'string',
-            'noOfConTeams' => 'integer|min:2|max:16',
+            'noOfConTeams' => 'integer|min:0|max:16',
         ], [
             'tier.required' => 'Tier parameter is required.',
             'noOfConTeams.integer' => 'Number of teams must be an integer.',
@@ -462,7 +462,7 @@ class MiscController extends Controller
             'tier' => 'required|string',
             'type' => 'string',
             'game' => 'string',
-            'noOfConTeams' => 'integer|min:2|max:16',
+            'noOfConTeams' => 'integer|min:0|max:16',
         ], [
             'tier.required' => 'Tier parameter is required.',
             'noOfConTeams.integer' => 'Number of teams must be an integer.',
