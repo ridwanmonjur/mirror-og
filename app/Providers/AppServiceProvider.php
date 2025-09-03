@@ -63,7 +63,12 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('viewLogViewer', function (?User $user) use ($logViewerEmails) {
-            return $user && in_array($user->email, $logViewerEmails);
+            // Allow access in production environment without authentication
+            if (app()->environment('production')) {
+                return $user && in_array($user->email, $logViewerEmails);
+            }
+            
+            return true;
         });
 
         View::share('USER_ACCESS', config('constants.USER_ACCESS'));
