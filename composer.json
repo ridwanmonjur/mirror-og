@@ -21,7 +21,6 @@
         "opcodesio/log-viewer": "^3.19",
         "openspout/openspout": "^4.28.0 <4.29.0",
         "paragonie/sodium_compat": "^2.1",
-        "sentry/sentry-laravel": "^4.15",
         "socialiteproviders/google": "^4.1",
         "spatie/laravel-feed": "^4.4",
         "spatie/laravel-googletagmanager": "*",
