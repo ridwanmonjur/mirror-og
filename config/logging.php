@@ -54,7 +54,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => env('APP_ENV') == 'local' ? ['single'] : ['sentry'],
+            'channels' => explode(',', env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
@@ -123,9 +123,9 @@ return [
             'handler' => NullHandler::class,
         ],
 
-        'sentry' => [
-            'driver' => 'sentry',
-            'level' => env('LOG_LEVEL', 'debug'),
+        'sentry_logs' => [
+            'driver' => 'sentry_logs',
+            'level' => 'warning',
         ],
 
         'emergency' => [
