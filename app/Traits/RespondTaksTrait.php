@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\EventRefundCouponMail;
 
 trait RespondTaksTrait
 {
@@ -55,19 +56,50 @@ trait RespondTaksTrait
                         ->get();
                     $this->releaseFunds($event, $paidEvents);
 
-                    $systemCoupon = new SystemCoupon([
-                        'code' => "ORGREFUND{$event->id}",
-                        'amount' => 100,
-                        'description' => "Refund for failed event id: {$event->id}",
-                        'is_active' => true,
-                        'is_public' => false,
-                        'discount_type' => 'percent',
-                        'expires_at' => Carbon::now()->addYears(1),
-                        'for_type' => 'organizer',
-                        'redeemable_count' => 1,
-                    ]);
+                    $tierPrizePool = $event->tier?->tierPrizePool ?? 0;
+                    $feePercentage = 0.2;
 
-                    $systemCoupon->save();
+                    $totalCompensation = $tierPrizePool + ($tierPrizePool * $feePercentage);
+                    
+                    $existingOrgCoupon = SystemCoupon::where('code', "ORGREFUND{$event->id}")->first();
+
+                    if (!$existingOrgCoupon) {
+                        $systemCoupon = new SystemCoupon([
+                            'code' => "ORGREFUND{$event->id}",
+                            'amount' => $totalCompensation,
+                            'description' => "Refund for failed event id: {$event->id}",
+                            'is_active' => true,
+                            'is_public' => false,
+                            'discount_type' => 'amount',
+                            'expires_at' => Carbon::now()->addYears(1),
+                            'for_type' => 'organizer',
+                            'redeemable_count' => 1,
+                        ]);
+
+                        $systemCoupon->save();
+                    } else {
+                        $systemCoupon = $existingOrgCoupon;
+                    }
+
+
+                    $emailData = [
+                        'subject' => 'Coupon for your failed event',
+                        'text' => 'Your event failed due to inadequate attendance.',
+                        'eventName' => $event->eventName,
+                        'eventTier' => $event->tier->eventTier,
+                        'actualAttendance' => $event->join_events_count,
+                        'expectedAttendance' => $event->tier?->tierTeamSlot ?? 0,
+                        'tierPrize' => number_format($totalCompensation, 2),
+                        'organizerName' => $event->user->name,
+                        'couponCode' => $systemCoupon->code,
+                    ];
+
+                    Log::info('Data', $emailData);
+                    Log::info('Data',$emailData);
+                    Log::info('Data',$emailData);
+
+                    Mail::to($event->user->email)->send(new EventRefundCouponMail($emailData));
+                   
 
                     $event->update(['status' => 'FAILED']);
                     $deadlines = BracketDeadline::where('event_details_id', $event->id)->get();
@@ -174,6 +206,7 @@ trait RespondTaksTrait
                                         $systemCoupon->save();
                                     } else {
                                         $systemCoupon = $existingCoupon;
+                                        $systemCoupon->increment('redeemable_count');
                                     }
 
                                     $existingUserCoupon = UserCoupon::where('user_id', $participantPay->user_id)->where('coupon_id', $systemCoupon->id)->first();
@@ -187,10 +220,11 @@ trait RespondTaksTrait
                                         ]);
 
                                         $newUserCoupon->save();
-
-                                    } else {
-                                        $existingUserCoupon->increment('redeemable_count');
                                     }
+
+                                    // } else {
+                                    //     $existingUserCoupon->increment('redeemable_count');
+                                    // }
                                 }
                             }
                         } catch (Exception $e) {
