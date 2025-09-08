@@ -148,7 +148,7 @@ class RespondTaskService
                 foreach ($startedEventIds as $eventId) {
                     try {
                         $event = EventDetail::where('id', $eventId)
-                            ->with('tier')
+                            ->with(['tier', 'user'])
                             ->withCount([
                                 'joinEvents' => function ($q) {
                                     $q->where('join_status', 'confirmed');
@@ -276,7 +276,7 @@ class RespondTaskService
                 foreach ($regOverEventIds as $eventId) {
                     try {
                         $event = EventDetail::where('id', $eventId)
-                            ->with('tier')
+                            ->with(['tier', 'user'])
                             ->withCount([
                                 'joinEvents' => function ($q) {
                                     $q->where('join_status', 'confirmed');
