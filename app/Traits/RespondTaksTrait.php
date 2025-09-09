@@ -61,11 +61,22 @@ trait RespondTaksTrait
 
                     $totalCompensation = $tierPrizePool + ($tierPrizePool * $feePercentage);
                     
-                    $existingOrgCoupon = SystemCoupon::where('code', "ORGREFUND{$event->id}")->first();
+                    $existingOrgEventCoupon = DB::table('org_event_coupons')
+                        ->where('event_details_id', $event->id)
+                        ->where('user_id', $event->user_id)
+                        ->first();
 
-                    if (!$existingOrgCoupon) {
+                    if (!$existingOrgEventCoupon) {
+                        $couponCode = $this->generateRandomCouponCode();
+                        $existingOrgCoupon = SystemCoupon::where('code', $couponCode)->first();
+
+                        while ($existingOrgCoupon) {
+                            $couponCode = $this->generateRandomCouponCode();
+                            $existingOrgCoupon = SystemCoupon::where('code', $couponCode)->first();
+                        }
+
                         $systemCoupon = new SystemCoupon([
-                            'code' => "ORGREFUND{$event->id}",
+                            'code' => $couponCode,
                             'amount' => $totalCompensation,
                             'description' => "Refund for failed event id: {$event->id}",
                             'is_active' => true,
@@ -77,28 +88,28 @@ trait RespondTaksTrait
                         ]);
 
                         $systemCoupon->save();
-                    } else {
-                        $systemCoupon = $existingOrgCoupon;
+
+                        DB::table('org_event_coupons')->insert([
+                            'event_details_id' => $event->id,
+                            'user_id' => $event->user_id,
+                            'system_coupon_id' => $systemCoupon->id,
+                        ]);
+
+                        $emailData = [
+                            'subject' => 'Your event didn\'t get enough signups to start',
+                            'text' => 'Your event failed due to inadequate attendance.',
+                            'eventName' => $event->eventName,
+                            'eventTier' => $event->tier->eventTier,
+                            'actualAttendance' => $event->join_events_count,
+                            'expectedAttendance' => $event->tier?->tierTeamSlot ?? 0,
+                            'tierPrize' => number_format($totalCompensation, 2),
+                            'organizerName' => $event->user->name,
+                            'couponCode' => $systemCoupon->code,
+                        ];
+
+
+                        Mail::to($event->user->email)->send(new EventRefundCouponMail($emailData));
                     }
-
-
-                    $emailData = [
-                        'subject' => 'Coupon for your failed event',
-                        'text' => 'Your event failed due to inadequate attendance.',
-                        'eventName' => $event->eventName,
-                        'eventTier' => $event->tier->eventTier,
-                        'actualAttendance' => $event->join_events_count,
-                        'expectedAttendance' => $event->tier?->tierTeamSlot ?? 0,
-                        'tierPrize' => number_format($totalCompensation, 2),
-                        'organizerName' => $event->user->name,
-                        'couponCode' => $systemCoupon->code,
-                    ];
-
-                    Log::info('Data', $emailData);
-                    Log::info('Data',$emailData);
-                    Log::info('Data',$emailData);
-
-                    Mail::to($event->user->email)->send(new EventRefundCouponMail($emailData));
                    
 
                     $event->update(['status' => 'FAILED']);
@@ -793,5 +804,23 @@ trait RespondTaksTrait
         }
 
         return [$playerNotif, $orgNotif, $logs, $memberIdList, $prize];
+    }
+
+    /**
+     * Generate a random coupon code in DWCXXXXXXXX format
+     * where X can be any alphanumeric character (case sensitive)
+     * 
+     * @return string
+     */
+    private function generateRandomCouponCode(): string
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $randomString = '';
+        
+        for ($i = 0; $i < 8; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        
+        return 'DWC' . $randomString;
     }
 }
