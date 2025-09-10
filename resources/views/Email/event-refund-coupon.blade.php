@@ -24,7 +24,7 @@
                         <p>To use this coupon, just enter the code <strong><code style="background-color: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-family: monospace;">{{ $couponCode }}</code></strong> when you're at the payment page.</p>
                         <p>If you need any support, ping us at supportmain@driftwood.gg and we'll come to your aid.</p>
                         <p>Thanks for using Driftwood, and good luck for your future events!</p>
-                        
+                        <br>
                         <p>From the Driftwood team</p>
                     </td>
                 </tr>
