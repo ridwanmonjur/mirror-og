@@ -168,7 +168,7 @@ class CheckoutController extends Controller
                     $coupon = null;
                     if ($couponCode) {
                         [$fee, , , $coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['cartTotal'], 0.0, 'shop', $user->id);
-                        $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
+                        $coupon?->validateAndIncrementCoupon($user->id);
                     } else {
                         $coupon = null;
                         $fee = SystemCoupon::emptyOrgCoupon([], $paymentDone);

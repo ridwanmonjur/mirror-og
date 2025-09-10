@@ -158,7 +158,7 @@ class SystemCoupon extends Model
                 $fee,
                 true,
                 null,
-                null,
+                $coupon,
             ];
         }
         $fee = self::emptyOrgCoupon($fee, $eventPrizePool, $incrementPercent);
@@ -171,7 +171,7 @@ class SystemCoupon extends Model
         ];
     }
 
-    public function orgFullCheckout(EventDetail $event, User $user, int $amount)
+    public static function orgFullCheckout(EventDetail $event, User $user, int $amount)
     {
         $historyId = TransactionHistory::insertGetId([
             'name' => "$event->eventName: Full Discount",
@@ -254,14 +254,6 @@ class SystemCoupon extends Model
             ], [
                 'redeemable_count' => 0,
             ]);
-        }
-
-        $userCoupon = UserCoupon::where('user_id', $userId)
-            ->where('coupon_id', $this->id)
-            ->first();
-
-        if ($userCoupon->redeemable_count >= $this->redeemable_count) {
-            throw new Exception('You have exceeded the maximum number of redemptions for this coupon.');
         }
 
         $userCoupon->increment('redeemable_count');

@@ -63,7 +63,7 @@ class OrganizerCheckoutController extends Controller
                 $event->payment_transaction_id = $paymentId;
                 $event->save();
 
-                $coupon->validateAndIncrementCoupon();
+                $coupon?->validateAndIncrementCoupon($event->user_id);
                 DB::commit();
 
                 return view('Organizer.CheckoutEventSuccess', [
@@ -74,7 +74,7 @@ class OrganizerCheckoutController extends Controller
 
             if ($isCouponApplied) {
                 DB::commit();
-                $coupon->validateAndIncrementCoupon();
+                $coupon->validateAndIncrementCoupon($event->user_id);
                 session()->flash('successMessageCoupon', "Applying your coupon named: {$request->coupon_code}! Note, the minimum stripe payment must be RM 5.0");
             } elseif (! is_null($error)) {
                 throw new Exception($error);
@@ -125,7 +125,15 @@ class OrganizerCheckoutController extends Controller
 
                     $couponCode = $paymentIntent['metadata']['coupon_code'] ?? null;
                     if ($couponCode) {
-                        $this->validateAndIncrementCoupon($couponCode, $user->id);
+                        $systemCoupon = SystemCoupon::where('code', $couponCode)
+                            ->where('is_active', true)
+                            ->first();
+                
+                        if (! $systemCoupon) {
+                            throw new Exception('Invalid coupon code.');
+                        }
+
+                        $systemCoupon->validateAndIncrementCoupon( $user->id);
                     }
 
                     $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
@@ -190,45 +198,5 @@ class OrganizerCheckoutController extends Controller
         }
     }
 
-    private function validateAndIncrementCoupon($couponCode, $userId)
-    {
-        if (! $couponCode) {
-            return;
-        }
-
-        $systemCoupon = SystemCoupon::where('code', $couponCode)
-            ->where('is_active', true)
-            ->first();
-
-        if (! $systemCoupon) {
-            throw new Exception('Invalid coupon code.');
-        }
-
-        if (! $systemCoupon->is_public) {
-            $userCoupon = UserCoupon::where('user_id', $userId)
-                ->where('coupon_id', $systemCoupon->id)
-                ->first();
-
-            if (! $userCoupon) {
-                throw new Exception('You do not have access to this coupon.');
-            }
-        } else {
-            $userCoupon = UserCoupon::firstOrCreate([
-                'user_id' => $userId,
-                'coupon_id' => $systemCoupon->id,
-            ], [
-                'redeemable_count' => 0,
-            ]);
-        }
-
-        $userCoupon = UserCoupon::where('user_id', $userId)
-            ->where('coupon_id', $systemCoupon->id)
-            ->first();
-
-        if ($userCoupon->redeemable_count >= $systemCoupon->redeemable_count) {
-            throw new Exception('You have exceeded the maximum number of redemptions for this coupon.');
-        }
-
-        $userCoupon->increment('redeemable_count');
-    }
+  
 }
