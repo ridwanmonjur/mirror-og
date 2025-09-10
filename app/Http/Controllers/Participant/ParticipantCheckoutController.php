@@ -149,7 +149,7 @@ class ParticipantCheckoutController extends Controller
             ]);
 
             ['coupon' => $coupon] = $request->couponDetails;
-            $coupon?->validateAndIncrementCoupon();
+            $coupon?->validateAndIncrementCoupon($user->id);
 
             if ($isCompletePayment) {
                 if ($pending_total_after_wallet <= config('constants.STRIPE.ZERO')) {
@@ -208,9 +208,9 @@ class ParticipantCheckoutController extends Controller
 
                     $couponCode = $paymentIntent['metadata']['coupon_code'] ?? null;
                     if ($couponCode) {
-                        [$fee, , ,$coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['totalFee'], 0.0, 'participant', $user->id);
+                        [, , ,$coupon] = SystemCoupon::loadCoupon($couponCode, $paymentIntent['metadata']['totalFee'], 0.0, 'participant', $user->id);
 
-                        $coupon?->validateAndIncrementCoupon($couponCode, $user->id);
+                        $coupon?->validateAndIncrementCoupon($user->id);
                     }
 
                     $transaction = RecordStripe::createTransaction($paymentIntent, $paymentMethod, $user->id, $request->query('saveDefault'), $request->query('savePayment'));
