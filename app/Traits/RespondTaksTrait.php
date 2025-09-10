@@ -89,6 +89,14 @@ trait RespondTaksTrait
 
                         $systemCoupon->save();
 
+                        $newUserCoupon = new UserCoupon([
+                            'user_id' => $event->user_id,
+                            'coupon_id' => $systemCoupon->id,
+                            'redeemable_count' => 0,
+                        ]);
+
+                        $newUserCoupon->save();
+
                         DB::table('org_event_coupons')->insert([
                             'event_details_id' => $event->id,
                             'user_id' => $event->user_id,
