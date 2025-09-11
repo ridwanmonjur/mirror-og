@@ -84,16 +84,14 @@ class RedeemCouponRequest extends FormRequest
             ->first();
 
         $this->userCoupon = $userCoupon;
-        if (!$coupon->is_public) {
-           
+        if (!$coupon->is_public && ! $userCoupon) {
+            $fail('This coupon is not available for your account.');
 
-
-            if (! $userCoupon) {
-                $fail('This coupon is not available for your account.');
-
-                return;
-            }
+            return;
        
+        }
+
+        if ($userCoupon) { 
             if ($userCoupon->redeemable_count >= $coupon->redeemable_count) {
                 $fail('You have already redeemed this coupon too many times.');
 
