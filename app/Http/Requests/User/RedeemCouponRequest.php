@@ -77,25 +77,26 @@ class RedeemCouponRequest extends FormRequest
             return;
         }
 
+       
+
         $userCoupon = UserCoupon::where('user_id', $user->id)
             ->where('coupon_id', $coupon->id)
             ->first();
 
         $this->userCoupon = $userCoupon;
+        if (!$coupon->is_public && ! $userCoupon) {
+            $fail('This coupon is not available for your account.');
 
-        if (! $userCoupon) {
-            if (! $coupon->is_public) {
-                $fail('This coupon is not available for your account.');
+            return;
+       
+        }
+
+        if ($userCoupon) { 
+            if ($userCoupon->redeemable_count >= $coupon->redeemable_count) {
+                $fail('You have already redeemed this coupon too many times.');
 
                 return;
             }
-
-        }
-
-        if ($userCoupon->redeemable_count >= $coupon->redeemable_count) {
-            $fail('You have already redeemed this coupon too many times.');
-
-            return;
         }
 
     }
