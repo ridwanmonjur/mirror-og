@@ -79,14 +79,13 @@ class RedeemCouponRequest extends FormRequest
 
        
 
-        $this->userCoupon = null;
+        $userCoupon = UserCoupon::where('user_id', $user->id)
+            ->where('coupon_id', $coupon->id)
+            ->first();
 
+        $this->userCoupon = $userCoupon;
         if (!$coupon->is_public) {
-            $userCoupon = UserCoupon::where('user_id', $user->id)
-                ->where('coupon_id', $coupon->id)
-                ->first();
-
-            $this->userCoupon = $userCoupon;
+           
 
 
             if (! $userCoupon) {
