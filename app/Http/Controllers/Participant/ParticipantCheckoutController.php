@@ -200,7 +200,7 @@ class ParticipantCheckoutController extends Controller
                 $paymentDone = (float) $paymentIntent['amount'] / 100;
 
                 if ($paymentIntent['amount'] > 0 && ($paymentIntent['amount_capturable'] === $paymentIntent['amount'] || $paymentIntent['amount_received'] === $paymentIntent['amount'])) {
-                    $joinEvent = JoinEvent::select('id', 'event_details_id', 'payment_status')->findOrFail($paymentIntent['metadata']['joinEventId']);
+                    $joinEvent = JoinEvent::findOrFail($paymentIntent['metadata']['joinEventId']);
 
                     $participantPaymentSum = ParticipantPayment::select(['join_events_id', 'id', 'payment_amount'])
                         ->where('join_events_id', $joinEvent->id)
@@ -262,11 +262,13 @@ class ParticipantCheckoutController extends Controller
                         'history_id' => $history?->id,
                         'type' => 'stripe',
                     ]);
-
-                    if ($total - ($participantPaymentSum + $paymentDone) < config('constants.STRIPE.ZERO')) {
+                    // dd($total, $participantPaymentSum, $paymentDone, config('constants.STRIPE.ZERO'), ($total - ($participantPaymentSum + $paymentDone)) < config('constants.STRIPE.ZERO') );
+                    if (($total - ($participantPaymentSum + $paymentDone)) < config('constants.STRIPE.ZERO')) {
                         $joinEvent->payment_status = 'completed';
                         $joinEvent->register_time = $regStatus;
                         $joinEvent->save();
+                        // dd($joinEvent);
+
                     }
                     DB::commit();
 

@@ -149,7 +149,7 @@ class SystemCoupon extends Model
                 $coupon->amount / 100 * $fee['totalFee'] : $coupon->amount;
             $fee['finalFee'] = $fee['totalFee'] - $fee['discountFee'];
 
-            if ($fee['finalFee'] > config('constants.STRIPE.ZER0') && $fee['finalFee'] < config('constants.STRIPE.MINIMUM_RM')) {
+            if ($fee['finalFee'] > config('constants.STRIPE.ZERO') && $fee['finalFee'] < config('constants.STRIPE.MINIMUM_RM')) {
                 $fee['finalFee'] = config('constants.STRIPE.MINIMUM_RM');
                 $fee['discountFee'] = $fee['totalFee'] - $fee['finalFee'];
             }
