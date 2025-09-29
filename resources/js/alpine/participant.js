@@ -117,6 +117,7 @@ function ParticipantData ()  {
             }
         },
         async removeProfile(event) {
+            this.isProfileRemoved = true;
             event.stopPropagation();
             event.preventDefault();
                 imageUpload.value = "";
@@ -154,6 +155,7 @@ function ParticipantData ()  {
                     body: JSON.stringify({
                         participant: this.participant,
                         user: this.user,
+                        isProfileRemoved: this.isProfileRemoved ?? false,
                         ...(fileFetch && { file: fileFetch })
                     }),
                 });

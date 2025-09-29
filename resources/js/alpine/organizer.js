@@ -84,6 +84,7 @@ function OrganizerData() {
             })
         },
         async removeProfile(event) {
+            this.isProfileRemoved = true;
             event.stopPropagation();
             event.preventDefault();
                 imageUpload.value = "";
@@ -131,6 +132,7 @@ function OrganizerData() {
                     body: JSON.stringify({
                         address: this.address,
                         userProfile: this.userProfile,
+                        isProfileRemoved: this.isProfileRemoved ?? false,
                         organizer: this.organizer,
                         ...(fileFetch && { file: fileFetch })
                     }),
