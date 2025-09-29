@@ -213,14 +213,42 @@ async def create_batch_disputes(request: Request, batch_request: BatchDisputesRe
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to create batch disputes")
 
-# Health check endpoint
+# Health check endpoint with Firebase initialization check
 @app.get("/health")
 async def health_check():
-    return {
-        'status': 'healthy',
-        'service': 'driftwood-api',
-        'timestamp': datetime.utcnow().isoformat()
-    }
+    try:
+        # Verify Firebase is initialized and accessible
+        if not firebase_admin._apps:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    'status': 'unhealthy',
+                    'service': 'driftwood-api',
+                    'error': 'Firebase not initialized',
+                    'timestamp': datetime.utcnow().isoformat()
+                }
+            )
+
+        # Try to access Firestore client to ensure it's responsive
+        db = firestore.client()
+
+        return {
+            'status': 'healthy',
+            'service': 'driftwood-api',
+            'firebase_initialized': True,
+            'timestamp': datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        logging.error(f"Health check failed: {type(e).__name__}: {str(e)}")
+        return JSONResponse(
+            status_code=503,
+            content={
+                'status': 'unhealthy',
+                'service': 'driftwood-api',
+                'error': str(e),
+                'timestamp': datetime.utcnow().isoformat()
+            }
+        )
 
 def createBatchReports(event_id, count, custom_values_array=None, specific_ids=None, games_per_match=3):
     """Create or overwrite multiple reports with specified IDs and customizable values using BulkWriter"""
