@@ -247,10 +247,13 @@ class User extends Authenticatable implements FilamentUser
 
         try {
             $requestData = json_decode($request->getContent(), true);
-            if (! isset($requestData['file'])) {
-                $this->userBanner = null;
-                $this->save();
-                $this->destroyUserBanner($oldBanner);
+            if (! isset($requestData['file']) ) {
+                if (isset($requestData['isProfileRemoved']) && $requestData['isProfileRemoved']) {
+                    $this->userBanner = null;
+                    $this->save();
+                    $this->destroyUserBanner($oldBanner);
+
+                }
 
                 return null;
             }
