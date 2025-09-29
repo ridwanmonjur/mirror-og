@@ -487,9 +487,13 @@ class Team extends Model
 
             $requestData = json_decode($request->getContent(), true);
             if (! isset($requestData['file'])) {
-                $this->destroyTeanBanner($oldBanner);
-                $this->teamBanner = null;
-                $this->save();
+                if (isset($requestData['isProfileRemoved']) && $requestData['isProfileRemoved']) {
+                    $this->destroyTeanBanner($oldBanner);
+                    $this->teamBanner = null;
+                    $this->save();
+
+                    
+                }
 
                 return null;
             }

@@ -222,6 +222,7 @@ function TeamHead() {
         select2: null,
         isEditMode: false,
         ...teamData,
+        isProfileRemoved: false,
         country: teamData?.country,
         errorMessage: '',
         isCountriesFetched: false,
@@ -296,6 +297,7 @@ function TeamHead() {
         async removeProfile(event) {
             event.stopPropagation();
             event.preventDefault();
+                this.isProfileRemoved = true;
                 imageUpload.value = "";
                 uploadedImageList[0].style.backgroundImage = `none`;
                 uploadedImageList[1].style.backgroundImage = `none`;
@@ -342,6 +344,7 @@ function TeamHead() {
                         country_flag: this.country_flag,
                         member_limit: this.member_limit,
                         country_name: this.country_name,
+                        isProfileRemoved: this.isProfileRemoved,
                         default_category_id: defaultCategory,
                         all_categories: userCategories,
                         status: String(this.teamStatus[0])?.toLowerCase(),
