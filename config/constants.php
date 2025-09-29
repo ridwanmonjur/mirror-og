@@ -193,7 +193,7 @@ return [
     ],
     'QUEUE_TRIES' => 3,
     'STRIPE' => [
-        'ZER0' => 0.05,
+        'ZERO' => 0.05,
         'MINIMUM_RM' => 5.0,
     ],
     'ROSTER_SIZE' => 5,

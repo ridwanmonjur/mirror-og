@@ -58,7 +58,7 @@ class OrganizerCheckoutController extends Controller
 
             [$fee, $isCouponApplied, $error, $coupon] = SystemCoupon::loadCoupon($request->coupon_code, $event->tier?->tierPrizePool, 0.2, 'organizer');
 
-            if ($fee['finalFee'] < config('constants.STRIPE.ZER0')) {
+            if ($fee['finalFee'] < config('constants.STRIPE.ZERO')) {
                 $paymentId = SystemCoupon::orgFullCheckout($event, $user, $fee['totalFee']);
                 $event->payment_transaction_id = $paymentId;
                 $event->save();

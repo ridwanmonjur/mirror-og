@@ -188,7 +188,7 @@ function registrationManage(event) {
         'TOO_EARLY' : 4
     };
 
-    let {modalId, joinEventId, status} = element.dataset;
+    let {modalId, joinEventId, status, registrationStatus} = element.dataset;
 
     const memberDataContainer = document.getElementById('reg-member-id-' + joinEventId);
     const rosterMapContainer = document.getElementById('roster-id-list-' + joinEventId);
@@ -201,6 +201,7 @@ function registrationManage(event) {
     if (status == registrationStatusEnum['NORMAL'] 
     ) {
         showNormalRegistration();
+        return;
     }
 
     else if (
@@ -208,6 +209,7 @@ function registrationManage(event) {
         || status == registrationStatusEnum['TOO_EARLY']
     ) {
         showRegistrationSteps();
+        return;
     }
 
     function showRegistrationSteps() {
@@ -254,6 +256,7 @@ function registrationManage(event) {
                     const bootstrapModal =  bootstrap.Modal.getInstance(modal);
                     bootstrapModal.show();
                 }
+                
             }
 
             if (result.isDismissed) {
@@ -356,8 +359,29 @@ function submitConfirmCancelForm(event) {
         console.log({joinStatus});
 
         showQuitEventPopup(joinStatus == "confirmed");
+        return;
     } else {
-        showRegistrationSteps();
+     
+        if (registrationStatus == registrationStatusEnum['NORMAL']) {
+            showNormalRegistration();
+            return;
+        }
+    
+        if (  registrationStatus == registrationStatusEnum['EARLY']
+            || registrationStatus == registrationStatusEnum['TOO_EARLY']
+        ) {
+            showEarlyRosterConfirmation();
+            return;
+        } else {
+            Swal.fire ({
+                icon: 'error',
+                title: 'Registration Period Has Ended',
+                text: 'Unfortunately, the registration deadline for this event has passed and new registrations are no longer being accepted. Please check our upcoming events page for other tournament opportunities where you can still register your team.',
+                confirmButtonColor: '#43a4d7'
+            })
+
+            return;
+        }
     }
     
     function showQuitEventPopup(isConfirmed = false) {
@@ -408,19 +432,22 @@ function submitConfirmCancelForm(event) {
 
                 if (registrationStatus == registrationStatusEnum['NORMAL']) {
                     showNormalRegistration();
+                    return;
                 }
             
                 if (  registrationStatus == registrationStatusEnum['EARLY']
                     || registrationStatus == registrationStatusEnum['TOO_EARLY']
                 ) {
                     showEarlyRosterConfirmation();
+                    return;
                 } else {
                     Swal.fire ({
                         icon: 'error',
                         title: 'Registration Period Has Ended',
                         text: 'Unfortunately, the registration deadline for this event has passed and new registrations are no longer being accepted. Please check our upcoming events page for other tournament opportunities where you can still register your team.',
                         confirmButtonColor: '#43a4d7'
-                    })
+                    });
+                    return;
                 }
             }
         });
@@ -696,6 +723,7 @@ addOnLoad(()=> {
                 timer: 3000,
                 showConfirmButton: false
             });
+            return;
         } else {
             scrollSwal(savedId);
         }
