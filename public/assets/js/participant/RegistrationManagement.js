@@ -260,7 +260,7 @@ function registrationManage(event) {
             }
 
             if (result.isDismissed) {
-                showRegistrationSteps();
+                return;
             }
         });
     }
@@ -294,7 +294,7 @@ function registrationManage(event) {
             }
 
             if (result.isDismissed) {
-                showRegistrationSteps();
+                return;
             }
         });
     }
@@ -476,7 +476,7 @@ function submitConfirmCancelForm(event) {
             }
 
             if (result.isDismissed) {
-                showRegistrationSteps();
+                return;
             }
         });
     }
@@ -505,7 +505,7 @@ function submitConfirmCancelForm(event) {
             }
 
             if (result.isDismissed) {
-                showRegistrationSteps();
+                return;
             }
         });
     }
