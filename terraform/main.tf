@@ -1403,6 +1403,30 @@ resource "google_cloud_run_v2_service" "driftwood_api" {
         name  = "SECRET_KEY"
         value = var.auth_service_secret_key != "" ? var.auth_service_secret_key : random_password.auth_secret[0].result
       }
+
+      # HTTP-based startup probe to ensure app is ready before accepting traffic
+      startup_probe {
+        initial_delay_seconds = 0
+        timeout_seconds       = 3
+        period_seconds        = 10
+        failure_threshold     = 3
+        http_get {
+          path = "/health"
+          port = 8080
+        }
+      }
+
+      # Liveness probe to detect if app becomes unresponsive
+      liveness_probe {
+        initial_delay_seconds = 30
+        timeout_seconds       = 3
+        period_seconds        = 30
+        failure_threshold     = 3
+        http_get {
+          path = "/health"
+          port = 8080
+        }
+      }
     }
 
     service_account = "${data.google_project.current.number}-compute@developer.gserviceaccount.com"
