@@ -123,6 +123,7 @@
     </script>
 <body>
     @include('googletagmanager::body')
+    <div class="scroll-indicator"></div>
     @include('includes.Navbar')
     <div class="d-none" id="analytics-data" 
         data-event-id="{{$event->id}}"

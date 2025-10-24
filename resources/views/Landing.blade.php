@@ -66,9 +66,12 @@
 <body>
     @include('googletagmanager::body')
     @include('includes.Navbar', ['search' => true ])
-    
-    <main 
+
+    <main
     >
+        
+    <div class="scroll-indicator"></div>
+
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         
         <section class="hero user-select-none d-none d-lg-block">

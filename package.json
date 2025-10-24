@@ -28,6 +28,7 @@
         "luxon": "^3.5.0",
         "petite-vue": "^0.4.1",
         "sass-loader": "^14.2.1",
+        "scroll-progress-indicator": "^1.0.1",
         "sweetalert2": "^11.10.8",
         "tippy.js": "^6.3.7",
         "tom-select": "^2.4.3"

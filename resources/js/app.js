@@ -215,10 +215,24 @@ if (pageName ) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     createApp({
         PageNotificationComponent,
     }).mount('#notif-dropdown');
+
+    const scrollIndicatorEl = document.querySelector('.scroll-indicator');
+    if (scrollIndicatorEl) {
+        try {
+            const { default: ScrollProgressIndicator } = await import('scroll-progress-indicator');
+            ScrollProgressIndicator.init({
+                color: '#43a4d7',
+                height: '4px',
+                position: 'top'
+            });
+        } catch (error) {
+            console.error('Failed to load scroll-progress-indicator:', error);
+        }
+    }
 
     const colors = [
         '#234B5C',  // Rich navy blue
