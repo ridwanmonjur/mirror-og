@@ -45,7 +45,7 @@
     data-event-count="{{ $notificationsCountArray['event_count'] }}"
 >
 </div>
-<nav class="navbar py-2 justify-content-between align-items-center user-select-none px-3 ">
+<nav class="navbar pt-2 justify-content-between  user-select-none px-3 ">
     <a href="{{ $routeLogo }}" title="Home Page Link" class="">
         <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="Website Logo">
     </a>
