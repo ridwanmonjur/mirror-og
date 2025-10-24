@@ -70,7 +70,7 @@
     <main
     >
         
-    <div class="scroll-indicator"></div>
+        <div class="scroll-indicator"></div>
 
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
         
