@@ -167,10 +167,21 @@ resource "null_resource" "deploy_firestore_rules" {
       PROJECT_ID="${var.project_id}"
       DATABASE_ID="(default)"
       ENVIRONMENT="${var.environment}"
-      
+
+      # Authenticate gcloud with service account if GOOGLE_APPLICATION_CREDENTIALS is set
+      if [ -n "$GOOGLE_APPLICATION_CREDENTIALS" ] && [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+        echo "Authenticating gcloud with service account..."
+        gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
+        gcloud config set project "$PROJECT_ID"
+
+        # Generate access token for Firebase CLI
+        echo "Generating access token for Firebase CLI..."
+        export FIREBASE_TOKEN=$(gcloud auth print-access-token)
+      fi
+
       # Change to project root directory where firestore.rules is located
       cd ..
-      
+
       # Update firebase.json with default database configuration
       cat > firebase.json << JSON
 {
@@ -179,12 +190,13 @@ resource "null_resource" "deploy_firestore_rules" {
   }
 }
 JSON
-      
+
       echo "Updated firebase.json for default database"
-      
+
       # Deploy rules using Firebase CLI to default database
-      firebase use "$PROJECT_ID"
-      firebase deploy --only firestore --project="$PROJECT_ID"
+      # Use --token flag with the generated access token
+      firebase use "$PROJECT_ID" --token "$FIREBASE_TOKEN"
+      firebase deploy --only firestore --project="$PROJECT_ID" --token "$FIREBASE_TOKEN"
     EOT
   }
 
@@ -686,7 +698,6 @@ resource "google_firestore_index" "message_timestamp_name_desc" {
   lifecycle {
     ignore_changes = [database, collection, fields]
     create_before_destroy = false
-    prevent_destroy = true
   }
 
   depends_on = [google_firestore_database.default]
@@ -1063,20 +1074,14 @@ resource "null_resource" "cleanup_existing_functions" {
   }
 }
 
-# Check if functions bucket exists
-data "external" "functions_bucket_exists" {
-  program = ["bash", "-c", "gsutil ls gs://$TF_VAR_project_id-functions-source >/dev/null 2>&1 && echo '{\"exists\":\"true\"}' || echo '{\"exists\":\"false\"}'"]
-}
-
 # Create Cloud Storage bucket for Cloud Functions source code
 resource "google_storage_bucket" "functions_bucket" {
-  count = data.external.functions_bucket_exists.result.exists == "false" ? 1 : 0
   name     = "${var.project_id}-functions-source"
   location = var.region
   project  = var.project_id
 
   uniform_bucket_level_access = true
-  
+
   lifecycle_rule {
     condition {
       age = 30
@@ -1086,17 +1091,12 @@ resource "google_storage_bucket" "functions_bucket" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [name, location]
-    prevent_destroy = true
-  }
-
   depends_on = [google_project_service.required_apis]
 }
 
-# Local value to handle conditional bucket reference
+# Local value to reference bucket name
 locals {
-  functions_bucket_name = length(google_storage_bucket.functions_bucket) > 0 ? google_storage_bucket.functions_bucket[0].name : "${var.project_id}-functions-source"
+  functions_bucket_name = google_storage_bucket.functions_bucket.name
 }
 
 # Build and push Docker image for Cloud Run

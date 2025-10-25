@@ -1,0 +1,61 @@
+FROM hashicorp/terraform:1.9
+
+# Install additional tools needed for Terraform operations
+RUN apk add --no-cache \
+    bash \
+    curl \
+    git \
+    python3 \
+    py3-pip \
+    jq \
+    zip \
+    php82 \
+    php82-phar \
+    php82-json \
+    php82-openssl \
+    php82-curl \
+    php82-mbstring
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php82 -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Google Cloud SDK
+RUN curl -sSL https://sdk.cloud.google.com | bash
+
+# Add gcloud to PATH
+ENV PATH="/root/google-cloud-sdk/bin:${PATH}"
+
+# Install Node.js and npm (required for Firebase CLI)
+RUN apk add --no-cache nodejs npm
+
+# Install Firebase CLI globally
+RUN npm install -g firebase-tools
+
+# Set working directory
+WORKDIR /app
+
+# Copy only necessary files
+COPY terraform/ /app/terraform/
+COPY .env /app/.env
+COPY .env.prod /app/.env.prod
+COPY .env.staging /app/.env.staging
+COPY .env.example /app/.env.example
+COPY .env.localdocker /app/.env.localdocker
+COPY firebase/ /app/firebase/
+COPY composer.json /app/composer.json
+COPY firestore.rules /app/firestore.rules
+COPY cloud_server_functions/ /app/cloud_server_functions/
+COPY cloud_client_auth/ /app/cloud_client_auth/
+COPY package.json /app/package.json
+COPY composer.lock /app/composer.lock
+
+# Make scripts executable and create aliases for easy access
+RUN chmod +x /app/terraform/scripts/firebase-login.sh && \
+    chmod +x /app/terraform/scripts/docker-tf-wrapper.sh && \
+    ln -s /app/terraform/scripts/firebase-login.sh /usr/local/bin/firebase-login
+
+# Override the ENTRYPOINT from the base terraform image
+ENTRYPOINT []
+
+# Default command
+CMD ["bash"]

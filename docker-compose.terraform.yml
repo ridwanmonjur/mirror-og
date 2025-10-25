@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  terraform:
+    build:
+      context: .
+      dockerfile: Dockerfile.terraform
+    container_name: driftwood_terraform
+    working_dir: /app
+    volumes:
+      # Two-way binding for terraform folder
+      - ./terraform:/app/terraform:rw
+
+      # Two-way binding for all .env files (writable)
+      - ./.env:/app/.env:rw
+      - ./.env.prod:/app/.env.prod:rw
+      - ./.env.staging:/app/.env.staging:rw
+      - ./.env.example:/app/.env.example:rw
+      - ./.env.localdocker:/app/.env.localdocker:rw
+
+      # Bind firebase credentials (needed by load-env.sh)
+      - ./firebase:/app/firebase:ro
+
+      # Bind cloud functions and firestore rules (needed by terraform)
+      - ./cloud_client_auth:/app/cloud_client_auth:rw
+      - ./cloud_server_functions:/app/cloud_server_functions:rw
+      - ./firestore.rules:/app/firestore.rules:ro
+      - ./composer.lock:/app/composer.lock:ro
+      - ./package.json:/app/package.json:ro
+
+      # Exclude node_modules and .venv (anonymous volumes)
+      - /app/node_modules
+      - /app/.venv
+
+      # Persist terraform plugin cache
+      - terraform-plugin-cache:/root/.terraform.d/plugin-cache
+
+      # Persist gcloud config
+      - gcloud-config:/root/.config/gcloud
+    environment:
+      - TF_PLUGIN_CACHE_DIR=/root/.terraform.d/plugin-cache
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/firebase/gcloud_service_account_dev.json
+      - FIREBASE_CREDENTIALS=firebase/gcloud_service_account_dev.json
+      - FIREBASE_TOKEN_FILE=/root/.config/firebase-token
+    stdin_open: true
+    tty: true
+    command: bash
+
+volumes:
+  terraform-plugin-cache:
+  gcloud-config:

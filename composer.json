@@ -238,10 +238,44 @@
             "rm -f terraform/.terraform/terraform.tfstate",
             "rm -f terraform/terraform.tfstate*",
             "rm -f terraform/dev.tfplan",
-            "rm -f terraform/staging.tfplan", 
+            "rm -f terraform/staging.tfplan",
             "rm -f terraform/prod.tfplan",
             "rm -rf terraform/.terraform/",
             "echo 'All Terraform state files removed successfully.'"
+        ],
+
+        "docker:tf:build": [
+            "docker compose -f docker-compose.terraform.yml build"
+        ],
+        "docker:tf:up": [
+            "docker compose -f docker-compose.terraform.yml up -d"
+        ],
+        "docker:tf:down": [
+            "docker compose -f docker-compose.terraform.yml down"
+        ],
+        "docker:tf:shell": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash"
+        ],
+        "docker:tf:dev:plan": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash terraform/scripts/docker-tf-wrapper.sh dev plan"
+        ],
+        "docker:tf:dev:apply": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash terraform/scripts/docker-tf-wrapper.sh dev apply"
+        ],
+        "docker:tf:staging:plan": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash terraform/scripts/docker-tf-wrapper.sh staging plan"
+        ],
+        "docker:tf:staging:apply": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash terraform/scripts/docker-tf-wrapper.sh staging apply"
+        ],
+        "docker:tf:prod:plan": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash terraform/scripts/docker-tf-wrapper.sh prod plan"
+        ],
+        "docker:tf:prod:apply": [
+            "docker compose -f docker-compose.terraform.yml exec terraform bash terraform/scripts/docker-tf-wrapper.sh prod apply"
+        ],
+        "docker:tf:init": [
+            "docker compose -f docker-compose.terraform.yml exec terraform sh -c \"cd terraform && terraform init\""
         ]
     },
     "extra": {

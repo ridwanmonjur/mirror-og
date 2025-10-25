@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const { default: ScrollProgressIndicator } = await import('scroll-progress-indicator');
             ScrollProgressIndicator.init({
-                color: '#43a4d7',
+                color: '#1fa5ed',
                 height: '4px',
                 position: 'top'
             });

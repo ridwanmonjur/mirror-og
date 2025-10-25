@@ -45,7 +45,15 @@ export TF_VAR_terraform_service_account=$TERRAFORM_SERVICE_ACCOUNT
 # Configure gcloud for the project
 echo "Configuring gcloud for project: $TF_VAR_project_id"
 gcloud config set project $TF_VAR_project_id
-gcloud auth application-default set-quota-project $TF_VAR_project_id
+
+# Authenticate with service account if credentials file exists
+if [ -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+  echo "Authenticating with service account..."
+  gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS" 2>/dev/null || true
+fi
+
+# Set quota project (this may fail if application-default credentials aren't set, which is fine)
+gcloud auth application-default set-quota-project $TF_VAR_project_id 2>/dev/null || true
 
 echo "Environment variables set:"
 echo "TF_VAR_project_id=$TF_VAR_project_id"
@@ -57,5 +65,5 @@ echo "TERRAFORM_SERVICE_ACCOUNT=$TERRAFORM_SERVICE_ACCOUNT"
 
 echo ""
 echo "Now run your terraform commands, e.g.:"
-echo "terraform plan -var-file=\"environments/${ENVIRONMENT}.tfvars\""
-echo "terraform apply -var-file=\"environments/${ENVIRONMENT}.tfvars\""
+echo "terraform plan -var-file=\"${ENVIRONMENT}.tfvars\""
+echo "terraform apply -var-file=\"${ENVIRONMENT}.tfvars\""
