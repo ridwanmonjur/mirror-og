@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "Bash(composer run:*)",
+      "Bash(docker exec:*)",
+      "Bash(test:*)",
+      "Bash(firebase --version:*)",
+      "Bash(chmod:*)",
+      "Bash(docker builder prune:*)",
+      "Bash(set:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
