@@ -87,7 +87,7 @@
         'frameStyles' => $frameStyles
     ] = $selectTeam->profile?->generateStyles();
     if (!$backgroundStyles) {
-        $backgroundStyles = "background-color: #fffdfb;"; // Default gray
+        $backgroundStyles = "background-color: #edebea;"; // Default gray
     }
 @endphp
 @guest

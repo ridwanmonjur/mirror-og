@@ -66,7 +66,7 @@
         'frameStyles' => $frameStyles,
     ] = $userProfile->profile?->generateStyles();
     if (!$backgroundStyles) {
-        $backgroundStyles = 'background-color: #fffdfb;'; // Default gray
+        $backgroundStyles = 'background-color: #edebea;'; // Default gray
     }
 
     $activityNames = ['new', 'recent', 'older'];

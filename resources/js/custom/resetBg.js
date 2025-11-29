@@ -5,7 +5,7 @@ function resetBg(initialData) {
         fontColor: null,
         frameColor: null,
         backgroundBanner: null,
-        backgroundColor: '#fffdfb',
+        backgroundColor: '#edebea',
         backgroundGradient: null,
     };
 
@@ -33,7 +33,7 @@ function resetBg(initialData) {
         backgroundBanner.style.background = 'auto';
     } else {
         backgroundBanner.style.backgroundImage = 'none';
-        backgroundBanner.style.background = '#fffdfb';
+        backgroundBanner.style.background = '#edebea';
     }
 
     document.querySelectorAll(".cursive-font").forEach((cursiveElement) => {

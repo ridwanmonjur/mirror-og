@@ -90,7 +90,7 @@ class TeamProfile extends Model
     {
         $backgroundStyles = $fontStyles = $frameStyles = '';
 
-        $backgroundStyles = 'background-color: #fffdfb;'; // Default gray
+        $backgroundStyles = 'background-color: #edebea;'; // Default gray
 
         if (isset($this->backgroundBanner)) {
             $backgroundStyles = "background-image: url('/storage/{$this->backgroundBanner}');";

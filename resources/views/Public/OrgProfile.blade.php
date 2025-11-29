@@ -74,7 +74,7 @@
     ] = $userProfile->profile?->generateStyles();
     $loggedUserId = $loggedUserRole = null;
     if (!$backgroundStyles) {
-        $backgroundStyles = "background-color: #fffdfb;"; // Default gray
+        $backgroundStyles = "background-color: #edebea;"; // Default gray
     }
 @endphp
 @auth
