@@ -425,6 +425,10 @@ function goToNextScreen(nextId, nextTimeline) {
 
     console.log({nextId, currentId});
 
+    if (nextId == allIDs[4]) {
+        fillStepGameDetailsValues();
+    }
+
     if (nextId == allIDs[5]) {
         let box = document.getElementById('event-tier-display');
         let eventTierTitle = localStorage.getItem('eventTierTitle') ?? null;
@@ -451,21 +455,23 @@ gameCategories.forEach(category => {
                 element.style.pointerEvents = 'auto';
             }
         });
-        
+
+          const categoryId = this.dataset.categoryId;
+        const gameTitle = this.dataset.gameTitle;
+        const gameIconSrc = this.dataset.gameIcon;
+
+        localStorage.setItem('gameTitle', gameTitle);
+        localStorage.setItem('gameTitleId', categoryId);
+        localStorage.setItem('gameTitleImg', gameIconSrc);
+         
         this.classList.add('color-border-success--thick');
         this.style.pointerEvents = 'none';
         
-        const categoryId = this.dataset.categoryId;
-        const gameTitle = this.dataset.gameTitle;
-        const gameIconSrc = this.dataset.gameIcon;
-        
         setFormValues({ 
             'gameTitle': gameTitle,
-            'gameTitleId': categoryId 
+            'gameTitleId': categoryId ,
         });
-        
-        localStorage.setItem('gameTitleImg', gameIconSrc);
-        
+
         // goToNextScreen('step-2', 'timeline-1');
     });
     }

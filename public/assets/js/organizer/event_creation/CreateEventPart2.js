@@ -39,7 +39,7 @@ function setInnerHTMLFromLocalStorage(key, element) {
 
 function setImageSrcFromLocalStorage(key, element) {
     let value = checkStringNullOrEmptyAndReturnFromLocalStorage(key);
-    
+
     if (value && element) element.src = value;
     else console.error(`Can't set image for: ${key}, ${value} ${value}`)
 }
@@ -75,9 +75,9 @@ function fillStepGameDetailsValues() {
         'gameTitle' in formValues &&
         'eventType' in formValues
     ) {
-        let eventTier = formValues['eventTier'];
-        let eventType = formValues['eventType'];
-        let gameTitle = formValues['gameTitle'];
+        // let eventTier = formValues['eventTier'];
+        // let eventType = formValues['eventType'];
+        // let gameTitle = formValues['gameTitle'];
 
         // Game Title
         let outputGameTitleImg = document.querySelector('img#outputGameTitleImg');
@@ -328,6 +328,8 @@ function clearLocalStorage() {
     localStorage.clear();
 }
 
+
+
 window.onload = function() {
     /* beautify preserve:start */
    const container = document.getElementById('eventContainer');
@@ -344,7 +346,8 @@ window.onload = function() {
         game = JSON.parse(container.dataset.game);
         assetKeyWord = container.dataset.assetKeyWord;
     } 
-  
+    let invisibleUntilLoaded = document.querySelector('form#evc-form');
+    invisibleUntilLoaded.classList.remove('invisible')  ;
     
     clearLocalStorage();
     

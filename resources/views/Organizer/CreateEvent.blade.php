@@ -17,8 +17,11 @@
         <main>
             <div>
                 <div>
-                    <form enctype="multipart/form-data" 
-                        action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate>
+                    <form enctype="multipart/form-data"
+                        id="evc-form" 
+                        action="{{ route('event.store') }}" method="post" name="create-event-form" novalidate
+                        class="invisible"
+                        >
                         @csrf
                         @include('includes.CreateEditEvent.CreateEventHiddenForm')
                         @include('includes.CreateEditEvent.CreateEventTimelineBox')

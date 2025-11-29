@@ -17,16 +17,7 @@ function setFormValuesAndNavigate(element) {
     let eventType = element.dataset.eventType;
     let eventTypeId = element.dataset.eventTypeId;
     let eventDefinitions = element.dataset.eventDefinitions;
-    if (eventType == "League") {
-        window.Swal.fire({
-            icon: "error",
-            title: "Oops...",   
-            confirmButtonColor: '#43a4d7',
-            text: "Cannot select League structure for now" 
-        });
-        return;
-    }
-
+    
     setFormValues({'eventType': eventType, 'eventTypeId': eventTypeId});
     goToNextScreen('step-3', 'timeline-1');
     

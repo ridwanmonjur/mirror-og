@@ -17,7 +17,8 @@
         <main>
             <div>
                 <div>
-                    <form enctype="multipart/form-data" 
+                    <form enctype="multipart/form-data"   class="invisible"
+                        id="evc-form" 
                         action="{{ route('event.updateForm', $event->id) }}" method="post" name="create-event-form"
                         novalidate>
                         @csrf
