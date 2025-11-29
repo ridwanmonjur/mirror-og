@@ -78,6 +78,8 @@
     <!-- Additional SEO Tags -->
     <meta name="author" content="{{ $event->user->name }}">
         <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="{{ asset('/assets/css/common/viewEvent.css') }}">
+        <link rel="stylesheet" href="{{ asset('/assets/css/common/game-sidebar.css') }}">
+        <link rel="stylesheet" href="{{ asset('/assets/css/common/breadcrumb.css') }}">
         @include('includes.HeadIcon')
         @vite([ 'resources/sass/app.scss',
             'resources/js/app.js',
@@ -121,10 +123,20 @@
             }
         }
     </script>
-<body>
+<body class="has-game-sidebar">
     @include('googletagmanager::body')
+    @include('includes.GameSidebar')
     <div class="scroll-indicator"></div>
     @include('includes.Navbar')
+
+    @include('includes.Breadcrumb', [
+        'items' => [
+            ['label' => 'Home', 'url' => route('public.landing.view')],
+            ['label' => $event->game?->gameTitle ?? 'Events', 'url' => route('public.landing.view')],
+            ['label' => Str::limit($event->eventName, 30), 'url' => '']
+        ]
+    ])
+
     <div class="d-none" id="analytics-data" 
         data-event-id="{{$event->id}}"
         data-event-name="{{ $event->eventName }}"

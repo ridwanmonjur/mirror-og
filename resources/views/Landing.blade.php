@@ -8,6 +8,7 @@
     <meta name="analytics" content="enabled">
     @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/game-sidebar.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     <title>Driftwood</title>
     <meta name="description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
@@ -63,12 +64,11 @@
         </script>
 </head>
 
-<body>
+<body class="has-game-sidebar">
     @include('googletagmanager::body')
+    @include('includes.GameSidebar')
     @include('includes.Navbar', ['search' => true ])
-
-    <main
-    >
+    <main>
         
         <div class="scroll-indicator"></div>
 
