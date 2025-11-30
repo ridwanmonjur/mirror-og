@@ -16,12 +16,15 @@ class BracketWinnerItem extends Component
 
     public $order = null;
 
-    public function __construct($bracket, $stageName, $innerStageName, $order)
+    public $winner = null;
+
+    public function __construct($bracket, $stageName, $innerStageName, $order, $winner = null)
     {
         $this->bracket = $bracket;
         $this->stageName = $stageName;
         $this->innerStageName = $innerStageName;
         $this->order = $order;
+        $this->winner = $winner;
     }
 
     /**
