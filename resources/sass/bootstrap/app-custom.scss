@@ -159,7 +159,7 @@ body.modal-open,
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Nunito", sans-serif;
+    font-family: "Nunito", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
 }
 
 
@@ -203,6 +203,7 @@ body.modal-open,
     height: 60px;
     transition: all 0.3s ease-in-out;
     padding-left: 0;
+    border-bottom: 2px solid rgb(200, 199, 199);
 }
 
 // .navbar-scrolled {
