@@ -3,11 +3,11 @@
 <nav class="breadcrumb-nav" aria-label="breadcrumb">
     <ol class="breadcrumb-nav__list">
         @foreach($items as $index => $item)
-            @if($loop->last)
+            @if($loop->last && isset($item['label']))
                 <li class="breadcrumb-nav__item breadcrumb-nav__item--active" aria-current="page">
                     <span class="breadcrumb-nav__text">{{ $item['label'] }}</span>
                 </li>
-            @else
+            @elseif (isset($item['label']) && isset($item['url']))
                 <li class="breadcrumb-nav__item">
                     <a href="{{ $item['url'] }}" class="breadcrumb-nav__link">
                         {{ $item['label'] }}
