@@ -30,7 +30,62 @@ final class TeamMemberFactory extends Factory
         return [];
     }
 
-   
+    /**
+     * Get team banner image based on game type
+     */
+    private function getTeamImage($game, $teamIndex)
+    {
+        $gameLower = strtolower($game);
+
+        if ($gameLower === 'chess') {
+            $prefix = 'ch';
+            $imageIndex = $teamIndex % 32;
+        } elseif ($gameLower === 'fifa') {
+            $prefix = 'f';
+            $imageIndex = $teamIndex % 32;
+        } else {
+            // For other games, use numbered team images (0-80)
+            $prefix = '';
+            $imageIndex = $teamIndex % 81;
+        }
+
+        $fileName = $prefix . $imageIndex;
+        $basePath = storage_path('app/public/images/team');
+        $possibleExtensions = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif'];
+
+        foreach ($possibleExtensions as $ext) {
+            $filePath = "{$basePath}/{$fileName}.{$ext}";
+            if (file_exists($filePath)) {
+                return "images/team/{$fileName}.{$ext}";
+            }
+        }
+
+        // Fallback to .jpg if no file found (maintains backward compatibility)
+        return "images/team/{$fileName}.jpg";
+    }
+
+    /**
+     * Get user profile image based on ethnicity
+     */
+    private function getUserImage($userNumber)
+    {
+        // Ethnicity-based distribution for all users
+        if ($userNumber <= 84) {
+            // Malay player: m0 to m83 (84 images)
+            $prefix = 'm';
+            $imageIndex = ($userNumber - 1) % 84;
+        } elseif ($userNumber <= 108) {
+            // Chinese player: c0 to c23 (24 images)
+            $prefix = 'c';
+            $imageIndex = ($userNumber - 85) % 24;
+        } else {
+            // Tamil player: t0 to t11 (12 images)
+            $prefix = 't';
+            $imageIndex = ($userNumber - 109) % 12;
+        }
+
+        return "images/user/{$prefix}{$imageIndex}.jpg";
+    }
 
     public function seed($numberOfUsers = 10, $playersPerTeam = 5, $eventGame = 'Dota 2', $startUserIndex = 1)
     {
@@ -181,14 +236,6 @@ final class TeamMemberFactory extends Factory
         // Shuffle to distribute evenly
         shuffle($allNames);
 
-        // Available team images
-        $teamImages = [
-            'images/team/0.webp', 'images/team/1.jpg', 'images/team/2.avif', 'images/team/3.avif', 
-            'images/team/4.jpg', 'images/team/5.jpg', 'images/team/6.avif', 'images/team/7.jpg',
-            'images/team/8.png', 'images/team/9.webp', 'images/team/10.jpg', 'images/team/12.jpg',
-            'images/team/13.jpg', 'images/team/14.png', 'images/team/15.jpg', 'images/team/2.avif'
-        ];
-
         $participants = [];
 
         // Build array of emails to check
@@ -213,10 +260,19 @@ final class TeamMemberFactory extends Factory
             $email = "tester$userNumber@$emailDomain";
 
             if (isset($existingUsers[$email])) {
-                // User exists, add to participants array
-                $participants[] = $existingUsers[$email];
+                // User exists, update profile image if needed and add to participants array
+                $user = $existingUsers[$email];
+                if (empty($user->userBanner)) {
+                    $userImage = $this->getUserImage($userNumber);
+                    if ($userImage) {
+                        $user->update(['userBanner' => $userImage]);
+                    }
+                }
+                $participants[] = $user;
             } else {
                 // User doesn't exist, prepare for bulk insert
+                $userImage = $this->getUserImage($userNumber);
+
                 $usersToCreate[] = [
                     'email' => $email,
                     'name' => $userName,
@@ -225,6 +281,7 @@ final class TeamMemberFactory extends Factory
                     'remember_token' => \Illuminate\Support\Str::random(10),
                     'role' => 'PARTICIPANT',
                     'status' => null,
+                    'userBanner' => $userImage,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
@@ -235,9 +292,17 @@ final class TeamMemberFactory extends Factory
         if (!empty($usersToCreate)) {
             User::insert($usersToCreate);
 
-            // Fetch newly created users
+            // Fetch newly created users and generate slugs
             $newEmails = array_column($usersToCreate, 'email');
             $newUsers = User::whereIn('email', $newEmails)->get();
+
+            foreach ($newUsers as $user) {
+                if (method_exists($user, 'slugify')) {
+                    $user->slugify();
+                    $user->save();
+                }
+            }
+
             $participants = array_merge($participants, $newUsers->all());
         }
 
@@ -303,9 +368,8 @@ final class TeamMemberFactory extends Factory
             }
         }
 
-        // Generate unique team names for this game
+        // Generate team names
         $teamNamesToCheck = [];
-        $gamePrefix = strtoupper(substr($eventGame, 0, 3));
 
         for ($i = 0; $i < $noOfConTeams; $i++) {
             if ($playersPerTeam == 1) {
@@ -315,9 +379,9 @@ final class TeamMemberFactory extends Factory
                     $teamNamesToCheck[] = $participants[$playerIndex]->name;
                 }
             } else {
-                // For multi-player teams, use team names with game prefix for uniqueness
+                // For multi-player teams, use team names without prefix (slugs handle uniqueness)
                 $baseTeamName = $teamNames[$i % count($teamNames)];
-                $teamNamesToCheck[] = "[$gamePrefix] " . $baseTeamName;
+                $teamNamesToCheck[] = $baseTeamName;
             }
         }
 
@@ -327,7 +391,7 @@ final class TeamMemberFactory extends Factory
         $teams = [];
 
         for ($i = 0; $i < $noOfConTeams; $i++) {
-            $teamImageIndex = $i % count($teamImages);
+            $teamBanner = $this->getTeamImage($eventGame, $i);
             $teamName = $teamNamesToCheck[$i];
 
             if (isset($existingTeams[$teamName])) {
@@ -336,7 +400,7 @@ final class TeamMemberFactory extends Factory
                 $team->update([
                     'creator_id' => $creatorUsers[$i]->id,
                     'teamDescription' => "Elite esports team competing at the highest level",
-                    'teamBanner' => $teamImages[$teamImageIndex],
+                    'teamBanner' => $teamBanner,
                     'country' => 'MY',
                     'country_name' => 'Malaysia',
                     'country_flag' => '🇲🇾',
@@ -348,12 +412,27 @@ final class TeamMemberFactory extends Factory
                     'teamName' => $teamName,
                     'creator_id' => $creatorUsers[$i]->id,
                     'teamDescription' => "Elite esports team competing at the highest level in $eventGame",
-                    'teamBanner' => $teamImages[$teamImageIndex],
+                    'teamBanner' => $teamBanner,
                     'country' => 'MY',
                     'country_name' => 'Malaysia',
                     'country_flag' => '🇲🇾',
                 ]);
+
+                // Generate slug for new team
+                if (method_exists($team, 'slugify')) {
+                    $team->slugify();
+                    $team->save();
+                }
+
                 $teams[] = $team;
+            }
+        }
+
+        // Generate slugs for existing teams that don't have them
+        foreach ($teams as $team) {
+            if (empty($team->slug) && method_exists($team, 'slugify')) {
+                $team->slugify();
+                $team->save();
             }
         }
 
