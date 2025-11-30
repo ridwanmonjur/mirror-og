@@ -83,9 +83,11 @@ final class JoinEventFactory extends Factory
         JoinEvent::whereIn('event_details_id', collect($events)->pluck('id'))->delete();
 
         $numberOfUsers = ($options['noOfConTeams'] * $playersPerTeam)  ?? 80;
-        
+
+        $eventGame = $options['event']['eventGame'] ?? 'Dota 2';
+
         $teamMemberFactory = new TeamMemberFactory;
-        $teamResult = $teamMemberFactory->seed($numberOfUsers, $playersPerTeam);
+        $teamResult = $teamMemberFactory->seed($numberOfUsers, $playersPerTeam, $eventGame);
         $teams = $teamResult['teams'];
         $members = $teamResult['members'];
         foreach ($teams as $team) {
