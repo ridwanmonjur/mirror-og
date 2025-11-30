@@ -33,14 +33,42 @@ img.fslightbox-source{
 
 
 body {
-    background-image: url("/assets/images/event-management-bg.png");
-    background-size: auto 100vh;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    background-color: white;
+
 }
+
+
+
 
 main {
     padding: 0px 5px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+main::before,
+main::after {
+    content: '';
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(80px);
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"),
+        radial-gradient(circle, rgba(132, 132, 132, 0.15) 0%, rgba(244, 244, 244, 0.15) 50%, rgba(39, 147, 159, 0.15) 100%);
+}
+
+main::before {
+    top: 10%;
+    left: -300px;
+}
+
+main::after {
+    bottom: 15%;
+    right: -300px;
 }
 
 .border-dashed {
@@ -347,7 +375,7 @@ input[type="submit"]:active {
     display: flex;
     justify-content: start;
     flex-wrap: wrap;
-    background-color: #f1f1f1;
+    background-color: #d9d9d9;
 }
 
 /* Style the buttons inside the tab */
@@ -371,6 +399,7 @@ input[type="submit"]:active {
     padding: 15px 10px;
     border-top: none;
     width: 100%;
+    min-height: 25vh;
 }
 
 .image-at-top {
@@ -426,10 +455,6 @@ input[type="submit"]:active {
 
     .search-bar2-adjust {
         margin-left: 0px;
-    }
-
-    body {
-        background-size: 100vw 100vh;
     }
 
     .d-none-at-desktop {
@@ -607,11 +632,6 @@ input, select {
 }
 
 
-body {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 
 .tournament-bracket__list{
     padding-left: 0px !important;

@@ -125,13 +125,19 @@ main {
     cursor: pointer;
 }
 
+.right-shift {
+    max-width: 100%; 
+    position: relative; 
+    top: 0; 
+    left: 0px;
+}
 
 /* Featured Events */
 
 .featured-events {
     margin: 0 0vw;
     gap: 0 2vw;
-    padding: 2rem 0 1rem;
+    padding: 2rem 5rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-auto-rows: 1fr;
@@ -383,12 +389,18 @@ footer {
 
 
 /* Mobile styles */
+@media (min-width: 992px) {
+    .right-shift {
+        left: 0px;
+        max-width: 90%; 
+    }
+}
 
 @media (max-width: 560px) {
     
 
     main {
-        background-size: auto 100vh;
+        background-size: cover;
         background-position: bottom !important;
     }
 
@@ -412,9 +424,7 @@ footer {
 
 
 @media (min-width: 560px) and (max-width: 800px) {
-    main {
-        background-size: auto 100vh;
-    }
+  
 
     .league_name p{
         font-size: 1.15rem;
@@ -497,6 +507,9 @@ footer {
         margin: 0 auto 2rem;
     }
 
+    .right-shift {
+        left: 50px;
+    }
 
 }
 
@@ -504,9 +517,7 @@ footer {
 /* Tablet styles */
 
 @media (min-width: 800px) and (max-width: 1200px) {
-    main {
-        background-size: 100vw 100vh;
-    }
+    
 
     .nav__items {
         display: flex;
