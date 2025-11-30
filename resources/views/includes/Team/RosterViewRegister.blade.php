@@ -49,7 +49,7 @@
     </div>
 
     <div @class([
-        'event  mx-auto event-width cursor-pointer visible-until-hover-parent position-relative ',
+        'event  mx-auto event-width  cursor-pointer bg-light visible-until-hover-parent position-relative ',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
         
     ]) >

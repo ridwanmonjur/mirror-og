@@ -35,7 +35,7 @@
     </div>
 
     <div @class([
-        'event  mx-auto event-width cursor-pointer',
+        'event  mx-auto event-width bg-light cursor-pointer',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->id, 'title' => $joinEvent->slug ]) }}">

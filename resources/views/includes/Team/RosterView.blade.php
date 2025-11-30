@@ -40,7 +40,7 @@
     </div>
 
     <div @class([
-        'event mx-auto event-width cursor-pointer visible-until-hover-parent',
+        'event mx-auto event-width bg-light cursor-pointer visible-until-hover-parent',
         'rounded-box-' . strtoLower($joinEvent->tier?->eventTier),
     ]) style="margin-bottom : 0;">
         <a href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => $joinEvent->eventDetails->slug]) }}">
