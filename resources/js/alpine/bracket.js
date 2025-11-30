@@ -71,7 +71,16 @@ window.updateReportDispute = async (reportId, team1Id, team2Id) => {
 
 async function getAllMatchStatusesData() {
   const matchesCRef = collection(db, `event/${eventId}/brackets`);
-  const allMatchStatusesQ = query(matchesCRef, where('stageName', 'in', bracketData.roundNames));
+
+  // Guard clause: Firebase 'in' query requires non-empty array
+  if (!bracketData.roundNames || bracketData.roundNames.length === 0) {
+    console.error('roundNames is empty, returning empty query');
+    // Return query without 'in' filter to get empty results
+    const emptyQ = query(matchesCRef, where('stageName', '==', '__NONEXISTENT__'));
+    var allMatchStatusesQ = emptyQ;
+  } else {
+    var allMatchStatusesQ = query(matchesCRef, where('stageName', 'in', bracketData.roundNames));
+  }
   let allDataList = {}, modifiedDataList = {}, newDataList = {};
   let newClassList = [], modifiedClassList = [];
   let isAddedActionType = true, isLoadedActionType = false;

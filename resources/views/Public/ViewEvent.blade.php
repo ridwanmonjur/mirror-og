@@ -146,7 +146,7 @@
     </div>
     <div class="d-none" id="bracket-report-data"
         data-event-id="{{$event->id}}"
-        data-event-type="{{ $event->type->eventType }}"
+        data-event-type="{{ $event?->type?->eventType }}"
         data-round-names="{{ json_encode($roundNames) }}"
         data-previous-values="{{ json_encode($previousValues) }}"
         data-join-event-team-id="{{$existingJoint?->team_id }}"
@@ -186,10 +186,10 @@
                 </div>
             @endif
         </div>
-        <div class="grid-container">
+        <div class="grid-container" >
             <div> </div>
-            <div>
-                <div class="py-3">
+            <div class=" px-3">
+                <div class="py-3 ">
             <header class="d-flex justify-content-between align-items-center">
                     <h5 class=" py-0 my-0">
                      <u>
@@ -226,12 +226,11 @@
 
                     </div>
                 </div>
-                <div>
+                <div class="mt-3">
                     <div class="grid-container-two-columns-at-desktop ">
                         <div class="card-text ">
                             <div>
-                                <br class="d-none d-lg-block">
-                                <div class="d-flex pt-2 justify-content-between flex-wrap align-items-start pb-3">
+                                <div class="d-flex pt-3 pb-3 justify-content-around px-1  flex-wrap align-items-start ">
                                     <h1 class="text-wrap w-75 fs-5 my-0 py-0 text-start">
                                         {{ $event->eventName ?? 'No name yet' }}
                                     </h1>
@@ -287,7 +286,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flexbox-centered-space card-subtitle me-2">
+                                <div class="flexbox-centered-space card-subtitle">
                                     <div class="flexbox-centered-space">
                                         @if (isset($event->user) && isset($event->user->userBanner))
                                             <img   alt="User Banner"  src="{{ asset('storage/'.$event->user->userBanner) }}"
@@ -356,20 +355,17 @@
                                         </form>
                                     @endif
                                 </div>
-                                <br>
-                                <div>
+                                <div class=" py-4 px-3 ">
                                     <h5> <u> {{ $combinedStr }} </u> </h5>
                                     <h5> <u> {{ $timePart }} </u> </h5>
                                 </div>
 
-                                <br class="d-none d-lg-block">
 
                             </div>
                         </div>
-                        <div class="card-heading">
-                            <br class="d-none d-lg-block">
+                        <div class="card-heading ">
                             @if (session('errorMessage'))
-                                <div class="error-message mt-0">
+                                <div class="error-message mt-2">
                                     {{ session('errorMessage') }}
                                 </div>
                             @endif
@@ -378,6 +374,7 @@
                                 data-event-id="{{ $event->id }}"
                                 data-event-name="{{ $event->eventName }}"
                                 {!! $eventDataAttributes !!}
+                                class="mt-2"
                             >
                                 @csrf
                                 @if ($existingJoint)
@@ -509,7 +506,7 @@
                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                     </svg>
                                     <span >{{ $type ?? 'Not available' }} 
-                                        @if ($event?->game->games_per_match)
+                                        @if ($event?->game?->games_per_match)
                                             (Best of {{$event->game->games_per_match}})
                                         @endif
                                     </span>
@@ -529,7 +526,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div >
                 <div class="tab ms-0 position-relative tab-viewEvent" >
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' . ($showBracketFirst ? '' : 'active') }}"
                         onclick=" openTab(event, 'Overview', 'current-title'); closeAllTippy();  ">Overview</button>
@@ -575,7 +572,6 @@
                 <div> </div>
 
         </div>
-
    
     </div>
     </main>
