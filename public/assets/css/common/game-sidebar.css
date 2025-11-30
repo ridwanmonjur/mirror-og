@@ -1,0 +1,65 @@
+/* Game Sidebar Styles - Using BEM methodology */
+
+.game-sidebar {
+    position: fixed;
+    left: 0;
+    top: 7vh;
+    height: calc(100vh - 7vh);
+    width: 60px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(46, 75, 89, 0.8) 100%);
+    z-index: 10;
+    padding-top: 30px;
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 2px solid rgba(67, 164, 215, 0.3);
+    scrollbar-width: none; /* Firefox */
+}
+
+.game-sidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.game-sidebar__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+    gap: 12px;
+}
+
+.game-sidebar__item {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid #43A4D7;
+    position: relative;
+}
+
+.game-sidebar__item:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(67, 164, 215, 0.5);
+}
+
+.game-sidebar__icon {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Show sidebar on desktop */
+@media (min-width: 992px) {
+    .game-sidebar {
+        display: block;
+    }
+}
+
+/* Adjust main content when sidebar is visible */
+@media (min-width: 992px) {
+    body.has-game-sidebar main {
+        margin-left: 60px;
+    }
+}
