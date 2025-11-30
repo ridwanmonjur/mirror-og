@@ -9,7 +9,7 @@
     @include('includes.HeadIcon')
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/common/game-sidebar.css') }}">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <title>Driftwood</title>
     <meta name="description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
     <meta name="keywords" content="community esports, esports platform, competitive gaming, esports community, amateur esports, esports tournament, gaming community, closed beta, play meet chill">
@@ -69,7 +69,7 @@
     @include('includes.GameSidebar')
     @include('includes.Navbar', ['search' => true ])
     <main>
-        
+
         <div class="scroll-indicator"></div>
 
         <input type="hidden" id="endpoint_route" value="{{ route('public.landing.view') }}">
@@ -86,19 +86,29 @@
             <br><br>
         </div>
 
-        <div class="text__middle d-none d-lg-block"
+        <div 
+            class=" d-none  right-shift d-lg-flex text-center mx-auto justify-content-between align-items-center px-2 flex-wrap align-items-center"
         >
-            <p class="head mt-3">
-            @if (empty(app('request')->input('search')))  
+            <h3 class="px-5 mb-0 text-dark">
+            @if (empty(app('request')->input('search')))
              We've got events for you...
             @else
             Showing search results for '{{app('request')->input('search')}}'
             @endif
-            </p>
+            </h3>
+            <a href="{{ route('shop.index') }}" class="text-light rounded-3 btn-primary py-1 px-2 ">
+                <h5 class="py-0 my-0">
+                    Go to shop
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
+                </h5>
+                
+            </a>
         </div>
 
         <section 
-            class="featured-events scrolling-pagination"
+            class="featured-events right-shift scrolling-pagination mt-3  mx-auto"
         >
             @include('includes.Landing')
         </section>
@@ -123,8 +133,10 @@
         
         
         <script type="module" src="{{ asset('/assets/js/shared/Landing.js') }}"></script>
-       
+    @include('includes.Footer')
+
     </main>
+
 </body>
 
 </html>

@@ -7,6 +7,7 @@ use App\Models\Brackets;
 use App\Models\Team;
 use App\Models\EventCategory;
 use App\Services\EventMatchService;
+use App\Services\CloudFunctionAuthService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -30,12 +31,20 @@ class BracketsFactory extends Factory
      */
     protected $eventMatchService;
 
+    /**
+     * The cloud function auth service instance.
+     *
+     * @var CloudFunctionAuthService
+     */
+    protected $authService;
+
     public function __construct()
     {
         parent::__construct();
 
-        // Resolve the service from the container
+        // Resolve the services from the container
         $this->eventMatchService = App::make(EventMatchService::class);
+        $this->authService = App::make(CloudFunctionAuthService::class);
     }
 
 
@@ -313,7 +322,9 @@ class BracketsFactory extends Factory
                     $isTeam1Winner = rand(1, 2) == 1;
                     $pattern = rand(0, 3);
                     $baseResults = [];
-                    
+                    $gamesPerMatch = $eventDetail->game->games_per_match ?? 3;
+                    $nullArray = array_fill(0, $gamesPerMatch, null);
+
                     if ($isTeam1Winner) {
                         switch ($pattern) {
                             case 0: $baseResults = ['0', '0', '0']; break; // 3-0 team1
@@ -329,10 +340,16 @@ class BracketsFactory extends Factory
                             case 3: $baseResults = ['1', '1', null]; break; // 2-0 team2
                         }
                     }
-                    
-                    $allResults[$matchId] = [                       
+
+                    $allResults[$matchId] = [
                         'team1Id' => $bracket->team1_id,
                         'team2Id' => $bracket->team2_id,
+                        'team1Winners' => $baseResults,
+                        'team2Winners' => $baseResults,
+                        'realWinners' => $baseResults,
+                        'randomWinners' => $nullArray,
+                        'organizerWinners' => $nullArray,
+                        'stageName' => $bracket->stage_name,
                     ];
                     $specificIds[] = $matchId;
                 }
@@ -512,7 +529,7 @@ class BracketsFactory extends Factory
 
         foreach ($documentSpecs as $documentId => $customValues) {
             $slicedValues = [];
-            
+
             foreach ($customValues as $key => $array) {
                 if (is_array($array)) {
                     $slicedValues[$key] = array_slice($array, 0, $gamesPerMatch);
@@ -520,10 +537,10 @@ class BracketsFactory extends Factory
                     $slicedValues[$key] = $array;
                 }
             }
-            
+
             $slicedValues['score'] = $this->calculateScores($slicedValues['realWinners']);
-            
-            $customValuesArray[] = $slicedValues;
+
+            $customValuesArray[$documentId] = $slicedValues;
         }
 
         return [$customValuesArray, $brackets];
@@ -567,6 +584,8 @@ class BracketsFactory extends Factory
                 'randomWinners' => $nullArray,
                 'organizerWinners' => $nullArray,
                 'stageName' => $bracket->stage_name,
+                'team1Id' => $bracket->team1_id,
+                'team2Id' => $bracket->team2_id,
             ];
             $index++;
         }
@@ -683,11 +702,25 @@ class BracketsFactory extends Factory
     {
         try {
             $cloudFunctionUrl = config('services.cloud_server_functions.url');
-            
-            // For factory usage, we'll use a simple approach without authentication
-            // In production, this would need proper authentication like in FirebaseController
+
+            // Log the data being sent for debugging
+            \Illuminate\Support\Facades\Log::info('Sending batch reports to cloud function', [
+                'event_id' => $eventId,
+                'count' => $count,
+                'specific_ids' => $specificIds,
+                'specific_ids_types' => array_map('gettype', $specificIds),
+                'games_per_match' => $gamesPerMatch
+            ]);
+
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+
             $response = Http::timeout(30)
                 ->contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken,
+                    'User-Agent' => 'Laravel-App/1.0'
+                ])
                 ->post($cloudFunctionUrl . '/batch/reports', [
                     'event_id' => $eventId,
                     'count' => $count,
@@ -697,17 +730,49 @@ class BracketsFactory extends Factory
                 ]);
 
             if (!$response->successful()) {
-                // Log error but don't throw exception to avoid breaking factory
-                \Illuminate\Support\Facades\Log::error('Cloud function call failed during factory seeding: ' . $response->body());
-                return null;
+                // Clear cache on authentication errors and retry once
+                if ($response->status() === 401 || $response->status() === 403) {
+                    \Illuminate\Support\Facades\Log::warning("Authentication failed during factory seeding, clearing token cache and retrying");
+                    $this->authService->clearIdentityTokenCache($cloudFunctionUrl);
+
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+                    $response = Http::timeout(30)
+                        ->contentType('application/json')
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $identityToken,
+                            'User-Agent' => 'Laravel-App/1.0'
+                        ])
+                        ->post($cloudFunctionUrl . '/batch/reports', [
+                            'event_id' => $eventId,
+                            'count' => $count,
+                            'custom_values_array' => $customValuesArray,
+                            'specific_ids' => $specificIds,
+                            'games_per_match' => $gamesPerMatch
+                        ]);
+                }
+
+                if (!$response->successful()) {
+                    // Log detailed error information
+                    \Illuminate\Support\Facades\Log::error('Cloud function call failed during factory seeding', [
+                        'status' => $response->status(),
+                        'body' => $response->body(),
+                        'event_id' => $eventId,
+                        'count' => $count
+                    ]);
+                    return null;
+                }
             }
-            
+
             $responseData = $response->json();
             if (!isset($responseData['statusReport']) || $responseData['statusReport'] !== 'success') {
-                \Illuminate\Support\Facades\Log::error('Cloud function returned error during factory seeding: ' . ($responseData['messageReport'] ?? 'Unknown error'));
+                \Illuminate\Support\Facades\Log::error('Cloud function returned error during factory seeding', [
+                    'message' => $responseData['messageReport'] ?? 'Unknown error',
+                    'response' => $responseData
+                ]);
                 return null;
             }
-            
+
             return $responseData;
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to create batch reports during factory seeding: ' . $e->getMessage());

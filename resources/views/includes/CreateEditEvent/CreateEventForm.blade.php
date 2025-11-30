@@ -49,9 +49,7 @@
                                 </h2>
                                 <span class="inputEventTypeDefinition" class="box-text"
                                     style="text-align: left;">{!! $gameCategory->eventDefinitions !!}</span>
-                                @if ($gameCategory->eventType == "League")
-                                    <h5 class="text-primary mt-2 text-center fw-bold"> COMING SOON</h5>
-                                @endif 
+                                
                             </a>
                         </div>
                     @endif
@@ -129,7 +127,7 @@
             </div>
         </div>
         <div class=" d-flex justify-content-between box-width back-next">
-            <button onclick="goToNextScreen('step-2', 'timeline-1')" type="button"
+            <button onclick="goToNextScreen('step-2', 'timeline-1'); fillStepGameDetailsValues()" type="button"
                 class="oceans-gaming-default-button oceans-gaming-transparent-button back-button"> Back </button>
             <button onclick="goToNextScreen('step-4', 'timeline-1'); " type="button"
                 class="oceans-gaming-default-button"> Next&nbsp;&nbsp;  &gt; </button>
@@ -560,7 +558,6 @@
         >
         <label for="private" class="mt-2">
             <u>Private</u>
-            <small class="text-primary text-center fw-bold ms-2"> COMING SOON</small>
         </label><br>
         <div class="radio-indent py-0 my-0 private">
             <p class="my-0 py-0">Only players you invite can see and join your event</p>
