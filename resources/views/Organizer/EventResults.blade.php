@@ -184,7 +184,7 @@
                                                             </div>
                                                             <div class="d-flex flex-column justify-content-center my-2">
                                                                 <h6 class="mb-1 text-wrap py-0">{{ $joinEventAndTeam->teamName }}
-                                                                    <span class="ms-3 mb-1" style="font-size: 1.5rem;"> {{ $joinEventAndTeam->country_flag }} </span>
+                                                                    <span class="ms-3 mb-1" style="font-size: 1.5rem;"> @emoji($joinEventAndTeam->country_flag) </span>
                                                                     <span class="fw-bold  fs-7 text-muted">{{ $joinEventAndTeam->country_name }}</span>
                                                                 </h6>
                                                                 <div class="text-body-secondary py-1 text-wrap">

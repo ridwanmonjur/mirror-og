@@ -586,8 +586,8 @@
                 <div class="my-0 d-flex justify-content-center align-items-center" v-cloak  v-if="!isEditMode">
                     <span class="ms-2" >{{$selectTeam->teamDescription ?? 'Add a team description'}}</span>
                     @if ($selectTeam->country_flag)
-                        <span class="ms-2  fs-5">{{$selectTeam->country_flag}}</span>
-                        <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>  
+                        <span class="ms-2  fs-5">@emoji($selectTeam->country_flag)</span>
+                        <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>
                     @endif
                     <span class="ms-1  badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-question-circle ms-1 cursor-pointer" viewBox="0 0 16 16">
@@ -601,8 +601,8 @@
                     <p  v-cloak class="mb-0 mt-2 py-0 d-flex justify-content-center align-items-center">
                         <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                         @if ($selectTeam->country_flag)
-                            <span class="d-inline ms-2 fs-5">{{$selectTeam->country_flag}}</span>
-                            <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>  
+                            <span class="d-inline ms-2 fs-5">@emoji($selectTeam->country_flag)</span>
+                            <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>
                         @endif
                         <span class="ms-2 badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team 
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="ms-1 cursor-pointer bi bi-question-circle" viewBox="0 0 16 16">

@@ -16,7 +16,7 @@
                                     <div>
                                         <p class="card-title py-0 my-0  d-inline-block  text-wrap my-0 py-0 mb-0"><u
                                                 class="me-2">{{ $team->teamName }}</u><span
-                                                style="font-size: 1.5rem;">{{ $team->country_flag }}</span>
+                                                style="font-size: 1.5rem;">@emoji($team->country_flag)</span>
                                                 <span class="fw-bold  fs-7 text-muted">{{ $team->country_name }}</span></p>
                                         <div class="text-muted text-wrap align-middle">
                                             <span class="me-2">{{ $team->createdAtHumaReadable() }}</span>

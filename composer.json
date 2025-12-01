@@ -12,6 +12,7 @@
         "google/apiclient": "^2.18",
         "guzzlehttp/guzzle": "^7.2",
         "io238/laravel-iso-countries": "^1.2",
+        "jdenticon/jdenticon": "^2.0",
         "laravel/framework": "^10.10",
         "laravel/pulse": "^1.2",
         "laravel/socialite": "^5.9",
@@ -53,7 +54,8 @@
         },
         "files": [
             "app/Helpers/bladeHelpers.php",
-            "app/Helpers/utils.php"
+            "app/Helpers/utils.php",
+            "app/Helpers/EmojiHelper.php"
         ]
     },
     "autoload-dev": {

@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Services\EventMatchService;
 use App\Services\PaymentService;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -72,7 +73,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::share('USER_ACCESS', config('constants.USER_ACCESS'));
-     
+
+        // Register emoji Blade directive
+        Blade::directive('emoji', function ($expression) {
+            return "<?php echo e({$expression}); ?>";
+        });
 
         Event::listen(
             JoinEventSignuped::class,

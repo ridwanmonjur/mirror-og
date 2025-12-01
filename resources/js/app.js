@@ -7,6 +7,7 @@ window.bootstrap = bootstrap;
 import { createApp } from 'petite-vue';
 import { PageNotificationComponent } from './custom/notifications';
 import './custom/analytics2.js';
+import './custom/emoji.js';
 
 const Toast = Swal.mixin({
     toast: true,

@@ -74,7 +74,7 @@
                                     <div class="d-inline-flex text-wrap flex-column justify-content-center">
                                         <h6 class="mb-1 text-wrap py-0">{{ $joinEventAndTeam->teamName }} <span
                                                 class="ms-2"
-                                                style="font-size: 1.5rem;">{{ $joinEventAndTeam->country_flag }}</span>
+                                                style="font-size: 1.5rem;">@emoji($joinEventAndTeam->country_flag)</span>
                                                 <span class="fw-bold  fs-7 text-muted">{{ $joinEventAndTeam->country_name }}</span>
                                         </h6>
 
