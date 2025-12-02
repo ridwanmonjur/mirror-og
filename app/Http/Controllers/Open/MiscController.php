@@ -363,12 +363,12 @@ class MiscController extends Controller
             'tier' => 'required|string',
             'type' => 'string',
             'game' => 'string',
-            'noOfConTeams' => 'integer|min:0|max:16',
+            'noOfConTeams' => 'integer|min:0|max:32',
         ], [
             'tier.required' => 'Tier parameter is required.',
             'noOfConTeams.integer' => 'Number of teams must be an integer.',
             'noOfConTeams.min' => 'Number of teams must be at least 2.',
-            'noOfConTeams.max' => 'Number of teams cannot exceed 16.',
+            'noOfConTeams.max' => 'Number of teams cannot exceed 32.',
         ]);
 
         if ($validator->fails()) {
@@ -462,12 +462,12 @@ class MiscController extends Controller
             'tier' => 'required|string',
             'type' => 'string',
             'game' => 'string',
-            'noOfConTeams' => 'integer|min:0|max:16',
+            'noOfConTeams' => 'integer|min:0|max:32',
         ], [
             'tier.required' => 'Tier parameter is required.',
             'noOfConTeams.integer' => 'Number of teams must be an integer.',
             'noOfConTeams.min' => 'Number of teams must be at least 2.',
-            'noOfConTeams.max' => 'Number of teams cannot exceed 16.',
+            'noOfConTeams.max' => 'Number of teams cannot exceed 32.',
         ]);
 
         if ($validator->fails()) {

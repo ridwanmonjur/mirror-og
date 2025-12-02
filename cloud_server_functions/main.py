@@ -129,6 +129,13 @@ class DeadlineTasksRequest(BaseModel):
     is_league: bool = False
     games_per_match: int = 3
 
+class MatchResultRequest(BaseModel):
+    event_id: Union[str, int]
+    match_id: str  # Match ID like "P1.P2"
+
+class AllMatchResultsRequest(BaseModel):
+    event_id: Union[str, int]
+
 
 # Room block/unblock endpoint
 @app.post("/room/block")
@@ -826,6 +833,70 @@ async def handle_org_tasks(request: Request, tasks_request: DeadlineTasksRequest
         
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to handle organizer tasks")
+
+# Get single match result endpoint
+@app.post("/match/result")
+@limiter.limit("60/minute")
+async def get_match_result(request: Request, match_request: MatchResultRequest):
+    """Get a single match result from Firestore."""
+    try:
+        event_id = str(match_request.event_id)
+        match_id = match_request.match_id
+        db = firestore.client()
+
+        # Get the match document
+        match_doc_ref = db.collection('event').document(event_id).collection('brackets').document(match_id)
+        match_doc = match_doc_ref.get()
+
+        if not match_doc.exists:
+            return {
+                'status': 'not_found',
+                'message': f'Match {match_id} not found for event {event_id}',
+                'data': None
+            }
+
+        match_data = match_doc.to_dict()
+
+        logging.info(f"Successfully fetched match result for event {event_id}, match {match_id}")
+
+        return {
+            'status': 'success',
+            'message': f'Successfully fetched match result for match {match_id}',
+            'data': match_data
+        }
+
+    except Exception as e:
+        logging.error(f"Failed to get match result for event {match_request.event_id}, match {match_request.match_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get match result: {str(e)}")
+
+# Get all match results endpoint
+@app.post("/match/results/all")
+@limiter.limit("30/minute")
+async def get_all_match_results(request: Request, results_request: AllMatchResultsRequest):
+    """Get all match results for an event from Firestore."""
+    try:
+        event_id = str(results_request.event_id)
+        db = firestore.client()
+
+        # Fetch all brackets for this event
+        brackets_collection = db.collection('event').document(event_id).collection('brackets')
+        all_match_results = {}
+
+        for doc in brackets_collection.stream():
+            all_match_results[doc.id] = doc.to_dict()
+
+        logging.info(f"Successfully fetched all match results for event {event_id}. Total matches: {len(all_match_results)}")
+
+        return {
+            'status': 'success',
+            'message': f'Successfully fetched all match results for event {event_id}',
+            'total_matches': len(all_match_results),
+            'data': all_match_results
+        }
+
+    except Exception as e:
+        logging.error(f"Failed to get all match results for event {results_request.event_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get all match results: {str(e)}")
 
 # Cloud Run entry point - FastAPI app runs directly with uvicorn
 if __name__ == "__main__":

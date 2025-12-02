@@ -70,11 +70,15 @@ final class JoinEventFactory extends Factory
             $playersPerTeam = $eventCategory->player_per_team ?? 5;
         }
 
+        // Clear cache to ensure we get fresh tier data
+        \Illuminate\Support\Facades\Cache::flush();
+        EventTier::clearBootedModels();
+
         $eventTier = EventTier::where('eventTier', $options['event']['eventTier'])->first();
         if ($eventTier) {
             $tierTeamSlot = (int) $eventTier->tierTeamSlot;
             $noOfConTeams = (int) $options['noOfConTeams'];
-            
+
             if ($noOfConTeams > $tierTeamSlot) {
                 $options['noOfConTeams'] = $tierTeamSlot;
             }

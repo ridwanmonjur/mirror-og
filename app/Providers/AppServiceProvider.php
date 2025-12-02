@@ -76,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Register emoji Blade directive
         Blade::directive('emoji', function ($expression) {
-            return "<?php echo e({$expression}); ?>";
+            return "<?php echo '<span class=\"emoji-text\">' . e({$expression}) . '</span>'; ?>";
         });
 
         Event::listen(

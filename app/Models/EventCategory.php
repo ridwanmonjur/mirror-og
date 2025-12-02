@@ -14,11 +14,13 @@ class EventCategory extends Model
     protected $fillable = [
         'gameTitle',
         'gameIcon',
+        'gameUrl',
         'gameDescription',
         'eventTags',
         'user_id',
         'player_per_team',
         'games_per_match',
+        'url',
     ];
 
     protected $table = 'event_categories';

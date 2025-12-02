@@ -2,266 +2,155 @@
 
 namespace App\Services;
 
-use Kreait\Firebase\Contract\Firestore;
-use Google\Cloud\Firestore\FieldValue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
+use App\Services\CloudFunctionAuthService;
 
 class FirestoreService
 {
     /**
-     * @var Firestore
+     * @var CloudFunctionAuthService
      */
-    protected $firestore;
+    protected $authService;
 
     /**
-     * Constructor to inject Firestore dependency
+     * Constructor to inject CloudFunctionAuthService dependency
      */
-    public function __construct(Firestore $firestore)
+    public function __construct(CloudFunctionAuthService $authService)
     {
-        $this->firestore = $firestore;
+        $this->authService = $authService;
     }
 
     /**
-     * Create or overwrite multiple reports individually (fallback for batch issues)
+     * Get match result from Firestore via Cloud Function
      *
-     * @param  string|int  $eventId  Event ID
-     * @param  int  $count  Number of reports to create
-     * @param  array  $customValuesArray  Array of custom values for each report
-     * @param  array  $specificIds  Array of specific IDs to use
-     * @return array Response with status and report references
+     * @param string|int $eventId Event ID
+     * @param string $matchId Match ID (e.g. "P1.P2")
+     * @return array|null Match data or null if not found
      */
-    public function createIndividualReports(
-        string|int $eventId,
-        int $count,
-        array $customValuesArray = [],
-        array $specificIds = [],
-        int $gamesPerMatch = 3
-    ) {
-        $results = [];
-
+    public function getMatchResult(string|int $eventId, string $matchId): ?array
+    {
         try {
-            $firestoreDB = $this->firestore->database();
+            $cloudFunctionUrl = config('services.cloud_server_functions.url');
 
-            for ($i = 0; $i < $count; $i++) {
-                $reportId = $specificIds[$i];
-                $customValues = $customValuesArray[$i] ?? [];
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
 
-                $defaultReport = [
-                    'completeMatchStatus' => 'UPCOMING',
-                    'defaultWinners' => array_fill(0, $gamesPerMatch, null),
-                    'disputeResolved' => array_fill(0, $gamesPerMatch, null),
-                    'disqualified' => false,
-                    'matchStatus' => array_fill(0, $gamesPerMatch, 'UPCOMING'),
-                    'organizerWinners' => array_fill(0, $gamesPerMatch, null),
-                    'position' => null,
-                    'randomWinners' => array_fill(0, $gamesPerMatch, null),
-                    'realWinners' => array_fill(0, $gamesPerMatch, null),
-                    'score' => [0, 0],
-                    'team1Id' => null,
-                    'team1Winners' => array_fill(0, $gamesPerMatch, null),
-                    'team2Id' => null,
-                    'team2Winners' => array_fill(0, $gamesPerMatch, null),
-                ];
+            $response = Http::timeout(30)
+                ->contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken,
+                    'User-Agent' => 'Laravel-App/1.0'
+                ])
+                ->post($cloudFunctionUrl . '/match/result', [
+                    'event_id' => $eventId,
+                    'match_id' => $matchId,
+                ]);
 
-                // Clean the custom values to prevent circular references
-                $cleanCustomValues = json_decode(json_encode($customValues), true);
-                $reportData = array_merge($defaultReport, $cleanCustomValues);
+            if (!$response->successful()) {
+                // Clear cache on authentication errors and retry once
+                if ($response->status() === 401 || $response->status() === 403) {
+                    \Illuminate\Support\Facades\Log::warning("Authentication failed for getMatchResult, clearing token cache and retrying");
+                    $this->authService->clearIdentityTokenCache($cloudFunctionUrl);
 
-                $docRef = $firestoreDB->collection('event')
-                    ->document((string) $eventId)
-                    ->collection('brackets')
-                    ->document($reportId);
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+                    $response = Http::timeout(30)
+                        ->contentType('application/json')
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $identityToken,
+                            'User-Agent' => 'Laravel-App/1.0'
+                        ])
+                        ->post($cloudFunctionUrl . '/match/result', [
+                            'event_id' => $eventId,
+                            'match_id' => $matchId,
+                        ]);
+                }
 
-                $docRef->set($reportData, ['merge' => false]);
-
-                $results[] = [
-                    'statusReport' => 'success',
-                    'reportId' => $reportId,
-                    'messageReport' => 'Report created or overwritten successfully',
-                ];
+                if (!$response->successful()) {
+                    error_log('FirestoreService getMatchResult cloud function call failed: Status ' . $response->status() . ', Body: ' . $response->body());
+                    return null;
+                }
             }
 
-            return [
-                'statusReport' => 'success',
-                'messageReport' => 'Individual operation completed - all reports created or overwritten',
-                'resultsReport' => $results,
-            ];
-        } catch (\Exception $e) {
-            error_log('FirestoreService individual write error: '.$e->getMessage());
-            error_log('Error trace: '.$e->getTraceAsString());
+            $responseData = $response->json();
 
-            return [
-                'statusReport' => 'error',
-                'messageReport' => $e->getMessage(),
-                'resultsReport' => $results,
-            ];
+            if ($responseData['status'] === 'not_found') {
+                return null;
+            }
+
+            if ($responseData['status'] !== 'success') {
+                error_log('FirestoreService getMatchResult error: ' . ($responseData['message'] ?? 'Unknown error'));
+                return null;
+            }
+
+            return $responseData['data'] ?? null;
+        } catch (\Exception $e) {
+            error_log('FirestoreService getMatchResult error: ' . $e->getMessage());
+            return null;
         }
     }
 
     /**
-     * Create or overwrite multiple reports with specified IDs and customizable values using BulkWriter
+     * Get all match results for an event from Firestore via Cloud Function
      *
-     * @param  string  $baseId  Base ID prefix for reports
-     * @param  int  $count  Number of reports to create
-     * @param  array  $customValuesArray  Array of custom values for each report
-     * @param  array  $specificIds  Optional array of specific IDs to use instead of sequential ones
-     * @param  int  $gamesPerMatch  Number of games per match
-     * @return array Response with status and report references
+     * @param string|int $eventId Event ID
+     * @return array Array of match results keyed by match ID
      */
-    public function createBatchReports(
-        string|int $eventId,
-        int $count,
-        array $customValuesArray = [],
-        array $specificIds = [],
-        int $gamesPerMatch = 3
-    ) {
-        $results = [];
-
+    public function getAllMatchResults(string|int $eventId): array
+    {
         try {
-            $firestoreDB = $this->firestore->database();
+            $cloudFunctionUrl = config('services.cloud_server_functions.url');
 
-            $bulkWriter = $firestoreDB->bulkWriter();
-            $promises = [];
+            // Get cached identity token for authentication
+            $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
 
-            for ($i = 0; $i < $count; $i++) {
-                $reportId = $specificIds[$i];
-                $customValues = $customValuesArray[$i] ?? [];
+            $response = Http::timeout(30)
+                ->contentType('application/json')
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $identityToken,
+                    'User-Agent' => 'Laravel-App/1.0'
+                ])
+                ->post($cloudFunctionUrl . '/match/results/all', [
+                    'event_id' => $eventId,
+                ]);
 
-                $defaultReport = [
-                    'completeMatchStatus' => 'UPCOMING',
-                    'defaultWinners' => array_fill(0, $gamesPerMatch, null),
-                    'disputeResolved' => array_fill(0, $gamesPerMatch, null),
-                    'disqualified' => false,
-                    'matchStatus' => array_fill(0, $gamesPerMatch, 'UPCOMING'),
-                    'organizerWinners' => array_fill(0, $gamesPerMatch, null),
-                    'position' => null,
-                    'randomWinners' => array_fill(0, $gamesPerMatch, null),
-                    'realWinners' => array_fill(0, $gamesPerMatch, null),
-                    'score' => [0, 0],
-                    'team1Id' => null,
-                    'team1Winners' => array_fill(0, $gamesPerMatch, null),
-                    'team2Id' => null,
-                    'team2Winners' => array_fill(0, $gamesPerMatch, null),
-                ];
+            if (!$response->successful()) {
+                // Clear cache on authentication errors and retry once
+                if ($response->status() === 401 || $response->status() === 403) {
+                    \Illuminate\Support\Facades\Log::warning("Authentication failed for getAllMatchResults, clearing token cache and retrying");
+                    $this->authService->clearIdentityTokenCache($cloudFunctionUrl);
 
-                // Clean the custom values to prevent circular references
-                $cleanCustomValues = json_decode(json_encode($customValues), true);
-                $reportData = array_merge($defaultReport, $cleanCustomValues);
+                    // Retry once with fresh token
+                    $identityToken = $this->authService->getCachedIdentityToken($cloudFunctionUrl);
+                    $response = Http::timeout(30)
+                        ->contentType('application/json')
+                        ->withHeaders([
+                            'Authorization' => 'Bearer ' . $identityToken,
+                            'User-Agent' => 'Laravel-App/1.0'
+                        ])
+                        ->post($cloudFunctionUrl . '/match/results/all', [
+                            'event_id' => $eventId,
+                        ]);
+                }
 
-                $docRef = $firestoreDB->collection('event')
-                    ->document((string) $eventId)
-                    ->collection('brackets')
-                    ->document($reportId);
-                
-                $bulkWriter->set($docRef, $reportData, ['merge' => false]);
-
-                $results[] = [
-                    'statusReport' => 'pending',
-                    'reportId' => $reportId,
-                ];
+                if (!$response->successful()) {
+                    error_log('FirestoreService getAllMatchResults cloud function call failed: Status ' . $response->status() . ', Body: ' . $response->body());
+                    return [];
+                }
             }
 
-            // Add debug logging before close
-            error_log('FirestoreService: About to close BulkWriter with '.count($results).' documents');
+            $responseData = $response->json();
 
-            // Close the bulk writer to flush all writes
-            $bulkWriter->close();
-
-            // Update results to success after close
-            foreach ($results as &$result) {
-                $result['statusReport'] = 'success';
-                $result['messageReport'] = 'Report created or overwritten successfully';
+            if ($responseData['status'] !== 'success') {
+                error_log('FirestoreService getAllMatchResults error: ' . ($responseData['message'] ?? 'Unknown error'));
+                return [];
             }
 
-            return [
-                'statusReport' => 'success',
-                'messageReport' => 'BulkWriter operation completed - all reports created or overwritten',
-                'resultsReport' => $results,
-            ];
+            return $responseData['data'] ?? [];
         } catch (\Exception $e) {
-            error_log('FirestoreService BulkWriter error: '.$e->getMessage());
-            error_log('Error trace: '.$e->getTraceAsString());
-
-            // If BulkWriter fails, try individual writes as fallback
-            error_log('FirestoreService: Falling back to individual writes due to BulkWriter error');
-            return $this->createIndividualReports($eventId, $count, $customValuesArray, $specificIds, $gamesPerMatch);
-        }
-    }
-
-    /**
-     * Create or overwrite multiple dispute documents with specified IDs using BulkWriter
-     *
-     * @param  string|int  $eventId  Event ID
-     * @param  int  $count  Number of disputes to create
-     * @param  array  $customValuesArray  Array of custom values for each dispute
-     * @param  array  $specificIds  Array of specific IDs to use for disputes
-     * @return array Response with status and dispute references
-     */
-    public function createBatchDisputes(
-        string|int $eventId,
-        int $count,
-        array $customValuesArray = [],
-        array $specificIds = []
-    ) {
-        $results = [];
-
-        try {
-            $firestoreDB = $this->firestore->database();
-
-            for ($i = 0; $i < $count; $i++) {
-                $disputeId = $specificIds[$i];
-                $customValues = $customValuesArray[$i] ?? [];
-
-                $defaultDispute = [
-                    'created_at' => FieldValue::serverTimestamp(),
-                    'dispute_description' => null,
-                    'dispute_image_videos' => [],
-                    'dispute_reason' => null,
-                    'dispute_teamId' => null,
-                    'dispute_teamNumber' => null,
-                    'dispute_userId' => null,
-                    'event_id' => (string) $eventId,
-                    'match_number' => null,
-                    'report_id' => null,
-                    'resolution_resolved_by' => null,
-                    'resolution_winner' => null,
-                    'response_explanation' => null,
-                    'response_teamId' => null,
-                    'response_teamNumber' => null,
-                    'response_userId' => null,
-                    'updated_at' => FieldValue::serverTimestamp(),
-                ];
-
-                $disputeData = array_merge($defaultDispute, $customValues);
-
-                $docRef = $firestoreDB->collection('event')
-                    ->document((string) $eventId)
-                    ->collection('disputes')
-                    ->document($disputeId);
-
-                $docRef->set($disputeData, ['merge' => false]);
-
-                $results[] = [
-                    'statusDispute' => 'success',
-                    'disputeId' => $disputeId,
-                    'messageDispute' => 'Dispute created or overwritten successfully',
-                ];
-            }
-
-            return [
-                'statusDispute' => 'success',
-                'messageDispute' => 'Individual operation completed - all disputes created or overwritten',
-                'resultsDispute' => $results,
-            ];
-        } catch (\Exception $e) {
-            error_log('FirestoreService individual dispute write error: '.$e->getMessage());
-            error_log('Error trace: '.$e->getTraceAsString());
-
-            return [
-                'statusDispute' => 'error',
-                'messageDispute' => $e->getMessage(),
-                'resultsDispute' => $results,
-            ];
+            error_log('FirestoreService getAllMatchResults error: ' . $e->getMessage());
+            return [];
         }
     }
 

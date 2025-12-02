@@ -27,6 +27,13 @@ class EventCategoryResource extends Resource
                 Forms\Components\TextInput::make('gameTitle')
                     ->maxLength(255),
 
+                Forms\Components\TextInput::make('gameUrl')
+                    ->label('Game URL (Wikipedia/Info Link)')
+                    ->url()
+                    ->placeholder('https://en.wikipedia.org/wiki/...')
+                    ->maxLength(500)
+                    ->helperText('Add a Wikipedia or informational link about this game'),
+
                 Forms\Components\Section::make('Event Category')
                     ->description('Image upload is only available when editing an existing category ')
                     ->icon('heroicon-o-photo')
@@ -114,6 +121,14 @@ class EventCategoryResource extends Resource
                     ->size(60),
                 Tables\Columns\TextColumn::make('gameTitle')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('gameUrl')
+                    ->label('Info Link')
+                    ->limit(30)
+                    ->url(fn ($record) => $record->gameUrl)
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-link')
+                    ->color('primary')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('player_per_team')
                     ->label('Players/Team')
                     ->sortable(),

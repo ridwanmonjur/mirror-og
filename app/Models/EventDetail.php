@@ -27,7 +27,7 @@ class EventDetail extends Model implements Feedable
 {
     use HasFactory;
 
-    protected $perPage = 6;
+    protected $perPage = 25;
 
     public function toFeedItem(): FeedItem
     {
@@ -690,7 +690,7 @@ class EventDetail extends Model implements Feedable
 
     public static function landingPageQuery(Request $request, $currentDateTime)
     {
-        return self::whereNotIn('status', ['DRAFT', 'ENDED', 'FAILED', 'PENDING', 'PREVIEW'])
+        return self::whereNotIn('status', ['DRAFT', 'FAILED', 'PENDING', 'PREVIEW'])
             ->whereNotNull('payment_transaction_id')
             ->where('sub_action_private', '<>', 'private')
             ->where(function ($query) use ($currentDateTime) {

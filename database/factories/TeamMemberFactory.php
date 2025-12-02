@@ -31,6 +31,168 @@ final class TeamMemberFactory extends Factory
     }
 
     /**
+     * Get team description based on index
+     */
+    private function getTeamDescription($teamIndex, $isSolo = false)
+    {
+        if ($isSolo) {
+            $soloDescriptions = [
+                "Dedicated solo competitor pushing limits", "Strategic solo player seeking glory", "Passionate solo gamer with champion mindset",
+                "Elite solo competitor dominating the scene", "Skilled solo player rising through ranks", "Determined solo competitor chasing victory",
+                "Experienced solo gamer with winning record", "Ambitious solo player aiming for top", "Focused solo competitor with tactical prowess",
+                "Veteran solo player bringing excellence", "Talented solo gamer mastering the meta", "Relentless solo competitor never backing down",
+                "Pro solo player with tournament experience", "Sharp solo gamer with analytical mind", "Fearless solo competitor embracing challenges",
+                "Consistent solo player with strong fundamentals", "Dynamic solo gamer adapting to meta", "Resilient solo competitor with clutch potential",
+                "Methodical solo player with strategic vision", "Aggressive solo gamer hunting victories", "Calculated solo competitor with game sense",
+                "Technical solo player with mechanical skill", "Versatile solo gamer playing all styles", "Disciplined solo competitor training daily",
+                "Creative solo player with unique strategies", "Patient solo gamer waiting for opportunities", "Bold solo competitor making big plays",
+                "Tactical solo player reading opponents well", "Competitive solo gamer seeking championships", "Professional solo competitor with dedication",
+                "Skilled solo player with tournament wins", "Strategic solo gamer with deep knowledge", "Focused solo competitor with winning mentality",
+                "Determined solo player grinding to top", "Talented solo gamer with natural ability", "Experienced solo competitor with wisdom",
+                "Ambitious solo player chasing dreams", "Elite solo gamer dominating competition", "Passionate solo competitor loving the game",
+                "Veteran solo player with proven results", "Sharp solo gamer with quick reflexes", "Confident solo competitor trusting abilities",
+                "Consistent solo player with steady improvement", "Dynamic solo gamer with adaptability", "Resilient solo competitor bouncing back strong",
+                "Methodical solo player with game plans", "Aggressive solo gamer taking risks", "Calculated solo competitor with precision",
+                "Technical solo player with execution", "Versatile solo gamer with flexibility", "Disciplined solo competitor with routine",
+                "Creative solo player with innovation", "Patient solo gamer with composure", "Bold solo competitor with courage",
+                "Tactical solo player with awareness", "Competitive solo gamer with hunger", "Professional solo competitor with standards",
+                "Skilled solo player with mechanics", "Strategic solo gamer with IQ", "Focused solo competitor with concentration",
+                "Determined solo player with perseverance", "Talented solo gamer with potential", "Experienced solo competitor with lessons",
+                "Ambitious solo player with goals", "Elite solo gamer with dominance", "Passionate solo competitor with heart",
+                "Veteran solo player with legacy", "Sharp solo gamer with instincts", "Confident solo competitor with belief",
+                "Consistent solo player with reliability", "Dynamic solo gamer with energy", "Resilient solo competitor with grit",
+                "Methodical solo player with structure", "Aggressive solo gamer with intensity", "Calculated solo competitor with planning",
+                "Technical solo player with polish", "Versatile solo gamer with range", "Disciplined solo competitor with work ethic",
+                "Creative solo player with ideas", "Patient solo gamer with timing", "Bold solo competitor with fearlessness",
+                "Tactical solo player with positioning", "Competitive solo gamer with drive", "Professional solo competitor with commitment",
+                "Skilled solo player with talent", "Strategic solo gamer with vision", "Focused solo competitor with determination",
+                "Determined solo player with resolve", "Talented solo gamer with flair", "Experienced solo competitor with maturity",
+                "Ambitious solo player with aspirations", "Elite solo gamer with championship caliber", "Passionate solo competitor with dedication",
+                "Veteran solo player with longevity", "Sharp solo gamer with sharpness", "Confident solo competitor with self-belief",
+                "Consistent solo player with dependability", "Dynamic solo gamer with excitement", "Resilient solo competitor with toughness",
+                "Methodical solo player with system", "Aggressive solo gamer with assertiveness", "Calculated solo competitor with thought",
+                "Technical solo player with finesse", "Versatile solo gamer with diversity", "Disciplined solo competitor with focus",
+                "Creative solo player with originality", "Patient solo gamer with patience", "Bold solo competitor with bravery",
+                "Tactical solo player with intelligence", "Competitive solo gamer with competitiveness", "Professional solo competitor with professionalism"
+            ];
+            return $soloDescriptions[$teamIndex % count($soloDescriptions)];
+        }
+
+        $teamDescriptions = [
+            "Elite esports squad competing at international level with championship aspirations",
+            "Professional gaming team dedicated to excellence and continuous improvement",
+            "Competitive roster striving for tournament victories and regional dominance",
+            "United squad with championship mindset and collaborative teamwork",
+            "Veteran team bringing years of competitive experience to every match",
+            "Rising stars aiming to make their mark on the esports scene",
+            "Tactical powerhouse known for strategic gameplay and coordination",
+            "Aggressive team with explosive playstyle and clutch performances",
+            "Disciplined roster focused on fundamentals and consistent execution",
+            "Innovative squad pioneering new strategies and meta developments",
+            "Resilient team bouncing back from setbacks with determination",
+            "Dynamic roster adapting to meta changes and opponent strategies",
+            "Championship-caliber team with proven track record of success",
+            "Hungry competitors grinding to reach the top of rankings",
+            "Experienced lineup with multiple tournament wins and accolades",
+            "Cohesive unit with exceptional communication and synergy",
+            "Versatile team capable of executing multiple strategies and compositions",
+            "Calculated squad with analytical approach to competitive gaming",
+            "Passionate gamers united by love for competition and victory",
+            "Strategic team emphasizing vision control and map awareness",
+            "Mechanical monsters with individual skill and team coordination",
+            "Clutch performers known for winning crucial high-pressure moments",
+            "Methodical roster with structured practice and game planning",
+            "Explosive team with aggressive early game and snowball potential",
+            "Defensive specialists with strong late game team fighting",
+            "Adaptive squad that thrives in diverse meta environments",
+            "Team-oriented players prioritizing objectives and macro gameplay",
+            "Creative roster with unconventional picks and surprise strategies",
+            "Consistent performers with steady improvement and growth mindset",
+            "Tournament veterans with nerves of steel and experience",
+            "Coordinated squad with flawless execution and timing",
+            "Balanced team with solid fundamentals across all roles",
+            "Ambitious competitors with sights set on championship glory",
+            "Skilled roster with deep champion pools and flexibility",
+            "United front with strong team identity and chemistry",
+            "Comeback kings known for clutch late game performances",
+            "Early game specialists dominating opening phases of matches",
+            "Vision masters with superior map control and awareness",
+            "Team fight experts with coordinated engage and disengage",
+            "Objective-focused squad prioritizing strategic goals over kills",
+            "Mechanical team with high individual skill ceiling and potential",
+            "Strategic minds with superior draft phase and counter-picking",
+            "Disciplined players with excellent positioning and macro sense",
+            "Innovative squad constantly experimenting with new strategies",
+            "Championship-proven roster with multiple title wins",
+            "Rising talents grinding to break into top tier competition",
+            "Veteran-led squad blending experience with young talent",
+            "Aggressive early game team with strong laning phase",
+            "Defensive powerhouse with excellent wave management",
+            "Rotation specialists with superior map movement and timing",
+            "Team-fighting monsters with devastating combo execution",
+            "Split-push masters with strong side lane pressure",
+            "Scaling team with powerful late game win conditions",
+            "Tempo-controlling squad dictating pace of matches",
+            "Objective traders with calculated risk-reward decision making",
+            "Vision-denying team with superior control ward placement",
+            "Counter-engage specialists with reactive team fighting",
+            "Pick-potential squad with strong catch and assassination",
+            "Siege experts with poke compositions and tower pressure",
+            "Disengage masters with excellent retreat and repositioning",
+            "All-in team with commitment to decisive team fights",
+            "Peel-focused squad protecting carries with precision",
+            "Dive composition specialists with aggressive backline access",
+            "Kiting experts with superior spacing and positioning",
+            "Zone control team with area denial and terrain advantage",
+            "Sustain-focused squad with healing and shielding synergy",
+            "Burst damage team with explosive combo potential",
+            "Crowd control specialists with layered lockdown abilities",
+            "Mobility squad with superior map presence and flanking",
+            "Tanky frontline team with durable engage and peel",
+            "Glass cannon roster with high risk high reward playstyle",
+            "Balanced composition with coverage across all damage types",
+            "Early spike team capitalizing on power spike timings",
+            "Item-dependent squad scaling with gold and experience",
+            "Level-focused team with experience advantage strategies",
+            "Objective-priority squad with baron and dragon control",
+            "Lane-swap specialists with flexible role assignments",
+            "Roaming team with strong mid-game skirmishing",
+            "Farming-focused squad with superior gold generation",
+            "Trading specialists with efficient poke and harass",
+            "Wave-clear team with defensive stalling capabilities",
+            "Push-focused squad with fast tower taking and pressure",
+            "Jungle-control team with superior vision and invades",
+            "Gank-heavy roster with roaming and pick potential",
+            "Counter-jungle specialists with aggressive jungle control",
+            "Support-focused team with strong warding and vision",
+            "Carry-oriented squad with hyper-carry protection",
+            "Mid-focused team with roaming mid lane priority",
+            "ADC-centric roster with strong bot lane advantage",
+            "Top-lane specialists with strong split push and dueling",
+            "Flex-pick team with position-swapping versatility",
+            "One-trick squad with mastery of signature champions",
+            "Meta-following team with strong tier-list awareness",
+            "Counter-pick specialists with champion pool depth",
+            "Comfort-pick team with signature champion preferences",
+            "Blind-pick squad with safe first-rotation champions",
+            "Draft-priority team with strong pick and ban strategy",
+            "Red-side specialists with counter-pick advantages",
+            "Blue-side team utilizing first-pick priority effectively",
+            "Patch-adaptive squad with quick meta understanding",
+            "Scrim-tested team with extensive practice and preparation",
+            "VOD-review focused squad with analytical improvement",
+            "Coaching-supported team with strategic guidance",
+            "Data-driven roster with statistical analysis and metrics",
+            "Communication-focused squad with clear shot-calling",
+            "Mental-fortitude team with strong psychological resilience",
+            "Bootcamp-trained squad with intensive preparation periods",
+            "International-experienced roster with global tournament participation"
+        ];
+
+        return $teamDescriptions[$teamIndex % count($teamDescriptions)];
+    }
+
+    /**
      * Get team banner image based on game type
      */
     private function getTeamImage($game, $teamIndex)
@@ -84,7 +246,19 @@ final class TeamMemberFactory extends Factory
             $imageIndex = ($userNumber - 109) % 12;
         }
 
-        return "images/user/{$prefix}{$imageIndex}.jpg";
+        $fileName = $prefix . $imageIndex;
+        $basePath = storage_path('app/public/images/user');
+        $possibleExtensions = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif'];
+
+        foreach ($possibleExtensions as $ext) {
+            $filePath = "{$basePath}/{$fileName}.{$ext}";
+            if (file_exists($filePath)) {
+                return "images/user/{$fileName}.{$ext}";
+            }
+        }
+
+        // Fallback to .jpg if no file found (maintains backward compatibility)
+        return "images/user/{$fileName}.jpg";
     }
 
     public function seed($numberOfUsers = 10, $playersPerTeam = 5, $eventGame = 'Dota 2', $startUserIndex = 1)
@@ -129,12 +303,21 @@ final class TeamMemberFactory extends Factory
         ];
 
         // Apply game-specific config if available
+        // Only override if the passed values are defaults (not explicitly set)
         $gameLower = strtolower($eventGame);
         if (isset($gameConfigs[$gameLower])) {
             $config = $gameConfigs[$gameLower];
-            $numberOfUsers = $config['numberOfUsers'];
-            $playersPerTeam = $config['playersPerTeam'];
-            $startUserIndex = $config['startUserIndex'];
+            // Only use game defaults if numberOfUsers is the function default (10)
+            // Otherwise respect the passed parameter
+            if ($numberOfUsers == 10 && $playersPerTeam == 5 && $startUserIndex == 1) {
+                $numberOfUsers = $config['numberOfUsers'];
+                $playersPerTeam = $config['playersPerTeam'];
+                $startUserIndex = $config['startUserIndex'];
+            }
+            // If custom values were passed, only override startUserIndex
+            else {
+                $startUserIndex = $config['startUserIndex'];
+            }
         }
 
         // Team names array based on game type
@@ -199,7 +382,8 @@ final class TeamMemberFactory extends Factory
             'Hanis Zafran Fadil', 'Ismail Haidir Ghazali', 'Khairul Imad Halim', 'Izwan Huzaifi Jaafar', 'Muaz Hakim Khalid',
             'Danish Iman Latiff', 'Afiq Nashwan Mahadi', 'Fakhri Amsyar Nordin', 'Syahmi Raiyan Othman', 'Haziq Zaki Ramzi',
             'Ikmal Danish Sazali', 'Najmi Haikal Taufik', 'Aqil Aiman Uzair', 'Syazwan Hariz Yaakob', 'Haffiz Ammar Zainol',
-            'Azim Danial Ariffin', 'Hilmi Faizal Bakar', 'Asyraf Hakam Che Mat', 'Farhan Danish Din', 'Hasnul Fikri Elias'
+            'Azim Danial Ariffin', 'Hilmi Faizal Bakar', 'Asyraf Hakam Che Mat', 'Farhan Danish Din', 'Hasnul Fikri Elias',
+            'Imran Qayyum Faruq', 'Razali Hafeez Ghaffar', 'Salman Yahya Zain', 'Taufiq Nasri Harun'
         ];
 
         $tamilNames = [
@@ -268,6 +452,21 @@ final class TeamMemberFactory extends Factory
                         $user->update(['userBanner' => $userImage]);
                     }
                 }
+                // Ensure existing user has a slug
+                if (empty($user->slug) && method_exists($user, 'slugify')) {
+                    $baseSlug = \Illuminate\Support\Str::slug($user->name);
+                    $slug = $baseSlug;
+                    $counter = 1;
+
+                    // Check if slug already exists
+                    while (User::where('slug', $slug)->where('id', '!=', $user->id)->exists()) {
+                        $slug = $baseSlug . '-' . $counter;
+                        $counter++;
+                    }
+
+                    $user->slug = $slug;
+                    $user->save();
+                }
                 $participants[] = $user;
             } else {
                 // User doesn't exist, prepare for bulk insert
@@ -297,8 +496,18 @@ final class TeamMemberFactory extends Factory
             $newUsers = User::whereIn('email', $newEmails)->get();
 
             foreach ($newUsers as $user) {
-                if (method_exists($user, 'slugify')) {
-                    $user->slugify();
+                if (empty($user->slug) && method_exists($user, 'slugify')) {
+                    $baseSlug = \Illuminate\Support\Str::slug($user->name);
+                    $slug = $baseSlug;
+                    $counter = 1;
+
+                    // Check if slug already exists
+                    while (User::where('slug', $slug)->where('id', '!=', $user->id)->exists()) {
+                        $slug = $baseSlug . '-' . $counter;
+                        $counter++;
+                    }
+
+                    $user->slug = $slug;
                     $user->save();
                 }
             }
@@ -393,14 +602,17 @@ final class TeamMemberFactory extends Factory
         for ($i = 0; $i < $noOfConTeams; $i++) {
             $teamBanner = $this->getTeamImage($eventGame, $i);
             $teamName = $teamNamesToCheck[$i];
+            $isSolo = ($playersPerTeam == 1);
+            $teamDescription = $this->getTeamDescription($i, $isSolo);
 
             if (isset($existingTeams[$teamName])) {
                 // Team exists, update if needed
                 $team = $existingTeams[$teamName];
                 $team->update([
                     'creator_id' => $creatorUsers[$i]->id,
-                    'teamDescription' => "Elite esports team competing at the highest level",
+                    'teamDescription' => $teamDescription,
                     'teamBanner' => $teamBanner,
+                    'member_limit' => $playersPerTeam,
                     'country' => 'MY',
                     'country_name' => 'Malaysia',
                     'country_flag' => '🇲🇾',
@@ -411,8 +623,9 @@ final class TeamMemberFactory extends Factory
                 $team = Team::create([
                     'teamName' => $teamName,
                     'creator_id' => $creatorUsers[$i]->id,
-                    'teamDescription' => "Elite esports team competing at the highest level in $eventGame",
+                    'teamDescription' => $teamDescription,
                     'teamBanner' => $teamBanner,
+                    'member_limit' => $playersPerTeam,
                     'country' => 'MY',
                     'country_name' => 'Malaysia',
                     'country_flag' => '🇲🇾',
