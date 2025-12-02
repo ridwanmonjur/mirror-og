@@ -77,10 +77,10 @@
             </a>
 
             <!-- Box 3 -->
-            <a href="javascript:void(0)" class="clickable-box " role="button" id="imageLink3">
+            <a href="{{ route('shop.index') }}" class="clickable-box " id="imageLink3">
                 <div class="event d-flex justify-content-center flex-column">
                     <div class="event_head_container">
-                        Manage your shop
+                        View the shop
                     </div>
 
                     <div class="frame1">
@@ -89,8 +89,8 @@
                     </div><br>
 
                     <div class="caption">
-                        See what you have listed in the official store view your sales, and get buyer insights for your
-                        listings
+                        See what is listed in the official store and make your purchases!
+                        All listings may be available for a limited time only.
                     </div>
                 </div>
             </a>

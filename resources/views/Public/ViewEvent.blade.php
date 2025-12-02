@@ -132,7 +132,7 @@
     @include('includes.Breadcrumb', [
         'items' => [
             ['label' => 'Home', 'url' => route('public.landing.view')],
-            ['label' => $event->game?->gameTitle ?? 'Events', 'url' => route('public.landing.view')],
+            ['label' => $event->game?->gameTitle ?? 'Events', 'url' => route('public.landing.view'), 'external_url' => $event->game?->url ?? null],
             ['label' => Str::limit($event->eventName, 30), 'url' => '']
         ]
     ])

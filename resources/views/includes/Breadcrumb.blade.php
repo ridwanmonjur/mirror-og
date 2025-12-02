@@ -5,13 +5,25 @@
         @foreach($items as $index => $item)
             @if($loop->last && isset($item['label']))
                 <li class="breadcrumb-nav__item breadcrumb-nav__item--active" aria-current="page">
-                    <span class="breadcrumb-nav__text">{{ $item['label'] }}</span>
+                    @if(isset($item['external_url']) && $item['external_url'])
+                        <a href="{{ $item['external_url'] }}" target="_blank" rel="noopener noreferrer" class="breadcrumb-nav__text breadcrumb-nav__text--link" title="Visit {{ $item['label'] }} official website">
+                            {{ $item['label'] }}
+                        </a>
+                    @else
+                        <span class="breadcrumb-nav__text">{{ $item['label'] }}</span>
+                    @endif
                 </li>
             @elseif (isset($item['label']) && isset($item['url']))
                 <li class="breadcrumb-nav__item">
-                    <a href="{{ $item['url'] }}" class="breadcrumb-nav__link">
-                        {{ $item['label'] }}
-                    </a>
+                    @if(isset($item['external_url']) && $item['external_url'])
+                        <a href="{{ $item['external_url'] }}" target="_blank" rel="noopener noreferrer" class="breadcrumb-nav__link" title="Visit {{ $item['label'] }} official website">
+                            {{ $item['label'] }}
+                        </a>
+                    @else
+                        <a href="{{ $item['url'] }}" class="breadcrumb-nav__link">
+                            {{ $item['label'] }}
+                        </a>
+                    @endif
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="breadcrumb-nav__separator" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                     </svg>

@@ -6,9 +6,9 @@
             // Default SVG for positions beyond 5
             $defaultSvg =
                 '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 32" width="36" height="32">
-                            <circle cx="18" cy="16" r="14" fill="#1E90FF"/>
-                            <circle cx="18" cy="16" r="13" fill="#1E90FF" stroke="#0066CC" stroke-width="0.8"/>
-                            <path d="M8,24 L5,28 L8,32 L18,29 L28,32 L31,28 L28,24" fill="#0066CC"/>
+                            <circle cx="18" cy="16" r="14" fill="#3B82F6"/>
+                            <circle cx="18" cy="16" r="13" fill="#3B82F6" stroke="#2563EB" stroke-width="0.8"/>
+                            <path d="M8,24 L5,28 L8,32 L18,29 L28,32 L31,28 L28,24" fill="#2563EB"/>
                             <text x="18" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="white">' .
                 'P' .
                 '</text>
@@ -17,11 +17,11 @@
 
             // Array of medal colors and properties
             $medals = [
-                1 => ['fill' => '#FFD700', 'stroke' => '#DAA520', 'color' => 'black'],
-                2 => ['fill' => '#C0C0C0', 'stroke' => '#808080', 'color' => 'white'],
-                3 => ['fill' => '#CD7F32', 'stroke' => '#8B4513', 'color' => 'white'],
-                4 => ['fill' => '#9933FF', 'stroke' => '#6600CC', 'color' => 'white'],
-                5 => ['fill' => '#009933', 'stroke' => '#006622', 'color' => 'white'],
+                1 => ['fill' => '#FFD700', 'stroke' => '#FFA500', 'color' => '#1a1a1a'],
+                2 => ['fill' => '#E8E8E8', 'stroke' => '#9E9E9E', 'color' => '#2c2c2c'],
+                3 => ['fill' => '#D2691E', 'stroke' => '#8B4513', 'color' => 'white'],
+                4 => ['fill' => '#9333EA', 'stroke' => '#6B21A8', 'color' => 'white'],
+                5 => ['fill' => '#10B981', 'stroke' => '#059669', 'color' => 'white'],
             ];
 
             // Return default for positions beyond 5
