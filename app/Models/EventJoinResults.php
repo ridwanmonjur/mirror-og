@@ -42,7 +42,9 @@ class EventJoinResults extends Model
                 'event_join_results.draw',
                 'event_join_results.points',
                 'event_join_results.lost',
-            )->get();
+            )
+            ->orderByRaw('event_join_results.position IS NULL, event_join_results.position ASC')
+            ->get();
     }
 
     public static function getEventJoinListResults(array $idList): Collection
