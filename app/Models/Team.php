@@ -164,7 +164,7 @@ class Team extends Model
 
         $teamQuery = self::whereDoesntHave('members', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
-        });
+        })->where('member_limit', '!=', 1);
 
         if (! empty($filters['status']) && is_array($filters['status'])) {
             $statusFilter = array_filter($filters['status'], fn ($val) => $val != 0);
@@ -234,6 +234,7 @@ class Team extends Model
     {
         $teamList = self::join('team_members', 'teams.id', '=', 'team_members.team_id')
             ->where('team_members.user_id', $user_id)
+            ->where('teams.member_limit', '!=', 1)
             ->orderBy('team_members.updated_at')
             ->withCount([
                 'members' => function ($q) {

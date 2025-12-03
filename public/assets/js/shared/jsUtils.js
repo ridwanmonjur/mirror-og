@@ -170,7 +170,20 @@ function openTab(evt, activeName, specialElementHeightId = null) {
     let activeElement = document.getElementById(activeName);
     activeElement.style.display = "block";
     evt.currentTarget.className += " active";
-    
+
+    // Trigger twemoji parsing for emoji in the newly visible tab
+    if (typeof twemoji !== 'undefined' && activeElement) {
+        const emojiElements = activeElement.querySelectorAll('.emoji-text, [data-emoji], .country-flag');
+        emojiElements.forEach(element => {
+            twemoji.parse(element, {
+                folder: 'svg',
+                ext: '.svg',
+                base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/',
+                className: 'emoji'
+            });
+        });
+    }
+
     if (specialElementHeightId) {
         console.log({specialElementHeightId});
         let bracketList = document.getElementById(specialElementHeightId);
@@ -196,7 +209,19 @@ function showTab(event, tabName, extraClassNameToFilter = "outer-tab") {
     const selectedTab = document.getElementById(tabName);
     if (selectedTab) {
         selectedTab.classList.remove('d-none');
-        
+
+        // Trigger twemoji parsing for emoji in the newly visible tab
+        if (typeof twemoji !== 'undefined') {
+            const emojiElements = selectedTab.querySelectorAll('.emoji-text, [data-emoji], .country-flag');
+            emojiElements.forEach(element => {
+                twemoji.parse(element, {
+                    folder: 'svg',
+                    ext: '.svg',
+                    base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/',
+                    className: 'emoji'
+                });
+            });
+        }
     }
 
     const tabButtons = document.querySelectorAll(`.tab-button-active.${extraClassNameToFilter}`);

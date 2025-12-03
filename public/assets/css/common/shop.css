@@ -4,19 +4,57 @@ body {
     display: block !important;
     align-items: center;
     justify-content: center;
-    background-image: url("/assets/images/event-management-bg.jpg");
-    background-size: auto 100vh;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, rgba(67, 164, 215, 0.15) 70%, #f8f9fa 100%);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(67, 164, 215, 0.04) 30px, rgba(67, 164, 215, 0.04) 60px),
+        repeating-linear-gradient(-45deg, transparent, transparent 30px, rgba(255, 255, 255, 0.06) 30px, rgba(255, 255, 255, 0.06) 60px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 @media screen and (min-width: 992px) {
-    
     body {
-        padding: 0 10vw ;
-        background-size: cover;
+        padding: 0 10vw;
     }
 }
+
+main {
+    position: relative;
+    z-index: 1;
+}
+
+.bg-white,
+.border.rounded,
+.product-card {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px 0 rgba(173, 216, 230, 0.12);
+}
+
+.product-card:hover {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.cart_sidebar {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px 0 rgba(173, 216, 230, 0.15);
+}
+
 
 .list-group-item.active:hover {
     color: white !important;

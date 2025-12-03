@@ -97,7 +97,7 @@
         $loggedUserId = null;
         $status = "not_signed";
         $statusMessage = "Please sign in!";
-        $acceptedTeamMemberCount = 0
+        ['accepted' => $acceptedTeamMemberCount] = $selectTeam->getMembersAndTeamCount();
     @endphp
 @endguest
 @auth
@@ -275,19 +275,25 @@
                                 @if ($isCreator)
                                     <p class="w-100 btn btn-light rounded-none h-100 py-2 my-0" style="background: white;">
                                         <small class="ms-2">
-                                            You've created this team
+                                            @if ($selectTeam->member_limit == 1)
+                                                This is your solo profile
+                                            @else
+                                                You've created this team
+                                            @endif
                                         </small>
                                     </p>
                                     <hr class="py-0 my-0">
                                 @endif
                             </div>
-                            <a class="dropdown-item py-2" href="/participant/team/{{ $selectTeam->id }}/manage">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                                </svg>
-                                <span class="ms-2"> Team Profile </span>
-                            </a>
+                            @if ($selectTeam->member_limit != 1)
+                                <a class="dropdown-item py-2" href="/participant/team/{{ $selectTeam->id }}/manage">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                    </svg>
+                                    <span class="ms-2"> Team Profile </span>
+                                </a>
+                            @endif
                             @if ($status == "accepted_team" || $status == "accepted_me")
                                 <a class="dropdown-item py-2" href="/participant/team/{{ $selectTeam->id }}/register">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
@@ -296,7 +302,7 @@
                                     <span class="ms-2"> Manage Registration </span>
                                 </a>
                             @endif
-                            @if ($isCreator)
+                            @if ($isCreator && $selectTeam->member_limit != 1)
                                 <a class="dropdown-item py-2" href="/participant/team/{{ $selectTeam->id }}/manage/member">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
                                     <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
@@ -321,7 +327,7 @@
                         @endif
                         @if ($status == "accepted_me" || $status == "accepted_team")
                             <button
-                                
+
                                  v-if="!isEditMode"
                                 style=" background-color: transparent; "
                                 class="me-2 badge  btn bg-primary text-white  px-2 position-relative"
@@ -330,11 +336,11 @@
                                     <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
                                     <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
                                 </svg>
-                                <span> Your team </span>
+                                <span> {{ $selectTeam->member_limit == 1 ? 'Your Solo Profile' : 'Your team' }} </span>
                             </button>
                         @elseif ($status == "left_team")
                             <button
-                                
+
                                  v-if="!isEditMode"
                                 style=" background-color: #299e29; "
                                 class="me-2 badge  btn  text-white px-2 position-relative"
@@ -343,11 +349,11 @@
                                     <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
                                     <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
                                 </svg>
-                                <span> Your previous team </span>
+                                <span> {{ $selectTeam->member_limit == 1 ? 'Your previous solo profile' : 'Your previous team' }} </span>
                             </button>
                         @elseif ($status == "left_me" )
                             <button
-                                
+
                                  v-if="!isEditMode"
                                 style=" background-color: #299e29; "
                                 class="me-2 badge  btn  text-white px-2 position-relative"
@@ -356,12 +362,12 @@
                                     <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
                                     <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
                                 </svg>
-                                <span> Your previous team </span>
+                                <span> {{ $selectTeam->member_limit == 1 ? 'Your previous solo profile' : 'Your previous team' }} </span>
                             </button>
                                 <button  class="btn rounded-pill border-2 bg-white border-primary btn-sm  position-relative "
                                     type="button"  onclick="rejoinTean({{$teamMember->id}})"
                                 >
-                                    <span class="text-primary   "> Rejoin team! </span>
+                                    <span class="text-primary   "> {{ $selectTeam->member_limit == 1 ? 'Rejoin solo profile!' : 'Rejoin team!' }} </span>
                                 </button>
                         @endif
                     </div>
@@ -369,7 +375,9 @@
                 @endauth
                 @if ($role == "PARTICIPANT")
                     @if (is_null($status))
-                        @if ($acceptedTeamMemberCount>=10)
+                        @if ($selectTeam->member_limit == 1)
+                            {{-- Solo teams cannot accept new members --}}
+                        @elseif ($acceptedTeamMemberCount>=10)
                             <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="button" disabled>
                                 <span> Full </span>
                             </button>
@@ -391,7 +399,7 @@
                                             <span class="text-primary"> Join Team </span>
                                         </button>
                                     </form>
-                                @else 
+                                @else
                                     <form  v-if="!isEditMode"  class="d-block d-lg-inline-block  px-0" method="POST" action="{{route('participant.member.pending', ['id' => $selectTeam->id]) }}">
                                         @csrf()
                                         <button  class="btn btn-primary bg-white rounded-pill border-2 btn-sm" type="submit">
@@ -547,22 +555,22 @@
                         </label>
                     </small>
 
-                    <small class=" mb-1">
-                        <input 
-                            class="form-control d-inline-block py-0 me-2" 
-                            style="width: 65px;" 
+                    <small class=" mb-1" v-if="originalMemberLimit != 1">
+                        <input
+                            class="form-control d-inline-block py-0 me-2"
+                            style="width: 65px;"
                             type="number"
                             id="member_limit"
                             min="5"
                             max="50"
                             name="member_limit"
-                            v-model="member_limit" 
+                            v-model="member_limit"
                             placeholder="Enter limit"
                         >
                         <label class="form-check-label " for="member_limit">
                             Team member limit:
                         </label>
-                        
+
                     </small>
 
 
@@ -586,10 +594,9 @@
                 <div class="my-0 d-flex justify-content-center align-items-center" v-cloak  v-if="!isEditMode">
                     <span class="ms-2" >{{$selectTeam->teamDescription ?? 'Add a team description'}}</span>
                     @if ($selectTeam->country_flag)
-                        <span class="ms-2  fs-5">@emoji($selectTeam->country_flag)</span>
-                        <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>
+                        <span class=" bg-primary px-2 small rounded-3 text-light ms-2 me-2 ">{{ $selectTeam->country_name }}</span>
                     @endif
-                    <span class="ms-1  badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team
+                    <span class="ms-1  badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} {{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }}
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-question-circle ms-1 cursor-pointer" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
@@ -601,15 +608,14 @@
                     <p  v-cloak class="mb-0 mt-2 py-0 d-flex justify-content-center align-items-center">
                         <span class="d-inline">{{$selectTeam->teamDescription}}</span>
                         @if ($selectTeam->country_flag)
-                            <span class="d-inline ms-2 fs-5">@emoji($selectTeam->country_flag)</span>
-                            <span class="fw-bold  fs-7 ms-2 me-2 ">{{ $selectTeam->country_name }}</span>
+                            <span class=" bg-primary px-2 small rounded-3 text-light ms-2 me-2 ">{{ $selectTeam->country_name }}</span>
                         @endif
-                        <span class="ms-2 badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} Team 
+                        <span class="ms-2 badge bg-primary" data-bs-toggle="tooltip" v-bind:title="teamStatus[1]">@{{teamStatus[0]}} {{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }}
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="ms-1 cursor-pointer bi bi-question-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
                             </svg>
-                        </small>
+                        </span>
                     </p>
                  @endif
             @endif
@@ -664,17 +670,19 @@
                 </div>
             </div>
             @if ($status == "accepted_me" || $status == "accepted_team")
-                <div v-cloak class="position-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2" style="bottom: 20px;">
-                    <button   v-if="!isEditMode" class="bg-red px-3 btn rounded-pill btn-sm py-2 text-white "
-                        onclick="disapproveMember({{ $teamMember->id }})"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
-                        <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
-                        </svg>
-                        <span class="d-none d-lg-inline">Leave Team</span>
-                    </button>
-                </div>
+                @if ($selectTeam->member_limit != 1)
+                    <div v-cloak class="position-absolute d-flex w-100 justify-content-end py-0 my-0 mt-2" style="bottom: 20px;">
+                        <button   v-if="!isEditMode" class="bg-red px-3 btn rounded-pill btn-sm py-2 text-white "
+                            onclick="disapproveMember({{ $teamMember->id }})"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                            </svg>
+                            <span class="d-none d-lg-inline">Leave Team</span>
+                        </button>
+                    </div>
+                @endif
             @endif
        
     </div>

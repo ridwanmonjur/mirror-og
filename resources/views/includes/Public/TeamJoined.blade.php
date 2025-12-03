@@ -24,8 +24,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                @php
+                                    $routeName = $team->member_limit == 1 ? 'public.solo.view' : 'public.team.view';
+                                @endphp
                                 <div class="col-2 d-flex justify-content-center align-items-center">
-                                    <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+                                    <a href="{{ route($routeName, ['id' => $team->id, 'title' => $team->slug]) }}"
                                         class="btn btn-link position-relative  btn-sm gear-icon-btn "
                                         style="z-index: 3;">
                                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
@@ -38,7 +41,7 @@
 
                             </div>
                         </div>
-                        <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+                        <a href="{{ route($routeName, ['id' => $team->id, 'title' => $team->slug]) }}"
                             class="position-absolute top-0 start-0 w-100 h-100"></a>
                     </div>
                 </div>

@@ -536,7 +536,7 @@
                             if (checkIfLoading(event)) { openTab(event, 'Bracket', 'bracket-list'); openAllTippy(); }
                         ">Bracket</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
-                        onclick=" openTab(event, 'Teams', 'current-teams'); closeAllTippy(); ">Teams</button>
+                        onclick=" openTab(event, 'Teams', 'current-teams'); closeAllTippy(); ">{{ $event->game?->player_per_team == 1 ? 'Players' : 'Teams' }}</button>
                     <button class="{{ 'side-image-' . $eventTierLower . ' tablinks ' }}"
                         onclick=" openTab(event, 'Result', 'current-positions'); closeAllTippy();  ">Result</button>
                 </div>
@@ -560,11 +560,11 @@
                     @endif
                 </div>
 
-                <div id="Teams" class="tabcontent" >
+                <div id="Teams" class="tabcontent" style="display: none;">
                     @include('includes.Public.TeamJoined')
                 </div>
 
-                <div id="Result" class="tabcontent" >
+                <div id="Result" class="tabcontent" style="display: none;">
                     @include('includes.Public.TeamResults')
                 </div>
             </div>

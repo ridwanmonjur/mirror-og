@@ -104,7 +104,7 @@
                 onclick="showTab(event, 'Overview', 'outer-tab')">Overview</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Activity', 'outer-tab')">Activity</button>
             <button class="tab-button outer-tab" onclick="showTab(event, 'Events', 'outer-tab')">Events</button>
-            <button class="tab-button outer-tab" onclick="showTab(event, 'Teams', 'outer-tab')">Teams</button>
+            <button class="tab-button outer-tab" onclick="showTab(event, 'Teams', 'outer-tab')">Solo / Teams</button>
         </div>
 
         <div class="tab-content pb-4  outer-tab" id="Overview">
@@ -218,7 +218,23 @@
 
         <div class="tab-content pb-4  outer-tab d-none" id="Teams">
             <br>
-            <div class="tab-size"><b>Current Teams</b></div>
+            @php
+                // Determine if there are solo profiles and/or teams in current teams
+                $hasSoloProfiles = isset($teamList) && collect($teamList)->contains('member_limit', 1);
+                $hasTeams = isset($teamList) && collect($teamList)->contains(function($team) {
+                    return $team->member_limit != 1;
+                });
+
+                // Build the section title
+                if ($hasSoloProfiles && $hasTeams) {
+                    $currentTitle = 'Current Solo Profiles / Teams';
+                } elseif ($hasSoloProfiles) {
+                    $currentTitle = 'Current Solo Profiles';
+                } else {
+                    $currentTitle = 'Current Teams';
+                }
+            @endphp
+            <div class="tab-size"><b>{{ $currentTitle }}</b></div>
             <div class="tab-size pt-4">
                 @if (isset($teamList[0]))
                     <div class="row row-cols-1 row-cols-lg-2 g-4">
@@ -237,19 +253,28 @@
                                                     style="object-fit: cover;" width="50" height="50"
                                                     alt="{{ $team->teamName }}">
                                                 <div>
-                                                    <h5 class="card-title mb-0 text-wrap">{{ $team->teamName }} <span
-                                                            class="ps-2 fs-5">@emoji($team->country_flag)</span>
-                                                        <small class="fw-bold fs-7 text-muted">{{ $team->country_name }}</small>
+                                                    
+                                                    <h5 class="card-title mb-0 text-wrap">{{ $team->teamName }}
+
                                                     </h5>
+                                                        <span class="ps-2 fs-5">@emoji($team->country_flag)</span>
+                                                        <small class="fw-bold fs-7 text-muted">{{ $team->country_name }}</small>
+                                                        @if ($team->member_limit == 1)
+                                                            <span class="badge bg-primary ms-2">Solo</span>
+                                                        @endif
+                                                        <br>
                                                     <div class="text-muted">
-                                                        <span class="me-3">{{ $team->members_count }}/5
+                                                        <span class="me-3">{{ $team->members_count }}
                                                             members</span>
 
 
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+                                            @php
+                                                $routeName = $team->member_limit == 1 ? 'public.solo.view' : 'public.team.view';
+                                            @endphp
+                                            <a href="{{ route($routeName, ['id' => $team->id, 'title' => $team->slug]) }}"
                                                 class="btn gear-icon-btn border-secondary btn-sm rounded-circle position-relative"
                                                 style="z-index: 3;">
                                                 <svg width="20" height="20" viewBox="0 0 24 24"
@@ -260,7 +285,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+                                    <a href="{{ route($routeName, ['id' => $team->id, 'title' => $team->slug]) }}"
                                         class="position-absolute top-0 start-0 w-100 h-100"></a>
                                 </div>
                             </div>
@@ -271,7 +296,23 @@
                 @endif
             </div>
             <br>
-            <div class="tab-size"><b>Past Teams</b></div>
+            @php
+                // Determine if there are solo profiles and/or teams in past teams
+                $hasPastSoloProfiles = isset($pastTeam) && collect($pastTeam)->contains('member_limit', 1);
+                $hasPastTeams = isset($pastTeam) && collect($pastTeam)->contains(function($team) {
+                    return $team->member_limit != 1;
+                });
+
+                // Build the section title
+                if ($hasPastSoloProfiles && $hasPastTeams) {
+                    $pastTitle = 'Past Solo Profiles / Teams';
+                } elseif ($hasPastSoloProfiles) {
+                    $pastTitle = 'Past Solo Profiles';
+                } else {
+                    $pastTitle = 'Past Teams';
+                }
+            @endphp
+            <div class="tab-size"><b>{{ $pastTitle }}</b></div>
             <div class="tab-size pt-4">
                 @if (isset($pastTeam[0]))
                     <div class="row row-cols-1 row-cols-lg-2 g-4">
@@ -292,15 +333,23 @@
                                                 <div>
                                                     <h5 class="card-title mb-0">{{ $team->teamName }}</h5>
                                                     <div class="text-muted">
-                                                        <span class="me-3">{{ $team->members_count }}/5
-                                                            members</span>
+
                                                         <span class="me-2 fs-5">@emoji($team->country_flag)</span>
                                                         <span class="fw-bold  fs-7 text-muted">{{ $team->country_name }}</span>
+                                                        @if ($team->member_limit == 1)
+                                                            <span class="badge bg-primary ms-2">Solo</span>
+                                                        @endif
+                                                        <br>
+                                                        <span class="me-3">{{ $team->members_count }}
+                                                            members</span> 
 
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+                                            @php
+                                                $routeName = $team->member_limit == 1 ? 'public.solo.view' : 'public.team.view';
+                                            @endphp
+                                            <a href="{{ route($routeName, ['id' => $team->id, 'title' => $team->slug]) }}"
                                                 class="btn gear-icon-btn border-secondary btn-sm rounded-circle position-relative"
                                                 style="z-index: 3;">
                                                 <svg width="20" height="20" viewBox="0 0 24 24"
@@ -311,7 +360,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="{{ route('public.team.view', ['id' => $team->id, 'title' => $team->slug]) }}"
+                                    <a href="{{ route($routeName, ['id' => $team->id, 'title' => $team->slug]) }}"
                                         class="position-absolute top-0 start-0 w-100 h-100"></a>
                                 </div>
                             </div>

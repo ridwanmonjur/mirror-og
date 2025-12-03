@@ -82,11 +82,11 @@ function ParticipantData ()  {
                     data?.data.forEach((value) => {
                         if (value.type === 'region') {
                             regionsHtml += `
-                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                                <option value='${value.id}' class="emoji-text">${value.emoji_flag} ${value.name}</option>
                             `;
                         } else if (value.type === 'country') {
                             countriesOptionsHtml += `
-                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                                <option value='${value.id}' class="emoji-text">${value.emoji_flag} ${value.name}</option>
                             `;
                         }
                     });

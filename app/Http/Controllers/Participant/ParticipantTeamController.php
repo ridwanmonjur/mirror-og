@@ -106,6 +106,17 @@ class ParticipantTeamController extends Controller
             ->first();
         // dd($selectTeam);
         if ($selectTeam) {
+            // Redirect to solo route if team has member_limit of 1
+            if ($selectTeam->member_limit == 1) {
+                // Check if this is being accessed from team routes
+                if ($request->routeIs('participant.team.manage')) {
+                    return redirect()->route('public.solo.view', ['id' => $id]);
+                }
+                if ($request->routeIs('public.team.view')) {
+                    return redirect()->route('public.solo.view', ['id' => $id, 'title' => $selectTeam->slug]);
+                }
+            }
+
             $captain = TeamCaptain::where('teams_id', $selectTeam->id)->first();
             $joinEvents = JoinEvent::getJoinEventsForTeamWithEventsRosterResults($selectTeam->id);
             $totalEventsCount = $joinEvents->count();
@@ -122,7 +133,13 @@ class ParticipantTeamController extends Controller
             $joinEventIds = $joinEvents->pluck('id')->toArray();
             $joinEventAndTeamList = EventJoinResults::getEventJoinListResults($joinEventIds);
 
-            return view('Public.TeamProfile', compact('selectTeam', 'joinEvents', 'captain', 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'joinEventAndTeamList', 'totalEventsCount', 'wins', 'streak'));
+            // Get the solo player's user information for solo teams
+            $soloPlayer = null;
+            if ($selectTeam->member_limit == 1 && $selectTeam->members->isNotEmpty()) {
+                $soloPlayer = $selectTeam->members->first()->user;
+            }
+
+            return view('Public.TeamProfile', compact('selectTeam', 'joinEvents', 'captain', 'joinEventsHistory', 'joinEventsActive', 'followCounts', 'joinEventAndTeamList', 'totalEventsCount', 'wins', 'streak', 'soloPlayer'));
         }
 
         return $this->showErrorParticipant('This event is missing or cannot be retrieved!');
@@ -216,6 +233,11 @@ class ParticipantTeamController extends Controller
         try {
             $validatedData = $request->validated();
             $team = Team::findOrFail($request['id']);
+
+            if ($team->member_limit == 1) {
+                $validatedData['member_limit'] = 1;
+            }
+
             $team->teamName = $request['teamName'];
             $team->slugify();
             $team->update($validatedData);
@@ -263,6 +285,11 @@ class ParticipantTeamController extends Controller
     public function inviteMember(Request $request, $id, $userId)
     {
         try {
+            $team = Team::findOrFail($id);
+            if ($team->member_limit == 1) {
+                return response()->json(['success' => false, 'message' => 'Cannot add members to a solo team'], 403);
+            }
+
             TeamMember::create([
                 'user_id' => $userId,
                 'team_id' => $id,
@@ -285,6 +312,20 @@ class ParticipantTeamController extends Controller
     public function pendingTeamMember(AddMemberRequest $request, $id)
     {
         try {
+            $team = Team::findOrFail($id);
+            if ($team->member_limit == 1) {
+                $errorMessage = 'Cannot join a solo team';
+
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMessage,
+                    ], 403);
+                }
+
+                return redirect()->back()->with('errorJoin', $errorMessage);
+            }
+
             $user = $request->attributes->get('user');
             $status = $request->getStatusByTeamType();
 
@@ -358,6 +399,14 @@ class ParticipantTeamController extends Controller
     {
         $member = $request->getTeamMember();
         $user = $request->attributes->get('user');
+
+        $team = Team::findOrFail($member->team_id);
+        if ($team->member_limit == 1 && $request->status === 'left') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot leave a solo team',
+            ], 403);
+        }
 
         if ($request->status === 'left') {
             $captain = TeamCaptain::where([

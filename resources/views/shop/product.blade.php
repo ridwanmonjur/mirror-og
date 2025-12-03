@@ -40,7 +40,7 @@
        
 
         <!-- Product Detail -->
-        <div class="px-4 py-2 bg-white  ">
+        <div class="px-4 py-2 bg-white rounded-3 shadow-sm">
 
              <div class="px-4 my-3">
             <nav aria-label="breadcrumb">

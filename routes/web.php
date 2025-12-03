@@ -69,6 +69,7 @@ Route::get('logout', [AuthController::class, 'logoutAction'])->name('logout.acti
 Route::get('/event/search', [MiscController::class, 'showLandingPage'])->name('public.search.view');
 Route::get('/event/{id}/{title?}', [ParticipantEventController::class, 'ViewEvent'])->name('public.event.view');
 Route::get('/view/team/{id}/{title?}', [ParticipantTeamController::class, 'teamManagement'])->name('public.team.view');
+Route::get('/view/solo/{id}/{title?}', [ParticipantTeamController::class, 'teamManagement'])->name('public.solo.view');
 Route::get('/view/participant/{id}/{title?}', [ParticipantController::class, 'viewProfileById'])->name('public.participant.view');
 Route::get('/view/organizer/{id}/{title?}', [OrganizerController::class, 'viewProfileById'])->name('public.organizer.view');
 
@@ -139,6 +140,7 @@ Route::group(['prefix' => 'participant'], function () {
             Route::get('/team/{id}/manage/member', [ParticipantTeamController::class, 'teamMemberManagement'])->name('participant.member.manage');
             Route::get('/team/{id}/manage', [ParticipantTeamController::class, 'teamManagement'])->name('participant.team.manage');
             Route::get('/team/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.manage');
+            Route::get('/solo/{id}/register', [ParticipantEventController::class, 'registrationManagement'])->name('participant.register.solo');
 
             Route::post('/team/roster/approve', [ParticipantRosterController::class, 'approveRosterMember'])->name('participant.roster.approve');
             Route::post('/team/roster/disapprove', [ParticipantRosterController::class, 'disapproveRosterMember'])->name('participant.roster.disapprove');

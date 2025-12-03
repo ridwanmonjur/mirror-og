@@ -10,7 +10,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @include('includes.HeadIcon')
     <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
-    <title>{{ $selectTeam->teamName }} - Team Profile</title>
+    <title>{{ $selectTeam->teamName }} - {{ $selectTeam->member_limit == 1 ? 'Solo Profile' : 'Team Profile' }}</title>
     <meta name="description" content="{{ $selectTeam->teamName }} has {{ $selectTeam->members_count }} members, {{ $totalEventsCount }} events joined, and {{ $wins }} tournament wins.">
     
     <!-- Open Graph Tags -->
@@ -59,7 +59,9 @@
         <div class="tabs">
             <button class="tab-button outer-tab py-2 tab-button-active "
                 onclick="showTab(event, 'Overview')">Overview</button>
-            <button class="tab-button outer-tab  py-2" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
+            @if ($selectTeam->member_limit != 1)
+                <button class="tab-button outer-tab  py-2" onclick="showTab(event, 'Members', 'outer-tab')">Members</button>
+            @endif
             <button class="tab-button outer-tab  py-2" onclick="showTab(event, 'Active Rosters', 'outer-tab')"><span class="d-none d-lg-inline">Active</span>
                 Rosters
             </button>
@@ -70,6 +72,17 @@
 
         <div class="tab-content pb-4 outer-tab" id="Overview">
             <div class="d-none d-lg-block"><br></div>
+            @if ($selectTeam->member_limit == 1 && isset($soloPlayer))
+                <div class="tab-size d-none d-lg-block text-center mx-auto mb-3">
+                    <p class="mb-2">
+                        This is the solo profile of
+                        <a href="{{ route('public.participant.view', ['id' => $soloPlayer->id, 'title' => $soloPlayer->participant?->slug ?? '']) }}"
+                           class="text-primary fw-bold text-decoration-none">
+                            {{ $soloPlayer->name }}
+                        </a>
+                    </p>
+                </div>
+            @endif
             <div class="tab-size d-none d-lg-block text-center mx-auto"><b>Recent Events</b></div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center">
@@ -109,17 +122,17 @@
                         <div class="card-body row py-2 d-flex justify-content-center flex-wrap text-center mx-auto py-0 px-0 " 
                             style="padding-top: 30px;padding-bottom: 30px;width: 90%;"
                         >
-                            <div class="col-12 col-xl-4"> 
+                            <div class="col-12 col-xl-4">
                                 <h3 class="py-0 my-0"> {{ $totalEventsCount }} </h3>
-                                <p class="mx-2 py-2 my-0"> Event{{ bldPlural($totalEventsCount) }} Joined By Team </p>
+                                <p class="mx-2 py-2 my-0"> Event{{ bldPlural($totalEventsCount) }} Joined By {{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }} </p>
                             </div>
-                            <div class="col-12 col-xl-4"> 
+                            <div class="col-12 col-xl-4">
                                 <h3 class="py-0 my-0"> {{$wins}} </h3>
-                                <p class="mx-2 py-2 my-0"> Tournament Win{{ bldPlural($wins) }} By Team </p>
+                                <p class="mx-2 py-2 my-0"> Tournament Win{{ bldPlural($wins) }} By {{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }} </p>
                             </div>
-                            <div class="col-12 col-xl-4"> 
+                            <div class="col-12 col-xl-4">
                                 <h3 class="py-0 my-0"> {{$streak}} </h3>
-                                <p class="mx-2 py-2 my-0"> Team Current Win Streak </p>
+                                <p class="mx-2 py-2 my-0"> {{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }} Current Win Streak </p>
                             </div>
                         </div>
                     </div>
@@ -145,11 +158,13 @@
             <br>
             @if (!isset($joinEventsActive[0]))
                 <p class="text-center">
-                    Team {{ $selectTeam->teamName }} has no active rosters.
+                    {{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }} {{ $selectTeam->teamName }} has no active rosters.
                 </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $joinCount }} roster member{{ bldPlural($joinCount) }}.</p>
+                    @if ($selectTeam->member_limit != 1)
+                        <p class="text-center"> {{ $selectTeam->teamName }} has {{ $joinCount }} roster member{{ bldPlural($joinCount) }}.</p>
+                    @endif
                     <br>
                     @foreach ($joinEventsActive as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">
@@ -164,10 +179,12 @@
         <div class="tab-content pb-4  outer-tab d-none" id="Roster History">
             <br>
             @if (!isset($joinEventsHistory[0]))
-                <p style="text-align: center;">Team {{ $selectTeam->teamName }} has no roster history </p>
+                <p style="text-align: center;">{{ $selectTeam->member_limit == 1 ? 'Player' : 'Team' }} {{ $selectTeam->teamName }} has no roster history </p>
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
-                    <p class="text-center">Team {{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bldPlural($historyCount) }} member{{ bldPlural($joinCount) }}.</p>
+                    @if ($selectTeam->member_limit != 1)
+                       <p class="text-center">{{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bldPlural($historyCount) }} member{{ bldPlural($joinCount) }}.</p>
+                    @endif
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)
                         <div class="d-flex justify-content-center align-items-center   animation-container ">

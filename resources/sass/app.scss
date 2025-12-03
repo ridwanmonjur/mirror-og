@@ -58,40 +58,9 @@
   font-family: 'Nunito', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
 }
 
-// Ensure proper emoji rendering including flag emojis
-
-
-// Emoji images styling
-img.emoji {
+.emoji-text img {
   height: 1.2em;
   width: 1.2em;
-  margin: 0 .05em 0 .1em;
-  vertical-align: -0.2em;
-  display: inline-block;
-}
-
-// Force emoji font rendering for flag emojis (fallback for non-JS environments)
-// Regional indicator symbols need special handling
-.flag-emoji,
-span:has([data-flag]),
-[class*="country_flag"],
-[class*="region_flag"] {
-  font-family: "Twemoji Mozilla", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "EmojiOne Color", sans-serif !important;
-  font-weight: normal !important;
-  font-style: normal !important;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-// Ensure inline flag emojis render properly (fallback)
-span {
-  &:not([class]):not([id]) {
-    // Check if content looks like a flag emoji (starts with regional indicator)
-    &:first-letter {
-      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-    }
-  }
 }
 
 @import 'variables';

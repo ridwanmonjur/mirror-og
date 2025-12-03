@@ -11,6 +11,8 @@ use App\Models\EventDetail;
 use App\Models\JoinEvent;
 use App\Models\Like;
 use App\Models\OrganizerFollow;
+use App\Models\Participant;
+use App\Models\RosterCaptain;
 use App\Models\RosterMember;
 use App\Models\Team;
 use App\Models\TeamCaptain;
@@ -80,6 +82,10 @@ class ParticipantEventController extends Controller
         $groupedPaymentsByEventAndTeamMember = [];
         $member = TeamMember::where('user_id', $logged_user_id)->select('id')->first();
         if ($selectTeam) {
+            // Redirect to solo route if team has member_limit of 1 and accessed via team route
+            if ($selectTeam->member_limit == 1 && $request->routeIs('participant.register.manage')) {
+                return redirect()->route('participant.register.solo', ['id' => $id]);
+            }
             if ($request->eventId) {
                 $invitationListIds = [];
                 $isRedirect = true;
@@ -111,7 +117,119 @@ class ParticipantEventController extends Controller
 
     public function redirectToSelectOrCreateTeamToJoinEvent(Request $request, $id)
     {
-        $user_id = $request->attributes->get('user')->id;
+        $user = $request->attributes->get('user');
+        $user_id = $user->id;
+
+        $event = EventDetail::with(['game:id,player_per_team'])
+            ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id', 'event_category_id')
+            ->with(['tier:id,eventTier', 'user:id,name,userBanner', 'signup:id,event_id,signup_open,normal_signup_start_advanced_close,signup_close'])
+            ->where('id', $id)
+            ->first();
+
+        if (!$event) {
+            return $this->showErrorParticipant('Event not found!');
+        }
+
+        $isSoloEvent = $event->game && $event->game->player_per_team == 1;
+
+        if ($isSoloEvent) {
+            $status = $event->getRegistrationStatus();
+            if ($status == config('constants.SIGNUP_STATUS.CLOSED')) {
+                return $this->showErrorParticipant('Signup is closed right now!');
+            }
+
+            $isPartOfRoster = JoinEvent::isPartOfRoster($id, $user_id);
+            if ($isPartOfRoster) {
+                return $this->showErrorParticipant('You have already joined this event!');
+            }
+
+            DB::beginTransaction();
+            try {
+                $existingTeam = Team::whereHas('members', function ($query) use ($user_id) {
+                    $query->where('user_id', $user_id)->where('status', 'accepted');
+                })
+                ->where('member_limit', 1)
+                ->where('teamName', $user->name)
+                ->first();
+
+                if ($existingTeam) {
+                    $selectTeam = $existingTeam;
+                } else {
+                    [
+                        'teamList' => $teamList,
+                        'count' => $count,
+                    ] = Team::getUserTeamListAndCount($user_id);
+
+                    if ($count >= 5) {
+                        DB::rollBack();
+                        return $this->showErrorParticipant('You already have 5 teams! Cannot create a solo team.');
+                    }
+
+                    $selectTeam = new Team();
+                    $selectTeam->teamName = $user->name;
+                    $selectTeam->slug = \Illuminate\Support\Str::slug($user->name);
+                    $selectTeam->creator_id = $user_id;
+                    $selectTeam->member_limit = 1;
+                    $selectTeam->save();
+
+                    TeamMember::bulkCreateTeanMembers($selectTeam->id, [$user_id], 'accepted');
+
+                    $selectTeam->load('members');
+
+                    // Add user as team captain
+                    if ($selectTeam->members->isNotEmpty()) {
+                        TeamCaptain::insert([
+                            'team_member_id' => $selectTeam->members[0]->id,
+                            'teams_id' => $selectTeam->id,
+                        ]);
+                    }
+                }
+
+                // Reload team with members and user details
+                $selectTeam->load(['members' => function ($query) {
+                    $query->where('status', 'accepted')
+                        ->with(['user' => function ($q) {
+                            $q->select(['id', 'name', 'email', 'userBanner']);
+                        }]);
+                }]);
+
+                // Register team for event
+                $join_id = $selectTeam->processTeamRegistration($user->id, $event->id);
+
+                // Get the roster member that was just created
+                $rosterMember = RosterMember::where('join_events_id', $join_id)
+                    ->where('user_id', $user_id)
+                    ->first();
+
+                if ($rosterMember) {
+                    // Add roster captain entry
+                    RosterCaptain::create([
+                        'team_member_id' => $rosterMember->team_member_id,
+                        'join_events_id' => $join_id,
+                        'teams_id' => $selectTeam->id,
+                    ]);
+
+                    // Update join_events with roster_captain_id
+                    $joinEvent = JoinEvent::find($join_id);
+                    if ($joinEvent) {
+                        $joinEvent->roster_captain_id = $rosterMember->id;
+                        $joinEvent->save();
+                    }
+                }
+
+                Event::dispatch(new JoinEventSignuped(compact('user', 'join_id', 'event', 'selectTeam')));
+                DB::commit();
+
+                return view('Participant.EventNotify', compact('id', 'selectTeam'));
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error($e);
+                return $this->showErrorParticipant('Failed to join event: ' . $e->getMessage());
+            }
+        }
+
+        // Original behavior for team events
         [
             'teamList' => $selectTeam,
             'count' => $count,
@@ -339,13 +457,15 @@ class ParticipantEventController extends Controller
                 return $this->showErrorParticipant("Doesn't belong to this roster!");
             }
 
-            $routeBack = route('participant.register.manage', ['id' => $rosterMember->team_id, 'scroll' => $request->join_event_id]);
-
-            $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!' : 'You have started a vote to cancel registratin.';
-
             $joinEvent = JoinEvent::where('id', $request->join_event_id)->firstOrFail();
 
             $team = Team::where('id', $joinEvent->team_id)->firstOrFail();
+
+            // Use appropriate route based on team type
+            $routeName = $team->member_limit == 1 ? 'participant.register.solo' : 'participant.register.manage';
+            $routeBack = route($routeName, ['id' => $rosterMember->team_id, 'scroll' => $request->join_event_id]);
+
+            $successMessage = $isToBeConfirmed ? 'Your registration is now successfully confirmed!' : 'You have started a vote to cancel registratin.';
 
             $event = EventDetail::where('id', $joinEvent->event_details_id)
                 ->select('id', 'eventName', 'eventBanner', 'event_tier_id', 'user_id')

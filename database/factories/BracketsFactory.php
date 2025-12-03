@@ -679,7 +679,7 @@ class BracketsFactory extends Factory
         $documentSpecs = [];
         $nullArray = array_fill(0, 3, null);
 
-        // Get all unique team IDs from brackets to create dynamic win probabilities
+        // Get all unique team IDs from brackets
         $teamIds = [];
         foreach ($brackets as $bracket) {
             if ($bracket->team1_id) $teamIds[$bracket->team1_id] = true;
@@ -688,52 +688,72 @@ class BracketsFactory extends Factory
         $teamIds = array_keys($teamIds);
         $teamCount = count($teamIds);
 
-        // Assign each team a skill level (0-100) that determines win probability
-        // This creates a realistic distribution where some teams are stronger
-        $teamSkills = [];
+        // Assign each team a distinct rank - higher rank = better team
+        // This ensures no two teams have same number of wins
+        $teamRanks = [];
         foreach ($teamIds as $index => $teamId) {
-            // Create a distribution where teams have varying skill levels
-            // Top teams: 80-95, Mid teams: 50-80, Bottom teams: 20-50
-            $position = $index / max(1, $teamCount - 1); // 0 to 1
-
-            // Use a sigmoid-like curve to create more variance at top and bottom
-            $skill = 20 + (75 * (1 - pow(abs($position - 0.5) * 2, 1.5)));
-
-            // Add some randomness
-            $skill += mt_rand(-10, 10);
-            $skill = max(15, min(95, $skill)); // Clamp between 15-95
-
-            $teamSkills[$teamId] = $skill;
+            // Rank from 0 (worst) to teamCount-1 (best)
+            $teamRanks[$teamId] = $index;
         }
 
-        $index = 0;
+        // Process each match
         foreach ($brackets as $matchId => $bracket) {
             $team1Id = $bracket->team1_id;
             $team2Id = $bracket->team2_id;
 
-            // Get skill levels
-            $team1Skill = $teamSkills[$team1Id] ?? 50;
-            $team2Skill = $teamSkills[$team2Id] ?? 50;
+            // Get team ranks
+            $team1Rank = $teamRanks[$team1Id] ?? 0;
+            $team2Rank = $teamRanks[$team2Id] ?? 0;
 
-            // Calculate win probability based on skill difference
-            // Higher skill difference = more likely to win
-            $skillDiff = $team1Skill - $team2Skill;
-            $team1WinProb = 1 / (1 + exp(-$skillDiff / 15)); // Sigmoid function
+            // Higher rank team always wins (no draws)
+            $team1Wins = $team1Rank > $team2Rank;
 
-            // Determine match winner based on probability
+            // Determine score variation based on rank difference
+            $rankDiff = abs($team1Rank - $team2Rank);
+
             $baseResults = [];
-            for ($i = 0; $i < $gamesPerMatch; $i++) {
-                // Add some randomness per game
-                $randomFactor = mt_rand(-20, 20) / 100;
-                $gameWinProb = $team1WinProb + $randomFactor;
 
-                $team1Wins = (mt_rand(1, 100) / 100) < $gameWinProb;
-                $baseResults[] = $team1Wins ? '0' : '1';
+            if ($rankDiff > ($teamCount * 0.6)) {
+                // Huge rank gap - dominant victory (3-0 or similar)
+                $winnerValue = $team1Wins ? '0' : '1';
+                for ($i = 0; $i < $gamesPerMatch; $i++) {
+                    $baseResults[] = $winnerValue;
+                }
+            } elseif ($rankDiff > ($teamCount * 0.3)) {
+                // Medium rank gap - convincing win (2-0 or 2-1)
+                $winnerValue = $team1Wins ? '0' : '1';
+                $loserValue = $team1Wins ? '1' : '0';
+
+                // Winner gets ceil(gamesPerMatch * 0.66) games
+                $winnerGames = (int)ceil($gamesPerMatch * 0.66);
+                $loserGames = $gamesPerMatch - $winnerGames;
+
+                $results = array_merge(
+                    array_fill(0, $winnerGames, $winnerValue),
+                    array_fill(0, $loserGames, $loserValue)
+                );
+                shuffle($results);
+                $baseResults = $results;
+            } else {
+                // Close rank gap - narrow win (2-1)
+                $winnerValue = $team1Wins ? '0' : '1';
+                $loserValue = $team1Wins ? '1' : '0';
+
+                // Winner gets minimum winning games
+                $winnerGames = (int)ceil($gamesPerMatch / 2);
+                $loserGames = $gamesPerMatch - $winnerGames;
+
+                $results = array_merge(
+                    array_fill(0, $winnerGames, $winnerValue),
+                    array_fill(0, $loserGames, $loserValue)
+                );
+                shuffle($results);
+                $baseResults = $results;
             }
 
             $documentSpecs[$matchId] = [
                 'team1Winners' => $baseResults,
-                'team2Winners' => $baseResults, // Same as team1 - unanimous
+                'team2Winners' => $baseResults,
                 'realWinners' => $baseResults,
                 'randomWinners' => $nullArray,
                 'organizerWinners' => $nullArray,
@@ -741,7 +761,6 @@ class BracketsFactory extends Factory
                 'team1Id' => $bracket->team1_id,
                 'team2Id' => $bracket->team2_id,
             ];
-            $index++;
         }
 
         // Add some conflicts (5% of matches) for realism
@@ -761,23 +780,22 @@ class BracketsFactory extends Factory
             $documentSpecs[$matchId]['team2Winners'] = $flippedResults;
         }
 
-        // Step 3: Resolve some conflicts with organizer decisions (40% of conflicts)
+        // Resolve some conflicts with organizer decisions (40% of conflicts)
         $organizerCount = max(1, (int)($conflictCount * 0.4));
         $organizerMatches = array_slice($conflictMatches, 0, $organizerCount);
 
         foreach ($organizerMatches as $matchId) {
-            $organizerDecision = $documentSpecs[$matchId]['team1Winners']; // Organizer sides with team1
+            $organizerDecision = $documentSpecs[$matchId]['team1Winners'];
             $documentSpecs[$matchId]['organizerWinners'] = $organizerDecision;
             $documentSpecs[$matchId]['realWinners'] = $organizerDecision;
         }
 
-        // Step 4: Resolve remaining conflicts with random decisions
+        // Resolve remaining conflicts with random decisions
         $randomMatches = array_slice($conflictMatches, $organizerCount);
 
         foreach ($randomMatches as $matchId) {
             $randomDecision = [];
             foreach ($documentSpecs[$matchId]['team1Winners'] as $i => $result) {
-                // Randomly pick between team1 and team2's choice
                 $randomDecision[] = mt_rand(0, 1) == 0
                     ? $documentSpecs[$matchId]['team1Winners'][$i]
                     : $documentSpecs[$matchId]['team2Winners'][$i];
@@ -888,7 +906,7 @@ class BracketsFactory extends Factory
     }
 
     /**
-     * Calculate league standings from Firestore match results and populate event_join_results table
+     * Calculate league standings from dummy data and populate event_join_results table
      *
      * @param int $eventId Event ID
      */
@@ -915,115 +933,56 @@ class BracketsFactory extends Factory
                 return;
             }
 
-            // Initialize stats for each team
-            $teamStats = [];
-            foreach ($joinEvents as $joinEvent) {
-                $teamStats[$joinEvent->team_id] = [
-                    'join_events_id' => $joinEvent->id,
-                    'played' => 0,
-                    'won' => 0,
-                    'draw' => 0,
-                    'lost' => 0,
-                    'points' => 0,
-                ];
-            }
+            $teamCount = $joinEvents->count();
 
-            // Fetch all match results from Firestore using FirestoreService
-            $firestoreService = app(\App\Services\FirestoreService::class);
-            $allMatchResults = $firestoreService->getAllMatchResults($eventId);
+            // Calculate matches per team in round-robin format
+            $matchesPerTeam = $teamCount - 1;
 
-            $processedMatches = 0;
-            $skippedMatches = 0;
-
-            // Process each bracket's results
-            foreach ($brackets as $bracket) {
-                $matchId = $bracket->team1_position . '.' . $bracket->team2_position;
-                $team1Id = $bracket->team1_id;
-                $team2Id = $bracket->team2_id;
-
-                // Skip if teams are not assigned
-                if (!$team1Id || !$team2Id) {
-                    $skippedMatches++;
-                    continue;
-                }
-
-                // Skip if teams don't have stats initialized
-                if (!isset($teamStats[$team1Id]) || !isset($teamStats[$team2Id])) {
-                    $skippedMatches++;
-                    continue;
-                }
-
-                // Check if match result exists in Firestore
-                if (!isset($allMatchResults[$matchId])) {
-                    $skippedMatches++;
-                    continue;
-                }
-
-                $matchData = $allMatchResults[$matchId];
-
-                // Get the score from Firestore
-                $score = $matchData['score'] ?? [0, 0];
-                $team1Score = $score[0] ?? 0;
-                $team2Score = $score[1] ?? 0;
-
-                // Only process if the match has been played (score is not 0-0)
-                if ($team1Score > 0 || $team2Score > 0) {
-                    // Update played count
-                    $teamStats[$team1Id]['played']++;
-                    $teamStats[$team2Id]['played']++;
-
-                    // Determine winner and update stats
-                    if ($team1Score > $team2Score) {
-                        // Team 1 wins
-                        $teamStats[$team1Id]['won']++;
-                        $teamStats[$team1Id]['points'] += 3; // 3 points for a win
-                        $teamStats[$team2Id]['lost']++;
-                    } elseif ($team2Score > $team1Score) {
-                        // Team 2 wins
-                        $teamStats[$team2Id]['won']++;
-                        $teamStats[$team2Id]['points'] += 3; // 3 points for a win
-                        $teamStats[$team1Id]['lost']++;
-                    } else {
-                        // Draw
-                        $teamStats[$team1Id]['draw']++;
-                        $teamStats[$team1Id]['points'] += 1; // 1 point for a draw
-                        $teamStats[$team2Id]['draw']++;
-                        $teamStats[$team2Id]['points'] += 1; // 1 point for a draw
-                    }
-                    $processedMatches++;
-                } else {
-                    $skippedMatches++;
-                }
-            }
-
-            // Calculate positions based on points (with tiebreakers: points, wins, then team_id for uniqueness)
+            // Create dummy standings with progressive wins and points
             $standingsArray = [];
-            foreach ($teamStats as $teamId => $stats) {
+
+            foreach ($joinEvents as $index => $joinEvent) {
+                // Position 1 (winner): most wins and points
+                // Position 2: one less win and lower points
+                // ... and so on
+                // Last position (loser): 0 wins and 0 points
+
+                $position = $index + 1;
+                $winsFromTop = $teamCount - $position; // First team gets (teamCount-1) wins, last gets 0
+
+                // Calculate draws and losses for variation
+                // Top teams have mostly wins, bottom teams have mostly losses
+                $played = $matchesPerTeam;
+                $won = $winsFromTop;
+
+                // Add some draws for realism (more draws for mid-table teams)
+                $maxDraws = min(2, $played - $won);
+                $draw = ($position > 1 && $position < $teamCount) ? min($maxDraws, 1) : 0;
+
+                // Remaining matches are losses
+                $lost = $played - $won - $draw;
+
+                // Points: 3 per win, 1 per draw
+                $points = ($won * 3) + ($draw * 1);
+
                 $standingsArray[] = [
-                    'team_id' => $teamId,
-                    'join_events_id' => $stats['join_events_id'],
-                    'played' => $stats['played'],
-                    'won' => $stats['won'],
-                    'draw' => $stats['draw'],
-                    'lost' => $stats['lost'],
-                    'points' => $stats['points'],
-                    // Create sort key: points (highest), wins (highest), team_id (lowest for consistency)
-                    'sort_key' => ($stats['points'] * 1000000) + ($stats['won'] * 1000) + (10000 - $teamId)
+                    'join_events_id' => $joinEvent->id,
+                    'team_id' => $joinEvent->team_id,
+                    'position' => $position,
+                    'played' => $played,
+                    'won' => $won,
+                    'draw' => $draw,
+                    'lost' => $lost,
+                    'points' => $points,
                 ];
             }
 
-            // Sort by sort_key descending
-            usort($standingsArray, function($a, $b) {
-                return $b['sort_key'] <=> $a['sort_key'];
-            });
-
-            $position = 1;
+            // Insert or update event_join_results for each team
             foreach ($standingsArray as $stats) {
-                // Insert or update event_join_results
                 DB::table('event_join_results')->updateOrInsert(
                     ['join_events_id' => $stats['join_events_id']],
                     [
-                        'position' => $position,
+                        'position' => $stats['position'],
                         'played' => $stats['played'],
                         'won' => $stats['won'],
                         'draw' => $stats['draw'],
@@ -1031,10 +990,9 @@ class BracketsFactory extends Factory
                         'points' => $stats['points'],
                     ]
                 );
-                $position++;
             }
 
-            \Illuminate\Support\Facades\Log::info("Successfully calculated league standings for event {$eventId}. Processed: {$processedMatches}, Skipped: {$skippedMatches}");
+            \Illuminate\Support\Facades\Log::info("Successfully created dummy league standings for event {$eventId} with {$teamCount} teams");
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Failed to calculate league standings for event {$eventId}: " . $e->getMessage());
             \Illuminate\Support\Facades\Log::error("Stack trace: " . $e->getTraceAsString());

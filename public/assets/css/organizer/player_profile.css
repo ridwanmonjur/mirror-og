@@ -6,21 +6,6 @@
     box-sizing: border-box;
 }
 
-body {
-  --s: 60px; /* control the size*/
-  --c1: #ffffff;
-  --c2: #f2f6f7;
-
-  background:
-    linear-gradient(135deg, var(--c1) 25%, transparent 25%),
-    linear-gradient(225deg, var(--c1) 25%, transparent 25%),
-    linear-gradient(45deg, var(--c1) 25%, transparent 25%),
-    linear-gradient(315deg, var(--c1) 25%, var(--c2) 25%);
-  background-position: var(--s) 0, var(--s) 0, 0 0, 0 0;
-  background-size: calc(var(--s) * 2) calc(var(--s) * 2);
-  background-repeat: repeat;
-  background-attachment: fixed;
-}
 
 main {
     width: 100%;
@@ -40,16 +25,9 @@ a.custom-link:hover {
 }
 
 @media screen and (max-width: 599px) {
-    body {
-        --s: 40px;
-    }
 }
 
 @media screen and (min-width: 600px) {
-    body {
-        --s: 50px;
-    }
-
     .swiper-container {
         display: block;
     }

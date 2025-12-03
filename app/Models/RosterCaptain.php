@@ -10,5 +10,5 @@ class RosterCaptain extends Model
 
     protected $table = 'rosters_captain';
 
-    protected $fillable = ['team_member_id', 'join_events_id', 'team_id'];
+    protected $fillable = ['team_member_id', 'join_events_id', 'teams_id'];
 }

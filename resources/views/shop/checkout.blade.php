@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/organizer/event-creation.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])    
     @include('includes.HeadIcon')
+    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
     <style>
         #Field-nameInput, #Field-addressLine2Input {
             width: 50% !important;

@@ -5,7 +5,13 @@
     font-display: swap;
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
-  
+
+body {
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='65.5' height='55.2' patternTransform='scale(2) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='%23ffffffff'/><path d='m4.6 6.7 28.1 22 28.1-22L52.4.2l-19.7 15L13 .2z'  stroke-width='1' stroke='none' fill='%23f0f4f680'/><path d='M0 0v6.7L8.54 0H0zm56.92 0 8.48 6.7.1-.08V0h-8.58zM6.3 36.2 0 41.1v14.1h8.54l10.96-8.6L6.3 36.2zm52.8 0L45.9 46.6l10.96 8.6h8.64V41.02l-.1.08-6.3-4.9z'  stroke-width='1' stroke='none' fill='%23f0f4f680'/><path d='M0 6.7v20.7l32.7 25.9 32.7-25.9.1.08V6.78l-.1-.08-32.7 25.6z'  stroke-width='1' stroke='none' fill='%23f0f4f680'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>") !important;
+  background-attachment: fixed;
+  background-repeat: repeat !important;
+}
+
 .cursive-font {
     text-align: center;
     font-family: 'Dancing Script', cursive;
@@ -68,11 +74,7 @@
     margin: 0;
 }
 
-.bgTeamAdmin {
-    background-repeat:repeat-y;
-    background-size: cover;
-    height: max-content;
-} 
+
 
 .main2 {
     display: block !important;
@@ -537,6 +539,10 @@
 }
 
 @media screen and (min-width: 576px) {
+    body {
+        --s: 50px;
+    }
+
     #connectionModal {
         width: 100%;
     }
@@ -567,6 +573,10 @@
 }
 
 @media screen and (min-width: 992px) {
+    body {
+        --s: 70px;
+    }
+
     .event {
         max-width: 1000px;
     }

@@ -222,6 +222,7 @@ function TeamHead() {
         select2: null,
         isEditMode: false,
         ...teamData,
+        originalMemberLimit: teamData?.member_limit,
         isProfileRemoved: false,
         country: teamData?.country,
         errorMessage: '',
@@ -259,11 +260,11 @@ function TeamHead() {
                     data?.data.forEach((value) => {
                         if (value.type === 'region') {
                             regionsHtml += `
-                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                                <option value='${value.id}' class="emoji-text">${value.emoji_flag} ${value.name}</option>
                             `;
                         } else if (value.type === 'country') {
                             countriesOptionsHtml += `
-                                <option value='${value.id}'>${value.emoji_flag} ${value.name}</option>
+                                <option value='${value.id}' class="emoji-text">${value.emoji_flag} ${value.name}</option>
                             `;
                         }
                     });

@@ -636,11 +636,11 @@ async function fetchCountries () {
         countries.forEach((value) => {
             if (value.type === 'region') {
                 regionsHtml += `
-                    <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
+                    <option value='${value.name}' class="emoji-text">${value.emoji_flag} ${value.name}</option>
                 `;
             } else if (value.type === 'country') {
                 countriesOptionsHtml += `
-                    <option value='${value.name}'>${value.emoji_flag} ${value.name}</option>
+                    <option value='${value.name}' class="emoji-text">${value.emoji_flag} ${value.name}</option>
                 `;
             }
         });

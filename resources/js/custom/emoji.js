@@ -3,7 +3,7 @@ import twemoji from 'twemoji';
 /**
  * Convert emoji to image HTML
  * @param {string} emoji - The emoji to convert
- * @returns {string} HTML img tag
+ * @returns {string} HTML img tag wrapped in .emoji-text span
  */
 function emojiToImage(emoji) {
     if (!emoji) return '';
@@ -15,7 +15,7 @@ function emojiToImage(emoji) {
         className: 'emoji'
     });
 
-    return parsed;
+    return `<span class="emoji-text">${parsed}</span>`;
 }
 
 /**
@@ -80,7 +80,9 @@ observer.observe(document.body, {
     subtree: true
 });
 
-// Make emojiToImage available globally
+// Make functions and twemoji available globally
 window.emojiToImage = emojiToImage;
+window.initEmojiRendering = initEmojiRendering;
+window.twemoji = twemoji;
 
 export { initEmojiRendering, emojiToImage };

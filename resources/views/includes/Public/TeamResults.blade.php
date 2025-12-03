@@ -72,9 +72,8 @@
                                             style="width: 48px; height: 48px;" alt="Team banner">
                                     </div>
                                     <div class="d-inline-flex text-wrap flex-column justify-content-center">
-                                        <h6 class="mb-1 text-wrap py-0">{{ $joinEventAndTeam->teamName }} <span
-                                                class="ms-2"
-                                                style="font-size: 1.5rem;">@emoji($joinEventAndTeam->country_flag)</span>
+                                        <h6 class="mb-1 text-wrap py-0">{{ $joinEventAndTeam->teamName }}
+                                                <span class="ms-2" style="font-size: 1.5rem;">@emoji($joinEventAndTeam->country_flag)</span>
                                                 <span class="fw-bold  fs-7 text-muted">{{ $joinEventAndTeam->country_name }}</span>
                                         </h6>
 
@@ -105,8 +104,11 @@
                                             stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </div>
+                                @php
+                                    $routeName = $joinEventAndTeam->member_limit == 1 ? 'public.solo.view' : 'public.team.view';
+                                @endphp
                                 <a class="position-absolute top-0 start-0 w-100 h-100"
-                                    href="{{ route('public.team.view', ['id' => $joinEventAndTeam->team_id, 'title' => $joinEventAndTeam->slug]) }}"></a>
+                                    href="{{ route($routeName, ['id' => $joinEventAndTeam->team_id, 'title' => $joinEventAndTeam->slug]) }}"></a>
                             </div>
                         </div>
                     </div>

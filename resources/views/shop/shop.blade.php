@@ -35,16 +35,16 @@
             <div class="col-12 col-xl-2 mb-6 mt-3">
                 <h5>Shop By Category</h5>
                 <form method="GET" action="{{ route('shop.index') }}" class="mt-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="category" value="all" id="all-categories" 
+                    <div class="form-check px-2 bg-white border-secondary border rounded-3 rounded">
+                        <input class="form-check-input ms-2" type="radio" name="category" value="all" id="all-categories" 
                                {{ request()->category === 'all' || request()->category === null ? 'checked' : '' }} onchange="this.form.submit()">
                         <label class="form-check-label ms-2" for="all-categories">
                             All Categories
                         </label>
                     </div>
                     @foreach ($categories as $category)
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="category" value="{{ $category->slug }}" 
+                        <div class="form-check px-2 bg-white border-secondary border rounded-3 rounded">
+                            <input class="form-check-input ms-2" type="radio" name="category" value="{{ $category->slug }}" 
                                    id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }} 
                                    onchange="this.form.submit()">
                             <label class="form-check-label ms-2" for="category-{{ $category->slug }}">
