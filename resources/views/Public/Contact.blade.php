@@ -1,38 +1,38 @@
 @extends('layout.app')
 
-@section('title', 'Driftwood - Contact Us')
+@section('title', 'OW Gaming - Contact Us')
 @section('body-class', 'contact')
 @push('styles')
     <!-- Meta tags for SEO -->
-    <meta name="description" content="Contact Driftwood - Get support for issues, ask questions, or discuss business inquiries. We're here to help the esports community. Email us at supportmain@driftwood.gg or handshake@driftwood.gg">
+    <meta name="description" content="Contact OW Gaming - Get support for issues, ask questions, or discuss business inquiries. We're here to help the esports community. Email us at supportmain@driftwood.gg or handshake@driftwood.gg">
     <meta name="keywords" content="contact driftwood, esports support, esports help, gaming platform support, driftwood contact, esports business inquiries">
 
     <!-- Open Graph tags -->
-    <meta property="og:title" content="Contact Driftwood - Esports Community Support">
-    <meta property="og:description" content="Get in touch with Driftwood. Need support? Have questions? Let's chat about esports and gaming community needs.">
+    <meta property="og:title" content="Contact OW Gaming - Esports Community Support">
+    <meta property="og:description" content="Get in touch with OW Gaming. Need support? Have questions? Let's chat about esports and gaming community needs.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://driftwood.gg/contact">
-    <meta property="og:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
+    <meta property="og:image" content="https://driftwood.gg/images/assets/images/DW_LOGO.png">
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Contact Driftwood - Community Support">
-    <meta name="twitter:description" content="Get support, ask questions, or discuss business opportunities with Driftwood esports platform.">
-    <meta property="twitter:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
+    <meta name="twitter:title" content="Contact OW Gaming - Community Support">
+    <meta name="twitter:description" content="Get support, ask questions, or discuss business opportunities with OW Gaming esports platform.">
+    <meta property="twitter:image" content="https://driftwood.gg/assets/images/DW_LOGO.png">
       <!-- Structured Data for Contact Page -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@type": "ContactPage",
-            "name": "Contact Driftwood",
+            "name": "Contact OW Gaming",
             "url": "https://driftwood.gg/contact",
-            "description": "Contact page for Driftwood esports community platform",
+            "description": "Contact page for OW Gaming esports community platform",
             "publisher": {
                 "@type": "Organization",
-                "name": "Driftwood",
+                "name": "OW Gaming",
                 "logo": {
                 "@type": "ImageObject",
-                "url": "https://driftwood.gg/assets/images/dw_logo.webp"
+                "url": "https://driftwood.gg/assets/images/DW_LOGO.png"
                 }
             }
         }
@@ -43,7 +43,7 @@
         {
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "Driftwood",
+            "name": "OW Gaming",
             "url": "https://driftwood.gg",
             "contactPoint": [
                 {
@@ -60,9 +60,9 @@
                 }
             ],
             "sameAs": [
-                "https://facebook.com/DriftwoodEsports",
-                "https://twitter.com/DriftwoodEsports",
-                "https://instagram.com/DriftwoodEsports",
+                "https://facebook.com/OW GamingEsports",
+                "https://twitter.com/OW GamingEsports",
+                "https://instagram.com/OW GamingEsports",
                 "https://discord.gg/driftwood"
             ]
         }
@@ -81,7 +81,7 @@
                 'icon' => 'support.png',
                 'title' => 'Need support?',
                 'description' => <<<HTML
-                    If you're <span class="text-primary">facing an issue</span> with Driftwood, <span class="text-primary">ping for support</span> and we'll be there.
+                    If you're <span class="text-primary">facing an issue</span> with OW Gaming, <span class="text-primary">ping for support</span> and we'll be there.
                     HTML,
                 'email' => 'supportmain@driftwood.gg',
                 'btnClass' => 'bg-support-btn',

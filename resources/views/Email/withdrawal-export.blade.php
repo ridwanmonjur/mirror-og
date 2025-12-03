@@ -36,7 +36,7 @@
                             <li>This link can only be used once</li>
                         </ul>
                         <p>If you didn't request this export, please ignore this email and contact our support team at supportmain@driftwood.gg.</p>
-                        <p>Sincerely,<br>The Driftwood Team</p>
+                        <p>Sincerely,<br>The OW Gaming Team</p>
                     </td>
                 </tr>
                 <tr>

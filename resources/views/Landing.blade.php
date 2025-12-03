@@ -10,22 +10,22 @@
     <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/common/game-sidebar.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <title>Driftwood</title>
-    <meta name="description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
+    <title>OW Gaming</title>
+    <meta name="description" content="Join OW Gaming - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
     <meta name="keywords" content="community esports, esports platform, competitive gaming, esports community, amateur esports, esports tournament, gaming community, closed beta, play meet chill">
 
     <!-- Open Graph tags for social sharing -->
-    <meta property="og:title" content="Driftwood - The Best Place for Community Esports">
-    <meta property="og:description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community.">
+    <meta property="og:title" content="OW Gaming - The Best Place for Community Esports">
+    <meta property="og:description" content="Join OW Gaming - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://driftwood.gg/">
-    <meta property="og:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
+    <meta property="og:image" content="https://driftwood.gg/images/assets/images/DW_LOGO.png">
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Driftwood - Community Esports Platform">
+    <meta name="twitter:title" content="OW Gaming - Community Esports Platform">
     <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
-    <meta property="twitter:image" content="https://driftwood.gg/images/assets/images/dw_logo.webp">
+    <meta property="twitter:image" content="https://driftwood.gg/images/assets/images/DW_LOGO.png">
 
     <link rel="alternate" type="application/atom+xml" title="Latest Esports Events" href="{{ route('feeds.events') }}" />
 
@@ -33,13 +33,13 @@
             {
                 "@context": "https://schema.org",
                 "@type": "Organization",
-                "name": "Driftwood",
+                "name": "OW Gaming",
                 "url": "https://driftwood.gg",
-                "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+                "logo": "https://driftwood.gg/assets/images/DW_LOGO.png",
                 "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
                 "sameAs": [
-                    "https://twitter.com/DriftwoodEsports",
-                    "https://facebook.com/DriftwoodEsports",
+                    "https://twitter.com/OW GamingEsports",
+                    "https://facebook.com/OW GamingEsports",
                     "https://discord.gg/driftwood"
                 ]
             }
@@ -50,7 +50,7 @@
             {
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "Driftwood",
+            "name": "OW Gaming",
             "url": "https://driftwood.gg",
             "applicationCategory": "GameApplication",
             "operatingSystem": "Web",
@@ -76,7 +76,7 @@
         
         <section class="hero user-select-none d-none d-lg-block">
             <img 
-                loading="lazy"  alt="Driftwood Esports Event"
+                loading="lazy"  alt="OW Gaming Esports Event"
                 onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                 src="{{ asset('/assets/images/homepage new header.png') }}" alt=""
             >

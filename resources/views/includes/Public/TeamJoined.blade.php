@@ -1,4 +1,7 @@
-<h5 class="mb-3"><u>Teams</u></h5>
+@php
+    $headingText = $event?->game?->player_per_team == 1 ? 'Players' : 'Teams';
+@endphp
+<h5 class="mb-3"><u>{{ $headingText }}</u></h5>
 <div class="pb-5" id="current-teams">
     @if (isset($teamList[0]))
         <div class="row row-cols-1   gy-2 gx-4">
@@ -56,7 +59,7 @@
                         d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <p class="d-inline text-body-secondary text-center  mb-0">No teams confirmed registration yet.</p>
+                <p class="d-inline text-body-secondary text-center  mb-0">No {{ strtolower($headingText) }} confirmed registration yet.</p>
             </div>
         </div>
     @endif

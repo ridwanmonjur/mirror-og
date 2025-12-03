@@ -35,7 +35,7 @@ class WithdrawalCsvExportMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Withdrawal CSV Export Ready - Driftwood',
+            subject: 'Withdrawal CSV Export Ready - OW Gaming',
         );
     }
 

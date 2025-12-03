@@ -20,7 +20,7 @@
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hi, interested user!</p>
-                        <p>Thank you for your interest in Driftwood's closed beta! Just confirm your email address and you're all good.
+                        <p>Thank you for your interest in OW Gaming's closed beta! Just confirm your email address and you're all good.
                         </p>
                         <p style="text-align: center;">
                             <a href="{{ route('interestedUser.verify.action', $token) }}"
@@ -40,11 +40,11 @@
                                 </p>
                             </td>
                         </tr>
-                        <p>Please note: Confirming your email does not automatically give you access to Driftwood's closed beta. Those invited will receive an additional email invitation.</p>
+                        <p>Please note: Confirming your email does not automatically give you access to OW Gaming's closed beta. Those invited will receive an additional email invitation.</p>
 
                         <p>If you need any support, ping us at <a href="mailto:supportmain@driftwood.gg" style="color: {{$primaryColor}};">supportmain@driftwood.gg </a> and we'll come to your aid.</p>
 
-                        <p>Sincerely,<br>The Driftwood Team</p>
+                        <p>Sincerely,<br>The OW Gaming Team</p>
                     </td>
                 </tr>
                

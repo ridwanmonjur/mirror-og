@@ -2,7 +2,7 @@
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `email_verified_token`, `email_verified_expires_at`, `password`, `country_code`, `mobile_no`, `role`, `status`, `remember_token`, `created_at`,  `google_id`) VALUES
 (1, 'Admin', 'admin@driftwood.gg', NULL, '08XknKWJLm8nUlEK11oYtie7bnRV7tKA4nLhA9yt4ZyaWmrFeVh00H0eGnzFpR78', NULL, '$2y$10$3b8hd9PNVg/ikULcrGgg/enkqjdqBSbZmgzwpxBzM7Ps2fW3SEkCa', NULL, NULL, 'ADMIN', NULL, NULL, '2023-11-05 20:36:17',  NULL),
 (2, 'o_zach', 'o_zach@gmail.com', '2023-11-05 20:44:48', NULL, NULL, '$2y$10$sDcA25DcYz.IpB3/TKxRP.kbnDc0LzSe..pGFc3g1FNIICGSmSsLi', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-05 20:44:22', NULL),
-(3, 'Driftwood', 'oceans@gmail.com', '2023-11-06 07:42:46', NULL, NULL, '$2y$10$0li6SVWriI9KTW.4LazL0eCR6q4TfBvbmWoqCH3rcAwEz3lEUyWgq', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 07:42:08', NULL),
+(3, 'OW Gaming', 'oceans@gmail.com', '2023-11-06 07:42:46', NULL, NULL, '$2y$10$0li6SVWriI9KTW.4LazL0eCR6q4TfBvbmWoqCH3rcAwEz3lEUyWgq', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 07:42:08', NULL),
 (4, 'o_leigh', 'o_leigh@gmail.com', '2023-11-06 17:46:09', NULL, NULL, '$2y$10$WUWJt5tJ4M6Domo78yjYXuQlJAEr3DHJVM0LMN8lcW1HgZkpnVbmW', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-06 17:45:20',  NULL),
 (5, 'ridwanmonjur', 'ridwanmonjur@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'ORGANIZER', NULL, NULL, '2023-11-10 10:02:24', NULL),
 (6, 'p_leigh', 'p_leigh@gmail.com', '2023-11-06 17:46:09', 'ExkEClSE2Gm2geLOK2zMXGYb54J1THPiaY3MplANxan7pXKgRENwLzkxg9o5Lt3v', NULL, '$2y$10$lH28CRN3B5YizMg/H4L1J.Xu1v6B2.6A3pN/9tVUG/xR9nh.ibht6', NULL, NULL, 'PARTICIPANT', NULL, NULL, '2023-11-10 10:02:24',  NULL),
@@ -31,8 +31,8 @@ INSERT INTO participants (created_at,updated_at,user_id) VALUES
 
 
 INSERT INTO `organizers` (`id`, `companyName`, `companyDescription`, `created_at`, `updated_at`, `user_id`) VALUES
-(1, 'Driftwood Test', 'Good Company', '2023-11-05 20:44:22', '2023-11-05 20:44:22', 1),
-(2, 'Driftwood Co', 'Cool Water Gaming', '2023-11-06 07:42:08', '2023-11-06 07:42:08', 1),
+(1, 'OW Gaming Test', 'Good Company', '2023-11-05 20:44:22', '2023-11-05 20:44:22', 1),
+(2, 'OW Gaming Co', 'Cool Water Gaming', '2023-11-06 07:42:08', '2023-11-06 07:42:08', 1),
 (3, 'Human', 'Good', '2023-11-06 17:45:20', '2023-11-06 17:45:20', 1),
 (4, 'ridwanmonjur@gmail.com', 'ridwanmonjur@gmail.com', '2023-11-10 10:02:24', '2023-11-10 10:02:24', 1);
 

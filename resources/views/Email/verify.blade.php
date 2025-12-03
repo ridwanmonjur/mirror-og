@@ -19,7 +19,7 @@
                 style="background-color: white; margin: 0 auto; padding: 0px; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Welcome to Driftwood, {{$user->name}}.</p>
+                        <p>Welcome to OW Gaming, {{$user->name}}.</p>
                         <p>Please verify your email address by clicking the button below:</p>
                         <p style="text-align: center;">
                             <a href="{{ route('user.verify.action', $token) }}"
@@ -28,7 +28,7 @@
                             </a>
                         </p>
                         <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
-                        <p>Sincerely,<br>The Driftwood Team</p>
+                        <p>Sincerely,<br>The OW Gaming Team</p>
                     </td>
                 </tr>
                 <tr>

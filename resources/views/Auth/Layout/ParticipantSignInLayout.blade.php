@@ -9,7 +9,7 @@
 >
 </div>
 <a href="{{route('public.landing.view')}}">
-    <img class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/dw_logo.webp') }}">
+    <img class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/DW_LOGO.png') }}">
 </a>
 <h5 class="px-2 my-0">Sign in to your <span class="text-primary">participant account</span></h5>
 <form 
@@ -46,7 +46,7 @@
     </div>
     <input type="submit" value="Sign in">
 
-    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#" role="button">Terms of Use</a>. Read our <a
+    <div class="sign-txt">By continuing, you agree to OW Gaming's <a href="#" role="button">Terms of Use</a>. Read our <a
             href="#" role="button">Privacy Policy</a>.</div>
     <div class="section-or">
         <div class="straight-line"></div>
@@ -62,7 +62,7 @@
 </form>
 
 <div class="section-bottom">
-    <p class="py-0 my-0">New to Driftwood? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
+    <p class="py-0 my-0">New to OW Gaming? <a href="{{ route('participant.signup.view') }}">Create an account</a></p>
 </div>
 <div>
     <a  href="{{ route('organizer.signin.view') }}" class="btn my-2 px-5 btn-secondary rounded-pill text-white btn-sm">Switch to organizer

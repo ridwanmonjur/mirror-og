@@ -29,7 +29,7 @@ class VerifyUserMailChange extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Change your email address for Driftwood.',
+            subject: 'Change your email address for OW Gaming.',
         );
     }
 

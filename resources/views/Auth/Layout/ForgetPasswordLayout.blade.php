@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 <a href="{{route('public.landing.view')}}">
-    <img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/dw_logo.webp') }}">
+    <img class="mt-4 mb-2 motion-logo" src="{{ asset('/assets/images/DW_LOGO.png') }}">
 </a>
 <header><u>Forgotten Password?</u></header>
 <br>

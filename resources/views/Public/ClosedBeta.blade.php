@@ -1,34 +1,34 @@
 @extends('layout.app')
 
-@section('title', 'Driftwood - Community Esports')
+@section('title', 'OW Gaming - Community Esports')
 @section('body-class', '')
 @push('styles')
     <meta name="page-component" content="beta">
     <!-- Meta tags for SEO -->
-    <meta name="description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
+    <meta name="description" content="Join OW Gaming - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
     <meta name="keywords" content="community esports, esports platform, competitive gaming, esports community, amateur esports, esports tournament, gaming community, closed beta, play meet chill">
 
     <!-- Open Graph tags for social sharing -->
-    <meta property="og:title" content="Driftwood - The Best Place for Community Esports">
-    <meta property="og:description" content="Join Driftwood - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community.">
+    <meta property="og:title" content="OW Gaming - The Best Place for Community Esports">
+    <meta property="og:description" content="Join OW Gaming - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://driftwood.gg">
-    <meta property="og:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
+    <meta property="og:image" content="https://driftwood.gg/assets/images/DW_LOGO.png">
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Driftwood - Community Esports Platform">
+    <meta name="twitter:title" content="OW Gaming - Community Esports Platform">
     <meta name="twitter:description" content="Play competitive games, meet players, and build your esports community. Join our closed beta!">
-    <meta property="twitter:image" content="https://driftwood.gg/assets/images/dw_logo.webp">
+    <meta property="twitter:image" content="https://driftwood.gg/assets/images/DW_LOGO.png">
 
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "Driftwood",
+            "name": "OW Gaming",
             "url": "https://driftwood.gg",
-            "logo": "https://driftwood.gg/assets/images/dw_logo.webp",
+            "logo": "https://driftwood.gg/assets/images/DW_LOGO.png",
             "description": "Community esports platform where players compete, meet, and build communities around competitive gaming.",
             "sameAs": [
             ]
@@ -69,7 +69,7 @@
                             </form>
                         </div>
                         <div class="d-flex align-items-center mt-3 flex-wrap">
-                            <p class="flex-grow-1 py-0 my-0 text-light"> Ahoy! If you're already a closed beta user, you can sign into Driftwood here: </p>
+                            <p class="flex-grow-1 py-0 my-0 text-light"> Ahoy! If you're already a closed beta user, you can sign into OW Gaming here: </p>
                             <a href="{{route('participant.signin.view')}}" title="Participant signin link" role="button" id="submitButton"  class="submit-button submit-button-border text-white py-2 px-3 rounded-pill ">Sign in</a>
                         </div>
                     </div>
@@ -83,13 +83,13 @@
                 <div class="row">
                     <div class="col-md-6 mb-4 mb-md-0 px-3 px-lg-5">
                         <p class="text-dark mb-3">
-                            Driftwood is a passion project made by esports lovers.
+                            OW Gaming is a passion project made by esports lovers.
                         </p>
                         <p class="text-dark mb-3">
                             Our goal is to grow and develop our local amateur esports scene, and to make esports more accessible for everyone.
                         </p>
                         <p class="text-dark mb-4">
-                            We hope to see you on Driftwood!
+                            We hope to see you on OW Gaming!
                         </p>
                     </div>
                     <div class="col-md-6 px-3 px-lg-5">

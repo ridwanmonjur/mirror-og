@@ -4,11 +4,11 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Change your email address for Driftwood' }}
+    {{ 'Change your email address for OW Gaming' }}
 @endsection
 
 @section('emailTitle')
-    {{ 'Change your email address for Driftwood' }}
+    {{ 'Change your email address for OW Gaming' }}
 @endsection
 
 @section('content')
@@ -19,7 +19,7 @@
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
                         <p>Hi.</p>
-                        <p>You recently requested to change the email address connected with your Driftwood account from
+                        <p>You recently requested to change the email address connected with your OW Gaming account from
                             {{$user->email}} to {{$newEmail}}.</p>
                         <br>
                         <p>Click the button below to confirm this change.</p>
@@ -30,7 +30,7 @@
                             </a>
                         </p>
                         <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
-                        <p>Sincerely,<br>The Driftwood Team</p>
+                        <p>Sincerely,<br>The OW Gaming Team</p>
                     </td>
                 </tr>
                 <tr>

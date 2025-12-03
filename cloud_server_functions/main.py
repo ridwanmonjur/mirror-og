@@ -44,8 +44,8 @@ security = HTTPBearer()
 
 # Create FastAPI app
 app = FastAPI(
-    title="Driftwood API",
-    description="Driftwood esports platform API",
+    title="OW Gaming API",
+    description="OW Gaming esports platform API",
     version="2.0.0"
 )
 

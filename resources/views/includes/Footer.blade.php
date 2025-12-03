@@ -3,14 +3,14 @@
         <div class="row g-4">
             <!-- About Section -->
             <div class="col-12 col-lg-6 col-xxl-4">
-                <h6 class="text-light fw-bold small">About Driftwood</h6>
+                <h6 class="text-light fw-bold small">About OW Gaming</h6>
                 
                 <p class="text-light fw-bold small mt-2 my-0 py-0 ">
                     The premier community esports platform where players compete, meet like-minded gamers, and build
                     esports communities.
                 </p>
                  <small class="text-light fw-bold small my-0 py-0  mb-md-0">
-                            &copy; {{ date('Y') }} Driftwood. All rights reserved.
+                            &copy; {{ date('Y') }} OW Gaming. All rights reserved.
                         </small>
             </div>
 
@@ -66,7 +66,7 @@
                 <div>
                     <h6 class="text-light fw-bold small">Connect With Us</h6>
                     <div class="d-flex justify-content-center text-center my-2 gap-3">
-                        <a href="https://twitter.com/DriftwoodEsports" target="_blank" rel="noopener noreferrer"
+                        <a href="https://twitter.com/OW GamingEsports" target="_blank" rel="noopener noreferrer"
                             class="text-light fw-bold" aria-label="Twitter">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 16 16">
@@ -74,7 +74,7 @@
                                     d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.6.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
                             </svg>
                         </a>
-                        <a href="https://facebook.com/DriftwoodEsports" target="_blank" rel="noopener noreferrer"
+                        <a href="https://facebook.com/OW GamingEsports" target="_blank" rel="noopener noreferrer"
                             class="text-light fw-bold" aria-label="Facebook">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                 viewBox="0 0 16 16">

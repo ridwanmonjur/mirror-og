@@ -75,7 +75,7 @@ class AuthResetAndVerifyController extends Controller
 
         DB::table('password_reset_tokens')->updateOrInsert(['email' => $request->email], ['token' => $token, 'expires_at' => Carbon::now()->addDay()]);
 
-        Mail::to($email)->queue(new ResetPasswordMail(public_path('assets/images/dw_logo.webp'), $token, $user->name));
+        Mail::to($email)->queue(new ResetPasswordMail(public_path('assets/images/DW_LOGO.png'), $token, $user->name));
 
         return back()->with('success', 'Password reset link sent. Please check your email.');
     }

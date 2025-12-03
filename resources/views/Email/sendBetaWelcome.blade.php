@@ -4,11 +4,11 @@
 @endphp
 @extends('Email.Layout.Layout')
 @section('title')
-    {{ 'Welcome to Driftwood\'s Closed Beta!' }}
+    {{ 'Welcome to OW Gaming\'s Closed Beta!' }}
 @endsection
 
 @section('emailTitle')
-    {{ 'Welcome to Driftwood\'s Closed Beta!' }}
+    {{ 'Welcome to OW Gaming\'s Closed Beta!' }}
 @endsection
 
 @section('content')
@@ -18,8 +18,8 @@
                 style="background-color: white; margin: 0 auto; padding: 0px; border-radius: 10px;">
                 <tr>
                     <td style="padding: 0 0px; text-align: left; color: #333333;">
-                        <p>Ahoy from Driftwood! We're excited to invite you to Driftwood as a closed beta user!</p>
-                        <p>Thank you for your interest in Driftwood's closed beta! Just confirm your email address and you're all good.
+                        <p>Ahoy from OW Gaming! We're excited to invite you to OW Gaming as a closed beta user!</p>
+                        <p>Thank you for your interest in OW Gaming's closed beta! Just confirm your email address and you're all good.
                         </p>
                         <p>
                             <span>You can sign into your account using the following temporary credentials:</span>
@@ -29,7 +29,7 @@
                             <span> Username: {{$username}} </span> <br>
                         </p>
                         <p> 
-                            <span> Sign into Driftwood here: </span>
+                            <span> Sign into OW Gaming here: </span>
                             <a href="{{ route('participant.signin.view') }}"
                                 style="margin-left: 5px; display: inline-block; color: white !important;background-color: transparent; color: {{$primaryColor}} !important; text-decoration: none; border-radius: 5px;">
                                 Sign in link
@@ -40,7 +40,7 @@
 
                         <p>We're still refining many of our features, so thank you for being patient. If you need any support, ping us at <a href="mailto:supportmain@driftwood.gg" style="color: {{$primaryColor}};">supportmain@driftwood.gg </a> and we'll come to your aid.</p>
 
-                        <p>Sincerely,<br>Leigh<br>The Driftwood Team<br><a style="color: {{$primaryColor}};"> driftwood.gg </a></p>
+                        <p>Sincerely,<br>Leigh<br>The OW Gaming Team<br><a style="color: {{$primaryColor}};"> driftwood.gg </a></p>
                     </td>
                 </tr>
                

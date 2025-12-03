@@ -23,7 +23,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Open Graph meta tags -->
-<meta property="og:title" content="Driftwood">
+<meta property="og:title" content="OW Gaming">
 <meta property="og:description" content="The best place for community esports">
-<meta property="og:image" content="{{ asset('assets/images/dw_logo.webp') }}">
+<meta property="og:image" content="{{ asset('assets/images/DW_LOGO.png') }}">
 <meta property="og:url" content="{{ url()->current() }}">

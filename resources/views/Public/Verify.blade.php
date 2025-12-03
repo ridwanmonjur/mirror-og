@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Driftwood - About Us')
+@section('title', 'OW Gaming - About Us')
 @section('body-class', 'about')
 
 @section('content')
@@ -70,7 +70,7 @@
 
             <div class="mt-3 d-flex justify-content-center">
                 <a href="{{ route('public.closedBeta.view') }}" class="text-light btn btn-primary mx-auto rounded-pill">
-                    Back to Driftwood
+                    Back to OW Gaming
                 </a>
             </div>
             <br> 

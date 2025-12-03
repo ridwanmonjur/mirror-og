@@ -33,7 +33,7 @@ class SendBetaWelcomeMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to Driftwood\'s Closed Beta!',
+            subject: 'Welcome to OW Gaming\'s Closed Beta!',
         );
     }
 

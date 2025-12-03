@@ -47,7 +47,7 @@
 </div>
 <nav class="navbar pt-2 justify-content-between  user-select-none px-3 ">
     <a href="{{ $routeLogo }}" title="Home Page Link" class="">
-        <img width="192" height="30" src="{{ asset('/assets/images/dw_logo.webp') }}" alt="Website Logo">
+        <img width="192" height="30" src="{{ asset('/assets/images/DW_LOGO.png') }}" alt="Website Logo">
     </a>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

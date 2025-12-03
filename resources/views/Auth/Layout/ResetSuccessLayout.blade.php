@@ -2,7 +2,7 @@
 
 @section('signUpbody')
 <a href="{{route('public.landing.view')}}">
-    <img  class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/dw_logo.webp') }}">
+    <img  class="my-0 motion-logo mb-2" src="{{ asset('/assets/images/DW_LOGO.png') }}">
 </a>
 <br>
 <h5><u>Success Notification</u></h5>

@@ -2,7 +2,7 @@
 @section('signUpbody')
 
 <a href="{{route('public.landing.view')}}">
-    <img class=" mb-1 motion-logo" src="{{ asset('/assets/images/dw_logo.webp') }}">
+    <img class=" mb-1 motion-logo" src="{{ asset('/assets/images/DW_LOGO.png') }}">
 </a>
 
 <h5 class=" mb-0">Create an <span class="text-primary">organizer account</span></h5>
@@ -25,7 +25,7 @@
     
     <input type="submit" class="mt-2" value="Register">
 
-    <div class="sign-txt">By continuing, you agree to Driftwood's <a href="#" role="button">Terms of Use</a>. Read our <a href="#" role="button">Privacy Policy</a>.</div>
+    <div class="sign-txt">By continuing, you agree to OW Gaming's <a href="#" role="button">Terms of Use</a>. Read our <a href="#" role="button">Privacy Policy</a>.</div>
 
     <div class="section-bottoms">
         <p class="py-0 my-0">Already have an account? <a href="{{ route('organizer.signin.view') }}">Sign in</a></p>

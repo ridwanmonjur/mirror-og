@@ -30,7 +30,7 @@
                             </a>
                         </p>
                        <p>If you didn't perform this action, please ignore this email and reach out to our customer support at supportmain@driftwood.gg.</p>
-                        <p>Sincerely,<br>The Driftwood Team</p>
+                        <p>Sincerely,<br>The OW Gaming Team</p>
                     </td>
                 </tr>
                 <tr>

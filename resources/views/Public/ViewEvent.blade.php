@@ -50,7 +50,7 @@
     @if (!in_array($event->status, ['DRAFT', 'PREVIEW', 'PENDING'])) 
         <meta name="analytics" content="enabled">
     @endif
-    <title>{{ $event->eventName }} | {{ $tier ?? 'Tournament' }} {{ $type ?? 'Event' }} - RM {{ $event->tier?->tierPrizePool ?? '0' }} Prize Pool | Driftwood GG</title>
+    <title>{{ $event->eventName }} | {{ $tier ?? 'Tournament' }} {{ $type ?? 'Event' }} - RM {{ $event->tier?->tierPrizePool ?? '0' }} Prize Pool | OW Gaming GG</title>
         <!-- Essential Meta Tags -->
     <meta name="description" content="{{ Str::limit($event->eventDescription, 155) ?? 'Join ' . $event->eventName . ' - ' . ($event->tier?->tierPrizePool ? 'RM ' . $event->tier?->tierPrizePool . ' Prize Pool' : '') . ' | ' . $type . ' event starting ' . $combinedStr }}">
     <meta name="keywords" content="{{ $event->eventName }}, {{ $event->game?->name ?? 'gaming' }}, esports tournament, {{ $tier ?? 'tournament' }}, {{ $event->venue ?? 'SEA' }}, gaming event">
@@ -67,7 +67,7 @@
     <!-- Analytics Data -->
     <meta name="event-id" content="{{ $event->id }}">
     <meta name="event-name" content="{{ $event->eventName }}">
-    <meta property="og:site_name" content="Driftwood GG">
+    <meta property="og:site_name" content="OW Gaming GG">
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">

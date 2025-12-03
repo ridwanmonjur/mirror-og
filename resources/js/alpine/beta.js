@@ -83,7 +83,7 @@ if (emailForm) {
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showCloseButton: false,
-                    denyButtonText: 'Back to Driftwood',
+                    denyButtonText: 'Back to OW Gaming',
                     denyButtonColor: "red",
                     preConfirm: () => {
                         let isButtonDisabled = localStorage.getItem('disabled') === "true";
@@ -112,7 +112,7 @@ if (emailForm) {
                             </p>
                         </div>
                     `,
-                    confirmButtonText: 'Back to Driftwood',
+                    confirmButtonText: 'Back to OW Gaming',
                     confirmButtonColor: "#43A4D7",
                     showConfirmButton: true,
                     allowOutsideClick: false,
@@ -120,7 +120,7 @@ if (emailForm) {
                     showCloseButton: false,
                 });
 
-                toggleResetButtonToUnavailable(false, 'Back to Driftwood');
+                toggleResetButtonToUnavailable(false, 'Back to OW Gaming');
                 clearTimeout(countdownInterval);
             }
             
@@ -147,7 +147,7 @@ if (emailForm) {
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showCloseButton: false,
-                    denyButtonText: 'Back to Driftwood',
+                    denyButtonText: 'Back to OW Gaming',
                     denyButtonColor: "red",
                     preConfirm: () => {
                         let isButtonDisabled = localStorage.getItem('disabled') === "true";
@@ -169,7 +169,7 @@ if (emailForm) {
                 icon: "error",
                 title: "Error",
                 text: 'An unexpected error occurred. Please try again.',
-                confirmButtonText: 'Back to Driftwood',
+                confirmButtonText: 'Back to OW Gaming',
                 confirmButtonColor: "#43A4D7",
                 allowOutsideClick: false,
                 allowEscapeKey: false,
