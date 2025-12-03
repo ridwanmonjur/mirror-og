@@ -32,10 +32,10 @@ return new class extends Migration
             });
         }
 
-        Artisan::call('db:seed', [
-            '--class' => 'Database\\Seeders\\BracketDeadlineSetupSeeder',
-            '--force' => true,
-        ]);
+        // Artisan::call('db:seed', [
+        //     '--class' => 'Database\\Seeders\\BracketDeadlineSetupSeeder',
+        //     '--force' => true,
+        // ]);
     }
 
     /**

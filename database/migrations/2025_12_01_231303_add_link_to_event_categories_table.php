@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('event_categories', function (Blueprint $table) {
             if (!Schema::hasColumn('event_categories', 'url')) {
-                $table->string('url', 500)->nullable()->after('gameUrl');
+                $table->string('url', 500)->nullable();
             }
         });
     }
