@@ -2,7 +2,6 @@ import { createApp, reactive } from "petite-vue";
 import { initializeApp } from "firebase/app";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, onSnapshot, orderBy, doc, query, collection, where, or, clearIndexedDbPersistence, addDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { getAuth,  signInWithCustomToken } from "firebase/auth";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from "firebase/app-check";
 import { DateTime } from "luxon";
 const loggedUserProfileInput = document.querySelector("#loggedUserProfile");
 
@@ -18,24 +17,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-// Initialize App Check with reCAPTCHA Enterprise
-let appCheck = null;
-try {
-    const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA;
-    if (recaptchaSiteKey) {
-        appCheck = initializeAppCheck(app, {
-            provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey),
-            isTokenAutoRefreshEnabled: true
-        });
-        console.log('Firebase App Check initialized with Enterprise reCAPTCHA');
-    } else {
-        console.warn('VITE_RECAPTCHA not found - App Check not initialized');
-    }
-} catch (error) {
-    console.error('Failed to initialize App Check:', error);
-}
-
 const auth = getAuth(app);
 
 let databaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
@@ -47,22 +28,6 @@ const db = initializeFirestore(app, {
 
 
 let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
-// Helper function to get App Check token
-async function getAppCheckToken() {
-    if (!appCheck) {
-        console.warn('App Check not initialized - cannot get token');
-        return null;
-    }
-
-    try {
-        const appCheckTokenResponse = await getToken(appCheck, false);
-        return appCheckTokenResponse.token;
-    } catch (error) {
-        console.error('Failed to get App Check token:', error);
-        return null;
-    }
-}
 
 const authStore = reactive({
     jwtToken: null,
@@ -94,21 +59,13 @@ const authStore = reactive({
             // Get user role and team info from loggedUserProfile
             const role = loggedUserProfile?.role || 'PARTICIPANT';
             const teamId = loggedUserProfile?.team?.id || loggedUserProfile?.teams?.[0]?.id || null;
-            
-            // Get App Check token
-            const appCheckToken = await getAppCheckToken();
-            const headers = {
-                'Content-Type': 'application/json',
-            };
-            
-            if (appCheckToken) {
-                headers['X-Firebase-AppCheck'] = appCheckToken;
-            }
 
             const response = await fetch(`${domain}/auth/token`, {
                 method: 'POST',
-                headers,
-                body: JSON.stringify({ 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     uid,
                     role,
                     teamId

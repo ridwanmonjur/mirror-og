@@ -128,11 +128,11 @@ def driftwood_client_auth(request):
 def handle_auth_token(request, headers, start_time, client_ip):
     """Handle auth token creation."""
     try:
-        # Verify App Check token
-        app_check_token = request.headers.get("X-Firebase-AppCheck")
-        if not verify_app_check_token(app_check_token):
-            logging.warning(f"POST /auth/token 401 {client_ip} - App Check verification failed")
-            return (jsonify({'detail': 'App Check verification failed'}), 401, headers)
+        # App Check verification disabled for development
+        # app_check_token = request.headers.get("X-Firebase-AppCheck")
+        # if not verify_app_check_token(app_check_token):
+        #     logging.warning(f"POST /auth/token 401 {client_ip} - App Check verification failed")
+        #     return (jsonify({'detail': 'App Check verification failed'}), 401, headers)
         
         request_json = request.get_json(silent=True)
         logging.info(f"Raw request data: {request.get_data()}")

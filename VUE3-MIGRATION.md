@@ -2,15 +2,14 @@
 
 ## Why Vue 3 Options API? (MINIMAL CHANGES)
 
-**Vue 3 Options API is the most minimal migration path** because:
+**Convert from Petite Vue to Vue 3 Options API with MOST minimal code changes.**:
 - ✅ Already using `createApp()` - just change import from `"petite-vue"` → `"vue"`
-- ✅ No need to learn `ref()`, `reactive()`, `computed()`, `watch()`
-- ✅ Simple `data()` function returns plain objects (same as Vue 2)
-- ✅ Methods accessed with `this.methodName()` (same as Vue 2)
-- ✅ Keep existing code structure 95% intact
-- ✅ Smaller bundle size than Vue 2 (~30% smaller)
-- ✅ Active support (Vue 2 reached EOL Dec 31, 2023)
-- ✅ No Composition API complexity needed
+- ✅ No need to use `setup()` or `watch()` or composition api
+- ✅ Simple `data()` function returns plain objects 
+- ✅ Methods accessed with `this.methodName()` 
+- ✅ Keep existing code structure 99% intact
+- ✅ Don't create templates in javascript - keep in Blade 
+
 
 ## Current Petite Vue Files (in `resources/js/alpine/`)
 - `bracket.js` - Tournament bracket management with Firebase

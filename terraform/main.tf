@@ -293,14 +293,32 @@ resource "null_resource" "disable_firestore_delete_protection" {
 
 
 
-# Check if Identity Platform is already enabled
-data "external" "identity_platform_exists" {
+# Check if Identity Platform API is enabled
+data "external" "identity_platform_api_enabled" {
   program = [
     "bash", "-c", <<EOT
       set -e
       PROJECT_ID="${var.project_id}"
 
       if gcloud services list --enabled --project="$PROJECT_ID" --filter="name:identitytoolkit" --format="value(name)" | grep -q identitytoolkit; then
+        echo '{"enabled": "true"}'
+      else
+        echo '{"enabled": "false"}'
+      fi
+    EOT
+  ]
+}
+
+# Check if Identity Platform is actually initialized/configured
+data "external" "identity_platform_config_exists" {
+  program = [
+    "bash", "-c", <<EOT
+      set +e  # Don't exit on errors
+      PROJECT_ID="${var.project_id}"
+
+      # Try to get the Identity Platform config
+      # If it returns successfully, the platform is initialized
+      if gcloud identity platform project-config describe --project="$PROJECT_ID" >/dev/null 2>&1; then
         echo '{"exists": "true"}'
       else
         echo '{"exists": "false"}'
@@ -316,8 +334,11 @@ locals {
 }
 
 # Firebase Auth configuration - conditional creation
+# Only create if:
+# 1. skip_identity_platform is false (user wants to create it)
+# 2. Identity Platform config doesn't already exist
 resource "google_identity_platform_config" "auth_config" {
-  count    = (var.skip_identity_platform || data.external.identity_platform_exists.result.exists == "true") ? 0 : 1
+  count    = (var.skip_identity_platform || data.external.identity_platform_config_exists.result.exists == "true") ? 0 : 1
   provider = google-beta
   project  = var.project_id
 
@@ -343,7 +364,8 @@ resource "google_identity_platform_config" "auth_config" {
   }
 
   depends_on = [
-    google_firebase_project.default
+    google_firebase_project.default,
+    google_project_service.required_apis
   ]
 }
 

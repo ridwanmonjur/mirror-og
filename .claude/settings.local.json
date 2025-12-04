@@ -36,7 +36,18 @@
       "Bash(grep:*)",
       "Bash(ls:*)",
       "Bash(python -m json.tool:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(cat:*)",
+      "Bash(gcloud projects:*)",
+      "Bash(gcloud services list:*)",
+      "Bash(gcloud firebase app-check service-configs list:*)",
+      "Bash(gcloud alpha firebase app-check service-configs list:*)",
+      "Bash(gcloud auth application-default set-quota-project:*)",
+      "Bash(gcloud identity platform project-config describe:*)",
+      "Bash(terraform state list:*)",
+      "Bash(terraform state show:*)",
+      "Bash(echo:*)",
+      "Bash(terraform plan:*)"
     ],
     "deny": [],
     "ask": []
