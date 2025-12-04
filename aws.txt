@@ -1,0 +1,332 @@
+ 1. Authentication & User Management
+
+  Core Auth Features (AuthController.php:23-210, AuthResetAndVerifyController.php:16-123)     
+
+  - Multi-role authentication (Participant, Organizer, Admin)
+  - Social login integration (Google OAuth, Steam)
+  - Email verification system with token-based validation
+  - Password reset with expiring tokens
+  - Remember me functionality
+  - Session management with regeneration
+  - Beta user onboarding system (BetaController.php:18-207)
+  - Interested user management with verification workflow
+
+  2. Tournament/Event Management
+
+  Event Creation & Management (OrganizerEventController.php:31-354)
+
+  - Event creation with tiers (Starfish, Dolphin, Turtle)
+  - Event editing with validation
+  - Event categories & types (Tournament, League)
+  - Event status management (DRAFT, PENDING, LIVE, ENDED)
+  - Event tier system with prize pools
+  - Event deletion with participant refunds
+  - Live preview mode for events
+  - Event filtering & search capabilities
+  - Event notification system
+  - Time-based validation for event scheduling
+
+  Event Features
+
+  - Single & Double elimination brackets
+  - League-based tournaments
+  - Custom prize pools per tier
+  - Minimum/maximum participant limits
+  - Early bird & normal registration periods
+  - Team size restrictions per game
+  - Solo event support (1v1 matches)
+
+  3. Bracket & Match Management
+
+  Bracket System (OrganizerEventResultsController.php:23-350, brackets.js:1-418)
+
+  - Automated bracket generation
+  - Match scheduling & tracking
+  - Winner/loser bracket management (double elimination)
+  - Round-robin for leagues
+  - Match result reporting system
+  - Score tracking with games per match
+  - Real-time match status updates (UPCOMING, ONGOING, COMPLETED)
+  - Match dispute system with evidence upload
+  - Organizer override capabilities
+  - Position tracking (team1_position, team2_position)
+
+  Results & Achievements (OrganizerEventResultsController.php:32-350)
+
+  - Tournament standings (position, played, won, draw, lost, points)
+  - Awards system with multiple award types
+  - Achievement tracking per team/player
+  - Win streaks tracking
+  - Historical results archive
+
+  4. Team Management
+
+  Team Features (ParticipantTeamController.php:27-590)
+
+  - Team creation (max 5 teams per user)
+  - Team roster management
+  - Team captain assignment
+  - Member invitation system
+  - Pending invitations (from team or user)
+  - Member acceptance/rejection
+  - 24-hour cooldown after leaving team
+  - Team profile customization (banner, country, description)
+  - Team search & pagination
+  - Solo team support (1-member teams)
+  - Team following system
+  - Team statistics (wins, streaks, events participated)
+
+  Roster Management (ParticipantRosterController.php:20-234)
+
+  - Roster approval/disapproval
+  - Roster captain selection
+  - Voting system for roster decisions
+  - Vote-to-quit mechanism
+  - Roster locking after confirmation
+
+  5. Payment & Wallet System
+
+  Stripe Integration (StripeController.php:24-477, 
+  ParticipantCheckoutController.php:24-316, OrganizerCheckoutController.php:21-202)
+
+  - Entry fee payments (Organizer & Participant)
+  - Wallet system with balance tracking
+  - Payment intent creation with idempotency
+  - Saved payment methods
+  - Early bird pricing
+  - Normal registration pricing
+  - Manual capture for pending events
+  - Refund processing for cancellations
+  - Transaction history
+  - Withdrawal system to bank accounts
+  - Top-up functionality
+  - Daily top-up limits (RM 1000)
+  - Bank account linking
+  - Coupon/discount system
+  - Wallet + Stripe hybrid payments
+
+  Coupon System (StripeController.php:417-476)
+
+  - Public coupons
+  - Private/targeted coupons
+  - Redeemable count limits
+  - Participant & Organizer coupons
+  - 100% discount support
+  - Coupon validation
+
+  6. Social Features
+
+  Following & Friends (SocialController.php:20-210)
+
+  - Organizer following system
+  - Participant following system
+  - Team following
+  - Friend requests (send, accept, reject)
+  - Block/unblock users
+  - Star/favorite users
+  - User reporting with reasons
+  - Follower/following counts
+  - Connection pagination
+
+  Activity Feeds (ParticipantController.php:160-172)
+
+  - Activity logs per user
+  - Duration-based filtering
+  - Paginated activity feeds
+
+  7. Notification System
+
+  Notifications (UserController.php:46-109)
+
+  - Multi-type notifications (social, event, system)
+  - Read/unread status
+  - Notification pagination
+  - Real-time notification creation
+  - Custom notification HTML
+  - Link-based notifications
+
+  8. Messaging/Chat System
+
+  Firebase Chat Integration (ChatController.php:10-67, FirebaseController.php:16-440)
+
+  - Real-time messaging via Firebase
+  - User online status tracking
+  - Block status sync with Firebase
+  - Chat room management
+  - User search for messaging
+  - Active user tracking
+
+  9. Participant Features
+
+  Event Participation (ParticipantEventController.php:31-562)
+
+  - Event browsing & search
+  - Event joining (with team or solo)
+  - Team selection for events
+  - Auto-team creation for solo events
+  - Registration management
+  - Confirmation/cancellation with voting
+  - Event invitations from organizers
+  - Like/unlike events
+  - Payment verification before confirmation
+  - Registration time tracking (early/normal/closed)
+
+  Profile Management (ParticipantController.php:23-173)
+
+  - Profile viewing (own & others)
+  - Profile editing
+  - Win/loss statistics
+  - Event history
+  - Team affiliations
+  - Region/country selection
+  - Age tracking
+  - Custom banners & backgrounds
+
+  10. Organizer Features
+
+  Profile & Management (OrganizerController.php:18-172)
+
+  - Company profile (name, description)
+  - Event portfolio
+  - Follower statistics
+  - Events created count
+  - Prize pool totals
+  - Event filtering by status
+  - Participant management
+
+  Event Invitations (OrganizerInvitationController.php:12-80)
+
+  - Team invitations to events
+  - Invitation tracking
+  - Invitation withdrawal
+  - Invitation list management
+
+  Checkout & Payments (OrganizerCheckoutController.php:21-202)
+
+  - Event tier payment
+  - Coupon application
+  - Saved payment methods
+  - Payment success tracking
+  - Event status updates after payment
+
+  11. Media Management
+
+  File Uploads (ImageVideoController.php:14-110)
+
+  - Image uploads
+  - Video uploads
+  - Media streaming
+  - File deletion
+  - Size limit handling
+  - Multiple file support
+
+  12. Admin & Configuration
+
+  System Management (MiscController.php:24-689)
+
+  - Country/region lists
+  - Game lists
+  - Task management (event lifecycle tasks)
+  - Test data seeding:
+    - Bracket seeding
+    - Join event seeding
+    - Demo event creation
+  - Landing page with event listings
+  - Withdrawal CSV export (password-protected ZIP)
+  - Sitemap generation
+
+  Automated Tasks (RunAllTasks.php:12-147 - Currently commented out)
+
+  - Event status tasks (started, live, ended, registration over)
+  - Deadline tasks (report start/end, organizer report)
+  - Weekly cleanup tasks
+  - Event-specific task execution
+
+  13. Firebase Real-time Features
+
+  Match Reporting System (brackets.js:6-417)
+
+  - Real-time bracket updates
+  - Match winner selection
+  - Score tracking per game
+  - Dispute filing with evidence
+  - Dispute resolution workflow
+  - Organizer overrides
+  - Random winner fallback
+  - Default winner assignment
+  - Match status synchronization
+  - Countdown timers for deadlines
+  - Visual score indicators (dots system)
+
+  Firebase Collections:
+
+  - room - Chat rooms
+  - event - Event data sync
+  - analytics-* - Analytics tracking
+  - Match reports with real-time updates
+  - Dispute tracking
+
+  14. Analytics & Tracking
+
+  Google Analytics Integration (CLAUDE.md mentions)
+
+  - Custom event tracking
+  - User behavior analytics
+  - Conversion tracking
+  - Google Tag Manager integration
+
+  15. User Settings
+
+  Settings Management (UserController.php:151-276)
+
+  - Email change with verification
+  - Password management
+  - Payment method management
+  - Transaction history
+  - Bank account linking/unlinking
+  - Background customization
+  - Privacy settings
+
+  16. Testing & Development Tools
+
+  Seeding Tools (MiscController.php:228-556)
+
+  - Bracket test data generation
+  - Join event scenarios
+  - Payment status combinations
+  - Registration time variants
+  - Demo mode for testing
+
+  17. Security Features
+
+  - CSRF protection
+  - JWT authentication
+  - Role-based access control
+  - Payment idempotency
+  - Email verification
+  - Session management
+  - Input validation
+  - SQL injection prevention
+  - XSS protection
+
+  18. Shop Features (Brief mention in controllers)
+
+  - Cart management (CartController.php)
+  - Checkout process (CheckoutController.php)
+  - Order management (OrdersController.php)
+  - Product listings (ShopController.php)
+
+  ---
+  Key Architectural Patterns:
+
+  - Service layer (PaymentService, EventMatchService, SocialService, etc.)
+  - Request validation with custom Form Requests
+  - Job queues for async processing (HandleEventJoinConfirm, HandleResults, etc.)
+  - Event broadcasting (JoinEventSignuped, etc.)
+  - Database transactions for data consistency
+  - Caching (Redis) for performance
+  - Real-time sync with Firebase Firestore
+
+  This platform is a full-featured esports tournament management system with payment
+  processing, real-time match tracking, social features, and comprehensive team/user
+  management!
