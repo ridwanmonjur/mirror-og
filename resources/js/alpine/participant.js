@@ -196,7 +196,7 @@ function ParticipantData ()  {
 function ActivityLogs(userId, duration) {
     return {  
         items: [],
-        hasMore: true,
+        hasMore: false,
         page: 1,
         userId,
         duration,

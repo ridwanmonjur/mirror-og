@@ -1,5 +1,9 @@
 @php
-    $joinEvent->regStatus = $joinEvent->eventDetails->getRegistrationStatus();
+    // Store BOTH values:
+    // 1. currentRegStatus - for UI display (buttons, modals) - shows what actions are available NOW
+    // 2. registeredAtStatus - for payment calculations - shows the fee they locked in when completing payment
+    $joinEvent->currentRegStatus = $joinEvent->eventDetails->getRegistrationStatus();
+    $joinEvent->registeredAtStatus = $joinEvent->register_time ?? $joinEvent->currentRegStatus;
     $random_int = rand(0, 999);
     $joinEvent->isUserPartOfRoster = false;
     $currentUser = ['memberId' => null, 'vote_to_quit' => null, 'rosterId' => null];
@@ -208,7 +212,7 @@
                                                             type="button"
                                                             data-cancel="1"
                                                             data-join-status="{{$joinEvent->join_status}}"
-                                                            data-registration-status="{{$joinEvent->regStatus}}"
+                                                            data-registration-status="{{$joinEvent->currentRegStatus}}"
                                                             onclick="submitConfirmCancelForm(event)" 
                                                             class="btn btn-sm my-1 text-red border border-danger bg-light me-2 rounded-pill"
                                                         >

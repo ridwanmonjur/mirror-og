@@ -1,7 +1,8 @@
 @php
     if ($joinEvent->tier) {
         $random_int = rand(0, 999);
-        $total = $joinEvent->regStatus == config('constants.SIGNUP_STATUS.EARLY') ? $joinEvent->tier->earlyEntryFee : $joinEvent->tier->tierEntryFee;
+        // Use registeredAtStatus for payment calculations (what they paid when they registered)
+        $total = $joinEvent->registeredAtStatus == config('constants.SIGNUP_STATUS.EARLY') ? $joinEvent->tier->earlyEntryFee : $joinEvent->tier->tierEntryFee;
         $exisitngSum = $groupedPaymentsByEvent[$joinEvent->id] ?? 0;
         $individualContributionTotal = 0;
     
@@ -102,18 +103,18 @@
     </div>
     <div class="mx-auto text-center ">
         @if ($joinEvent->isUserPartOfRoster)
-            @if ($signupStatusEnum['TOO_EARLY'] == $joinEvent->regStatus )
-                <p class="text-center"> 
-                    Event start time: {{$joinEvent->eventDetails->getFormattedStartDate()}} 
+            @if ($signupStatusEnum['TOO_EARLY'] == $joinEvent->currentRegStatus )
+                <p class="text-center">
+                    Event start time: {{$joinEvent->eventDetails->getFormattedStartDate()}}
                 </p>
             @else
                 @if ($joinEvent->payment_status != "completed")
-                    <button class="oceans-gaming-default-button  d-inline-block btn " 
+                    <button class="oceans-gaming-default-button  d-inline-block btn "
                         data-bs-toggle="modal"
                         data-bs-target="{{ '#payModal' . $random_int }}"
                         data-join-event-id="{{ $joinEvent->id }}"
                     >
-                        {{ $signupStatusEnum['EARLY'] == $joinEvent->regStatus ? 'Early Registration' : 'Normal Registration' }} 
+                        {{ $signupStatusEnum['EARLY'] == $joinEvent->currentRegStatus ? 'Early Registration' : 'Normal Registration' }} 
 
                     </button> <br>
 
@@ -133,7 +134,7 @@
                                 data-cancel="0"
                                 data-join-event-id="{{$joinEvent->id}}"
                                 data-join-status="{{$joinEvent->join_status}}"
-                                data-registration-status="{{$joinEvent->regStatus}}"
+                                data-registration-status="{{$joinEvent->currentRegStatus}}"
                                 onclick="submitConfirmCancelForm(event)" 
                                 class="mt-2 btn bg-success py-2 rounded-pill"
                             >
@@ -150,9 +151,9 @@
                                     data-join-event-id="{{$joinEvent->id}}"
                                     data-form="{{'cancelform' . $random_int}}" 
                                     data-cancel="1"
-                                    type="button" 
+                                    type="button"
                                     data-join-status="{{$joinEvent->join_status}}"
-                                    data-registration-status="{{$joinEvent->regStatus}}"
+                                    data-registration-status="{{$joinEvent->currentRegStatus}}"
                                     onclick="submitConfirmCancelForm(event)" 
                                     class="mt-2 btn py-2 bg-red text-light rounded-pill"
                                 >
