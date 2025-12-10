@@ -47,7 +47,12 @@
       "Bash(terraform state list:*)",
       "Bash(terraform state show:*)",
       "Bash(echo:*)",
-      "Bash(terraform plan:*)"
+      "Bash(terraform plan:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(gcloud run services describe:*)",
+      "Bash(gcloud run services delete:*)",
+      "Bash(gcloud run services update:*)"
     ],
     "deny": [],
     "ask": []
