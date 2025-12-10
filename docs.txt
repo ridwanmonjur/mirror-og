@@ -1,0 +1,98 @@
+ Here are great resources to find technical problems and challenges:
+
+  Interview & Learning Platforms
+
+  - LeetCode - Algorithm/data structure problems with real-world scenarios
+  - System Design Primer (GitHub) - Common architecture challenges and solutions
+  - Pramp/Interviewing.io - Mock interviews expose real problems engineers face
+
+  Engineering Blogs
+
+  - Netflix Tech Blog - Microservices, resilience, A/B testing at scale
+  - Uber Engineering - Geospatial problems, payment systems, real-time matching
+  - Stripe Engineering - Payment processing, API design, idempotency
+  - Cloudflare Blog - DDoS mitigation, edge computing, performance
+  - AWS Architecture Blog - Scaling, reliability, disaster recovery
+  - Meta/Facebook Engineering - Database sharding, caching, CDN optimization
+
+  Specific Tech Blogs
+
+  - High Scalability - Case studies from major platforms
+  - Martin Fowler's Blog - Software architecture patterns
+  - PostgreSQL/MySQL Performance Blog - Database optimization challenges
+
+  GitHub Repositories
+
+  - awesome-scalability - Curated list of architecture patterns
+  - system-design-interview - Real interview questions from FAANG
+  - coding-interview-university - Comprehensive problem collection
+
+  Communities
+
+  - r/ExperiencedDevs (Reddit) - Real production problems developers face
+  - HackerNews "Ask HN" - Engineers sharing actual challenges
+  - Dev.to - Developer stories and problem-solving articles
+  - Stack Overflow Blog - Common pitfalls and solutions
+
+  Books
+
+  - Designing Data-Intensive Applications (Martin Kleppmann)
+  - Site Reliability Engineering (Google)
+  - Release It! (Michael Nygard) - Production failure patterns
+
+  Postmortems
+
+  - GitHub Engineering Postmortems
+  - Google SRE Postmortems
+  - PagerDuty Incident Reports
+
+
+  Top System Design Repositories
+
+  https://github.com/ByteByteGoHq/system-design-101 - ByteByteGo (64.6k ⭐)
+  - Visual explanations with diagrams
+  - Communication protocols, APIs, CI/CD, databases
+  - Great for beginners
+
+  https://github.com/madd86/awesome-system-design
+  - Curated list of distributed systems resources
+  - Papers, books, courses, tools
+
+  https://github.com/karanpratapsingh/system-design (38.8k ⭐)
+  - Comprehensive system design guide
+  - Real-world case studies
+
+  https://github.com/ashishps1/awesome-system-design-resources (28k ⭐)
+  - Free resources for interview prep
+  - Structured learning path
+
+  https://github.com/checkcheckzz/system-design-interview
+  - Curated interview questions
+  - Company-specific problems
+
+  https://github.com/codersguild/System-Design
+  - Scalability, availability, reliability
+  - Eventual consistency patterns
+
+  https://github.com/binhnguyennus/awesome-scalability
+  - Database sharding, caching, microservices
+  - Real architecture case studies
+
+  https://github.com/TheAlgorithms
+  - Multiple language implementations
+  - Data structures + algorithms
+
+  https://github.com/codecrafters-io/build-your-own-x
+  - Build Redis, Git, Docker, etc.
+  - Learn by implementing
+
+  https://github.com/mehdihadeli/awesome-software-architecture
+  - Design patterns, DDD, microservices
+  - Architecture principles
+
+  Sources:
+  - https://github.com/madd86/awesome-system-design
+  - https://github.com/topics/system-design
+  - https://github.com/karanpratapsingh/system-design
+  - https://github.com/ashishps1/awesome-system-design-resources
+  - https://dev.to/kumarkalyan/17-best-free-github-repositories-to-crack-system-design-interviews-h5p
