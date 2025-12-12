@@ -10,7 +10,7 @@
                     <div class="card h-100 border-2 border" style="transition: transform 0.2s; cursor: pointer;"
                         onmouseover="this.style.transform='translateY(-2px)'"
                         onmouseout="this.style.transform='translateY(0)'">
-                        <div class="card-body border border-2">
+                        <div class="card-body border border">
                             <div class="row">
                                 <div class="col-10 d-flex justify-content-start">
                                     <img src="{{ '/storage' . '/' . $team->teamBanner }}" {!! bldImgF() !!}
