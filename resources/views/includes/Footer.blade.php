@@ -3,58 +3,58 @@
         <div class="row g-4">
             <!-- About Section -->
             <div class="col-12 col-lg-6 col-xxl-4">
-                <h6 class="text-light fw-bold small">About OW Gaming</h6>
-                
-                <p class="text-light fw-bold small mt-2 my-0 py-0 ">
+                <h6 class="text-white font-poppins fw-bold text-sm">About OW Gaming</h6>
+
+                <p class="text-gray-lighter font-nunito fw-normal text-sm mt-2 my-0 py-0 leading-relaxed">
                     The premier community esports platform where players compete, meet like-minded gamers, and build
                     esports communities.
                 </p>
-                 <small class="text-light fw-bold small my-0 py-0  mb-md-0">
+                 <small class="text-gray-light font-nunito fw-normal text-xs my-0 py-0 mb-md-0">
                             &copy; {{ date('Y') }} OW Gaming. All rights reserved.
                         </small>
             </div>
 
             <!-- Quick Links -->
             <div class="col-12 col-lg-6 col-xxl-6">
-                <h6 class="text-light fw-bold small">Quick Links</h6>
+                <h6 class="text-white font-poppins fw-bold text-sm">Quick Links</h6>
                 <div class="row">
                     <div class="col-6">
-                        <ul class="list-unstyled text-light fw-bold small">
-                            <li class="my-0 py-0 ">
+                        <ul class="list-unstyled">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('public.landing.view') }}"
-                                    class="text-light fw-bold text-decoration-none">Events</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Events</a>
                             </li>
-                            <li class="my-0 py-0 ">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('participant.signin.view') }}"
-                                    class="text-light fw-bold text-decoration-none">About</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">About</a>
                             </li>
-                            <li class="my-0 py-0 ">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('shop.index') }}"
-                                    class="text-light fw-bold text-decoration-none">Shop</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Shop</a>
                             </li>
-                            <li class="my-0 py-0 ">
-                                <a href="{{ route('feeds.events') }}" class="text-light fw-bold text-decoration-none">RSS
+                            <li class="my-0 py-0">
+                                <a href="{{ route('feeds.events') }}" class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">RSS
                                     Feed</a>
                             </li>
                         </ul>
                     </div>
                     <div class="col-6">
-                        <ul class="list-unstyled text-light fw-bold small">
-                            <li class="my-0 py-0 ">
+                        <ul class="list-unstyled">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('participant.signin.view') }}"
-                                    class="text-light fw-bold text-decoration-none">Create Event</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Create Event</a>
                             </li>
-                            <li class="my-0 py-0 ">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('participant.signin.view') }}"
-                                    class="text-light fw-bold text-decoration-none">Manage Event</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Manage Event</a>
                             </li>
-                            <li class="my-0 py-0 ">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('participant.signin.view') }}"
-                                    class="text-light fw-bold text-decoration-none">Create Team</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Create Team</a>
                             </li>
-                            <li class="my-0 py-0 ">
+                            <li class="my-0 py-0">
                                 <a href="{{ route('participant.signin.view') }}"
-                                    class="text-light fw-bold text-decoration-none">Manage Team</a>
+                                    class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Manage Team</a>
                             </li>
 
                         </ul>
@@ -64,7 +64,7 @@
 
             <div class="col-12 col-xxl-2">
                 <div>
-                    <h6 class="text-light fw-bold small">Connect With Us</h6>
+                    <h6 class="text-white font-poppins fw-bold text-sm">Connect With Us</h6>
                     <div class="d-flex justify-content-center text-center my-2 gap-3">
                         <a href="https://twitter.com/OW GamingEsports" target="_blank" rel="noopener noreferrer"
                             class="text-light fw-bold" aria-label="Twitter">
@@ -95,11 +95,11 @@
                 <div class="col-12">
                     <div
                         class=" text-center ">
-                       
-                        <div class="small">
-                            <a href="{{ route('public.about.view') }}" class="text-light fw-bold text-decoration-none">Privacy Policy</a>
+
+                        <div>
+                            <a href="{{ route('public.about.view') }}" class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Privacy Policy</a>
                             <br>
-                            <a href="{{ route('public.about.view') }}" class="text-light fw-bold text-decoration-none">Terms of Service</a>
+                            <a href="{{ route('public.about.view') }}" class="text-gray-lighter font-nunito fw-medium text-sm text-decoration-none">Terms of Service</a>
                         </div>
                     </div>
                 </div>

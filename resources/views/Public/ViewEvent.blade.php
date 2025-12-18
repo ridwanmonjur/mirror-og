@@ -191,12 +191,12 @@
             <div class=" px-3">
                 <div class="py-3 ">
             <header class="d-flex justify-content-between align-items-center">
-                    <h5 class=" py-0 my-0">
+                    <h5 class="py-0 my-0 font-poppins fw-semibold text-lg">
                      <u>
                         View your events
                         </u>
                     </h5>
-                    <a href="javascript:history.back()" class="text-decoration-none">
+                    <a href="javascript:history.back()" class="text-decoration-none text-base fw-medium">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                         </svg>
@@ -231,7 +231,7 @@
                         <div class="card-text ">
                             <div>
                                 <div class="d-flex pt-3 pb-3 justify-content-around px-1  flex-wrap align-items-start ">
-                                    <h1 class="text-wrap w-75 fs-5 my-0 py-0 text-start">
+                                    <h1 class="text-wrap w-75 my-0 py-0 text-start font-poppins  text-xl ">
                                         {{ $event->eventName ?? 'No name yet' }}
                                     </h1>
                                     <div>
@@ -299,9 +299,9 @@
                                         &nbsp;
                                         <div class="card-organizer d-flex ms-2 justify-content-center flex-col">
                                             <a href="{{route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug ])}}">
-                                                <p style="display: inline;"><u>{{ $event->user->name ?? 'Add' }} </u> </p>
+                                                <p class="font-poppins fw-bold text-base text-primary-dark m-0"><u>{{ $event->user->name ?? 'Add' }} </u> </p>
                                             </a>
-                                            <p class="small-text m-0" id="followCount" data-count="{{ $followersCount }}">
+                                            <p class="font-nunito fw-light text-xs text-gray-medium m-0" id="followCount" data-count="{{ $followersCount }}">
                                                 <i> {{ $followersCount }}
                                                     {{ $followersCount == 1 ? 'follower' : 'followers' }}
                                                 </i>
@@ -356,8 +356,8 @@
                                     @endif
                                 </div>
                                 <div class=" py-4 px-3 ">
-                                    <h5> <u> {{ $combinedStr }} </u> </h5>
-                                    <h5> <u> {{ $timePart }} </u> </h5>
+                                    <h5 class="font-poppins fw-semibold text-lg "> <u> {{ $combinedStr }} </u> </h5>
+                                    <h5 class="font-poppins fw-semibold text-lg "> <u> {{ $timePart }} </u> </h5>
                                 </div>
 
 
@@ -436,11 +436,11 @@
                                     </svg>
 
                                     @if ($event->game)
-                                        <span  class=" text-wrap"> 
+                                        <span class="text-wrap font-nunito fw-medium text-base ">
                                             {{ $event->game?->gameTitle . " (" . $event->game?->player_per_team .'v' . $event->game?->player_per_team . ")" ?? 'No Title' }}
                                         </span>
                                     @else
-                                        <span>Not available</span>
+                                        <span class="font-nunito fw-normal text-base text-gray-medium">Not available</span>
                                     @endif
                                 </div>
                                 <div class="d-flex justify-content-start align-items-center pb-1">
@@ -449,11 +449,11 @@
                                     </svg>
 
                                     @if ($event->tier)
-                                        <span > RM
-                                            {{ $event->tier?->tierPrizePool . ' Prize Pool' ?? 'No Prize' }} 
+                                        <span class="font-nunito fw-medium text-base "> RM
+                                            {{ $event->tier?->tierPrizePool . ' Prize Pool' ?? 'No Prize' }}
                                         </span>
                                     @else
-                                        <span>Not available</span>
+                                        <span class="font-nunito fw-normal text-base text-gray-medium">Not available</span>
                                     @endif
                                 </div>
                                 <div class="d-flex justify-content-start align-items-center pb-1">
@@ -469,8 +469,8 @@
                                             <div class="d-inline cursor-pointer" data-bs-toggle="tooltip" title="Early Bird Discount! Ends {{
                                                 date('d M y g:i A', strtotime($event->signup->normal_signup_start_advanced_close) + (8 * 3600))
                                             }}.">
-                                            <span class="text-decoration-line-through me-1"> RM {{ $event->tier->tierEntryFee }}</span>
-                                            <span class="text-primary has-discount">RM {{ $entryFee }}</span>
+                                            <span class="text-decoration-line-through me-1 font-nunito fw-normal text-base"> RM {{ $event->tier->tierEntryFee }}</span>
+                                            <span class="text-primary has-discount font-nunito  text-base">RM {{ $entryFee }}</span>
                                             </div>
                                             <svg data-bs-toggle="tooltip" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#43a4d7" class="bi ms-2 bi-question-circle" viewBox="0 0 16 16"
                                                 title="Early Bird Discount! Ends {{
@@ -481,10 +481,10 @@
                                             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
                                             </svg>
                                         @else
-                                            <span class="fw-bold">RM {{ $entryFee }} </span>
+                                            <span class="font-nunito fw-normal text-base ">RM {{ $entryFee }} </span>
                                         @endif
                                     @else
-                                        <span>RM 0</span>
+                                        <span class="font-nunito fw-normal text-base text-gray-medium">RM 0</span>
 
                                     @endif
                                 </div>
@@ -495,7 +495,7 @@
                                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
                                     </svg>
-                                    <span >{{ $event->venue ?? 'SEA' }}</span>
+                                    <span class="font-nunito fw-medium text-base text-primary-dark">{{ $event->venue ?? 'SEA' }}</span>
                                 </div>
                                 <div class="d-flex justify-content-start align-items-center pb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -505,7 +505,7 @@
                                         <line x1="12" y1="16" x2="12" y2="12"></line>
                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                     </svg>
-                                    <span >{{ $type ?? 'Not available' }} 
+                                    <span class="font-nunito fw-medium text-base text-primary-dark">{{ $type ?? 'Not available' }}
                                         @if ($event?->game?->games_per_match)
                                             (Best of {{$event->game->games_per_match}})
                                         @endif
@@ -520,7 +520,7 @@
                                         <line x1="12" y1="20" x2="12" y2="4"></line>
                                         <line x1="6" y1="20" x2="6" y2="14"></line>
                                     </svg>
-                                    <span >{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? '0' }}</span>
+                                    <span class="font-nunito fw-medium text-base text-primary-dark">{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? '0' }}</span>
                                 </div>
 
                             </div>
@@ -542,8 +542,8 @@
                 </div>
                 <br>
                 <div id="Overview" class="tabcontent" style="display: {{ $showBracketFirst ? 'none' : 'block' }};">
-                    <h2 id="current-title" class="fs-5 text-start"><u>About this event</u></h2>
-                    <p style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
+                    <h2 id="current-title" class="text-start font-poppins fw-semibold text-xl text-primary-dark"><u>About this event</u></h2>
+                    <p class="font-nunito fw-normal text-base leading-relaxed text-primary-dark" style="white-space: pre-wrap">{{ $event->eventDescription ?? 'Not added description yet' }} </p>
                 </div>
 
                 <div id="Bracket" v-scope="BracketData()"

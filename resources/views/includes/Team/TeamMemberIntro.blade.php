@@ -27,7 +27,7 @@
         <div>
            
             <span>{{$actorStatusMap[$member->status][$member->actor]}}</span>
-            <span>{{ $member->updatedAtDiffForHumans() }}</span>
+            <span class="text-muted">{{ $member->updatedAtDiffForHumans() }}</span>
         </div>
     </div>
 </div>

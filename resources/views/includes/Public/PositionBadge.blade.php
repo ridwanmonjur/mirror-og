@@ -6,22 +6,22 @@
         // Default SVG for positions beyond 5
         $defaultSvg =
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 32" width="36" height="32">
-        <circle cx="18" cy="16" r="14" fill="#1E90FF"/>
-        <circle cx="18" cy="16" r="13" fill="#1E90FF" stroke="#0066CC" stroke-width="0.8"/>
-        <path d="M8,24 L5,28 L8,32 L18,29 L28,32 L31,28 L28,24" fill="#0066CC"/>
-        <text x="18" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="white">' .
+        <circle cx="18" cy="16" r="14" fill="transparent"/>
+        <circle cx="18" cy="16" r="13" fill="transparent" stroke="#dee2e6" stroke-width="1.5"/>
+        <path d="M8,24 L5,28 L8,32 L18,29 L28,32 L31,28 L28,24" fill="#dee2e6"/>
+        <text x="18" y="20" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">' .
             'P' .
             '</text>
-        <path d="M15,16 Q18,12 21,16" fill="none" stroke="#FFFFFF" stroke-width="0.5" opacity="0.4"/>
+        <path d="M15,16 Q18,12 21,16" fill="none" stroke="#dee2e6" stroke-width="0.5" opacity="0.4"/>
     </svg>';
 
         // Array of medal colors and properties
         $medals = [
-            1 => ['fill' => '#FFD700', 'stroke' => '#DAA520', 'color' => 'black'],
-            2 => ['fill' => '#C0C0C0', 'stroke' => '#808080', 'color' => 'white'],
-            3 => ['fill' => '#CD7F32', 'stroke' => '#8B4513', 'color' => 'white'],
-            4 => ['fill' => '#9933FF', 'stroke' => '#6600CC', 'color' => 'white'],
-            5 => ['fill' => '#009933', 'stroke' => '#006622', 'color' => 'white'],
+            1 => ['fill' => '#FFE55C', 'stroke' => '#FFCA28', 'color' => 'black'],
+            2 => ['fill' => '#E8E8E8', 'stroke' => '#BDBDBD', 'color' => '#2c2c2c'],
+            3 => ['fill' => '#E8956E', 'stroke' => '#D4795B', 'color' => 'white'],
+            4 => ['fill' => '#B565FF', 'stroke' => '#9333EA', 'color' => 'white'],
+            5 => ['fill' => '#34D399', 'stroke' => '#10B981', 'color' => 'white'],
         ];
 
         // Return default for positions beyond 5

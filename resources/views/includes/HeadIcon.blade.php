@@ -1,13 +1,12 @@
 
-<!-- Poppins -->
-<!-- Only preload the primary font weights that are used above the fold -->
-<link 
-    rel="preload" 
-    href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2" 
-    as="font" 
-    type="font/woff2" 
-    crossorigin
->
+<!-- Optimized Font Loading Performance -->
+<!-- Preconnect to Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- DNS Prefetch for faster font loading -->
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">

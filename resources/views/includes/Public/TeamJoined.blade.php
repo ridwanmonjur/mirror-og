@@ -17,12 +17,12 @@
                                         class="border object-fit-cover my-2 border-secondary  rounded-circle me-3"
                                         width="50" height="50" alt="{{ $team->teamName }}">
                                     <div>
-                                        <p class="card-title py-0 my-0  d-inline-block  text-wrap my-0 py-0 mb-0"><u
+                                        <p class="card-title py-0 my-0  d-inline-block  text-wrap my-0 py-0 mb-0 font-poppins fw-semibold "><u
                                                 class="me-2">{{ $team->teamName }}</u><span
                                                 style="font-size: 1.5rem;">@emoji($team->country_flag)</span>
-                                                <span class="fw-bold  fs-7 text-muted">{{ $team->country_name }}</span></p>
-                                        <div class="text-muted text-wrap align-middle">
-                                            <span class="me-2">{{ $team->createdAtHumaReadable() }}</span>
+                                                <span class="fw-medium  text-gray-dark">{{ $team->country_name }}</span></p>
+                                        <div class="text-wrap align-middle">
+                                            <span class="me-2 font-nunito fw-normal text-gray-medium">{{ $team->createdAtHumaReadable() }}</span>
 
                                         </div>
                                     </div>

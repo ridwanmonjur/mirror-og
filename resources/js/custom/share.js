@@ -48,17 +48,54 @@ function initSocialShareModals() {
             .then(() => {
                 window.Swal.fire({
                     icon: 'success',
-                    text: "Successfully copied to clipboard!",
-                    html: `<div>Successfully copied to clipboard!</div>
-                    <div class="bg-secondary text-light rounded-3 px-3 py-2 mt-2" style="word-break: break-all;">${shareUrl}</div>`,
-                    confirmButtonColor: '#43A4D7'
+                    title: '<span style="font-size: 1.4rem; font-weight: 600; color: #2d3748;">Link Copied Successfully!</span>',
+                    html: `
+                        <div style="margin-top: 1.25rem;">
+                            <p style="font-size: 0.95rem; color: #718096; margin-bottom: 1.25rem; font-weight: 400; line-height: 1.5;">
+                                Share this link with others to invite them to the event
+                            </p>
+                            <div class="bg-primary text-white" style="
+                                border-radius: 10px;
+                                padding: 1rem 1.25rem;
+                                word-break: break-all;
+                                font-family: 'Courier New', Consolas, monospace;
+                                font-size: 0.875rem;
+                                box-shadow: 0 4px 6px rgba(67, 164, 215, 0.15);
+                                transition: all 0.2s ease;
+                                line-height: 1.6;
+                            ">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style="flex-shrink: 0; opacity: 0.9;">
+                                        <path d="M13.5 1a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-11A1.5 1.5 0 0 1 2.5 1h11zm-11-1A2.5 2.5 0 0 0 0 2.5v11A2.5 2.5 0 0 0 2.5 16h11a2.5 2.5 0 0 0 2.5-2.5v-11A2.5 2.5 0 0 0 13.5 0h-11z"/>
+                                        <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                                    </svg>
+                                    <span style="flex: 1; font-weight: 500;">${shareUrl}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonColor: '#43A4D7',
+                    confirmButtonText: 'Done',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        confirmButton: 'swal-custom-button'
+                    },
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown animate__faster'
+                    }
                 });
             })
             .catch(__ => {
                 window.Swal.fire({
                     icon: 'error',
-                    text: "Failed to copy to clipboard!",
-                    confirmButtonColor: '#43A4D7'
+                    title: '<span style="font-size: 1.4rem; font-weight: 600; color: #2d3748;">Unable to Copy Link</span>',
+                    html: '<p style="font-size: 0.95rem; color: #718096; margin-top: 0.75rem; line-height: 1.6;">There was a problem copying the link to your clipboard. Please try again or copy it manually.</p>',
+                    confirmButtonColor: '#43A4D7',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        confirmButton: 'swal-custom-button'
+                    }
                 });
             });
     }

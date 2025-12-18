@@ -74,20 +74,20 @@
             <div class="d-none d-lg-block"><br></div>
             @if ($selectTeam->member_limit == 1 && isset($soloPlayer))
                 <div class="tab-size d-none d-lg-block text-center mx-auto mb-3">
-                    <p class="mb-2">
+                    <p class="mb-2 font-nunito fw-normal text-base">
                         This is the solo profile of
                         <a href="{{ route('public.participant.view', ['id' => $soloPlayer->id, 'title' => $soloPlayer->participant?->slug ?? '']) }}"
-                           class="text-primary fw-bold text-decoration-none">
+                           class="text-gray text-base text-decoration-none font-poppins">
                             {{ $soloPlayer->name }}
                         </a>
                     </p>
                 </div>
             @endif
-            <div class="tab-size d-none d-lg-block text-center mx-auto"><b>Recent Events</b></div>
+            <div class="tab-size d-none d-lg-block text-center mx-auto font-poppins fw-semibold text-lg">Recent Events</div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
-                    <p>No events available!</p>
+                    <p class="font-nunito fw-medium text-base text-gray-medium">No events available!</p>
                 @else
                     <button @class(["carousel-button position-absolute ",
                        "carousel-button-disabled"  => empty($joinEvents[2])
@@ -116,7 +116,7 @@
             <br>
             <div class="row px-4">
                 <div class="showcase col-12 col-lg-6">
-                    <div class="text-center"><b>Showcase</b></div>
+                    <div class="text-center font-poppins text-lg text-primary-dark">Showcase</div>
                     <br>
                     <div class="card border-2 py-0 my-0 mx-auto py-4" style=" width: 90%;">
                         <div class="card-body row py-2 d-flex justify-content-center flex-wrap text-center mx-auto py-0 px-0 " 
@@ -183,7 +183,7 @@
             @else
                 <div id="activeRostersForm" class="animation-container text-center mx-auto">
                     @if ($selectTeam->member_limit != 1)
-                       <p class="text-center">{{ $selectTeam->teamName }} has {{ $historyCount }} roster{{ bldPlural($historyCount) }} member{{ bldPlural($joinCount) }}.</p>
+                       <p class="text-center">{{ $selectTeam->teamName }} has {{ $historyCount }} roster member{{ bldPlural($joinCount) }}.</p>
                     @endif
                     <br>
                     @foreach ($joinEventsHistory as $key => $joinEvent)

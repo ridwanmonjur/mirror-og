@@ -1,62 +1,277 @@
-// Fonts
-// resources/sass/_fonts.scss
+// ============================================
+// OPTIMIZED FONT LOADING
+// ============================================
+// Import Google Fonts with only necessary weights
+// Using display=swap for better performance
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Nunito:wght@300;400;500;600;700;800&display=swap');
 
-// Poppins Font Face Declarations
-
-
+// CSS Custom Properties for Font Stacks
+:root {
+  --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-nunito: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 
 .nav-link:hover {
   color: #43A4D7 !important;
 }
-@font-face {
-  font-family: 'Poppins';
-  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLDz8Z1xlFQ.woff2') format('woff2');
-  font-weight: 300;
-  font-display: swap;
-}
 
-@font-face {
-  font-family: 'Poppins';
-  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2') format('woff2');
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofIO-aBXso.woff2') format('woff2');
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaBXso.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaBXso.woff2') format('woff2');
-  font-weight: 600;
-  font-display: swap;
-}
 // Font Utility Classes
 .font-poppins {
-  font-family: 'Poppins', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+  font-family: var(--font-poppins);
 }
 
 .font-nunito {
-  font-family: 'Nunito', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+  font-family: var(--font-nunito);
 }
+
+// ============================================
+// Typography Utility Classes (Bootstrap/Tailwind Style)
+// ============================================
+
+// Font Weight Utilities
+.fw-light {
+  font-weight: 300 !important;
+}
+
+.fw-normal {
+  font-weight: 400 !important;
+}
+
+.fw-medium {
+  font-weight: 500 !important;
+}
+
+.fw-semibold {
+  font-weight: 600 !important;
+}
+
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+.fw-extrabold {
+  font-weight: 800 !important;
+}
+
+// Font Size Scale (Modular Scale: 1.125 ratio)
+.text-xs {
+  font-size: 0.75rem !important;    // 12px
+  line-height: 1rem !important;     // 16px
+}
+
+.text-sm {
+  font-size: 0.875rem !important;   // 14px
+  line-height: 1.25rem !important;  // 20px
+}
+
+.text-base {
+  font-size: 1rem !important;       // 16px
+  line-height: 1.5rem !important;   // 24px
+}
+
+.text-lg {
+  font-size: 1.125rem !important;   // 18px
+  line-height: 1.75rem !important;  // 28px
+}
+
+.text-xl {
+  font-size: 1.25rem !important;    // 20px
+  line-height: 1.75rem !important;  // 28px
+}
+
+.text-2xl {
+  font-size: 1.5rem !important;     // 24px
+  line-height: 2rem !important;     // 32px
+}
+
+.text-3xl {
+  font-size: 1.875rem !important;   // 30px
+  line-height: 2.25rem !important;  // 36px
+}
+
+.text-4xl {
+  font-size: 2.25rem !important;    // 36px
+  line-height: 2.5rem !important;   // 40px
+}
+
+.text-5xl {
+  font-size: 3rem !important;       // 48px
+  line-height: 1 !important;
+}
+
+// Line Height Utilities
+.leading-tight {
+  line-height: 1.25 !important;
+}
+
+.leading-normal {
+  line-height: 1.5 !important;
+}
+
+.leading-relaxed {
+  line-height: 1.75 !important;
+}
+
+.leading-loose {
+  line-height: 2 !important;
+}
+
+// Letter Spacing Utilities
+.tracking-tighter {
+  letter-spacing: -0.05em !important;
+}
+
+.tracking-tight {
+  letter-spacing: -0.025em !important;
+}
+
+.tracking-normal {
+  letter-spacing: 0em !important;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em !important;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em !important;
+}
+
+.tracking-widest {
+  letter-spacing: 0.1em !important;
+}
+
+// Text Color Utilities (Semantic & Extended Palette)
+
+// Primary Colors
+.text-primary-dark {
+  color: #2E4B59 !important;
+}
+
+.text-primary {
+  color: #3A5F71 !important;
+}
+
+.text-primary-light {
+  color: #43A4D7 !important;
+}
+
+.text-primary-lighter {
+  color: #5AB4E5 !important;
+}
+
+// Accent Colors
+.text-accent {
+  color: #FF6C00 !important;
+}
+
+.text-accent-light {
+  color: #FF8533 !important;
+}
+
+.text-accent-dark {
+  color: #CC5600 !important;
+}
+
+// Success Colors
+.text-success {
+  color: #78da1d !important;
+}
+
+.text-success-dark {
+  color: #5FB915 !important;
+}
+
+.text-success-light {
+  color: #8CCD39 !important;
+}
+
+// Warning Colors
+.text-warning {
+  color: #FFA500 !important;
+}
+
+.text-warning-dark {
+  color: #E69500 !important;
+}
+
+.text-warning-light {
+  color: #FFB733 !important;
+}
+
+// Danger/Error Colors
+.text-danger {
+  color: #bf6868 !important;
+}
+
+.text-danger-dark {
+  color: #A85050 !important;
+}
+
+.text-danger-light {
+  color: #D88080 !important;
+}
+
+// Gray Scale (Extended)
+.text-gray-darker {
+  color: #3D3D3D !important;
+}
+
+.text-gray-dark {
+  color: #555555 !important;
+}
+
+.text-gray {
+  color: #6B6B6B !important;
+}
+
+.text-gray-medium {
+  color: #808080 !important;
+}
+
+.text-gray-light {
+  color: #95adbd !important;
+}
+
+.text-gray-lighter {
+  color: #BDBCBC !important;
+}
+
+.text-gray-lightest {
+  color: #D9D9D9 !important;
+}
+
+// Neutral Colors
+.text-white {
+  color: #FFFFFF !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+// Special/Tier Colors
+.text-gold {
+  color: #e8cf66 !important;
+}
+
+.text-silver {
+  color: #BDBCBC !important;
+}
+
+.text-bronze {
+  color: #a6877c !important;
+}
+
+.text-blue-info {
+  color: #7dc3e0 !important;
+}
+
+// ============================================
 
 .emoji-text img {
   height: 1.2em;

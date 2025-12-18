@@ -198,16 +198,16 @@
                 <br>
                 @if ($userProfile->participant?->nickname)
                     <div class="d-flex justify-content-start align-items-center flex-wrap">
-                        <h4 class="my-0 me-4">{{ $userProfile->participant->nickname }}</h4>
+                        <h4 class="my-0 me-4 font-poppins fw-bold text-2xl ">{{ $userProfile->participant->nickname }}</h4>
                     </div>
                 @else
                     <div class="d-flex justify-content-start align-items-center flex-wrap">
-                        <h4 class="my-0 me-4">{{ $userProfile->name }}</h4>
+                        <h4 class="my-0 me-4 font-poppins fw-bold text-2xl ">{{ $userProfile->name }}</h4>
                     </div>
                 @endif
                 <div class="my-2">
                     @if ($userProfile->participant?->nickname)
-                        <span>{{ $userProfile->name }}</span>
+                        <span class="font-nunito fw-medium text-base text-gray-dark">{{ $userProfile->name }}</span>
                     @endif
                     @if (
                         $userProfile->participant?->birthday &&
@@ -220,7 +220,7 @@
                     @if ($userProfile->participant?->birthday)
                         <span>
                             @if ($userProfile->participant?->isAgeVisible)
-                                <span>{{ $userProfile->participant->age }}</span>
+                                <span class="font-nunito fw-semibold text-base ">{{ $userProfile->participant->age }}</span>
                             @endif
                             {{-- Calendar --}}
                             <svg @class([
@@ -234,7 +234,7 @@
                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
                             </svg>
                             @if ($userProfile->participant?->birthday)
-                                <span class="me-2">{{ $userProfile->participant->birthday }}</span>
+                                <span class="me-2 font-nunito fw-normal text-sm text-gray-medium">{{ $userProfile->participant->birthday }}</span>
                             @endif
                             @if ($isOwnProfile)
                                 @if ($userProfile->participant?->isAgeVisible)
@@ -261,7 +261,7 @@
                 </div>
 
                 @if ($userProfile->participant?->bio)
-                    <p>{{ $userProfile->participant->bio }}</p>
+                    <p class="font-nunito fw-normal text-baseleading-relaxed">{{ $userProfile->participant->bio }}</p>
                 @endif
 
                 <div class="d-flex justify-content-start flex-wrap w-100">
@@ -272,7 +272,7 @@
                                 <path
                                     d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
                             </svg>
-                            <span class="me-1">{{ $userProfile->participant->region_name }}</span>
+                            <span class="me-1 font-nunito  ">{{ $userProfile->participant->region_name }}</span>
                         </span>
                     @endif
                     @if ($userProfile->participant?->domain)
@@ -284,7 +284,7 @@
                                 <path
                                     d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
                             </svg>
-                            <span class="me-1">{{ $userProfile->participant->domain }}</span>
+                            <span class="me-1 font-nunito fw-medium ">{{ $userProfile->participant->domain }}</span>
                         </span>
                     @endif
                     <span class="me-2">

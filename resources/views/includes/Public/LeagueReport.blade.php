@@ -3,26 +3,26 @@
 <div id="bracket-list" class="custom-scrollbar tab-bracketlist">
 
         @if (isset($joinEventAndTeamList) && count($joinEventAndTeamList) > 0)
-            <h5 class="my-2 text-start"><u>League Standings</u></h5>
+            <h5 class="my-2 text-start font-poppins fw-semibold text-xl text-primary-dark"><u>League Standings</u></h5>
             <div class="mb-2 row px-0 mx-0">
                 <div class="col-12">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover font-nunito">
                             <thead>
                                 <tr>
-                                    <th class="text-start align-middle">Team</th>
-                                    <th class="text-center align-middle">Played</th>
-                                    <th class="text-center align-middle">Won</th>
-                                    <th class="text-center align-middle">Draw</th>
-                                    <th class="text-center align-middle">Lost</th>
-                                    <th class="text-center align-middle">Points</th>
+                                    <th class="text-start align-middle fw-semibold text-base">Team</th>
+                                    <th class="text-center align-middle fw-semibold text-base" style="background-color: #f8f9fa;">Played</th>
+                                    <th class="text-center align-middle fw-semibold text-base">Won</th>
+                                    <th class="text-center align-middle fw-semibold text-base" style="background-color: #f8f9fa;">Draw</th>
+                                    <th class="text-center align-middle fw-semibold text-base">Lost</th>
+                                    <th class="text-center align-middle fw-semibold text-base" style="background-color: #f8f9fa;">Points</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($joinEventAndTeamList as $team)
                                     <tr>
-                                        
-                                        <td class="align-middle">
+
+                                        <td class="align-middle fw-semibold">
                                             <div class="d-flex align-items-center">
                                                 @if($team->teamBanner)
                                                     <img src="{{ '/storage' . '/'. $team->teamBanner }}"
@@ -31,15 +31,15 @@
                                                         style="width: 24px; height: 24px;"
                                                         alt="Team banner">
                                                 @endif
-                                                <span>{{ $team->teamName }}</span>
-                                              
+                                                <span class="fw-normal">{{ $team->teamName }}</span>
+
                                             </div>
                                         </td>
-                                        <td class="text-center align-middle">{{ $team->played ?? 0 }}</td>
-                                        <td class="text-center align-middle">{{ $team->won ?? 0 }}</td>
-                                        <td class="text-center align-middle">{{ $team->draw ?? 0 }}</td>
-                                        <td class="text-center align-middle">{{ $team->lost ?? 0 }}</td>
-                                        <td class="text-center align-middle fw-bold text-primary">{{ $team->points ?? 0 }}</td>
+                                        <td class="text-center align-middle fw-normal" style="background-color: #f8f9fa;">{{ $team->played ?? 0 }}</td>
+                                        <td class="text-center align-middle fw-normal">{{ $team->won ?? 0 }}</td>
+                                        <td class="text-center align-middle fw-normal" style="background-color: #f8f9fa;">{{ $team->draw ?? 0 }}</td>
+                                        <td class="text-center align-middle fw-normal">{{ $team->lost ?? 0 }}</td>
+                                        <td class="text-center align-middle fw-bold text-primary" style="background-color: #f8f9fa;">{{ $team->points ?? 0 }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -50,7 +50,7 @@
         @endif
 
         @if (isset($bracketList) && !empty($bracketList))
-            <h5 class="mt-3 mb-2 text-start"><u>Rounds & Results</u></h5>
+            <h5 class="mt-3 mb-2 text-start font-poppins fw-semibold text-xl text-primary-dark"><u>Rounds & Results</u></h5>
             
             {{-- Pagination Component --}}
             @if(isset($pagination))

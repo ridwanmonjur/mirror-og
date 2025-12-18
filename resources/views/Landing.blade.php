@@ -123,8 +123,8 @@
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
                                 </svg>
                             </div>
-                            <h5 class="card-title text-muted mb-2">No Events Available</h5>
-                            <p class="card-text text-muted small mb-0">We don't have any events to display</p>
+                            <h5 class="card-title mb-2 font-poppins fw-semibold text-lg text-gray-dark">No Events Available</h5>
+                            <p class="card-text mb-0 font-nunito fw-normal text-sm text-gray-medium">We don't have any events to display</p>
                         </div>
                 </div>
             </div>
