@@ -17,11 +17,11 @@
 
         // Array of medal colors and properties
         $medals = [
-            1 => ['fill' => '#FFE55C', 'stroke' => '#FFCA28', 'color' => 'black'],
-            2 => ['fill' => '#E8E8E8', 'stroke' => '#BDBDBD', 'color' => '#2c2c2c'],
-            3 => ['fill' => '#E8956E', 'stroke' => '#D4795B', 'color' => 'white'],
-            4 => ['fill' => '#B565FF', 'stroke' => '#9333EA', 'color' => 'white'],
-            5 => ['fill' => '#34D399', 'stroke' => '#10B981', 'color' => 'white'],
+            1 => ['fill' => 'transparent', 'stroke' => '#FFCA28', 'color' => '#FFCA28'],
+            2 => ['fill' => 'transparent', 'stroke' => '#BDBDBD', 'color' => '#757575'],
+            3 => ['fill' => 'transparent', 'stroke' => '#D4795B', 'color' => '#D4795B'],
+            4 => ['fill' => 'transparent', 'stroke' => '#9333EA', 'color' => '#9333EA'],
+            5 => ['fill' => 'transparent', 'stroke' => '#10B981', 'color' => '#10B981'],
         ];
 
         // Return default for positions beyond 5

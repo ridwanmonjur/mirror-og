@@ -1,0 +1,365 @@
+3Methodology
+Learning interdependently between various human skeleton
+joints is a tedious task. Human motion depends on the joint’s
+relation, and human motion incorporates the motion of the
+joints. This work aims to improve the networks’ prediction
+ability to understand the interdependence between joints of
+the human skeleton in the OoD scenario. We improve the
+capability of our deep network by adding multiple linear
+matrices, which helps to understand the interdependency
+between joints by improving the capability of the latent
+variable. Adding extra linear matrices between the encoder
+and the decoder penalizes the rank of the latent variable
+by reducing the number of dimensions used by the latent
+variables. The more linear matrices added, the better the
+regularization effect produced. The output of the encoder is
+fed to the linear matrices, and its output is provided to the
+decoder. This can result in an implicit regularization effect.
+3.1 Problemdescription
+In the literature on human motion, three-dimensional
+joint coordinates and angles are the two most common
+ways to represent a human position. These two methods
+are completely static. In this work, we use joint angle
+representation. As other methods discuss, The input of our
+model is an observed continuous motion sequence X1:N =
+[X1,X2,...Xi,..,XN] consisting N continuous observed
+G. K. Yadav et al.
+18030
+pose frames, and the output of the model is T continuous
+frames containing the predicted poses. Input and output
+frames have a single scale. In other words, motion sequence
+X1:N is a matrix consisting of N rows and K columns.
+Each pose Xi ∈ RK has K joints to represent the pose.
+Now the task is to build a model fpredict(.) to predict the
+unknown future pose sequence ˆXN+1:N+T given X1:N that
+approximates the ground truth XN+1:N+T. The column of
+X1:N represents the human pose each time step, whereas
+each row of X1:N shows the motion of each joint. Here
+Xk
+N =[Xk
+1,Xk
+2,.....Xk
+N] shows the trajectory of the kth joint
+across the N frames. In our study, N is set to 10, and T varies
+from 2 to 25.
+As stated in the literature, given a time horizon of
+40ms, the short-term predictions correspond to 40, 80, 160,
+320, and 400ms (2, 4, 6, 8, and 10 frames), while long
+term predictions correspond to 1000ms (25 frames). In our
+implementation, we set the number of input frames (NIF)
+and the number of output frames (NOF) that determines the
+type of prediction (short or long). With the CMU MoCap
+dataset, our model has been trained to predict long-term
+poses (25 frames). For short-term predictions, we set the
+NOFofthetrainedmodelto2,4,6,8,or10framestomake
+the short-term predictions 40, 80, 160, 320, or 400ms.
+We use temporal encoding, bypassing the input frame to
+a discrete cosine transform function. The goal of temporal
+encoding is to capture each joint’s motion pattern. It
+provides compact representation by discarding the high
+frequencies that help capture the smoothness of human
+motion. In the proposed model, we use a linear layer
+enabled discriminative model, which is incorporated with a
+generative model for training the network by minimizing the
+combined loss calculated loss functions for both network
+branches. In the testing phase, we use only the discriminator
+network shown in Fig. 4 to predict the expected future pose
+ˆ
+XN+1:N+T.
+Weapply discrete cosine transformations (DCT) on each
+input to the network, along with the freedom to eliminate
+low or high frequencies. Every single coefficient contains
+information at a distinct temporal frequency of the whole
+sequence. We define a vector xk =[xk,1,xk,2,..,..,xk,N],
+which is a vector of a specific joint k, taken over N time
+steps. This is converted to a DCT vector defined as Ck =
+[Ck,1,Ck,2,.., ..,Ck,N], whereCk,l denotes the lth DCT
+coefficient, which can be computed as (1):
+Ck,l =
+2
+N
+N
+n=1
+xk,n
+√
+1
+1 +δl1 
+cos( π
+2N(2n−1)(l−1)). (1)
+This is invertible on the condition that none of the
+frequencies are cropped. Invertibility is achieved by
+employing inverse discrete cosine transform (IDCT), which
+can be expressed as (2):
+xk,l =
+2
+N
+N
+l=1
+Ck,l
+√
+1
+1 +δl1 
+cos( π
+2N(2n−1)(l−1)). (2)
+The IDCT is applied to the outputs for conversion to
+the original coordinate system. This effectively allows
+comparison with the ground truths.
+3.2 Graphconvolutionalnetworks
+The early version of neural networks works effectively
+with Euclidean data. However, many datasets, such as
+social networks, and biological, chemical, etc., are irregular,
+non-Euclidean data. The graph uses a node to represent
+these inconsistent data, and mathematical operations can
+be implemented on these data types. All the mathematical
+operations are applied to the GCN following the previous
+CNN equation with some modification [36]. The forward
+propagation of GCNs at each layer is represented by (3).
+The term GCL(A[l−1]) represents the function of feature
+representation. σ is the activation function. We presume
+that C ∈ RK×(N+T) is elucidated on a graph with N+T
+dimensions and k nodes. A[0] = C ∈ RK×(N+T),where
+C is the feature matrix at the first layer, which can also be
+written as A[0], it is also known as input features or node
+features. W ∈ Rn[l−1]× n[l] are the weights and b ∈ Rn[l] are
+the bias parameters. The count of hidden units in each layer
+l is represented by n[l]. The normalized adjacency matrix S,
+the weights W, and the biases b are all learnable parameters.
+A[l−1] shows the feature representation matrix at layer l-1.
+GCL(A[l−1]) = σ(SA[l−1]W +b). (
+3)
+To ensure that the model converges, we must normal
+ize the features to avoid numerical instability and van
+ishing/exploding gradients. S is the normalized adjacency
+matrix calculated using (4).
+S =D−1
+2 ∗s ∗D−1
+2. (
+4)
+Moreover, S ∈ RK×K is a normalized graph Laplacian
+that constitutes the connection between the different joints
+and is layer specific. In contrast, s is the adjacency matrix
+representing the edges or connection between the nodes in
+the forward propagation. Moreover, D is the diagonal node
+degree matrix, which normalizes the adjacency matrix s.
+3.3 Residual graphconvolutional networkblock
+The residual graph convolutional network (ResGCN)
+consists of graph convolutional layers with residual
+connections. By doing this, we are trying to enhance the
+capability of simple GCN. The graphical representation
+Implicit regularization of a deep augmented...
+18031
+of the ResGCN is in Fig. 1. First, we use this ResGCN
+in the encoder of our network, and one after another,
+we use six ResGCNs in the encoder network. Similarly,
+we use six ResGCNs for both branches of the decoder
+network, followed by a single graph convolutional layer.
+Each ResGCN works as follows:
+ResGCN(A)= A+S(SAW)W,
+(5)
+where A ∈ RK×N is the activation of the previous layer
+passing to the ResGCN block. S ∈ RK×K is a normalized
+adjacency matrix, and W ∈ RN×N is a weight matrix. The
+output of this block passes through a nonlinear activation
+function. We employ the ReLU activation function in our
+scenario. ReLU function production is the result of the
+ResGCNblock. Weusesixsuch blocks for both the encoder
+and decoder.
+3.4 Implicit regularization using linear matrices
+We use generative and discriminative models to learn the
+OoD scenario. Earlier research works [16, 18, 35] used
+a discriminative model for the human motion prediction
+task, and they discussed only the ID scenario. For the first
+time, [11] proposed augmentation of the generative model
+with a discriminative model to deal with the OoD scenario.
+Bourached et al. [11] uses the variational autoencoder as a
+generative model to deal with the OoD cases. Decreasing or
+restricting the latent representation’s information capacity
+is a crucial part of autoencoder approaches. Jing et al. [13]
+proposed an approach to minimize the rank of latent
+variables by adding linear matrices between the encoder
+and decoder of the autoencoder. To obtain motivation, we
+use this concept in our case, where our task to predict
+the future poses an OoD scenario. In our model, we
+use an autoencoder branch together with a discriminative
+branch. By adding the linear matrices, we improve the
+learning representation capability of the latent variable of
+the generative branch.
+Implicit regularization is a phenomenon whereby gra
+dient descent optimization of a linear multilayer neural
+network results in a low-rank solution. Our goal is to cre
+ate an architecture that benefits from this phenomenon to
+enhance the quality of learned representations in predicting
+human motion. Learning good representations between var
+ious human joints remains a core issue in human motion
+prediction tasks. To address this scenario in the proposed
+deep network architecture, we add extra linear matrices
+W1, W2,.,Wj..Wl between the encoder and decoder net
+works. We used eight linear matrices. The dimensions of
+each matrix are Wj ∈ Rd×d, and they are initialized ran
+domly. We train all Wj matrices jointly with both branches.
+Figure 2 shows the encoder part of our network. Lin
+ear matrices are added after residual GCN blocks. These
+matrices successfully minimize the rank of the covariance
+matrix of the latent space while training latent variables by
+encouraging them to use lower dimensions. Moreover, by
+accomplishing this, they intensify the regularization effect
+of our deep network. The regularized network learns inter
+dependently between the various joints of the 3D skeleton of
+a human, and this capability of the network helps to predict
+more accurate motion during inference.
+The inference network used for testing purpose only
+is shown in Fig. 4. The predicted pose is the output
+of the decoder network with a residual connection and
+is represented by the following equation. Equation (6)
+mathematically expresses the Fig. 4.
+ˆ
+Ck,n = Dec(Wl....W2W1Enc(Ck,n)) + Ck,n. (
+6)
+Because linear matrix multiplication is associative, all
+Wj matrices can be absorbed into the encoder during
+inference. As a result, this linearly adjusted decoder can be
+used directly to generate the future pose.
+3.5 Networkarchitecture
+Figure 3 shows the details of the train network architecture
+of our network. There exists one GCL at the start of
+the network. This GCL is followed by the first 6 Graph
+Convolution Blocks (GCBs). Each GCB consists of two
+graph convolution layers with residual connections. For
+each layer l, the number of hidden units, n[l] = 256. The
+first 6 GCBs and linear layers constitute the encoder part of
+Fig. 2 Figure shows the encoder part of our deep augmented network
+Fig. 1 Complete figure of residual graph convolutional network block
+G. K. Yadav et al.
+18032
+Fig. 3 The proposed deep network architecture consists of GCN,
+linear matrices, and a variational autoencoder branch.Ck,n is
+the input DCT coefficient matrix. ˆCk,l is the DCT coeffi
+cient predicted by the discriminative decoder branch. Ck,l is
+the DCT coefficient of the ground truth corresponding to the
+output. Ld() is the loss function for discriminative branch.
+LG() is the loss function calculated by the VAE branch. This
+architecture encoder consists of one graph convolutional layer
+(GCL), six residual graph convolutional network (ResGCN) blocks,
+our network architecture. These blocks are defined with a
+latent variable. The latent variable can be represented as (7):
+z ∈ Rk×nz = N(μz,σz),
+(7)
+where μz ∈ Rk×nz, σz ∈ Rk×nz. nz is 8 or 32 according
+to the stability of the training process. Equation (8) defines
+the KL divergence between a latent space distribution and
+the spherical Gaussian N(0, I) distribution.
+ll = KL(q(z|c) q(z))= 1
+2 
+nz
+1 
+(μz2 + σz2 −1−log(σz2).
+(8)
+The output of these six GCBs is passed through the linear
+layers. The number of linear layers is set as 8. The linear
+layers perform the task of applying a linear transformation
+of whatever input goes into them. The learnable weights of
+these layers are of the shape (outfeatures,infeatures) and
+are taken from a uniform distribution μ(−√k,√k),where
+k = 1
+in2
+features
+,
+where infeatures is the size of each input sample, and
+outfeatures is the size of each output sample. The linear
+transformation applied to the incoming data is y = wT ∗
+x. Our network’s encoder design is depicted in Fig. 2.
+and eight linear matrices. For training, the network consists of two
+branches. The first discriminative branch consists of six ResGCN
+blocks followed by GCL and a residual connection. Second, the varia
+tional autoencoder (VAE) branch uses two GCL layers to make a code
+variable. The code variable passes through a GCL followed by six Res
+GCNblocks and two GCL blocks separately to construct μk,l and σkl.
+Then using the loss function discussed in the methodology section,
+we calculate the loss for training. We use the combined loss l for the
+training process
+The output of the linear transformations is fed to the
+decoder part of the VAE that has the same composition
+as the discriminative branch. It has 6 GCBs. The output
+neurons are parameterized as μz ∈ RK×(N+T), and
+log(σ2) ∈ RK×(N+T). The second component of VAE
+has a negative variational lower bound (VLB) as shown
+in (9). It reconstructs the inputs as samples from a maximum
+likelihood Gaussian distribution.
+lc = log(p(c|z)) =−1
+2 
+N+T
+n=1
+l
+l=1
+(log(σ2
+kl)
+),
++log(2π)+ |ck,l − μk,l|2
+elog(σ2
+k,l )
+where ck,l are the ground truth DCT coefficients.
+3.6 Training
+(9)
+The complete network is trained in conjunction with the
+negative VLB. Our loss function is defined by (10).
+N+T
+l =
+1
+K(N+T)
+n=1
+K
+k=1
+|ˆxk,n − xk,n|−λ(lc − ll).
+(10)
+In each layer, the graph size shows that the count of the
+parameters differs with K, which is the number of joints.
+Implicit regularization of a deep augmented...
+18033
+Fig. 4 Overview of the linear transformation incorporated discrimi
+nator network to predict frame xN+1 to xN+T by taking x1 to xN.
+Each frame passes through the DCT function. Here, K represents the
+number of joints in the 3D human skeleton. N shows the number of
+The values of K are 48 for H3.6 M, 64 for CMU joint
+angles, and K = 65 for CMU Cartesian coordinates. λ is a
+hyperparameter, and our entire model has approximately 4.2
+Mparameters.
+The average l1 distance between the ground-truth joint
+angles and the projected joint angles is given the joint angle
+loss, which can be defined as (11):
+N+T
+la =
+1
+K(N+T)
+n=1
+K
+k=1
+|ˆxk,n − xk,n|,
+(11)
+where ˆxk,n is the predicted kth joint, and xk,n is the
+analogous ground truth, both at time-step n. As has already
+been proposed by [34] and implemented in [12, 19], the
+mean per joint position error (MPJPE) has been used for the
+training of joint angle loss on 3D joint coordinate prediction.
+For each training sample, the MPJPE has been established
+as (12):
+N+T
+lm =
+1
+K(N+T)
+n=1
+K
+k=1
+| ˆ
+Pk,n − Pk,n|2,
+(12)
+where K is the count of the skeletal joints, ˆPk,n ∈ R3 is
+the predicted kth joint position, and Pk,n is the analogous
+ground truth, both at time-step n.
+Out of these different loss functions, our final loss
+function to train our network architecture is represented as
+l. l integrates the loss of both branches of the network. la
+shows the loss of the discriminator branch, where lc and ll
+are losses of the VAE branch. We use lm (MPJPE) for test
+cases to compare our results with the other approach results
+(Fig. 4). We also compare our results in the Euclidean
+distance between anticipated and ground truth joint angles.

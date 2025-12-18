@@ -52,7 +52,8 @@
       "WebFetch(domain:github.com)",
       "Bash(gcloud run services describe:*)",
       "Bash(gcloud run services delete:*)",
-      "Bash(gcloud run services update:*)"
+      "Bash(gcloud run services update:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
