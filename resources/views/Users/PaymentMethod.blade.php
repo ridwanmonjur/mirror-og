@@ -15,9 +15,9 @@
                     <div class="px-2 py-2">
                         <div class="card-body">
                             <div class="row mb-3">
-                                <h3 class="transaction-history__title text-secondary text-start col-12 col-lg-8">Add Bank Account for Withdrawals</h3>
+                                <h3 class="transaction-history__title text-gray-dark text-start col-12 col-lg-8">Add Bank Account for Withdrawals</h3>
                                 <a href="{{route('wallet.dashboard')}}" class="col-12 col-lg-4 text-start text-lg-end">
-                                    <span class="cursor-pointer text-secondary">
+                                    <span class="cursor-pointer text-gray-dark">
                                         <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                                             </svg>

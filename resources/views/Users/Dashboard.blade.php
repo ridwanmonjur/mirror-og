@@ -29,7 +29,7 @@
             <div class="col-12 px-0 col-xl-5">
                 <div class="card my-2 mx-2 py-0 border border-3 border-primary  rounded-30px ">
                     <div class="card-body d-flex flex-column justify-content-center">
-                        <h5 class="my-3 text-secondary">Current Balance </h5>
+                        <h5 class="my-3 text-gray-dark">Current Balance </h5>
                         <h2 class="text-primary my-3"> RM  {{ number_format($wallet->current_balance, 2) }} </h2>
                         <div class="my-2">
                             <button type="button"
@@ -62,11 +62,11 @@
                 </div>
                 <div class="card my-2  mx-2 py-1 border border-2 border-secondary rounded-30px">
                     <div class="card-body">
-                        <div class="row text-secondary">
+                        <div class="row text-gray-dark">
                             <p class="col-6 text-start">Coupons expiring soon</p>
                             {{-- ahref --}}
                             <a href="{{route('wallet.coupons')}}" class="col-6 text-end cursor-pointer">
-                                <span class="text-secondary">View all my coupons</span>
+                                <span class="text-gray-dark">View all my coupons</span>
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                         fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
@@ -95,9 +95,9 @@
                         <div class="container-fluid px-0 py-0">
                             <div class="transaction-history">
                                 <div class="row py-0 px-3 my-0">
-                                    <h3 class="transaction-history__title  col-12 col-lg-6 text-secondary">Most recent transactions
+                                    <h3 class="transaction-history__title  col-12 col-lg-6 text-gray-dark">Most recent transactions
                                     </h3>
-                                    <a href="{{route('wallet.transactions')}}" class="col-12 col-lg-6 text-secondary text-start text-lg-end">
+                                    <a href="{{route('wallet.transactions')}}" class="col-12 col-lg-6 text-gray-dark text-start text-lg-end">
                                         View full <span class="d-none d-lg-inline">transaction</span> history
                                         <span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
@@ -154,7 +154,7 @@
                 <div class="card-body px-2 py-2">
                     <div class=" px-2 py-2">
                         <div class=" px-1 py-0 my-0">
-                            <h5 class="text-center mt-2 mb-3 text-secondary">Add funds to your wallet</h5>
+                            <h5 class="text-center mt-2 mb-3 text-gray-dark">Add funds to your wallet</h5>
 
                         </div>
                         <div class="mt-3">
@@ -229,7 +229,7 @@
                 <div class="card-body px-2 py-2">
                     <div class=" px-2 py-1">
                         <div class=" px-1 py-0 my-0">
-                            <h5 class="text-center mt-2 mb-3 text-secondary">Withdraw funds from your wallet</h5>
+                            <h5 class="text-center mt-2 mb-3 text-gray-dark">Withdraw funds from your wallet</h5>
 
                         </div>
                         <div class="mt-3">

@@ -72,7 +72,7 @@ table.responsive thead {
 
 
 .wallet, .wallet2 {
-    background: linear-gradient(135deg, #2e4b59 0%, #43A4D7 100%);
+    background: linear-gradient(135deg, #f1f2f4 0%, #7db9dc 75%, #43a4d7 100%);
     min-height: 100vh;
     overflow-x: hidden;
 
