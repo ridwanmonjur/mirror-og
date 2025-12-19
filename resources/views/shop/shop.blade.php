@@ -9,10 +9,26 @@
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/breadcrumb.css') }}">
 </head>
 
 <body>
+    <div class="scroll-indicator"></div>
     @include('includes.Navbar')
+
+    @php
+        $breadcrumbItems = [
+            ['label' => 'Shop', 'url' => '/shop']
+        ];
+
+        if (request()->category && request()->category !== 'all') {
+            $breadcrumbItems[] = ['label' => $categoryName];
+        } else {
+            $breadcrumbItems[] = ['label' => 'All Categories'];
+        }
+    @endphp
+
+    @include('includes.Breadcrumb', ['items' => $breadcrumbItems])
 
     <main class="px-2 pt-4">
         @if (session()->has('success_message'))
@@ -33,21 +49,21 @@
 
         <div class="row mx-2">
             <div class="col-12 col-xl-2 mb-6 mt-3">
-                <h5>Shop By Category</h5>
+                <h5 class="fw-semibold mb-4">Shop By Category</h5>
                 <form method="GET" action="{{ route('shop.index') }}" class="mt-4">
-                    <div class="form-check px-2 bg-white border-secondary border rounded-3 rounded">
-                        <input class="form-check-input ms-2" type="radio" name="category" value="all" id="all-categories" 
+                    <div class="form-check px-3 py-2 mb-2 bg-white border-secondary border rounded-3">
+                        <input class="form-check-input" type="radio" name="category" value="all" id="all-categories"
                                {{ request()->category === 'all' || request()->category === null ? 'checked' : '' }} onchange="this.form.submit()">
-                        <label class="form-check-label ms-2" for="all-categories">
+                        <label class="form-check-label fw-normal" for="all-categories">
                             All Categories
                         </label>
                     </div>
                     @foreach ($categories as $category)
-                        <div class="form-check px-2 bg-white border-secondary border rounded-3 rounded">
-                            <input class="form-check-input ms-2" type="radio" name="category" value="{{ $category->slug }}" 
-                                   id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }} 
+                        <div class="form-check px-3 py-2 mb-2 bg-white border-secondary border rounded-3">
+                            <input class="form-check-input" type="radio" name="category" value="{{ $category->slug }}"
+                                   id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }}
                                    onchange="this.form.submit()">
-                            <label class="form-check-label ms-2" for="category-{{ $category->slug }}">
+                            <label class="form-check-label fw-normal" for="category-{{ $category->slug }}">
                                 {{ $category->name }}
                             </label>
                         </div>
@@ -57,16 +73,13 @@
 
             <div class="col-12 col-xl-10 mb-6 mt-3">
                 <div class="d-flex align-items-center flex-wrap justify-content-between">
-                    <div class=" mb-6">
-                        <h4 style="font-weight: bold">{{ $categoryName }}</h4>
+                    <div class="mb-6">
+                        <h4 class="fw-bold mb-0">{{ $categoryName }}</h4>
                     </div>
-                    <div class=" mb-6">
-
-                        <!-- Example single danger button -->
-
-                        <div class="d-flex flex-wrap" >
-                            <div class="dropdown me-1">
-                                <button type="button" class="btn px-0 rounded-2 text-dark dropdown-toggle me-4" id="dropdownMenuOffset"
+                    <div class="mb-6">
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm px-3 rounded-2 text-dark dropdown-toggle" id="dropdownMenuOffset"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     Product Type
                                     <svg width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
@@ -75,16 +88,15 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                                     @foreach ($categories as $category)
-                                        <a class="dropdown-item"
-                                            href="{{ route('shop.index', ['category' => $category->slug]) }}"
-                                            style="color: #000;">
-                                            {{ $category->name }}</a>
+                                        <a class="dropdown-item" href="{{ route('shop.index', ['category' => $category->slug]) }}">
+                                            {{ $category->name }}
+                                        </a>
                                     @endforeach
                                 </div>
                             </div>
 
-                            <div class="btn-group mb-2" >
-                                <button type="button" class="btn  px-0 rounded-2 text-dark me-4 dropdown-toggle" id="dropdownMenuOffset3"
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm px-3 rounded-2 text-dark dropdown-toggle" id="dropdownMenuOffset3"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     Price
                                     <svg width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
@@ -94,7 +106,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset3">
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_less_than_50']) }}">
-                                        less than RM 50</a>
+                                        Less than RM 50</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_50_to_100']) }}">
                                         RM 50 - RM 100</a>
@@ -103,13 +115,13 @@
                                         RM 100 - RM 150</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_150_or_more']) }}">
-                                        RM 150 or more</a>
+                                        RM 150 or More</a>
 
                                 </div>
                             </div>
 
-                            <div class="btn-group mb-2">
-                                <button type="button" class="btn px-0 rounded-2 text-dark  me-4 dropdown-toggle" id="dropdownMenuOffset2"
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm px-3 rounded-2 text-dark dropdown-toggle" id="dropdownMenuOffset2"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     Sort By
                                     <svg width="16" height="16" fill="currentColor" class="ms-1" viewBox="0 0 16 16">
@@ -121,12 +133,11 @@
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'Newest']) }}">
                                         Newest</a>
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'low_high']) }}"
-                                        style="color: #000;">
-                                        Price low - high</a>
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'low_high']) }}">
+                                        Price Low - High</a>
                                     <a class="dropdown-item"
                                         href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'high_low']) }}">
-                                        Price high - low</a>
+                                        Price High - Low</a>
                                    
 
                                 </div>
@@ -143,7 +154,7 @@
                         <a href="{{ route('shop.show', $product->slug) }}" class="text-decoration-none ">
                             <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-3 border-primary h-100 d-flex flex-column">
                                 
-                                    <div class="product-card__image-wrapper  mb-3">
+                                    <div class="product-card__image-wrapper  mb-1">
                                         
                                         <img src="{{ asset('storage/' . $product->image) }}" 
                                             class="product-card__image w-100 object-fit-cover   border-primary border-bottom"
@@ -157,7 +168,7 @@
 
                                     <div class="text-start px-3 d-flex flex-column justify-content-between" >
                                         <div>
-                                                <h5  class="product-card__name text-truncate mt-2 mb-3 px-0 text-primary d-block mb-1">
+                                                <h5 class="product-card__name text-truncate mt-2 mb-2 px-0 text-primary fw-semibold">
                                                     {{ $product->name }}
                                                 </h5>
                                             
@@ -180,44 +191,23 @@
                                                 <span class="product-card__currency ">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
                                             </div>
                                             
-                                            <div class="mb-0">
-                                                <small class="text-muted me-2">Category: </small>
-                                                <div class="d-inline-flex flex-wrap justify-content-center align-items-center">
+                                            <div class="mb-3">
+                                                <div class="d-flex flex-wrap gap-1">
                                                     @foreach($product->categories->take(2) as $category)
-                                                        <a href="{{ '/shop?category=' .  $category->slug }}" class="badge mb-2 bg-primary me-1 text-white text-truncate d-inline-block text-decoration-none" style="width: 12ch; ">
+                                                        <a href="{{ '/shop?category=' .  $category->slug }}"
+                                                           class="badge rounded-pill text-primary bg-light border border-primary text-decoration-none px-3 py-1"
+                                                           style="font-size: 0.75rem; font-weight: 500;">
                                                             {{ $category->name }}
                                                         </a>
-                                                        
-                                                        
                                                     @endforeach
-                                                    @if($product->isPhysical)
-                                                    <span class="badge bg-primary mb-2" style="width: 8ch; ">
-                                                    
-                                                        Physical
-                                                    </span>
-                                                @else
-                                                    <span class="badge bg-success mb-2" style="width: 8ch; " >
-                                                        
-                                                        Digital
-                                                    </span>
-                                                @endif
+                                                    @if (isset($product->categories[2]))
+                                                        <span class="badge rounded-pill bg-light text-muted border border-secondary px-2 py-1" style="font-size: 0.75rem;">+{{ count($product->categories) - 2 }}</span>
+                                                    @endif
                                                 </div>
-                                                @if (isset ($product->categories[2])) 
-                                                    ...
-                                                @endif
-                                                
                                             </div>
 
                                             <!-- View Product Button -->
-                                            <div class="d-flex justify-content-center align-items-center mb-3">
-                                                <a href="{{ route('shop.show', $product->slug) }}" class="  text-muted border-secondary small  px-2 mt-2 ">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi border-secondary bi-eye me-1" viewBox="0 0 16 16">
-                                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-                                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-                                                    </svg>
-                                                    View Product
-                                                </a>
-                                            </div>
+                                           
                                         </div>
                                     </div>
                             </div> 

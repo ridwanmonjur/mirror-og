@@ -9,12 +9,31 @@
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/breadcrumb.css') }}">
 </head>
 
 <body>
     @include('googletagmanager::body')
+    <div class="scroll-indicator"></div>
     @include('includes.Navbar')
     <input type="hidden" id="user_role" value="{{ auth()->check() ? auth()->user()->role : null }}">
+
+    @php
+        $breadcrumbItems = [
+            ['label' => 'Shop', 'url' => '/shop']
+        ];
+
+        if (isset($product->categories) && isset($product->categories[0])) {
+            $breadcrumbItems[] = [
+                'label' => $product->categories[0]->name,
+                'url' => '/shop/?category=' . $product->categories[0]->slug
+            ];
+        }
+
+        $breadcrumbItems[] = ['label' => $product->name];
+    @endphp
+
+    @include('includes.Breadcrumb', ['items' => $breadcrumbItems])
 
     <main class="product py-3">
         @if (session()->has('success_message'))
@@ -41,21 +60,6 @@
 
         <!-- Product Detail -->
         <div class="px-4 py-2 bg-white rounded-3 shadow-sm">
-
-             <div class="px-4 my-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/shop" class="text-decoration-none">Shop</a></li>
-                    @if (isset($product->categories) && isset($product->categories[0]))
-                        <li class="breadcrumb-item"><a href="{{ '/shop/?category=' . $product->categories[0]->slug }}"
-                                class="text-decoration-none">{{ $product->categories[0]->name }}</a>
-                        </li>
-                    @endif
-                    <li class="breadcrumb-item" aria-current="page">{{ $product->name }}</li>
-                </ol>
-            </nav>
-        </div>
-
             <div class="row  px-4 g-4">
                 <!-- Product Images -->
                 <div class="col-lg-3 col-12">
@@ -64,24 +68,23 @@
                             @if ($product->images)
                                 <div class="carousel-inner">
                                     @foreach ((is_array($product->images) ? $product->images : json_decode($product->images, true)) as $index => $image)
-                                        <div
-                                            class="carousel-item  border border-light {{ $index === 0 ? 'active' : '' }}">
+                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                             <img src="{{ asset('storage/' . $image) }}"
-                                                class="d-block w-100 rounded-3 shadow-sm object-fit-cover border border-light"
-                                                alt="{{ $product->name }}" style="height: 250px; "
+                                                class="d-block w-100 rounded-3 shadow-sm object-fit-cover"
+                                                alt="{{ $product->name }}" style="height: 250px;"
                                                 onerror="this.onerror=null;this.src='/assets/images/404q.png';">
                                         </div>
                                     @endforeach
                                 </div>
                                 <button
-                                    class="carousel-control-prev bg-secondary bg-opacity-75 rounded-circle border border-white border-2 position-absolute top-50 translate-middle-y"
+                                    class="carousel-control-prev bg-dark rounded-circle border border-white border-2 position-absolute top-50 translate-middle-y"
                                     type="button" data-bs-target="#productCarousel" data-bs-slide="prev"
                                     style="width:35px; height: 35px;">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
                                 </button>
                                 <button
-                                    class="carousel-control-next bg-secondary bg-opacity-75 rounded-circle border border-white border-2  position-absolute top-50 translate-middle-y"
+                                    class="carousel-control-next bg-dark rounded-circle border border-white border-2 position-absolute top-50 translate-middle-y"
                                     type="button" data-bs-target="#productCarousel" data-bs-slide="next"
                                     style="width:35px; height: 35px;">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -94,31 +97,31 @@
 
                 <!-- Product Info -->
                 <div class="col-lg-9 col-12">
-                    <div class="product-info  rounded px-4 ">
-                        <div class=" pb-2">
-                            <h4 class="product-detail-name text-dark my-0 pt-0  text-truncate ">{{ $product->name }}
-                            </h4>
-
+                    <div class="product-info rounded px-4">
+                        <div class="pb-2">
+                            <h4 class="product-detail-name text-dark mb-0 fw-bold text-truncate">{{ $product->name }}</h4>
                         </div>
 
                         <!-- Product Description -->
                         @if ($product->description)
-                            <div class=" mt-2 mb-3">
-
+                            <div class="mt-2 mb-3">
                                 <div class="bg-light py-3 border-secondary text-start border px-3 rounded">
-                                    <span class="text-dark shop__description">{{ trim($product->description) }}</span>
-                                    <span class="text-muted pt-3 shop__details">{{ trim($product->details) }}</span>
+                                    <div class="text-dark shop__description mb-2">{{ trim($product->description) }}</div>
+                                    @if($product->details)
+                                        <div class="text-muted shop__details">{{ trim($product->details) }}</div>
+                                    @endif
                                 </div>
                             </div>
                         @endif
 
                         
 
-                        <div class="my-2 pb-3 border-1 border-bottom border-warning ">
-                            <div class="d-inline-flex flex-wrap gap-2">
+                        <div class="my-3 pb-3 border-bottom border-light">
+                            <div class="d-flex flex-wrap gap-2">
                                 @foreach ($product->categories as $category)
                                     <a href="{{ '/shop?category=' . $category->slug }}"
-                                        class="badge bg-secondary text-white text-decoration-none">
+                                        class="badge rounded-pill text-primary bg-light border border-primary text-decoration-none px-3 py-2"
+                                        style="font-size: 0.85rem; font-weight: 500;">
                                         {{ $category->name }}
                                     </a>
                                 @endforeach
@@ -127,63 +130,51 @@
                                     $stockThreshold = 10;
                                 @endphp
                                 @if ($totalStock > $stockThreshold)
-                                    <span class="badge bg-success">
-                                        <svg width="12" height="12" fill="currentColor" class="me-1"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                            <path
-                                                d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
+                                    <span class="badge rounded-pill text-success bg-light border border-success px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                                        <svg width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
                                         </svg>
                                         In Stock
                                     </span>
                                 @elseif($totalStock > 0)
-                                    <span class="badge bg-warning">
-                                        <svg width="12" height="12" fill="currentColor" class="me-1"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                    <span class="badge rounded-pill text-warning bg-light border border-warning px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                                        <svg width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                                         </svg>
                                         Low Stock
                                     </span>
                                 @else
-                                    <span class="badge bg-danger">
-                                        <svg width="12" height="12" fill="currentColor" class="me-1"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                            <path
-                                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    <span class="badge rounded-pill text-danger bg-light border border-danger px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                                        <svg width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                                         </svg>
-                                        Not available
+                                        Not Available
                                     </span>
                                 @endif
-                                
+
                                 @if($product->isPhysical)
-                                    <span class="badge bg-primary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-box me-1" viewBox="0 0 16 16">
+                                    <span class="badge rounded-pill text-primary bg-light border border-primary px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
                                             <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.629 13.09A1 1 0 0 1 0 12.162V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
                                         </svg>
                                         Physical Product
                                     </span>
                                 @else
-                                    <span class="badge bg-success">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-display me-1" viewBox="0 0 16 16">
+                                    <span class="badge rounded-pill text-success bg-light border border-success px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
                                             <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145Z"/>
                                         </svg>
                                         Digital Product
                                     </span>
                                 @endif
                             </div>
-
                         </div>
 
 
                         <div class="price-section py-3 mb-2">
-
-                            <h3 class="py-0 my-0 leading text-warning d-inline-block fw-bold"
-                                style="transform: scaleY(1.05); ">RM
-                                {{ number_format($product->price, 2) }}</h3>
+                            <h3 class="mb-0 text-primary fw-bold">RM {{ number_format($product->price, 2) }}</h3>
                         </div>
 
                         <!-- Product Variants -->
@@ -264,7 +255,7 @@
                                         <input type="hidden" name="variant_ids" id="selected_variant_ids">
                                         <input type="hidden" name="quantity" id="selected_quantity" value="1">
                                         <button type="submit" id="addToCartBtn"
-                                            class="btn btn-warning px-5 text-dark fw-bold rounded-pill " data-disabled="true">
+                                            class="btn btn-primary px-5 text-white fw-bold rounded-pill" data-disabled="true">
                                             <svg width="16" height="16" fill="currentColor" class="me-2"
                                                 viewBox="0 0 16 16">
                                                 <path
@@ -284,7 +275,6 @@
         <br> <br>
     </main>
 
-    <script type="text/javascript" src="{{ asset('jquery/jquery-3.2.1.min.js') }}"></script>
 
 
 

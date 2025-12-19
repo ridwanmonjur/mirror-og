@@ -1,30 +1,13 @@
 <body style="overflow-y: auto !important;">
     @include('googletagmanager::body')
 
-    <!-- Decorative clouds -->
-    <div class="clouds-container">
-        <svg class="cloud cloud-1" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-            <path d="M170,20c0-11-9-20-20-20c-4.5,0-8.6,1.5-12,4C134.5,1.5,130.5,0,126,0c-11,0-20,9-20,20c0,0.3,0,0.7,0,1 c-11.4,1.2-20,10.8-20,22c0,12.1,9.9,22,22,22h62c11,0,20-9,20-20C190,33.8,181.2,24,170,20z" fill="white" opacity="0.9"/>
+    <!-- Center waves -->
+    <div class="wave-center-container">
+        <svg class="wave wave-center" viewBox="0 0 1200 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0,50 C150,70 250,20 400,50 C550,80 700,15 850,50 C1000,75 1100,25 1200,50" fill="none" stroke="white" stroke-width="8" opacity="0.4"/>
         </svg>
-
-        <svg class="cloud cloud-2" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-            <path d="M170,20c0-11-9-20-20-20c-4.5,0-8.6,1.5-12,4C134.5,1.5,130.5,0,126,0c-11,0-20,9-20,20c0,0.3,0,0.7,0,1 c-11.4,1.2-20,10.8-20,22c0,12.1,9.9,22,22,22h62c11,0,20-9,20-20C190,33.8,181.2,24,170,20z" fill="white" opacity="0.8"/>
-        </svg>
-
-        <svg class="cloud cloud-3" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-            <path d="M170,20c0-11-9-20-20-20c-4.5,0-8.6,1.5-12,4C134.5,1.5,130.5,0,126,0c-11,0-20,9-20,20c0,0.3,0,0.7,0,1 c-11.4,1.2-20,10.8-20,22c0,12.1,9.9,22,22,22h62c11,0,20-9,20-20C190,33.8,181.2,24,170,20z" fill="white" opacity="0.75"/>
-        </svg>
-
-        <svg class="cloud cloud-4" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-            <path d="M170,20c0-11-9-20-20-20c-4.5,0-8.6,1.5-12,4C134.5,1.5,130.5,0,126,0c-11,0-20,9-20,20c0,0.3,0,0.7,0,1 c-11.4,1.2-20,10.8-20,22c0,12.1,9.9,22,22,22h62c11,0,20-9,20-20C190,33.8,181.2,24,170,20z" fill="white" opacity="0.85"/>
-        </svg>
-
-        <svg class="cloud cloud-5" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-            <path d="M170,20c0-11-9-20-20-20c-4.5,0-8.6,1.5-12,4C134.5,1.5,130.5,0,126,0c-11,0-20,9-20,20c0,0.3,0,0.7,0,1 c-11.4,1.2-20,10.8-20,22c0,12.1,9.9,22,22,22h62c11,0,20-9,20-20C190,33.8,181.2,24,170,20z" fill="white" opacity="0.82"/>
-        </svg>
-
-        <svg class="cloud cloud-6" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-            <path d="M170,20c0-11-9-20-20-20c-4.5,0-8.6,1.5-12,4C134.5,1.5,130.5,0,126,0c-11,0-20,9-20,20c0,0.3,0,0.7,0,1 c-11.4,1.2-20,10.8-20,22c0,12.1,9.9,22,22,22h62c11,0,20-9,20-20C190,33.8,181.2,24,170,20z" fill="white" opacity="0.88"/>
+        <svg class="wave wave-center-2" viewBox="0 0 1200 250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0,125 C150,200 300,15 450,125 C600,220 750,10 900,125 C1050,210 1150,40 1200,125" fill="none" stroke="white" stroke-width="8" opacity="0.6"/>
         </svg>
     </div>
 

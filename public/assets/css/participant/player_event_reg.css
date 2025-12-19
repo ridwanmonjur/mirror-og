@@ -8,14 +8,11 @@
 body{
     height: auto;
     overflow: hidden;
-    background-image: url("/assets/images/event-creation-bg.jpg");
-    background-size: auto 100vh;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
+    background: linear-gradient(135deg, #2e4b59 0%, #43A4D7 100%);
 }
 
 main {
-    width: 100%;    
+    width: 100%;
     min-height: 80vh;
     padding: 0 0;
    

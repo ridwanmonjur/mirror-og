@@ -72,12 +72,10 @@ table.responsive thead {
 
 
 .wallet, .wallet2 {
-    background-image: url("/assets/images/event-creation-bg.jpg");
+    background: linear-gradient(135deg, #2e4b59 0%, #43A4D7 100%);
     min-height: 100vh;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     overflow-x: hidden;
- 
+
 }
 
 
