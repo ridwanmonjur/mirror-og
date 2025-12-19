@@ -298,12 +298,12 @@
                     </span>
                 </div>
                 
-                <div class="mt-4 my-2 text-wrap">
+                <div class="mx-2 text-muted my-2 text-wrap">
                     <div @vue:mounted="init"
                         v-scope="ProfileCount(
                                 '{{ $userProfile->id }}', '{{ $userProfile->role }}'
                             )"
-                        class="mt-4">
+                        class="mt-1">
                         <!-- Tabs -->
                         <div v-if="!loading">
                             <div class="" style="color: inherit !important;">

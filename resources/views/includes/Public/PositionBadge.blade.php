@@ -77,7 +77,7 @@
                                              title="{{ $event->eventName }} Esports Tournament"
                                         >
 
-                                            <h6 class="mb-1 text-wrap py-0">{{ $event->eventName }}</h6>
+                                            <h6 class="mb-1 text-wrap fw-bold py-0">{{ $event->eventName }}</h6>
                                             <div class="text-body-secondary py-1 text-wrap ">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16"
                                                     fill="currentColor" class="bi me-1 bi-person-circle"
@@ -98,7 +98,7 @@
                                 <!-- Right side with position and chevron -->
                                 <div class="col-12 col-lg-3 d-flex justify-content-start my-2 align-items-center gap-3">
                                     @if ($event->position)
-                                        <div class="d-flex align-items-center text-body-secondary small">
+                                        <div class="d-flex align-items-center fw-semibold text-body-secondary small">
                                             <span class="me-2">{!! getMedalSvg($event->position) !!} </span>
                                             {{ bldOrdinal($event->position) }}
                                         </div>

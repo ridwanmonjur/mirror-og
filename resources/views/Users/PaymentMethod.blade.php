@@ -14,10 +14,10 @@
                 <div class="card-body px-2 py-2">
                     <div class="px-2 py-2">
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <h3 class="transaction-history__title text-gray-dark text-start col-12 col-lg-8">Add Bank Account for Withdrawals</h3>
+                            <div class="row mb-4">
+                                <h2 class="transaction-history__title text-gray-dark text-start col-12 col-lg-8 fw-semibold mb-2">Add Bank Account for Withdrawals</h2>
                                 <a href="{{route('wallet.dashboard')}}" class="col-12 col-lg-4 text-start text-lg-end">
-                                    <span class="cursor-pointer text-gray-dark">
+                                    <span class="cursor-pointer text-gray-dark fw-medium">
                                         <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                                             </svg>
@@ -28,13 +28,13 @@
                             </div>
 
                             @include('includes.Flash')
-                            <p class="my-3">Add your bank account details to receive your prize money.</p>
+                            <p class="my-3 fs-6 lh-base text-gray-dark">Add your bank account details to receive your prize money.</p>
 
                             <form id="bank-form" action="{{ route('wallet.save-payment-method') }}" method="POST">
                                 @csrf
                                 
                                 <div class="mb-3">
-                                    <label for="bank_name" class="form-label">Bank Name</label>
+                                    <label for="bank_name" class="form-label fw-medium fs-6 mb-2">Bank Name</label>
                                     <select  id="bank-select" name="bank_name" required>
                                         <option value="">Select your bank</option>
                                         @php
@@ -98,21 +98,21 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="account_number" class="form-label">Account Number</label>
-                                    <input type="text" class="form-control" id="account_number" name="account_number" 
+                                    <label for="account_number" class="form-label fw-medium fs-6 mb-2">Account Number</label>
+                                    <input type="text" class="form-control" id="account_number" name="account_number"
                                            placeholder="Enter your account number" required maxlength="20"
                                            pattern="[0-9\-]+" title="Only numbers and hyphens allowed">
                                     @error('account_number')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                        <div class="text-danger mt-1 fw-medium">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="account_holder_name" class="form-label">Account Holder Name</label>
-                                    <input type="text" class="form-control" id="account_holder_name" name="account_holder_name" 
+                                    <label for="account_holder_name" class="form-label fw-medium fs-6 mb-2">Account Holder Name</label>
+                                    <input type="text" class="form-control" id="account_holder_name" name="account_holder_name"
                                            placeholder="Enter account holder name as per bank records" required maxlength="100"
                                            value="{{ old('account_holder_name', auth()->user()->name ?? '') }}">
-                                    <small class="form-text text-muted">Name must match your bank account exactly</small>
+                                    <small class="form-text text-muted fst-italic lh-sm">Name must match your bank account exactly</small>
                                     @error('account_holder_name')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
@@ -120,7 +120,7 @@
 
                                 <div id="error-message" class=" text-red" style="display: none;"></div>
 
-                                <button id="submit-button" type="submit" class="btn rounded-pill text-light btn-primary">
+                                <button id="submit-button" type="submit" class="btn rounded-pill text-light btn-primary fw-medium px-4 py-2">
                                     Save Bank Account Details
                                 </button>
                             </form>

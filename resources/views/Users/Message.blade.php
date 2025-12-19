@@ -19,7 +19,7 @@
         <div class="sidebar col-12  col-lg-4 m-0 p-0" @vue:mounted="mounted" id="room-component"
             v-scope="RoomComponent()" v-cloak>
             <div class="sidebar-header align-middle">
-                <h5 id="initDB" class="my-0">Chat List</h5>
+                <h4 id="initDB" class="my-0 fw-semibold">Chat List</h4>
                 {{-- TODO --}}
                 <button v-on:click="fetchProspectiveChatters(null);" class="add-chat" data-bs-toggle="modal"
                     data-bs-target="#other-users-component">
@@ -43,8 +43,8 @@
                     </div>
                     <div class="chat-info w-75">
                         <div v-if="room?.otherRoomMember && room?.otherRoomMember?.name">
-                            <h3 class="d-inline user-select-none" v-text="room?.otherRoomMember?.name"></h3>
-                            <small v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }"
+                            <h5 class="d-inline user-select-none fw-medium mb-0" v-text="room?.otherRoomMember?.name"></h5>
+                            <small v-bind:class="{'text-white fw-semibold' : currentRoomObj?.id == room?.id }"
                                 class="text-red" v-if="room?.i_blocked">
                                 <svg class="me-1 ms-2" xmlns="http://www.w3.org/2000/svg" width="13" height="13"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -56,8 +56,8 @@
                                 Blocked
                             </small>
                         </div>
-                        <p class="status my-0 user-select-none">
-                            <span v-bind:class="{'text-white fw-bold' : currentRoomObj?.id == room?.id }"
+                        <p class="status my-0 user-select-none lh-sm">
+                            <span v-bind:class="{'text-white fw-semibold' : currentRoomObj?.id == room?.id }"
                                 v-text="formatDate(room?.otherRoomMember?.updated_at)"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-bell-fill mt-1 ms-2 d-none" viewBox="0 0 16 16">
@@ -75,7 +75,7 @@
         <div v-cloak id="chat-component" v-scope="ChatListComponent()"
             class="chat-container position-relative col-12 d-flex  col-lg-8 m-0 p-0" style="overflow: hidden;">
             <div class="chat-header 75">
-                <h2 class="chat-user-name py-0 my-0">
+                <h3 class="chat-user-name py-0 my-0 fw-semibold">
                     <span v-show="currentRoomObj?.otherRoomMember?.name != null">
                         <img v-if="currentRoomObj?.otherRoomMember?.userBanner != null" {!! bldImgF() !!}
                             v-bind:src="'/storage/' + currentRoomObj?.otherRoomMember?.userBanner" width="40"
@@ -87,7 +87,7 @@
                         </span>
                     </span>
                     <span v-text="currentRoomObj?.otherRoomMember?.name ?? 'Start a chat'"></span>
-                </h2>
+                </h3>
                 <button class="menu-btn dropdown">
                     {{-- Settions icon --}}
                     <button class="btn menu-btn text-white" type="button" data-bs-toggle="dropdown"
@@ -160,8 +160,8 @@
                         </div>
 
                         <div class="message-content w-75">
-                            <span style="white-space: pre-wrap !important;" v-text="message.text"></span>
-                            <span class="timestamp"
+                            <span class="lh-base" style="white-space: pre-wrap !important;" v-text="message.text"></span>
+                            <span class="timestamp lh-sm"
                                 v-text="humanReadableChatTimeFormat(message.createdAtDate)"></span>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content  px-4 py-2">
                     <div class="px-4 pt-4   border-0">
-                        <h5 class="modal-title py-0 my-0" id="staticBackdropLabel">Start a new chat</h5>
+                        <h4 class="modal-title py-0 my-0 fw-semibold" id="staticBackdropLabel">Start a new chat</h4>
                     </div>
                     <div class="modal-body pt-2 px-3 pb-2 container-fluid">
                         <div class="row">
@@ -225,8 +225,8 @@
                                                             v-bind:src="'/storage/' + chat?.userBanner">
                                                     </div>
                                                     <div class="col-9 col-xl-10 col-xl-">
-                                                        <span class="text-wrap d-inline-block align-middle me-2 "  v-text="chat?.name"></span>
-                                                        <small class="text-muted d-inline-block align-middle" v-text="chat?.role.toLowerCase()"></small>
+                                                        <span class="text-wrap d-inline-block align-middle me-2 fw-medium lh-base"  v-text="chat?.name"></span>
+                                                        <small class="text-muted d-inline-block align-middle lh-sm fst-italic" v-text="chat?.role.toLowerCase()"></small>
                                                     </div>
                                                     <div class="col-1 text-end gear-icon-btn">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -254,7 +254,7 @@
                             </ul>
                         </div>
                           <button type="button" data-bs-dismiss="modal"
-                            class="rounded-pill btn d-inline-block mb-2 mx-auto px-4 btn-primary text-light ">Close</button>
+                            class="rounded-pill btn d-inline-block mb-2 mx-auto px-4 btn-primary text-light fw-medium">Close</button>
                 </div>
                     </div>
                    
@@ -277,7 +277,7 @@
                             </div>
 
                             <div v-else>
-                                <h5 class="mt-4 mb-0 d-block pt-0 pb-3 text-primary text-start">
+                                <h5 class="mt-4 mb-0 d-block pt-0 pb-3 text-primary text-start fw-semibold">
                                     <img v-bind:src="'/storage/' + user?.userBanner"
                                         class="rounded-circle object-fit-cover border border-primary me-2"
                                         width="35" height="35" onerror="this.src='/assets/images/404q.png';">
@@ -286,7 +286,7 @@
                                 </h5>
 
                                 <div class="d-flex justify-content-between mb-2">
-                                    <button class="btn btn-primary text-light px-3 mb-2 rounded-pill"
+                                    <button class="btn btn-primary text-light px-3 mb-2 rounded-pill fw-medium"
                                         v-on:click="toggleWillShowReports">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" viewBox="0 0 16 16" class="bi bi-plus-lg me-1">
@@ -316,14 +316,14 @@
                                 <template v-for="(report, key) in reports" :key="report.id">
                                     <div class="card mb-3">
                                         <div class="card-header d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0" v-text="'Report #' + (Number(key)+1)"></h6>
+                                            <h6 class="mb-0 fw-semibold" v-text="'Report #' + (Number(key)+1)"></h6>
                                         </div>
                                         <div class="card-body">
                                             <div class="mb-3">
                                                 <div class="d-flex justify-content-between">
                                                     <div>
-                                                        <small class="text-muted">Reported by</small>
-                                                        <p class="mb-0 fw-medium">
+                                                        <small class="text-muted fst-italic lh-sm">Reported by</small>
+                                                        <p class="mb-0 fw-semibold lh-base">
                                                             <img src="{{ asset('storage/' . ($user?->userBanner ?? '')) }}"
                                                                 class="rounded-circle object-fit-cover border border-secondary me-1"
                                                                 width="25" height="25"
@@ -332,18 +332,18 @@
                                                         </p>
                                                     </div>
                                                     <div class="text-end">
-                                                        <small class="text-muted">Date</small>
-                                                        <p class="mb-0" v-text="formatDate(report.created_at)"></p>
+                                                        <small class="text-muted fst-italic lh-sm">Date</small>
+                                                        <p class="mb-0 lh-base" v-text="formatDate(report.created_at)"></p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="mb-0">
-                                                <small class="text-muted">Reason</small>
-                                                <p class="mb-2 fw-medium" v-text="report.reason"></p>
+                                                <small class="text-muted fst-italic lh-sm">Reason</small>
+                                                <p class="mb-2 fw-semibold lh-base" v-text="report.reason"></p>
 
-                                                <small class="text-muted">Description</small>
-                                                <p class="mb-0" v-text="report.description"></p>
+                                                <small class="text-muted fst-italic lh-sm">Description</small>
+                                                <p class="mb-0 lh-base" v-text="report.description"></p>
                                             </div>
 
                                             {{-- <div class="mt-3 border-top pt-3">
@@ -363,24 +363,24 @@
 
                             <div v-show="!willShowReports">
                                 <div class="border-0  mt-2 mb-0">
-                                    <h5 class="d-inline-block py-2 text-start text-primary">
+                                    <h5 class="d-inline-block py-2 text-start text-primary fw-semibold">
                                         Writing a report</h5>
                                 </div>
 
-                                <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start">
+                                <h5 class="my-0 d-inline-block pt-0 pb-3 text-primary text-start fw-semibold">
                                     <img v-bind:src="'/storage/' + user?.userBanner"
                                         class="rounded-circle object-fit-cover border border-primary me-2"
                                         width="35" height="35" onerror="this.src='/assets/images/404q.png';">
 
                                     <span v-text="user?.userName"> </span>
                                 </h5>
-                                <p style="color: gray;"><i> We are so sorry for your experience. Please let us know
+                                <p class="fst-italic text-muted lh-base"> We are so sorry for your experience. Please let us know
                                         what we
-                                        can do to help.</i> </p>
+                                        can do to help. </p>
 
                                 <form v-on:submit.prevent="submitReport(event)">
                                     <div class="mb-3">
-                                        <p class="form-label  d-block">
+                                        <p class="form-label  d-block fw-medium lh-base">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="inherit" class="bi bi-exclamation-triangle ms-1 me-2"
                                                 viewBox="0 0 16 16">
@@ -412,7 +412,7 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <p class="form-label text-dark d-block">
+                                        <p class="form-label text-dark d-block fw-medium lh-base">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 fill="inherit" class="ms-1 me-2 bi bi-exclamation-octagon"
                                                 viewBox="0 0 16 16">
@@ -429,8 +429,8 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center  my-4">
-                                        
-                                        <button type="submit" class="btn btn-primary text-light px-3 rounded-pill"
+
+                                        <button type="submit" class="btn btn-primary text-light px-3 rounded-pill fw-medium"
                                             v-bind:disabled="loading">
                                             <span v-show="loading"
                                                 class="spinner-border spinner-border-sm me-1"></span>

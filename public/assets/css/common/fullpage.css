@@ -172,8 +172,8 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-image: url('/assets/images/chat/inbox.png');
-    /* Use the generated background image */
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background-attachment: fixed;
     background-size: cover;
     background-position: center;
     border-radius: 0;

@@ -25,11 +25,11 @@
             <div class="accordion accordion-flush " id="accordionExample">
                 <div  class="accordion-item border-0 pb-0 mb-0" @vue:mounted="init">
                     <h1 class="accordion-header " id="headingOne">
-                        <div class="accordion-button pb-4 rounded-pill border 
-                            border-0 bg-white"
+                        <div class="accordion-button pb-4 rounded-pill border
+                            border-0 bg-white fw-semibold fs-5"
                             style="padding-top: 35px;" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <b>Account details and security </b>
+                            Account details and security
                         </div>
                     </h1>
                     <div id="collapseOne" class="accordion-collapse collapse {{ !$isShowNextAccordion ? 'show' : '' }}"
@@ -38,13 +38,13 @@
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
-                                    <p class="py-0 my-0"> Email Address </p>
-                                    <small class="text-primary" v-text="emailAddress"></small>
+                                    <p class="py-0 my-0 fw-medium fs-6 mb-1"> Email Address </p>
+                                    <small class="text-primary lh-sm" v-text="emailAddress"></small>
                                 </div>
                                 <button v-on:click="changeEmailAddress(event)"
                                     data-route="{{ route('user.settings.action') }}"
                                     data-event-type="{{ $settingsAction['CHANGE_EMAIL']['key'] }}"
-                                    class="btn btn-sm btn-white btn-size border-secondary py-2 px-3 rounded-pill"
+                                    class="btn btn-sm btn-white btn-size border-secondary py-2 px-3 rounded-pill fw-medium"
                                     style="background: white;">
                                     Change Email Address
                                 </button>
@@ -52,44 +52,44 @@
                              <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
-                                    <p class="py-0 my-0"> Account Recovery </p>
-                                    <small class="text-primary" v-text="recoveryAddress"></small>
+                                    <p class="py-0 my-0 fw-medium fs-6 mb-1"> Account Recovery </p>
+                                    <small class="text-primary lh-sm" v-text="recoveryAddress"></small>
                                 </div>
                                 <button v-on:click="changeRecoveryEmailAddress(event)"
-                                    class="btn btn-size btn-sm border-primary py-2 rounded-pill"
+                                    class="btn btn-size btn-sm border-primary py-2 rounded-pill fw-medium"
                                     data-route="{{ route('user.settings.action') }}"
                                     data-event-type="{{ $settingsAction['CHANGE_RECOVERY_EMAIL']['key'] }}">
                                     Change Recovery Email
                                 </button>
                             </div>
-                            
+
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
-                                    <p class="py-0 my-0"> Password </p>
+                                    <p class="py-0 my-0 fw-medium fs-6"> Password </p>
                                 </div>
                                 <button v-on:click="changePassword(event)"
                                     dat-is-password-null="{{ $user->is_null_password }}"
                                     data-route="{{ route('user.settings.action') }}"
                                     data-event-one-type="{{ $settingsAction['COMPARE_PASSWORD']['key'] }}"
                                     data-event-two-type="{{ $settingsAction['CHANGE_PASSWORD']['key'] }}"
-                                    class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill">
+                                    class="btn btn-sm btn-size text-light bg-secondary py-2 px-3 rounded-pill fw-medium">
                                     Change Password
                                 </button>
                             </div>
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
-                                    <p class="py-0 my-0"> Account Type</p>
-                                    <small class="text-gray-dark fw-bold text-capitalize"><u>{{strtolower($user->role)}}</u></small>
+                                    <p class="py-0 my-0 fw-medium fs-6 mb-1"> Account Type</p>
+                                    <small class="text-gray-dark fw-semibold text-capitalize lh-sm"><u>{{strtolower($user->role)}}</u></small>
                                 </div>
-                              
+
                             </div>
                              <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
-                                    <p class="py-0 my-0"> Account Creation </p>
-                                    <small class="text-gray-dark fw-bold text-capitalize">{{$user->createdIsoFormat()}}</small>
+                                    <p class="py-0 my-0 fw-medium fs-6 mb-1"> Account Creation </p>
+                                    <small class="text-gray-dark fw-semibold text-capitalize lh-sm">{{$user->createdIsoFormat()}}</small>
                                 </div>
                                 <div></div>
                             </div>
@@ -109,10 +109,10 @@
                 </div>
                 <div class="accordion-item accordion-flush mb-4 border-0">
                     <h2 class="accordion-header pb-2 border-0" id="headingTwo">
-                        <div class="accordion-button  pt-4 pb-4 rounded-pill {{ $isShowNextAccordion ? '' : 'collapsed' }} border-0 bg-white"
+                        <div class="accordion-button  pt-4 pb-4 rounded-pill {{ $isShowNextAccordion ? '' : 'collapsed' }} border-0 bg-white fw-semibold fs-5"
                             type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                             aria-controls="collapseTwo">
-                            <b>Payment info</b>
+                            Payment info
                         </div>
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse {{ $isShowNextAccordion ? 'show' : '' }}"
@@ -122,24 +122,24 @@
                             <div
                                 class="d-grid  flex-wrap  justify-content-between align-items-center border-top   py-3">
                                 <div>
-                                    <p class="py-0 my-0"> Linked Bank Account </p>
-                                    <small v-if="wallet.has_bank_account" class="text-primary text-capitalize">
+                                    <p class="py-0 my-0 fw-medium fs-6 mb-1"> Linked Bank Account </p>
+                                    <small v-if="wallet.has_bank_account" class="text-primary text-capitalize lh-sm">
                                         <span v-text="wallet.bank_name"  ></span>
                                         ****
                                         <span v-text="wallet.bank_last4"  ></span>
                                     </small>
-                                    <small v-else>
+                                    <small v-else class="lh-sm">
                                         No linked account
                                     </small>
                                 </div>
                                 <button v-if="wallet.has_bank_account" v-on:click="unlinkBankAccount(event)"
                                     data-route="{{ route('wallet.unlink') }}"
-                                    class="btn btn-sm btn-size text-light bg-red py-2 px-3 rounded-pill">
+                                    class="btn btn-sm btn-size text-light bg-red py-2 px-3 rounded-pill fw-medium">
                                     Unlink
                                 </button>
                                 <a href="{{route('wallet.payment-method')}}" v-else>
-                                    <button 
-                                    class="btn btn-sm btn-size text-dark bg-success py-2 px-3 rounded-pill">
+                                    <button
+                                    class="btn btn-sm btn-size text-dark bg-success py-2 px-3 rounded-pill fw-medium">
                                     Link Bank Account
                                 </button>
                                 </a>
@@ -179,7 +179,7 @@
                                 <div class="accordion" id="nestedAccordion2">
                                     <div class="accordion-item border-0">
                                         <h3 class="accordion-header " id="nestedHeading2">
-                                            <div class="px-0 accordion-button border-top py-4  {{ $isShowSecondInnerAccordion ? 'collapsed' : '' }} bg-white"
+                                            <div class="px-0 accordion-button border-top py-4  {{ $isShowSecondInnerAccordion ? 'collapsed' : '' }} bg-white fw-medium fs-6"
                                                 type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#nestedCollapse2" aria-expanded="false"
                                                 aria-controls="nestedCollapse2">
@@ -197,10 +197,10 @@
                                                                 id="payment-methods-table">
                                                                 <thead class="border-bottom border-secondary">
                                                                     <tr>
-                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">#</th>
-                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">Card Type</th>
-                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">Last 4</th>
-                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3">Expiry</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3 fw-semibold">#</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3 fw-semibold">Card Type</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3 fw-semibold">Last 4</th>
+                                                                        <th scope="col" class="transaction-table__header-cell bg-secondary text-white py-3 fw-semibold">Expiry</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -240,8 +240,8 @@
                                                                         <input type="hidden" name="methods_limit"
                                                                             value="{{ $limit_methods + 10 }}">
                                                                         <button type="submit"
-                                                                            class="btn btn-primary btn-sm text-light px-3  rounded-pill"><b>Load
-                                                                                More</b></button>
+                                                                            class="btn btn-primary btn-sm text-light px-3  rounded-pill fw-semibold">Load
+                                                                                More</button>
                                                                     </form>
                                                                 </div>
                                                             @endif
@@ -249,8 +249,8 @@
                                                     </div>
                                                 @else
                                                     <div>
-                                                        <p class="my-2 pt-2 pb-5"> <i> You have no payment methods up
-                                                                till now... </i> </p>
+                                                        <p class="my-2 pt-2 pb-5 fst-italic text-muted lh-base"> You have no payment methods up
+                                                                till now... </p>
                                                     </div>
                                                 @endif
                                             </div>
@@ -360,7 +360,7 @@
                                 <div class="accordion pb-5 " v-scope="TransactionComponent()" @vue:mounted="init" id="nestedAccordion4">
                                     <div class="accordion-item  ">
                                         <h3 class="accordion-header" id="nestedHeading4">
-                                            <div class="px-0 accordion-button border-top collapsed border-1  py-4  bg-white"
+                                            <div class="px-0 accordion-button border-top collapsed border-1  py-4  bg-white fw-medium fs-6"
                                                 type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#nestedCollapse4" aria-expanded="false"
                                                 aria-controls="nestedCollapse4">
@@ -375,13 +375,13 @@
                                                     <x-wallet.transanction-list  />
 
                                                     <div v-else>
-                                                        <p class="my-2 pt-2 pb-5"> <i> You have no transactions up till
-                                                                now... </i> </p>
+                                                        <p class="my-2 pt-2 pb-5 fst-italic text-muted lh-base"> You have no transactions up till
+                                                                now... </p>
                                                     </div>
 
                                                     <div v-if="hasMore" class="text-center  my-4" v-cloak>
                                                         <button v-on:click="loadMore" :disabled="loading"
-                                                            class="btn text-light rounded-pill btn-primary">
+                                                            class="btn text-light rounded-pill btn-primary fw-medium">
                                                             <span v-if="loading" v-cloak class="spinner-border spinner-border-sm me-2"></span>
                                                             <span v-if="loading" v-cloak>Loading...</span>
                                                             <span v-else>Load More</span>
