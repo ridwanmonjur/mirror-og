@@ -129,15 +129,7 @@
                                     $totalStock = $product->productVariants->sum('stock');
                                     $stockThreshold = 10;
                                 @endphp
-                                @if ($totalStock > $stockThreshold)
-                                    <span class="badge rounded-pill text-success bg-light border border-success px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
-                                        <svg width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
-                                        </svg>
-                                        In Stock
-                                    </span>
-                                @elseif($totalStock > 0)
+                                @if ($totalStock < $stockThreshold)
                                     <span class="badge rounded-pill text-warning bg-light border border-warning px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
                                         <svg width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
                                             <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
@@ -154,21 +146,7 @@
                                     </span>
                                 @endif
 
-                                @if($product->isPhysical)
-                                    <span class="badge rounded-pill text-primary bg-light border border-primary px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                            <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.629 13.09A1 1 0 0 1 0 12.162V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
-                                        </svg>
-                                        Physical Product
-                                    </span>
-                                @else
-                                    <span class="badge rounded-pill text-success bg-light border border-success px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                            <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2zm1.398-.855a.758.758 0 0 0-.254.302A1.46 1.46 0 0 0 1 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 0 0 .254-.302 1.464 1.464 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 0 0-.302-.254A1.46 1.46 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145Z"/>
-                                        </svg>
-                                        Digital Product
-                                    </span>
-                                @endif
+                               
                             </div>
                         </div>
 
