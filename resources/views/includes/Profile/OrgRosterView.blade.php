@@ -84,7 +84,7 @@
                         src="{{ bldImg($joinEvent->user->userBanner) }}" width="35" height="35"
                         class="me-2 object-fit-cover rounded-circle rounded-circle2" >
                     <div class="text-start d-inline-flex flex-column justify-content-center ">
-                        <small class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->user->name) }}</small>
+                        <span class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->user->name) }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->user_id, $followCounts) ? $followCounts[$joinEvent->user_id] : 0 }} "
                             class="d-inline-block {{ 'followCounts' . $joinEvent->user_id }}">

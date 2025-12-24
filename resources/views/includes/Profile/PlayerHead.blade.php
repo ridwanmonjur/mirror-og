@@ -198,11 +198,11 @@
                 <br>
                 @if ($userProfile->participant?->nickname)
                     <div class="d-flex justify-content-start align-items-center flex-wrap">
-                        <h4 class="my-0 me-4 font-poppins fw-bold text-2xl ">{{ $userProfile->participant->nickname }}</h4>
+                        <h4 class="my-0 me-4 font-poppins  text-2xl ">{{ $userProfile->participant->nickname }}</h4>
                     </div>
                 @else
                     <div class="d-flex justify-content-start align-items-center flex-wrap">
-                        <h4 class="my-0 me-4 font-poppins fw-bold text-2xl ">{{ $userProfile->name }}</h4>
+                        <h4 class="my-0 me-4 font-poppins  text-2xl ">{{ $userProfile->name }}</h4>
                     </div>
                 @endif
                 <div class="my-2">

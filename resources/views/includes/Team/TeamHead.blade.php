@@ -255,7 +255,7 @@
                     </div>
 
                 @endif
-                    <h3    v-if="!isEditMode" style="{{$fontStyles}}" class="team-name ms-0 me-2 mt-2 py-0 font-poppins fw-bold text-2xl" id="team-name">
+                    <h3    v-if="!isEditMode" style="{{$fontStyles}}" class="team-name ms-0 me-2 mt-2 py-0 font-poppins  text-2xl" id="team-name">
                         {{$selectTeam->teamName}}
                     </h3>
 

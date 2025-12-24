@@ -364,7 +364,7 @@
                         src="{{ $joinEvent->eventDetails->user->userBanner ? asset('storage/' . $joinEvent->eventDetails->user->userBanner) : '/assets/images/404.png' }}" 
                         class="object-fit-cover me-2 rounded-circle rounded-circle2 border border-secondary" >
                     <div class="text-start d-inline-flex flex-column justify-content-center  ">
-                        <small class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->eventDetails->user->name) }}</small>
+                        <span class="d-inline-block my-0 text-wrap ">{{ truncateText($joinEvent->eventDetails->user->name) }}</span>
                         <small
                             data-count="{{ array_key_exists($joinEvent->eventDetails->user_id, $followCounts) ? $followCounts[$joinEvent->eventDetails->user_id] : 0 }} "
                             class="d-block p-0 {{ 'followCounts' . $joinEvent->eventDetails?->user_id }}">

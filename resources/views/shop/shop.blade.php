@@ -49,12 +49,12 @@
 
         <div class="row mx-2">
             <div class="col-12 col-xl-2 mb-6 mt-3">
-                <h5 class="fw-semibold mb-4">Shop By Category</h5>
+                <h6 class="fw-semibold mb-4" style="font-size: 0.9rem;">Shop By Category</h6>
                 <form method="GET" action="{{ route('shop.index') }}" class="mt-4">
                     <div class="form-check px-3 py-2 mb-2 bg-white border-secondary border rounded-3">
                         <input class="form-check-input" type="radio" name="category" value="all" id="all-categories"
                                {{ request()->category === 'all' || request()->category === null ? 'checked' : '' }} onchange="this.form.submit()">
-                        <label class="form-check-label fw-normal" for="all-categories">
+                        <label class="form-check-label fw-normal" for="all-categories" style="font-size: 0.85rem;">
                             All Categories
                         </label>
                     </div>
@@ -63,7 +63,7 @@
                             <input class="form-check-input" type="radio" name="category" value="{{ $category->slug }}"
                                    id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }}
                                    onchange="this.form.submit()">
-                            <label class="form-check-label fw-normal" for="category-{{ $category->slug }}">
+                            <label class="form-check-label fw-normal" for="category-{{ $category->slug }}" style="font-size: 0.85rem;">
                                 {{ $category->name }}
                             </label>
                         </div>
@@ -88,7 +88,7 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
                                     @foreach ($categories as $category)
-                                        <a class="dropdown-item" href="{{ route('shop.index', ['category' => $category->slug]) }}">
+                                        <a class="dropdown-item" href="{{ route('shop.index', ['category' => $category->slug]) }}" style="font-size: 0.85rem;">
                                             {{ $category->name }}
                                         </a>
                                     @endforeach
@@ -105,16 +105,16 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset3">
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_less_than_50']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_less_than_50']) }}" style="font-size: 0.85rem;">
                                         Less than RM 50</a>
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_50_to_100']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_50_to_100']) }}" style="font-size: 0.85rem;">
                                         RM 50 - RM 100</a>
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_100_to_150']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_100_to_150']) }}" style="font-size: 0.85rem;">
                                         RM 100 - RM 150</a>
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_150_or_more']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'price_150_or_more']) }}" style="font-size: 0.85rem;">
                                         RM 150 or More</a>
 
                                 </div>
@@ -130,15 +130,15 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset2">
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'Newest']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'Newest']) }}" style="font-size: 0.9rem;">
                                         Newest</a>
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'low_high']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'low_high']) }}" style="font-size: 0.9rem;">
                                         Price Low - High</a>
                                     <a class="dropdown-item"
-                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'high_low']) }}">
+                                        href="{{ route('shop.index', ['category' => request()->category, 'sort' => 'high_low']) }}" style="font-size: 0.85rem;">
                                         Price High - Low</a>
-                                   
+
 
                                 </div>
                             </div>
@@ -152,13 +152,13 @@
                     @forelse ($products as $product)
                         <div class="col-12 col-md-6 col-lg-4 col-xxl-3 mb-4">
                         <a href="{{ route('shop.show', $product->slug) }}" class="text-decoration-none ">
-                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-3 border-primary h-100 d-flex flex-column">
+                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-1 border-primary h-100 d-flex flex-column">
                                 
                                     <div class="product-card__image-wrapper  mb-1">
                                         
-                                        <img src="{{ asset('storage/' . $product->image) }}" 
+                                        <img src="{{ asset('storage/' . $product->image) }}"
                                             class="product-card__image w-100 object-fit-cover   border-primary border-bottom"
-                                            style="height: 200px;border-radius: 30px 30px 0 0; "   
+                                            style="height: 230px;border-radius: 30px 30px 0 0; "
                                             onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                                             alt="{{ $product->name }}"
                                         >
@@ -166,14 +166,14 @@
                                     </div>
                                 
 
-                                    <div class="text-start px-3 d-flex flex-column justify-content-between" >
+                                    <div class="text-start px-2 d-flex flex-column justify-content-between" >
                                         <div>
-                                                <h5 class="product-card__name text-truncate mt-2 mb-2 px-0 text-primary fw-semibold">
+                                                <h6 class="product-card__name text-truncate mt-2 mb-1 px-0 text-primary fw-semibold">
                                                     {{ $product->name }}
-                                                </h5>
+                                                </h6>
                                             
                                             @if($product->description)
-                                            <div class="product-card__description mb-2 fs-7 ">
+                                            <div class="product-card__description mb-1 fs-7 ">
                                                 {!! strip_tags($product->description) !!}
                                             </div>
                                             @endif
@@ -187,7 +187,7 @@
                                                 $decimal = $parts[1];
                                             @endphp
                                             
-                                            <div class="product-card__price text-dark">
+                                            <div class="product-card__price">
                                                 <span class="product-card__currency ">RM</span><span class="product-card__price-main">{{ $whole }}</span><span class="product-card__price-decimal">.{{ $decimal }}</span>
                                             </div>
                                             
@@ -195,13 +195,13 @@
                                                 <div class="d-flex flex-wrap gap-1">
                                                     @foreach($product->categories->take(2) as $category)
                                                         <a href="{{ '/shop?category=' .  $category->slug }}"
-                                                           class="badge rounded-pill text-primary bg-light border border-primary text-decoration-none px-3 py-1"
-                                                           style="font-size: 0.75rem; font-weight: 500;">
+                                                           class="badge rounded-pill text-primary bg-white border border-primary text-decoration-none px-3 py-1"
+                                                           style="font-size: 0.85rem; font-weight: 500;">
                                                             {{ $category->name }}
                                                         </a>
                                                     @endforeach
                                                     @if (isset($product->categories[2]))
-                                                        <span class="badge rounded-pill bg-light text-muted border border-secondary px-2 py-1" style="font-size: 0.75rem;">+{{ count($product->categories) - 2 }}</span>
+                                                        <span class="badge rounded-pill bg-white text-muted border border-secondary px-2 py-1" style="font-size: 0.85rem;">+{{ count($product->categories) - 2 }}</span>
                                                     @endif
                                                 </div>
                                             </div>

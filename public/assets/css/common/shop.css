@@ -97,7 +97,7 @@ main {
 }
 
 .product-detail__price {
-    font-weight: 700;
+    font-weight: 500;
 }
 
 /* Disabled button styling */
@@ -144,6 +144,7 @@ main {
     text-overflow: ellipsis;
     width: 100%;
     max-width: 25ch;
+    font-size: 1.1rem;
 }
 
 .product-card__description {
@@ -158,31 +159,32 @@ main {
     width: 100%;
     max-width: 30ch;
     opacity: 0.8;
+    font-size: 0.9rem;
 }
 
 .product-card__name:hover {
     color: #e47911;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .product-card__price {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin: 0.5rem 0;
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin: 0.25rem 0;
 }
 
 .product-card__currency {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     vertical-align: top;
     margin-right: 2px;
 }
 
 .product-card__price-main {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
 }
 
 .product-card__price-decimal {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     vertical-align: top;
 }
 
