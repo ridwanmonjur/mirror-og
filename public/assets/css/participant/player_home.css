@@ -1,5 +1,7 @@
 /* Reset some default styles */
 
+
+
 main {
     background-image: url("/assets/images/homepage new bg.png");
     background-size: cover;
@@ -126,10 +128,12 @@ main {
 }
 
 .right-shift {
-    max-width: 100%; 
-    position: relative; 
-    top: 0; 
+    max-width: 100%;
+    position: relative;
+    top: 0;
     left: 0px;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Featured Events */
@@ -388,11 +392,27 @@ footer {
 }
 
 
-/* Mobile styles */
+/* Desktop styles */
 @media (min-width: 992px) {
     .right-shift {
         left: 0px;
-        max-width: 90%; 
+        max-width: 90%;
+        width: 90%;
+        overflow-y: hidden;
+        margin-bottom: 50px;
+
+    }
+}
+
+/* Ensure no horizontal overflow on mobile/tablet */
+@media (max-width: 991.98px) {
+    .right-shift {
+        max-width: 100%;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 20px;
+        padding-top: 20px;
     }
 }
 
