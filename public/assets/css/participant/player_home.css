@@ -424,7 +424,7 @@ footer {
 
 
 @media (min-width: 560px) and (max-width: 800px) {
-  
+
 
     .league_name p{
         font-size: 1.15rem;
@@ -505,10 +505,6 @@ footer {
     .event_2 {
         width: 100%;
         margin: 0 auto 2rem;
-    }
-
-    .right-shift {
-        left: 50px;
     }
 
 }

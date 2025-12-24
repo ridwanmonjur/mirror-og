@@ -18,6 +18,7 @@
 
     @php
         $breadcrumbItems = [
+            ['label' => 'Home', 'url' => '/'],
             ['label' => 'Shop', 'url' => '/shop']
         ];
 
@@ -59,7 +60,7 @@
                         </label>
                     </div>
                     @foreach ($categories as $category)
-                        <div class="form-check px-3 py-2 mb-2 bg-white border-secondary border rounded-3">
+                        <div class="form-check px-3 py-1 mb-1 bg-white border-secondary border rounded-3">
                             <input class="form-check-input" type="radio" name="category" value="{{ $category->slug }}"
                                    id="category-{{ $category->slug }}" {{ request()->category === $category->slug ? 'checked' : '' }}
                                    onchange="this.form.submit()">
@@ -146,18 +147,18 @@
 
                     </div>
                 </div>
-                <div class="row px-3 mt-3">
+                <div class="row px-3 mx-3 mt-3">
 
 
                     @forelse ($products as $product)
-                        <div class="col-12 col-md-6 col-lg-4 col-xxl-3 mb-4">
+                        <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-4">
                         <a href="{{ route('shop.show', $product->slug) }}" class="text-decoration-none ">
-                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card border border-1 border-primary h-100 d-flex flex-column">
+                            <div style="border-radius: 30px; background-color: rgba(255, 255, 255, 0.7);" class="product-card  h-100 d-flex flex-column">
                                 
                                     <div class="product-card__image-wrapper  mb-1">
                                         
                                         <img src="{{ asset('storage/' . $product->image) }}"
-                                            class="product-card__image w-100 object-fit-cover   border-primary border-bottom"
+                                            class="product-card__image w-100 object-fit-cover   "
                                             style="height: 230px;border-radius: 30px 30px 0 0; "
                                             onerror="this.onerror=null;this.src='/assets/images/404q.png';"
                                             alt="{{ $product->name }}"
