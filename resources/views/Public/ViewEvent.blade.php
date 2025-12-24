@@ -301,7 +301,7 @@
                                             <a href="{{route('public.organizer.view', ['id'=> $event->user->id, 'title' => $event->user->slug ])}}">
                                                 <p class="font-poppins fw-bold text-base text-primary-dark m-0"><u>{{ $event->user->name ?? 'Add' }} </u> </p>
                                             </a>
-                                            <p class="font-nunito fw-light text-xs text-gray-medium m-0" id="followCount" data-count="{{ $followersCount }}">
+                                            <p class="font-nunito fw-medium text-xs text-dark m-0" id="followCount" data-count="{{ $followersCount }}">
                                                 <i> {{ $followersCount }}
                                                     {{ $followersCount == 1 ? 'follower' : 'followers' }}
                                                 </i>

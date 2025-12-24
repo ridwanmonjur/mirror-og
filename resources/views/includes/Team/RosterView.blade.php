@@ -97,11 +97,11 @@
                         title="Event {{$joinEvent->eventDetails->slug}}"
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id, 'title' => $joinEvent->eventDetails->slug ]) }}"
                     >
-                        <img 
+                        <img
                             onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';" style="max-width: 50px; "
                             src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-1 rounded-2" width="30px" height="30px"
-                            style="object-position: center;"    
+                            class="object-fit-cover me-1 rounded-2" width="40px" height="40px"
+                            style="object-position: center;"
                         >
                         <span class="text-wrap d-inline-block text-start pe-2 "> {{ truncateText($joinEvent->eventDetails->eventName) }} </span>
                     </a>

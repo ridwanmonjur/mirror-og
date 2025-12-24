@@ -349,8 +349,8 @@
                         href="{{ route('public.event.view', ['id' => $joinEvent->eventDetails->id]) }}">
                         <img onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                             src="{{ bldImg($joinEvent->game ? $joinEvent->game?->gameIcon : null) }}"
-                            class="object-fit-cover me-2 rounded-2 border border-secondary" width="30px" height="30px"
-                             style="object-position:center;"    
+                            class="object-fit-cover me-2 rounded-2 border border-secondary" width="40px" height="40px"
+                             style="object-position:center;"
                         >
                         <span class="text-wrap  d-inline-block  pe-2 text-start"> {{ truncateText($joinEvent->eventDetails->eventName) }}
                         </span>
