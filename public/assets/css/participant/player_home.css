@@ -148,8 +148,8 @@ main {
     position: relative;
     margin: auto;
     margin-bottom: 40px;
-    min-height: 450px;
-    width: min(360px, 80vw);
+    min-height: 380px;
+    width: min(320px, 80vw);
     border: 3.1px solid rgb(82, 159, 23);
     border-radius: 42px;
     box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
@@ -222,7 +222,7 @@ main {
 
 
 .league_name p{
-    font-size: 1.0rem;
+    font-size: 0.95rem;
 }
 
 .hamburger-menu {
@@ -310,7 +310,7 @@ main {
 
 .league_name {
     text-align: left;
-    padding: 0 20px;
+    padding: 0 15px;
 }
 
 .cover {
@@ -348,7 +348,7 @@ main {
 
 .event h3,
 .event p {
-    padding: 1rem;
+    padding: 0.75rem;
 }
 
 
@@ -362,9 +362,9 @@ footer {
     display: flex;
     align-items: center;
     text-align: center;
-    gap: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    gap: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .event_status {
@@ -372,13 +372,13 @@ footer {
 }
 
 .tierIcon {
-    width: 60px;
-    height: 40px;
+    width: 50px;
+    height: 35px;
 }
 
 .gameIcon {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 5px 5px 5px 5px;
 }
 
@@ -397,7 +397,7 @@ footer {
 }
 
 @media (max-width: 560px) {
-    
+
 
     main {
         background-size: cover;

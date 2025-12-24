@@ -40,12 +40,12 @@
             title="Event {{$event->slug}}"
         >
             <div style="display: flex; justify-content: center;">
-                <button  
+                <button
                     @class([
-                        " rounded-pill mt-2 py-2 px-4",
+                        " rounded-pill mt-2 py-1 px-3",
                         'EventStatus-' .  $status . '-HOME'
-                    ])  
-                    style="padding-top: -150px; position: absolute !important; top: -35px !important; z-index: 111; "
+                    ])
+                    style="padding-top: -150px; position: absolute !important; top: -30px !important; z-index: 111; font-size: 0.9rem;"
                 >
                    
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="d-none me-3 bi bi-stopwatch UPCOMING" viewBox="0 0 16 16">
@@ -69,14 +69,14 @@
                     <span>{{ $status }}</span>
                 </button>
             </div>
-            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! bldImgF() !!} class="cover " style="height: 150px !important; ">
-            <div class="frame1 d-flex justify-content-between flex-wrap px-3">
+            <img loading="lazy"  alt="{{ $event->eventName }}" src="{{ $eventBannerImg }}" {!! bldImgF() !!} class="cover " style="height: 125px !important; ">
+            <div class="frame1 d-flex justify-content-between flex-wrap px-3 mt-2">
                 <div>
                     <img 
                         src="{{ $eventTierLowerImg }}" 
                         loading="lazy"  
                         alt="{{ $eventTierLowerImg }}"
-                        class="pe-3 tierIcon mt-2"
+                        class="pe-2 tierIcon mt-2"
                         alt="{{ $event->tier?->tierIcon }}"
                         onerror="this.onerror=null;this.src='{{asset('assets/images/404.png')}}';"
                     >
@@ -88,14 +88,14 @@
                         loading="lazy"
                     >
                 </div>
-                <button class="btn rounded-pill mt-2" style="@php echo $stylesEventRatio; @endphp">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                <button class="btn rounded-pill mt-2" style="@php echo $stylesEventRatio; @endphp font-size: 0.9rem; padding: 0.25rem 0.75rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-1" viewBox="0 0 16 16">
                     <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                     </svg>
                     <span>{{ $event->join_events_count }}/{{ $event->tier?->tierTeamSlot ?? 'Not Available' }}</span>
                 </button>
             </div>
-            <div class="league_name mt-3 mb-2">
+            <div class="league_name mt-2 mb-1">
 
                 <p 
                     class="{{ 'text-truncate w-100  ms-0 mb-2 p-0 ' . 'Color-' . $event->tier->eventTier }}"><b>{{ $event->eventName }}</b></p>
@@ -111,11 +111,11 @@
                     </div>
                 </div>
             </div>
-            <div class="ms-3 fs-7">
+            <div class="ms-3" style="font-size: 0.9rem;">
                 <div class="mb-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-info me-2">
+                        stroke-linejoin="round" class="feather feather-info me-1">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="16" x2="12" y2="12"></line>
                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -123,7 +123,7 @@
                     <span>{{ $event->type?->eventType ?? 'Choose a type' }}</span>
                 </div>
                 <div class="mb-1">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trophy me-2" viewBox="0 0 16 16">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-trophy me-1" viewBox="0 0 16 16">
                         <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z"/>
                     </svg>
                     @if ($event->tier)
@@ -133,9 +133,9 @@
                     @endif
                 </div>
                 <div class="mb-1">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-user me-2">
+                        stroke-linejoin="round" class="feather feather-user me-1">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
@@ -163,9 +163,9 @@
                 </div>
                 <div>
                     <h5 @class([
-                        'py-0 my-0 mt-3 d-flex justify-content-center Color-' . $event->tier->eventTier,
+                        'py-0 my-0 mt-2 d-flex justify-content-center Color-' . $event->tier->eventTier,
                         ' text-secondary' => $isEnded
-                    ])>
+                    ]) style="font-size: 1rem;">
                         <span> {{$fmtStartDt}} </span>
                         <span> <span class="ms-3 me-2"><svg width="5" height="5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
                         <circle cx="2" cy="2" r="2" fill="currentColor"/>
@@ -181,8 +181,8 @@
                         @endif
                     @else
                         <div class="text-center mt-1" style="height: 25px;">
-                            <button onclick="window.trackEventCardClick(this, event)" 
-                                data-event-id="{{ $event['id'] }}" 
+                            <button onclick="window.trackEventCardClick(this, event)"
+                                data-event-id="{{ $event['id'] }}"
                                 data-event-name="{{ $event->eventName }}"
                                 @if($event->tier?->eventTier) data-event-tier="{{ $event->tier->eventTier }}" @endif
                                 @if($event->type?->eventType) data-event-type="{{ $event->type->eventType }}" @endif
@@ -192,7 +192,7 @@
                                 @if($event->type?->id) data-type-id="{{ $event->type->id }}" @endif
                                 @if($event->game?->id) data-game-id="{{ $event->game->id }}" @endif
                                 @if($event->user?->id) data-user-id="{{ $event->user->id }}" @endif
-                                class="btn btn-small py-1 px-2 border-primary text-primary"> See bracket</button>
+                                class="btn btn-small py-0 px-2 border-primary text-primary mt-1" > See bracket</button>
                         </div>
                     @endif
                 </div>

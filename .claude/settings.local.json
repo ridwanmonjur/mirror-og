@@ -53,7 +53,8 @@
       "Bash(gcloud run services describe:*)",
       "Bash(gcloud run services delete:*)",
       "Bash(gcloud run services update:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
