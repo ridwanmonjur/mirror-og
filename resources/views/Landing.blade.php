@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="analytics" content="enabled">
     @include('includes.HeadIcon')
-    <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/common/game-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/participant/player_home.css') }}?v=12.2">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/game-sidebar.css') }}?v=12.2">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <title>OW Gaming</title>
     <meta name="description" content="Join OW Gaming - the premier community esports platform. Play competitive games, meet like-minded players, and build your esports community. Join our closed beta today!">
@@ -132,7 +132,7 @@
         <br><br>
         
         
-        <script type="module" src="{{ asset('/assets/js/shared/Landing.js') }}"></script>
+        <script type="module" src="{{ asset('/assets/js/shared/Landing.js') }}?v=12.2"></script>
     @include('includes.Footer')
 
     </main>

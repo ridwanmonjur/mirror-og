@@ -8,8 +8,8 @@
     <title>Shop</title>
     @include('includes.HeadIcon')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/common/breadcrumb.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/shop.css') }}?v=12.2">
+    <link rel="stylesheet" href="{{ asset('assets/css/common/breadcrumb.css') }}?v=12.2">
 </head>
 
 <body>

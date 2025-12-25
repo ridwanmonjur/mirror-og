@@ -77,9 +77,9 @@
 
     <!-- Additional SEO Tags -->
     <meta name="author" content="{{ $event->user->name }}">
-        <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="{{ asset('/assets/css/common/viewEvent.css') }}">
-        <link rel="stylesheet" href="{{ asset('/assets/css/common/game-sidebar.css') }}">
-        <link rel="stylesheet" href="{{ asset('/assets/css/common/breadcrumb.css') }}">
+        <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="{{ asset('/assets/css/common/viewEvent.css') }}?v=12.2">
+        <link rel="stylesheet" href="{{ asset('/assets/css/common/game-sidebar.css') }}?v=12.2">
+        <link rel="stylesheet" href="{{ asset('/assets/css/common/breadcrumb.css') }}?v=12.2">
         @include('includes.HeadIcon')
         @vite([ 'resources/sass/app.scss',
             'resources/js/app.js',
@@ -575,7 +575,7 @@
    
     </div>
     </main>
-    <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}"></script>
+    <script src="{{ asset('/assets/js/participant/ViewEvent.js') }}?v=12.2"></script>
    <script type="application/ld+json">
         {
             "@context": "https://schema.org",
