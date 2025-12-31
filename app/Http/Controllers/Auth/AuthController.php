@@ -60,6 +60,12 @@ class AuthController extends Controller
 
         extract($this->authService->determineUserRole($request));
 
+        // Add organizer-specific validation rules
+        if ($role === 'organizer') {
+            $validationRules['companyName'] = 'required|string|max:255';
+            $validationRules['companyDescription'] = 'required|string';
+        }
+
         $redirectErrorRoute = $role.'.signup.view';
         $redirectSuccessRoute = $role.'.signin.view';
 

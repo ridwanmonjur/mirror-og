@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeamCaptain extends Model
 {
+    use HasFactory;
+
     public $timestamps = false;
 
     protected $table = 'captains';
 
-    protected $fillable = ['userID', 'team_id'];
+    protected $fillable = ['team_member_id', 'teams_id'];
 
     public function team(): BelongsTo
     {

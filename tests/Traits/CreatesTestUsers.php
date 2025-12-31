@@ -20,17 +20,13 @@ trait CreatesTestUsers
             'email_verified_at' => now(),
         ], $attributes));
 
-        // Create participant profile
-        Participant::factory()->create(['user_id' => $user->id]);
-
-        // Create notification counter
-        NotificationCounter::factory()->create(['user_id' => $user->id]);
+        // UserFactory already creates participant profile and notification counter via configure()
 
         // Create wallet with default balance
         Wallet::factory()->create([
             'user_id' => $user->id,
             'usable_balance' => 0.00,
-            'total_balance' => 0.00,
+            'current_balance' => 0.00,
         ]);
 
         return $user->fresh(['participant', 'wallet']);
@@ -46,17 +42,13 @@ trait CreatesTestUsers
             'email_verified_at' => now(),
         ], $attributes));
 
-        // Create organizer profile
-        Organizer::factory()->create(['user_id' => $user->id]);
-
-        // Create notification counter
-        NotificationCounter::factory()->create(['user_id' => $user->id]);
+        // UserFactory already creates organizer profile and notification counter via configure()
 
         // Create wallet
         Wallet::factory()->create([
             'user_id' => $user->id,
             'usable_balance' => 0.00,
-            'total_balance' => 0.00,
+            'current_balance' => 0.00,
         ]);
 
         return $user->fresh(['organizer', 'wallet']);
@@ -93,7 +85,7 @@ trait CreatesTestUsers
 
         $user->wallet->update([
             'usable_balance' => $balance,
-            'total_balance' => $balance,
+            'current_balance' => $balance,
         ]);
 
         return $user->fresh(['wallet']);
@@ -108,7 +100,7 @@ trait CreatesTestUsers
 
         $user->wallet->update([
             'usable_balance' => $balance,
-            'total_balance' => $balance,
+            'current_balance' => $balance,
         ]);
 
         return $user->fresh(['wallet']);

@@ -24,9 +24,15 @@ trait CreatesTestTeams
         ], $attributes));
 
         // Create team captain
+        $teamMember = TeamMember::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $creator->id,
+            'status' => 'approved',
+        ]);
+
         TeamCaptain::factory()->create([
             'teams_id' => $team->id,
-            'user_id' => $creator->id,
+            'team_member_id' => $teamMember->id,
         ]);
 
         // Create team profile if doesn't exist

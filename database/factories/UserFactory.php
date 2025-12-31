@@ -22,7 +22,14 @@ class UserFactory extends Factory
 
     public function definition(): array
     {
-        return [];
+        return [
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => 'password', // Will be automatically hashed by the 'hashed' cast
+            'role' => 'PARTICIPANT',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
     }
 
    

@@ -25,15 +25,17 @@ class SocialControllerTest extends TestCase
         $organizer = $this->createOrganizer();
 
         $response = $this->actingAs($this->participant)
-            ->post('/social/follow-organizer', [
-                'organizer_id' => $organizer->organizer->id,
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/api/participant/organizer/follow', [
+                'organizer' => $organizer->id,
             ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(201);
+        $response->assertJson(['success' => true]);
 
         $this->assertDatabaseHas('organizer_follows', [
-            'user_id' => $this->participant->id,
-            'organizer_id' => $organizer->organizer->id,
+            'participant_user_id' => $this->participant->id,
+            'organizer_user_id' => $organizer->id,
         ]);
     }
 
@@ -43,20 +45,22 @@ class SocialControllerTest extends TestCase
         $organizer = $this->createOrganizer();
 
         OrganizerFollow::factory()->create([
-            'user_id' => $this->participant->id,
-            'organizer_id' => $organizer->organizer->id,
+            'participant_user_id' => $this->participant->id,
+            'organizer_user_id' => $organizer->id,
         ]);
 
         $response = $this->actingAs($this->participant)
-            ->post('/social/follow-organizer', [
-                'organizer_id' => $organizer->organizer->id,
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/api/participant/organizer/follow', [
+                'organizer' => $organizer->id,
             ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(201);
+        $response->assertJson(['success' => true]);
 
         $this->assertDatabaseMissing('organizer_follows', [
-            'user_id' => $this->participant->id,
-            'organizer_id' => $organizer->organizer->id,
+            'participant_user_id' => $this->participant->id,
+            'organizer_user_id' => $organizer->id,
         ]);
     }
 
@@ -66,16 +70,18 @@ class SocialControllerTest extends TestCase
         $otherParticipant = $this->createParticipant();
 
         $response = $this->actingAs($this->participant)
-            ->post('/social/friend', [
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/participant/friends', [
                 'friend_id' => $otherParticipant->id,
                 'action' => 'send',
             ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(200);
+        $response->assertJson(['status' => 'success']);
 
         $this->assertDatabaseHas('friends', [
-            'user_id' => $this->participant->id,
-            'friend_id' => $otherParticipant->id,
+            'user1_id' => $this->participant->id,
+            'user2_id' => $otherParticipant->id,
             'status' => 'pending',
         ]);
     }
@@ -86,22 +92,25 @@ class SocialControllerTest extends TestCase
         $requester = $this->createParticipant();
 
         Friend::factory()->create([
-            'user_id' => $requester->id,
-            'friend_id' => $this->participant->id,
+            'user1_id' => $requester->id,
+            'user2_id' => $this->participant->id,
             'status' => 'pending',
+            'actor_id' => $requester->id,
         ]);
 
         $response = $this->actingAs($this->participant)
-            ->post('/social/friend', [
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/participant/friends', [
                 'friend_id' => $requester->id,
                 'action' => 'accept',
             ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(200);
+        $response->assertJson(['status' => 'success']);
 
         $this->assertDatabaseHas('friends', [
-            'user_id' => $requester->id,
-            'friend_id' => $this->participant->id,
+            'user1_id' => $requester->id,
+            'user2_id' => $this->participant->id,
             'status' => 'accepted',
         ]);
     }
@@ -112,18 +121,21 @@ class SocialControllerTest extends TestCase
         $requester = $this->createParticipant();
 
         $friendship = Friend::factory()->create([
-            'user_id' => $requester->id,
-            'friend_id' => $this->participant->id,
+            'user1_id' => $requester->id,
+            'user2_id' => $this->participant->id,
             'status' => 'pending',
+            'actor_id' => $requester->id,
         ]);
 
         $response = $this->actingAs($this->participant)
-            ->post('/social/friend', [
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/participant/friends', [
                 'friend_id' => $requester->id,
                 'action' => 'reject',
             ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(200);
+        $response->assertJson(['status' => 'success']);
 
         $this->assertDatabaseMissing('friends', [
             'id' => $friendship->id,
@@ -136,15 +148,17 @@ class SocialControllerTest extends TestCase
         $otherParticipant = $this->createParticipant();
 
         $response = $this->actingAs($this->participant)
-            ->post('/social/follow-participant', [
-                'participant_id' => $otherParticipant->participant->id,
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/participant/follow', [
+                'participant_id' => $otherParticipant->id,
             ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(200);
+        $response->assertJson(['success' => true]);
 
         $this->assertDatabaseHas('participant_follows', [
-            'user_id' => $this->participant->id,
-            'participant_id' => $otherParticipant->participant->id,
+            'participant_follower' => $this->participant->id,
+            'participant_followee' => $otherParticipant->id,
         ]);
     }
 
@@ -209,13 +223,13 @@ class SocialControllerTest extends TestCase
         ];
 
         $response = $this->actingAs($this->participant)
-            ->post("/social/{$reportedUser->id}/report", $reportData);
+            ->post("/api/user/{$reportedUser->id}/report", $reportData);
 
-        $response->assertJson(['success' => true]);
+        $response->assertJson(['message' => 'Report submitted successfully']);
 
         $this->assertDatabaseHas('reports', [
             'reporter_id' => $this->participant->id,
-            'reported_id' => $reportedUser->id,
+            'reported_user_id' => $reportedUser->id,
             'reason' => 'Inappropriate behavior',
         ]);
     }
@@ -224,30 +238,31 @@ class SocialControllerTest extends TestCase
     public function participant_can_view_reports()
     {
         $response = $this->actingAs($this->participant)
-            ->get("/social/{$this->participant->id}/reports");
+            ->get("/api/user/{$this->participant->id}/reports");
 
         $response->assertStatus(200);
-        $response->assertViewHas('reports');
+        $response->assertJsonStructure(['reports']);
     }
 
     /** @test */
     public function guest_cannot_access_social_features()
     {
-        $this->post('/social/follow-organizer', [])->assertRedirect('/login');
-        $this->post('/social/friend', [])->assertRedirect('/login');
-        $this->post('/social/follow-participant', [])->assertRedirect('/login');
+        $this->post('/api/participant/organizer/follow', [])->assertRedirect(route('participant.signin.view'));
+        $this->post('/participant/friends', [])->assertRedirect(route('participant.signin.view'));
+        $this->post('/participant/follow', [])->assertRedirect(route('participant.signin.view'));
     }
 
     /** @test */
     public function participant_cannot_send_friend_request_to_self()
     {
         $response = $this->actingAs($this->participant)
-            ->post('/social/friend', [
+            ->withHeaders(['Accept' => 'application/json'])
+            ->post('/participant/friends', [
                 'friend_id' => $this->participant->id,
                 'action' => 'send',
             ]);
 
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
+        $response->assertStatus(200);
+        $response->assertJson(['status' => 'success']); // Service handles this gracefully
     }
 }

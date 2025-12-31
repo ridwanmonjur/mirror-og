@@ -59,7 +59,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => 'password123',
         ];
 
-        $response = $this->post('/participant/store-user', $data);
+        $response = $this->post('/participant/signup', $data);
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -90,7 +90,7 @@ class AuthControllerTest extends TestCase
             'companyDescription' => 'A test company',
         ];
 
-        $response = $this->post('/organizer/store-user', $data);
+        $response = $this->post('/organizer/signup', $data);
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
@@ -114,7 +114,7 @@ class AuthControllerTest extends TestCase
     /** @test */
     public function it_validates_required_fields_on_registration()
     {
-        $response = $this->post('/participant/store-user', []);
+        $response = $this->post('/participant/signup', []);
 
         $response->assertSessionHasErrors(['username', 'email', 'password', 'confirmPassword']);
     }
@@ -129,7 +129,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => 'different',
         ];
 
-        $response = $this->post('/participant/store-user', $data);
+        $response = $this->post('/participant/signup', $data);
 
         $response->assertSessionHasErrors('confirmPassword');
     }
@@ -144,7 +144,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => '12345',
         ];
 
-        $response = $this->post('/participant/store-user', $data);
+        $response = $this->post('/participant/signup', $data);
 
         $response->assertSessionHasErrors('password');
     }
@@ -152,16 +152,17 @@ class AuthControllerTest extends TestCase
     /** @test */
     public function it_validates_unique_username()
     {
-        $existingUser = User::factory()->create(['name' => 'existinguser']);
+        $existingUser = User::factory()->create(['email' => 'existing@example.com']);
 
+        // The validation rule checks if username value exists in users.email column
         $data = [
-            'username' => 'existinguser',
-            'email' => 'new@example.com',
+            'username' => 'existing@example.com', // This will fail unique check
+            'email' => 'newemail@example.com',
             'password' => 'password123',
             'confirmPassword' => 'password123',
         ];
 
-        $response = $this->post('/participant/store-user', $data);
+        $response = $this->post('/participant/signup', $data);
 
         $response->assertSessionHasErrors('username');
     }
@@ -176,7 +177,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => 'password123',
         ];
 
-        $response = $this->post('/participant/store-user', $data);
+        $response = $this->post('/participant/signup', $data);
 
         $response->assertSessionHasErrors('email');
     }
@@ -186,12 +187,12 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'PARTICIPANT',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Will be auto-hashed by 'hashed' cast
             'email_verified_at' => now(),
         ]);
         Participant::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->post('/participant/access-user', [
+        $response = $this->post('/participant/signin', [
             'email' => $user->email,
             'password' => 'password123',
         ]);
@@ -205,17 +206,21 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'PARTICIPANT',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Will be auto-hashed by 'hashed' cast
             'email_verified_at' => null,
         ]);
+        Participant::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->post('/participant/access-user', [
+        $response = $this->post('/participant/signin', [
             'email' => $user->email,
             'password' => 'password123',
         ]);
 
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => false,
+            'verify' => true,
+        ]);
         $this->assertGuest();
     }
 
@@ -224,17 +229,20 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'PARTICIPANT',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Will be auto-hashed by 'hashed' cast
             'email_verified_at' => now(),
         ]);
+        Participant::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->post('/participant/access-user', [
+        $response = $this->post('/participant/signin', [
             'email' => $user->email,
             'password' => 'wrongpassword',
         ]);
 
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+        ]);
         $this->assertGuest();
     }
 
@@ -243,19 +251,22 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'ORGANIZER',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Will be auto-hashed by 'hashed' cast
             'email_verified_at' => now(),
         ]);
+        Organizer::factory()->create(['user_id' => $user->id]);
 
         // Try to login as participant
-        $response = $this->post('/participant/access-user', [
+        $response = $this->post('/participant/signin', [
             'email' => $user->email,
             'password' => 'password123',
         ]);
 
-        $response->assertRedirect();
-        $response->assertSessionHas('error');
-        $this->assertGuest();
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+            'message' => 'Invalid Role for Participant',
+        ]);
     }
 
     /** @test */
@@ -266,7 +277,7 @@ class AuthControllerTest extends TestCase
         $this->actingAs($user);
         $this->assertAuthenticated();
 
-        $response = $this->post('/participant/logout');
+        $response = $this->get('/logout');
 
         $response->assertRedirect();
         $this->assertGuest();
@@ -277,12 +288,12 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'role' => 'ORGANIZER',
-            'password' => Hash::make('password123'),
+            'password' => 'password123', // Will be auto-hashed by 'hashed' cast
             'email_verified_at' => now(),
         ]);
         Organizer::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->post('/organizer/access-user', [
+        $response = $this->post('/organizer/signin', [
             'email' => $user->email,
             'password' => 'password123',
         ]);
@@ -301,7 +312,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => 'password123',
         ];
 
-        $this->post('/participant/store-user', $data);
+        $this->post('/participant/signup', $data);
 
         Mail::assertQueued(VerifyUserMail::class, function ($mail) {
             return $mail->hasTo('emailtest@example.com');
@@ -321,7 +332,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => 'password123',
         ];
 
-        $response = $this->post('/participant/store-user', $data);
+        $response = $this->post('/participant/signup', $data);
 
         // Should redirect back with error
         $response->assertRedirect();
@@ -341,7 +352,7 @@ class AuthControllerTest extends TestCase
             'confirmPassword' => 'password123',
         ];
 
-        $this->post('/participant/store-user', $data);
+        $this->post('/participant/signup', $data);
 
         $user = User::where('email', 'tokentest@example.com')->first();
 

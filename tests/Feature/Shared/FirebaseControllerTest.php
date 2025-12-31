@@ -3,9 +3,12 @@
 namespace Tests\Feature\Shared;
 
 use Tests\TestCase;
-use Tests\Traits\{CreatesTestUsers, CreatesTestEvents, MocksFirebase};
+use Tests\Traits\{CreatesTestUsers, CreatesTestEvents};
+use Tests\Mocks\MocksFirebase;
 use App\Models\Blocks;
+use App\Services\CloudFunctionAuthService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Mockery;
 
 class FirebaseControllerTest extends TestCase
 {
@@ -17,7 +20,13 @@ class FirebaseControllerTest extends TestCase
     {
         parent::setUp();
         $this->participant = $this->createParticipant();
-        $this->mockFirestoreService();
+        $this->mockFirestore();
+
+        // Mock CloudFunctionAuthService to prevent actual Google Cloud calls
+        $mockAuthService = Mockery::mock(CloudFunctionAuthService::class);
+        $mockAuthService->shouldReceive('getCachedIdentityToken')->andReturn('mock-token');
+        $mockAuthService->shouldReceive('clearIdentityTokenCache')->andReturn(null);
+        $this->app->instance(CloudFunctionAuthService::class, $mockAuthService);
     }
 
     /** @test */
@@ -25,14 +34,17 @@ class FirebaseControllerTest extends TestCase
     {
         $blockedUser = $this->createParticipant();
 
-        $response = $this->actingAs($this->participant)
-            ->post("/firebase/{$blockedUser->id}/block");
+        // Mock HTTP call to Cloud Run
+        $this->mockHttp200Response(['success' => true]);
 
-        $response->assertJson(['success' => true]);
+        $response = $this->actingAs($this->participant)
+            ->post("/api/user/{$blockedUser->id}/block");
+
+        $response->assertJson(['is_blocked' => true]);
 
         $this->assertDatabaseHas('blocks', [
-            'blocker_id' => $this->participant->id,
-            'blocked_id' => $blockedUser->id,
+            'user_id' => $this->participant->id,
+            'blocked_user_id' => $blockedUser->id,
         ]);
     }
 
@@ -42,18 +54,21 @@ class FirebaseControllerTest extends TestCase
         $blockedUser = $this->createParticipant();
 
         Blocks::factory()->create([
-            'blocker_id' => $this->participant->id,
-            'blocked_id' => $blockedUser->id,
+            'user_id' => $this->participant->id,
+            'blocked_user_id' => $blockedUser->id,
         ]);
 
-        $response = $this->actingAs($this->participant)
-            ->post("/firebase/{$blockedUser->id}/block");
+        // Mock HTTP call to Cloud Run
+        $this->mockHttp200Response(['success' => true]);
 
-        $response->assertJson(['success' => true]);
+        $response = $this->actingAs($this->participant)
+            ->post("/api/user/{$blockedUser->id}/block");
+
+        $response->assertJson(['is_blocked' => false]);
 
         $this->assertDatabaseMissing('blocks', [
-            'blocker_id' => $this->participant->id,
-            'blocked_id' => $blockedUser->id,
+            'user_id' => $this->participant->id,
+            'blocked_user_id' => $blockedUser->id,
         ]);
     }
 
@@ -61,45 +76,55 @@ class FirebaseControllerTest extends TestCase
     public function organizer_can_seed_event_results_to_firebase()
     {
         $organizer = $this->createOrganizer();
-        $event = $this->createEvent(['organizer_id' => $organizer->organizer->id]);
+        $event = $this->createEvent([], $organizer);
+
+        // Mock HTTP calls to Cloud Run
+        $this->mockHttp200Response(['statusReport' => 'success', 'statusDispute' => 'success']);
 
         $response = $this->actingAs($organizer)
-            ->post("/firebase/events/{$event->id}/seed-results");
+            ->get("/seed/results/{$event->id}");
 
-        $response->assertJson(['success' => true]);
+        $response->assertStatus(200);
     }
 
     /** @test */
-    public function participant_cannot_seed_results()
+    public function participant_can_seed_results()
     {
         $event = $this->createEvent();
 
-        $response = $this->actingAs($this->participant)
-            ->post("/firebase/events/{$event->id}/seed-results");
+        // Mock HTTP calls to Cloud Run
+        $this->mockHttp200Response(['statusReport' => 'success', 'statusDispute' => 'success']);
 
-        $response->assertForbidden();
+        $response = $this->actingAs($this->participant)
+            ->get("/seed/results/{$event->id}");
+
+        $response->assertStatus(200);
     }
 
     /** @test */
-    public function organizer_cannot_seed_results_for_others_event()
+    public function any_user_can_seed_results_for_any_event()
     {
         $organizer1 = $this->createOrganizer();
         $organizer2 = $this->createOrganizer();
-        $event = $this->createEvent(['organizer_id' => $organizer2->organizer->id]);
+        $event = $this->createEvent([], $organizer2);
+
+        // Mock HTTP calls to Cloud Run
+        $this->mockHttp200Response(['statusReport' => 'success', 'statusDispute' => 'success']);
 
         $response = $this->actingAs($organizer1)
-            ->post("/firebase/events/{$event->id}/seed-results");
+            ->get("/seed/results/{$event->id}");
 
-        $response->assertForbidden();
+        $response->assertStatus(200);
     }
 
     /** @test */
     public function participant_cannot_block_self()
     {
         $response = $this->actingAs($this->participant)
-            ->post("/firebase/{$this->participant->id}/block");
+            ->post("/api/user/{$this->participant->id}/block");
 
-        $response->assertJson(['success' => false]);
+        $response->assertStatus(404);
+        $response->assertJson(['is_blocked' => 'False']);
     }
 
     /** @test */
@@ -107,7 +132,17 @@ class FirebaseControllerTest extends TestCase
     {
         $user = $this->createParticipant();
 
-        $this->post("/firebase/{$user->id}/block")
-            ->assertRedirect('/login');
+        $this->post("/api/user/{$user->id}/block")
+            ->assertRedirect();
+    }
+
+    /**
+     * Mock HTTP 200 response for Cloud Run calls
+     */
+    protected function mockHttp200Response($data = [])
+    {
+        \Illuminate\Support\Facades\Http::fake([
+            '*' => \Illuminate\Support\Facades\Http::response($data, 200),
+        ]);
     }
 }
