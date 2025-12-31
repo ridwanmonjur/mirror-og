@@ -1,0 +1,50 @@
+issuer: http://127.0.0.1:5556/dex
+
+storage:
+  type: sqlite3
+  config:
+    file: /var/dex/dex.db
+
+web:
+  http: 0.0.0.0:5556
+
+telemetry:
+  http: 0.0.0.0:5558
+
+# OAuth2 clients (your Laravel app)
+staticClients:
+- id: driftwood-test
+  redirectURIs:
+  - 'http://localhost:8000/auth/google/callback'
+  - 'http://localhost:8000/auth/callback'
+  name: 'Driftwood Test App'
+  secret: driftwood-test-secret
+
+# Mock connector (replaces real Google OAuth)
+connectors:
+- type: mockCallback
+  id: mock
+  name: Mock Google OAuth
+
+# Static users for testing
+enablePasswordDB: true
+staticPasswords:
+- email: "test@driftwood.gg"
+  hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W" # password: password
+  username: "testuser"
+  userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
+
+- email: "organizer@driftwood.gg"
+  hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W" # password: password
+  username: "organizer"
+  userID: "08a8684b-db88-4b73-90a9-3cd1661f5467"
+
+- email: "participant@driftwood.gg"
+  hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W" # password: password
+  username: "participant"
+  userID: "08a8684b-db88-4b73-90a9-3cd1661f5468"
+
+# OAuth2 configuration
+oauth2:
+  skipApprovalScreen: true
+  responseTypes: ["code", "token", "id_token"]

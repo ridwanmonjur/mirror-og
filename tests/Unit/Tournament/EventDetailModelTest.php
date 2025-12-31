@@ -1,6 +1,6 @@
-<!-- <?php
+<?php
 
-namespace Tests\Models;
+namespace Tests\Unit\Tournament;
 
 use App\Models\EventDetail;
 use App\Models\User;
@@ -18,7 +18,7 @@ use App\Models\BracketDeadlineSetup;
 use App\Exceptions\TimeGreaterException;
 use Carbon\Carbon;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -28,14 +28,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
-class EventDetailTest extends TestCase
+class EventDetailModelTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create required test data
         $this->user = User::factory()->create();
         $this->eventType = EventType::factory()->create();
@@ -44,7 +44,8 @@ class EventDetailTest extends TestCase
         $this->organizerPayment = OrganizerPayment::factory()->create();
     }
 
-    public function test_event_detail_can_be_created()
+    /** @test */
+    public function it_can_be_created()
     {
         $eventDetail = EventDetail::factory()->create([
             'user_id' => $this->user->id,
@@ -61,7 +62,8 @@ class EventDetailTest extends TestCase
         ]);
     }
 
-    public function test_to_feed_item_returns_feed_item()
+    /** @test */
+    public function it_converts_to_feed_item()
     {
         $eventDetail = EventDetail::factory()->create([
             'user_id' => $this->user->id,
@@ -76,7 +78,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('A test tournament description', $feedItem->summary);
     }
 
-    public function test_get_feed_items_returns_published_events()
+    /** @test */
+    public function it_returns_only_published_events_in_feed()
     {
         // Create events with different statuses
         EventDetail::factory()->create(['status' => 'LIVE']);
@@ -92,7 +95,8 @@ class EventDetailTest extends TestCase
         }));
     }
 
-    public function test_user_relationship()
+    /** @test */
+    public function it_has_user_relationship()
     {
         $eventDetail = EventDetail::factory()->create(['user_id' => $this->user->id]);
 
@@ -100,7 +104,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($this->user->id, $eventDetail->user->id);
     }
 
-    public function test_invitation_list_relationship()
+    /** @test */
+    public function it_has_invitation_list_relationship()
     {
         $eventDetail = EventDetail::factory()->create();
         $invitation = EventInvitation::factory()->create(['event_id' => $eventDetail->id]);
@@ -109,7 +114,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($invitation->id, $eventDetail->invitationList->first()->id);
     }
 
-    public function test_tier_relationship()
+    /** @test */
+    public function it_has_tier_relationship()
     {
         $eventDetail = EventDetail::factory()->create(['event_tier_id' => $this->eventTier->id]);
 
@@ -117,7 +123,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($this->eventTier->id, $eventDetail->tier->id);
     }
 
-    public function test_type_relationship()
+    /** @test */
+    public function it_has_type_relationship()
     {
         $eventDetail = EventDetail::factory()->create(['event_type_id' => $this->eventType->id]);
 
@@ -125,7 +132,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($this->eventType->id, $eventDetail->type->id);
     }
 
-    public function test_game_relationship()
+    /** @test */
+    public function it_has_game_relationship()
     {
         $eventDetail = EventDetail::factory()->create(['event_category_id' => $this->eventCategory->id]);
 
@@ -133,7 +141,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($this->eventCategory->id, $eventDetail->game->id);
     }
 
-    public function test_payment_transaction_relationship()
+    /** @test */
+    public function it_has_payment_transaction_relationship()
     {
         $eventDetail = EventDetail::factory()->create(['payment_transaction_id' => $this->organizerPayment->id]);
 
@@ -141,7 +150,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($this->organizerPayment->id, $eventDetail->paymentTransaction->id);
     }
 
-    public function test_join_events_relationship()
+    /** @test */
+    public function it_has_join_events_relationship()
     {
         $eventDetail = EventDetail::factory()->create();
         $joinEvent = JoinEvent::factory()->create(['event_details_id' => $eventDetail->id]);
@@ -150,7 +160,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($joinEvent->id, $eventDetail->joinEvents->first()->id);
     }
 
-    public function test_matches_relationship()
+    /** @test */
+    public function it_has_matches_relationship()
     {
         $eventDetail = EventDetail::factory()->create();
         $bracket = Brackets::factory()->create(['event_details_id' => $eventDetail->id]);
@@ -159,7 +170,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($bracket->id, $eventDetail->matches->first()->id);
     }
 
-    public function test_signup_relationship()
+    /** @test */
+    public function it_has_signup_relationship()
     {
         $eventDetail = EventDetail::factory()->create();
         $signup = EventSignup::factory()->create(['event_id' => $eventDetail->id]);
@@ -168,7 +180,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($signup->id, $eventDetail->signup->id);
     }
 
-    public function test_deadlines_relationship()
+    /** @test */
+    public function it_has_deadlines_relationship()
     {
         $eventDetail = EventDetail::factory()->create();
         $deadline = BracketDeadline::factory()->create(['event_details_id' => $eventDetail->id]);
@@ -177,7 +190,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals($deadline->id, $eventDetail->deadlines->first()->id);
     }
 
-    public function test_destroy_event_banner_removes_file()
+    /** @test */
+    public function it_can_destroy_event_banner()
     {
         Storage::fake('local');
         $fileName = 'images/events/test-banner.jpg';
@@ -192,7 +206,8 @@ class EventDetailTest extends TestCase
         $this->assertTrue(method_exists(EventDetail::class, 'destroyEventBanner'));
     }
 
-    public function test_process_events_categorizes_events_by_status()
+    /** @test */
+    public function it_processes_events_by_status()
     {
         $events = collect([
             (object) ['status' => null, 'user_id' => 1, 'statusResolved' => fn() => 'ONGOING'],
@@ -209,7 +224,8 @@ class EventDetailTest extends TestCase
         $this->assertCount(1, $result['historyEvents']); // ENDED
     }
 
-    public function test_is_complete_event_returns_true_for_complete_event()
+    /** @test */
+    public function it_identifies_complete_event()
     {
         $eventDetail = EventDetail::factory()->create([
             'eventName' => 'Test Event',
@@ -230,7 +246,8 @@ class EventDetailTest extends TestCase
         $this->assertTrue($eventDetail->isCompleteEvent());
     }
 
-    public function test_is_complete_event_returns_false_for_incomplete_event()
+    /** @test */
+    public function it_identifies_incomplete_event()
     {
         $eventDetail = EventDetail::factory()->create([
             'eventName' => null, // Missing required field
@@ -241,7 +258,8 @@ class EventDetailTest extends TestCase
         $this->assertFalse($eventDetail->isCompleteEvent());
     }
 
-    public function test_create_status_update_task_creates_tasks()
+    /** @test */
+    public function it_creates_status_update_tasks()
     {
         $eventDetail = EventDetail::factory()->create([
             'startDate' => '2024-12-01',
@@ -268,7 +286,8 @@ class EventDetailTest extends TestCase
         ]);
     }
 
-    public function test_create_registration_task_creates_signup_dates_and_task()
+    /** @test */
+    public function it_creates_registration_task()
     {
         $eventDetail = EventDetail::factory()->create([
             'event_tier_id' => $this->eventTier->id,
@@ -291,14 +310,16 @@ class EventDetailTest extends TestCase
         ]);
     }
 
-    public function test_status_resolved_returns_correct_status_for_draft()
+    /** @test */
+    public function it_resolves_draft_status()
     {
         $eventDetail = EventDetail::factory()->create(['status' => 'DRAFT']);
 
         $this->assertEquals('DRAFT', $eventDetail->statusResolved());
     }
 
-    public function test_status_resolved_returns_correct_status_for_ended_event()
+    /** @test */
+    public function it_resolves_ended_status()
     {
         $eventDetail = EventDetail::factory()->create([
             'status' => 'LIVE',
@@ -310,7 +331,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals('ENDED', $eventDetail->statusResolved());
     }
 
-    public function test_status_resolved_returns_correct_status_for_ongoing_event()
+    /** @test */
+    public function it_resolves_ongoing_status()
     {
         $eventDetail = EventDetail::factory()->create([
             'status' => 'LIVE',
@@ -324,7 +346,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals('ONGOING', $eventDetail->statusResolved());
     }
 
-    public function test_status_resolved_returns_correct_status_for_upcoming_event()
+    /** @test */
+    public function it_resolves_upcoming_status()
     {
         $eventDetail = EventDetail::factory()->create([
             'status' => 'LIVE',
@@ -338,7 +361,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals('UPCOMING', $eventDetail->statusResolved());
     }
 
-    public function test_get_formatted_start_date_returns_human_readable_date()
+    /** @test */
+    public function it_formats_start_date_for_humans()
     {
         $eventDetail = EventDetail::factory()->create([
             'startDate' => Carbon::tomorrow()->format('Y-m-d'),
@@ -351,7 +375,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('in', $formatted);
     }
 
-    public function test_get_registration_status_returns_correct_status()
+    /** @test */
+    public function it_gets_registration_status()
     {
         $eventDetail = EventDetail::factory()->create();
         $signup = EventSignup::factory()->create([
@@ -366,7 +391,8 @@ class EventDetailTest extends TestCase
         $this->assertIsString($status);
     }
 
-    public function test_strip_sec_removes_seconds_from_time()
+    /** @test */
+    public function it_strips_seconds_from_time()
     {
         $eventDetail = new EventDetail();
 
@@ -375,7 +401,8 @@ class EventDetailTest extends TestCase
         $this->assertNull($eventDetail->stripSec(null));
     }
 
-    public function test_store_time_my_converts_timezone_correctly()
+    /** @test */
+    public function it_converts_time_to_utc_for_storage()
     {
         $eventDetail = new EventDetail();
 
@@ -385,7 +412,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals('UTC', $result->timezone->getName());
     }
 
-    public function test_convert_to_malaysian_time_updates_dates_and_times()
+    /** @test */
+    public function it_converts_to_malaysian_time()
     {
         $eventDetail = EventDetail::factory()->make([
             'startDate' => '2024-12-01',
@@ -402,7 +430,8 @@ class EventDetailTest extends TestCase
         $this->assertIsString($eventDetail->startTime);
     }
 
-    public function test_get_date_tz_returns_carbon_instance()
+    /** @test */
+    public function it_gets_date_with_timezone()
     {
         $eventDetail = new EventDetail();
 
@@ -412,7 +441,8 @@ class EventDetailTest extends TestCase
         $this->assertEquals('UTC', $result->timezone->getName());
     }
 
-    public function test_start_dates_str_returns_formatted_date_array()
+    /** @test */
+    public function it_formats_start_dates_as_string_array()
     {
         $eventDetail = new EventDetail();
 
@@ -426,7 +456,8 @@ class EventDetailTest extends TestCase
         $this->assertArrayHasKey('combinedStr', $result);
     }
 
-    public function test_start_dates_readable_returns_formatted_array()
+    /** @test */
+    public function it_formats_start_dates_readable()
     {
         $eventDetail = EventDetail::factory()->make([
             'startDate' => '2024-12-01',
@@ -441,7 +472,8 @@ class EventDetailTest extends TestCase
         $this->assertArrayHasKey('fmtStartIn', $result);
     }
 
-    public function test_filter_events_applies_status_filter()
+    /** @test */
+    public function it_filters_events_by_status()
     {
         EventDetail::factory()->create(['status' => 'DRAFT']);
         EventDetail::factory()->create(['status' => 'LIVE']);
@@ -452,7 +484,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('DRAFT', $query->toSql());
     }
 
-    public function test_filter_events_applies_search_filter()
+    /** @test */
+    public function it_filters_events_by_search_term()
     {
         $request = new Request(['search' => 'tournament']);
         $query = EventDetail::filterEvents($request);
@@ -462,7 +495,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('LIKE', $sql);
     }
 
-    public function test_landing_page_query_excludes_draft_events()
+    /** @test */
+    public function it_excludes_draft_events_from_landing_page_query()
     {
         $request = new Request();
         $currentDateTime = Carbon::now();
@@ -473,7 +507,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('NOT IN', $sql);
     }
 
-    public function test_filter_events_full_applies_sorting()
+    /** @test */
+    public function it_applies_sorting_in_filter_events_full()
     {
         $request = new Request(['sort' => ['startDate' => 'asc']]);
         $query = EventDetail::filterEventsFull($request);
@@ -482,7 +517,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('order by', $sql);
     }
 
-    public function test_find_event_with_relations_and_throw_error_returns_event()
+    /** @test */
+    public function it_finds_event_with_relations_and_authorization()
     {
         $eventDetail = EventDetail::factory()->create(['user_id' => $this->user->id]);
 
@@ -494,14 +530,16 @@ class EventDetailTest extends TestCase
         $this->assertEquals($eventDetail->id, $result->id);
     }
 
-    public function test_find_event_with_relations_and_throw_error_throws_model_not_found()
+    /** @test */
+    public function it_throws_exception_when_event_not_found()
     {
         $this->expectException(ModelNotFoundException::class);
 
         EventDetail::findEventWithRelationsAndThrowError($this->user->id, 999);
     }
 
-    public function test_find_event_with_relations_and_throw_error_throws_unauthorized()
+    /** @test */
+    public function it_throws_exception_when_unauthorized_user()
     {
         $eventDetail = EventDetail::factory()->create(['user_id' => $this->user->id]);
         $otherUser = User::factory()->create();
@@ -511,7 +549,8 @@ class EventDetailTest extends TestCase
         EventDetail::findEventWithRelationsAndThrowError($otherUser->id, $eventDetail->id);
     }
 
-    public function test_find_event_and_throw_error_returns_event()
+    /** @test */
+    public function it_finds_event_and_authorizes_user()
     {
         $eventDetail = EventDetail::factory()->create(['user_id' => $this->user->id]);
 
@@ -520,14 +559,16 @@ class EventDetailTest extends TestCase
         $this->assertEquals($eventDetail->id, $result->id);
     }
 
-    public function test_find_event_and_throw_error_throws_model_not_found()
+    /** @test */
+    public function it_throws_exception_when_finding_nonexistent_event()
     {
         $this->expectException(ModelNotFoundException::class);
 
         EventDetail::findEventAndThrowError(999, $this->user->id);
     }
 
-    public function test_find_event_and_throw_error_throws_unauthorized()
+    /** @test */
+    public function it_throws_exception_when_finding_event_for_wrong_user()
     {
         $eventDetail = EventDetail::factory()->create(['user_id' => $this->user->id]);
         $otherUser = User::factory()->create();
@@ -537,7 +578,8 @@ class EventDetailTest extends TestCase
         EventDetail::findEventAndThrowError($eventDetail->id, $otherUser->id);
     }
 
-    public function test_scope_with_event_tier_and_filtered_matches()
+    /** @test */
+    public function it_loads_event_tier_and_filtered_matches()
     {
         $eventDetail = EventDetail::factory()->create();
         $bracketDeadlines = collect();
@@ -547,7 +589,8 @@ class EventDetailTest extends TestCase
         $this->assertStringContainsString('tier', $query->toSql());
     }
 
-    public function test_event_tags_cast_to_array()
+    /** @test */
+    public function it_casts_event_tags_to_array()
     {
         $tags = ['tournament', 'esports', 'competitive'];
         $eventDetail = EventDetail::factory()->create(['eventTags' => $tags]);
@@ -556,14 +599,16 @@ class EventDetailTest extends TestCase
         $this->assertEquals($tags, $eventDetail->eventTags);
     }
 
-    public function test_per_page_is_set_correctly()
+    /** @test */
+    public function it_has_correct_per_page_value()
     {
         $eventDetail = new EventDetail();
 
         $this->assertEquals(6, $eventDetail->getPerPage());
     }
 
-    public function test_fillable_attributes_are_set()
+    /** @test */
+    public function it_has_correct_fillable_attributes()
     {
         $fillable = [
             'eventName',
@@ -592,10 +637,11 @@ class EventDetailTest extends TestCase
         $this->assertEquals($fillable, $eventDetail->getFillable());
     }
 
-    public function test_table_name_is_set_correctly()
+    /** @test */
+    public function it_has_correct_table_name()
     {
         $eventDetail = new EventDetail();
 
         $this->assertEquals('event_details', $eventDetail->getTable());
     }
-} 
+}

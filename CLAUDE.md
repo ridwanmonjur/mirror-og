@@ -29,11 +29,123 @@ Driftwood is a comprehensive community esports platform that facilitates competi
 - `app/Filament/Resources/` - Admin interface resources
 - `database/migrations/` - 80+ migrations showing platform evolution
 
-## Testing
-- PHPUnit for unit/feature tests
-- Laravel Dusk for browser testing
-- Separate MySQL test database
-- Firebase and external service mocking
+## Testing Strategy
+
+### Test Syllabus (Priority Order)
+1. **Mock Infrastructure** (Week 1)
+   - MocksStripe, MocksFirebase, MocksEmail, MocksGoogleAuth, MocksSteamAuth
+   - CreatesTestUsers, CreatesTestEvents, CreatesTestTeams, CreatesTestPayments
+
+2. **Critical Services** (Week 1-2) - 95%+ coverage
+   - PaymentService (refunds, captures, wallet operations)
+   - BracketDataService (8/16/32 team brackets)
+   - AuthService (OAuth, JWT, role determination)
+   - EventMatchService (event lifecycle)
+
+3. **Core Models** (Week 2-3) - 85%+ coverage
+   - Priority: User, EventDetail, Team, Wallet, RecordStripe
+   - All 66 models: relationships, scopes, casts, methods
+
+4. **Controllers** (Week 3-4) - 90%+ coverage
+   - All 24 controllers via Feature tests
+   - Auth, payment, event, team workflows
+
+5. **Form Requests** (Week 4) - 90%+ coverage
+   - All 29 validation classes
+
+6. **Jobs & Mail** (Week 5) - 90%+ coverage
+   - 5 Jobs, 19 Mail classes, 6 Events/Listeners
+
+7. **Middleware** (Week 5) - 95%+ coverage
+   - All 15 middleware (security critical)
+
+8. **Integration & Performance** (Week 6)
+   - End-to-end payment/event/team flows
+   - Bracket generation performance (<100ms for 32 teams)
+
+### Database Strategy: Use Transactions (FAST)
+
+**All tests use `DatabaseTransactions`** - wraps each test in transaction, rolls back after.
+
+```php
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+class PaymentServiceTest extends TestCase
+{
+    use DatabaseTransactions; // ← Fast: Only transaction rollback, no migrations
+
+    /** @test */
+    public function it_processes_payment()
+    {
+        // Transaction START
+        $payment = RecordStripe::factory()->create();
+        $service->refund($payment);
+        $this->assertDatabaseHas('record_stripes', ['payment_status' => 'refunded']);
+        // Transaction ROLLBACK (automatic)
+    }
+}
+```
+
+### Mock All External Services (NEVER hit real APIs)
+- **Stripe**: MocksStripe trait
+- **Firebase/Firestore**: MocksFirebase trait
+- **Email**: Mail::fake() or MocksEmail trait
+- **Google OAuth**: MocksGoogleAuth trait
+- **Steam API**: MocksSteamAuth trait
+
+### Test Pattern Template
+```php
+use DatabaseTransactions, MocksStripe, CreatesTestUsers;
+
+/** @test */
+public function it_does_something()
+{
+    // Arrange
+    $this->mockStripeClient();
+    $user = $this->createParticipant();
+
+    // Act
+    $result = $service->doSomething($user);
+
+    // Assert
+    $this->assertTrue($result);
+    $this->assertDatabaseHas('table', ['key' => 'value']);
+}
+```
+
+### Coverage Targets
+- Critical Services: 95%+
+- Models: 85%+
+- Controllers: 90%+
+- Jobs/Mail/Middleware: 90%+
+- **Overall: 90%+**
+
+### Test Execution
+```bash
+vendor/bin/phpunit                    # All tests
+vendor/bin/phpunit --testsuite Unit   # Unit tests only
+vendor/bin/phpunit --coverage-html coverage  # With coverage report
+```
+
+### Configuration
+- Database: `driftwood_test` (MySQL on port 3307)
+- Cache/Session: `array` (in-memory)
+- Mail: Mailhog (SMTP on port 1025, UI on port 8025)
+- Queue: `sync` (no background)
+- Firebase: Emulator (Firestore:8080, Auth:9099, UI:4000)
+- OAuth: Dex Mock Server (port 5556)
+
+### Test Environment (docker-compose.local.yml)
+```bash
+# Start all test services
+docker-compose -f docker-compose.local.yml up -d
+
+# Services available:
+# - test_db: MySQL test database (port 3307)
+# - mailhog: Email testing (SMTP 1025, UI 8025)
+# - firebase_emulator: Firebase services (UI 4000)
+# - dex: OAuth mock server (port 5556)
+```
 
 ## Requirements
 - PHP 8.2+ with GRPC extension

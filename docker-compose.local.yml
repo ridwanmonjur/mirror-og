@@ -1,0 +1,83 @@
+version: "3.8"
+services:
+  # Test MySQL Database
+  test_db:
+    container_name: driftwood_test_db
+    image: mysql:8.4
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: driftwood_test
+      MYSQL_ROOT_PASSWORD: Ridwan123@.
+      MYSQL_USER: driftwood
+      MYSQL_PASSWORD: Ridwan123@.
+    volumes:
+      - test_db_data:/var/lib/mysql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Mailhog - Email Testing
+  mailhog:
+    container_name: driftwood_mailhog
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    networks:
+      - app_network
+
+  # Firebase Emulator Suite
+  firebase_emulator:
+    container_name: driftwood_firebase_emulator
+    image: node:18-alpine
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "
+      npm install -g firebase-tools &&
+      firebase emulators:start --project=demo-test --import=/app/firebase-data --export-on-exit
+      "
+    ports:
+      - "4000:4000"  # Emulator Suite UI
+      - "8080:8080"  # Firestore
+      - "9099:9099"  # Auth
+      - "5001:5001"  # Functions
+      - "9199:9199"  # Storage
+    environment:
+      - FIRESTORE_EMULATOR_HOST=0.0.0.0:8080
+      - FIREBASE_AUTH_EMULATOR_HOST=0.0.0.0:9099
+    volumes:
+      - ./firebase-emulator:/app
+      - firebase_data:/app/firebase-data
+    networks:
+      - app_network
+
+  # Dex OAuth Mock Server
+  dex:
+    container_name: driftwood_dex
+    image: ghcr.io/dexidp/dex:latest
+    restart: unless-stopped
+    ports:
+      - "5556:5556"  # Dex UI
+      - "5558:5558"  # gRPC
+    command: ["dex", "serve", "/etc/dex/config.yaml"]
+    volumes:
+      - ./dex-config:/etc/dex
+    networks:
+      - app_network
+
+volumes:
+  test_db_data:
+    driver: local
+  firebase_data:
+    driver: local
+
+networks:
+  app_network:
+    external: true
