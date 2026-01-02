@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+dist
+coverage
+*.md
+.git
+.gitignore
+.env
+.env.local
+serviceAccountKey.json
+tests
+*.test.ts
+jest.config.js
+.vscode
+.idea
+logs
