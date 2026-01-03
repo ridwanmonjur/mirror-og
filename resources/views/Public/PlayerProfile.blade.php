@@ -254,9 +254,9 @@
                                                     alt="{{ $team->teamName }}">
                                                 <div>
 
-                                                    <h5 class="text-muted mb-0 text-wrap font-poppins ">{{ $team->teamName }}
+                                                    <h6 class="text-muted mb-0 text-wrap font-poppins ">{{ $team->teamName }}
 
-                                                    </h5>
+                                                    </h6>
                                                         <span class="ps-2 fs-5">@emoji($team->country_flag)</span>
                                                         <small class="fs-7 text-muted">{{ $team->country_name }}</small>
                                                         @if ($team->member_limit == 1)
