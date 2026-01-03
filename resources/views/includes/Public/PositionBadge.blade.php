@@ -77,7 +77,7 @@
                                              title="{{ $event->eventName }} Esports Tournament"
                                         >
 
-                                            <h6 class="mb-1 text-wrap fw-bold py-0">{{ $event->eventName }}</h6>
+                                            <h6 class="mb-1 text-wrap font-poppins py-0">{{ $event->eventName }}</h6>
                                             <div class="text-body-secondary py-1 text-wrap ">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16"
                                                     fill="currentColor" class="bi me-1 bi-person-circle"
