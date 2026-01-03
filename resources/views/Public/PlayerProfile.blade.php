@@ -162,7 +162,7 @@
                     </div>
 
                     <div class="achievements col-12 col-lg-6">
-                        <div class="ms-2 text-center"><b>Positions</b></div><br>
+                        <div class="ms-2 text-center fw-bold text-lg text-primary-dark"><b>Positions</b></div><br>
                         @include('includes.Public.PositionBadge')
                     </div>
                 </div>
