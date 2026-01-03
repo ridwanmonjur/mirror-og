@@ -254,7 +254,7 @@
                                                     alt="{{ $team->teamName }}">
                                                 <div>
 
-                                                    <h5 class="card-title mb-0 text-wrap font-poppins  text-lg text-primary-dark">{{ $team->teamName }}
+                                                    <h5 class="text-muted mb-0 text-wrap font-poppins  text-lg ">{{ $team->teamName }}
 
                                                     </h5>
                                                         <span class="ps-2 fs-5">@emoji($team->country_flag)</span>
