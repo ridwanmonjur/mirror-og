@@ -362,7 +362,7 @@ async function fetchMembers() {
                                 </span>
                                 ${member?.user?.name}
                                 <span class="fs-4 ms-3">${member?.user?.participant?.region_flag ? window.emojiToImage(member.user.participant.region_flag) : '' }</span>
-                                <span class="fw-bold fs-7 text-muted">${member?.user?.participant?.region_name ?? '' }</span>
+                                <span class="font-poppins fs-7 text-muted">${member?.user?.participant?.region_name ?? '' }</span>
                             </h6>
                             <td class="small"><span class="fw-light">${window.formatDateLuxon(member.created_at)}</span></td>
                             </div>

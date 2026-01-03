@@ -758,7 +758,7 @@ async function fetchMembers(event = null) {
                     </td>
                     <td class=" colored-cell text-start text-lg-center px-3 fs-4">
                     <span>${user?.participant?.region_flag? window.emojiToImage(user.participant.region_flag): '-'}</span>
-                        <span class="fw-bold fs-7 text-muted">${ user?.participant?.region_name ?? '-' }</span>
+                        <span class="font-poppins fs-7 text-muted">${ user?.participant?.region_name ?? '-' }</span>
                     </td>
                      <td class="colored-cell px-3">
                         ${user.is_in_team ?

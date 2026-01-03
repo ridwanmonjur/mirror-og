@@ -6,12 +6,31 @@ import { testDatabaseConnection } from './config/database';
 import { initializeFirebase } from './config/firebase';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import bracketRoutes from './routes/brackets';
+import authRoutes from './routes/auth';
+import tournamentRoutes from './routes/tournaments';
 
 // Load environment variables
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
+const environment = process.env.ENVIRONMENT || 'dev';
+
+// Configure CORS origins based on environment
+let allowedOrigins: string[] = [];
+if (environment === 'prod') {
+  allowedOrigins = ['https://driftwood.gg'];
+} else if (environment === 'staging') {
+  allowedOrigins = ['https://oceansgaming.gg'];
+} else {
+  // dev
+  allowedOrigins = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:5173', // Vite dev server
+    'http://127.0.0.1:5173',
+  ];
+}
 
 /**
  * Initialize application
@@ -34,7 +53,41 @@ async function initializeApp() {
 /**
  * Middleware configuration
  */
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (environment === 'dev') {
+        // In dev mode, allow all origins
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: [
+      'Accept',
+      'Accept-Language',
+      'Content-Language',
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'X-Firebase-AppCheck',
+      'Origin',
+      'Referer',
+      'User-Agent',
+    ],
+    exposedHeaders: ['Content-Type', 'Authorization', 'X-Firebase-AppCheck'],
+    maxAge: 86400, // 24 hours
+  })
+);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -63,6 +116,16 @@ app.get('/health', (req, res) => {
  * API Routes
  */
 app.use('/api/brackets', bracketRoutes);
+
+/**
+ * Auth Routes (converted from cloud_client_auth/main.py)
+ */
+app.use('/auth', authRoutes);
+
+/**
+ * Tournament Routes (converted from cloud_server_functions/main.py)
+ */
+app.use('/', tournamentRoutes);
 
 /**
  * Error handling

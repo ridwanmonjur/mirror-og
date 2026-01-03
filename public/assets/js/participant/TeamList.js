@@ -420,7 +420,7 @@ function paintScreen(teamListServerValue, membersCountServerValue, countServerVa
             }).join('');
 
             if (!all_categories.length) {
-                allCategoriesHtml = ` <small class="fw-bold" style="max-width: 15ch;  font-size: 0.9rem; overflow: hidden;">No Games</small>`;
+                allCategoriesHtml = ` <small class="font-poppins" style="max-width: 15ch;  font-size: 0.9rem; overflow: hidden;">No Games</small>`;
             } else {
                 // Count how many complete titles fit in 30 chars
                 let displayedCount = 0;
