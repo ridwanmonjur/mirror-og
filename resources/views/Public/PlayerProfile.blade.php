@@ -110,7 +110,7 @@
         <div class="tab-content pb-4  outer-tab" id="Overview">
             <div class="d-none d-lg-block"><br></div>
 
-            <div class="d-flex d-none d-lg-flex justify-content-center font-poppins fw-bold text-lg text-primary-dark">Recent Events</div>
+            <div class="d-flex d-none d-lg-flex justify-content-center font-poppins text-lg text-primary-dark">Recent Events</div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
@@ -137,7 +137,7 @@
             <div class="row px-4 mt-4">
                 <div class="row px-4 ">
                     <div class="showcase col-12 col-lg-6">
-                        <div class="text-center font-poppins fw-bold text-lg text-primary-dark">Showcase</div>
+                        <div class="text-center font-poppins text-lg text-primary-dark">Showcase</div>
                         <br>
 
                         <div class="card border-2 py-0 my-0 mx-auto py-4" style=" width: 90%;">
@@ -162,7 +162,7 @@
                     </div>
 
                     <div class="achievements col-12 col-lg-6">
-                        <div class="ms-2 text-center fw-bold text-lg text-primary-dark"><b>Positions</b></div><br>
+                        <div class="ms-2 text-center font-poppins text-lg text-primary-dark"><b>Positions</b></div><br>
                         @include('includes.Public.PositionBadge')
                     </div>
                 </div>
@@ -258,7 +258,7 @@
 
                                                     </h5>
                                                         <span class="ps-2 fs-5">@emoji($team->country_flag)</span>
-                                                        <small class="fw-bold fs-7 text-muted">{{ $team->country_name }}</small>
+                                                        <small class="fs-7 text-muted">{{ $team->country_name }}</small>
                                                         @if ($team->member_limit == 1)
                                                             <span class="badge bg-primary ms-2">Solo</span>
                                                         @endif
@@ -331,7 +331,7 @@
                                                     style="object-fit: cover;" width="50" height="50"
                                                     alt="{{ $team->teamName }}">
                                                 <div>
-                                                    <h5 class="card-title mb-0 font-poppins fw-bold text-lg text-primary-dark">{{ $team->teamName }}</h5>
+                                                    <h5 class="card-title mb-0 font-poppins text-lg text-primary-dark">{{ $team->teamName }}</h5>
                                                     <div>
 
                                                         <span class="me-2 fs-5">@emoji($team->country_flag)</span>

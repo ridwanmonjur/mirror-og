@@ -83,7 +83,7 @@
                     </p>
                 </div>
             @endif
-            <div class="tab-size d-none d-lg-block text-center mx-auto font-poppins fw-semibold text-lg">Recent Events</div>
+            <div class="tab-size d-none d-lg-block text-center mx-auto font-poppins text-lg text-primary-dark">Recent Events</div>
             <div class="d-none d-lg-block"><br><br></div>
             <div class="position-relative d-none d-lg-flex justify-content-center">
                 @if (!isset($joinEvents[0]))
@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="achievements col-12 col-lg-6" id="Positions">
-                    <div class="ms-2 text-center fw-bold text-lg text-primary-dark"><b>Positions</b></div><br>
+                    <div class="ms-2 text-center font-poppins text-lg text-primary-dark"><b>Positions</b></div><br>
                     @include('includes.Public.PositionBadge')
                 </div>
             </div>

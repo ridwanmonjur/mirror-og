@@ -217,7 +217,7 @@
         <div class="grid-2-columns tab-size">
             <div class="">
                 <br>
-                <div class="fw-bold text-lg"> About </div>
+                <div class="font-poppins text-primary-dark text-lg"> About </div>
                 <br>
                 <div class="pe-5"  v-show="isEditMode">
                     <textarea 
@@ -387,7 +387,7 @@
             </div>
             <div class="">
                 <br>
-                <div class="fw-bold text-lg"> Links </div>
+                <div class="font-poppins text-lg text-primary-dark"> Links </div>
                 <br>
                 <div  v-show="isEditMode" class="pe-4">
                     <svg width="25px" height="25px" class="me-3 cursor-pointer" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#2e4b59"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M512 599.6L107.9 311.1v19.7L512 619.3l404.1-288.6V311L512 599.6z" fill="#E73B37"></path><path d="M63.9 187v650h896.2V187H63.9z m852.2 598.5L672.2 611.3l-13.8 9.8L899.1 793H125.5l240.6-171.8-13.8-9.8-244.4 174.5V231h808.2v554.5z" fill="#39393A"></path><path d="M512.9 536.7m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z" fill="#E73B37"></path></g></svg>
