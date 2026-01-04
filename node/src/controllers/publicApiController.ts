@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { Logger } from '../utils/logger';
-import { query } from '../config/database';
+import { prisma } from '../config/database';
 
 /**
- * Public API Controller
+ * Public API Controller (Prisma Version)
  * Converted from Laravel's Open and Shared controllers
  * These endpoints don't require authentication
  */
@@ -11,20 +11,16 @@ import { query } from '../config/database';
 /**
  * Get activity logs for a user
  * GET /api/user/:id/logs
- * Converted from ParticipantController::getActivityLogs
  */
 export async function getActivityLogs(req: Request, res: Response): Promise<void> {
   try {
-    const userId = req.params.id;
+    const userId = parseInt(req.params.id);
 
-    // Query activity logs from database
-    const logs = await query(
-      `SELECT * FROM activity_logs
-       WHERE user_id = ?
-       ORDER BY created_at DESC
-       LIMIT 50`,
-      [userId]
-    );
+    const logs = await prisma.activityLog.findMany({
+      where: { user_id: userId },
+      orderBy: { created_at: 'desc' },
+      take: 50,
+    });
 
     res.status(200).json({
       success: true,
@@ -42,27 +38,44 @@ export async function getActivityLogs(req: Request, res: Response): Promise<void
 /**
  * Get user connections (followers/following)
  * GET /api/user/:id/connections
- * Converted from SocialController::getConnections
  */
 export async function getConnections(req: Request, res: Response): Promise<void> {
   try {
-    const userId = req.params.id;
+    const userId = parseInt(req.params.id);
 
-    // Get followers
-    const followers = await query(
-      `SELECT u.* FROM users u
-       INNER JOIN user_followers uf ON u.id = uf.follower_id
-       WHERE uf.user_id = ?`,
-      [userId]
-    );
+    // Get followers (users who follow this user as an organizer)
+    const followersData = await prisma.organizerFollower.findMany({
+      where: { organizer_id: userId },
+      include: {
+        follower: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar_url: true,
+          },
+        },
+      },
+    });
 
-    // Get following
-    const following = await query(
-      `SELECT u.* FROM users u
-       INNER JOIN user_followers uf ON u.id = uf.user_id
-       WHERE uf.follower_id = ?`,
-      [userId]
-    );
+    // Get following (organizers this user follows)
+    const followingData = await prisma.organizerFollower.findMany({
+      where: { follower_id: userId },
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar_url: true,
+          },
+        },
+      },
+    });
+
+    // Format response to match expected structure
+    const followers = followersData.map((f) => f.follower);
+    const following = followingData.map((f) => f.organizer);
 
     res.status(200).json({
       success: true,
@@ -83,25 +96,26 @@ export async function getConnections(req: Request, res: Response): Promise<void>
 /**
  * Store event invitation
  * POST /api/event/:id/invitation
- * Converted from OrganizerInvitationController::store
  */
 export async function storeEventInvitation(req: Request, res: Response): Promise<void> {
   try {
-    const eventId = req.params.id;
+    const eventId = parseInt(req.params.id);
     const { team_id, user_id, message } = req.body;
 
-    // Insert invitation
-    const result = await query(
-      `INSERT INTO event_invitations (event_id, team_id, user_id, message, created_at, updated_at)
-       VALUES (?, ?, ?, ?, NOW(), NOW())`,
-      [eventId, team_id, user_id, message]
-    );
+    const result = await prisma.eventInvitation.create({
+      data: {
+        event_id: eventId,
+        team_id: team_id ? parseInt(team_id) : null,
+        user_id: user_id ? parseInt(user_id) : null,
+        message: message || null,
+      },
+    });
 
     res.status(201).json({
       success: true,
       message: 'Invitation sent successfully',
       data: {
-        id: result.insertId,
+        id: result.id,
       },
     });
   } catch (error) {
@@ -116,18 +130,18 @@ export async function storeEventInvitation(req: Request, res: Response): Promise
 /**
  * Delete event invitation
  * POST /api/event/:id/inviteDestroy
- * Converted from OrganizerInvitationController::destroy
  */
 export async function destroyEventInvitation(req: Request, res: Response): Promise<void> {
   try {
-    const eventId = req.params.id;
+    const eventId = parseInt(req.params.id);
     const { invitation_id } = req.body;
 
-    await query(
-      `DELETE FROM event_invitations
-       WHERE id = ? AND event_id = ?`,
-      [invitation_id, eventId]
-    );
+    await prisma.eventInvitation.deleteMany({
+      where: {
+        id: parseInt(invitation_id),
+        event_id: eventId,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -145,25 +159,26 @@ export async function destroyEventInvitation(req: Request, res: Response): Promi
 /**
  * Upload media (image/video)
  * POST /api/media
- * Converted from ImageVideoController::upload
  */
 export async function uploadMedia(req: Request, res: Response): Promise<void> {
   try {
     const { file_path, file_type, user_id } = req.body;
 
-    const result = await query(
-      `INSERT INTO image_videos (file_path, file_type, user_id, created_at, updated_at)
-       VALUES (?, ?, ?, NOW(), NOW())`,
-      [file_path, file_type, user_id]
-    );
+    const result = await prisma.imageVideo.create({
+      data: {
+        file_path,
+        file_type,
+        user_id: user_id ? parseInt(user_id) : null,
+      },
+    });
 
     res.status(201).json({
       success: true,
       message: 'Media uploaded successfully',
       data: {
-        id: result.insertId,
-        file_path,
-        file_type,
+        id: result.id,
+        file_path: result.file_path,
+        file_type: result.file_type,
       },
     });
   } catch (error) {
@@ -178,16 +193,14 @@ export async function uploadMedia(req: Request, res: Response): Promise<void> {
 /**
  * Stream media file
  * GET /api/media/stream/:media
- * Converted from ImageVideoController::stream
  */
 export async function streamMedia(req: Request, res: Response): Promise<void> {
   try {
-    const mediaId = req.params.media;
+    const mediaId = parseInt(req.params.media);
 
-    const [media] = await query(
-      `SELECT * FROM image_videos WHERE id = ?`,
-      [mediaId]
-    );
+    const media = await prisma.imageVideo.findUnique({
+      where: { id: mediaId },
+    });
 
     if (!media) {
       res.status(404).json({
@@ -215,13 +228,14 @@ export async function streamMedia(req: Request, res: Response): Promise<void> {
 /**
  * Delete media
  * DELETE /api/media/:media
- * Converted from ImageVideoController::destroy
  */
 export async function deleteMedia(req: Request, res: Response): Promise<void> {
   try {
-    const mediaId = req.params.media;
+    const mediaId = parseInt(req.params.media);
 
-    await query(`DELETE FROM image_videos WHERE id = ?`, [mediaId]);
+    await prisma.imageVideo.delete({
+      where: { id: mediaId },
+    });
 
     res.status(200).json({
       success: true,
@@ -239,18 +253,22 @@ export async function deleteMedia(req: Request, res: Response): Promise<void> {
 /**
  * Register beta interest
  * PUT /api/interest
- * Converted from BetaController::interestedAction
  */
 export async function registerInterest(req: Request, res: Response): Promise<void> {
   try {
     const { email, name, interest_type } = req.body;
 
-    await query(
-      `INSERT INTO beta_interests (email, name, interest_type, created_at, updated_at)
-       VALUES (?, ?, ?, NOW(), NOW())
-       ON DUPLICATE KEY UPDATE updated_at = NOW()`,
-      [email, name, interest_type]
-    );
+    await prisma.betaInterest.upsert({
+      where: { email },
+      update: {
+        // Just update the timestamp
+      },
+      create: {
+        email,
+        name: name || null,
+        interest_type: interest_type || null,
+      },
+    });
 
     res.status(200).json({
       success: true,

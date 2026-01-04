@@ -297,7 +297,7 @@ export async function handleEndedTasks(req: Request, res: Response): Promise<voi
           const disputeRef = result.dispute_ref_list[i];
           const disputeUpdate = result.update_dispute_values[i];
           if (disputeRef && disputeUpdate) {
-            await disputeRef.update(disputeUpdate);
+            await disputeRef.update(disputeUpdate as any);
           }
         }
 
@@ -398,7 +398,7 @@ export async function handleOrgTasks(req: Request, res: Response): Promise<void>
           const disputeRef = result.dispute_ref_list[i];
           const disputeUpdate = result.update_dispute_values[i];
           if (disputeRef && disputeUpdate) {
-            await disputeRef.update(disputeUpdate);
+            await disputeRef.update(disputeUpdate as any);
           }
         }
 
@@ -503,7 +503,7 @@ export async function getAllMatchResults(req: Request, res: Response): Promise<v
  * Health check endpoint
  * GET /health
  */
-export async function handleTournamentHealthCheck(req: Request, res: Response): Promise<void> {
+export async function handleTournamentHealthCheck(_req: Request, res: Response): Promise<void> {
   try {
     // Verify Firebase is initialized and accessible
     if (admin.apps.length === 0) {

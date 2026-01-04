@@ -1,14 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { Logger } from '../utils/logger';
+import { JWTUser } from '../models/types';
 
 /**
  * Extended Express Request with user info
  */
 export interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-    role: string;
-    email?: string;
+  user?: JWTUser & {
     [key: string]: any;
   };
 }

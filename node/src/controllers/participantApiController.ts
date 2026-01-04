@@ -1,10 +1,10 @@
 import { Response } from 'express';
 import { Logger } from '../utils/logger';
-import { query } from '../config/database';
+import { prisma } from '../config/database';
 import { AuthenticatedRequest } from '../middleware/roleCheck';
 
 /**
- * Participant API Controller
+ * Participant API Controller (Prisma Version)
  * Converted from Laravel's ParticipantController, ParticipantEventController, and ParticipantTeamController
  * These endpoints require participant or admin role
  */
@@ -12,33 +12,30 @@ import { AuthenticatedRequest } from '../middleware/roleCheck';
 /**
  * Get events list with filters
  * POST /api/participant/events
- * Converted from ParticipantEventController::index
  */
 export async function getEvents(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { filters, page = 1, limit = 20 } = req.body;
-    const offset = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    let whereClause = 'WHERE 1=1';
-    const params: any[] = [];
+    const where: any = {};
 
     if (filters?.game_id) {
-      whereClause += ' AND game_id = ?';
-      params.push(filters.game_id);
+      where.game_id = parseInt(filters.game_id);
     }
 
     if (filters?.status) {
-      whereClause += ' AND status = ?';
-      params.push(filters.status);
+      where.status = filters.status;
     }
 
-    const events = await query(
-      `SELECT * FROM event_details
-       ${whereClause}
-       ORDER BY start_date DESC
-       LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
-    );
+    const events = await prisma.eventDetail.findMany({
+      where,
+      orderBy: {
+        start_date: 'desc',
+      },
+      skip,
+      take: limit,
+    });
 
     res.status(200).json({
       success: true,
@@ -56,25 +53,33 @@ export async function getEvents(req: AuthenticatedRequest, res: Response): Promi
 /**
  * Like/unlike an event
  * POST /api/user/likes
- * Converted from ParticipantEventController::likeEvent
  */
 export async function likeEvent(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = req.user?.id;
+    const userId = parseInt(req.user?.id!);
     const { event_id } = req.body;
+    const eventId = parseInt(event_id);
 
     // Check if already liked
-    const [existing] = await query(
-      `SELECT * FROM event_likes WHERE user_id = ? AND event_id = ?`,
-      [userId, event_id]
-    );
+    const existing = await prisma.eventLike.findUnique({
+      where: {
+        user_id_event_id: {
+          user_id: userId,
+          event_id: eventId,
+        },
+      },
+    });
 
     if (existing) {
       // Unlike
-      await query(
-        `DELETE FROM event_likes WHERE user_id = ? AND event_id = ?`,
-        [userId, event_id]
-      );
+      await prisma.eventLike.delete({
+        where: {
+          user_id_event_id: {
+            user_id: userId,
+            event_id: eventId,
+          },
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -83,11 +88,12 @@ export async function likeEvent(req: AuthenticatedRequest, res: Response): Promi
       });
     } else {
       // Like
-      await query(
-        `INSERT INTO event_likes (user_id, event_id, created_at, updated_at)
-         VALUES (?, ?, NOW(), NOW())`,
-        [userId, event_id]
-      );
+      await prisma.eventLike.create({
+        data: {
+          user_id: userId,
+          event_id: eventId,
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -107,25 +113,33 @@ export async function likeEvent(req: AuthenticatedRequest, res: Response): Promi
 /**
  * Follow/unfollow organizer
  * POST /api/participant/organizer/follow
- * Converted from SocialController::followOrganizer
  */
 export async function followOrganizer(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = req.user?.id;
+    const userId = parseInt(req.user?.id!);
     const { organizer_id } = req.body;
+    const organizerId = parseInt(organizer_id);
 
     // Check if already following
-    const [existing] = await query(
-      `SELECT * FROM organizer_followers WHERE follower_id = ? AND organizer_id = ?`,
-      [userId, organizer_id]
-    );
+    const existing = await prisma.organizerFollower.findUnique({
+      where: {
+        follower_id_organizer_id: {
+          follower_id: userId,
+          organizer_id: organizerId,
+        },
+      },
+    });
 
     if (existing) {
       // Unfollow
-      await query(
-        `DELETE FROM organizer_followers WHERE follower_id = ? AND organizer_id = ?`,
-        [userId, organizer_id]
-      );
+      await prisma.organizerFollower.delete({
+        where: {
+          follower_id_organizer_id: {
+            follower_id: userId,
+            organizer_id: organizerId,
+          },
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -134,11 +148,12 @@ export async function followOrganizer(req: AuthenticatedRequest, res: Response):
       });
     } else {
       // Follow
-      await query(
-        `INSERT INTO organizer_followers (follower_id, organizer_id, created_at, updated_at)
-         VALUES (?, ?, NOW(), NOW())`,
-        [userId, organizer_id]
-      );
+      await prisma.organizerFollower.create({
+        data: {
+          follower_id: userId,
+          organizer_id: organizerId,
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -158,19 +173,21 @@ export async function followOrganizer(req: AuthenticatedRequest, res: Response):
 /**
  * Edit participant profile
  * POST /api/participant/profile
- * Converted from ParticipantController::editProfile
  */
 export async function editProfile(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = req.user?.id;
+    const userId = parseInt(req.user?.id!);
     const { name, bio, avatar_url, social_links } = req.body;
 
-    await query(
-      `UPDATE users
-       SET name = ?, bio = ?, avatar_url = ?, social_links = ?, updated_at = NOW()
-       WHERE id = ?`,
-      [name, bio, avatar_url, JSON.stringify(social_links), userId]
-    );
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name,
+        bio,
+        avatar_url,
+        social_links: social_links || null,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -188,18 +205,19 @@ export async function editProfile(req: AuthenticatedRequest, res: Response): Pro
 /**
  * Search teams
  * GET /api/teams/search
- * Converted from ParticipantTeamController::search
  */
 export async function searchTeams(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { search_term, limit = 20 } = req.query;
 
-    const teams = await query(
-      `SELECT * FROM teams
-       WHERE name LIKE ?
-       LIMIT ?`,
-      [`%${search_term}%`, limit]
-    );
+    const teams = await prisma.team.findMany({
+      where: {
+        teamName: {
+          contains: search_term as string,
+        },
+      },
+      take: parseInt(limit as string),
+    });
 
     res.status(200).json({
       success: true,
@@ -217,20 +235,23 @@ export async function searchTeams(req: AuthenticatedRequest, res: Response): Pro
 /**
  * Get team list
  * POST /api/teams/list
- * Converted from ParticipantTeamController::teamList
  */
 export async function getTeamList(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     const { user_id, page = 1, limit = 20 } = req.body;
-    const offset = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    const teams = await query(
-      `SELECT t.* FROM teams t
-       INNER JOIN team_members tm ON t.id = tm.team_id
-       WHERE tm.user_id = ?
-       LIMIT ? OFFSET ?`,
-      [user_id, limit, offset]
-    );
+    const teams = await prisma.team.findMany({
+      where: {
+        team_members: {
+          some: {
+            user_id: parseInt(user_id),
+          },
+        },
+      },
+      skip,
+      take: limit,
+    });
 
     res.status(200).json({
       success: true,
@@ -248,19 +269,21 @@ export async function getTeamList(req: AuthenticatedRequest, res: Response): Pro
 /**
  * Edit team
  * POST /api/participant/team
- * Converted from ParticipantTeamController::editTeam
  */
 export async function editTeam(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const userId = req.user?.id;
+    const userId = parseInt(req.user?.id!);
     const { team_id, name, description, logo_url } = req.body;
+    const teamId = parseInt(team_id);
 
     // Verify user is team captain
-    const [member] = await query(
-      `SELECT * FROM team_members
-       WHERE team_id = ? AND user_id = ? AND is_captain = 1`,
-      [team_id, userId]
-    );
+    const member = await prisma.teamMember.findFirst({
+      where: {
+        team_id: teamId,
+        user_id: userId,
+        is_captain: true,
+      },
+    });
 
     if (!member) {
       res.status(403).json({
@@ -270,12 +293,14 @@ export async function editTeam(req: AuthenticatedRequest, res: Response): Promis
       return;
     }
 
-    await query(
-      `UPDATE teams
-       SET name = ?, description = ?, logo_url = ?, updated_at = NOW()
-       WHERE id = ?`,
-      [name, description, logo_url, team_id]
-    );
+    await prisma.team.update({
+      where: { id: teamId },
+      data: {
+        teamName: name,
+        description,
+        logo_url,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -293,20 +318,21 @@ export async function editTeam(req: AuthenticatedRequest, res: Response): Promis
 /**
  * Invite member to team
  * POST /api/participant/team/:id/user/:userId/invite
- * Converted from ParticipantTeamController::inviteMember
  */
 export async function inviteMember(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const teamId = req.params.id;
-    const invitedUserId = req.params.userId;
-    const currentUserId = req.user?.id;
+    const teamId = parseInt(req.params.id);
+    const invitedUserId = parseInt(req.params.userId);
+    const currentUserId = parseInt(req.user?.id!);
 
     // Verify current user is team captain
-    const [member] = await query(
-      `SELECT * FROM team_members
-       WHERE team_id = ? AND user_id = ? AND is_captain = 1`,
-      [teamId, currentUserId]
-    );
+    const member = await prisma.teamMember.findFirst({
+      where: {
+        team_id: teamId,
+        user_id: currentUserId,
+        is_captain: true,
+      },
+    });
 
     if (!member) {
       res.status(403).json({
@@ -317,17 +343,20 @@ export async function inviteMember(req: AuthenticatedRequest, res: Response): Pr
     }
 
     // Create invitation
-    const result = await query(
-      `INSERT INTO team_invitations (team_id, invited_user_id, invited_by, status, created_at, updated_at)
-       VALUES (?, ?, ?, 'pending', NOW(), NOW())`,
-      [teamId, invitedUserId, currentUserId]
-    );
+    const result = await prisma.teamInvitation.create({
+      data: {
+        team_id: teamId,
+        invited_user_id: invitedUserId,
+        invited_by: currentUserId,
+        status: 'pending',
+      },
+    });
 
     res.status(201).json({
       success: true,
       message: 'Member invited successfully',
       data: {
-        id: result.insertId,
+        id: result.id,
       },
     });
   } catch (error) {
@@ -342,20 +371,21 @@ export async function inviteMember(req: AuthenticatedRequest, res: Response): Pr
 /**
  * Make member captain
  * POST /api/participant/team/:id/member/:memberId/captain
- * Converted from ParticipantTeamController::captainMember
  */
 export async function makeCaptain(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const teamId = req.params.id;
-    const memberId = req.params.memberId;
-    const currentUserId = req.user?.id;
+    const teamId = parseInt(req.params.id);
+    const memberId = parseInt(req.params.memberId);
+    const currentUserId = parseInt(req.user?.id!);
 
     // Verify current user is team captain
-    const [currentMember] = await query(
-      `SELECT * FROM team_members
-       WHERE team_id = ? AND user_id = ? AND is_captain = 1`,
-      [teamId, currentUserId]
-    );
+    const currentMember = await prisma.teamMember.findFirst({
+      where: {
+        team_id: teamId,
+        user_id: currentUserId,
+        is_captain: true,
+      },
+    });
 
     if (!currentMember) {
       res.status(403).json({
@@ -366,12 +396,15 @@ export async function makeCaptain(req: AuthenticatedRequest, res: Response): Pro
     }
 
     // Make member captain
-    await query(
-      `UPDATE team_members
-       SET is_captain = 1, updated_at = NOW()
-       WHERE team_id = ? AND user_id = ?`,
-      [teamId, memberId]
-    );
+    await prisma.teamMember.updateMany({
+      where: {
+        team_id: teamId,
+        user_id: memberId,
+      },
+      data: {
+        is_captain: true,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -389,19 +422,21 @@ export async function makeCaptain(req: AuthenticatedRequest, res: Response): Pro
 /**
  * Remove captain role from member
  * POST /api/participant/team/:id/member/:memberId/deleteCaptain
- * Converted from ParticipantTeamController::deleteCaptain
  */
 export async function removeCaptain(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const teamId = req.params.id;
-    const memberId = req.params.memberId;
+    const teamId = parseInt(req.params.id);
+    const memberId = parseInt(req.params.memberId);
 
-    await query(
-      `UPDATE team_members
-       SET is_captain = 0, updated_at = NOW()
-       WHERE team_id = ? AND user_id = ?`,
-      [teamId, memberId]
-    );
+    await prisma.teamMember.updateMany({
+      where: {
+        team_id: teamId,
+        user_id: memberId,
+      },
+      data: {
+        is_captain: false,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -419,19 +454,19 @@ export async function removeCaptain(req: AuthenticatedRequest, res: Response): P
 /**
  * Update team member
  * POST /api/participant/team/member/:id/update
- * Converted from ParticipantTeamController::updateTeamMember
  */
 export async function updateTeamMember(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const memberId = req.params.id;
+    const memberId = parseInt(req.params.id);
     const { role, status } = req.body;
 
-    await query(
-      `UPDATE team_members
-       SET role = ?, status = ?, updated_at = NOW()
-       WHERE id = ?`,
-      [role, status, memberId]
-    );
+    await prisma.teamMember.update({
+      where: { id: memberId },
+      data: {
+        role: role || undefined,
+        status: status || undefined,
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -449,16 +484,14 @@ export async function updateTeamMember(req: AuthenticatedRequest, res: Response)
 /**
  * Withdraw invitation
  * POST /api/participant/team/member/:id/deleteInvite
- * Converted from ParticipantTeamController::withdrawInviteMember
  */
 export async function withdrawInvite(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const inviteId = req.params.id;
+    const inviteId = parseInt(req.params.id);
 
-    await query(
-      `DELETE FROM team_invitations WHERE id = ?`,
-      [inviteId]
-    );
+    await prisma.teamInvitation.delete({
+      where: { id: inviteId },
+    });
 
     res.status(200).json({
       success: true,
@@ -476,18 +509,17 @@ export async function withdrawInvite(req: AuthenticatedRequest, res: Response): 
 /**
  * Reject invitation
  * POST /api/participant/team/member/:id/rejectInvite
- * Converted from ParticipantTeamController::rejectInviteMember
  */
 export async function rejectInvite(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    const inviteId = req.params.id;
+    const inviteId = parseInt(req.params.id);
 
-    await query(
-      `UPDATE team_invitations
-       SET status = 'rejected', updated_at = NOW()
-       WHERE id = ?`,
-      [inviteId]
-    );
+    await prisma.teamInvitation.update({
+      where: { id: inviteId },
+      data: {
+        status: 'rejected',
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -505,15 +537,12 @@ export async function rejectInvite(req: AuthenticatedRequest, res: Response): Pr
 /**
  * Validate bracket for event
  * POST /api/event/:id/brackets
- * Converted from ParticipantEventController::validateBracket
  */
 export async function validateBracket(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
-    // const eventId = req.params.id; // Reserved for future use
     const { bracket_data } = req.body;
 
     // Validate bracket structure
-    // This is a placeholder - actual validation logic would be more complex
     const isValid = bracket_data && bracket_data.matches && Array.isArray(bracket_data.matches);
 
     res.status(200).json({

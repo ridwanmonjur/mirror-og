@@ -1,0 +1,405 @@
+// Prisma Schema for Driftwood Esports Platform
+// This schema is generated from the existing MySQL database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PARTICIPANT
+  ORGANIZER
+  ADMIN
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  name             String    @db.VarChar(255)
+  email            String    @unique @db.VarChar(255)
+  role             UserRole  @default(PARTICIPANT)
+  bio              String?   @db.Text
+  avatar_url       String?   @db.VarChar(500)
+  background_url   String?   @db.VarChar(500)
+  company_name     String?   @db.VarChar(255)
+  website          String?   @db.VarChar(500)
+  social_links     Json?
+  settings         Json?
+  bank_account_id  String?   @db.VarChar(255)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  // Relations
+  organized_events       EventDetail[]       @relation("OrganizerEvents")
+  created_teams          Team[]              @relation("TeamCreator")
+  team_memberships       TeamMember[]        @relation("UserTeamMemberships")
+  notifications          Notification[]      @relation("UserNotifications")
+  achievements           UserAchievement[]   @relation("UserAchievements")
+  sent_reports           UserReport[]        @relation("ReportedBy")
+  received_reports       UserReport[]        @relation("ReportedUser")
+  starred_by             UserStar[]          @relation("StarredUser")
+  stars                  UserStar[]          @relation("UserStars")
+  activity_logs          ActivityLog[]       @relation("UserActivityLogs")
+  followers              OrganizerFollower[] @relation("OrganizerFollowers")
+  following              OrganizerFollower[] @relation("FollowerUsers")
+  liked_events           EventLike[]         @relation("UserEventLikes")
+  sent_invitations       TeamInvitation[]    @relation("InvitedBy")
+  received_invitations   TeamInvitation[]    @relation("InvitedUser")
+  event_awards           EventAward[]        @relation("AwardRecipient")
+
+  @@map("users")
+}
+
+model EventDetail {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  eventName        String    @db.VarChar(255)
+  description      String?   @db.Text
+  start_date       DateTime?
+  end_date         DateTime?
+  game_id          Int?
+  status           String?   @db.VarChar(50)
+  max_teams        Int?
+  entry_fee        Decimal?  @db.Decimal(10, 2)
+  prize_pool       Decimal?  @db.Decimal(10, 2)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  // Relations
+  organizer            User                 @relation("OrganizerEvents", fields: [user_id], references: [id], onDelete: Cascade)
+  brackets             Bracket[]            @relation("EventBrackets")
+  bracket_deadlines    BracketDeadline[]    @relation("EventDeadlines")
+  event_results        EventResult[]        @relation("EventResults")
+  event_likes          EventLike[]          @relation("EventLikes")
+  event_invitations    EventInvitation[]    @relation("EventInvitations")
+  event_matches        EventMatch[]         @relation("EventMatches")
+  event_awards         EventAward[]         @relation("EventAwards")
+  user_achievements    UserAchievement[]    @relation("EventAchievements")
+
+  @@index([user_id])
+  @@index([status])
+  @@index([game_id])
+  @@map("event_details")
+}
+
+model Team {
+  id          Int       @id @default(autoincrement())
+  teamName    String    @db.VarChar(255)
+  creator_id  Int
+  description String?   @db.Text
+  logo_url    String?   @db.VarChar(500)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  // Relations
+  creator           User              @relation("TeamCreator", fields: [creator_id], references: [id], onDelete: Cascade)
+  team_members      TeamMember[]      @relation("TeamMembers")
+  team_invitations  TeamInvitation[]  @relation("TeamInvitations")
+  event_results     EventResult[]     @relation("TeamResults")
+  event_awards      EventAward[]      @relation("TeamAwards")
+
+  @@index([creator_id])
+  @@map("teams")
+}
+
+model TeamMember {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  team_id     Int
+  role        String?   @db.VarChar(100)
+  status      String    @default("pending") @db.VarChar(50)
+  is_captain  Boolean   @default(false)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  // Relations
+  user User @relation("UserTeamMemberships", fields: [user_id], references: [id], onDelete: Cascade)
+  team Team @relation("TeamMembers", fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, team_id])
+  @@index([user_id])
+  @@index([team_id])
+  @@map("team_members")
+}
+
+model TeamInvitation {
+  id               Int       @id @default(autoincrement())
+  team_id          Int
+  invited_user_id  Int
+  invited_by       Int
+  status           String    @default("pending") @db.VarChar(50)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  // Relations
+  team         Team @relation("TeamInvitations", fields: [team_id], references: [id], onDelete: Cascade)
+  invited_user User @relation("InvitedUser", fields: [invited_user_id], references: [id], onDelete: Cascade)
+  inviter      User @relation("InvitedBy", fields: [invited_by], references: [id], onDelete: Cascade)
+
+  @@index([team_id])
+  @@index([invited_user_id])
+  @@index([invited_by])
+  @@map("team_invitations")
+}
+
+model Bracket {
+  id                Int       @id @default(autoincrement())
+  team1_id          String?   @db.VarChar(50)
+  team1_position    String    @db.VarChar(50)
+  team2_id          String?   @db.VarChar(50)
+  team2_position    String    @db.VarChar(50)
+  stage_name        String    @db.VarChar(50)
+  inner_stage_name  String    @db.VarChar(50)
+  event_details_id  Int
+  order             Int?
+  winner_id         String?   @db.VarChar(50)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  // Relations
+  event EventDetail @relation("EventBrackets", fields: [event_details_id], references: [id], onDelete: Cascade)
+
+  @@index([event_details_id])
+  @@index([stage_name, inner_stage_name])
+  @@map("brackets")
+}
+
+model BracketDeadline {
+  id                Int       @id @default(autoincrement())
+  event_details_id  Int
+  deadlines         Json
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  // Relations
+  event EventDetail @relation("EventDeadlines", fields: [event_details_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_details_id])
+  @@map("bracket_deadlines")
+}
+
+model EventResult {
+  id           Int       @id @default(autoincrement())
+  event_id     Int
+  team_id      Int
+  placement    Int
+  prize_amount Decimal?  @db.Decimal(10, 2)
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  // Relations
+  event EventDetail @relation("EventResults", fields: [event_id], references: [id], onDelete: Cascade)
+  team  Team        @relation("TeamResults", fields: [team_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, team_id])
+  @@index([event_id])
+  @@index([team_id])
+  @@map("event_results")
+}
+
+model EventLike {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  event_id   Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  // Relations
+  user  User        @relation("UserEventLikes", fields: [user_id], references: [id], onDelete: Cascade)
+  event EventDetail @relation("EventLikes", fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, event_id])
+  @@index([user_id])
+  @@index([event_id])
+  @@map("event_likes")
+}
+
+model EventInvitation {
+  id         Int       @id @default(autoincrement())
+  event_id   Int
+  team_id    Int?
+  user_id    Int?
+  message    String?   @db.Text
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  // Relations
+  event EventDetail @relation("EventInvitations", fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@index([event_id])
+  @@map("event_invitations")
+}
+
+model EventMatch {
+  id         Int       @id @default(autoincrement())
+  event_id   Int
+  match_id   String    @db.VarChar(100)
+  team1_id   String?   @db.VarChar(50)
+  team2_id   String?   @db.VarChar(50)
+  winner_id  String?   @db.VarChar(50)
+  status     String?   @db.VarChar(50)
+  round      Int?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  // Relations
+  event EventDetail @relation("EventMatches", fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, match_id])
+  @@index([event_id])
+  @@map("event_matches")
+}
+
+model EventAward {
+  id          Int       @id @default(autoincrement())
+  event_id    Int
+  team_id     Int?
+  user_id     Int?
+  award_type  String    @db.VarChar(100)
+  award_name  String    @db.VarChar(255)
+  award_value Decimal?  @db.Decimal(10, 2)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  // Relations
+  event EventDetail @relation("EventAwards", fields: [event_id], references: [id], onDelete: Cascade)
+  team  Team?       @relation("TeamAwards", fields: [team_id], references: [id], onDelete: Cascade)
+  user  User?       @relation("AwardRecipient", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([event_id])
+  @@index([team_id])
+  @@index([user_id])
+  @@map("event_awards")
+}
+
+model UserAchievement {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  event_id         Int?
+  achievement_type String    @db.VarChar(100)
+  achievement_name String    @db.VarChar(255)
+  achievement_data Json?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  // Relations
+  user  User         @relation("UserAchievements", fields: [user_id], references: [id], onDelete: Cascade)
+  event EventDetail? @relation("EventAchievements", fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([event_id])
+  @@map("user_achievements")
+}
+
+model Notification {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  title      String    @db.VarChar(255)
+  message    String    @db.Text
+  type       String    @db.VarChar(50)
+  event_id   Int?
+  read_at    DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  // Relations
+  user User @relation("UserNotifications", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("notifications")
+}
+
+model UserReport {
+  id               Int       @id @default(autoincrement())
+  reporter_id      Int
+  reported_user_id Int
+  reason           String    @db.VarChar(255)
+  description      String?   @db.Text
+  status           String?   @default("pending") @db.VarChar(50)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  // Relations
+  reporter      User @relation("ReportedBy", fields: [reporter_id], references: [id], onDelete: Cascade)
+  reported_user User @relation("ReportedUser", fields: [reported_user_id], references: [id], onDelete: Cascade)
+
+  @@index([reporter_id])
+  @@index([reported_user_id])
+  @@map("user_reports")
+}
+
+model UserStar {
+  id              Int       @id @default(autoincrement())
+  user_id         Int
+  starred_user_id Int
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  // Relations
+  user         User @relation("UserStars", fields: [user_id], references: [id], onDelete: Cascade)
+  starred_user User @relation("StarredUser", fields: [starred_user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, starred_user_id])
+  @@index([user_id])
+  @@index([starred_user_id])
+  @@map("user_stars")
+}
+
+model OrganizerFollower {
+  id           Int       @id @default(autoincrement())
+  follower_id  Int
+  organizer_id Int
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  // Relations
+  follower  User @relation("FollowerUsers", fields: [follower_id], references: [id], onDelete: Cascade)
+  organizer User @relation("OrganizerFollowers", fields: [organizer_id], references: [id], onDelete: Cascade)
+
+  @@unique([follower_id, organizer_id])
+  @@index([follower_id])
+  @@index([organizer_id])
+  @@map("organizer_followers")
+}
+
+model ActivityLog {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  action     String    @db.VarChar(255)
+  details    Json?
+  ip_address String?   @db.VarChar(45)
+  created_at DateTime  @default(now())
+
+  // Relations
+  user User @relation("UserActivityLogs", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([created_at])
+  @@map("activity_logs")
+}
+
+model ImageVideo {
+  id         Int       @id @default(autoincrement())
+  file_path  String    @db.VarChar(500)
+  file_type  String    @db.VarChar(50)
+  user_id    Int?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  @@index([user_id])
+  @@map("image_videos")
+}
+
+model BetaInterest {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique @db.VarChar(255)
+  name          String?   @db.VarChar(255)
+  interest_type String?   @db.VarChar(100)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  @@map("beta_interests")
+}

@@ -24,7 +24,7 @@ export class ApiError extends Error {
  */
 export function errorHandler(
   error: Error | ApiError | ZodError,
-  req: Request,
+  _req: Request,
   res: Response,
   _next: NextFunction
 ): void {

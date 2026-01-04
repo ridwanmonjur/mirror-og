@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import { Logger } from '../utils/logger';
+import { prisma } from './prisma';
 
 // Database configuration from environment variables
 const dbConfig = {
@@ -49,3 +50,6 @@ export async function query<T = any>(sql: string, params?: any[]): Promise<T> {
 
 // Export pool for advanced usage
 export default pool;
+
+// Export Prisma client
+export { prisma };

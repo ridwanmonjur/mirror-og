@@ -11,7 +11,7 @@ export const authRateLimiter = rateLimit({
   message: { error: 'Too Many Requests' },
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response) => {
+  handler: (_req: Request, res: Response) => {
     res.status(429).json({ error: 'Too Many Requests' });
   },
 });
@@ -26,7 +26,7 @@ export const tournamentRateLimiter = rateLimit({
   message: { error: 'Too Many Requests' },
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response) => {
+  handler: (_req: Request, res: Response) => {
     res.status(429).json({ error: 'Too Many Requests' });
   },
 });
@@ -41,7 +41,7 @@ export const batchRateLimiter = rateLimit({
   message: { error: 'Too Many Requests' },
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response) => {
+  handler: (_req: Request, res: Response) => {
     res.status(429).json({ error: 'Too Many Requests' });
   },
 });
@@ -56,7 +56,7 @@ export const deadlineRateLimiter = rateLimit({
   message: { error: 'Too Many Requests' },
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response) => {
+  handler: (_req: Request, res: Response) => {
     res.status(429).json({ error: 'Too Many Requests' });
   },
 });

@@ -21,7 +21,7 @@ describe('Bracket API - Integration Tests', () => {
   let participantId: number;
   let eventId: number;
   let teamId: number;
-  let matchId: number;
+  // let _matchId: number; // Reserved for future use
 
   beforeAll(async () => {
     // Initialize Firebase (will use emulator from env vars)
@@ -65,7 +65,7 @@ describe('Bracket API - Integration Tests', () => {
       status: 'accepted',
     });
 
-    matchId = await seedTestBracket({
+    /*_matchId =*/ await seedTestBracket({
       team1_id: String(teamId),
       team1_position: 'W1',
       team2_id: '2',

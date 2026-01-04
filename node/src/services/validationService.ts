@@ -1,17 +1,16 @@
-import { query } from '../config/database';
+import { prisma } from '../config/database';
 import { Logger } from '../utils/logger';
 import {
   Match,
-  TeamMember,
-  EventDetail,
   ValidationContext,
   ValidationResult,
 } from '../models/types';
 
 /**
- * Validation Service
+ * Validation Service (Prisma Version)
  *
  * Replicates validation logic from ValidateBracketUpdateRequest.php
+ * Using Prisma ORM instead of raw SQL queries
  */
 export class ValidationService {
   /**
@@ -19,32 +18,17 @@ export class ValidationService {
    */
   async validateMatchExists(context: ValidationContext): Promise<Match | null> {
     try {
-      const sql = `
-        SELECT *
-        FROM brackets
-        WHERE team1_id = ?
-          AND team1_position = ?
-          AND team2_id = ?
-          AND team2_position = ?
-          AND event_details_id = ?
-        LIMIT 1
-      `;
+      const match = await prisma.bracket.findFirst({
+        where: {
+          team1_id: context.team1Id,
+          team1_position: context.team1Position,
+          team2_id: context.team2Id,
+          team2_position: context.team2Position,
+          event_details_id: parseInt(context.eventId),
+        },
+      });
 
-      const params = [
-        context.team1Id,
-        context.team1Position,
-        context.team2Id,
-        context.team2Position,
-        context.eventId,
-      ];
-
-      const rows = await query<Match[]>(sql, params);
-
-      if (rows.length === 0) {
-        return null;
-      }
-
-      return rows[0];
+      return match as Match | null;
     } catch (error) {
       Logger.error('Error validating match existence', error);
       throw error;
@@ -56,17 +40,17 @@ export class ValidationService {
    */
   async validateOrganizerPermission(userId: string, eventId: string): Promise<boolean> {
     try {
-      const sql = `
-        SELECT id
-        FROM event_details
-        WHERE id = ?
-          AND user_id = ?
-        LIMIT 1
-      `;
+      const event = await prisma.eventDetail.findFirst({
+        where: {
+          id: parseInt(eventId),
+          user_id: parseInt(userId),
+        },
+        select: {
+          id: true,
+        },
+      });
 
-      const rows = await query<EventDetail[]>(sql, [eventId, userId]);
-
-      return rows.length > 0;
+      return event !== null;
     } catch (error) {
       Logger.error('Error validating organizer permission', error);
       throw error;
@@ -87,28 +71,22 @@ export class ValidationService {
     innerStageName: string
   ): Promise<boolean> {
     try {
-      const sql = `
-        SELECT deadlines
-        FROM bracket_deadlines
-        WHERE event_details_id = ?
-        LIMIT 1
-      `;
+      const bracketDeadline = await prisma.bracketDeadline.findUnique({
+        where: {
+          event_details_id: parseInt(eventId),
+        },
+        select: {
+          deadlines: true,
+        },
+      });
 
-      const rows = await query<any[]>(sql, [eventId]);
-
-      if (rows.length === 0) {
+      if (!bracketDeadline) {
         Logger.warn('No bracket deadlines found for event', { eventId });
         return false;
       }
 
       // Parse JSON deadlines
-      let deadlines: Record<string, Record<string, any>>;
-
-      if (typeof rows[0].deadlines === 'string') {
-        deadlines = JSON.parse(rows[0].deadlines);
-      } else {
-        deadlines = rows[0].deadlines;
-      }
+      const deadlines = bracketDeadline.deadlines as Record<string, Record<string, any>>;
 
       // Check if deadline exists for this stage
       const stageDeadlines = deadlines[stageName];
@@ -159,18 +137,18 @@ export class ValidationService {
    */
   async validateTeamMembership(userId: string, teamId: string): Promise<boolean> {
     try {
-      const sql = `
-        SELECT id
-        FROM team_members
-        WHERE user_id = ?
-          AND team_id = ?
-          AND status = 'accepted'
-        LIMIT 1
-      `;
+      const membership = await prisma.teamMember.findFirst({
+        where: {
+          user_id: parseInt(userId),
+          team_id: parseInt(teamId),
+          status: 'accepted',
+        },
+        select: {
+          id: true,
+        },
+      });
 
-      const rows = await query<TeamMember[]>(sql, [userId, teamId]);
-
-      return rows.length > 0;
+      return membership !== null;
     } catch (error) {
       Logger.error('Error validating team membership', error);
       throw error;

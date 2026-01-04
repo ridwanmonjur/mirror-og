@@ -1,10 +1,11 @@
-import { query, getConnection } from '../../src/config/database';
+import { prisma } from '../../src/config/database';
 import { Logger } from '../../src/utils/logger';
+import { UserRole } from '@prisma/client';
 
 /**
- * Test Database Helpers
+ * Test Database Helpers (Prisma Version)
  *
- * Utilities for seeding and cleaning test database
+ * Utilities for seeding and cleaning test database using Prisma
  */
 
 /**
@@ -12,19 +13,26 @@ import { Logger } from '../../src/utils/logger';
  */
 export async function clearTestData(): Promise<void> {
   try {
-    // Disable foreign key checks temporarily
-    await query('SET FOREIGN_KEY_CHECKS = 0');
-
-    // Clear tables in order (respect foreign keys)
-    await query('DELETE FROM brackets');
-    await query('DELETE FROM bracket_deadlines');
-    await query('DELETE FROM team_members');
-    await query('DELETE FROM event_details');
-    await query('DELETE FROM teams');
-    await query('DELETE FROM users');
-
-    // Re-enable foreign key checks
-    await query('SET FOREIGN_KEY_CHECKS = 1');
+    // Delete in order to respect foreign key constraints
+    // Use deleteMany to clear all records
+    await prisma.bracketDeadline.deleteMany();
+    await prisma.bracket.deleteMany();
+    await prisma.teamMember.deleteMany();
+    await prisma.teamInvitation.deleteMany();
+    await prisma.eventResult.deleteMany();
+    await prisma.eventLike.deleteMany();
+    await prisma.eventInvitation.deleteMany();
+    await prisma.eventMatch.deleteMany();
+    await prisma.eventAward.deleteMany();
+    await prisma.userAchievement.deleteMany();
+    await prisma.notification.deleteMany();
+    await prisma.userReport.deleteMany();
+    await prisma.userStar.deleteMany();
+    await prisma.organizerFollower.deleteMany();
+    await prisma.activityLog.deleteMany();
+    await prisma.eventDetail.deleteMany();
+    await prisma.team.deleteMany();
+    await prisma.user.deleteMany();
 
     Logger.debug('Test data cleared');
   } catch (error) {
@@ -42,13 +50,16 @@ export async function seedTestUser(data: {
   email: string;
   role?: 'PARTICIPANT' | 'ORGANIZER' | 'ADMIN';
 }): Promise<number> {
-  const result: any = await query(
-    `INSERT INTO users (id, name, email, role, created_at, updated_at)
-     VALUES (?, ?, ?, ?, NOW(), NOW())`,
-    [data.id || null, data.name, data.email, data.role || 'PARTICIPANT']
-  );
+  const user = await prisma.user.create({
+    data: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      role: (data.role as UserRole) || UserRole.PARTICIPANT,
+    },
+  });
 
-  return result.insertId || data.id;
+  return user.id;
 }
 
 /**
@@ -59,13 +70,15 @@ export async function seedTestEvent(data: {
   user_id: number;
   eventName: string;
 }): Promise<number> {
-  const result: any = await query(
-    `INSERT INTO event_details (id, user_id, eventName, created_at, updated_at)
-     VALUES (?, ?, ?, NOW(), NOW())`,
-    [data.id || null, data.user_id, data.eventName]
-  );
+  const event = await prisma.eventDetail.create({
+    data: {
+      id: data.id,
+      user_id: data.user_id,
+      eventName: data.eventName,
+    },
+  });
 
-  return result.insertId || data.id;
+  return event.id;
 }
 
 /**
@@ -76,13 +89,15 @@ export async function seedTestTeam(data: {
   teamName: string;
   creator_id: number;
 }): Promise<number> {
-  const result: any = await query(
-    `INSERT INTO teams (id, teamName, creator_id, created_at, updated_at)
-     VALUES (?, ?, ?, NOW(), NOW())`,
-    [data.id || null, data.teamName, data.creator_id]
-  );
+  const team = await prisma.team.create({
+    data: {
+      id: data.id,
+      teamName: data.teamName,
+      creator_id: data.creator_id,
+    },
+  });
 
-  return result.insertId || data.id;
+  return team.id;
 }
 
 /**
@@ -93,13 +108,15 @@ export async function seedTestTeamMember(data: {
   team_id: number;
   status?: 'accepted' | 'pending' | 'rejected';
 }): Promise<number> {
-  const result: any = await query(
-    `INSERT INTO team_members (user_id, team_id, status, created_at, updated_at)
-     VALUES (?, ?, ?, NOW(), NOW())`,
-    [data.user_id, data.team_id, data.status || 'accepted']
-  );
+  const member = await prisma.teamMember.create({
+    data: {
+      user_id: data.user_id,
+      team_id: data.team_id,
+      status: data.status || 'accepted',
+    },
+  });
 
-  return result.insertId;
+  return member.id;
 }
 
 /**
@@ -114,23 +131,19 @@ export async function seedTestBracket(data: {
   inner_stage_name: string;
   event_details_id: number;
 }): Promise<number> {
-  const result: any = await query(
-    `INSERT INTO brackets (team1_id, team1_position, team2_id, team2_position,
-                          stage_name, inner_stage_name, event_details_id,
-                          created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-    [
-      data.team1_id,
-      data.team1_position,
-      data.team2_id,
-      data.team2_position,
-      data.stage_name,
-      data.inner_stage_name,
-      data.event_details_id,
-    ]
-  );
+  const bracket = await prisma.bracket.create({
+    data: {
+      team1_id: data.team1_id,
+      team1_position: data.team1_position,
+      team2_id: data.team2_id,
+      team2_position: data.team2_position,
+      stage_name: data.stage_name,
+      inner_stage_name: data.inner_stage_name,
+      event_details_id: data.event_details_id,
+    },
+  });
 
-  return result.insertId;
+  return bracket.id;
 }
 
 /**
@@ -140,18 +153,28 @@ export async function seedTestBracketDeadline(data: {
   event_details_id: number;
   deadlines: Record<string, Record<string, { start_date: string; end_date: string }>>;
 }): Promise<number> {
-  const result: any = await query(
-    `INSERT INTO bracket_deadlines (event_details_id, deadlines)
-     VALUES (?, ?)`,
-    [data.event_details_id, JSON.stringify(data.deadlines)]
-  );
+  const deadline = await prisma.bracketDeadline.upsert({
+    where: {
+      event_details_id: data.event_details_id,
+    },
+    update: {
+      deadlines: data.deadlines as any,
+    },
+    create: {
+      event_details_id: data.event_details_id,
+      deadlines: data.deadlines as any,
+    },
+  });
 
-  return result.insertId;
+  return deadline.id;
 }
 
 /**
- * Execute raw SQL query
+ * Execute raw SQL query (for advanced cases)
  */
 export async function execQuery(sql: string, params?: any[]): Promise<any> {
-  return await query(sql, params);
+  // Prisma doesn't support parameterized raw queries the same way
+  // For simple queries, use Prisma's models instead
+  // For complex queries, use $queryRaw or $executeRaw
+  return await prisma.$queryRawUnsafe(sql, ...(params || []));
 }
