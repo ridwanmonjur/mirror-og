@@ -1,13 +1,14 @@
-# Python to JavaScript Express Conversion
+# Python & Laravel to JavaScript Express Conversion
 
-This document describes the conversion of Python services to JavaScript Express backend.
+This document describes the conversion of Python services and Laravel API routes to JavaScript Express backend.
 
 ## Overview
 
-Two Python services have been converted to JavaScript/TypeScript Express:
+The following services have been converted to JavaScript/TypeScript Express:
 
 1. **cloud_client_auth/main.py** → **Auth Routes** (`/auth`)
 2. **cloud_server_functions/main.py** → **Tournament Routes** (`/`)
+3. **routes/api.php (Laravel)** → **Laravel API Routes** (`/api/*`)
 
 ## What Was Converted
 
@@ -58,6 +59,82 @@ Two Python services have been converted to JavaScript/TypeScript Express:
 - Score calculation from match results
 - Match state management (UPCOMING → ONGOING → ENDED)
 - Bulk fetching with hashmaps to avoid N+1 queries
+
+### 3. Laravel API Service (routes/api.php)
+
+**Original:** Laravel API routes with role-based middleware
+
+**Converted to:**
+- `src/routes/publicApi.ts` - Public API routes (no auth)
+- `src/routes/userApi.ts` - User API routes (authenticated)
+- `src/routes/participantApi.ts` - Participant routes
+- `src/routes/organizerApi.ts` - Organizer routes
+- `src/controllers/publicApiController.ts` - Public API controller
+- `src/controllers/userApiController.ts` - User API controller
+- `src/controllers/participantApiController.ts` - Participant API controller
+- `src/controllers/organizerApiController.ts` - Organizer API controller
+- `src/middleware/roleCheck.ts` - Role-based access control
+
+**Public API Endpoints (no authentication):**
+- `GET /api/user/:id/logs` - Get activity logs
+- `GET /api/user/:id/connections` - Get user connections
+- `POST /api/event/:id/invitation` - Store event invitation
+- `POST /api/event/:id/inviteDestroy` - Delete invitation
+- `POST /api/media` - Upload media
+- `GET /api/media/stream/:media` - Stream media
+- `DELETE /api/media/:media` - Delete media
+- `PUT /api/interest` - Register beta interest
+
+**User API Endpoints (authenticated, any role):**
+- `GET /api/user` - Get current user
+- `GET /api/teams/search` - Search teams
+- `POST /api/teams/list` - Get team list
+- `POST /api/event/:id/brackets` - Validate bracket
+- `GET /api/user/:id/reports` - Get user reports
+- `GET /api/user/notifications` - View notifications
+- `POST /api/user/notifications` - Create notification
+- `POST /api/user/notifications/:id` - Mark as read
+- `POST /api/user/settings` - Change settings
+- `POST /api/user/:id/background` - Replace background
+- `POST /api/user/:id/star` - Toggle star
+- `POST /api/user/:id/report` - Report user
+- `POST /api/user/likes` - Like event
+- `POST /api/user/participants` - Search participants
+- `POST /api/user/unlink` - Unlink bank account
+
+**Participant API Endpoints (participant or admin):**
+- `POST /api/participant/events` - Get events list
+- `POST /api/participant/organizer/follow` - Follow organizer
+- `POST /api/participant/profile` - Edit profile
+- `POST /api/participant/team` - Edit team
+- `POST /api/participant/team/:id/user/:userId/invite` - Invite member
+- `POST /api/participant/team/:id/member/:memberId/captain` - Make captain
+- `POST /api/participant/team/:id/member/:memberId/deleteCaptain` - Remove captain
+- `POST /api/participant/team/member/:id/update` - Update member
+- `POST /api/participant/team/member/:id/deleteInvite` - Withdraw invite
+- `POST /api/participant/team/member/:id/rejectInvite` - Reject invite
+
+**Organizer API Endpoints (organizer or admin):**
+- `POST /api/organizer/events/search` - Search events
+- `POST /api/organizer/event/:id/destroy` - Delete event
+- `POST /api/organizer/event/:id/results` - Store results
+- `POST /api/organizer/event/:id/notifications` - Send notifications
+- `POST /api/organizer/event/:id/matches` - Upsert bracket
+- `POST /api/organizer/event/:id/awards` - Store award
+- `DELETE /api/organizer/event/:id/awards/:awardId` - Delete award
+- `POST /api/organizer/event/:id/achievements` - Store achievement
+- `DELETE /api/organizer/event/achievements/:achievementId` - Delete achievement
+- `POST /api/organizer/profile` - Edit profile
+
+**Features:**
+- Role-based access control (participant, organizer, admin)
+- JWT authentication (compatible with Laravel tokens)
+- MySQL database integration (shared with Laravel)
+- Comprehensive user, team, and event management
+- Social features (following, starring, reporting)
+- Notification system
+- Media upload/streaming
+- Bracket validation
 
 ## New Dependencies
 
@@ -158,6 +235,90 @@ curl -X POST http://localhost:3000/match/results/all \
   }'
 ```
 
+### Laravel API Examples
+
+#### Get Current User (Authenticated)
+
+```bash
+curl -X GET http://localhost:3000/api/user \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### Search Teams
+
+```bash
+curl -X GET "http://localhost:3000/api/teams/search?search_term=esports&limit=10" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### Get Events (Participant)
+
+```bash
+curl -X POST http://localhost:3000/api/participant/events \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filters": {
+      "game_id": "123",
+      "status": "upcoming"
+    },
+    "page": 1,
+    "limit": 20
+  }'
+```
+
+#### Edit Profile (Participant)
+
+```bash
+curl -X POST http://localhost:3000/api/participant/profile \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Player123",
+    "bio": "Pro gamer",
+    "avatar_url": "https://example.com/avatar.jpg",
+    "social_links": {
+      "twitter": "@player123",
+      "twitch": "player123"
+    }
+  }'
+```
+
+#### Search Events (Organizer)
+
+```bash
+curl -X POST http://localhost:3000/api/organizer/events/search \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "search_term": "tournament",
+    "filters": {
+      "status": "active"
+    },
+    "page": 1,
+    "limit": 20
+  }'
+```
+
+#### Store Event Results (Organizer)
+
+```bash
+curl -X POST http://localhost:3000/api/organizer/event/123/results \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "team_id": "456",
+    "placement": 1,
+    "prize_amount": 1000
+  }'
+```
+
+#### Get Activity Logs (Public)
+
+```bash
+curl -X GET http://localhost:3000/api/user/123/logs
+```
+
 ## Deployment
 
 ### Install Dependencies
@@ -224,13 +385,14 @@ Uses `express-rate-limit` with in-memory store (same as Python's simple implemen
 
 ## Migration Notes
 
-### Original Python Files
+### Original Files
 
-The original Python files are **NOT MODIFIED**:
+The original files are **NOT MODIFIED**:
 - `cloud_client_auth/main.py` - Still exists
 - `cloud_server_functions/main.py` - Still exists
+- `routes/api.php` - Still exists
 
-This conversion creates **new** Express endpoints alongside the Python services.
+This conversion creates **new** Express endpoints alongside the Python and Laravel services.
 
 ### Differences from Python
 
@@ -240,16 +402,34 @@ This conversion creates **new** Express endpoints alongside the Python services.
 4. **Logging:** Uses Winston logger (existing in project)
 5. **JSON Handling:** Native JavaScript object handling vs Pydantic models
 
+### Differences from Laravel
+
+1. **Database Access:** Direct SQL queries using mysql2 vs Eloquent ORM
+2. **Middleware:** Express middleware vs Laravel middleware
+3. **Validation:** Manual validation vs FormRequest classes
+4. **Authentication:** JWT from header vs Laravel Sanctum/Passport
+5. **Error Handling:** Express error handlers vs Laravel exception handling
+6. **Role Checking:** Custom middleware vs Laravel policies/gates
+
 ### Next Steps
 
-If you want to fully replace the Python services:
+If you want to fully replace the services:
 
+**For Python Services:**
 1. Update Laravel to call the new Express endpoints
 2. Update any cron jobs or scheduled tasks
 3. Update Firebase Cloud Functions triggers
 4. Test thoroughly in staging
 5. Deploy to production
 6. Deprecate Python services
+
+**For Laravel API:**
+1. Update frontend to call Express endpoints instead of Laravel
+2. Ensure JWT tokens are compatible
+3. Test all role-based access controls
+4. Verify database queries return correct data
+5. Migrate gradually by route group (public → user → participant → organizer)
+6. Keep Laravel running alongside Express during transition
 
 ## API Compatibility
 

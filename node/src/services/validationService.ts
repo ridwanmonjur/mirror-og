@@ -2,7 +2,6 @@ import { query } from '../config/database';
 import { Logger } from '../utils/logger';
 import {
   Match,
-  BracketDeadline,
   TeamMember,
   EventDetail,
   ValidationContext,

@@ -1,8 +1,6 @@
 import {
   getFirestore,
   getServerTimestamp,
-  getBracketCollection,
-  getDisputeCollection,
 } from '../config/firebase';
 import { Logger } from '../utils/logger';
 import { BracketReport, Dispute } from '../models/types';

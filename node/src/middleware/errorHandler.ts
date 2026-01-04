@@ -26,7 +26,7 @@ export function errorHandler(
   error: Error | ApiError | ZodError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void {
   // Log all errors
   Logger.error('Error occurred', error);
@@ -81,7 +81,7 @@ export function errorHandler(
 /**
  * Middleware to catch 404 errors
  */
-export function notFoundHandler(req: Request, res: Response, next: NextFunction): void {
+export function notFoundHandler(req: Request, res: Response, _next: NextFunction): void {
   res.status(404).json({
     success: false,
     message: `Route not found: ${req.method} ${req.path}`,
@@ -91,7 +91,9 @@ export function notFoundHandler(req: Request, res: Response, next: NextFunction)
 /**
  * Async handler wrapper to catch promise rejections
  */
-export function asyncHandler(fn: Function) {
+export function asyncHandler(
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+) {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };

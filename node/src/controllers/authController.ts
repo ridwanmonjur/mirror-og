@@ -16,24 +16,25 @@ interface AuthTokenRequest {
 
 /**
  * Verify Firebase App Check token (disabled in development)
+ * Currently commented out but kept for future implementation
  */
-function verifyAppCheckToken(appCheckToken: string | undefined): boolean {
-  if (!appCheckToken) {
-    return false;
-  }
-
-  try {
-    // In production, verify the App Check token
-    if (ENVIRONMENT === 'prod' || ENVIRONMENT === 'staging') {
-      // admin.appCheck().verifyToken(appCheckToken);
-      // Commented out for now - implement when needed
-    }
-    return true;
-  } catch (error) {
-    Logger.log('App Check verification failed', error);
-    return false;
-  }
-}
+// function verifyAppCheckToken(appCheckToken: string | undefined): boolean {
+//   if (!appCheckToken) {
+//     return false;
+//   }
+//
+//   try {
+//     // In production, verify the App Check token
+//     if (ENVIRONMENT === 'prod' || ENVIRONMENT === 'staging') {
+//       // admin.appCheck().verifyToken(appCheckToken);
+//       // Commented out for now - implement when needed
+//     }
+//     return true;
+//   } catch (error) {
+//     Logger.log('App Check verification failed', error);
+//     return false;
+//   }
+// }
 
 /**
  * Handle authentication token creation

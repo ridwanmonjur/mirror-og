@@ -517,7 +517,7 @@ export async function handleTournamentHealthCheck(req: Request, res: Response): 
     }
 
     // Try to access Firestore client to ensure it's responsive
-    const db = admin.firestore();
+    // const db = admin.firestore(); // Reserved for future health checks
 
     res.status(200).json({
       status: 'healthy',

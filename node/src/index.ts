@@ -8,6 +8,10 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import bracketRoutes from './routes/brackets';
 import authRoutes from './routes/auth';
 import tournamentRoutes from './routes/tournaments';
+import publicApiRoutes from './routes/publicApi';
+import userApiRoutes from './routes/userApi';
+import participantApiRoutes from './routes/participantApi';
+import organizerApiRoutes from './routes/organizerApi';
 
 // Load environment variables
 dotenv.config();
@@ -115,6 +119,7 @@ app.get('/health', (req, res) => {
 /**
  * API Routes
  */
+// Bracket API (existing)
 app.use('/api/brackets', bracketRoutes);
 
 /**
@@ -126,6 +131,23 @@ app.use('/auth', authRoutes);
  * Tournament Routes (converted from cloud_server_functions/main.py)
  */
 app.use('/', tournamentRoutes);
+
+/**
+ * Laravel API Routes Conversion
+ * Converted from routes/api.php
+ */
+
+// Public API Routes (no authentication required)
+app.use('/api', publicApiRoutes);
+
+// User API Routes (authenticated, any role)
+app.use('/api', userApiRoutes);
+
+// Participant API Routes (participant or admin)
+app.use('/api/participant', participantApiRoutes);
+
+// Organizer API Routes (organizer or admin)
+app.use('/api/organizer', organizerApiRoutes);
 
 /**
  * Error handling
@@ -158,7 +180,7 @@ process.on('uncaughtException', (error) => {
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
   Logger.error('Unhandled Rejection', reason);
   process.exit(1);
 });
