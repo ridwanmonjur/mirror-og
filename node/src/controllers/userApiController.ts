@@ -17,7 +17,7 @@ export async function getCurrentUser(req: AuthenticatedRequest, res: Response): 
   try {
     const userId = parseInt(req.user?.id!);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: userId },
     });
 
@@ -141,7 +141,7 @@ export async function changeSettings(req: AuthenticatedRequest, res: Response): 
     const userId = parseInt(req.user?.id!);
     const { settings } = req.body;
 
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         settings: settings,
@@ -170,7 +170,7 @@ export async function replaceBackground(req: AuthenticatedRequest, res: Response
     const userId = parseInt(req.params.id);
     const { background_url } = req.body;
 
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         background_url,
@@ -334,7 +334,7 @@ export async function searchParticipants(req: AuthenticatedRequest, res: Respons
   try {
     const { search_term, limit = 20 } = req.body;
 
-    const participants = await prisma.user.findMany({
+    const participants = await prisma.users.findMany({
       where: {
         role: 'PARTICIPANT',
         OR: [
@@ -366,7 +366,7 @@ export async function unlinkBankAccount(req: AuthenticatedRequest, res: Response
   try {
     const userId = parseInt(req.user?.id!);
 
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         bank_account_id: null,

@@ -23,10 +23,10 @@ jest.mock('../../src/utils/logger');
 
 import { prisma } from '../../src/config/database';
 
-const mockBracketFindFirst = prisma.bracket.findFirst as jest.MockedFunction<typeof prisma.bracket.findFirst>;
-const mockEventDetailFindFirst = prisma.eventDetail.findFirst as jest.MockedFunction<typeof prisma.eventDetail.findFirst>;
+const mockBracketFindFirst = prisma.brackets.findFirst as jest.MockedFunction<typeof prisma.brackets.findFirst>;
+const mockEventDetailFindFirst = prisma.event_details.findFirst as jest.MockedFunction<typeof prisma.event_details.findFirst>;
 const mockBracketDeadlineFindUnique = prisma.bracketDeadline.findUnique as jest.MockedFunction<typeof prisma.bracketDeadline.findUnique>;
-const mockTeamMemberFindFirst = prisma.teamMember.findFirst as jest.MockedFunction<typeof prisma.teamMember.findFirst>;
+const mockTeamMemberFindFirst = prisma.team_members.findFirst as jest.MockedFunction<typeof prisma.team_members.findFirst>;
 
 describe('ValidationService', () => {
   let service: ValidationService;

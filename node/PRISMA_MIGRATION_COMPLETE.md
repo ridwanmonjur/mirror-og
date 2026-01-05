@@ -82,7 +82,7 @@ const [user] = await query('SELECT * FROM users WHERE id = ?', [userId]);
 
 **After:**
 ```typescript
-const user = await prisma.user.findUnique({ where: { id: userId } });
+const user = await prisma.users.findUnique({ where: { id: userId } });
 // user is typed as: User | null (fully typed!)
 ```
 
@@ -113,7 +113,7 @@ const rows = await query<Match[]>(sql, [team1Id, pos1, team2Id, pos2, eventId]);
 
 **After:**
 ```typescript
-const match = await prisma.bracket.findFirst({
+const match = await prisma.brackets.findFirst({
   where: {
     team1_id: team1Id,
     team1_position: pos1,
@@ -221,7 +221,7 @@ await prisma.eventResult.upsert({
 
 ### Search Pattern (LIKE queries)
 ```typescript
-const results = await prisma.team.findMany({
+const results = await prisma.teams.findMany({
   where: {
     teamName: { contains: searchTerm }
   }

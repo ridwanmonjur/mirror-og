@@ -1,405 +1,1462 @@
-// Prisma Schema for Driftwood Esports Platform
-// This schema is generated from the existing MySQL database
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://root:@127.0.0.1:3306/driftwood"
 }
 
-enum UserRole {
-  PARTICIPANT
-  ORGANIZER
-  ADMIN
+model fa_links {
+  id                       BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id                  BigInt    @db.UnsignedBigInt
+  withdrawal_history_token String    @unique(map: "2fa_links_withdrawal_history_token_unique") @db.VarChar(64)
+  expires_at               DateTime  @db.Timestamp(0)
+  created_at               DateTime? @db.Timestamp(0)
+  updated_at               DateTime? @db.Timestamp(0)
+  users                    users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "2fa_links_user_id_foreign")
+
+  @@index([user_id], map: "2fa_links_user_id_foreign")
+  @@index([withdrawal_history_token, expires_at], map: "2fa_links_withdrawal_history_token_expires_at_index")
+  @@map("2fa_links")
 }
 
-model User {
-  id               Int       @id @default(autoincrement())
-  name             String    @db.VarChar(255)
-  email            String    @unique @db.VarChar(255)
-  role             UserRole  @default(PARTICIPANT)
-  bio              String?   @db.Text
-  avatar_url       String?   @db.VarChar(500)
-  background_url   String?   @db.VarChar(500)
-  company_name     String?   @db.VarChar(255)
-  website          String?   @db.VarChar(500)
-  social_links     Json?
-  settings         Json?
-  bank_account_id  String?   @db.VarChar(255)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+model achievements {
+  id            BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  title         String      @unique(map: "achievements_title_unique") @db.VarChar(255)
+  description   String      @db.Text
+  join_event_id BigInt      @db.UnsignedBigInt
+  created_at    DateTime    @default(now()) @db.Timestamp(0)
+  join_events   join_events @relation(fields: [join_event_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "achievements_join_event_id_foreign")
 
-  // Relations
-  organized_events       EventDetail[]       @relation("OrganizerEvents")
-  created_teams          Team[]              @relation("TeamCreator")
-  team_memberships       TeamMember[]        @relation("UserTeamMemberships")
-  notifications          Notification[]      @relation("UserNotifications")
-  achievements           UserAchievement[]   @relation("UserAchievements")
-  sent_reports           UserReport[]        @relation("ReportedBy")
-  received_reports       UserReport[]        @relation("ReportedUser")
-  starred_by             UserStar[]          @relation("StarredUser")
-  stars                  UserStar[]          @relation("UserStars")
-  activity_logs          ActivityLog[]       @relation("UserActivityLogs")
-  followers              OrganizerFollower[] @relation("OrganizerFollowers")
-  following              OrganizerFollower[] @relation("FollowerUsers")
-  liked_events           EventLike[]         @relation("UserEventLikes")
-  sent_invitations       TeamInvitation[]    @relation("InvitedBy")
-  received_invitations   TeamInvitation[]    @relation("InvitedUser")
-  event_awards           EventAward[]        @relation("AwardRecipient")
-
-  @@map("users")
+  @@index([join_event_id], map: "achievements_join_event_id_foreign")
 }
 
-model EventDetail {
-  id               Int       @id @default(autoincrement())
-  user_id          Int
-  eventName        String    @db.VarChar(255)
-  description      String?   @db.Text
-  start_date       DateTime?
-  end_date         DateTime?
-  game_id          Int?
-  status           String?   @db.VarChar(50)
-  max_teams        Int?
-  entry_fee        Decimal?  @db.Decimal(10, 2)
-  prize_pool       Decimal?  @db.Decimal(10, 2)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+model activity_logs {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  action       String    @db.VarChar(255)
+  image        String?   @db.VarChar(255)
+  log          String    @db.Text
+  subject_type String    @db.VarChar(255)
+  subject_id   BigInt    @db.UnsignedBigInt
+  object_type  String?   @db.VarChar(255)
+  object_id    BigInt?   @db.UnsignedBigInt
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
 
-  // Relations
-  organizer            User                 @relation("OrganizerEvents", fields: [user_id], references: [id], onDelete: Cascade)
-  brackets             Bracket[]            @relation("EventBrackets")
-  bracket_deadlines    BracketDeadline[]    @relation("EventDeadlines")
-  event_results        EventResult[]        @relation("EventResults")
-  event_likes          EventLike[]          @relation("EventLikes")
-  event_invitations    EventInvitation[]    @relation("EventInvitations")
-  event_matches        EventMatch[]         @relation("EventMatches")
-  event_awards         EventAward[]         @relation("EventAwards")
-  user_achievements    UserAchievement[]    @relation("EventAchievements")
-
-  @@index([user_id])
-  @@index([status])
-  @@index([game_id])
-  @@map("event_details")
+  @@index([object_type, object_id], map: "activity_logs_object_type_object_id_index")
+  @@index([subject_type, subject_id], map: "activity_logs_subject_type_subject_id_index")
 }
 
-model Team {
-  id          Int       @id @default(autoincrement())
-  teamName    String    @db.VarChar(255)
-  creator_id  Int
-  description String?   @db.Text
-  logo_url    String?   @db.VarChar(500)
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-
-  // Relations
-  creator           User              @relation("TeamCreator", fields: [creator_id], references: [id], onDelete: Cascade)
-  team_members      TeamMember[]      @relation("TeamMembers")
-  team_invitations  TeamInvitation[]  @relation("TeamInvitations")
-  event_results     EventResult[]     @relation("TeamResults")
-  event_awards      EventAward[]      @relation("TeamAwards")
-
-  @@index([creator_id])
-  @@map("teams")
+model awards {
+  id             BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  title          String?          @db.VarChar(255)
+  image          String?          @db.VarChar(255)
+  description    String?          @db.VarChar(255)
+  created_at     DateTime?        @db.Timestamp(0)
+  updated_at     DateTime?        @db.Timestamp(0)
+  awards_results awards_results[]
 }
 
-model TeamMember {
-  id          Int       @id @default(autoincrement())
-  user_id     Int
-  team_id     Int
-  role        String?   @db.VarChar(100)
-  status      String    @default("pending") @db.VarChar(50)
-  is_captain  Boolean   @default(false)
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
+model awards_results {
+  join_events_id BigInt      @db.UnsignedBigInt
+  award_id       BigInt      @db.UnsignedBigInt
+  team_id        BigInt      @db.UnsignedBigInt
+  id             BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  awards         awards      @relation(fields: [award_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "awards_results_award_id_foreign")
+  join_events    join_events @relation(fields: [join_events_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "awards_results_join_events_id_foreign")
+  teams          teams       @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "awards_results_team_id_foreign")
 
-  // Relations
-  user User @relation("UserTeamMemberships", fields: [user_id], references: [id], onDelete: Cascade)
-  team Team @relation("TeamMembers", fields: [team_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, team_id])
-  @@index([user_id])
-  @@index([team_id])
-  @@map("team_members")
+  @@unique([award_id, join_events_id], map: "awards_results_award_id_join_events_id_unique")
+  @@index([join_events_id], map: "awards_results_join_events_id_foreign")
+  @@index([team_id], map: "awards_results_team_id_foreign")
 }
 
-model TeamInvitation {
-  id               Int       @id @default(autoincrement())
-  team_id          Int
-  invited_user_id  Int
-  invited_by       Int
-  status           String    @default("pending") @db.VarChar(50)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+model blocks {
+  id                                  BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id                             BigInt    @db.UnsignedBigInt
+  blocked_user_id                     BigInt    @db.UnsignedBigInt
+  created_at                          DateTime? @db.Timestamp(0)
+  updated_at                          DateTime? @db.Timestamp(0)
+  users_blocks_blocked_user_idTousers users     @relation("blocks_blocked_user_idTousers", fields: [blocked_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "blocks_blocked_user_id_foreign")
+  users_blocks_user_idTousers         users     @relation("blocks_user_idTousers", fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "blocks_user_id_foreign")
 
-  // Relations
-  team         Team @relation("TeamInvitations", fields: [team_id], references: [id], onDelete: Cascade)
-  invited_user User @relation("InvitedUser", fields: [invited_user_id], references: [id], onDelete: Cascade)
-  inviter      User @relation("InvitedBy", fields: [invited_by], references: [id], onDelete: Cascade)
-
-  @@index([team_id])
-  @@index([invited_user_id])
-  @@index([invited_by])
-  @@map("team_invitations")
+  @@unique([user_id, blocked_user_id], map: "blocks_user_id_blocked_user_id_unique")
+  @@index([blocked_user_id], map: "blocks_blocked_user_id_foreign")
 }
 
-model Bracket {
-  id                Int       @id @default(autoincrement())
-  team1_id          String?   @db.VarChar(50)
-  team1_position    String    @db.VarChar(50)
-  team2_id          String?   @db.VarChar(50)
-  team2_position    String    @db.VarChar(50)
-  stage_name        String    @db.VarChar(50)
-  inner_stage_name  String    @db.VarChar(50)
-  event_details_id  Int
-  order             Int?
-  winner_id         String?   @db.VarChar(50)
-  created_at        DateTime  @default(now())
-  updated_at        DateTime  @updatedAt
+model bracket_deadline_setup {
+  id              BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  tier_id         BigInt      @db.UnsignedBigInt
+  type_id         BigInt?     @db.UnsignedBigInt
+  deadline_config String      @db.LongText
+  event_tier      event_tier  @relation(fields: [tier_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "bracket_deadline_setup_tier_id_foreign")
+  event_type      event_type? @relation(fields: [type_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "bracket_deadline_setup_type_id_foreign")
 
-  // Relations
-  event EventDetail @relation("EventBrackets", fields: [event_details_id], references: [id], onDelete: Cascade)
-
-  @@index([event_details_id])
-  @@index([stage_name, inner_stage_name])
-  @@map("brackets")
+  @@index([tier_id], map: "bracket_deadline_setup_tier_id_foreign")
+  @@index([type_id], map: "bracket_deadline_setup_type_id_foreign")
 }
 
-model BracketDeadline {
-  id                Int       @id @default(autoincrement())
-  event_details_id  Int
-  deadlines         Json
-  created_at        DateTime  @default(now())
-  updated_at        DateTime  @updatedAt
+model bracket_deadlines {
+  id               BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  stage            String        @db.VarChar(255)
+  inner_stage      String        @db.VarChar(255)
+  start_date       DateTime      @db.DateTime(0)
+  end_date         DateTime      @db.DateTime(0)
+  created_at       DateTime      @db.DateTime(0)
+  event_details_id BigInt        @db.UnsignedBigInt
+  event_details    event_details @relation(fields: [event_details_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "bracket_deadlines_event_details_id_foreign")
 
-  // Relations
-  event EventDetail @relation("EventDeadlines", fields: [event_details_id], references: [id], onDelete: Cascade)
-
-  @@unique([event_details_id])
-  @@map("bracket_deadlines")
+  @@unique([event_details_id, stage, inner_stage], map: "bracket_deadlines_event_details_id_stage_inner_stage_unique")
 }
 
-model EventResult {
-  id           Int       @id @default(autoincrement())
-  event_id     Int
-  team_id      Int
-  placement    Int
-  prize_amount Decimal?  @db.Decimal(10, 2)
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
+model brackets {
+  id                             BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  order                          Int           @db.UnsignedInt
+  team1_id                       BigInt?       @db.UnsignedBigInt
+  team2_id                       BigInt?       @db.UnsignedBigInt
+  event_details_id               BigInt        @db.UnsignedBigInt
+  team1_position                 String?       @db.VarChar(255)
+  team2_position                 String?       @db.VarChar(255)
+  stage_name                     String?       @db.VarChar(255)
+  inner_stage_name               String?       @db.VarChar(255)
+  created_at                     DateTime?     @db.Timestamp(0)
+  updated_at                     DateTime?     @db.Timestamp(0)
+  event_details                  event_details @relation(fields: [event_details_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "matches_event_details_id_foreign")
+  teams_brackets_team1_idToteams teams?        @relation("brackets_team1_idToteams", fields: [team1_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "matches_team1_id_foreign")
+  teams_brackets_team2_idToteams teams?        @relation("brackets_team2_idToteams", fields: [team2_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "matches_team2_id_foreign")
 
-  // Relations
-  event EventDetail @relation("EventResults", fields: [event_id], references: [id], onDelete: Cascade)
-  team  Team        @relation("TeamResults", fields: [team_id], references: [id], onDelete: Cascade)
-
-  @@unique([event_id, team_id])
-  @@index([event_id])
-  @@index([team_id])
-  @@map("event_results")
+  @@index([event_details_id], map: "matches_event_details_id_foreign")
+  @@index([team1_id], map: "matches_team1_id_foreign")
+  @@index([team2_id], map: "matches_team2_id_foreign")
 }
 
-model EventLike {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  event_id   Int
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+model brackets_setup {
+  id                   BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  event_tier_id        BigInt     @db.UnsignedBigInt
+  team1_position       String?    @db.VarChar(255)
+  stage_name           String?    @db.VarChar(255)
+  inner_stage_name     String?    @db.VarChar(255)
+  order                String?    @db.VarChar(255)
+  team2_position       String?    @db.VarChar(255)
+  winner_next_position String?    @db.VarChar(255)
+  loser_next_position  String?    @db.VarChar(255)
+  event_tier           event_tier @relation(fields: [event_tier_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "brackets_setup_event_tier_id_foreign")
 
-  // Relations
-  user  User        @relation("UserEventLikes", fields: [user_id], references: [id], onDelete: Cascade)
-  event EventDetail @relation("EventLikes", fields: [event_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, event_id])
-  @@index([user_id])
-  @@index([event_id])
-  @@map("event_likes")
+  @@index([event_tier_id], map: "brackets_setup_event_tier_id_index")
 }
 
-model EventInvitation {
-  id         Int       @id @default(autoincrement())
-  event_id   Int
-  team_id    Int?
-  user_id    Int?
-  message    String?   @db.Text
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+model captains {
+  id             BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  team_member_id BigInt       @db.UnsignedBigInt
+  teams_id       BigInt       @db.UnsignedBigInt
+  team_members   team_members @relation(fields: [team_member_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "captains_team_member_id_foreign")
+  teams          teams        @relation(fields: [teams_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "captains_teams_id_foreign")
 
-  // Relations
-  event EventDetail @relation("EventInvitations", fields: [event_id], references: [id], onDelete: Cascade)
-
-  @@index([event_id])
-  @@map("event_invitations")
+  @@index([team_member_id], map: "captains_team_member_id_foreign")
+  @@index([teams_id], map: "captains_teams_id_foreign")
 }
 
-model EventMatch {
-  id         Int       @id @default(autoincrement())
-  event_id   Int
-  match_id   String    @db.VarChar(100)
-  team1_id   String?   @db.VarChar(50)
-  team2_id   String?   @db.VarChar(50)
-  winner_id  String?   @db.VarChar(50)
-  status     String?   @db.VarChar(50)
-  round      Int?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+model cart_item_product_variants {
+  id               BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  cart_item_id     BigInt           @db.UnsignedBigInt
+  variant_id       BigInt           @db.UnsignedBigInt
+  created_at       DateTime?        @db.Timestamp(0)
+  updated_at       DateTime?        @db.Timestamp(0)
+  cart_items       cart_items       @relation(fields: [cart_item_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "cart_item_product_variants_cart_item_id_foreign")
+  product_variants product_variants @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "cart_item_product_variants_variant_id_foreign")
 
-  // Relations
-  event EventDetail @relation("EventMatches", fields: [event_id], references: [id], onDelete: Cascade)
-
-  @@unique([event_id, match_id])
-  @@index([event_id])
-  @@map("event_matches")
+  @@unique([cart_item_id, variant_id], map: "cart_item_product_variants_cart_item_id_variant_id_unique")
+  @@index([variant_id], map: "cart_item_product_variants_variant_id_foreign")
 }
 
-model EventAward {
-  id          Int       @id @default(autoincrement())
-  event_id    Int
-  team_id     Int?
-  user_id     Int?
-  award_type  String    @db.VarChar(100)
-  award_name  String    @db.VarChar(255)
-  award_value Decimal?  @db.Decimal(10, 2)
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
+model cart_items {
+  id                         BigInt                       @id @default(autoincrement()) @db.UnsignedBigInt
+  cart_id                    BigInt                       @db.UnsignedBigInt
+  product_id                 Int                          @db.UnsignedInt
+  quantity                   Int
+  subtotal                   Decimal                      @db.Decimal(8, 2)
+  created_at                 DateTime?                    @db.Timestamp(0)
+  updated_at                 DateTime?                    @db.Timestamp(0)
+  cart_item_product_variants cart_item_product_variants[]
+  final_carts                final_carts                  @relation(fields: [cart_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "cart_items_cart_id_foreign")
+  products                   products                     @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "cart_items_product_id_foreign")
 
-  // Relations
-  event EventDetail @relation("EventAwards", fields: [event_id], references: [id], onDelete: Cascade)
-  team  Team?       @relation("TeamAwards", fields: [team_id], references: [id], onDelete: Cascade)
-  user  User?       @relation("AwardRecipient", fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([event_id])
-  @@index([team_id])
-  @@index([user_id])
-  @@map("event_awards")
+  @@index([cart_id], map: "cart_items_cart_id_foreign")
+  @@index([product_id], map: "cart_items_product_id_foreign")
 }
 
-model UserAchievement {
-  id               Int       @id @default(autoincrement())
-  user_id          Int
-  event_id         Int?
-  achievement_type String    @db.VarChar(100)
-  achievement_name String    @db.VarChar(255)
-  achievement_data Json?
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+model categories {
+  id               Int          @id @default(autoincrement()) @db.UnsignedInt
+  parent_id        Int?         @db.UnsignedInt
+  order            Int          @default(1)
+  name             String       @db.VarChar(255)
+  slug             String       @unique(map: "categories_slug_unique") @db.VarChar(255)
+  created_at       DateTime?    @db.Timestamp(0)
+  updated_at       DateTime?    @db.Timestamp(0)
+  categories       categories?  @relation("categoriesTocategories", fields: [parent_id], references: [id], map: "categories_parent_id_foreign")
+  other_categories categories[] @relation("categoriesTocategories")
 
-  // Relations
-  user  User         @relation("UserAchievements", fields: [user_id], references: [id], onDelete: Cascade)
-  event EventDetail? @relation("EventAchievements", fields: [event_id], references: [id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@index([event_id])
-  @@map("user_achievements")
+  @@index([parent_id], map: "categories_parent_id_foreign")
 }
 
-model Notification {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  title      String    @db.VarChar(255)
-  message    String    @db.Text
-  type       String    @db.VarChar(50)
-  event_id   Int?
-  read_at    DateTime?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-
-  // Relations
-  user User @relation("UserNotifications", fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@map("notifications")
+model category {
+  id               Int                @id @default(autoincrement()) @db.UnsignedInt
+  name             String             @unique(map: "category_name_unique") @db.VarChar(255)
+  slug             String             @unique(map: "category_slug_unique") @db.VarChar(255)
+  created_at       DateTime?          @db.Timestamp(0)
+  updated_at       DateTime?          @db.Timestamp(0)
+  category_product category_product[]
 }
 
-model UserReport {
-  id               Int       @id @default(autoincrement())
-  reporter_id      Int
-  reported_user_id Int
-  reason           String    @db.VarChar(255)
-  description      String?   @db.Text
-  status           String?   @default("pending") @db.VarChar(50)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+model category_product {
+  id          Int       @id @default(autoincrement()) @db.UnsignedInt
+  product_id  Int?      @db.UnsignedInt
+  category_id Int?      @db.UnsignedInt
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+  category    category? @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "category_product_category_id_foreign")
+  products    products? @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "category_product_product_id_foreign")
 
-  // Relations
-  reporter      User @relation("ReportedBy", fields: [reporter_id], references: [id], onDelete: Cascade)
-  reported_user User @relation("ReportedUser", fields: [reported_user_id], references: [id], onDelete: Cascade)
-
-  @@index([reporter_id])
-  @@index([reported_user_id])
-  @@map("user_reports")
+  @@index([category_id], map: "category_product_category_id_foreign")
+  @@index([product_id], map: "category_product_product_id_foreign")
 }
 
-model UserStar {
-  id              Int       @id @default(autoincrement())
-  user_id         Int
-  starred_user_id Int
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
+model conversations {
+  id                                      BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  status                                  conversations_status @default(request)
+  created_at                              DateTime?            @db.Timestamp(0)
+  updated_at                              DateTime?            @db.Timestamp(0)
+  user1_id                                BigInt               @db.UnsignedBigInt
+  user2_id                                BigInt               @db.UnsignedBigInt
+  initiator_id                            BigInt               @db.UnsignedBigInt
+  users_conversations_initiator_idTousers users                @relation("conversations_initiator_idTousers", fields: [initiator_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "conversations_initiator_id_foreign")
+  users_conversations_user1_idTousers     users                @relation("conversations_user1_idTousers", fields: [user1_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "conversations_user1_id_foreign")
+  users_conversations_user2_idTousers     users                @relation("conversations_user2_idTousers", fields: [user2_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "conversations_user2_id_foreign")
 
-  // Relations
-  user         User @relation("UserStars", fields: [user_id], references: [id], onDelete: Cascade)
-  starred_user User @relation("StarredUser", fields: [starred_user_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, starred_user_id])
-  @@index([user_id])
-  @@index([starred_user_id])
-  @@map("user_stars")
+  @@index([initiator_id], map: "conversations_initiator_id_foreign")
+  @@index([user1_id], map: "conversations_user1_id_foreign")
+  @@index([user2_id], map: "conversations_user2_id_foreign")
 }
 
-model OrganizerFollower {
-  id           Int       @id @default(autoincrement())
-  follower_id  Int
-  organizer_id Int
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
+model countries_and_regions {
+  id         BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String                     @unique(map: "countries_and_regions_name_unique") @db.VarChar(255)
+  emoji_flag String                     @db.VarChar(255)
+  type       countries_and_regions_type @default(country)
+  sort_order Int                        @default(1000)
 
-  // Relations
-  follower  User @relation("FollowerUsers", fields: [follower_id], references: [id], onDelete: Cascade)
-  organizer User @relation("OrganizerFollowers", fields: [organizer_id], references: [id], onDelete: Cascade)
-
-  @@unique([follower_id, organizer_id])
-  @@index([follower_id])
-  @@index([organizer_id])
-  @@map("organizer_followers")
+  @@index([name, type], map: "countries_and_regions_name_type_index")
+  @@index([sort_order], map: "countries_and_regions_sort_order_index")
+  @@index([type], map: "countries_and_regions_type_index")
 }
 
-model ActivityLog {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  action     String    @db.VarChar(255)
-  details    Json?
-  ip_address String?   @db.VarChar(45)
-  created_at DateTime  @default(now())
-
-  // Relations
-  user User @relation("UserActivityLogs", fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@index([created_at])
-  @@map("activity_logs")
+model coupons {
+  id          Int       @id @default(autoincrement()) @db.UnsignedInt
+  code        String    @unique(map: "coupons_code_unique") @db.VarChar(255)
+  type        String    @db.VarChar(255)
+  value       Int?
+  percent_off Int?
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
 }
 
-model ImageVideo {
-  id         Int       @id @default(autoincrement())
-  file_path  String    @db.VarChar(500)
-  file_type  String    @db.VarChar(50)
-  user_id    Int?
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-
-  @@index([user_id])
-  @@map("image_videos")
+model csv_passwords {
+  id       BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  password String @db.VarChar(255)
 }
 
-model BetaInterest {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique @db.VarChar(255)
-  name          String?   @db.VarChar(255)
-  interest_type String?   @db.VarChar(100)
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+model daily_command_errors {
+  id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  class_name  String    @db.VarChar(255)
+  error_date  DateTime  @db.Date
+  error_count Int       @default(1)
+  email_sent  Boolean   @default(false)
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
 
-  @@map("beta_interests")
+  @@unique([class_name, error_date], map: "daily_command_errors_class_name_error_date_unique")
+  @@index([class_name], map: "daily_command_errors_class_name_index")
+  @@index([error_date], map: "daily_command_errors_error_date_index")
+}
+
+model disputes {
+  id                                      BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  report_id                               String        @db.VarChar(255)
+  match_number                            String        @db.VarChar(255)
+  event_id                                BigInt        @db.UnsignedBigInt
+  dispute_userId                          BigInt        @db.UnsignedBigInt
+  dispute_teamId                          BigInt        @db.UnsignedBigInt
+  dispute_teamNumber                      String        @db.VarChar(255)
+  dispute_reason                          String        @db.VarChar(255)
+  dispute_description                     String?       @db.Text
+  response_userId                         BigInt?       @db.UnsignedBigInt
+  response_teamId                         BigInt?       @db.UnsignedBigInt
+  response_teamNumber                     String?       @db.VarChar(255)
+  response_explanation                    String?       @db.Text
+  resolution_winner                       BigInt?       @db.UnsignedBigInt
+  resolution_resolved_by                  BigInt?       @db.UnsignedBigInt
+  created_at                              DateTime?     @db.Timestamp(0)
+  updated_at                              DateTime?     @db.Timestamp(0)
+  teams_disputes_dispute_teamIdToteams    teams         @relation("disputes_dispute_teamIdToteams", fields: [dispute_teamId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "disputes_dispute_teamid_foreign")
+  users_disputes_dispute_userIdTousers    users         @relation("disputes_dispute_userIdTousers", fields: [dispute_userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "disputes_dispute_userid_foreign")
+  event_details                           event_details @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "disputes_event_id_foreign")
+  teams_disputes_resolution_winnerToteams teams?        @relation("disputes_resolution_winnerToteams", fields: [resolution_winner], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "disputes_resolution_winner_foreign")
+  teams_disputes_response_teamIdToteams   teams?        @relation("disputes_response_teamIdToteams", fields: [response_teamId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "disputes_response_teamid_foreign")
+  users_disputes_response_userIdTousers   users?        @relation("disputes_response_userIdTousers", fields: [response_userId], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "disputes_response_userid_foreign")
+
+  @@unique([event_id, match_number, report_id], map: "disputes_event_id_match_number_report_id_unique")
+  @@index([dispute_teamId], map: "disputes_dispute_teamid_foreign")
+  @@index([dispute_userId], map: "disputes_dispute_userid_foreign")
+  @@index([resolution_winner], map: "disputes_resolution_winner_foreign")
+  @@index([response_teamId], map: "disputes_response_teamid_foreign")
+  @@index([response_userId], map: "disputes_response_userid_foreign")
+}
+
+model event_categories {
+  id               BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  player_per_team  Int             @default(5)
+  games_per_match  Int             @default(3)
+  gameTitle        String?         @db.VarChar(255)
+  gameIcon         String?         @db.VarChar(255)
+  gameUrl          String?         @db.VarChar(500)
+  url              String?         @db.VarChar(500)
+  eventDefinitions String?         @db.VarChar(255)
+  user_id          BigInt?         @db.UnsignedBigInt
+  created_at       DateTime?       @db.Timestamp(0)
+  updated_at       DateTime?       @db.Timestamp(0)
+  users            users?          @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "event_categories_user_id_foreign")
+  event_details    event_details[]
+
+  @@index([user_id], map: "event_categories_user_id_foreign")
+}
+
+model event_create_coupon {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String?   @db.VarChar(255)
+  coupon     String?   @db.VarChar(255)
+  type       String?   @db.VarChar(255)
+  amount     Float?
+  startDate  DateTime? @db.Date
+  endDate    DateTime? @db.Date
+  startTime  DateTime? @db.Time(0)
+  endTime    DateTime? @db.Time(0)
+  isEnforced Boolean?
+}
+
+model event_details {
+  id                     BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  eventDefinitions       String?             @db.VarChar(255)
+  eventName              String?             @db.VarChar(255)
+  slug                   String?             @unique(map: "event_details_slug_unique") @db.VarChar(255)
+  startDate              DateTime?           @db.Date
+  endDate                DateTime?           @db.Date
+  startTime              DateTime?           @db.Time(0)
+  endTime                DateTime?           @db.Time(0)
+  eventDescription       String?             @db.Text
+  eventBanner            String?             @db.VarChar(255)
+  eventTags              String?             @db.VarChar(255)
+  status                 String?             @db.VarChar(255)
+  venue                  String?             @db.VarChar(255)
+  sub_action_public_date String?             @db.VarChar(255)
+  sub_action_public_time String?             @db.VarChar(255)
+  sub_action_private     String?             @db.VarChar(255)
+  user_id                BigInt              @db.UnsignedBigInt
+  created_at             DateTime?           @db.Timestamp(0)
+  updated_at             DateTime?           @db.Timestamp(0)
+  event_type_id          BigInt?             @db.UnsignedBigInt
+  event_tier_id          BigInt?             @db.UnsignedBigInt
+  event_category_id      BigInt?             @db.UnsignedBigInt
+  willNotify             Boolean             @default(true)
+  payment_transaction_id BigInt?             @db.UnsignedBigInt
+  bracket_deadlines      bracket_deadlines[]
+  brackets               brackets[]
+  disputes               disputes[]
+  event_categories       event_categories?   @relation(fields: [event_category_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_details_event_category_id_foreign")
+  event_tier             event_tier?         @relation(fields: [event_tier_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_details_event_tier_id_foreign")
+  event_type             event_type?         @relation(fields: [event_type_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_details_event_type_id_foreign")
+  organizer_payments     organizer_payments? @relation(fields: [payment_transaction_id], references: [id], onUpdate: Restrict, map: "event_details_payment_transaction_id_foreign")
+  users                  users               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_details_user_id_foreign")
+  event_invitations      event_invitations[]
+  event_signup_dates     event_signup_dates?
+  join_events            join_events[]
+  likes                  likes[]
+  org_event_coupons      org_event_coupons[]
+
+  @@index([event_category_id], map: "event_details_event_category_id_foreign")
+  @@index([event_tier_id], map: "event_details_event_tier_id_foreign")
+  @@index([event_type_id], map: "event_details_event_type_id_foreign")
+  @@index([payment_transaction_id], map: "event_details_payment_transaction_id_foreign")
+  @@index([user_id], map: "event_details_user_id_foreign")
+}
+
+model event_invitations {
+  id                                                 BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  organizer_user_id                                  BigInt?        @db.UnsignedBigInt
+  event_id                                           BigInt?        @db.UnsignedBigInt
+  participant_user_id                                BigInt?        @db.UnsignedBigInt
+  created_at                                         DateTime?      @db.Timestamp(0)
+  updated_at                                         DateTime?      @db.Timestamp(0)
+  team_id                                            BigInt?        @db.UnsignedBigInt
+  event_details                                      event_details? @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_invitations_event_id_foreign")
+  users_event_invitations_organizer_user_idTousers   users?         @relation("event_invitations_organizer_user_idTousers", fields: [organizer_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_invitations_organizer_id_foreign")
+  users_event_invitations_participant_user_idTousers users?         @relation("event_invitations_participant_user_idTousers", fields: [participant_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_invitations_participant_id_foreign")
+  teams                                              teams?         @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_invitations_team_id_foreign")
+
+  @@index([event_id], map: "event_invitations_event_id_foreign")
+  @@index([organizer_user_id], map: "event_invitations_organizer_id_foreign")
+  @@index([participant_user_id], map: "event_invitations_participant_id_foreign")
+  @@index([team_id], map: "event_invitations_team_id_foreign")
+}
+
+model event_join_results {
+  join_events_id BigInt      @db.UnsignedBigInt
+  position       Int
+  id             BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  prize_sum      Decimal?    @db.Decimal(10, 2)
+  played         Int         @default(0) @db.UnsignedInt
+  won            Int         @default(0) @db.UnsignedInt
+  draw           Int         @default(0) @db.UnsignedInt
+  points         Int         @default(0) @db.UnsignedInt
+  lost           Int         @default(0) @db.UnsignedInt
+  join_events    join_events @relation(fields: [join_events_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_join_results_join_events_id_foreign")
+
+  @@index([join_events_id], map: "event_join_results_join_events_id_foreign")
+}
+
+model event_signup_dates {
+  id                                 BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  event_id                           BigInt        @unique(map: "event_signup_dates_event_id_unique") @db.UnsignedBigInt
+  signup_open                        DateTime      @db.DateTime(0)
+  normal_signup_start_advanced_close DateTime      @db.DateTime(0)
+  signup_close                       DateTime      @db.DateTime(0)
+  event_details                      event_details @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_signup_dates_event_id_foreign")
+}
+
+model event_tier {
+  id                           BigInt                         @id @default(autoincrement()) @db.UnsignedBigInt
+  eventTier                    String?                        @db.VarChar(255)
+  tierIcon                     String?                        @db.VarChar(255)
+  tierTeamSlot                 String?                        @db.VarChar(255)
+  tierPrizePool                String?                        @db.VarChar(255)
+  tierEntryFee                 String?                        @db.VarChar(255)
+  earlyEntryFee                String                         @db.VarChar(255)
+  user_id                      BigInt?                        @db.UnsignedBigInt
+  bracket_deadline_setup       bracket_deadline_setup[]
+  brackets_setup               brackets_setup[]
+  event_details                event_details[]
+  users                        users?                         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_tier_user_id_foreign")
+  event_tier_prize             event_tier_prize[]
+  event_tier_type_signup_dates event_tier_type_signup_dates[]
+
+  @@index([user_id], map: "event_tier_user_id_foreign")
+}
+
+model event_tier_prize {
+  id            BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  event_tier_id BigInt     @db.UnsignedBigInt
+  position      Int        @db.UnsignedInt
+  prize_sum     Decimal    @db.Decimal(10, 2)
+  event_tier    event_tier @relation(fields: [event_tier_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "event_tier_prize_event_tier_id_foreign")
+
+  @@index([event_tier_id, position], map: "event_tier_prize_event_tier_id_position_index")
+}
+
+model event_tier_type_signup_dates {
+  id                                 BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  tier_id                            BigInt     @db.UnsignedBigInt
+  type_id                            BigInt     @db.UnsignedBigInt
+  signup_open                        Int
+  signup_close                       Int
+  normal_signup_start_advanced_close Int
+  event_tier                         event_tier @relation(fields: [tier_id], references: [id], onUpdate: Restrict, map: "event_tier_type_signup_dates_tier_id_foreign")
+  event_type                         event_type @relation(fields: [type_id], references: [id], onUpdate: Restrict, map: "event_tier_type_signup_dates_type_id_foreign")
+
+  @@unique([tier_id, type_id], map: "event_tier_type_signup_dates_tier_id_type_id_unique")
+  @@index([type_id], map: "event_tier_type_signup_dates_type_id_foreign")
+}
+
+model event_type {
+  id                           BigInt                         @id @default(autoincrement()) @db.UnsignedBigInt
+  eventType                    String?                        @db.VarChar(255)
+  eventDefinitions             String?                        @db.VarChar(255)
+  bracket_deadline_setup       bracket_deadline_setup[]
+  event_details                event_details[]
+  event_tier_type_signup_dates event_tier_type_signup_dates[]
+}
+
+model failed_jobs {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
+  connection String   @db.Text
+  queue      String   @db.Text
+  payload    String   @db.LongText
+  exception  String   @db.LongText
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model final_carts {
+  id         BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id    BigInt       @unique(map: "final_carts_user_id_unique") @db.UnsignedBigInt
+  total      Decimal      @default(0.00) @db.Decimal(8, 2)
+  created_at DateTime?    @db.Timestamp(0)
+  updated_at DateTime?    @db.Timestamp(0)
+  cart_items cart_items[]
+  users      users        @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "final_carts_user_id_foreign")
+}
+
+model firebase_user_active_at {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id    BigInt   @db.UnsignedBigInt
+  updated_at DateTime @db.Timestamp(0)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "firebase_user_active_at_user_id_foreign")
+
+  @@index([user_id], map: "firebase_user_active_at_user_id_foreign")
+}
+
+model friends {
+  id                            BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  user1_id                      BigInt         @db.UnsignedBigInt
+  user2_id                      BigInt         @db.UnsignedBigInt
+  actor_id                      BigInt         @db.UnsignedBigInt
+  created_at                    DateTime?      @db.Timestamp(0)
+  updated_at                    DateTime?      @db.Timestamp(0)
+  status                        friends_status @default(pending)
+  users_friends_user1_idTousers users          @relation("friends_user1_idTousers", fields: [user1_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "friends_user1_id_foreign")
+  users_friends_user2_idTousers users          @relation("friends_user2_idTousers", fields: [user2_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "friends_user2_id_foreign")
+
+  @@unique([user1_id, user2_id], map: "friends_user1_id_user2_id_unique")
+  @@index([user2_id], map: "friends_user2_id_foreign")
+}
+
+model game_user {
+  user_id BigInt @db.UnsignedBigInt
+  game_id BigInt @db.UnsignedBigInt
+  games   games  @relation(fields: [game_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "game_user_game_id_foreign")
+  users   users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "game_user_user_id_foreign")
+
+  @@unique([user_id, game_id], map: "game_user_user_id_game_id_unique")
+  @@index([game_id], map: "game_user_game_id_foreign")
+}
+
+model games {
+  id        BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  gameTitle String?     @db.VarChar(255)
+  gameIcon  String?     @db.VarChar(255)
+  game_user game_user[]
+}
+
+model image_videos {
+  id         BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  file_path  String                 @db.VarChar(255)
+  file_type  image_videos_file_type
+  mime_type  String                 @db.VarChar(255)
+  size       Int
+  created_at DateTime?              @db.Timestamp(0)
+  updated_at DateTime?              @db.Timestamp(0)
+}
+
+model interested_user {
+  id                   BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  email                String    @unique(map: "interested_user_email_unique") @db.VarChar(255)
+  created_at           DateTime? @db.Timestamp(0)
+  updated_at           DateTime? @db.Timestamp(0)
+  email_verified_at    DateTime? @db.Timestamp(0)
+  email_verified_token String?   @db.VarChar(255)
+  pass_text            String?   @db.VarChar(255)
+}
+
+model jobs {
+  id           BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  queue        String @db.VarChar(255)
+  payload      String @db.LongText
+  attempts     Int    @db.UnsignedTinyInt
+  reserved_at  Int?   @db.UnsignedInt
+  available_at Int    @db.UnsignedInt
+  created_at   Int    @db.UnsignedInt
+
+  @@index([queue], map: "jobs_queue_index")
+}
+
+model join_events {
+  id                                                           BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
+  event_details_id                                             BigInt                     @db.UnsignedBigInt
+  created_at                                                   DateTime?                  @db.Timestamp(0)
+  updated_at                                                   DateTime?                  @db.Timestamp(0)
+  team_id                                                      BigInt                     @db.UnsignedBigInt
+  joiner_id                                                    BigInt                     @db.UnsignedBigInt
+  joiner_participant_id                                        BigInt                     @db.UnsignedBigInt
+  payment_status                                               join_events_payment_status @default(pending)
+  join_status                                                  join_events_join_status    @default(pending)
+  vote_ongoing                                                 Boolean?
+  roster_captain_id                                            BigInt?                    @db.UnsignedBigInt
+  vote_starter_id                                              BigInt?                    @db.UnsignedBigInt
+  register_time                                                String?                    @db.VarChar(255)
+  achievements                                                 achievements[]
+  awards_results                                               awards_results[]
+  event_join_results                                           event_join_results[]
+  event_details                                                event_details              @relation(fields: [event_details_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "join_events_id_foreign")
+  users_join_events_joiner_idTousers                           users                      @relation("join_events_joiner_idTousers", fields: [joiner_id], references: [id], onUpdate: Restrict, map: "join_events_joiner_id_foreign")
+  participants                                                 participants               @relation(fields: [joiner_participant_id], references: [id], onUpdate: Restrict, map: "join_events_joiner_participant_id_foreign")
+  roster_members_join_events_roster_captain_idToroster_members roster_members?            @relation("join_events_roster_captain_idToroster_members", fields: [roster_captain_id], references: [id], onUpdate: Restrict, map: "join_events_roster_captain_id_foreign")
+  teams                                                        teams                      @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "join_events_team_id_foreign")
+  users_join_events_vote_starter_idTousers                     users?                     @relation("join_events_vote_starter_idTousers", fields: [vote_starter_id], references: [id], onUpdate: Restrict, map: "join_events_vote_starter_id_foreign")
+  participant_payments                                         participant_payments[]
+  roster_history                                               roster_history[]
+  roster_members_roster_members_join_events_idTojoin_events    roster_members[]           @relation("roster_members_join_events_idTojoin_events")
+  rosters_captain                                              rosters_captain[]
+
+  @@unique([team_id, event_details_id], map: "join_events_team_id_event_details_id_unique")
+  @@index([event_details_id], map: "join_events_id_foreign")
+  @@index([joiner_id], map: "join_events_joiner_id_foreign")
+  @@index([joiner_participant_id], map: "join_events_joiner_participant_id_foreign")
+  @@index([roster_captain_id], map: "join_events_roster_captain_id_foreign")
+  @@index([vote_starter_id], map: "join_events_vote_starter_id_foreign")
+}
+
+model likes {
+  id            BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id       BigInt        @db.UnsignedBigInt
+  event_id      BigInt        @db.UnsignedBigInt
+  created_at    DateTime?     @db.Timestamp(0)
+  updated_at    DateTime?     @db.Timestamp(0)
+  event_details event_details @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "likes_event_id_foreign")
+  users         users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "likes_user_id_foreign")
+
+  @@unique([event_id, user_id], map: "likes_event_id_user_id_unique")
+  @@index([user_id], map: "likes_user_id_foreign")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement()) @db.UnsignedInt
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model monitored_scheduled_task_log_items {
+  id                          BigInt                    @id @default(autoincrement()) @db.UnsignedBigInt
+  monitored_scheduled_task_id BigInt                    @db.UnsignedBigInt
+  type                        String                    @db.VarChar(255)
+  logs                        String?                   @db.VarChar(255)
+  created_at                  DateTime?                 @db.Timestamp(0)
+  updated_at                  DateTime?                 @db.Timestamp(0)
+  monitored_scheduled_tasks   monitored_scheduled_tasks @relation(fields: [monitored_scheduled_task_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_scheduled_task_id")
+
+  @@index([monitored_scheduled_task_id], map: "fk_scheduled_task_id")
+}
+
+model monitored_scheduled_tasks {
+  id                                 BigInt                               @id @default(autoincrement()) @db.UnsignedBigInt
+  name                               String                               @db.VarChar(255)
+  type                               String?                              @db.VarChar(255)
+  cron_expression                    String                               @db.VarChar(255)
+  last_started_at                    DateTime?                            @db.DateTime(0)
+  last_ended_at                      DateTime?                            @db.DateTime(0)
+  created_at                         DateTime?                            @db.Timestamp(0)
+  updated_at                         DateTime?                            @db.Timestamp(0)
+  monitored_scheduled_task_log_items monitored_scheduled_task_log_items[]
+}
+
+model notification_counters {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id      BigInt    @unique(map: "notification_counters_user_id_unique") @db.UnsignedBigInt
+  social_count Int       @default(0)
+  teams_count  Int       @default(0)
+  event_count  Int       @default(0)
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+  users        users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "notification_counters_user_id_foreign")
+}
+
+model notifications2 {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id    BigInt    @db.UnsignedBigInt
+  type       String    @db.VarChar(255)
+  icon_type  String?   @db.VarChar(255)
+  img_src    String?   @db.VarChar(255)
+  html       String    @db.Text
+  link       String?   @db.VarChar(255)
+  is_read    Boolean   @default(false)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "notifications2_user_id_foreign")
+
+  @@index([created_at], map: "notifications2_created_at_index")
+  @@index([user_id, is_read], map: "notifications2_user_id_is_read_index")
+}
+
+model order_item_product_variants {
+  id               BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  order_product_id Int              @db.UnsignedInt
+  variant_id       BigInt           @db.UnsignedBigInt
+  created_at       DateTime?        @db.Timestamp(0)
+  updated_at       DateTime?        @db.Timestamp(0)
+  order_product    order_product    @relation(fields: [order_product_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "order_item_product_variants_order_product_id_foreign")
+  product_variants product_variants @relation(fields: [variant_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "order_item_product_variants_variant_id_foreign")
+
+  @@unique([order_product_id, variant_id], map: "order_item_product_variants_order_product_id_variant_id_unique")
+  @@index([variant_id], map: "order_item_product_variants_variant_id_foreign")
+}
+
+model order_product {
+  id                          Int                           @id @default(autoincrement()) @db.UnsignedInt
+  order_id                    Int?                          @db.UnsignedInt
+  product_id                  Int?                          @db.UnsignedInt
+  quantity                    Int                           @db.UnsignedInt
+  created_at                  DateTime?                     @db.Timestamp(0)
+  updated_at                  DateTime?                     @db.Timestamp(0)
+  order_item_product_variants order_item_product_variants[]
+  orders                      orders?                       @relation(fields: [order_id], references: [id], map: "order_product_order_id_foreign")
+  products                    products?                     @relation(fields: [product_id], references: [id], map: "order_product_product_id_foreign")
+
+  @@index([order_id], map: "order_product_order_id_foreign")
+  @@index([product_id], map: "order_product_product_id_foreign")
+}
+
+model orders {
+  id                    Int             @id @default(autoincrement()) @db.UnsignedInt
+  user_id               BigInt?         @db.UnsignedBigInt
+  billing_discount      Int             @default(0)
+  billing_discount_code String?         @db.VarChar(255)
+  billing_subtotal      Int
+  billing_total         Int
+  shipped               Boolean         @default(false)
+  created_at            DateTime?       @db.Timestamp(0)
+  updated_at            DateTime?       @db.Timestamp(0)
+  order_product         order_product[]
+  users                 users?          @relation(fields: [user_id], references: [id], map: "orders_user_id_foreign")
+
+  @@index([user_id], map: "orders_user_id_foreign")
+}
+
+model org_event_coupons {
+  id               BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  event_details_id BigInt         @db.UnsignedBigInt
+  user_id          BigInt         @db.UnsignedBigInt
+  system_coupon_id BigInt         @db.UnsignedBigInt
+  event_details    event_details  @relation(fields: [event_details_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "org_event_coupons_event_details_id_foreign")
+  system_coupons   system_coupons @relation(fields: [system_coupon_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "org_event_coupons_system_coupon_id_foreign")
+  users            users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "org_event_coupons_user_id_foreign")
+
+  @@index([event_details_id], map: "org_event_coupons_event_details_id_foreign")
+  @@index([system_coupon_id], map: "org_event_coupons_system_coupon_id_foreign")
+  @@index([user_id], map: "org_event_coupons_user_id_foreign")
+}
+
+model organizer_follows {
+  id                                                 BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  participant_user_id                                BigInt    @db.UnsignedBigInt
+  organizer_user_id                                  BigInt    @db.UnsignedBigInt
+  created_at                                         DateTime? @db.Timestamp(0)
+  updated_at                                         DateTime? @db.Timestamp(0)
+  users_organizer_follows_organizer_user_idTousers   users     @relation("organizer_follows_organizer_user_idTousers", fields: [organizer_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "follows_organizer_user_id_foreign")
+  users_organizer_follows_participant_user_idTousers users     @relation("organizer_follows_participant_user_idTousers", fields: [participant_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "follows_participant_user_id_foreign")
+
+  @@index([organizer_user_id], map: "follows_organizer_user_id_foreign")
+  @@index([participant_user_id], map: "follows_participant_user_id_foreign")
+}
+
+model organizer_payments {
+  id                  BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  payment_amount      Float?
+  discount_amount     Float?
+  user_id             BigInt?              @db.UnsignedBigInt
+  history_id          BigInt?              @db.UnsignedBigInt
+  payment_id          BigInt?              @db.UnsignedBigInt
+  event_details       event_details[]
+  transaction_history transaction_history? @relation(fields: [history_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "organizer_payments_history_id_foreign")
+  stripe_transactions stripe_transactions? @relation(fields: [payment_id], references: [id], onUpdate: Restrict, map: "organizer_payments_payment_id_foreign")
+  users               users?               @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "organizer_payments_user_id_foreign")
+
+  @@index([history_id], map: "organizer_payments_history_id_foreign")
+  @@index([payment_id], map: "organizer_payments_payment_id_foreign")
+  @@index([user_id], map: "organizer_payments_user_id_foreign")
+}
+
+model organizers {
+  id                 BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  companyName        String?   @db.VarChar(255)
+  companyDescription String?   @db.VarChar(255)
+  created_at         DateTime? @db.Timestamp(0)
+  updated_at         DateTime? @db.Timestamp(0)
+  user_id            BigInt    @db.UnsignedBigInt
+  stripe_customer_id String?   @db.VarChar(255)
+  industry           String?   @db.VarChar(255)
+  type               String?   @db.VarChar(255)
+  website_link       String?   @db.VarChar(255)
+  instagram_link     String?   @db.VarChar(255)
+  facebook_link      String?   @db.VarChar(255)
+  twitter_link       String?   @db.VarChar(255)
+  users              users     @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "organizers_user_id_foreign")
+
+  @@index([user_id], map: "organizers_user_id_foreign")
+}
+
+model participant_follows {
+  id                                                    BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  participant_follower                                  BigInt    @db.UnsignedBigInt
+  participant_followee                                  BigInt    @db.UnsignedBigInt
+  created_at                                            DateTime? @db.Timestamp(0)
+  updated_at                                            DateTime? @db.Timestamp(0)
+  users_participant_follows_participant_followerTousers users     @relation("participant_follows_participant_followerTousers", fields: [participant_follower], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "participant_follows_participant1_user_foreign")
+  users_participant_follows_participant_followeeTousers users     @relation("participant_follows_participant_followeeTousers", fields: [participant_followee], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "participant_follows_participant2_user_foreign")
+
+  @@unique([participant_follower, participant_followee], map: "participant_follows_participant1_user_participant2_user_unique")
+  @@index([participant_followee], map: "participant_follows_participant2_user_foreign")
+}
+
+model participant_payments {
+  id                  BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  join_events_id      BigInt               @db.UnsignedBigInt
+  created_at          DateTime?            @db.Timestamp(0)
+  updated_at          DateTime?            @db.Timestamp(0)
+  payment_amount      Float?
+  register_time       String?              @db.VarChar(255)
+  type                String               @db.VarChar(255)
+  team_members_id     BigInt?              @db.UnsignedBigInt
+  user_id             BigInt?              @db.UnsignedBigInt
+  history_id          BigInt?              @db.UnsignedBigInt
+  payment_id          BigInt?              @db.UnsignedBigInt
+  transaction_history transaction_history? @relation(fields: [history_id], references: [id], onUpdate: Restrict, map: "participant_payments_history_id_foreign")
+  join_events         join_events          @relation(fields: [join_events_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "participant_payments_join_events_id_foreign")
+  stripe_transactions stripe_transactions? @relation(fields: [payment_id], references: [id], onUpdate: Restrict, map: "participant_payments_payment_id_foreign")
+  team_members        team_members?        @relation(fields: [team_members_id], references: [id], onUpdate: Restrict, map: "participant_payments_team_members_id_foreign")
+  users               users?               @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "participant_payments_user_id_foreign")
+
+  @@index([history_id], map: "participant_payments_history_id_foreign")
+  @@index([join_events_id], map: "participant_payments_join_events_id_foreign")
+  @@index([payment_id], map: "participant_payments_payment_id_foreign")
+  @@index([team_members_id], map: "participant_payments_team_members_id_foreign")
+  @@index([user_id], map: "participant_payments_user_id_foreign")
+}
+
+model participants {
+  id           BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  created_at   DateTime?     @db.Timestamp(0)
+  updated_at   DateTime?     @db.Timestamp(0)
+  user_id      BigInt        @db.UnsignedBigInt
+  nickname     String?       @db.VarChar(255)
+  domain       String?       @db.VarChar(255)
+  bio          String?       @db.Text
+  age          Int?          @db.UnsignedInt
+  region       String?       @db.VarChar(255)
+  birthday     DateTime?     @db.Date
+  games_data   String?       @db.LongText
+  region_name  String?       @db.VarChar(255)
+  region_flag  String?       @db.VarChar(255)
+  isAgeVisible Boolean       @default(true)
+  team_left_at DateTime?     @db.Timestamp(0)
+  join_events  join_events[]
+  users        users         @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "participants_user_id_foreign")
+
+  @@index([user_id], map: "participants_user_id_foreign")
+}
+
+model password_reset_tokens {
+  email      String    @id @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  expires_at DateTime? @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model password_resets {
+  email      String
+  token      String
+  created_at DateTime? @db.Timestamp(0)
+
+  @@index([email], map: "password_resets_email_index")
+  @@ignore
+}
+
+model payment_intents {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id           BigInt    @db.UnsignedBigInt
+  payment_intent_id String    @db.VarChar(255)
+  customer_id       String    @db.VarChar(255)
+  status            String    @db.VarChar(255)
+  amount            Int
+  created_at        DateTime? @db.Timestamp(0)
+  updated_at        DateTime? @db.Timestamp(0)
+  users             users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "payment_intents_user_id_foreign")
+
+  @@index([user_id], map: "payment_intents_user_id_foreign")
+}
+
+model personal_access_tokens {
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  tokenable_type String    @db.VarChar(255)
+  tokenable_id   BigInt    @db.UnsignedBigInt
+  name           String    @db.VarChar(255)
+  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
+  abilities      String?   @db.Text
+  last_used_at   DateTime? @db.Timestamp(0)
+  expires_at     DateTime? @db.Timestamp(0)
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
+}
+
+model product_variants {
+  id                          BigInt                        @id @default(autoincrement()) @db.UnsignedBigInt
+  product_id                  Int                           @db.UnsignedInt
+  name                        String                        @db.VarChar(255)
+  value                       String                        @db.VarChar(255)
+  stock                       Int                           @default(0)
+  created_at                  DateTime?                     @db.Timestamp(0)
+  updated_at                  DateTime?                     @db.Timestamp(0)
+  cart_item_product_variants  cart_item_product_variants[]
+  order_item_product_variants order_item_product_variants[]
+  products                    products                      @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "product_variants_product_id_foreign")
+
+  @@index([product_id, name], map: "product_variants_product_id_name_index")
+}
+
+model products {
+  id               Int                @id @default(autoincrement()) @db.UnsignedInt
+  name             String             @unique(map: "products_name_unique") @db.VarChar(255)
+  slug             String             @unique(map: "products_slug_unique") @db.VarChar(255)
+  details          String?            @db.VarChar(255)
+  price            Int
+  description      String             @db.Text
+  featured         Boolean            @default(false)
+  image            String?            @db.VarChar(255)
+  images           String?            @db.Text
+  created_at       DateTime?          @db.Timestamp(0)
+  updated_at       DateTime?          @db.Timestamp(0)
+  isPhysical       Boolean            @default(true)
+  cart_items       cart_items[]
+  category_product category_product[]
+  order_product    order_product[]
+  product_variants product_variants[]
+}
+
+model pulse_aggregates {
+  id        BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  bucket    Int     @db.UnsignedInt
+  period    Int     @db.UnsignedMediumInt
+  type      String  @db.VarChar(255)
+  key       String  @db.MediumText
+  key_hash  Bytes?  @db.Binary(16)
+  aggregate String  @db.VarChar(255)
+  value     Decimal @db.Decimal(20, 2)
+  count     Int?    @db.UnsignedInt
+
+  @@unique([bucket, period, type, aggregate, key_hash], map: "pulse_aggregates_bucket_period_type_aggregate_key_hash_unique")
+  @@index([period, bucket], map: "pulse_aggregates_period_bucket_index")
+  @@index([period, type, aggregate, bucket], map: "pulse_aggregates_period_type_aggregate_bucket_index")
+  @@index([type], map: "pulse_aggregates_type_index")
+}
+
+model pulse_entries {
+  id        BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  timestamp Int     @db.UnsignedInt
+  type      String  @db.VarChar(255)
+  key       String  @db.MediumText
+  key_hash  Bytes?  @db.Binary(16)
+  value     BigInt?
+
+  @@index([key_hash], map: "pulse_entries_key_hash_index")
+  @@index([timestamp], map: "pulse_entries_timestamp_index")
+  @@index([timestamp, type, key_hash, value], map: "pulse_entries_timestamp_type_key_hash_value_index")
+  @@index([type], map: "pulse_entries_type_index")
+}
+
+model pulse_values {
+  id        BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  timestamp Int    @db.UnsignedInt
+  type      String @db.VarChar(255)
+  key       String @db.MediumText
+  key_hash  Bytes? @db.Binary(16)
+  value     String @db.MediumText
+
+  @@unique([type, key_hash], map: "pulse_values_type_key_hash_unique")
+  @@index([timestamp], map: "pulse_values_timestamp_index")
+  @@index([type], map: "pulse_values_type_index")
+}
+
+model reports {
+  id                                    BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  reporter_id                           BigInt         @db.UnsignedBigInt
+  reported_user_id                      BigInt         @db.UnsignedBigInt
+  reason                                String         @db.VarChar(255)
+  description                           String?        @db.Text
+  status                                reports_status @default(pending)
+  admin_notes                           String?        @db.Text
+  created_at                            DateTime?      @db.Timestamp(0)
+  updated_at                            DateTime?      @db.Timestamp(0)
+  users_reports_reported_user_idTousers users          @relation("reports_reported_user_idTousers", fields: [reported_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "reports_reported_user_id_foreign")
+  users_reports_reporter_idTousers      users          @relation("reports_reporter_idTousers", fields: [reporter_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "reports_reporter_id_foreign")
+
+  @@index([reported_user_id], map: "reports_reported_user_id_foreign")
+  @@index([reporter_id], map: "reports_reporter_id_foreign")
+}
+
+model roster_history {
+  id             BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id        BigInt      @db.UnsignedBigInt
+  join_events_id BigInt      @db.UnsignedBigInt
+  team_member_id BigInt?     @db.UnsignedBigInt
+  team_id        BigInt?     @db.UnsignedBigInt
+  vote_to_quit   Boolean     @default(false)
+  created_at     DateTime?   @db.Timestamp(0)
+  updated_at     DateTime?   @db.Timestamp(0)
+  join_events    join_events @relation(fields: [join_events_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "roster_history_join_events_id_foreign")
+  users          users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "roster_history_user_id_foreign")
+
+  @@index([join_events_id], map: "roster_history_join_events_id_foreign")
+  @@index([user_id], map: "roster_history_user_id_foreign")
+}
+
+model roster_members {
+  id                                                        BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id                                                   BigInt        @db.UnsignedBigInt
+  join_events_id                                            BigInt        @db.UnsignedBigInt
+  created_at                                                DateTime?     @db.Timestamp(0)
+  updated_at                                                DateTime?     @db.Timestamp(0)
+  team_member_id                                            BigInt        @db.UnsignedBigInt
+  team_id                                                   BigInt        @db.UnsignedBigInt
+  vote_to_quit                                              Boolean?
+  join_events_join_events_roster_captain_idToroster_members join_events[] @relation("join_events_roster_captain_idToroster_members")
+  join_events_roster_members_join_events_idTojoin_events    join_events   @relation("roster_members_join_events_idTojoin_events", fields: [join_events_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "roster_members_join_events_id_foreign")
+  teams                                                     teams         @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "roster_members_team_id_foreign")
+  team_members                                              team_members  @relation(fields: [team_member_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "roster_members_team_member_id_foreign")
+  users                                                     users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "roster_members_user_id_foreign")
+
+  @@unique([team_member_id, join_events_id], map: "roster_members_team_member_id_join_events_id_unique")
+  @@unique([user_id, join_events_id], map: "roster_members_user_id_join_events_id_unique")
+  @@index([join_events_id], map: "roster_members_join_events_id_foreign")
+  @@index([team_id], map: "roster_members_team_id_foreign")
+}
+
+model rosters_captain {
+  id             BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  team_member_id BigInt       @db.UnsignedBigInt
+  join_events_id BigInt       @db.UnsignedBigInt
+  teams_id       BigInt       @db.UnsignedBigInt
+  join_events    join_events  @relation(fields: [join_events_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "rosters_captain_join_events_id_foreign")
+  team_members   team_members @relation(fields: [team_member_id], references: [id], onUpdate: Restrict, map: "rosters_captain_team_member_id_foreign")
+  teams          teams        @relation(fields: [teams_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "rosters_captain_teams_id_foreign")
+
+  @@unique([teams_id, join_events_id, team_member_id], map: "rosters_captain_teams_id_join_events_id_team_member_id_unique")
+  @@index([join_events_id], map: "rosters_captain_join_events_id_foreign")
+  @@index([team_member_id], map: "rosters_captain_team_member_id_foreign")
+}
+
+model saved_cards {
+  id                       BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id                  BigInt           @db.UnsignedBigInt
+  stripe_payment_method_id String           @db.VarChar(255)
+  brand                    String           @db.VarChar(255)
+  last4                    String           @db.VarChar(4)
+  exp_month                Int
+  fingerprint              String           @db.VarChar(255)
+  exp_year                 Int
+  is_default               Boolean          @default(false)
+  created_at               DateTime?        @db.Timestamp(0)
+  updated_at               DateTime?        @db.Timestamp(0)
+  users                    users            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "saved_cards_user_id_foreign")
+  saved_payments           saved_payments[]
+
+  @@unique([user_id, fingerprint], map: "saved_cards_user_id_fingerprint_unique")
+  @@index([user_id, is_default], map: "saved_cards_user_id_is_default_index")
+}
+
+model saved_payments {
+  id                BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  payment_intent_id String       @unique(map: "saved_payments_payment_intent_id_unique") @db.VarChar(255)
+  user_id           BigInt       @db.UnsignedBigInt
+  saved_card_id     BigInt?      @db.UnsignedBigInt
+  currency          String       @db.VarChar(3)
+  status            String       @db.VarChar(255)
+  amount            Decimal      @db.Decimal(8, 2)
+  created_at        DateTime?    @db.Timestamp(0)
+  updated_at        DateTime?    @db.Timestamp(0)
+  saved_cards       saved_cards? @relation(fields: [saved_card_id], references: [id], onUpdate: Restrict, map: "saved_payments_saved_card_id_foreign")
+  users             users        @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "saved_payments_user_id_foreign")
+
+  @@index([payment_intent_id], map: "saved_payments_payment_intent_id_index")
+  @@index([saved_card_id], map: "saved_payments_saved_card_id_foreign")
+  @@index([user_id, status], map: "saved_payments_user_id_status_index")
+}
+
+model stars {
+  id                                 BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id                            BigInt    @db.UnsignedBigInt
+  starred_user_id                    BigInt    @db.UnsignedBigInt
+  created_at                         DateTime? @db.Timestamp(0)
+  updated_at                         DateTime? @db.Timestamp(0)
+  users_stars_starred_user_idTousers users     @relation("stars_starred_user_idTousers", fields: [starred_user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "stars_starred_user_id_foreign")
+  users_stars_user_idTousers         users     @relation("stars_user_idTousers", fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "stars_user_id_foreign")
+
+  @@unique([user_id, starred_user_id], map: "stars_user_id_starred_user_id_unique")
+  @@index([starred_user_id], map: "stars_starred_user_id_foreign")
+}
+
+model stripe_transactions {
+  id                   BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  payment_id           String?                @db.VarChar(255)
+  payment_status       String                 @db.VarChar(255)
+  created_at           DateTime?              @db.Timestamp(0)
+  payment_amount       Float
+  user_id              BigInt?                @db.UnsignedBigInt
+  brand                String                 @db.VarChar(255)
+  last4                String                 @db.VarChar(4)
+  currency             String                 @db.VarChar(14)
+  exp_month            Int
+  exp_year             Int
+  metadata             String?                @db.LongText
+  organizer_payments   organizer_payments[]
+  participant_payments participant_payments[]
+  users                users?                 @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "stripe_transactions_user_id_foreign")
+
+  @@index([user_id], map: "stripe_transactions_user_id_index")
+}
+
+model system_coupons {
+  id                BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  code              String                  @unique(map: "participant_coupons_code_unique") @db.VarChar(255)
+  amount            Decimal                 @db.Decimal(10, 2)
+  description       String?                 @db.Text
+  is_active         Boolean                 @default(true)
+  is_public         Boolean                 @default(true)
+  expires_at        DateTime?               @db.Timestamp(0)
+  type              String?                 @db.VarChar(255)
+  discount_type     String                  @default("sum") @db.VarChar(255)
+  for_type          system_coupons_for_type @default(participant)
+  redeemable_count  Int                     @default(10)
+  org_event_coupons org_event_coupons[]
+  user_coupons      user_coupons[]
+}
+
+model tasks {
+  id            BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  event_id      BigInt?   @db.UnsignedBigInt
+  task_name     String    @db.VarChar(255)
+  action_time   DateTime  @db.DateTime(0)
+  created_at    DateTime? @db.Timestamp(0)
+  taskable_type String    @db.VarChar(255)
+  taskable_id   BigInt    @db.UnsignedBigInt
+
+  @@index([taskable_type, taskable_id], map: "tasks_taskable_type_taskable_id_index")
+}
+
+model team_follows {
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  team_id BigInt @db.UnsignedBigInt
+  user_id BigInt @db.UnsignedBigInt
+  teams   teams  @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "team_follows_team_id_foreign")
+  users   users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "team_follows_user_id_foreign")
+
+  @@unique([team_id, user_id], map: "team_follows_team_id_user_id_unique")
+  @@index([user_id], map: "team_follows_user_id_foreign")
+}
+
+model team_members {
+  id                   BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id              BigInt                 @db.UnsignedBigInt
+  team_id              BigInt                 @db.UnsignedBigInt
+  created_at           DateTime?              @db.Timestamp(0)
+  updated_at           DateTime?              @db.Timestamp(0)
+  status               team_members_status    @default(pending)
+  actor                team_members_actor     @default(user)
+  captains             captains[]
+  participant_payments participant_payments[]
+  roster_members       roster_members[]
+  rosters_captain      rosters_captain[]
+  teams                teams                  @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "team_members_team_id_foreign")
+  users                users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "team_members_user_id_foreign")
+
+  @@unique([user_id, team_id], map: "team_members_user_id_team_id_unique")
+  @@index([team_id], map: "team_members_team_id_foreign")
+}
+
+model team_profile {
+  backgroundColor    String? @db.VarChar(255)
+  backgroundBanner   String? @db.VarChar(255)
+  backgroundGradient String? @db.VarChar(255)
+  fontColor          String? @db.VarChar(255)
+  frameColor         String? @db.VarChar(255)
+  id                 BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  team_id            BigInt  @db.UnsignedBigInt
+  follower_count     Int     @default(0)
+  teams              teams   @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "team_profile_team_id_foreign")
+
+  @@index([team_id], map: "team_profile_team_id_foreign")
+}
+
+model teams {
+  id                                         BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  teamName                                   String              @unique(map: "teams_teamname_unique") @db.VarChar(255)
+  slug                                       String?             @unique(map: "teams_slug_unique") @db.VarChar(255)
+  creator_id                                 BigInt              @db.UnsignedBigInt
+  created_at                                 DateTime?           @db.Timestamp(0)
+  updated_at                                 DateTime?           @db.Timestamp(0)
+  teamDescription                            String              @db.VarChar(255)
+  teamBanner                                 String?             @db.VarChar(255)
+  country                                    String?             @db.VarChar(255)
+  country_name                               String?             @db.VarChar(255)
+  country_flag                               String?             @db.VarChar(255)
+  default_category_id                        BigInt?             @db.UnsignedBigInt
+  all_categories                             String?             @db.Text
+  status                                     teams_status        @default(open)
+  member_limit                               Int                 @default(10)
+  awards_results                             awards_results[]
+  brackets_brackets_team1_idToteams          brackets[]          @relation("brackets_team1_idToteams")
+  brackets_brackets_team2_idToteams          brackets[]          @relation("brackets_team2_idToteams")
+  captains                                   captains[]
+  disputes_disputes_dispute_teamIdToteams    disputes[]          @relation("disputes_dispute_teamIdToteams")
+  disputes_disputes_resolution_winnerToteams disputes[]          @relation("disputes_resolution_winnerToteams")
+  disputes_disputes_response_teamIdToteams   disputes[]          @relation("disputes_response_teamIdToteams")
+  event_invitations                          event_invitations[]
+  join_events                                join_events[]
+  roster_members                             roster_members[]
+  rosters_captain                            rosters_captain[]
+  team_follows                               team_follows[]
+  team_members                               team_members[]
+  team_profile                               team_profile[]
+  users                                      users               @relation(fields: [creator_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "teams_user_id_foreign")
+
+  @@index([creator_id], map: "teams_user_id_foreign")
+}
+
+model transaction_history {
+  id                   BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  name                 String                 @db.VarChar(255)
+  type                 String                 @db.VarChar(255)
+  link                 String?                @db.VarChar(255)
+  amount               Decimal                @db.Decimal(8, 2)
+  summary              String?                @db.VarChar(255)
+  isPositive           Boolean                @default(true)
+  date                 DateTime               @db.Timestamp(0)
+  user_id              BigInt                 @db.UnsignedBigInt
+  organizer_payments   organizer_payments[]
+  participant_payments participant_payments[]
+  users                users                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "transaction_history_user_id_foreign")
+
+  @@index([user_id], map: "transaction_history_user_id_foreign")
+}
+
+model user_address {
+  id           BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  city         String  @db.VarChar(255)
+  addressLine1 String  @db.VarChar(255)
+  addressLine2 String? @db.VarChar(255)
+  postcode     String  @db.VarChar(255)
+  country      String  @db.VarChar(255)
+  user_id      BigInt? @db.UnsignedBigInt
+  users        users?  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_address_user_id_foreign")
+
+  @@index([user_id], map: "user_address_user_id_foreign")
+}
+
+model user_coupons {
+  id               BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id          BigInt         @db.UnsignedBigInt
+  coupon_id        BigInt         @db.UnsignedBigInt
+  redeemable_count Int            @default(0)
+  redeemed_at      DateTime?      @db.Date
+  system_coupons   system_coupons @relation(fields: [coupon_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_coupons_coupon_id_foreign")
+  users            users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_coupons_user_id_foreign")
+
+  @@unique([user_id, coupon_id], map: "user_coupons_user_id_coupon_id_unique")
+  @@index([coupon_id], map: "user_coupons_coupon_id_foreign")
+}
+
+model user_profile {
+  backgroundColor    String? @db.VarChar(255)
+  backgroundBanner   String? @db.VarChar(255)
+  backgroundGradient String? @db.VarChar(255)
+  fontColor          String? @db.VarChar(255)
+  frameColor         String? @db.VarChar(255)
+  id                 BigInt  @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id            BigInt  @db.UnsignedBigInt
+  users              users   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_profile_user_id_foreign")
+
+  @@index([user_id], map: "user_profile_user_id_foreign")
+}
+
+model user_wallet {
+  id                      BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  usable_balance          Float?
+  user_id                 BigInt    @db.UnsignedBigInt
+  current_balance         Decimal   @default(0.00) @db.Decimal(10, 2)
+  stripe_connect_id       String?   @db.VarChar(255)
+  has_bank_account        Boolean   @default(false)
+  bank_last4              String?   @db.VarChar(255)
+  bank_name               String?   @db.VarChar(100)
+  account_number          String?   @db.VarChar(20)
+  account_holder_name     String?   @db.VarChar(100)
+  last_payout_at          DateTime? @db.Timestamp(0)
+  bank_details_updated_at DateTime? @db.Timestamp(0)
+  users                   users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "user_discounts_user_id_foreign")
+
+  @@index([user_id], map: "user_discounts_user_id_foreign")
+}
+
+model users {
+  id                                                                  BigInt                    @id @default(autoincrement()) @db.UnsignedBigInt
+  name                                                                String                    @db.VarChar(255)
+  slug                                                                String?                   @unique(map: "users_slug_unique") @db.VarChar(255)
+  email                                                               String                    @unique(map: "users_email_unique") @db.VarChar(255)
+  email_verified_at                                                   DateTime?                 @db.Timestamp(0)
+  email_verified_token                                                String?                   @db.VarChar(255)
+  email_verified_expires_at                                           DateTime?                 @db.Timestamp(0)
+  password                                                            String                    @db.VarChar(255)
+  country_code                                                        String?                   @db.VarChar(255)
+  mobile_no                                                           String?                   @db.VarChar(255)
+  role                                                                String?                   @db.VarChar(255)
+  status                                                              String?                   @db.VarChar(255)
+  remember_token                                                      String?                   @db.VarChar(100)
+  created_at                                                          DateTime?                 @db.Timestamp(0)
+  google_id                                                           String?                   @db.VarChar(255)
+  userBanner                                                          String?                   @db.VarChar(255)
+  steam_id                                                            String?                   @db.VarChar(255)
+  stripe_customer_id                                                  String?                   @db.VarChar(255)
+  demo_email                                                          String?                   @db.VarChar(255)
+  updated_at                                                          DateTime?                 @db.Timestamp(0)
+  recovery_email                                                      String?                   @db.VarChar(255)
+  fa_links                                                            fa_links[]
+  blocks_blocks_blocked_user_idTousers                                blocks[]                  @relation("blocks_blocked_user_idTousers")
+  blocks_blocks_user_idTousers                                        blocks[]                  @relation("blocks_user_idTousers")
+  conversations_conversations_initiator_idTousers                     conversations[]           @relation("conversations_initiator_idTousers")
+  conversations_conversations_user1_idTousers                         conversations[]           @relation("conversations_user1_idTousers")
+  conversations_conversations_user2_idTousers                         conversations[]           @relation("conversations_user2_idTousers")
+  disputes_disputes_dispute_userIdTousers                             disputes[]                @relation("disputes_dispute_userIdTousers")
+  disputes_disputes_response_userIdTousers                            disputes[]                @relation("disputes_response_userIdTousers")
+  event_categories                                                    event_categories[]
+  event_details                                                       event_details[]
+  event_invitations_event_invitations_organizer_user_idTousers        event_invitations[]       @relation("event_invitations_organizer_user_idTousers")
+  event_invitations_event_invitations_participant_user_idTousers      event_invitations[]       @relation("event_invitations_participant_user_idTousers")
+  event_tier                                                          event_tier[]
+  final_carts                                                         final_carts?
+  firebase_user_active_at                                             firebase_user_active_at[]
+  friends_friends_user1_idTousers                                     friends[]                 @relation("friends_user1_idTousers")
+  friends_friends_user2_idTousers                                     friends[]                 @relation("friends_user2_idTousers")
+  game_user                                                           game_user[]
+  join_events_join_events_joiner_idTousers                            join_events[]             @relation("join_events_joiner_idTousers")
+  join_events_join_events_vote_starter_idTousers                      join_events[]             @relation("join_events_vote_starter_idTousers")
+  likes                                                               likes[]
+  notification_counters                                               notification_counters?
+  notifications2                                                      notifications2[]
+  orders                                                              orders[]
+  org_event_coupons                                                   org_event_coupons[]
+  organizer_follows_organizer_follows_organizer_user_idTousers        organizer_follows[]       @relation("organizer_follows_organizer_user_idTousers")
+  organizer_follows_organizer_follows_participant_user_idTousers      organizer_follows[]       @relation("organizer_follows_participant_user_idTousers")
+  organizer_payments                                                  organizer_payments[]
+  organizers                                                          organizers[]
+  participant_follows_participant_follows_participant_followerTousers participant_follows[]     @relation("participant_follows_participant_followerTousers")
+  participant_follows_participant_follows_participant_followeeTousers participant_follows[]     @relation("participant_follows_participant_followeeTousers")
+  participant_payments                                                participant_payments[]
+  participants                                                        participants[]
+  payment_intents                                                     payment_intents[]
+  reports_reports_reported_user_idTousers                             reports[]                 @relation("reports_reported_user_idTousers")
+  reports_reports_reporter_idTousers                                  reports[]                 @relation("reports_reporter_idTousers")
+  roster_history                                                      roster_history[]
+  roster_members                                                      roster_members[]
+  saved_cards                                                         saved_cards[]
+  saved_payments                                                      saved_payments[]
+  stars_stars_starred_user_idTousers                                  stars[]                   @relation("stars_starred_user_idTousers")
+  stars_stars_user_idTousers                                          stars[]                   @relation("stars_user_idTousers")
+  stripe_transactions                                                 stripe_transactions[]
+  team_follows                                                        team_follows[]
+  team_members                                                        team_members[]
+  teams                                                               teams[]
+  transaction_history                                                 transaction_history[]
+  user_address                                                        user_address[]
+  user_coupons                                                        user_coupons[]
+  user_profile                                                        user_profile[]
+  user_wallet                                                         user_wallet[]
+  wallet_topups                                                       wallet_topups[]
+  withdrawals                                                         withdrawals[]
+}
+
+model wallet_topups {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  amount     Decimal  @db.Decimal(10, 2)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  user_id    BigInt   @db.UnsignedBigInt
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "wallet_topups_user_id_foreign")
+
+  @@index([user_id], map: "wallet_topups_user_id_foreign")
+}
+
+model weekly_task_executions {
+  id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  executed_at DateTime @db.Timestamp(0)
+}
+
+model withdrawals {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id      BigInt    @db.UnsignedBigInt
+  withdrawal   Decimal   @db.Decimal(10, 2)
+  status       String    @default("pending") @db.VarChar(255)
+  requested_at DateTime? @db.Timestamp(0)
+  users        users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "withdrawals_user_id_foreign")
+
+  @@index([user_id], map: "withdrawals_user_id_index")
+}
+
+enum conversations_status {
+  request
+  accepted
+  blocked
+}
+
+enum image_videos_file_type {
+  image
+  video
+}
+
+enum countries_and_regions_type {
+  country
+  region
+}
+
+enum reports_status {
+  pending
+  investigating
+  resolved
+}
+
+enum team_members_status {
+  pending
+  accepted
+  rejected
+  left
+}
+
+enum friends_status {
+  pending
+  accepted
+  rejected
+  left
+}
+
+enum team_members_actor {
+  team
+  user
+}
+
+enum join_events_payment_status {
+  pending
+  completed
+  waived
+}
+
+enum join_events_join_status {
+  canceled
+  confirmed
+  pending
+}
+
+enum system_coupons_for_type {
+  organizer
+  participant
+}
+
+enum teams_status {
+  public
+  private
+  open
 }

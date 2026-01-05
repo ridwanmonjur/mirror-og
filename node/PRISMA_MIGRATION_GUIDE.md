@@ -45,7 +45,7 @@
 const [user] = await query('SELECT * FROM users WHERE id = ?', [userId]);
 
 // NEW:
-const user = await prisma.user.findUnique({
+const user = await prisma.users.findUnique({
   where: { id: parseInt(userId) }
 });
 
@@ -69,7 +69,7 @@ await query(
 );
 
 // NEW:
-await prisma.user.update({
+await prisma.users.update({
   where: { id: parseInt(userId) },
   data: { settings: settings }
 });
@@ -80,14 +80,14 @@ await prisma.user.update({
 **Endpoints to migrate:**
 ```typescript
 // Activity logs
-const logs = await prisma.activityLog.findMany({
+const logs = await prisma.activity_logs.findMany({
   where: { user_id: parseInt(userId) },
   orderBy: { created_at: 'desc' },
   take: 50
 });
 
 // Connections (with relations)
-const followers = await prisma.user.findMany({
+const followers = await prisma.users.findMany({
   where: {
     following: {
       some: { organizer_id: parseInt(userId) }
@@ -118,12 +118,12 @@ await prisma.betaInterest.upsert({
 
 ```typescript
 // Find unique
-const user = await prisma.user.findUnique({
+const user = await prisma.users.findUnique({
   where: { id: 1 }
 });
 
 // Find first matching
-const event = await prisma.eventDetail.findFirst({
+const event = await prisma.event_details.findFirst({
   where: {
     user_id: 1,
     status: 'active'
@@ -131,7 +131,7 @@ const event = await prisma.eventDetail.findFirst({
 });
 
 // Find many with filters
-const events = await prisma.eventDetail.findMany({
+const events = await prisma.event_details.findMany({
   where: {
     user_id: 1,
     OR: [
@@ -149,7 +149,7 @@ const events = await prisma.eventDetail.findMany({
 
 ```typescript
 // Simple create
-const team = await prisma.team.create({
+const team = await prisma.teams.create({
   data: {
     teamName: 'Warriors',
     creator_id: 1
@@ -169,13 +169,13 @@ await prisma.notification.createMany({
 
 ```typescript
 // Update single
-await prisma.user.update({
+await prisma.users.update({
   where: { id: 1 },
   data: { name: 'New Name' }
 });
 
 // Update many
-await prisma.teamMember.updateMany({
+await prisma.team_members.updateMany({
   where: {
     team_id: 1,
     user_id: 2
@@ -212,7 +212,7 @@ await prisma.eventResult.upsert({
 
 ```typescript
 // Delete single
-await prisma.team.delete({
+await prisma.teams.delete({
   where: { id: 1 }
 });
 
@@ -226,7 +226,7 @@ await prisma.bracketDeadline.deleteMany({
 
 ```typescript
 // Include relations
-const team = await prisma.team.findUnique({
+const team = await prisma.teams.findUnique({
   where: { id: 1 },
   include: {
     team_members: true,
@@ -235,7 +235,7 @@ const team = await prisma.team.findUnique({
 });
 
 // Select specific fields
-const user = await prisma.user.findUnique({
+const user = await prisma.users.findUnique({
   where: { id: 1 },
   select: {
     id: true,
@@ -245,7 +245,7 @@ const user = await prisma.user.findUnique({
 });
 
 // Nested where clauses
-const teams = await prisma.team.findMany({
+const teams = await prisma.teams.findMany({
   where: {
     team_members: {
       some: {
@@ -294,12 +294,12 @@ Prisma provides full type safety:
 
 ```typescript
 // TypeScript knows the exact shape of the result
-const user = await prisma.user.findUnique({
+const user = await prisma.users.findUnique({
   where: { id: 1 }
 });
 // user is typed as: User | null
 
-const users = await prisma.user.findMany();
+const users = await prisma.users.findMany();
 // users is typed as: User[]
 ```
 

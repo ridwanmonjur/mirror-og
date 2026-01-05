@@ -18,7 +18,7 @@ export class ValidationService {
    */
   async validateMatchExists(context: ValidationContext): Promise<Match | null> {
     try {
-      const match = await prisma.bracket.findFirst({
+      const match = await prisma.brackets.findFirst({
         where: {
           team1_id: context.team1Id,
           team1_position: context.team1Position,
@@ -40,7 +40,7 @@ export class ValidationService {
    */
   async validateOrganizerPermission(userId: string, eventId: string): Promise<boolean> {
     try {
-      const event = await prisma.eventDetail.findFirst({
+      const event = await prisma.event_details.findFirst({
         where: {
           id: parseInt(eventId),
           user_id: parseInt(userId),
@@ -137,7 +137,7 @@ export class ValidationService {
    */
   async validateTeamMembership(userId: string, teamId: string): Promise<boolean> {
     try {
-      const membership = await prisma.teamMember.findFirst({
+      const membership = await prisma.team_members.findFirst({
         where: {
           user_id: parseInt(userId),
           team_id: parseInt(teamId),

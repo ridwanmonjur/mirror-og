@@ -2,13 +2,14 @@ import request from 'supertest';
 import app from '../../src/index';
 import { initializeFirebase } from '../../src/config/firebase';
 import {
-  clearTestData,
   seedTestUser,
   seedTestEvent,
   seedTestTeam,
   seedTestTeamMember,
   seedTestBracket,
   seedTestBracketDeadline,
+  beginTransaction,
+  rollbackTransaction,
 } from '../helpers/testDb';
 import {
   generateParticipantToken,
@@ -29,44 +30,38 @@ describe('Dispute API - Integration Tests', () => {
   });
 
   beforeEach(async () => {
-    await clearTestData();
+    await beginTransaction();
 
     // Seed test data
     organizerId = await seedTestUser({
-      id: 1,
       name: 'Test Organizer',
       email: 'organizer@test.com',
       role: 'ORGANIZER',
     });
 
     participantId = await seedTestUser({
-      id: 2,
       name: 'Test Participant 1',
       email: 'participant1@test.com',
       role: 'PARTICIPANT',
     });
 
     participant2Id = await seedTestUser({
-      id: 3,
       name: 'Test Participant 2',
       email: 'participant2@test.com',
       role: 'PARTICIPANT',
     });
 
     eventId = await seedTestEvent({
-      id: 1,
       user_id: organizerId,
       eventName: 'Test Tournament',
     });
 
     team1Id = await seedTestTeam({
-      id: 1,
       teamName: 'Team Alpha',
       creator_id: participantId,
     });
 
     team2Id = await seedTestTeam({
-      id: 2,
       teamName: 'Team Beta',
       creator_id: participant2Id,
     });
@@ -113,6 +108,10 @@ describe('Dispute API - Integration Tests', () => {
     });
   });
 
+  afterEach(async () => {
+    await rollbackTransaction();
+  });
+
   describe('POST /api/brackets/:eventId/disputes', () => {
     it('should allow team member to submit dispute', async () => {
       const token = generateParticipantToken(String(participantId));
@@ -143,7 +142,6 @@ describe('Dispute API - Integration Tests', () => {
 
     it('should reject dispute from non-team member', async () => {
       const nonMemberId = await seedTestUser({
-        id: 4,
         name: 'Non Member',
         email: 'nonmember@test.com',
         role: 'PARTICIPANT',
@@ -228,7 +226,6 @@ describe('Dispute API - Integration Tests', () => {
 
     it('should reject response from non-team member', async () => {
       const nonMemberId = await seedTestUser({
-        id: 5,
         name: 'Non Member',
         email: 'nonmember2@test.com',
         role: 'PARTICIPANT',
@@ -357,7 +354,6 @@ describe('Dispute API - Integration Tests', () => {
 
     it('should reject organizer who does not own the event', async () => {
       const otherOrganizerId = await seedTestUser({
-        id: 6,
         name: 'Other Organizer',
         email: 'other.organizer@test.com',
         role: 'ORGANIZER',

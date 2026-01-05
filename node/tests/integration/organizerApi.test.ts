@@ -2,9 +2,10 @@ import request from 'supertest';
 import app from '../../src/index';
 import { initializeFirebase } from '../../src/config/firebase';
 import {
-  clearTestData,
   seedTestUser,
   seedTestEvent,
+  beginTransaction,
+  rollbackTransaction,
 } from '../helpers/testDb';
 import {
   generateOrganizerToken,
@@ -24,34 +25,34 @@ describe('Organizer API - Integration Tests', () => {
   });
 
   beforeEach(async () => {
-    await clearTestData();
+    await beginTransaction();
 
     organizerId = await seedTestUser({
-      id: 1,
       name: 'Test Organizer',
       email: 'organizer@test.com',
       role: 'ORGANIZER',
     });
 
     participantId = await seedTestUser({
-      id: 2,
       name: 'Test Participant',
       email: 'participant@test.com',
       role: 'PARTICIPANT',
     });
 
     adminId = await seedTestUser({
-      id: 3,
       name: 'Test Admin',
       email: 'admin@test.com',
       role: 'ADMIN',
     });
 
     eventId = await seedTestEvent({
-      id: 1,
       user_id: organizerId,
       eventName: 'Test Tournament',
     });
+  });
+
+  afterEach(async () => {
+    await rollbackTransaction();
   });
 
   describe('POST /api/organizer/events/search', () => {
@@ -144,7 +145,6 @@ describe('Organizer API - Integration Tests', () => {
 
     it('should reject organizer from deleting another organizer event', async () => {
       const otherOrganizerId = await seedTestUser({
-        id: 4,
         name: 'Other Organizer',
         email: 'other.organizer@test.com',
         role: 'ORGANIZER',

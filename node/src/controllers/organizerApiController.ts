@@ -38,7 +38,7 @@ export async function searchEvents(req: AuthenticatedRequest, res: Response): Pr
       where.status = filters.status;
     }
 
-    const events = await prisma.eventDetail.findMany({
+    const events = await prisma.event_details.findMany({
       where,
       orderBy: {
         start_date: 'desc',
@@ -70,7 +70,7 @@ export async function destroyEvent(req: AuthenticatedRequest, res: Response): Pr
     const userId = parseInt(req.user?.id!);
 
     // Verify user owns this event
-    const event = await prisma.eventDetail.findFirst({
+    const event = await prisma.event_details.findFirst({
       where: {
         id: eventId,
         user_id: userId,
@@ -85,7 +85,7 @@ export async function destroyEvent(req: AuthenticatedRequest, res: Response): Pr
       return;
     }
 
-    await prisma.eventDetail.delete({
+    await prisma.event_details.delete({
       where: { id: eventId },
     });
 
@@ -376,7 +376,7 @@ export async function editProfile(req: AuthenticatedRequest, res: Response): Pro
     const userId = parseInt(req.user?.id!);
     const { name, bio, company_name, website, avatar_url, social_links } = req.body;
 
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         name,

@@ -2,13 +2,14 @@ import request from 'supertest';
 import app from '../../src/index';
 import { initializeFirebase } from '../../src/config/firebase';
 import {
-  clearTestData,
   seedTestUser,
   seedTestEvent,
   seedTestTeam,
   seedTestTeamMember,
   seedTestBracket,
   seedTestBracketDeadline,
+  beginTransaction,
+  rollbackTransaction,
 } from '../helpers/testDb';
 import {
   generateParticipantToken,
@@ -29,32 +30,27 @@ describe('Bracket API - Integration Tests', () => {
   });
 
   beforeEach(async () => {
-    // Clear test data before each test
-    await clearTestData();
+    await beginTransaction();
 
     // Seed test data
     organizerId = await seedTestUser({
-      id: 1,
       name: 'Test Organizer',
       email: 'organizer@test.com',
       role: 'ORGANIZER',
     });
 
     participantId = await seedTestUser({
-      id: 2,
       name: 'Test Participant',
       email: 'participant@test.com',
       role: 'PARTICIPANT',
     });
 
     eventId = await seedTestEvent({
-      id: 1,
       user_id: organizerId,
       eventName: 'Test Tournament',
     });
 
     teamId = await seedTestTeam({
-      id: 1,
       teamName: 'Test Team',
       creator_id: participantId,
     });
@@ -93,6 +89,10 @@ describe('Bracket API - Integration Tests', () => {
         },
       },
     });
+  });
+
+  afterEach(async () => {
+    await rollbackTransaction();
   });
 
   describe('POST /api/brackets/:eventId/report', () => {
@@ -232,7 +232,6 @@ describe('Bracket API - Integration Tests', () => {
     it('should block participant if not team member', async () => {
       // Create another user who is not a team member
       const nonMemberId = await seedTestUser({
-        id: 3,
         name: 'Non Member',
         email: 'nonmember@test.com',
         role: 'PARTICIPANT',

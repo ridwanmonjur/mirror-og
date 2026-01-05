@@ -2,9 +2,10 @@ import request from 'supertest';
 import app from '../../src/index';
 import { initializeFirebase } from '../../src/config/firebase';
 import {
-  clearTestData,
   seedTestUser,
   seedTestEvent,
+  beginTransaction,
+  rollbackTransaction,
 } from '../helpers/testDb';
 
 describe('Public API - Integration Tests', () => {
@@ -17,27 +18,28 @@ describe('Public API - Integration Tests', () => {
   });
 
   beforeEach(async () => {
-    await clearTestData();
+    await beginTransaction();
 
     userId = await seedTestUser({
-      id: 1,
       name: 'Test User',
       email: 'user@test.com',
       role: 'PARTICIPANT',
     });
 
     user2Id = await seedTestUser({
-      id: 2,
       name: 'Test User 2',
       email: 'user2@test.com',
       role: 'PARTICIPANT',
     });
 
     eventId = await seedTestEvent({
-      id: 1,
       user_id: userId,
       eventName: 'Test Tournament',
     });
+  });
+
+  afterEach(async () => {
+    await rollbackTransaction();
   });
 
   describe('GET /api/user/:id/logs', () => {

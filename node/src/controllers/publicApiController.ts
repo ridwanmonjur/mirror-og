@@ -16,7 +16,7 @@ export async function getActivityLogs(req: Request, res: Response): Promise<void
   try {
     const userId = parseInt(req.params.id);
 
-    const logs = await prisma.activityLog.findMany({
+    const logs = await prisma.activity_logs.findMany({
       where: { user_id: userId },
       orderBy: { created_at: 'desc' },
       take: 50,
@@ -102,7 +102,7 @@ export async function storeEventInvitation(req: Request, res: Response): Promise
     const eventId = parseInt(req.params.id);
     const { team_id, user_id, message } = req.body;
 
-    const result = await prisma.eventInvitation.create({
+    const result = await prisma.event_invitations.create({
       data: {
         event_id: eventId,
         team_id: team_id ? parseInt(team_id) : null,
@@ -136,7 +136,7 @@ export async function destroyEventInvitation(req: Request, res: Response): Promi
     const eventId = parseInt(req.params.id);
     const { invitation_id } = req.body;
 
-    await prisma.eventInvitation.deleteMany({
+    await prisma.event_invitations.deleteMany({
       where: {
         id: parseInt(invitation_id),
         event_id: eventId,

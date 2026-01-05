@@ -2,11 +2,12 @@ import request from 'supertest';
 import app from '../../src/index';
 import { initializeFirebase } from '../../src/config/firebase';
 import {
-  clearTestData,
   seedTestUser,
   seedTestEvent,
   seedTestBracket,
   seedTestBracketDeadline,
+  beginTransaction,
+  rollbackTransaction,
 } from '../helpers/testDb';
 
 describe('Tournament API - Integration Tests', () => {
@@ -18,17 +19,15 @@ describe('Tournament API - Integration Tests', () => {
   });
 
   beforeEach(async () => {
-    await clearTestData();
+    await beginTransaction();
 
     userId = await seedTestUser({
-      id: 1,
       name: 'Test Organizer',
       email: 'organizer@test.com',
       role: 'ORGANIZER',
     });
 
     eventId = await seedTestEvent({
-      id: 1,
       user_id: userId,
       eventName: 'Test Tournament',
     });
@@ -61,6 +60,10 @@ describe('Tournament API - Integration Tests', () => {
         },
       },
     });
+  });
+
+  afterEach(async () => {
+    await rollbackTransaction();
   });
 
   describe('GET /health', () => {

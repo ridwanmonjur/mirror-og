@@ -28,7 +28,7 @@ export async function getEvents(req: AuthenticatedRequest, res: Response): Promi
       where.status = filters.status;
     }
 
-    const events = await prisma.eventDetail.findMany({
+    const events = await prisma.event_details.findMany({
       where,
       orderBy: {
         start_date: 'desc',
@@ -179,7 +179,7 @@ export async function editProfile(req: AuthenticatedRequest, res: Response): Pro
     const userId = parseInt(req.user?.id!);
     const { name, bio, avatar_url, social_links } = req.body;
 
-    await prisma.user.update({
+    await prisma.users.update({
       where: { id: userId },
       data: {
         name,
@@ -210,7 +210,7 @@ export async function searchTeams(req: AuthenticatedRequest, res: Response): Pro
   try {
     const { search_term, limit = 20 } = req.query;
 
-    const teams = await prisma.team.findMany({
+    const teams = await prisma.teams.findMany({
       where: {
         teamName: {
           contains: search_term as string,
@@ -241,7 +241,7 @@ export async function getTeamList(req: AuthenticatedRequest, res: Response): Pro
     const { user_id, page = 1, limit = 20 } = req.body;
     const skip = (page - 1) * limit;
 
-    const teams = await prisma.team.findMany({
+    const teams = await prisma.teams.findMany({
       where: {
         team_members: {
           some: {
@@ -277,7 +277,7 @@ export async function editTeam(req: AuthenticatedRequest, res: Response): Promis
     const teamId = parseInt(team_id);
 
     // Verify user is team captain
-    const member = await prisma.teamMember.findFirst({
+    const member = await prisma.team_members.findFirst({
       where: {
         team_id: teamId,
         user_id: userId,
@@ -293,7 +293,7 @@ export async function editTeam(req: AuthenticatedRequest, res: Response): Promis
       return;
     }
 
-    await prisma.team.update({
+    await prisma.teams.update({
       where: { id: teamId },
       data: {
         teamName: name,
@@ -326,7 +326,7 @@ export async function inviteMember(req: AuthenticatedRequest, res: Response): Pr
     const currentUserId = parseInt(req.user?.id!);
 
     // Verify current user is team captain
-    const member = await prisma.teamMember.findFirst({
+    const member = await prisma.team_members.findFirst({
       where: {
         team_id: teamId,
         user_id: currentUserId,
@@ -379,7 +379,7 @@ export async function makeCaptain(req: AuthenticatedRequest, res: Response): Pro
     const currentUserId = parseInt(req.user?.id!);
 
     // Verify current user is team captain
-    const currentMember = await prisma.teamMember.findFirst({
+    const currentMember = await prisma.team_members.findFirst({
       where: {
         team_id: teamId,
         user_id: currentUserId,
@@ -396,7 +396,7 @@ export async function makeCaptain(req: AuthenticatedRequest, res: Response): Pro
     }
 
     // Make member captain
-    await prisma.teamMember.updateMany({
+    await prisma.team_members.updateMany({
       where: {
         team_id: teamId,
         user_id: memberId,
@@ -428,7 +428,7 @@ export async function removeCaptain(req: AuthenticatedRequest, res: Response): P
     const teamId = parseInt(req.params.id);
     const memberId = parseInt(req.params.memberId);
 
-    await prisma.teamMember.updateMany({
+    await prisma.team_members.updateMany({
       where: {
         team_id: teamId,
         user_id: memberId,
@@ -460,7 +460,7 @@ export async function updateTeamMember(req: AuthenticatedRequest, res: Response)
     const memberId = parseInt(req.params.id);
     const { role, status } = req.body;
 
-    await prisma.teamMember.update({
+    await prisma.team_members.update({
       where: { id: memberId },
       data: {
         role: role || undefined,

@@ -2,11 +2,12 @@ import request from 'supertest';
 import app from '../../src/index';
 import { initializeFirebase } from '../../src/config/firebase';
 import {
-  clearTestData,
   seedTestUser,
   seedTestEvent,
   seedTestTeam,
   seedTestTeamMember,
+  beginTransaction,
+  rollbackTransaction,
 } from '../helpers/testDb';
 import {
   generateParticipantToken,
@@ -28,44 +29,38 @@ describe('Participant API - Integration Tests', () => {
   });
 
   beforeEach(async () => {
-    await clearTestData();
+    await beginTransaction();
 
     participantId = await seedTestUser({
-      id: 1,
       name: 'Test Participant',
       email: 'participant@test.com',
       role: 'PARTICIPANT',
     });
 
     participant2Id = await seedTestUser({
-      id: 2,
       name: 'Test Participant 2',
       email: 'participant2@test.com',
       role: 'PARTICIPANT',
     });
 
     organizerId = await seedTestUser({
-      id: 3,
       name: 'Test Organizer',
       email: 'organizer@test.com',
       role: 'ORGANIZER',
     });
 
     adminId = await seedTestUser({
-      id: 4,
       name: 'Test Admin',
       email: 'admin@test.com',
       role: 'ADMIN',
     });
 
     /*_eventId =*/ await seedTestEvent({
-      id: 1,
       user_id: organizerId,
       eventName: 'Test Tournament',
     });
 
     teamId = await seedTestTeam({
-      id: 1,
       teamName: 'Test Team',
       creator_id: participantId,
     });
@@ -75,6 +70,10 @@ describe('Participant API - Integration Tests', () => {
       team_id: teamId,
       status: 'accepted',
     });
+  });
+
+  afterEach(async () => {
+    await rollbackTransaction();
   });
 
   describe('POST /api/participant/events', () => {
