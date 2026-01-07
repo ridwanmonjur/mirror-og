@@ -41,7 +41,7 @@ class AuthController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         $role = Session::get('role');
-        $user = Socialite::driver('google')->stateless->user();
+        $user = Socialite::driver('google')->user();
         ['finduser' => $finduser, 'error' => $error] = $this->authService->registerOrLoginUserForSocialAuth($user, 'google', $role);
         Session::forget('role');
 
